@@ -42,9 +42,9 @@ class Cvss(Base):
 
     id = Column(Integer, primary_key=True)
     score = Column(String(5))
-    access_vector = Column(String(10))
+    access_vector = Column(String(20))
     access_complexity = Column(String(10))
-    authentication = Column(String(10))
+    authentication = Column(String(15))
     confidentiality = Column(String(10))
     integrity_impact = Column(String(10))
     availability_impact = Column(String(10))

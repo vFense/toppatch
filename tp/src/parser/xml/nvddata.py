@@ -59,24 +59,35 @@ class NVDEntry():
         """
             Returns a namedtuple of CVScore.
         """
-        cvss = self._entry[_cvss][_cvss_ns + "base_metrics"]
+        try:
+            cvss = self._entry[_cvss][_cvss_ns + "base_metrics"]
 
-        score			= cvss[_cvss_ns + "score"]
-        vector			= cvss[_cvss_ns + "access-vector"]
-        complexity		= cvss[_cvss_ns + "access-complexity"]
-        auth		 	= cvss[_cvss_ns + "authentication"]
-        confi			= cvss[_cvss_ns + "confidentiality-impact"]
-        integrity 		= cvss[_cvss_ns + "integrity-impact"]
-        avali 			= cvss[_cvss_ns + "availability-impact"]
-        src 			= cvss[_cvss_ns + "source"]
-        date 			= cvss[_cvss_ns + "generated-on-datetime"]
+            score			= cvss[_cvss_ns + "score"]
+            vector			= cvss[_cvss_ns + "access-vector"]
+            complexity		= cvss[_cvss_ns + "access-complexity"]
+            auth		 	= cvss[_cvss_ns + "authentication"]
+            confi			= cvss[_cvss_ns + "confidentiality-impact"]
+            integrity 		= cvss[_cvss_ns + "integrity-impact"]
+            avali 			= cvss[_cvss_ns + "availability-impact"]
+            src 			= cvss[_cvss_ns + "source"]
+            date 			= cvss[_cvss_ns + "generated-on-datetime"]
 
-        metrics = CVScore(score, vector, complexity, auth, confi, integrity, avali, src, date)
+            metrics = CVScore(score, vector, complexity, auth, confi, integrity, avali, src, date)
+        except AttributeError:
+            print "No CVSS"
+            metrics = CVScore("None", "None", "None", "None", "None", "None", "None", "None", "None")
+        finally:
+            return metrics
 
-        return metrics
 
     def get_cwe_id(self):
-        return self._entry[_vuln_ns + "cwe"].get("id")
+        try:
+            cwe = self._entry[_vuln_ns + "cwe"].get("id")
+        except AttributeError:
+            print "No CWE id!!!"
+            cwe = "None"
+        finally:
+            return cwe
 
     def get_cve_id(self):
         return self._entry[_vuln_ns + "cve-id"]

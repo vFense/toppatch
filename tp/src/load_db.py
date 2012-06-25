@@ -10,12 +10,12 @@ from models.base import Base
 __author__ = 'Miguel Moll'
 
 
-db = create_engine('mysql://root@127.0.0.1/vuls')
+db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
 Base.metadata.create_all(db)
 Session = sessionmaker(bind=db)
 session = Session()
 
-nc = NvdCollection("./data/nvd.xml")
+nc = NvdCollection("./data/nvdcve-2.0-recent.xml")
 entries = nc.parse_collection()
 
 for i in range(len(entries)):
