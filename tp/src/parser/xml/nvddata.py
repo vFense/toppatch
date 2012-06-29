@@ -2,7 +2,7 @@
     Helper class for the NVD xml files. Holds one entry from that file. (http://nvd.nist.gov/download.cfm)
 """
 
-from lxml import objectify
+#from lxml import objectify
 from collections import namedtuple
 """
     The following are constant strings to help with xml namespaces for accessing each xml node. NDV files "abuse" them! ;)
@@ -47,7 +47,10 @@ CVScore = namedtuple("CVScore",
 """ Namedtuple to help with references. """
 Reference = namedtuple("Reference", "type, source, link, description")
 
-class NVDEntry():
+""" Namedtuple to help with state of cpe name. To check if it is valid. """
+CpeMeta = namedtuple("CpeMeta", "valid, name")
+
+class NvdEntry():
     """
         Helper class for the NVD xml files. Holds one entry from that file. (http://nvd.nist.gov/download.cfm)
     """
@@ -74,7 +77,6 @@ class NVDEntry():
 
             metrics = CVScore(score, vector, complexity, auth, confi, integrity, avali, src, date)
         except AttributeError:
-            print "No CVSS"
             metrics = CVScore("None", "None", "None", "None", "None", "None", "None", "None", "None")
         finally:
             return metrics
@@ -84,7 +86,6 @@ class NVDEntry():
         try:
             cwe = self._entry[_vuln_ns + "cwe"].get("id")
         except AttributeError:
-            print "No CWE id!!!"
             cwe = "None"
         finally:
             return cwe
@@ -101,17 +102,28 @@ class NVDEntry():
     def get_summary(self):
         return self._entry[_vuln_ns + "summary"]
 
-    def get_vulnerable_list(self):
+    def get_vulnerable_software_list(self):
         """
-            Returns a list of vulnerable software and version.
+            Returns a list of CPE-defined strings. Said strig are to be passed to parser.cpedata.CpeItem.
+            CpeMeta = namedtuple("CpeMeta", "valid, name")
         """
         l = []
-        software_list = self._entry[_software_list].product
+        try:
+            software_list = self._entry[_software_list][_vuln_ns+"product"]
 
-        for i in range(len(software_list)):
-            app = software_list[i]
 
-            l.append(app)
+            for i in range(len(software_list)):
+                if len(software_list) is 0:
+                    meta = CpeMeta(False, "No vulnerable software list provided.")
+                    break
+
+                meta = CpeMeta(True, str(software_list[i]))
+                l.append(meta)
+
+        except AttributeError:
+            app = "No vulnerable software list provided."
+            meta = CpeMeta(False, app)
+
 
         return l
 
@@ -134,10 +146,9 @@ class NVDEntry():
 
         return l
 
-
 if __name__ == "__main__":
-    data = NVDEntry()
-    print data.get_vulnerable_list()
+    data = NvdEntry()
+    print data.get_vulnerable_software_list()
 
 
 

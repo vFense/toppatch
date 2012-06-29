@@ -23,6 +23,8 @@ class Cve(Base):
 
     cvss = relationship("Cvss", uselist=False, backref="cves")
 
+    versions_id = Column(Integer, ForeignKey('versions.id'))
+
     def __init__(self, cve_id, cwe_id, pdate, mdate, summary):
         self.cve_id = cve_id
         self.cwe_id = cwe_id
