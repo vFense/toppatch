@@ -1,5 +1,2 @@
-include/
-bin/
-lib/
 .idea/
 *.pyc
