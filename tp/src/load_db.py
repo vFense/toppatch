@@ -14,7 +14,7 @@ Base.metadata.create_all(db)
 Session = sessionmaker(bind=db)
 session = Session()
 
-nc = NvdCollection("./data/nvdcve-2.0-recent.xml")
+nc = NvdCollection("./data/xml/nvdcve-2.0-recent.xml")
 entries = nc.parse_collection()
 
 #cp = CpeCollection("./data/official-cpe-dictionary_v2.2.xml")
