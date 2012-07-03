@@ -1,2 +1,11 @@
 .idea/
+.vimrc
+.viminfo
+.bashrc
+.bash_profile
+.bash_history
+.mysql_history
+.profile
+.ssh
 *.pyc
+*.log
