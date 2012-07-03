@@ -1,0 +1,1108 @@
+Downloading/unpacking lxml
+
+  Getting page http://pypi.python.org/simple/lxml
+  URLs to search for versions for lxml:
+  * http://pypi.python.org/simple/lxml/
+  Getting page http://codespeak.net/lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.3.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.3.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1alpha1.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1alpha1.tar.gz when looking for download links for lxml
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.2.3.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.6.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.6.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.10.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.10.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha5.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha5.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha1.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha1.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1beta3.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1beta3.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.5.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.5.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.4.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.4.tar.gz when looking for download links for lxml
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.2.5.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.3.2.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.2.4.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.2.7.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.2.6.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.2.1.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.tar.gz when looking for download links for lxml
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.2.2.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.1.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.1.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.2.1.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.2.1.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.4.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.4.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.5.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.5.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.1.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.1.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0beta1.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0beta1.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha2.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha2.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1beta1.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1beta1.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1beta2.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1beta2.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.11.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.11.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0beta2.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0beta2.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3beta.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3beta.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha3.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha3.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha6.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha6.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.2.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.2.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.7.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.7.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.6.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.6.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.3.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.3.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.2.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.2.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.1.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.1.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.9.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.9.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.8.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.8.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.2.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.2.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.3.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.3.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.2.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.2.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.5.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.5.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.4.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.4.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha4.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha4.tar.gz when looking for download links for lxml
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.3.1.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2alpha1.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2alpha1.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta1.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta1.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta2.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta2.tar.gz when looking for download links for lxml
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.2.8.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta3.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta3.tar.gz when looking for download links for lxml
+  Could not fetch URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta4.tar.gz (from http://pypi.python.org/simple/lxml/): HTTP Error 404: Not Found
+  Will skip URL http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta4.tar.gz when looking for download links for lxml
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.3.4.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.3.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.3.3.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Skipping page http://pypi.python.org/packages/source/l/lxml/lxml-2.3beta1.tar.gz (from http://pypi.python.org/simple/lxml/) because of Content-Type: application/octet-stream
+  Analyzing links from page http://pypi.python.org/simple/lxml/
+    Skipping link http://pypi.python.org/packages/3.0/l/lxml/lxml-2.2.1-py3.0-win32.egg#md5=03976f126f6d73f750ce1b89eb0af003 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.1.win32-py2.4.exe#md5=2dd1b9344f0d11b4ade7564b12fe51f1 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.2.1.win32-py2.4.exe#md5=be8deff1f66e8400bfc15e545df5c7dc (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.3beta1-py2.5-macosx-10.3-i386.egg#md5=3917603babc9cc0b1c27df288dab22ec (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1.1-py2.4-linux-i686.egg#md5=efc97ce068b9564fde4b4a4c99021b16 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.win32-py2.4.exe#md5=fe316bf30bf4ef1e1077ab7920fe628f (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.3.2.win32-py2.4.exe#md5=e2d191ddeb58bb0b842d13eecf9e41d1 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1.2-py2.5-win32.egg#md5=6c6816cfe9e63a192f7943e0f074e841 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.7-py2.5-macosx-10.3-ppc.egg#md5=b3669ff12643a2fad728900ec4c11acf (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.10.win32-py2.4.exe#md5=7d4b25b15afe90c869edfbf16184e737 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.6-py2.5-macosx-10.3-ppc.egg#md5=ed4f121007e6bad7b0f58e46e8c1ac49 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.1.1-py2.5-win32.egg#md5=e9c026f678883737f01183734d20f27d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.win32-py2.4.exe#md5=88e3cb9425e4904062c504e2e9cbeeac (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.3.win32-py2.4.exe#md5=cdef15b50e07780862f8d3856e55245b (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2beta1-py2.6-win32.egg#md5=0cf62e9b7de95d196adc003351e4a275 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1beta3.win32-py2.5.exe#md5=d0d4c1b734a6f58a7e8181a3bb8e026b (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.0.1.tar.gz#md5=f6dda59c9915aab02aff111c9d5b04e4 (from http://pypi.python.org/simple/lxml/), version: 1.0.1
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.3beta.win32-py2.4.exe#md5=68c3fad892b0801e471d0f93a3384e8e (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1.2-py2.4-win32.egg#md5=da207cc7babb8ea59f17ad2ddd78fe9f (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.0.tar.gz#md5=2f1ced6d29eeafea7b82acbac7e787f6 (from http://pypi.python.org/simple/lxml/), version: 1.0
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1.1-py2.4-linux-x86_64.egg#md5=9e030dfcbf3d66b1ff94678f8878a253 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.3/l/lxml/lxml-1.0.2-py2.3-linux-i686.egg#md5=e919305107b3490a8bf986e18acbe032 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.0.2.tar.gz#md5=bcebff4526b02dad4070cbbcb3d1b7e0 (from http://pypi.python.org/simple/lxml/), version: 1.0.2
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.4-py2.4-win32.egg#md5=31feae2109116b57d66a5c857590899c (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.2.4-py3.1-win32.egg#md5=cdfceac1537b2a11b8f4aaf095338786 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.8-py2.4-win32.egg#md5=56179cf4400c326acbf67e8b252ae313 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9-py2.4-win32.egg#md5=887c2d49b84d39b57f0d3b26d0405786 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.4-py2.4-win32.egg#md5=07d17a118c574937438eab759a14e62a (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.1.2.tar.gz#md5=d18ecaacdecf7c9f02a6e9aecb16c720 (from http://pypi.python.org/simple/lxml/), version: 1.1.2
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0alpha4.win32-py2.5.exe#md5=24b5171a460d9845ccfe9fb7dd0ba889 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.6.win32-py2.4.exe#md5=5cd4b1474f99b13d314daa354dbbeec0 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1.1.win32-py2.4.exe#md5=981d483a86d7fa61cbe1243c2292722c (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.3-py2.5-macosx-10.3-ppc.egg#md5=9242c307922e9bb50cc054396567b1ca (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.1-py2.4-freebsd-6.0-RELEASE-i386.egg#md5=0a8319fa17c4ce66812a56f35d2d2524 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.2.win32-py2.4.exe#md5=5098cf4cc66236d2dbe3c817f0e555c0 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.win32-py2.5.exe#md5=ee26370e20adee1fd30931c60c971cd3 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.1.win32-py2.5.exe#md5=d2b2c7efde6af0918e470330f5e10187 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.1-py2.4-win32.egg#md5=2775f049232545af27ca5be0746d6fb3 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1.3.win32-py2.5.exe#md5=2da28cdd0a15ea7b0fce941c17878c85 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.3-py2.7-macosx-10.3-fat.egg#md5=a420c9f2e0106a2c9c836174eb261897 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.1.1.tar.gz#md5=f59403a30ef6089989250b5c8eedafe5 (from http://pypi.python.org/simple/lxml/), version: 1.1.1
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.2-py2.5-win32.egg#md5=9b5e5f72fe10df808da1509aebbffd96 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.3.5.win32-py2.4.exe#md5=6cc828e4db9acebf029b7b0991286272 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1.win32-py2.5.exe#md5=3e1f3d8143570029cd511f48777e9fa6 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.9.win32-py2.5.exe#md5=15735bffd6f72da79628889e29c46ea0 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0-py2.4-freebsd-6.1-RELEASE-i386.egg#md5=1541e9d7ff3de6a1c1c0866208221e81 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1beta3.win32-py2.4.exe#md5=8f5c59642ac98195bee47c07f72937c8 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0alpha4.win32-py2.4.exe#md5=f8e662838d0980e62805c60e03a03499 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.7.win32-py2.5.exe#md5=70ee5e846caf403192a3d3b647626552 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.2.4.win32-py3.1.exe#md5=84077039384b5b086b2bc97daf70de1b (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.4.win-amd64-py2.6.exe#md5=9fae6a91cfba69f67978acabbfb1d94c (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1.3-py2.6-win32.egg#md5=c337781a9e060aaee597c502254a4d23 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1alpha.win32-py2.4.exe#md5=b6e3cec6aacf5969ca9e4f3e6864ef17 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1beta-py2.4-linux-x86_64.egg#md5=7feb1095491f9df836bc739b5bcd489d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.2.win32-static-py2.4.exe#md5=9380caeb2791e1031d436a5dcb5cbf67 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.2-py2.6-macosx-10.5-i386.egg#md5=5c4b4b67d107241df82e1b480a496bac (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.3.5-py2.4-win32.egg#md5=dfa103cab38cd9f1b9ec5ffe27736058 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.0/l/lxml/lxml-2.2.4-py3.0-win32.egg#md5=a16743e91b9d6d85932e3784e07915eb (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-0.9.1.tar.gz#md5=25e18d86050907f3a088550fe650f841 (from http://pypi.python.org/simple/lxml/), version: 0.9.1
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2-py2.6-win32.egg#md5=d7930c4735af1cadde570cbaae3f8278 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.2-py2.4-linux-x86_64.egg#md5=6b23bb4d736c9c86db536724caa71b02 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.6-py2.5-win32.egg#md5=0eb47862fef75d91abc99b5434f77967 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.2.win-amd64-py2.6.exe#md5=4d25990558ca850431b772233be985e6 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0alpha3-py2.4-win32.egg#md5=6900527cb6bd7d64414f4eab32862e8c (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1.3-py2.4-win32.egg#md5=f95c81f26d51a4f37b247b9ea3538c1e (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.2.win32-py2.4.exe#md5=60aed88ab26352d284838cf052a01ac0 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0alpha2.win32-py2.4.exe#md5=307cca538f6a613602c7012f41113889 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.7.tar.gz#md5=f72a3ce319b286926ac08ae66d30cd31 (from http://pypi.python.org/simple/lxml/), version: 2.0.7
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.1-py2.4-win32.egg#md5=c82ad217a9c0da07af2df9e7c590e580 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.3.4-py2.5-win32.egg#md5=ca73864551c90e49c1f96985919c41f7 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.0/l/lxml/lxml-2.2.win32-py3.0.exe#md5=cf36bddfca945d8b8b54a74b63054b07 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9-py2.4-linux-x86_64.egg#md5=25ea4e0046dc7bf87bafc0346ba71b38 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.2-py2.6-win-amd64.egg#md5=9f5c275fba860ccd9d898dc7c04dde0f (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0alpha5.win32-py2.5.exe#md5=8406d1b182d48c079095fd5550d82ba4 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1.5-py2.6-win32.egg#md5=d7edc347cda56507785a24efeb4f8156 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0alpha4.tar.gz#md5=f068d523c5cda4762beec5d253b0a946 (from http://pypi.python.org/simple/lxml/), version: 2.0alpha4
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2-py2.4-win32.egg#md5=50eb92e4d830c7bf275667030ca0aee7 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1.2.win32-py2.4.exe#md5=53bdfc444a67c4789863269ae85acf9d (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.7-py2.5-win32.egg#md5=b80444318d22280471fdd4f41c122774 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.5.win32-py2.4.exe#md5=cb84b9fd007b17af4f98b8f451e5a014 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.1.2-py2.5-win32.egg#md5=713eaf043a6c86c5044bfbd35c5a2ab1 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.1.2-py2.5-linux-x86_64.egg#md5=9b642725e7174889c984627dca9d4d52 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.2-py2.5-macosx-10.5-i386.egg#md5=023b093ecb2ce886f80b7a7f0601adb5 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.2.6-py2.7-macosx-10.3-fat.egg#md5=8b8ecaac7097c818bc6242f752e2d98f (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.9.win32-py2.4.exe#md5=84bf9f85b52941a0264277d0a658b2d5 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.10.win32-py2.5.exe#md5=b96243d23dbc20f9ecc76213b42c4152 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.0.8-py2.6-win32.egg#md5=7bbead45e92a2f6117740f059971bf23 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.2.8-py2.7-win-amd64.egg#md5=75cdaf9523bb25be3dbca59fd372530e (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0alpha4-py2.4-win32.egg#md5=6de63eab954df66c4226e3ffe482f560 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.3.win32-py2.4.exe#md5=b52dd2b33157bb0054dd386adead37a8 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.3.win32-py3.1.exe#md5=9ca46d61dbb5df77271c1d07af3ab9d6 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2beta1-py2.5-win32.egg#md5=0798b4e0b7d0e231809685f7092754ee (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.2.win32-py2.4.exe#md5=2144325d8c64ead2d1103318b699f899 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1alpha-py2.4-linux-x86_64.egg#md5=74c7003ce4143f9eb832a1f03c13e2bd (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.6-py2.5-win32.egg#md5=6dea8aa20b065f89136fc76b15204985 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0alpha6.tar.gz#md5=306d0277a24e0798f74793622b0a1b92 (from http://pypi.python.org/simple/lxml/), version: 2.0alpha6
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.1.win32-py2.6.exe#md5=8a6d1c26a4b8708bbd2d315a87478971 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.3.6.win32-py2.4.exe#md5=5a804a5765eeede53e098eb7c5f27e6b (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.1alpha1.tar.gz#md5=66851335be466f634792146b23ee9e24 (from http://pypi.python.org/simple/lxml/), version: 2.1alpha1
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.0.9-py2.6-win32.egg#md5=d4d5f94dcdd58ec958192d7b8a285477 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1.3.win32-py2.6.exe#md5=bd6b9880fafb1f60adf0d71ef97b5e57 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.3.6.win32-py2.5.exe#md5=c71d386d46237dbe951ed42b8d99157e (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.1.win32-static-py2.4.exe#md5=4f24be1d9d1a5910be15286aa974afdc (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0alpha5-py2.5-win32.egg#md5=7b9e67571d521cc9c43c1c5da9ccdf46 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.6.win32-py2.5.exe#md5=ca016104f4cb3b70eaf143c676ae28b6 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.3/l/lxml/lxml-1.0.1-py2.3-linux-i686.egg#md5=329fc2a0614fbeb232298bcb6674d7db (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.3.5-py2.5-win32.egg#md5=30707b8d0b29b9655841d568b018f224 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1.1-py2.4-win32.egg#md5=fdb83b711b508d677c90c090b1fd2d87 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2beta1.win32-py2.6.exe#md5=9c87955efabb1c902454097df3f54f3e (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.1-py2.4-linux-i686.egg#md5=a513ea07645d38e53e71ee8d6de67819 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.1-py2.4-win32.egg#md5=147de1824fd7d599ce0a0998e3367402 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.3beta1.win32-py2.6.exe#md5=6bd7101460aaa72f183769e541a94b51 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.3.6-py2.4-win32.egg#md5=91aefa5a712850c4c1a2f710cfefe292 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.1-py2.5-win32.egg#md5=e7848267af1916a689927bdd1432abb4 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.3-py2.4-win32.egg#md5=6d7718c193718a29988e5062658db3a3 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.3-py2.4-win32.egg#md5=1512b4b24d53aebbea36360c74065bf0 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.3.win-amd64-py2.6.exe#md5=5244c30b0a6fc535004a7a53cac37465 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.3.2.tar.gz#md5=5d3e6d89a286085b5968188561e2025b (from http://pypi.python.org/simple/lxml/), version: 1.3.2
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.3-py2.7-win32.egg#md5=607f701d0961834667abe737b3206215 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.0.9.win32-py2.6.exe#md5=426ac8153b2446abde8b0f9ceff3d089 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.3.win-amd64-py3.1.exe#md5=8bb4d983f019e064c77eb61ce5f03aaa (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0-static.win32-py2.4.exe#md5=fc914e6e589d1201124fba4ad90c71ee (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0alpha3-py2.5-win32.egg#md5=d4a812cc4ac4301493ea2c516d0463b2 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0alpha2.win32-py2.5.exe#md5=8a8df4f1eda561cefca861c07938acc5 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0-py2.4-win32.egg#md5=f3990bbef4b988cee650f182491e50dc (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.2-py2.5-win32.egg#md5=47f67d921862d8cf9a8897ba48b5c69d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.2.8-py2.7-win32.egg#md5=62180a1bf41e037cd2712957fa4acf62 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.1-py2.4-macosx-10.4-fat.egg#md5=3e2a353dae2c3f05154ccc26159e004a (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.3-py2.6-macosx-10.3-fat.egg#md5=592cf7613f84b623b05642bb033c709c (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.4-py2.5-win32.egg#md5=cafffb117c4942b8140307416644fd69 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.4-py2.4-linux-x86_64.egg#md5=83e7d79c7aff626648650d96f42de42b (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.3/l/lxml/lxml-1.1alpha-py2.3-linux-i686.egg#md5=3773f28d0004fed92b8eac68166d1d3d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.2.win32-py2.4.exe#md5=e9d25f2fbe5915bc01ae1a24dc8b4ea7 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.3.3.win32-py2.4.exe#md5=8ec7c45763a41b3c9b91593c31b5126b (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1alpha-py2.4-freebsd-6.1-RELEASE-i386.egg#md5=82f26b68b63def856d8e0e242e831927 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1.1-py2.4-win32.egg#md5=ee0ed69f0f2b8f39f09582138d9709ec (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.2.tar.gz#md5=d971fc4cb31dc7a18ee397b2f815e0b9 (from http://pypi.python.org/simple/lxml/), version: 1.2
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-0.9.tgz#md5=f3040cdc4fb8365341dfa441b5d26146 (from http://pypi.python.org/simple/lxml/), version: 0.9
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.3.win32-py2.7.exe#md5=9c02aae672870701377750121f5a6f84 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.1.win32-py2.4.exe#md5=fec24f8ce2572dc3f7daf22c4808a8a8 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0alpha5.win32-py2.4.exe#md5=05a3bcd71a2b665d6a9e8ec5c5f66391 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.2-py2.4-linux-x86_64.egg#md5=583103dae3449d243966df191f85ec52 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.1.tar.gz#md5=5c79994d716d88ee69d57c4efe38bfec (from http://pypi.python.org/simple/lxml/), version: 1.1
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.3-py2.6-win-amd64.egg#md5=6fa50c6588061e8e2bd1658367d6f999 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.1beta3.tar.gz#md5=1991c88415dde06a52db91d494ba680d (from http://pypi.python.org/simple/lxml/), version: 2.1beta3
+    Skipping link http://pypi.python.org/packages/3.2/l/lxml/lxml-2.3.win32-py3.2.exe#md5=d20af7a1a2b47433fbbc549ee5b635f4 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.2-py2.4-macosx-10.6-i386.egg#md5=38b727f5524bb9162a3c02c8e27c1a17 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1.win32-py2.6.exe#md5=2f5b393e73bb93056a04ec86543a4db3 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9-py2.4-linux-i686.egg#md5=8ece039882713b59644bb19bd31fdf39 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.10-py2.4-win32.egg#md5=9c6b74a0c537923b699b4cdd7bccc6c7 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1.2-py2.4-linux-x86_64.egg#md5=abd283a0b0a917234a251284ac529cdc (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.1.2.win32-py2.5.exe#md5=310025ab66a8e6c781ca60150cb93e77 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1beta3-py2.5-win32.egg#md5=fb71dc4387b3522288f699b607ee7358 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.win32-py2.5.exe#md5=eb9dde316733e2b7642ee43a2fb939fd (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.2.win32-py2.5.exe#md5=ddedd9d6ea6932d69aaf40668e6db1a6 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1.4-py2.4-win32.egg#md5=f3e6e74c7a16327965a4fc41fc082a1d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.1.tar.gz#md5=f18b17e4c83edcfc8a8649c498210e20 (from http://pypi.python.org/simple/lxml/), version: 2.2.1
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0-py2.4-macosx-10.4-ppc.egg#md5=65924cd7364ed906f24868813f0d2d77 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.5.tar.gz#md5=2cc8caf84c3b55353d5513c6d668c090 (from http://pypi.python.org/simple/lxml/), version: 2.0.5
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.1.4.tar.gz#md5=05f35b81955caf502584b685a5226417 (from http://pypi.python.org/simple/lxml/), version: 2.1.4
+    Skipping link http://pypi.python.org/packages/2.3/l/lxml/lxml-1.2.win32-py2.3.exe#md5=e1aa22f6cd969ad8c25327e2a6ea89b1 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/3.0/l/lxml/lxml-2.2.4.win-amd64-py3.0.exe#md5=043af74853d5a76b7e6ee9c5292ac995 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1.1.win32-py2.6.exe#md5=58a2e68f4838be415710295a201b6120 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.10.tar.gz#md5=d5d534c5efbf35b2fd8a7a933e657b71 (from http://pypi.python.org/simple/lxml/), version: 2.0.10
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.3beta1-py3.1-macosx-10.3-fat.egg#md5=4e30eb3b96e93f47aa9beba7cc828ab5 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.2.win32-py2.5.exe#md5=ec0ac707d2de8242945bb118a282d472 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.3.win-amd64-py2.7.exe#md5=3db458d2127e68c49d6694d409322d96 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.7.tar.gz#md5=c1da56b823fdc00804938d2b788dbfd0 (from http://pypi.python.org/simple/lxml/), version: 2.2.7
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.4.win32-py2.4.exe#md5=e49c059b41ab7ec4646e76481b3262b5 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.8.win-amd64-py2.6.exe#md5=2bc40c8d85cf2bad784f92db5eb13fc1 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0-py2.4-linux-x86_64.egg#md5=924180d63fef2a3f5777b32f3e6703ef (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.0.10.win32-py2.6.exe#md5=d35051dacc5d88b36f245e4e3adc104b (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/3.0/l/lxml/lxml-2.2.1.win32-py3.0.exe#md5=fb599aa53f4a4b514c48fb8eabe9bf3d (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.3.3.tar.gz#md5=2baa9f8ad14aa6dcfb763cfa0ce3bbcb (from http://pypi.python.org/simple/lxml/), version: 1.3.3
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.7-py2.6-macosx-10.3-fat.egg#md5=e38a72c0514dd34e8ab71079c3f093a2 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.beta-py2.4-linux-x86_64.egg#md5=2a868e9fbc436f19c7303946a486f139 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.3.4.win32-py2.5.exe#md5=0ac70b7ed1be6df801508c9ef625f935 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2-py2.5-win32.egg#md5=eafeb0b7acb36ba6c1ac4b7363217a33 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.win32-py2.4.exe#md5=0a33d8392451d793d6b1143657990f2d (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.3/l/lxml/lxml-0.9.1-py2.3-linux-i686.egg#md5=2ebdef54b05df44c4550a5671138467a (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1beta-py2.4-linux-i686.egg#md5=1888630b76913068de1b9c26bab01c58 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.2.win32-py2.4.exe#md5=b55c68040eaa9c38e26c79fd2fbc2f32 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.8-py2.5-macosx-10.3-ppc.egg#md5=e4cc766686ed038e14d0c592d3ec1f8c (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.3beta1-py2.6-macosx-10.3-fat.egg#md5=e3f4965674ef37c8cdc354227d379ce7 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.3-py2.6-win32.egg#md5=450a455c9ec8d348e1cb05cf7df80ab3 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1-py2.4-win32.egg#md5=d64705156404ee2e2432cbe5c86c57f6 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0alpha5-py2.4-win32.egg#md5=42fce1de8bcd80e401ef5eb3a0c5430c (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.10-py2.5-win32.egg#md5=793db9bbd8caf50ab5807aea849a33e8 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.3beta1-py2.5-macosx-10.3-ppc.egg#md5=1ec9be3dfb23dc7e8257cd783c127d6b (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.beta.win32-py2.4.exe#md5=2ba1702d1e361eff31f53e1f3a4704ad (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1-py2.4-win32.egg#md5=540536771630b99bf2fcd01dd97520f2 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.4.win32-py2.4.exe#md5=28137fc88b59614d39f3500d75c0fd42 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.6.win32-py2.5.exe#md5=5824f195b457bb8b613d0369a54ccc70 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1alpha-py2.4-static-win32.egg#md5=9b6deaca93684ab6bdad909e133a4442 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.3beta1-py3.1-win32.egg#md5=f1df24806582e72a8685b3fbcc8dd135 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.3.3-py2.4-win32.egg#md5=00f7bd6b067c83d325e938aae65e683d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.1beta.tar.gz#md5=c5047d0bf64677327a1743225a578c4f (from http://pypi.python.org/simple/lxml/), version: 1.1beta
+    Skipping link http://pypi.python.org/packages/3.2/l/lxml/lxml-2.3beta1.win32-py3.2.exe#md5=6dc9c771f16b709de59c2e39d1480678 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.3/l/lxml/lxml-1.0-py2.3-linux-i686.egg#md5=26607383b8be2e09843dd96523266007 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.3.3-py2.5-win32.egg#md5=a36f21ceaa71695680f7700f1a27072b (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.0.3.tar.gz#md5=5b01f595b28de9cb75cd2e31ebc37c53 (from http://pypi.python.org/simple/lxml/), version: 1.0.3
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1.4-py2.5-win32.egg#md5=97da2549da5d17be23726dd345a26efd (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0alpha2-py2.5-win32.egg#md5=f5ad20b908c9e3fecc1305b44fb38c78 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.11-py2.4-win32.egg#md5=9e9019fe03d7f63d25fd1f0060f98604 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.2.win32-py2.6.exe#md5=d60065cc2618044972aede181ea16904 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1.1-py2.5-win32.egg#md5=70e26672247883cb49d0c9006f57f87e (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.1-py2.4-macosx-10.5-i386.egg#md5=a99ad0e80afc94e308b0f3f1a778b2e4 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.4-py2.6-win32.egg#md5=deebfa2d726884ddfa31a53d2f3bdc24 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.1-py2.4-macosx-10.4-ppc.egg#md5=8a8a70d63d6c06a27634290a4fd0f053 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0alpha5.tar.gz#md5=2b2b54e416442091c2bdf1cebe8beb60 (from http://pypi.python.org/simple/lxml/), version: 2.0alpha5
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1.4.win32-py2.6.exe#md5=c5e1bf8493b155d6c295fbaf36abee30 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1.win32-py2.4.exe#md5=d76e80d4fb509c535b96ba785deac626 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1-py2.5-win32.egg#md5=d8851d42d38e3e22452c8a57dd4c9ee9 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.5.tar.gz#md5=2ce79c4162c25063f58975a9a1f63e27 (from http://pypi.python.org/simple/lxml/), version: 2.2.5
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.7.win32-py2.4.exe#md5=9927a1e023bf494c6b5cb4154a188be8 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.3beta.win32-py2.5.exe#md5=701ece926753e05a49b190f8eaa5b381 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.1-py2.4-win32.egg#md5=b44fc53bf3e6c8ec3c78a66fd597914e (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.11-py2.5-win32.egg#md5=67d9ad4d1525ac89dad07eeaa54e9b61 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.3-py2.5-macosx-10.3-i386.egg#md5=94192ff14448c86f33398d0ba24ade4b (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-0.9.2.tar.gz#md5=07f31442a53331c332dd50e6a7cd6664 (from http://pypi.python.org/simple/lxml/), version: 0.9.2
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.1.win32-py2.5.exe#md5=4b4da4774c2d969587a94abe251365f6 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.1-py2.4-freebsd-6.1-RELEASE-i386.egg#md5=d07ad89b9c6584df5b9a4104a321f55a (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.2-py2.4-linux-i686.egg#md5=143edd7bff5bacd4db1efbbf687e0c6a (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.2-py2.6-win32.egg#md5=dc73ae17e486037580371077efdc13e9 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.3.2.win32-py2.5.exe#md5=412a14fd524f8604b50ef2448e2d1883 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.1-py2.4-linux-i686.egg#md5=f925fef034fb35d2bb5aacfe9c859b78 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.2-py2.4-win32.egg#md5=75f71436be5fde8f2e10c26011da4dbf (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.2-py2.4-macosx-10.4-ppc.egg#md5=9187303415df8c304e6217abe9302ce7 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.2-py2.4-macosx-10.5-i386.egg#md5=58297e10cea604d7112063aa7a3a940c (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.2-py2.4-win32.egg#md5=9db09c574184d6c59536d041d805e267 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.9-py2.5-win32.egg#md5=6732eb0990fa23ed9f0c41884fefe9bf (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.0.10-py2.6-win32.egg#md5=b92cca9122ca7c1438b10f096efa5c22 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.5-py2.4-win32.egg#md5=31dfdbc267fcb156b440d8d9c5d8752e (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1alpha.win32-static-py2.4.exe#md5=fa2129c2fc66cf31201f07b674da4611 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.1-py2.4-linux-x86_64.egg#md5=3f5f2345b3a41765ac756893095de6f8 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.1-py2.4-macosx-10.4-ppc.egg#md5=c5c89c6da2bc8747125ed6f5e36cafc2 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.3-py3.1-win32.egg#md5=84f5d7d34176c2433abb2c7e833cf309 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.3.win32-py2.5.exe#md5=bee005c72366be866151e4b09f94b460 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.1-py2.5-win32.egg#md5=a4c3c85a90b60fe5244ba2ed1f841623 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.3beta1-py2.7-macosx-10.6-intel.egg#md5=93f7341cb92a755443036a737d3126ed (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.11.win32-py2.5.exe#md5=bcb554509b77834b0d94170dff533777 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.8-py2.6-win-amd64.egg#md5=54b83492670694e36be1cfd4ff2f949b (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.4.tar.gz#md5=38b49baf4ffa1ec012886eda3a728f21 (from http://pypi.python.org/simple/lxml/), version: 2.0.4
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0-py2.4-linux-i686.egg#md5=665e81ea9ce3363093a767e35603fd6c (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.2.8-py3.1-win32.egg#md5=65f63a56f9de570ba7d7879a41b7a8cf (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1.2.win32-py2.5.exe#md5=e06b30d24633c5180cf6f72a0ef8fe68 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.0.8.win32-py2.6.exe#md5=ad2424c425927d6df357e5e88e76fdc5 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.3.5.win32-py2.5.exe#md5=a6be697a60c93b139136e8545f86908c (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0alpha3.win32-py2.5.exe#md5=a944c2c74be300f2f4ea87754d8e69ff (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.3.5.tar.gz#md5=14e77a50b1be907b2ae682ea7dfacedc (from http://pypi.python.org/simple/lxml/), version: 1.3.5
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1.5.win32-py2.5.exe#md5=e08b38ad240cccd805d4b319f84f6e7a (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.1.tar.gz#md5=d01c2c736ab3432db7bbdf2e14ce57b8 (from http://pypi.python.org/simple/lxml/), version: 2.0.1
+    Skipping link http://pypi.python.org/packages/3.2/l/lxml/lxml-2.3-py3.2-win-amd64.egg#md5=5d4cadd6609cf181cf2426478693a2ef (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.2-py2.4-static-win32.egg#md5=e4740c6b239a80680661d81e6d41c53d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.2.tar.gz#md5=ddfa5354726d4bb5de54a8685bdc87a2 (from http://pypi.python.org/simple/lxml/), version: 2.0.2
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.2.2.win32-py3.1.exe#md5=ea35d6b3a4d24f8aac60a98a6c99c9b1 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.2.8-py2.7-macosx-10.6-intel.egg#md5=738832eb6102b76a8561b2a3fdabc87d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.1.tar.gz#md5=c5ebec90d5ed223fd59c0d45a72b3491 (from http://pypi.python.org/simple/lxml/), version: 2.1
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.8.win32-py2.4.exe#md5=66259daf5210eda75fa7ad1e1552659f (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.beta-py2.4-win32.egg#md5=da2d6d71c1725136c5a9f940d724ba14 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.3.4.tar.gz#md5=dba0efc2da3e7b0e58827279767ba414 (from http://pypi.python.org/simple/lxml/), version: 1.3.4
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2beta2.tar.gz#md5=3c580423364591d527aa21fbe186307d (from http://pypi.python.org/simple/lxml/), version: 2.2beta2
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.1.win32-py2.4.exe#md5=ed4dcbbf82fec8dcc10b8f0af6c8a8fb (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.3beta1.win32-py2.7.exe#md5=ea0224feed6f649cdb1ccb656ab91d81 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.6.win32-py2.4.exe#md5=bfc119824d803b05671e6f7fe6c73e3f (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.3beta1-py2.7-win32.egg#md5=4c0da2b308dd2cd0095de21c26647842 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.8-py2.6-win32.egg#md5=d8dcf2fd5d3a674623fd29dec401a2e8 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.0/l/lxml/lxml-2.2.4.win32-py3.0.exe#md5=7a4f64692c5db4683202fcf57dcc4b7a (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.11.tar.gz#md5=52f492b9989b2f6bb8dcd3bb11a12fb9 (from http://pypi.python.org/simple/lxml/), version: 2.0.11
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.1.3.tar.gz#md5=93a651178c1428e05cff8f058c336425 (from http://pypi.python.org/simple/lxml/), version: 2.1.3
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1.2-py2.6-win32.egg#md5=f92827b5eb14c07167acca19f576d4a7 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.8-py2.6-macosx-10.3-fat.egg#md5=9f6c0ff0e800036c0e067162ced4be5e (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0alpha3.win32-py2.4.exe#md5=22f58fe905e320135993e4df73148ff6 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.4-py2.4-win32.egg#md5=5555acc686308a4ce33e639d6b8c4158 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.3beta1-py2.6-win32.egg#md5=d4dafc94ae9543661e4c5722496d923d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.2-py2.4-linux-i686.egg#md5=2d30dba0346cbc34a9ebdb63ad29522d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9-py2.4-macosx-10.4-ppc.egg#md5=4378a01151453da93b56cf85914f874d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1.win32-py2.4.exe#md5=08dd09c7d28f2ea071883c02b9140463 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1beta3-py2.4-win32.egg#md5=8b387ae00e37b15abdbde25fbc876c36 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.9.tar.gz#md5=cc8a7dc871d5e91d24432c9154af8664 (from http://pypi.python.org/simple/lxml/), version: 2.0.9
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2beta4.tar.gz#md5=892f96ec22ff940ed7cfc4ce8d1d814b (from http://pypi.python.org/simple/lxml/), version: 2.2beta4
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.3.4.win32-py2.4.exe#md5=3007a5b7556d5115e34da2e220630d1d (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.tar.gz#md5=6381e75b193d3e58c8d2bf2364062e8f (from http://pypi.python.org/simple/lxml/), version: 2.0
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0alpha2.tar.gz#md5=1390319168de4a06a20c9acf6e6dba52 (from http://pypi.python.org/simple/lxml/), version: 2.0alpha2
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.3.3.win32-py2.5.exe#md5=c4c9febb292d6d791ce6eaa4454383ad (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1.4-py2.6-win32.egg#md5=5d4e8c465683cb954080463264e7f565 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.0/l/lxml/lxml-2.2.4-py3.0-win-amd64.egg#md5=3c8a96fce9d2fd02ff3d21af9ea84c31 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.win32-py2.6.exe#md5=b886b0e847ee4ac0cc5e3f2ab8f81c0d (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1alpha-py2.4-win32.egg#md5=0a381a2cdde61acc715a365f4bbaf181 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.beta-py2.4-linux-i686.egg#md5=f796efc6917bc8bf558379d6f4895635 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.3.4-py2.4-win32.egg#md5=e3a61f6492f79f77d1765909651e769a (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.4.win32-py2.6.exe#md5=d58763332ea0043b2e145e15a7b878fb (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.9-py2.4-win32.egg#md5=3b9e7ee354ca9098f05832898dab81c3 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.3-py3.1-win-amd64.egg#md5=9025c6ad371a6bb230f20ec2c4720f91 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.2-py2.4-win32.egg#md5=027138834c9122bee571b9cc4d6bad24 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.4.win32-py2.4.exe#md5=1bb03f3cb6bd469534918d07f3dc0643 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1.3.win32-py2.4.exe#md5=dee3bbaf5fc5eab8bea8a55cd0550638 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1.1-py2.6-win32.egg#md5=8e4b1fab57b81f3ea743818be8e8738c (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1.4.win32-py2.5.exe#md5=274dc13a244344c56ce3f5cc721d6462 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.8.win32-py2.5.exe#md5=0b9562d791408efa1fe2e48c8856f8ce (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.3/l/lxml/lxml-1.1.1-py2.3-linux-i686.egg#md5=51a8704863250761e5b73378b14f2296 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.5-py2.5-win32.egg#md5=285362872773a7d8e9a8173bd050d2b9 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.3-py2.5-win32.egg#md5=54e04ad38fec7e3ee8644f34d562c4fd (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0-py2.4-win32.egg#md5=17173b24056dc887c75f0a5f323010ec (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.6-py2.6-macosx-10.3-fat.egg#md5=cb237cfe98fdf1256b345d439514b3d8 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.7-py2.4-win32.egg#md5=95f51fc1f5a0c0d8d87984d0c54c4ac8 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.8-py2.5-win32.egg#md5=cb50a4b77a9d1bd34df9cbfc482bf860 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.1-py2.4-linux-x86_64.egg#md5=b646a3e7df56282112fd6f90ae0ad6a7 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.2.1.win32-py2.5.exe#md5=bf0bc72ef795c557db6a216f48d4103f (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0alpha3.tar.gz#md5=253dc753344b8de7790fea5b5c3256df (from http://pypi.python.org/simple/lxml/), version: 2.0alpha3
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.tar.gz#md5=b3f12344291aa0d393915e7d8358b480 (from http://pypi.python.org/simple/lxml/), version: 2.2
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.3.tar.gz#md5=80fbcb6b284025f70fc53805df4ee996 (from http://pypi.python.org/simple/lxml/), version: 1.3
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.2.win32-py2.5.exe#md5=564e3e29264c1523164e7197e3028d57 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.3/l/lxml/lxml-1.3beta.win32-py2.3.exe#md5=cedb7acda3ee7057880ddbb75115c7ec (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.3.6-py2.5-win32.egg#md5=8188d671d6f6876d95e21af6e694b43a (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1.5-py2.5-win32.egg#md5=dad40bdec6a4b9095902121d71dd3fa6 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1.5.win32-py2.4.exe#md5=56fe6ab82edda3a9b91f70e47c39ff09 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/3.0/l/lxml/lxml-2.2.2-py3.0-win32.egg#md5=f5e4aa2c2f68b2564bcdea0529e79a1e (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.3.win32-py2.6.exe#md5=4135a4ac2abe3cb1ef0fa9f198fe3c51 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.1-py2.6-win32.egg#md5=6f3a8f3b2b8db0fc385bc6f454280651 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.0/l/lxml/lxml-2.2-py3.0-win32.egg#md5=e619c93232a0210af816bd5697767406 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.8.tar.gz#md5=d6c612d63a84d79440912a1b29d3b981 (from http://pypi.python.org/simple/lxml/), version: 2.2.8
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.0.11-py2.6-win32.egg#md5=ef4737da27104ecfcdc0bc397ba3efcc (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2beta1.win32-py2.4.exe#md5=c0f32c11d3eef580774e4849e2c3441f (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1-py2.6-win32.egg#md5=37946292c8750ec64bf222caa4af3fa3 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.1.5.tar.gz#md5=22567ccc6ab8ec8c90c335c810cabe11 (from http://pypi.python.org/simple/lxml/), version: 2.1.5
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.1beta2.tar.gz#md5=227edeac51dfb4f5e6dfffe0366ca5b9 (from http://pypi.python.org/simple/lxml/), version: 2.1beta2
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3.3.tar.gz#md5=a7825793c69d004f388ec6600bad7a6f (from http://pypi.python.org/simple/lxml/), version: 2.3.3
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.2-py2.4-win32.egg#md5=d8ba2ca257ed6e627584350fe8df5e9e (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0alpha4-py2.5-win32.egg#md5=a914b1e689e85131fe40445549e440ec (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0beta2.tar.gz#md5=1eee52cf85668723f3b9a233df1a2ef1 (from http://pypi.python.org/simple/lxml/), version: 2.0beta2
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.0.4.tar.gz#md5=b83980e9000f4af98d4a5f29bd0493e1 (from http://pypi.python.org/simple/lxml/), version: 1.0.4
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.2.7-py2.7-macosx-10.3-fat.egg#md5=5212cd2dd24a1c5e68650036f6782b59 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2beta1-py2.4-win32.egg#md5=797afc52eea0cac1ca42e8d09e6a8ce0 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.6-py2.4-win32.egg#md5=443c940513303037a77840d2fa7e7ad5 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.6-py2.5-macosx-10.3-i386.egg#md5=39d54a5765b8d7958bfa2f5b5d361d8c (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.3beta.tar.gz#md5=72bd35c5f4bb8442cd98924fe97f976a (from http://pypi.python.org/simple/lxml/), version: 1.3beta
+    Skipping link http://pypi.python.org/packages/3.2/l/lxml/lxml-2.3beta1-py3.2-win32.egg#md5=9916dea174a05036f4fc2616da68ab4d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.0/l/lxml/lxml-2.2.2.win32-py3.0.exe#md5=c07cddac23c424da33a6a3342e6c0aca (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1.2.win32-py2.4.exe#md5=13105659d769cb26e10578b66faeb44d (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.4-py2.6-win-amd64.egg#md5=27543e8769e9c82b6782292d372da786 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1.1.win32-py2.4.exe#md5=4f630aae503a6e49721f133b9f77b742 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.4.win32-py2.5.exe#md5=b3bcc4242a7d00a0e4ec80b153523147 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.1.1-py2.5-linux-x86_64.egg#md5=3018d0fc97bf3465334e91ff0117bbcd (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.4-py2.5-win32.egg#md5=38ab2707cb14f2c6484c77f35a9ba3e8 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.2/l/lxml/lxml-2.3-py3.2-win32.egg#md5=0c8d03cad1eaf5f0146474c09d5dfda2 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1-py2.4-linux-x86_64.egg#md5=f7d6122b372cc705ab682a30f30da9c3 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.8.win32-py2.6.exe#md5=18a7e134fc6eeda498068ece7f1656ef (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.1beta1.tar.gz#md5=3ab8de11827f26ede8114477f1078bd3 (from http://pypi.python.org/simple/lxml/), version: 2.1beta1
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.3beta1-py2.7-macosx-10.3-fat.egg#md5=98f7ed4774d9d640ae3210971873385c (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.3-py2.4-linux-i686.egg#md5=cb323e92f6c07ebed44f6c7632e5908d (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.4.win32-py2.5.exe#md5=6adece0f820a6c1824e5dd9e88b3c763 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0beta1.tar.gz#md5=fcb7de92a629de0d41c3eb9da21152c6 (from http://pypi.python.org/simple/lxml/), version: 2.0beta1
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.2.1.win32-py2.4.exe#md5=7183655216c29c614b73fa09ba2151e4 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.2.tar.gz#md5=2f2fcb6aae51b5b417a3c0a6b256ec56 (from http://pypi.python.org/simple/lxml/), version: 2.2.2
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1.3-py2.5-win32.egg#md5=d49cd58d4f49c5e508f0cace74fbbb42 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1.2-py2.4-win32.egg#md5=0c58b5a16d058d11aff539f97d8aee8b (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.1alpha.tar.gz#md5=6a6208a81400fea7d5d7855b8ea46e73 (from http://pypi.python.org/simple/lxml/), version: 1.1alpha
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.4.tar.gz#md5=077841e74ee728e7746b65d8483274be (from http://pypi.python.org/simple/lxml/), version: 2.2.4
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.2.8.win-amd64-py2.7.exe#md5=cfcf7f07a5016a5934271cddde4bbcbe (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.3-py2.4-linux-x86_64.egg#md5=8a5f97a80542e694a667f65e1af5d840 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.1-py2.4-win32-static.egg#md5=03044c39fda38c6a0e89fff9e097e39a (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.6-py2.4-win32.egg#md5=227ee1c316280dcf1602d947d12344d5 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.3.tar.gz#md5=0b3fcd56909273b3db864133475449dc (from http://pypi.python.org/simple/lxml/), version: 2.2.3
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0-py2.5-win32.egg#md5=e4ae5bded4cf48b1534595c14b33943a (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1.2.win32-py2.6.exe#md5=95479859c9ce652be96b544f5651bad7 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.3-py2.7-macosx-10.6-intel.egg#md5=52322e4698d68800c6b6aedb0dbe5f34 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.0.2-py2.4-freebsd-6.1-RELEASE-i386.egg#md5=fface15ef364988ff9fbdd8d9da31504 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.2.4.win-amd64-py3.1.exe#md5=9bbdd83a6f42a2daf51661c0e9f39396 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/3.2/l/lxml/lxml-2.3.win-amd64-py3.2.exe#md5=bc0d4a88245a5387a39aafe42bef1bad (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2beta3.tar.gz#md5=f9e8be923a5d055c8ab1927a2d4aa6a1 (from http://pypi.python.org/simple/lxml/), version: 2.2beta3
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0alpha2-py2.4-win32.egg#md5=182c10206d00786e60c5dcf370e55f74 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3.1.tar.gz#md5=87931fbf35df60cd71cfe7484b4b36ed (from http://pypi.python.org/simple/lxml/), version: 2.3.1
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2beta1.tar.gz#md5=f811008505aba17ed09dd494c4ccc20a (from http://pypi.python.org/simple/lxml/), version: 2.2beta1
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.1.2.tar.gz#md5=d957423bbd56de25ef636671e7245069 (from http://pypi.python.org/simple/lxml/), version: 2.1.2
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.7-py2.5-macosx-10.3-i386.egg#md5=5d587e67ac1e0cf6d90c0f336d3b9853 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3.4.tar.gz#md5=61d4ad80726b984b35c9a81aa2510b4d (from http://pypi.python.org/simple/lxml/), version: 2.3.4
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.6.tar.gz#md5=b1f700fb22d7ee9b977ee3eceb65b20c (from http://pypi.python.org/simple/lxml/), version: 2.2.6
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.0.11.win32-py2.6.exe#md5=8d5af0deae992e150899d1c3e80b6679 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.8.tar.gz#md5=f3e7ad6e0e4b66d596e8f301c6943b43 (from http://pypi.python.org/simple/lxml/), version: 2.0.8
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.3.6.tar.gz#md5=a66f3b9669ee4fd2f98b6be920ac583c (from http://pypi.python.org/simple/lxml/), version: 1.3.6
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3.2.tar.gz#md5=50ed3706da4665c40600fd6e2a7d1159 (from http://pypi.python.org/simple/lxml/), version: 2.3.2
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.0.11.win32-py2.4.exe#md5=ee7a10cfbe425df158303ba7eb4d14f4 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.6/l/lxml/lxml-2.1.5.win32-py2.6.exe#md5=7211984ac8bf9d929f6953b75275160f (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-1.1alpha-py2.4-linux-i686.egg#md5=eacea3444ded3a1d2d1bd02d10608562 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.2.1.tar.gz#md5=fcf68c4fe91953960c2a547effd5e1f5 (from http://pypi.python.org/simple/lxml/), version: 1.2.1
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.2.win32-py2.4.static.exe#md5=ca6aa422a6ae69209672e64fad5570ce (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-1.0.beta.tar.gz#md5=7404c299b4174b11718c4ff150ad6b89 (from http://pypi.python.org/simple/lxml/), version: 1.0.beta
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-1.1.1.win32-py2.5.exe#md5=b68d99ab74cc673be9dab20c32332c4e (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1.5-py2.4-win32.egg#md5=41bbdcb3ec48f8f8bc86c7d6fec39cfd (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.2.4-py3.1-win-amd64.egg#md5=6efa47aef0755748ebca52379ee32faf (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.2.8.win32-py3.1.exe#md5=d1fb73a8596bb77e155cef7ae6b0bc53 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/3.1/l/lxml/lxml-2.3beta1.win32-py3.1.exe#md5=bff12882d75bc4eec4ff1cabb667faa8 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.1.1.win32-py2.5.exe#md5=e8d5d814a9206758d8702d37700fc657 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2.8-py2.5-macosx-10.3-i386.egg#md5=ad33b327d40f59427fb33041d88ba432 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.2.8-py2.7-macosx-10.3-fat.egg#md5=1ecddbe9d24f4fd546ba6796c8308359 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-0.9.2-py2.4-freebsd-6.1-RELEASE-i386.egg#md5=435b074d75b94c8f7147c6529741216f (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.6.tar.gz#md5=e6749a36142b44a969c25a589f51f755 (from http://pypi.python.org/simple/lxml/), version: 2.0.6
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2alpha1.tar.gz#md5=15044cdcc332daac60d4ba60457911f7 (from http://pypi.python.org/simple/lxml/), version: 2.2alpha1
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3.tar.gz#md5=a245a015fd59b63e220005f263e1682a (from http://pypi.python.org/simple/lxml/), version: 2.3
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.3-py2.7-win-amd64.egg#md5=be755607b5318f6ed998e5ef58e849f0 (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0.3.tar.gz#md5=cdef802a5543571c167140efaf788b69 (from http://pypi.python.org/simple/lxml/), version: 2.0.3
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3beta1.tar.gz#md5=adfeff2bc9c68480075ac03b04a89dde (from http://pypi.python.org/simple/lxml/), version: 2.3beta1
+    Skipping link http://pypi.python.org/packages/2.4/l/lxml/lxml-2.1.4.win32-py2.4.exe#md5=269000eaa83bf3f7c59e2ceaf4a96253 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.2beta1.win32-py2.5.exe#md5=0f9e5ad6c5421b28909deafbaa9f9025 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.7/l/lxml/lxml-2.2.8.win32-py2.7.exe#md5=deb95d53dbd3734ecfb4f69850758427 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.0alpha1.tar.gz#md5=ee104d2e3c05b0e210a13bf2e8501282 (from http://pypi.python.org/simple/lxml/), version: 2.0alpha1
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.1.1.tar.gz#md5=f6fd6f45e3034de29ec1411549bc529d (from http://pypi.python.org/simple/lxml/), version: 2.1.1
+    Skipping link http://pypi.python.org/packages/2.5/l/lxml/lxml-2.0.5.win32-py2.5.exe#md5=52e7f2e56245628f36ca1110499b5b94 (from http://pypi.python.org/simple/lxml/); unknown archive format: .exe
+    Skipping link http://pypi.python.org/packages/2.3/l/lxml/lxml-1.0.3-py2.3-linux-i686.egg#md5=67fd572f2145a8e9b7c4faafb79ca91f (from http://pypi.python.org/simple/lxml/); unknown archive format: .egg
+    Skipping link http://codespeak.net/lxml (from http://pypi.python.org/simple/lxml/); not a file
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.3.tar.gz (from http://pypi.python.org/simple/lxml/), version: 1.3.3
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1alpha1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.1alpha1
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.3.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2.3
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.tar.gz (from http://pypi.python.org/simple/lxml/), version: 1.3
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.6.tar.gz (from http://pypi.python.org/simple/lxml/), version: 1.3.6
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.10.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0.10
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha5.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0alpha5
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0alpha1
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1beta3.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.1beta3
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.5.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0.5
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.4.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0.4
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.5.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2.5
+    Skipping link http://lxml.de/ (from http://pypi.python.org/simple/lxml/); not a file
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3.2.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.3.2
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.4.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2.4
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.7.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2.7
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.6.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2.6
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2.1
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.1
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.2.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2.2
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.1.1
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.2.1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 1.2.1
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.4.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.1.4
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.5.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.1.5
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 1.3.1
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0beta1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0beta1
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha2.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0alpha2
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1beta1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.1beta1
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1beta2.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.1beta2
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.11.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0.11
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0beta2.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0beta2
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3beta.tar.gz (from http://pypi.python.org/simple/lxml/), version: 1.3beta
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha3.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0alpha3
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha6.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0alpha6
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.2.tar.gz (from http://pypi.python.org/simple/lxml/), version: 1.2
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.7.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0.7
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.6.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0.6
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.3.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0.3
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.2.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0.2
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0.1
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.9.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0.9
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0.8.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0.8
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.2.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.1.2
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.1.3.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.1.3
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.2.tar.gz (from http://pypi.python.org/simple/lxml/), version: 1.3.2
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.5.tar.gz (from http://pypi.python.org/simple/lxml/), version: 1.3.5
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-1.3.4.tar.gz (from http://pypi.python.org/simple/lxml/), version: 1.3.4
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.0alpha4.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.0alpha4
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3.1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.3.1
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2alpha1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2alpha1
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2beta1
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta2.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2beta2
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.2.8.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2.8
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta3.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2beta3
+    Found link http://cheeseshop.python.org/packages/source/l/lxml/lxml-2.2beta4.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.2beta4
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3.4.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.3.4
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.3
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3.3.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.3.3
+    Found link http://pypi.python.org/packages/source/l/lxml/lxml-2.3beta1.tar.gz (from http://pypi.python.org/simple/lxml/), version: 2.3beta1
+    Skipping link http://codespeak.net/svn/lxml/trunk (from http://pypi.python.org/simple/lxml/); not a file
+    Skipping link https://github.com/lxml/lxml-maintenance/tree/lxml-2.2 (from http://pypi.python.org/simple/lxml/); unknown archive format: .2
+    Skipping link https://github.com/lxml/lxml (from http://pypi.python.org/simple/lxml/); not a file
+    Skipping link http://codespeak.net/svn/lxml/branch/lxml-2.0 (from http://pypi.python.org/simple/lxml/); unknown archive format: .0
+    Skipping link http://codespeak.net/svn/lxml/branch/lxml-2.1 (from http://pypi.python.org/simple/lxml/); unknown archive format: .1
+    Skipping link http://effbot.org/elementtree/elementtree-xmlparser.htm (from http://pypi.python.org/simple/lxml/); unknown archive format: .htm
+    Skipping link http://codespeak.net (from http://pypi.python.org/simple/lxml/); not a file
+    Skipping link http://codespeak.net/svn/lxml/branch/lxml-1.1 (from http://pypi.python.org/simple/lxml/); unknown archive format: .1
+    Skipping link https://launchpad.net/lxml (from http://pypi.python.org/simple/lxml/); not a file
+    Skipping link https://launchpad.net/lxml/ (from http://pypi.python.org/simple/lxml/); not a file
+    Skipping link https://github.com/lxml/lxml/tree/lxml-2.3 (from http://pypi.python.org/simple/lxml/); unknown archive format: .3
+    Skipping link http://codespeak.net/svn/lxml/branch/lxml-2.2 (from http://pypi.python.org/simple/lxml/); unknown archive format: .2
+    Skipping link http://pygments.org/ (from http://pypi.python.org/simple/lxml/); not a file
+    Skipping link http://codespeak.net/svn/lxml/branch/lxml-1.3 (from http://pypi.python.org/simple/lxml/); unknown archive format: .3
+    Skipping link http://codespeak.net/lxml/ (from http://pypi.python.org/simple/lxml/); not a file
+    Skipping link http://codespeak.net/svn/lxml/branch/lxml-1.2 (from http://pypi.python.org/simple/lxml/); unknown archive format: .2
+    Found link http://codespeak.net/svn/lxml/branch/lxml-1.2#egg=lxml-1.2bugfix (from http://pypi.python.org/simple/lxml/), version: 1.2bugfix
+    Found link https://github.com/lxml/lxml/tarball/master#egg=lxml-dev (from http://pypi.python.org/simple/lxml/), version: dev
+    Found link https://github.com/lxml/lxml/tarball/lxml-2.3#egg=lxml-2.3bugfix (from http://pypi.python.org/simple/lxml/), version: 2.3bugfix
+    Found link http://codespeak.net/svn/lxml/branch/lxml-1.3#egg=lxml-1.3bugfix (from http://pypi.python.org/simple/lxml/), version: 1.3bugfix
+    Found link http://codespeak.net/svn/lxml/branch/lxml-2.2#egg=lxml-2.2bugfix (from http://pypi.python.org/simple/lxml/), version: 2.2bugfix
+    Found link http://codespeak.net/svn/lxml/branch/lxml-2.0#egg=lxml-2.0bugfix (from http://pypi.python.org/simple/lxml/), version: 2.0bugfix
+    Found link http://codespeak.net/svn/lxml/branch/lxml-1.1#egg=lxml-1.1bugfix (from http://pypi.python.org/simple/lxml/), version: 1.1bugfix
+    Found link http://codespeak.net/svn/lxml/branch/lxml-2.1#egg=lxml-2.1bugfix (from http://pypi.python.org/simple/lxml/), version: 2.1bugfix
+    Found link https://github.com/lxml/lxml-maintenance/tarball/lxml-2.2#egg=lxml-2.2bugfix (from http://pypi.python.org/simple/lxml/), version: 2.2bugfix
+    Found link http://codespeak.net/svn/lxml/trunk#egg=lxml-dev (from http://pypi.python.org/simple/lxml/), version: dev
+  Analyzing links from page http://lxml.de/
+    Skipping link http://lxml.de/style.css (from http://lxml.de/); unknown archive format: .css
+    Skipping link http://lxml.de/index.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/index.html#introduction (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/index.html#support-the-project (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/index.html#documentation (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/index.html#download (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/index.html#mailing-list (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/index.html#bug-tracker (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/index.html#license (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/index.html#old-versions (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/index.html#legal-notice-for-donations (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/intro.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/intro.html#motto (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/intro.html#aims (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/installation.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/installation.html#requirements (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/installation.html#installation (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/installation.html#building-lxml-from-sources (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/installation.html#using-lxml-with-python-libxml2 (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/installation.html#ms-windows (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/installation.html#macos-x (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/performance.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/performance.html#general-notes (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/performance.html#how-to-read-the-timings (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/performance.html#parsing-and-serialising (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/performance.html#the-elementtree-api (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/performance.html#xpath (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/performance.html#a-longer-example (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/performance.html#lxml-objectify (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/compatibility.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/FAQ.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/FAQ.html#general-questions (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/FAQ.html#installation (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/FAQ.html#contributing (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/FAQ.html#bugs (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/FAQ.html#id1 (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/FAQ.html#parsing-and-serialisation (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/FAQ.html#xpath-and-document-traversal (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/tutorial.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/tutorial.html#the-element-class (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/tutorial.html#the-elementtree-class (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/tutorial.html#parsing-from-strings-and-files (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/tutorial.html#namespaces (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/tutorial.html#the-e-factory (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/tutorial.html#elementpath (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api/index.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api.html#lxml-etree (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api.html#other-element-apis (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api.html#trees-and-documents (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api.html#iteration (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api.html#error-handling-on-exceptions (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api.html#error-logging (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api.html#serialisation (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api.html#cdata (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api.html#xinclude-and-elementinclude (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/api.html#write-c14n-on-elementtree (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/parsing.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/parsing.html#parsers (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/parsing.html#the-target-parser-interface (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/parsing.html#the-feed-parser-interface (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/parsing.html#iterparse-and-iterwalk (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/parsing.html#python-unicode-strings (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/validation.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/validation.html#validation-at-parse-time (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/validation.html#id1 (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/validation.html#relaxng (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/validation.html#xmlschema (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/validation.html#id2 (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/validation.html#id3 (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/xpathxslt.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/xpathxslt.html#xpath (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/xpathxslt.html#xslt (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/objectify.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/objectify.html#the-lxml-objectify-api (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/objectify.html#asserting-a-schema (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/objectify.html#objectpath (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/objectify.html#python-data-types (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/objectify.html#how-data-types-are-matched (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/objectify.html#what-is-different-from-lxml-etree (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxmlhtml.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxmlhtml.html#parsing-html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxmlhtml.html#html-element-methods (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxmlhtml.html#running-html-doctests (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxmlhtml.html#creating-html-with-the-e-factory (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxmlhtml.html#working-with-links (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxmlhtml.html#forms (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxmlhtml.html#cleaning-up-html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxmlhtml.html#html-diff (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxmlhtml.html#examples (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/cssselect.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/cssselect.html#the-cssselector-class (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/cssselect.html#css-selectors (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/cssselect.html#namespaces (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/cssselect.html#limitations (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/elementsoup.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/elementsoup.html#parsing-with-the-soupparser (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/elementsoup.html#entity-handling (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/elementsoup.html#using-soupparser-as-a-fallback (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/elementsoup.html#using-only-the-encoding-detection (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/html5parser.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/html5parser.html#differences-to-regular-html-parsing (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/html5parser.html#function-reference (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/resolvers.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/resolvers.html#xml-catalogs (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/resolvers.html#uri-resolvers (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/resolvers.html#document-loading-in-context (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/resolvers.html#i-o-access-control-in-xslt (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/extensions.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/extensions.html#xpath-extension-functions (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/extensions.html#xslt-extension-elements (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/element_classes.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/element_classes.html#background-on-element-proxies (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/element_classes.html#element-initialization (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/element_classes.html#setting-up-a-class-lookup-scheme (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/element_classes.html#generating-xml-with-custom-classes (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/element_classes.html#id1 (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/sax.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/sax.html#building-a-tree-from-sax-events (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/sax.html#producing-sax-events-from-an-elementtree-or-element (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/sax.html#interfacing-with-pulldom-minidom (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/capi.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/capi.html#writing-external-modules-in-cython (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/capi.html#writing-external-modules-in-c (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/build.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/build.html#cython (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/build.html#github-git-and-hg (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/build.html#id2 (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/build.html#running-the-tests-and-reporting-errors (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/build.html#building-an-egg (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/build.html#building-lxml-on-macos-x (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/build.html#static-linking-on-windows (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/build.html#building-debian-packages-from-svn-sources (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxml-source-howto.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxml-source-howto.html#what-is-cython (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxml-source-howto.html#where-to-start (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxml-source-howto.html#lxml-etree (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxml-source-howto.html#python-modules (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxml-source-howto.html#lxml-objectify (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/lxml-source-howto.html#lxml-html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/changes-2.3.4.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/credits.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/credits.html#main-contributors (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/credits.html#special-thanks-goes-to (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/sitemap.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://thread.gmane.org/gmane.comp.python.lxml.devel/3252/focus=3258 (from http://lxml.de/); not a file
+    Skipping link http://xmlsoft.org/ (from http://lxml.de/); not a file
+    Skipping link http://xmlsoft.org/XSLT/ (from http://lxml.de/); not a file
+    Skipping link http://effbot.org/zone/element-index.htm (from http://lxml.de/); unknown archive format: .htm
+    Skipping link https://flattr.com/thing/268156/lxml-The-Python-XML-Toolkit (from http://lxml.de/); not a file
+    Skipping link https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=R56JE3VCPDA9N (from http://lxml.de/); not a file
+    Skipping link http://consulting.behnel.de/ (from http://lxml.de/); not a file
+    Skipping link http://lxml.de/lxmldoc-2.3.4.pdf (from http://lxml.de/); unknown archive format: .pdf
+    Skipping link http://lxml.de/#download (from http://lxml.de/); not a file
+    Skipping link http://www.nmt.edu/tcc/help/pubs/pylxml/ (from http://lxml.de/); not a file
+    Skipping link http://effbot.org/zone/element.htm (from http://lxml.de/); unknown archive format: .htm
+    Skipping link http://effbot.org/zone/element-index.htm#documentation (from http://lxml.de/); unknown archive format: .htm
+    Skipping link http://lxml.de/s5/lxml-ep2008.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/FAQ.html#what-is-the-difference-between-lxml-etree-and-lxml-objectify (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://effbot.org/zone/celementtree.htm (from http://lxml.de/); unknown archive format: .htm
+    Skipping link http://www.w3.org/TR/xpath/ (from http://lxml.de/); not a file
+    Skipping link http://www.relaxng.org/ (from http://lxml.de/); not a file
+    Skipping link http://www.w3.org/XML/Schema (from http://lxml.de/); not a file
+    Skipping link http://www.w3.org/TR/xslt (from http://lxml.de/); not a file
+    Skipping link http://www.w3.org/TR/xml-c14n (from http://lxml.de/); not a file
+    Skipping link http://pypi.python.org/pypi/lxml/ (from http://lxml.de/); not a file
+    Skipping link http://lxml.de/pubkey.asc (from http://lxml.de/); unknown archive format: .asc
+    Found link http://lxml.de/files/lxml-2.3.4.tgz (from http://lxml.de/), version: 2.3.4
+    Skipping link http://lxml.de/#old-versions (from http://lxml.de/); not a file
+    Skipping link https://github.com/lxml/lxml/ (from http://lxml.de/); not a file
+    Skipping link https://github.com/lxml/lxml/blob/master/CHANGES.txt (from http://lxml.de/); unknown archive format: .txt
+    Skipping link http://lxml.de/mailinglist/ (from http://lxml.de/); not a file
+    Skipping link http://blog.gmane.org/gmane.comp.python.lxml.devel (from http://lxml.de/); unknown archive format: .devel
+    Skipping link http://www.google.com/webhp?q=site:comments.gmane.org%2Fgmane.comp.python.lxml.devel+ (from http://lxml.de/); not a file
+    Skipping link https://github.com/lxml/lxml/blob/master/doc/licenses/BSD.txt (from http://lxml.de/); unknown archive format: .txt
+    Skipping link http://www.opensource.org/licenses/mit-license.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/1.3/ (from http://lxml.de/); unknown archive format: .3
+    Skipping link http://lxml.de/2.0/ (from http://lxml.de/); unknown archive format: .0
+    Skipping link http://lxml.de/2.1/ (from http://lxml.de/); unknown archive format: .1
+    Skipping link http://lxml.de/2.2/ (from http://lxml.de/); unknown archive format: .2
+    Skipping link http://lxml.de/dev/ (from http://lxml.de/); not a file
+    Found link http://lxml.de/files/lxml-2.3.3.tgz (from http://lxml.de/), version: 2.3.3
+    Skipping link http://lxml.de/changes-2.3.3.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.3.2.tgz (from http://lxml.de/), version: 2.3.2
+    Skipping link http://lxml.de/changes-2.3.2.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.3.1.tgz (from http://lxml.de/), version: 2.3.1
+    Skipping link http://lxml.de/changes-2.3.1.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.3.tgz (from http://lxml.de/), version: 2.3
+    Skipping link http://lxml.de/changes-2.3.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.3beta1.tgz (from http://lxml.de/), version: 2.3beta1
+    Skipping link http://lxml.de/changes-2.3beta1.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.3alpha2.tgz (from http://lxml.de/), version: 2.3alpha2
+    Skipping link http://lxml.de/changes-2.3alpha2.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.3alpha1.tgz (from http://lxml.de/), version: 2.3alpha1
+    Skipping link http://lxml.de/changes-2.3alpha1.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.2.8.tgz (from http://lxml.de/), version: 2.2.8
+    Skipping link http://lxml.de/changes-2.2.8.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.2.7.tgz (from http://lxml.de/), version: 2.2.7
+    Skipping link http://lxml.de/changes-2.2.7.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.2.6.tgz (from http://lxml.de/), version: 2.2.6
+    Skipping link http://lxml.de/changes-2.2.6.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.2.5.tgz (from http://lxml.de/), version: 2.2.5
+    Skipping link http://lxml.de/changes-2.2.5.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.2.4.tgz (from http://lxml.de/), version: 2.2.4
+    Skipping link http://lxml.de/changes-2.2.4.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.2.3.tgz (from http://lxml.de/), version: 2.2.3
+    Skipping link http://lxml.de/changes-2.2.3.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.2.2.tgz (from http://lxml.de/), version: 2.2.2
+    Skipping link http://lxml.de/changes-2.2.2.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.2.1.tgz (from http://lxml.de/), version: 2.2.1
+    Skipping link http://lxml.de/changes-2.2.1.html (from http://lxml.de/); unknown archive format: .html
+    Found link http://lxml.de/files/lxml-2.2.tgz (from http://lxml.de/), version: 2.2
+    Skipping link http://lxml.de/changes-2.2.html (from http://lxml.de/); unknown archive format: .html
+    Skipping link http://lxml.de/2.2/#old-versions (from http://lxml.de/); unknown archive format: .2
+  Analyzing links from page http://lxml.de/
+    Found link http://lxml.de/files/lxml-2.3.4.tgz (from http://lxml.de/), version: 2.3.4
+    Found link http://lxml.de/files/lxml-2.3.3.tgz (from http://lxml.de/), version: 2.3.3
+    Found link http://lxml.de/files/lxml-2.3.2.tgz (from http://lxml.de/), version: 2.3.2
+    Found link http://lxml.de/files/lxml-2.3.1.tgz (from http://lxml.de/), version: 2.3.1
+    Found link http://lxml.de/files/lxml-2.3.tgz (from http://lxml.de/), version: 2.3
+    Found link http://lxml.de/files/lxml-2.3beta1.tgz (from http://lxml.de/), version: 2.3beta1
+    Found link http://lxml.de/files/lxml-2.3alpha2.tgz (from http://lxml.de/), version: 2.3alpha2
+    Found link http://lxml.de/files/lxml-2.3alpha1.tgz (from http://lxml.de/), version: 2.3alpha1
+    Found link http://lxml.de/files/lxml-2.2.8.tgz (from http://lxml.de/), version: 2.2.8
+    Found link http://lxml.de/files/lxml-2.2.7.tgz (from http://lxml.de/), version: 2.2.7
+    Found link http://lxml.de/files/lxml-2.2.6.tgz (from http://lxml.de/), version: 2.2.6
+    Found link http://lxml.de/files/lxml-2.2.5.tgz (from http://lxml.de/), version: 2.2.5
+    Found link http://lxml.de/files/lxml-2.2.4.tgz (from http://lxml.de/), version: 2.2.4
+    Found link http://lxml.de/files/lxml-2.2.3.tgz (from http://lxml.de/), version: 2.2.3
+    Found link http://lxml.de/files/lxml-2.2.2.tgz (from http://lxml.de/), version: 2.2.2
+    Found link http://lxml.de/files/lxml-2.2.1.tgz (from http://lxml.de/), version: 2.2.1
+    Found link http://lxml.de/files/lxml-2.2.tgz (from http://lxml.de/), version: 2.2
+  Using version 2.3.4 (newest of versions: 2.3.4, 2.3.4, 2.3.4, 2.3.4, 2.3.3, 2.3.3, 2.3.3, 2.3.3, 2.3.2, 2.3.2, 2.3.2, 2.3.2, 2.3.1, 2.3.1, 2.3.1, 2.3.1, 2.3, 2.3, 2.3, 2.3, 2.3bugfix, 2.3beta1, 2.3beta1, 2.3beta1, 2.3beta1, 2.3alpha2, 2.3alpha2, 2.3alpha1, 2.3alpha1, 2.2.8, 2.2.8, 2.2.8, 2.2.8, 2.2.7, 2.2.7, 2.2.7, 2.2.7, 2.2.6, 2.2.6, 2.2.6, 2.2.6, 2.2.5, 2.2.5, 2.2.5, 2.2.5, 2.2.4, 2.2.4, 2.2.4, 2.2.4, 2.2.3, 2.2.3, 2.2.3, 2.2.3, 2.2.2, 2.2.2, 2.2.2, 2.2.2, 2.2.1, 2.2.1, 2.2.1, 2.2.1, 2.2, 2.2, 2.2, 2.2, 2.2bugfix, 2.2bugfix, 2.2beta4, 2.2beta4, 2.2beta3, 2.2beta3, 2.2beta2, 2.2beta2, 2.2beta1, 2.2beta1, 2.2alpha1, 2.2alpha1, 2.1.5, 2.1.5, 2.1.4, 2.1.4, 2.1.3, 2.1.3, 2.1.2, 2.1.2, 2.1.1, 2.1.1, 2.1, 2.1, 2.1bugfix, 2.1beta3, 2.1beta3, 2.1beta2, 2.1beta2, 2.1beta1, 2.1beta1, 2.1alpha1, 2.1alpha1, 2.0.11, 2.0.11, 2.0.10, 2.0.10, 2.0.9, 2.0.9, 2.0.8, 2.0.8, 2.0.7, 2.0.7, 2.0.6, 2.0.6, 2.0.5, 2.0.5, 2.0.4, 2.0.4, 2.0.3, 2.0.3, 2.0.2, 2.0.2, 2.0.1, 2.0.1, 2.0, 2.0, 2.0bugfix, 2.0beta2, 2.0beta2, 2.0beta1, 2.0beta1, 2.0alpha6, 2.0alpha6, 2.0alpha5, 2.0alpha5, 2.0alpha4, 2.0alpha4, 2.0alpha3, 2.0alpha3, 2.0alpha2, 2.0alpha2, 2.0alpha1, 2.0alpha1, 1.3.6, 1.3.6, 1.3.5, 1.3.5, 1.3.4, 1.3.4, 1.3.3, 1.3.3, 1.3.2, 1.3.2, 1.3.1, 1.3, 1.3, 1.3bugfix, 1.3beta, 1.3beta, 1.2.1, 1.2.1, 1.2, 1.2, 1.2bugfix, 1.1.2, 1.1.1, 1.1, 1.1bugfix, 1.1beta, 1.1alpha, 1.0.4, 1.0.3, 1.0.2, 1.0.1, 1.0, 1.0.beta, 0.9.2, 0.9.1, 0.9, dev, dev)
+  Downloading from URL http://pypi.python.org/packages/source/l/lxml/lxml-2.3.4.tar.gz#md5=61d4ad80726b984b35c9a81aa2510b4d (from http://pypi.python.org/simple/lxml/)
+  Running setup.py egg_info for package lxml
+
+    Building lxml version 2.3.4.
+
+    Building without Cython.
+
+    ERROR: /bin/sh: 1: xslt-config: not found
+
+    
+
+    ** make sure the development packages of libxml2 and libxslt are installed **
+
+    
+
+    Using build configuration of libxslt
+
+    running egg_info
+    creating pip-egg-info/lxml.egg-info
+    writing pip-egg-info/lxml.egg-info/PKG-INFO
+    writing top-level names to pip-egg-info/lxml.egg-info/top_level.txt
+    writing dependency_links to pip-egg-info/lxml.egg-info/dependency_links.txt
+    writing manifest file 'pip-egg-info/lxml.egg-info/SOURCES.txt'
+    warning: manifest_maker: standard file '-c' not found
+    
+
+    reading manifest file 'pip-egg-info/lxml.egg-info/SOURCES.txt'
+    reading manifest template 'MANIFEST.in'
+    warning: no previously-included files found matching '*.py'
+
+    writing manifest file 'pip-egg-info/lxml.egg-info/SOURCES.txt'
+Installing collected packages: lxml
+
+  Running setup.py install for lxml
+
+    Running command /opt/TopPatch/python/current/bin/python -c "import setuptools;__file__='/opt/TopPatch/build/lxml/setup.py';exec(compile(open(__file__).read().replace('\r\n', '\n'), __file__, 'exec'))" install --single-version-externally-managed --record /tmp/pip-XrwJCE-record/install-record.txt
+    Building lxml version 2.3.4.
+
+    Building without Cython.
+
+    ERROR: /bin/sh: 1: xslt-config: not found
+
+    
+
+    ** make sure the development packages of libxml2 and libxslt are installed **
+
+    
+
+    Using build configuration of libxslt
+
+    running install
+    running build
+    running build_py
+    creating build
+    creating build/lib.linux-x86_64-2.7
+    creating build/lib.linux-x86_64-2.7/lxml
+    copying src/lxml/cssselect.py -> build/lib.linux-x86_64-2.7/lxml
+    copying src/lxml/sax.py -> build/lib.linux-x86_64-2.7/lxml
+    copying src/lxml/usedoctest.py -> build/lib.linux-x86_64-2.7/lxml
+    copying src/lxml/ElementInclude.py -> build/lib.linux-x86_64-2.7/lxml
+    copying src/lxml/builder.py -> build/lib.linux-x86_64-2.7/lxml
+    copying src/lxml/__init__.py -> build/lib.linux-x86_64-2.7/lxml
+    copying src/lxml/_elementpath.py -> build/lib.linux-x86_64-2.7/lxml
+    copying src/lxml/pyclasslookup.py -> build/lib.linux-x86_64-2.7/lxml
+    copying src/lxml/doctestcompare.py -> build/lib.linux-x86_64-2.7/lxml
+    creating build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/soupparser.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/clean.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/_html5builder.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/html5parser.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/usedoctest.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/builder.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/__init__.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/formfill.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/_dictmixin.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/diff.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/ElementSoup.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/_setmixin.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/_diffcommand.py -> build/lib.linux-x86_64-2.7/lxml/html
+    copying src/lxml/html/defs.py -> build/lib.linux-x86_64-2.7/lxml/html
+    creating build/lib.linux-x86_64-2.7/lxml/isoschematron
+    copying src/lxml/isoschematron/__init__.py -> build/lib.linux-x86_64-2.7/lxml/isoschematron
+    copying src/lxml/etreepublic.pxd -> build/lib.linux-x86_64-2.7/lxml
+    copying src/lxml/tree.pxd -> build/lib.linux-x86_64-2.7/lxml
+    copying src/lxml/etree_defs.h -> build/lib.linux-x86_64-2.7/lxml
+    creating build/lib.linux-x86_64-2.7/lxml/isoschematron/resources
+    creating build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/rng
+    copying src/lxml/isoschematron/resources/rng/iso-schematron.rng -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/rng
+    creating build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl
+    copying src/lxml/isoschematron/resources/xsl/XSD2Schtrn.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl
+    copying src/lxml/isoschematron/resources/xsl/RNG2Schtrn.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl
+    creating build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+    copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_dsdl_include.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+    copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_message.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+    copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_svrl_for_xslt1.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+    copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_skeleton_for_xslt1.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+    copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_abstract_expand.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+    copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/readme.txt -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+    running build_ext
+    building 'lxml.etree' extension
+
+    creating build/temp.linux-x86_64-2.7
+    creating build/temp.linux-x86_64-2.7/src
+    creating build/temp.linux-x86_64-2.7/src/lxml
+    gcc -pthread -fno-strict-aliasing -g -O2 -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -fPIC -I/opt/TopPatch/python/current/include/python2.7 -c src/lxml/lxml.etree.c -o build/temp.linux-x86_64-2.7/src/lxml/lxml.etree.o -w
+
+    In file included from src/lxml/lxml.etree.c:239:0:
+
+    src/lxml/etree_defs.h:9:31: fatal error: libxml/xmlversion.h: No such file or directory
+
+    compilation terminated.
+
+    error: command 'gcc' failed with exit status 1
+
+    Complete output from command /opt/TopPatch/python/current/bin/python -c "import setuptools;__file__='/opt/TopPatch/build/lxml/setup.py';exec(compile(open(__file__).read().replace('\r\n', '\n'), __file__, 'exec'))" install --single-version-externally-managed --record /tmp/pip-XrwJCE-record/install-record.txt:
+
+    Building lxml version 2.3.4.
+
+Building without Cython.
+
+ERROR: /bin/sh: 1: xslt-config: not found
+
+
+
+** make sure the development packages of libxml2 and libxslt are installed **
+
+
+
+Using build configuration of libxslt
+
+running install
+
+running build
+
+running build_py
+
+creating build
+
+creating build/lib.linux-x86_64-2.7
+
+creating build/lib.linux-x86_64-2.7/lxml
+
+copying src/lxml/cssselect.py -> build/lib.linux-x86_64-2.7/lxml
+
+copying src/lxml/sax.py -> build/lib.linux-x86_64-2.7/lxml
+
+copying src/lxml/usedoctest.py -> build/lib.linux-x86_64-2.7/lxml
+
+copying src/lxml/ElementInclude.py -> build/lib.linux-x86_64-2.7/lxml
+
+copying src/lxml/builder.py -> build/lib.linux-x86_64-2.7/lxml
+
+copying src/lxml/__init__.py -> build/lib.linux-x86_64-2.7/lxml
+
+copying src/lxml/_elementpath.py -> build/lib.linux-x86_64-2.7/lxml
+
+copying src/lxml/pyclasslookup.py -> build/lib.linux-x86_64-2.7/lxml
+
+copying src/lxml/doctestcompare.py -> build/lib.linux-x86_64-2.7/lxml
+
+creating build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/soupparser.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/clean.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/_html5builder.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/html5parser.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/usedoctest.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/builder.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/__init__.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/formfill.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/_dictmixin.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/diff.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/ElementSoup.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/_setmixin.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/_diffcommand.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+copying src/lxml/html/defs.py -> build/lib.linux-x86_64-2.7/lxml/html
+
+creating build/lib.linux-x86_64-2.7/lxml/isoschematron
+
+copying src/lxml/isoschematron/__init__.py -> build/lib.linux-x86_64-2.7/lxml/isoschematron
+
+copying src/lxml/etreepublic.pxd -> build/lib.linux-x86_64-2.7/lxml
+
+copying src/lxml/tree.pxd -> build/lib.linux-x86_64-2.7/lxml
+
+copying src/lxml/etree_defs.h -> build/lib.linux-x86_64-2.7/lxml
+
+creating build/lib.linux-x86_64-2.7/lxml/isoschematron/resources
+
+creating build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/rng
+
+copying src/lxml/isoschematron/resources/rng/iso-schematron.rng -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/rng
+
+creating build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl
+
+copying src/lxml/isoschematron/resources/xsl/XSD2Schtrn.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl
+
+copying src/lxml/isoschematron/resources/xsl/RNG2Schtrn.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl
+
+creating build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+
+copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_dsdl_include.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+
+copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_message.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+
+copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_svrl_for_xslt1.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+
+copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_schematron_skeleton_for_xslt1.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+
+copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/iso_abstract_expand.xsl -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+
+copying src/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/readme.txt -> build/lib.linux-x86_64-2.7/lxml/isoschematron/resources/xsl/iso-schematron-xslt1
+
+running build_ext
+
+building 'lxml.etree' extension
+
+creating build/temp.linux-x86_64-2.7
+
+creating build/temp.linux-x86_64-2.7/src
+
+creating build/temp.linux-x86_64-2.7/src/lxml
+
+gcc -pthread -fno-strict-aliasing -g -O2 -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -fPIC -I/opt/TopPatch/python/current/include/python2.7 -c src/lxml/lxml.etree.c -o build/temp.linux-x86_64-2.7/src/lxml/lxml.etree.o -w
+
+In file included from src/lxml/lxml.etree.c:239:0:
+
+src/lxml/etree_defs.h:9:31: fatal error: libxml/xmlversion.h: No such file or directory
+
+compilation terminated.
+
+error: command 'gcc' failed with exit status 1
+
+----------------------------------------
+
+Command /opt/TopPatch/python/current/bin/python -c "import setuptools;__file__='/opt/TopPatch/build/lxml/setup.py';exec(compile(open(__file__).read().replace('\r\n', '\n'), __file__, 'exec'))" install --single-version-externally-managed --record /tmp/pip-XrwJCE-record/install-record.txt failed with error code 1 in /opt/TopPatch/build/lxml
+
+Exception information:
+Traceback (most recent call last):
+  File "/opt/TopPatch/python/current/lib/python2.7/site-packages/pip-1.1-py2.7.egg/pip/basecommand.py", line 104, in main
+    status = self.run(options, args)
+  File "/opt/TopPatch/python/current/lib/python2.7/site-packages/pip-1.1-py2.7.egg/pip/commands/install.py", line 250, in run
+    requirement_set.install(install_options, global_options)
+  File "/opt/TopPatch/python/current/lib/python2.7/site-packages/pip-1.1-py2.7.egg/pip/req.py", line 1133, in install
+    requirement.install(install_options, global_options)
+  File "/opt/TopPatch/python/current/lib/python2.7/site-packages/pip-1.1-py2.7.egg/pip/req.py", line 577, in install
+    cwd=self.source_dir, filter_stdout=self._filter_install, show_stdout=False)
+  File "/opt/TopPatch/python/current/lib/python2.7/site-packages/pip-1.1-py2.7.egg/pip/__init__.py", line 256, in call_subprocess
+    % (command_desc, proc.returncode, cwd))
+InstallationError: Command /opt/TopPatch/python/current/bin/python -c "import setuptools;__file__='/opt/TopPatch/build/lxml/setup.py';exec(compile(open(__file__).read().replace('\r\n', '\n'), __file__, 'exec'))" install --single-version-externally-managed --record /tmp/pip-XrwJCE-record/install-record.txt failed with error code 1 in /opt/TopPatch/build/lxml
