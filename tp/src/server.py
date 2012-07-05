@@ -22,8 +22,9 @@ class Application(tornado.web.Application):
 
 
             #### API Handlers
-            (r"/api/vendors/?", ApiHandler),
-            (r"/api/vendors/?(\w+)", ApiHandler)]
+            (r"/api/vendors/?", ApiHandler),                # Returns all vendors
+            (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
+            (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler)]  # Returns specific product from respected vendor with vulnerabilities.
 
         self.db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
 

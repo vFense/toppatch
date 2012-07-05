@@ -2,7 +2,7 @@
 Models classes that store data from the scanner.
 """
 
-from base import Base
+from models.base import Base
 
 from sqlalchemy import String, Integer, Boolean, Column, Text, ForeignKey
 from sqlalchemy.orm import relationship, backref
