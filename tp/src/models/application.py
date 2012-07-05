@@ -21,7 +21,7 @@ Random example:
 
 """
 
-from base import Base
+from models.base import Base
 from cve import Cve
 
 from sqlalchemy import String, Column, Integer, Text, ForeignKey
