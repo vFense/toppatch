@@ -9,6 +9,7 @@ from parser.xml.cpedata import CpeItem
 
 from models.cve import Cve, Cvss, Reference
 from models.application import *
+from models.auth.account import Account
 from models.base import Base
 
 toppatch_dir = '/opt/TopPatch'
@@ -135,6 +136,8 @@ def run():
                     print vendor
                     session.add(vendor)
 
+    # Creating a temp "admin" account
+    session.add(Account("admin", "pass1word"))
     session.commit()
 
 print "Initializing TopPatch Database!"
