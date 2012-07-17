@@ -13,8 +13,11 @@ import tornado.options
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
-from server.handlers import RootHandler, LoginHandler
+from server.handlers import RootHandler, LoginHandler, SignupHandler, LogoutHandler
+from server.oauth.handlers import AuthorizeHandler, TokenHandler
+
 from server.api import *
+from server.authentication.manager import AccountManager
 
 from tornado.options import define, options
 define("port", default=8000, help="run on port", type=int)
@@ -27,6 +30,12 @@ class Application(tornado.web.Application):
 
             (r"/?", RootHandler),
             (r"/login/?", LoginHandler),
+            (r"/signup/?", SignupHandler),
+            (r"/logout/?", LogoutHandler),
+
+            #### oAuth 2.0 Handlers
+            (r"/login/oauth/authorize/?", AuthorizeHandler),
+            (r"/login/oauth/access_token", TokenHandler),
 
 
             #### API Handlers
@@ -43,6 +52,7 @@ class Application(tornado.web.Application):
 
         Session = sessionmaker(bind=self.db)
         self.session = Session()
+        self.account_manager = AccountManager(self.session)
 
         tornado.web.Application.__init__(self, handlers, debug=debug, **settings)
 

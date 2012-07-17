@@ -34,7 +34,7 @@ class Crypto():
 
     @staticmethod
     def _random_salt(length):
-        """ Random string to 'salt' up the hash. b/scrypt already do this but just in case.
+        """ Random string to 'salt' up the hash.
         'length' shouldn't be > 255 because thats the size limit in the database where it's stored.
         """
         if length > 255:

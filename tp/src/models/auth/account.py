@@ -12,11 +12,13 @@ class Account(Base):
     __tablename__ = "accounts"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(255))
-    password = Column(String(255))
+    username = Column(String(255))
+    hash = Column(String(255))
+    fullname = Column(String(255))
     email = Column(String(255))
 
-    def __init__(self, name, password, email=None):
-        self.name = name
-        self.password = password
+    def __init__(self, username, password, fullname=None, email=None):
+        self.username = username
+        self.hash = password
+        self.fullname = fullname
         self.email = email
