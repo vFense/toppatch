@@ -1,9 +1,7 @@
 
 import tornado.web
 
-from models.auth.account import Account
-
-from utils.security import Crypto
+from server.oauth import token
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -39,21 +37,6 @@ class LoginHandler(BaseHandler):
          else:
              self.write("Invalid username and/or password .")
 
-#    def _authenticate_user(self):
-#
-#        name = self.get_argument("name")
-#        password = str(self.get_argument("password"))
-#
-#        account = self.application.session.query(Account).filter(Account.name == name).first()
-#
-#        if account is None:
-#            return False
-#
-#        if Crypto.verify_scrypt_hash(password, account.hash):
-#            return True
-#        else:
-#            return False
-
 
 
 class SignupHandler(BaseHandler):
@@ -71,8 +54,10 @@ class SignupHandler(BaseHandler):
 
     def post(self):
 
-        if self.application.account_manager.create_account(str(self.get_argument("name")), str(self.get_argument("password"))):
+        user = self.application.account_manager.user_account(str(self.get_argument("name")), str(self.get_argument("password")))
 
+        if user is not None:
+            self.application.account_manager.save_account(user)
             self.set_secure_cookie("user", self.get_argument("name"))
             self.redirect("/")
         else:
@@ -82,3 +67,27 @@ class LogoutHandler(BaseHandler):
     def get(self):
         self.clear_all_cookies()
         self.write("Goodbye!" + '<br><a href="/login">Login</a>')
+
+class DeveloperRegistrationHandler(BaseHandler):
+    def get(self):
+        self.write('<html>'
+                   '<body>'
+                   '<form action="/developer" method="post">'
+                   'Name: <input type="text" name="name">'
+                   '<input type="submit" value="Generate Tokens">'
+                   '</form>'
+                   '</body></html>')
+
+
+    def post(self):
+
+        dev = self.application.account_manager.dev_account(self.get_argument("name"))
+
+        if dev is not None:
+
+            self.application.account_manager.save_account(dev)
+            self.write("For %s: Client_id:  %s client_secret: %s" % (dev.name, dev.client_id, dev.client_secret))
+        else:
+            self.write("Developer account already exist.")
+
+

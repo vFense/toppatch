@@ -1,10 +1,10 @@
 """Hopefully, this is a RESTful implementation of the Top Patch API."""
 
-#import json
 import tornado.httpserver
-#import tornado.ioloop
 import tornado.web
 
+try: import simplejson as json
+except ImportError: import json
 
 from models.application import *
 
