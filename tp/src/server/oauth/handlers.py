@@ -48,19 +48,19 @@ class TokenHandler(RequestHandler):
             #scope = self.get_argument("scope")  # Optional
 
             if self.application.account_manager.authenticate_account(username, password):
-                access_token = token.generate_token()
+                access_token = self.token.generate_token()
 
                 self.set_status(200)
                 self.set_header("Cache-Control", "no-store")
                 self.set_header("Pragma", "no-cache")
 
-                token_values ={}
+                response_values = {}
 
-                token_values["access_token"] = access_token
-                token_values["token_type"] = token_type
-                token_values["expires_in"] = expires_in
+                response_values["access_token"] = access_token
+                response_values["token_type"] = token_type
+                response_values["expires_in"] = expires_in
 
-                self.write(json.dumps(token_values))
+                self.write(json.dumps(response_values))
 
 
         elif grant_type == "code":

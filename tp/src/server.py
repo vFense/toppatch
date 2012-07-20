@@ -18,6 +18,7 @@ from server.oauth.handlers import AuthorizeHandler, TokenHandler
 
 from server.api import *
 from server.authentication.manager import AccountManager
+from server.oauth.token import TokenManager
 
 from tornado.options import define, options
 define("port", default=8000, help="run on port", type=int)
@@ -56,6 +57,7 @@ class Application(tornado.web.Application):
         Session = sessionmaker(bind=self.db)
         self.session = Session()
         self.account_manager = AccountManager(self.session)
+        self.token = TokenManager(self.session)
 
         tornado.web.Application.__init__(self, handlers, debug=debug, **settings)
 

@@ -1,5 +1,6 @@
 import os
 import subprocess
+import datetime
 
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
@@ -9,11 +10,6 @@ from parser.xml.cpedata import CpeItem
 
 from models.cve import Cve, Cvss, Reference
 from models.application import *
-from models.authentication.account import User
-from models.authentication.developer import Developer
-from models.base import Base
-
-from server.oauth import token
 
 toppatch_dir = '/opt/TopPatch'
 
@@ -49,7 +45,7 @@ def create_cve(entry):
 
 def run():
 
-    load_db = True
+    load_db = False
     if load_db:
         for x in range(len(entries)):
 
@@ -140,13 +136,6 @@ def run():
 
                         print vendor
                         session.add(vendor)
-
-    # Creating a temp "admin" account
-    session.add(User("admin", "pass1word"))
-
-    # Create the developers table for now
-    session.add(Developer("main_tp_client", token.generate_token(), token.generate_token()))
-
     session.commit()
 
 print "Initializing TopPatch Database!"

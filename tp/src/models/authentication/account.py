@@ -1,7 +1,7 @@
 
 from models.base import Base
 
-from sqlalchemy import String, Column, Integer, Text
+from sqlalchemy import String, Column, Integer
 
 class User(Base):
     """ Basic User Account class representing a record from the 'accounts' table.
