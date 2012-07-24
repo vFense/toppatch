@@ -37,12 +37,16 @@ deactivate () {
 # unset irrelavent variables
 deactivate nondestructive
 
-VIRTUAL_ENV=$(cd "$(dirname "$0")"; pwd)
+VIRTUAL_ENV=$(readlink -f "$( dirname "$0" )"|eval sed -re 's/\\/bin$//g')
 export VIRTUAL_ENV
+echo $VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
 PATH="$VIRTUAL_ENV/bin:$VIRTUAL_ENV/python/current/bin:$VIRTUAL_ENV/mysql/current/bin:$PATH"
 export PATH
+
+PYTHONPATH="$VIRTUAL_ENV/tp/src"
+export PYTHONPATH
 
 # unset PYTHONHOME if set
 # this will fail if PYTHONHOME is set to the empty string (which is bad anyway)

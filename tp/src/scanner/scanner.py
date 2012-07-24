@@ -7,7 +7,7 @@ import sys
 import argparse
 
 from daemon import runner
-sys.path.append(re.sub(r'\/\w+$', '', os.path.dirname(os.path.abspath(__file__))))
+#sys.path.append(re.sub(r'\/\w+$', '', os.path.dirname(os.path.abspath(__file__))))
 from utils.utils import get_networks_to_scan
 import pyping
 
