@@ -41,6 +41,12 @@ def get_networks_to_scan():
     return gnts
 
 def verify_network(network):
+    """
+    This method will verify that the ip address or ip and netmask 
+    is valid as well as check that the ip is not a multicast, 
+    reserved, or loopback addresses. If this is a valid IP or
+    IP/CIDR or IP/NETMASK, this method will return True, else False
+    """
     is_valid = None
     try:
         addr = ipaddr.IPv4Network(network)
