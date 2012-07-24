@@ -44,14 +44,15 @@ def verify_network(network):
     """
     This method will verify that the ip address or ip and netmask 
     is valid as well as check that the ip is not a multicast, 
-    reserved, or loopback addresses. If this is a valid IP or
-    IP/CIDR or IP/NETMASK, this method will return True, else False
+    reserved, local link, or loopback addresses. If this is a valid
+    IP or IP/CIDR or IP/NETMASK, this method will return True, 
+    else False
     """
     is_valid = None
     try:
         addr = ipaddr.IPv4Network(network)
         if not addr.is_reserved and not addr.is_multicast \
-            and not addr.is_loopback:
+            and not addr.is_loopback and not addr.is_link_local:
             is_valid = True
         else:
             is_valid = False
