@@ -41,7 +41,7 @@ _references		= _vuln_ns		+ "references"
 
 """	Namedtuple to help with Common Vulnerability Scoring System (CVSS) """
 CVScore = namedtuple("CVScore",
-    'score, access_vector, access_complexity, authentication, confidentiality_impact, integrity_impact, \
+    'score, access_vector, access_complexity, account, confidentiality_impact, integrity_impact, \
      availability_impact, source, generated_date')
 
 """ Namedtuple to help with references. """

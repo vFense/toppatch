@@ -1,4 +1,4 @@
-from models.authentication.account import User, Developer
+from models.account import User, Developer
 from server.oauth import token
 
 from utils.security import Crypto
@@ -53,6 +53,9 @@ class AccountManager():
 
         self.session.add(account)
         self.session.commit()
+
+    def get_account(self, username):
+        return self.session.query(User).filter(User.username == username).first()
 
     def authenticate_account(self, username, password):
         """ Checks if the username and password are correct.

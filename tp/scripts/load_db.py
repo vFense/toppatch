@@ -1,6 +1,8 @@
 import os
 import subprocess
-import datetime
+
+import sys
+sys.path.append("/opt/TopPatch/tp/src")
 
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *

@@ -14,10 +14,10 @@ from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
 from server.handlers import RootHandler, LoginHandler, SignupHandler, LogoutHandler, DeveloperRegistrationHandler
-from server.oauth.handlers import AuthorizeHandler, TokenHandler
+from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
 from server.api import *
-from server.authentication.manager import AccountManager
+from server.account.manager import AccountManager
 from server.oauth.token import TokenManager
 
 from tornado.options import define, options
@@ -38,7 +38,7 @@ class Application(tornado.web.Application):
 
             #### oAuth 2.0 Handlers
             (r"/login/oauth/authorize/?", AuthorizeHandler),
-            (r"/login/oauth/access_token", TokenHandler),
+            (r"/login/oauth/access_token", AccessTokenHandler),
 
 
 
@@ -57,7 +57,7 @@ class Application(tornado.web.Application):
         Session = sessionmaker(bind=self.db)
         self.session = Session()
         self.account_manager = AccountManager(self.session)
-        self.token = TokenManager(self.session)
+        self.tokens = TokenManager(self.session)
 
         tornado.web.Application.__init__(self, handlers, debug=debug, **settings)
 

@@ -1,10 +1,11 @@
+from datetime import datetime
+
 try: import simplejson as json
 except ImportError: import json
 
 from tornado.web import RequestHandler
-from tornado.httpclient import HTTPResponse
 
-from server.oauth import token
+from models.oauth.token import AccessToken
 
 class AuthorizeHandler(RequestHandler):
     def get(self):
@@ -23,7 +24,7 @@ class AuthorizeHandler(RequestHandler):
     def post(self):
         pass
 
-class TokenHandler(RequestHandler):
+class AccessTokenHandler(RequestHandler):
     """ Provides an access token to the caller.
 
     the token endpoint MUST use POST.
@@ -37,7 +38,7 @@ class TokenHandler(RequestHandler):
 
 
         token_type = "Bearer"   # TODO Get MAC token types working
-        expires_in = 300 # in seconds (5 minutes)
+        expires_in = 300 # seconds (5 minutes)
 
         if grant_type == "password":
             # Resource Owner Password Credentials
@@ -48,11 +49,12 @@ class TokenHandler(RequestHandler):
             #scope = self.get_argument("scope")  # Optional
 
             if self.application.account_manager.authenticate_account(username, password):
-                access_token = self.token.generate_token()
+                access_token = self.application.tokens.generate_token()
 
                 self.set_status(200)
                 self.set_header("Cache-Control", "no-store")
                 self.set_header("Pragma", "no-cache")
+                self.set_header("Content-type", "application/json")
 
                 response_values = {}
 
@@ -60,8 +62,17 @@ class TokenHandler(RequestHandler):
                 response_values["token_type"] = token_type
                 response_values["expires_in"] = expires_in
 
+                user_id = self.application.account_manager.get_account(username).id
+                self.save_token(access_token, token_type, expires_in, user_id)
+
                 self.write(json.dumps(response_values))
 
 
         elif grant_type == "code":
             pass
+
+    def save_token(self, token, type, expires, user_id, dev_id=None, refresh_token=None):
+        time_stamp = datetime.now()
+
+        self.application.tokens.save_access_token(AccessToken(token, type, expires, user_id, time_stamp,
+            dev_id, refresh_token))
