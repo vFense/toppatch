@@ -43,8 +43,12 @@ def get_networks_to_scan():
 def verify_network(network):
     is_valid = None
     try:
-        ipaddr.IPv4Network(network)
-        is_valid = True
+        addr = ipaddr.IPv4Network(network)
+        if not addr.is_reserved and not addr.is_multicast \
+            and not addr.is_loopback:
+            is_valid = True
+        else:
+            is_valid = False
     except Exception as e:
         is_valid = False
     return is_valid
