@@ -1,8 +1,6 @@
 
 import tornado.web
 
-from server.oauth import token
-
 class BaseHandler(tornado.web.RequestHandler):
 
     def get_current_user(self):

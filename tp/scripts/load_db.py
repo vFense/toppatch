@@ -1,9 +1,6 @@
 import os
 import subprocess
 
-import sys
-sys.path.append("/opt/TopPatch/tp/src")
-
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
@@ -47,7 +44,7 @@ def create_cve(entry):
 
 def run():
 
-    load_db = False
+    load_db = True
     if load_db:
         for x in range(len(entries)):
 

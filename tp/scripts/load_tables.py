@@ -2,9 +2,6 @@
 Simple script to create the tables of the database from the model sources.
 """
 
-import sys
-sys.path.append("/opt/TopPatch/tp/src")
-
 from sqlalchemy import create_engine
 
 from models.base import Base

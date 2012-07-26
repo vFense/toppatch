@@ -7,10 +7,13 @@ try: import simplejson as json
 except ImportError: import json
 
 from models.application import *
+from server.decorators import authenticated_request
+from server.handlers import BaseHandler
 
-class ApiHandler(tornado.web.RequestHandler):
+class ApiHandler(BaseHandler):
     """ Trying to figure out this whole RESTful api thing with json."""
 
+    @authenticated_request
     def get(self, vendor=None, product=None):
         self.session = self.application.session
 
@@ -49,7 +52,7 @@ class ApiHandler(tornado.web.RequestHandler):
             root_json["vendors"] = vendors
 
         self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(root_json, indent=4))
+        self.write(json.dumps([root_json], indent=4))
 
     def _get_vendor(self, name=None):
         """ Returns all vendors (list) if name is None otherwise the vendor 'name'."""
