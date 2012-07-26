@@ -41,6 +41,9 @@ VIRTUAL_ENV=$(readlink -f "$( dirname "$1" )"|eval sed -re 's/\\/bin$//g')
 export VIRTUAL_ENV
 # echo $VIRTUAL_ENV
 
+LD_LIBRARY_PATH="/opt/TopPatch/lib/x86_64:/opt/TopPatch/python/current/lib:/opt/TopPatch/mysql/current/lib"
+export LD_LIBRARY_PATH
+
 _OLD_VIRTUAL_PATH="$PATH"
 PATH="$VIRTUAL_ENV/bin:$VIRTUAL_ENV/python/current/bin:$VIRTUAL_ENV/mysql/current/bin:$PATH"
 export PATH
