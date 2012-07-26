@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelavent variables
 deactivate nondestructive
 
-VIRTUAL_ENV=$(readlink -f "$( dirname "$0" )"|eval sed -re 's/\\/bin$//g')
+VIRTUAL_ENV=$(readlink -f "$( dirname "$1" )"|eval sed -re 's/\\/bin$//g')
 export VIRTUAL_ENV
 # echo $VIRTUAL_ENV
 
