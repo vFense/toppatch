@@ -9,14 +9,18 @@ from parser.xml.cpedata import CpeItem
 
 from models.cve import Cve, Cvss, Reference
 from models.application import *
+from models.authentication.account import User
+from models.authentication.developer import Developer
 from models.base import Base
+
+from server.oauth import token
 
 toppatch_dir = '/opt/TopPatch'
 
 mysql_dir = toppatch_dir + '/mysql/current'
 mysql_data_dir = mysql_dir + '/data'
 
-nc = NvdCollection("./data/xml/nvdcve-2.0-recent.xml")
+nc = NvdCollection("./data/xml/nvdcve-2.0-modified.xml")
 entries = nc.parse_collection()
 
 db = None
@@ -45,95 +49,103 @@ def create_cve(entry):
 
 def run():
 
-    for x in range(len(entries)):
+    load_db = True
+    if load_db:
+        for x in range(len(entries)):
 
-        software = entries[x].get_vulnerable_software_list()
+            software = entries[x].get_vulnerable_software_list()
 
 
-        for i in range(len(software)):
-            cpe = CpeItem(software[i])
-            if cpe.get_validity():
+            for i in range(len(software)):
+                cpe = CpeItem(software[i])
+                if cpe.get_validity():
 
-                vendor_name = cpe.get_vendor()
-                product_name = cpe.get_product()
-                version = cpe.get_version()
-                update = cpe.get_update()
-                edition = cpe.get_edition()
+                    vendor_name = cpe.get_vendor()
+                    product_name = cpe.get_product()
+                    version = cpe.get_version()
+                    update = cpe.get_update()
+                    edition = cpe.get_edition()
 
-                print "+----------------Begin----------------------------+"
-                print str(vendor_name) + " " + str(product_name) + " " + str(version)  + " " + str(update) + " " + str(edition)
-                print "+-------------------------------------------------+"
+                    print "+----------------Begin----------------------------+"
+                    print str(vendor_name) + " " + str(product_name) + " " + str(version)  + " " + str(update) + " " + str(edition)
+                    print "+-------------------------------------------------+"
 
-                if session.query(Vendor).filter(Vendor.name == vendor_name).first() is not None: ## Check if vendor exist
-                    print "--Vendor Exist."
-                    if session.query(Product).join(Vendor).filter(Vendor.name == vendor_name).filter(Product.name == product_name).first() is not None:   # Check if products exist with vendor.
-                        print "----Product Exist."
+                    if session.query(Vendor).filter(Vendor.name == vendor_name).first() is not None: ## Check if vendor exist
+                        print "--Vendor Exist."
+                        if session.query(Product).join(Vendor).filter(Vendor.name == vendor_name).filter(Product.name == product_name).first() is not None:   # Check if products exist with vendor.
+                            print "----Product Exist."
 
-                        if session.query(Product).join(Vendor,Version).filter(Vendor.name == vendor_name).\
-                                                                    filter(Product.name == product_name).\
-                                                                    filter(Version.version == version).first() is not None: #Check Version
-                            print "------Version Exist."
-
-                            if session.query(Product).join(Vendor,Version).filter(Vendor.name == vendor_name).filter(Product.name == product_name).\
-                               filter(Version.version == version).filter(Version.update == update).first() is not None: #Check update
-                                print "--------Update Exist."
+                            if session.query(Product).join(Vendor,Version).filter(Vendor.name == vendor_name).\
+                                                                        filter(Product.name == product_name).\
+                                                                        filter(Version.version == version).first() is not None: #Check Version
+                                print "------Version Exist."
 
                                 if session.query(Product).join(Vendor,Version).filter(Vendor.name == vendor_name).filter(Product.name == product_name).\
-                                filter(Version.version == version).filter(Version.update == update).\
-                                   filter(Version.edition == edition).first() is not None: #Check edition
-                                    print "** Products + Version already in database. **"
-                                    v = session.query(Version,Vendor).join(Product).filter(Vendor.name == vendor_name).filter(Product.name == product_name).\
-                                    filter(Version.version == version).filter(Version.update == update).\
-                                    filter(Version.edition == edition).first()
+                                   filter(Version.version == version).filter(Version.update == update).first() is not None: #Check update
+                                    print "--------Update Exist."
 
-                                    # Just add the CVE but should really check if its already included
-                                    v = v.Version
-                                    v.cves.append(create_cve(entries[x]))
+                                    if session.query(Product).join(Vendor,Version).filter(Vendor.name == vendor_name).filter(Product.name == product_name).\
+                                    filter(Version.version == version).filter(Version.update == update).\
+                                       filter(Version.edition == edition).first() is not None: #Check edition
+                                        print "** Products + Version already in database. **"
+                                        v = session.query(Version,Vendor).join(Product).filter(Vendor.name == vendor_name).filter(Product.name == product_name).\
+                                        filter(Version.version == version).filter(Version.update == update).\
+                                        filter(Version.edition == edition).first()
+
+                                        # Just add the CVE but should really check if its already included
+                                        v = v.Version
+                                        v.cves.append(create_cve(entries[x]))
+                                    else:
+                                        prod = session.query(Product).join(Vendor).filter(Product.name == product_name).first()
+                                        print "++Adding version w/ update + edition (" + str(version) + "," + str(update) + "," + str(edition) +  ")."
+                                        v = Version(version, update, edition)
+                                        v.cves.append(create_cve(entries[x]))
+                                        prod.versions.append(v)
+
                                 else:
-                                    prod = session.query(Product).join(Vendor).filter(Product.name == product_name).first()
-                                    print "++Adding version w/ update + edition (" + str(version) + "," + str(update) + "," + str(edition) +  ")."
+                                    prod = session.query(Product).join(Vendor).filter(Vendor.name == vendor_name).filter(Product.name == product_name).first()
+                                    print "++Adding version w/ update (" + str(version) + "," + str(update) + "," + str(edition) +  ")."
                                     v = Version(version, update, edition)
                                     v.cves.append(create_cve(entries[x]))
                                     prod.versions.append(v)
 
+
                             else:
                                 prod = session.query(Product).join(Vendor).filter(Vendor.name == vendor_name).filter(Product.name == product_name).first()
-                                print "++Adding version w/ update (" + str(version) + "," + str(update) + "," + str(edition) +  ")."
+                                print "++Adding version (" + str(version) + "," + str(update) + "," + str(edition) +  ")."
                                 v = Version(version, update, edition)
                                 v.cves.append(create_cve(entries[x]))
                                 prod.versions.append(v)
 
-
                         else:
-                            prod = session.query(Product).join(Vendor).filter(Vendor.name == vendor_name).filter(Product.name == product_name).first()
-                            print "++Adding version (" + str(version) + "," + str(update) + "," + str(edition) +  ")."
+                            vendor = session.query(Vendor).filter(Vendor.name == vendor_name).first()
+                            print "++Adding product " + str(product_name) + " to vendor " + str(vendor.name) + "."
+                            prod = Product(product_name)
+
                             v = Version(version, update, edition)
                             v.cves.append(create_cve(entries[x]))
-                            prod.versions.append(v)
 
+                            prod.versions.append(v)
+                            vendor.products.append(prod)
                     else:
-                        vendor = session.query(Vendor).filter(Vendor.name == vendor_name).first()
-                        print "++Adding product " + str(product_name) + " to vendor " + str(vendor.name) + "."
-                        prod = Product(product_name)
+                        print "++Vendor doesn't exist. Add it all."
+                        vendor = Vendor(cpe.get_vendor())
+                        prod = Product(cpe.get_product())
 
                         v = Version(version, update, edition)
                         v.cves.append(create_cve(entries[x]))
 
                         prod.versions.append(v)
                         vendor.products.append(prod)
-                else:
-                    print "++Vendor doesn't exist. Add it all."
-                    vendor = Vendor(cpe.get_vendor())
-                    prod = Product(cpe.get_product())
 
-                    v = Version(version, update, edition)
-                    v.cves.append(create_cve(entries[x]))
+                        print vendor
+                        session.add(vendor)
 
-                    prod.versions.append(v)
-                    vendor.products.append(prod)
+    # Creating a temp "admin" account
+    session.add(User("admin", "pass1word"))
 
-                    print vendor
-                    session.add(vendor)
+    # Create the developers table for now
+    session.add(Developer("main_tp_client", token.generate_token(), token.generate_token()))
 
     session.commit()
 
