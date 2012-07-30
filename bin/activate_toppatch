@@ -32,6 +32,8 @@ deactivate () {
     # Self destruct!
         unset -f deactivate
     fi
+    unset LD_LIBRARY_PATH
+    unset VIRTUAL_ENV
 }
 
 # unset irrelavent variables
