@@ -2,6 +2,7 @@
 
 import os
 import sys
+import re
 
 from netifaces import interfaces, ifaddresses
 import ipaddr
@@ -13,7 +14,7 @@ def convert_netmask_to_cidr(netmask):
     Converts a netmask (255.255.255.0) to CIDR notation 24
     """
     count = 0
-    for octect in netmask.split("."):
+    for octect in netmask.split('.'):
         octect = int(octect)
         while octect != 0:
             if octect % 2 == 1:
@@ -26,21 +27,17 @@ def get_networks_to_scan():
     This will get every interface on the node that this is running on
     and report back the ip address, netmask, and CIDR in a dictionary
     """
-    gnts = {}
     valid_interfaces = interfaces()[1:]
+    nw = []
     for interface in valid_interfaces:
         iface = ifaddresses(interface)[2][0]
         addr = iface['addr']
         netmask = iface['netmask']
         cidr = convert_netmask_to_cidr(netmask)
-        gnts[addr] = {
-                      'addr' : addr,
-                      'netmask' : netmask,
-                      'cidr' : cidr,
-                     } 
-    return gnts
+        nw.append((addr+'/'+cidr))
+    return tuple(nw)
 
-def verify_network(network):
+def verify_networks(network):
     """
     This method will verify that the ip address or ip and netmask 
     is valid as well as check that the ip is not a multicast, 
@@ -48,15 +45,26 @@ def verify_network(network):
     IP or IP/CIDR or IP/NETMASK, this method will return True, 
     else False
     """
-    is_valid = None
-    try:
-        addr = ipaddr.IPv4Network(network)
-        if not addr.is_reserved and not addr.is_multicast \
-            and not addr.is_loopback and not addr.is_link_local:
-            is_valid = True
-        else:
-            is_valid = False
-    except Exception as e:
-        is_valid = False
-    return is_valid
+    network = re.split(r',', re.sub(r',\s+|\s+', ',', network))
+    verified = []
+    false_count = 0
+    is_valid = False
+    for net in network:
+        try:
+            addr = ipaddr.IPv4Network(net)
+            if not addr.is_reserved and not addr.is_multicast \
+                and not addr.is_loopback and not addr.is_link_local:
+                verified.append((net, True))
+            else:
+                verified.append((net, False))
+                false_count = false_count + 1
+        except Exception as e:
+            verified.append((net, False))
+            false_count = false_count + 1
+   
+    if false_count > 0:
+        return(verified, is_valid)
+    else:
+        is_valid = True
+        return(verified, is_valid)
 
