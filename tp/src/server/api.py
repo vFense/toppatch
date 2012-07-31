@@ -101,15 +101,16 @@ class ApiHandler(BaseHandler):
                     cve_node["score"] = c.cvss.score
 
                     # Same method as above
-                    refs_list = []
-                    refs_node = {}
-
-                    for r in c.refs:
-                        refs_node["link"] = r.link
-                        refs_node["type"] = r.type
-
-                        refs_list.append(dict(refs_node))
-                        cve_node["refs"] = list(refs_list)
+#                    Don't add refs to the json. To much data. Use api providing the CVE id to get the refs
+#                    refs_list = []
+#                    refs_node = {}
+#
+#                    for r in c.refs:
+#                        refs_node["link"] = r.link
+#                        refs_node["type"] = r.type
+#
+#                        refs_list.append(dict(refs_node))
+#                        cve_node["refs"] = list(refs_list)
 
 
                     cve_list.append(dict(cve_node))
