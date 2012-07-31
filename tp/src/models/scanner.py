@@ -19,7 +19,7 @@ class Host(Base):
     snmp_status = Column(Boolean)   # True = On, False = Off
     host_status = Column(Boolean)   # True = On, False = Off
 
-    client_apps = relationship("ClientApp", backref="hosts")
+    client_apps = relationship("ScannedApp", backref="hosts")
 
     def __init__(self, ip_address, host_name, host_status=False, snmp_status=False):
         self.ip_address = ip_address
@@ -27,11 +27,11 @@ class Host(Base):
         self.host_status = host_status
         self.snmp_status = snmp_status
 
-class ClientApp(Base):
+class ScannedApp(Base):
     """
-    Represents an application that is installed on a client node, as oppose to a Product from a Vendor in the database.
+    Represents an application that is installed on a node, as oppose to a Product from a Vendor in the database.
     """
-    __tablename__ = "client_apps"
+    __tablename__ = "scanned_apps"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
