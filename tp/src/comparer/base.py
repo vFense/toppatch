@@ -55,7 +55,7 @@ class Comparer():
                 self.save_vulnerability(product, version, na.node)
 
     def save_vulnerability(self, product, version, node):
-        vul = Vulnerability(product.id, version.id, node.id)
+        vul = Vulnerability(product, version, node)
         self._session.add(vul)
         self._session.commit()
 

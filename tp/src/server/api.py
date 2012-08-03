@@ -4,7 +4,7 @@ try: import simplejson as json
 except ImportError: import json
 
 from models.application import *
-from models.base import Vulnerability
+from models.scanner import Vulnerability
 from server.decorators import authenticated_request
 from server.handlers import BaseHandler
 
@@ -124,5 +124,5 @@ class NodeHandler(BaseHandler):
 
     @authenticated_request
     def get(self):
-        self.session.query(Vulnerability).filterby
+        print self.application.session.query(Vulnerability).filter_by(fixed=False).all()
 

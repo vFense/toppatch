@@ -5,9 +5,10 @@ ALL DATA COMES FROM THE SCANNER
 """
 
 from models.base import Base
+from models.application import Product, Version
 
 from sqlalchemy import String, Integer, Boolean, Column, Date, Time, ForeignKey
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 
 class Node(Base):
     """
@@ -72,4 +73,46 @@ class App(Base):
 
     def __repr__(self):
         return "<App(%s, %s)>" % (self.name, self.version)
+
+class Vulnerability(Base):
+    """ Represents one row from the 'vulnerabilities' table.
+
+    Latest known vulnerability in the network. Once the client server compares the CVE data and the scanned apps of each
+    node, the results are stored here.
+
+    One vulnerability contains:
+
+        - application affected
+        - application version
+        - CVE (which in turn can access the refs, score, etc)
+        - node it belongs to (ip address and/or hostname)
+        - fixed status(whether or not the vulnerability has been resolved. True or False)
+
+        - date found - date which the vulnerability was first discovered on this node.
+        - date fixed - date which the vulnerability was resolved.
+    """
+    __tablename__ = "vulnerabilities"
+
+    id = Column(Integer, primary_key=True)
+    fixed = Column(Boolean)
+    
+    node = relationship("Node", uselist=False)
+    product = relationship("Product", uselist=False)
+    version = relationship("Version", uselist=False)
+
+    product_id = Column(Integer, ForeignKey("products.id"))
+    version_id = Column(Integer, ForeignKey("versions.id"))
+
+    node_id = Column(Integer, ForeignKey("nodes.id"))
+
+    def __init__(self, product, version, node, fixed=False):
+
+        self.product_id = product.id
+        self.version_id = version.id
+        self.node_id = node.id
+
+        self.fixed = fixed
+
+    def __repr__(self):
+        return "<Vulnerability('Fixed: %s')>" % (self.fixed)
 
