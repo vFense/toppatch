@@ -1,17 +1,15 @@
 """Hopefully, this is a RESTful implementation of the Top Patch API."""
 
-import tornado.httpserver
-import tornado.web
-
 try: import simplejson as json
 except ImportError: import json
 
 from models.application import *
+from models.base import Vulnerability
 from server.decorators import authenticated_request
 from server.handlers import BaseHandler
 
-class ApiHandler(BaseHandler):
-    """ Trying to figure out this whole RESTful api thing with json."""
+class CveHandler(BaseHandler):
+    """ API for CVE data """
 
     @authenticated_request
     def get(self, vendor=None, product=None):
@@ -121,6 +119,10 @@ class ApiHandler(BaseHandler):
         return root_list
 
 
+class NodeHandler(BaseHandler):
+    """  Data for nodes on the network. """
 
-
+    @authenticated_request
+    def get(self):
+        self.session.query(Vulnerability).filterby
 

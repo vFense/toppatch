@@ -12,6 +12,7 @@ class Comparer():
     End data is stored in the 'vulnerabilities' table.
     """
 
+    # Update types
     MASTER = 0
     NODE = 1
 
@@ -35,9 +36,6 @@ class Comparer():
             """ Check for any new apps/versions/nodes that might have been installed. """
 
             node_apps = self._session.query(NodeApp).filter_by(last_scan_date=scan_date).all()
-            print "******** Last scanned apps *******"
-            print node_apps
-            print "**********************************"
 
             self.search_for_cve(node_apps)
 
@@ -47,9 +45,7 @@ class Comparer():
         Checks the app name and version, then gets the cve's accordingly.
         """
         for na in node_apps:
-            print na.app.name
             product = self._session.query(Product).filter_by(name=na.app.name).first()
-            print product.name
 
             if product is not None:
 
