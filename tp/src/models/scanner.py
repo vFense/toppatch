@@ -29,6 +29,9 @@ class Node(Base):
         self.host_status = host_status
         self.snmp_status = snmp_status
 
+    def __repr__(self):
+        return "<Node(%s, %s)>" % (self.ip_address, self.host_name)
+
 class NodeApp(Base):
     """
     Represents an application that is installed on a node, as oppose to a Product from a Vendor in the database.
@@ -39,16 +42,17 @@ class NodeApp(Base):
     port = Column(Integer)
     protocol = Column(String(12))
     last_scan_date = Column(Date)
-    last_scan_time = Column(Time)
 
     app_id = Column(Integer, ForeignKey('apps_list.id'))
     node_id = Column(Integer, ForeignKey('nodes.id'))
 
-    def __init__(self, port, protocol, last_scan_date, last_scan_time):
+    def __init__(self, port, protocol, last_scan_date):
         self.port = port
         self.protocol = protocol
         self.last_scan_date = last_scan_date
-        self.last_scan_time = last_scan_time
+
+    def __repr__(self):
+        return "<NodeApp(%s, %s)>" % (self.app, self.node)
 
 class App(Base):
     """ Table of all the apps installed of each node on the network.
@@ -65,4 +69,7 @@ class App(Base):
     def __init__(self, name, version):
         self.name = name
         self.version = version
+
+    def __repr__(self):
+        return "<App(%s, %s)>" % (self.name, self.version)
 

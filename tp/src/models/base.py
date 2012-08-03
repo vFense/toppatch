@@ -30,18 +30,16 @@ class Vulnerability(Base):
     id = Column(Integer, primary_key=True)
     fixed = Column(Boolean)
 
-    cve = Column(Integer, ForeignKey('cves.id'))
-    application = Column(Integer, ForeignKey("products.id"))
-    version = Column(Integer, ForeignKey("versions.id"))
+    product_id = Column(Integer, ForeignKey("products.id"))
+    version_id = Column(Integer, ForeignKey("versions.id"))
 
-    node = Column(Integer, ForeignKey("nodes.id"))
+    node_id = Column(Integer, ForeignKey("nodes.id"))
 
-    def __init__(self, app_id, cve_id, version_id, node_id, fixed ):
+    def __init__(self, product_id, version_id, node_id, fixed=False):
 
-        self.application = app_id
-        self.version = version_id
-        self.node = node_id
-        self.cve = cve_id
+        self.product_id = product_id
+        self.version_id = version_id
+        self.node_id = node_id
 
         self.fixed = fixed
 

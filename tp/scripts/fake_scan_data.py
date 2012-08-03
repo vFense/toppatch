@@ -18,16 +18,16 @@ meta1 = App("firefox", "1.5.6")
 meta2 = App("office", "2010")
 meta3 = App("winamp", "5.55")
 
-app = NodeApp(88, "snmp",date.today(), time())
+app = NodeApp(88, "snmp",date.today())
 app.node = node1
 app.app = meta1
 
-app2 = NodeApp(12, "tcp",date.today(), time())
-app2.node = node1
+app2 = NodeApp(12, "tcp",date.today())
+app2.node = node2
 app2.app = meta2
 
-app3 = NodeApp(100, "udc", date.today(), time())
-app3.node = node1
+app3 = NodeApp(100, "udc", date(2012, 8, 1))
+app3.node = node2
 app3.app = meta3
 
 session.add(node1)
