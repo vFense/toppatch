@@ -130,5 +130,5 @@ class NodeHandler(BaseHandler):
         if vuls is None:
 
             self.set_header('Content-Type', 'application/json')
-            self.write([])
+            self.write([""])
 
