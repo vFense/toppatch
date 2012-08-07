@@ -124,5 +124,11 @@ class NodeHandler(BaseHandler):
 
     @authenticated_request
     def get(self):
-        print self.application.session.query(Vulnerability).filter_by(fixed=False).all()
+        vuls =  self.application.session.query(Vulnerability).filter_by(fixed=False).all()
+
+
+        if vuls is None:
+
+            self.set_header('Content-Type', 'application/json')
+            self.write([])
 
