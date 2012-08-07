@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 
-import os
-import sys
 import re
 
 from netifaces import interfaces, ifaddresses
 import ipaddr
-
 
 
 def convert_netmask_to_cidr(netmask):
@@ -22,27 +19,29 @@ def convert_netmask_to_cidr(netmask):
             octect = octect / 2
     return count
 
+
 def get_networks_to_scan():
     """
     This will get every interface on the node that this is running on
     and report back the ip address, netmask, and CIDR in a dictionary
     """
     valid_interfaces = interfaces()[1:]
-    nw = []
+    network = []
     for interface in valid_interfaces:
         iface = ifaddresses(interface)[2][0]
         addr = iface['addr']
         netmask = iface['netmask']
         cidr = convert_netmask_to_cidr(netmask)
-        nw.append((addr+'/'+cidr))
-    return tuple(nw)
+        network.append((addr + '/' + cidr))
+    return tuple(network)
+
 
 def verify_networks(network):
     """
-    This method will verify that the ip address or ip and netmask 
-    is valid as well as check that the ip is not a multicast, 
+    This method will verify that the ip address or ip and netmask
+    is valid as well as check that the ip is not a multicast,
     reserved, local link, or loopback addresses. If this is a valid
-    IP or IP/CIDR or IP/NETMASK, this method will return True, 
+    IP or IP/CIDR or IP/NETMASK, this method will return True,
     else False
     """
     network = re.split(r',', re.sub(r',\s+|\s+', ',', network))
@@ -58,13 +57,12 @@ def verify_networks(network):
             else:
                 verified.append((net, False))
                 false_count = false_count + 1
-        except Exception as e:
+        except Exception:
             verified.append((net, False))
             false_count = false_count + 1
-   
+
     if false_count > 0:
         return(verified, is_valid)
     else:
         is_valid = True
         return(verified, is_valid)
-
