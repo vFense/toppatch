@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 from models.scanner import *
 from models.application import *
-from models.base import Vulnerability
+from models.scanner import Vulnerability
 
 class Comparer():
     """ The grand "Comparer" class. Compares data from the 'products'/'cves' table against the 'apps_list' table, determining
