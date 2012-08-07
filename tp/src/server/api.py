@@ -4,7 +4,7 @@ try: import simplejson as json
 except ImportError: import json
 
 from models.application import *
-from models.scanner import Vulnerability
+from models.scanner import *
 from server.decorators import authenticated_request
 from server.handlers import BaseHandler
 
@@ -50,7 +50,7 @@ class CveHandler(BaseHandler):
             root_json["vendors"] = vendors
 
         self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps([root_json], indent=4))
+        self.write(json.dumps([root_json]))
 
     def _get_vendor(self, name=None):
         """ Returns all vendors (list) if name is None otherwise the vendor 'name'."""
@@ -120,15 +120,32 @@ class CveHandler(BaseHandler):
 
 
 class NodeHandler(BaseHandler):
-    """  Data for nodes on the network. """
+    """  Data for nodes on the network.
+
+     Scenarios:
+
+        - vulnerabilities table is an empty set, have to run scanner!
+            : returns [] (empty array)
+
+
+    """
 
     @authenticated_request
     def get(self):
-        vuls =  self.application.session.query(Vulnerability).filter_by(fixed=False).all()
+
+        self.set_header('Content-Type', 'application/json')
+        root_json = {}
+
+        vuls =  len(self.application.session.query(Vulnerability).filter_by(fixed=False).all())
+        if vuls is 0:
+            self.write(json.dumps(vuls))
+            return
+
+        nodes = len(self.application.session.query(Node).all())
+        apps = len(self.application.session.query(App).all())
 
 
-        if vuls is None:
-
-            self.set_header('Content-Type', 'application/json')
-            self.write([""])
-
+        root_json["vuls"] = vuls
+        root_json["nodes"] = nodes
+        root_json["apps"] = apps
+        self.write(json.dumps([root_json]))
