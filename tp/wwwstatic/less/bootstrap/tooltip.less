@@ -1,0 +1,37 @@
+// TOOLTIP
+// ------=
+
+.tooltip {
+  @thisFontSize: @tooltipFontSize;
+  position: absolute;
+  z-index: @zindexTooltip;
+  display: block;
+  visibility: visible;
+  font-size: @em*( 11px )/@thisFontSize;
+  padding: @em*( 5px )/@thisFontSize;
+  .opacity(0);
+  &.in     { .opacity(80); }
+  &.top    { margin-top:  @em*( -2px )/@thisFontSize; }
+  &.right  { margin-left:  @em*( 2px )/@thisFontSize; }
+  &.bottom { margin-top:   @em*( 2px )/@thisFontSize; }
+  &.left   { margin-left: @em*( -2px )/@thisFontSize; }
+  &.top .tooltip-arrow    { #popoverArrow > .top(); }
+  &.left .tooltip-arrow   { #popoverArrow > .left(); }
+  &.bottom .tooltip-arrow { #popoverArrow > .bottom(); }
+  &.right .tooltip-arrow  { #popoverArrow > .right(); }
+}
+.tooltip-inner {
+  @thisFontSize: @tooltipFontSize;
+  max-width: @em*( 200px )/@thisFontSize;
+  padding: @em*( 3px )/@thisFontSize @em*( 8px )/@thisFontSize;
+  color: @white;
+  text-align: center;
+  text-decoration: none;
+  background-color: @black;
+  .border-radius(@em*( 4px )/@thisFontSize);
+}
+.tooltip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+}

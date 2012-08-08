@@ -1,0 +1,8 @@
+[
+	["Vendor","Product","Version","CVE ID","Score"],
+	["mozilla","firefox","8.0:--:--","CVE-2011-3658","7.5"],
+	["mozilla","firefox","8.0:--:--","CVE-2012-0451","4.3"],
+	["mozilla","firefox","8.0:--:--","CVE-2012-0454","7.5"],
+	["mozilla","firefox","8.0:--:--","CVE-2012-0455","4.3"],
+	["mozilla","firefox","8.0:--:--","CVE-2012-0456","5.0"]
+]

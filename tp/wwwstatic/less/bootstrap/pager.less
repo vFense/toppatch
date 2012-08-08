@@ -1,0 +1,36 @@
+// PAGER
+// -----
+
+.pager {
+  margin-left: 0;
+  margin-bottom: @em*( @baseLineHeight )/@baseFontSize;
+  list-style: none;
+  text-align: center;
+  .clearfix();
+}
+.pager li {
+  display: inline;
+}
+.pager a {
+  display: inline-block;
+  padding: @em*( 5px )/@baseFontSize @em*( 14px )/@baseFontSize;
+  background-color: #fff;
+  border: @em*( 1px )/@baseFontSize solid #ddd;
+  .border-radius(@em*( 15px )/@baseFontSize);
+}
+.pager a:hover {
+  text-decoration: none;
+  background-color: #f5f5f5;
+}
+.pager .next a {
+  float: right;
+}
+.pager .previous a {
+  float: left;
+}
+.pager .disabled a,
+.pager .disabled a:hover {
+  color: @grayLight;
+  background-color: #fff;
+  cursor: default;
+}

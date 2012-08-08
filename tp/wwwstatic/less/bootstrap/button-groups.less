@@ -1,0 +1,207 @@
+// BUTTON GROUPS
+// -------------
+
+
+// Make the div behave like a button
+.btn-group {
+  position: relative;
+  .clearfix(); // clears the floated buttons
+  .ie7-restore-left-whitespace();
+}
+
+// Space out series of button groups
+.btn-group + .btn-group {
+  margin-left: @em*( 5px )/@baseFontSize;
+}
+
+// Optional: Group multiple button groups together for a toolbar
+.btn-toolbar {
+  margin-top: @em*( @baseLineHeight / 2 )/@baseFontSize;
+  margin-bottom: @em*( @baseLineHeight / 2 )/@baseFontSize;
+  .btn-group {
+    display: inline-block;
+    .ie7-inline-block();
+  }
+}
+
+// Float them, remove border radius, then re-add to first and last elements
+.btn-group > .btn {
+  position: relative;
+  float: left;
+  .border-radius(0);
+   margin-left: @em*( -1px )/@btnFontSize;
+   &.btn-large{
+     margin-left: @em*( -1px )/@btnLargeFontSize;
+   }
+   &.btn-small{
+     margin-left: @em*( -1px )/@btnSmallFontSize;
+   }
+   &.btn-mini{
+     margin-left: @em*( -1px )/@btnMiniFontSize;
+   }
+}
+// Set corners individual because sometimes a single button can be in a .btn-group and we need :first-child and :last-child to both match
+.btn-group > .btn:first-child {
+  margin-left: 0;
+  .border-radius-left( @em*( 4px )/@btnFontSize );
+}
+// Need .dropdown-toggle since :last-child doesn't apply given a .dropdown-menu immediately after it
+.btn-group > .btn:last-child,
+.btn-group > .dropdown-toggle {
+  .border-radius-right( @em*( 4px )/@btnFontSize );
+}
+// Reset corners for large buttons
+.btn-group > .btn.large:first-child {
+  margin-left: 0;
+  .border-radius-left( @em*( 6px )/@btnLargeFontSize );
+}
+.btn-group > .btn.large:last-child,
+.btn-group > .large.dropdown-toggle {
+  .border-radius-right( @em*( 6px )/@btnLargeFontSize );
+}
+// Reset corners for small buttons
+.btn-group > .btn.small:first-child {
+  margin-left: 0;
+  .border-radius-left( @em*( 4px )/@btnSmallFontSize );
+}
+.btn-group > .btn.small:last-child,
+.btn-group > .small.dropdown-toggle {
+  .border-radius-right( @em*( 4px )/@btnSmallFontSize );
+}
+// Reset corners for mini buttons
+.btn-group > .btn.mini:first-child {
+  margin-left: 0;
+  .border-radius-left( @em*( 4px )/@btnMiniFontSize );
+}
+.btn-group > .btn.mini:last-child,
+.btn-group > .mini.dropdown-toggle {
+  .border-radius-right( @em*( 4px )/@btnMiniFontSize );
+}
+
+// On hover/focus/active, bring the proper btn to front
+.btn-group > .btn:hover,
+.btn-group > .btn:focus,
+.btn-group > .btn:active,
+.btn-group > .btn.active {
+  z-index: 2;
+}
+
+// On active and open, don't show outline
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+
+
+
+// Split button dropdowns
+// ----------------------
+
+// Give the line between buttons some depth
+.btn-group > .dropdown-toggle {
+  padding-left: @em*( 8px )/@btnFontSize;
+  padding-right: @em*( 8px )/@btnFontSize;
+  .box-shadow(inset @em*( 1px )/@btnFontSize 0 0 rgba(255,255,255,.125), inset 0 @em*( 1px )/@btnFontSize 0 rgba(255,255,255,.2), 0 @em*( 1px )/@btnFontSize @em*( 2px )/@btnFontSize rgba(0,0,0,.05));
+  *padding-top: @em*( 4px )/@btnFontSize;
+  *padding-bottom: @em*( 4px )/@btnFontSize;
+}
+.btn-group > .btn-mini.dropdown-toggle {
+  padding-left: @em*( 5px )/@btnMiniFontSize;
+  padding-right: @em*( 5px )/@btnMiniFontSize;
+}
+.btn-group > .btn-small.dropdown-toggle {
+  *padding-top: @em*( 4px )/@btnSmallFontSize;
+  *padding-bottom: @em*( 4px )/@btnSmallFontSize;
+}
+.btn-group > .btn-large.dropdown-toggle {
+  padding-left: @em*( 12px )/@btnLargeFontSize;
+  padding-right: @em*( 12px )/@btnLargeFontSize;
+}
+
+.btn-group.open {
+
+  // The clickable button for toggling the menu
+  // Remove the gradient and set the same inset shadow as the :active state
+  .dropdown-toggle {
+    background-image: none;
+    .box-shadow(inset 0 @em*( 2px )/@btnFontSize @em*( 4px )/@btnFontSize rgba(0,0,0,.15), 0 @em*( 1px )/@btnFontSize @em*( 2px )/@btnFontSize rgba(0,0,0,.05));
+  	&.btn-large{
+      .box-shadow(inset 0 @em*( 2px )/@btnLargeFontSize @em*( 4px )/@btnLargeFontSize rgba(0,0,0,.15), 0 @em*( 1px )/@btnLargeFontSize @em*( 2px )/@btnLargeFontSize rgba(0,0,0,.05));
+    }
+    &.btn-small{
+      .box-shadow(inset 0 @em*( 2px )/@btnSmallFontSize @em*( 4px )/@btnSmallFontSize rgba(0,0,0,.15), 0 @em*( 1px )/@btnSmallFontSize @em*( 2px )/@btnSmallFontSize rgba(0,0,0,.05));
+    }
+    &.btn-mini{
+      .box-shadow(inset 0 @em*( 2px )/@btnMiniFontSize @em*( 4px )/@btnMiniFontSize rgba(0,0,0,.15), 0 @em*( 1px )/@btnMiniFontSize @em*( 2px )/@btnMiniFontSize rgba(0,0,0,.05));
+    }
+  }
+
+  // Keep the hover's background when dropdown is open
+  .btn.dropdown-toggle {
+    background-color: @btnBackgroundHighlight;
+  }
+  .btn-primary.dropdown-toggle {
+    background-color: @btnPrimaryBackgroundHighlight;
+  }
+  .btn-warning.dropdown-toggle {
+    background-color: @btnWarningBackgroundHighlight;
+  }
+  .btn-danger.dropdown-toggle {
+    background-color: @btnDangerBackgroundHighlight;
+  }
+  .btn-success.dropdown-toggle {
+    background-color: @btnSuccessBackgroundHighlight;
+  }
+  .btn-info.dropdown-toggle {
+    background-color: @btnInfoBackgroundHighlight;
+  }
+  .btn-inverse.dropdown-toggle {
+    background-color: @btnInverseBackgroundHighlight;
+  }
+}
+
+
+// Reposition the caret
+.btn .caret {
+  margin-top: @em*( 7px )/@btnFontSize;
+  margin-left: 0;
+}
+.btn:hover .caret,
+.open.btn-group .caret {
+  .opacity(100);
+}
+// Carets in other button sizes
+.btn-mini .caret {
+  margin-top: @em*( 5px )/@btnMiniFontSize;
+}
+.btn-small .caret {
+  margin-top: @em*( 6px )/@btnSmallFontSize;
+}
+.btn-large .caret {
+  margin-top: @em*( 6px )/@btnLargeFontSize;
+  border-left-width:  @em*( 5px )/@btnLargeFontSize;
+  border-right-width: @em*( 5px )/@btnLargeFontSize;
+  border-top-width:   @em*( 5px )/@btnLargeFontSize;
+}
+// Upside down carets for .dropup
+.dropup .btn-large .caret {
+  border-bottom: @em*( 5px )/@btnLargeFontSize solid @black;
+  border-top: 0;
+}
+
+
+
+// Account for other colors
+.btn-primary,
+.btn-warning,
+.btn-danger,
+.btn-info,
+.btn-success,
+.btn-inverse {
+  .caret {
+    border-top-color: @white;
+    border-bottom-color: @white;
+    .opacity(75);
+  }
+}
+

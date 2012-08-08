@@ -1,0 +1,49 @@
+// POPOVERS
+// --------
+
+.popover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: @zindexPopover;
+  display: none;
+  padding: @em*( 5px )/@baseFontSize;
+  &.top    { margin-top:  @em*( -5px )/@baseFontSize; }
+  &.right  { margin-left:  @em*( 5px )/@baseFontSize; }
+  &.bottom { margin-top:   @em*( 5px )/@baseFontSize; }
+  &.left   { margin-left: @em*( -5px )/@baseFontSize; }
+  &.top .arrow    { #popoverArrow > .top(); }
+  &.right .arrow  { #popoverArrow > .right(); }
+  &.bottom .arrow { #popoverArrow > .bottom(); }
+  &.left .arrow   { #popoverArrow > .left();  }
+  .arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+}
+.popover-inner {
+  padding: @em*( 3px )/@baseFontSize;
+  width: @em*( 280px )/@baseFontSize;
+  overflow: hidden;
+  background: @black; // has to be full background declaration for IE fallback
+  background: rgba(0,0,0,.8);
+  .border-radius(@em*( 6px )/@baseFontSize);
+  .box-shadow(0 @em*( 3px )/@baseFontSize @em*( 7px )/@baseFontSize rgba(0,0,0,0.3));
+}
+.popover-title {
+  padding: @em*( 9px )/@baseFontSize @em*( 15px )/@baseFontSize;
+  line-height: 1;
+  background-color: #f5f5f5;
+  border-bottom:@em*( 1px )/@baseFontSize solid #eee;
+  .border-radius(@em*( 3px )/@baseFontSize @em*( 3px )/@baseFontSize 0 0);
+}
+.popover-content {
+  padding: @em*( 14px )/@baseFontSize;
+  background-color: @white;
+  .border-radius(0 0 @em*( 3px )/@baseFontSize @em*( 3px )/@baseFontSize);
+  .background-clip(padding-box);
+  p, ul, ol {
+    margin-bottom: 0;
+  }
+}

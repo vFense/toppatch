@@ -1,0 +1,90 @@
+// MODALS
+// ------
+
+// Recalculate z-index where appropriate
+.modal-open {
+  .dropdown-menu {  z-index: @zindexDropdown + @zindexModal; }
+  .dropdown.open { *z-index: @zindexDropdown + @zindexModal; }
+  .popover       {  z-index: @zindexPopover  + @zindexModal; }
+  .tooltip       {  z-index: @zindexTooltip  + @zindexModal; }
+}
+
+// Background
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: @zindexModalBackdrop;
+  background-color: @black;
+  // Fade for backdrop
+  &.fade { opacity: 0; }
+}
+
+.modal-backdrop,
+.modal-backdrop.fade.in {
+  .opacity(80);
+}
+
+// Base modal
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: @zindexModal;
+  overflow: auto;
+  width: @em*( 560px )/@baseFontSize;
+  margin: -@em*( 250px )/@baseFontSize 0 0 -@em*( 280px )/@baseFontSize;
+  background-color: @white;
+  border: @em*( 1px )/@baseFontSize solid #999;
+  border: @em*( 1px )/@baseFontSize solid rgba(0,0,0,.3);
+  *border: @em*( 1px )/@baseFontSize solid #999; /* IE6-7 */
+  .border-radius(@em*( 6px )/@baseFontSize);
+  .box-shadow(0 @em*( 3px )/@baseFontSize @em*( 7px )/@baseFontSize rgba(0,0,0,0.3));
+  .background-clip(padding-box);
+  &.fade {
+    .transition(e('opacity .3s linear, top .3s ease-out'));
+    top: -25%;
+  }
+  &.fade.in { top: 50%; }
+}
+.modal-header {
+  padding: @em*( 9px )/@baseFontSize @em*( 15px )/@baseFontSize;
+  border-bottom: @em*( 1px )/@baseFontSize solid #eee;
+  // Close icon
+  .close { margin-top: @em*( 2px )/@baseFontSize; }
+}
+
+// Body (where all modal content resides)
+.modal-body {
+  overflow-y: auto;
+  max-height: @em*( 400px )/@baseFontSize;
+  padding: @em*( 15px )/@baseFontSize;
+}
+// Remove bottom margin if need be
+.modal-form {
+  margin-bottom: 0;
+}
+
+// Footer (for actions)
+.modal-footer {
+  padding: @em*( 14px )/@baseFontSize @em*( 15px )/@baseFontSize @em*( 15px )/@baseFontSize;
+  margin-bottom: 0;
+  text-align: right; // right align buttons
+  background-color: #f5f5f5;
+  border-top: @em*( 1px )/@baseFontSize solid #ddd;
+  .border-radius(0 0 @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize);
+  .box-shadow(inset 0 @em*( 1px )/@baseFontSize 0 @white);
+  .clearfix(); // clear it in case folks use .pull-* classes on buttons
+
+  // Properly space out buttons
+  .btn + .btn {
+    margin-left: @em*( 5px )/@baseFontSize;
+    margin-bottom: 0; // account for input[type="submit"] which gets the bottom margin like all other inputs
+  }
+  // but override that for button groups
+  .btn-group .btn + .btn {
+    margin-left: -@em*( 1px )/@baseFontSize;
+  }
+}

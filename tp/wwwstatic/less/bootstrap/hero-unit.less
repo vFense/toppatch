@@ -1,0 +1,25 @@
+// HERO UNIT
+// ---------
+
+.hero-unit {
+  padding: @em*( 60px )/@baseFontSize;
+  margin-bottom: @em*( 30px )/@baseFontSize;
+  background-color: @heroUnitBackground;
+  .border-radius(@em*( 6px )/@baseFontSize);
+  h1 {
+    @thisFontSize: @heroH1FontSize;
+    margin-bottom: 0;
+    font-size: @em*( @thisFontSize )/@baseFontSize;
+    line-height: 1;
+    color: @heroUnitHeadingColor;
+    letter-spacing: @em*( -1px )/@thisFontSize;
+  }
+  p {
+    @thisFontSize: @heroPFontSize;
+    font-size: @thisFontSize;
+    font-weight: 200;
+    line-height: @em*( @baseLineHeight * 1.5 )/@thisFontSize;
+    color: @heroUnitLeadColor;
+    margin-bottom: @em*( @baseLineHeight / 2 )/@thisFontSize;
+  }
+}
