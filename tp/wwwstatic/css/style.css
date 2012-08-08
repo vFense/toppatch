@@ -5297,11 +5297,7 @@ a.badge:hover {
 */
 BODY {
   font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
-  background-color: #fbfbfc;
   min-width: 72.3076923076923em;
-}
-.page-header {
-  border-bottom-color: #E0E0E0;
 }
 BODY FOOTER {
   background-color: #F8F8F8;
@@ -5309,20 +5305,20 @@ BODY FOOTER {
   margin-top: 1.3846153846153846em;
   color: #535456;
   border-top: 0.07692307692307693em solid #e0e0e0;
+  border-bottom: 0.07692307692307693em solid #e0e0e0;
 }
 BODY FOOTER .logo-text {
   padding-top: 1.0769230769230769em;
   padding-bottom: 1.0769230769230769em;
-  height: 2.4615384615384617em;
+}
+.docHeader {
+  border-bottom-color: #E0E0E0;
 }
 .legal {
   line-height: 4.615384615384615em;
 }
-.show-grid > [class*="span"] {
-  background-color: #FFF;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+.logo-text {
+  height: 2.4615384615384617em;
 }
 .login {
   background-color: #FFF;
@@ -5384,7 +5380,7 @@ BODY FOOTER .logo-text {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cdd4da', GradientType=0);
 }
-.page-nav {
+.pageHeader {
   background-color: #ebeef0;
   background-image: -moz-linear-gradient(top, #ffffff, #cdd4da);
   background-image: -ms-linear-gradient(top, #ffffff, #cdd4da);
@@ -5395,30 +5391,31 @@ BODY FOOTER .logo-text {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#cdd4da', GradientType=0);
 }
-.page-nav .navbar {
+.pageHeader .navbar {
+  font-family: "Cantarell", "Arial Black", "Arial Bold", sans-serif;
   font-weight: bold;
   margin-bottom: 0;
 }
-.page-nav .navbar-inner {
+.pageHeader .navbar-inner {
   padding-left: 0;
   padding-right: 0;
 }
-.page-nav .brand {
+.pageHeader .brand {
   margin-left: 0;
   padding-left: 0 !important;
 }
-.page-nav .dropdown .caret {
+.pageHeader .dropdown .caret {
   border-top-color: #000000 !important;
   border-bottom-color: #000000 !important;
   opacity: 1;
 }
-.page-nav .dropdown:hover .caret,
-.page-nav .dropdown.open .caret {
+.pageHeader .dropdown:hover .caret,
+.pageHeader .dropdown.open .caret {
   border-top-color: #0064cd !important;
   border-bottom-color: #0064cd !important;
 }
-.page-nav .dropdown:hover > a,
-.page-nav .dropdown.open > a {
+.pageHeader .dropdown:hover > a,
+.pageHeader .dropdown.open > a {
   color: #0064cd;
 }
 .nav li.divide-before {
@@ -5434,6 +5431,11 @@ BODY FOOTER .logo-text {
   -moz-box-shadow: -0.07692307692307693em 0 0 #ffffff;
   box-shadow: -0.07692307692307693em 0 0 #ffffff;
   padding-right: 0.7692307692307693em;
+}
+.boxshadow .pageHeader {
+  -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px;
 }
 .widget HEADER {
   border-bottom: 0.07692307692307693em solid #e0e0e0;
@@ -5480,16 +5482,16 @@ NOSCRIPT {
   user-select: none;
 }
 NOSCRIPT .title {
-  font-size: 40px;
+  font-size: 30px;
   line-height: 1em;
   font-weight: 600;
-  text-shadow: rgba(0, 0, 0, 0.5) 0.025em 0.025em 0.1em;
+  text-shadow: rgba(0, 0, 0, 0.5) 0.03333333333333333em 0.03333333333333333em 0.13333333333333333em;
 }
 NOSCRIPT .subtitle {
-  font-size: 19px;
+  font-size: 18px;
   line-height: 1em;
   font-weight: 300;
-  text-shadow: rgba(0, 0, 0, 0.5) 0.05263157894736842em 0.05263157894736842em 0.15789473684210525em;
+  text-shadow: rgba(0, 0, 0, 0.5) 0.05555555555555555em 0.05555555555555555em 0.16666666666666666em;
 }
 .noRadius {
   -webkit-border-radius: 0 !important;
@@ -5504,18 +5506,14 @@ NOSCRIPT .subtitle {
 .noPad {
   padding: 0;
 }
-.noPrint {
-  display: none;
+.show-grid > [class*="span"] {
+  background-color: #FFF;
+  background-color: rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 @media print {
-  * {
-    background: transparent !important;
-    color: black !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-    filter: none !important;
-    -ms-filter: none !important;
-  }
   a,
   a:visited {
     text-decoration: underline;
@@ -5556,8 +5554,7 @@ NOSCRIPT .subtitle {
   h3 {
     page-break-after: avoid;
   }
-  .navbar {
-    left: 0;
-    right: 0;
+  .noPrint {
+    display: none;
   }
 }

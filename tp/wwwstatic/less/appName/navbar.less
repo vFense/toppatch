@@ -1,11 +1,11 @@
 // Navbar Styles
 // -------------------------
 
-.page-nav {
+.pageHeader {
 	#gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
 	
 	.navbar {
-		//font-family: "Cantarell", "Arial Black", "Arial Bold", sans-serif;
+		font-family: "Cantarell", "Arial Black", "Arial Bold", sans-serif;
 		font-weight: bold;
 		margin-bottom:0;
 	}
@@ -49,4 +49,12 @@
 	border-left:@em*( 1px )/@baseFontSize solid @navbarBackground;
 	.box-shadow(@em*( -1px )/@baseFontSize 0 0 @navbarBackgroundHighlight);
 	padding-right:@em*( 10px )/@baseFontSize;
+}
+
+// CSS3 Styles
+// Filtered by Modernizr
+// ----------------------
+
+.boxshadow .pageHeader {
+	.box-shadow(rgba(0, 0, 0, 0.3) 0px 1px 2px 0px);
 }

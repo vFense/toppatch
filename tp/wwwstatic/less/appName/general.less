@@ -6,12 +6,8 @@
 
 BODY {
 	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
-	background-color: @TP_White;
+	//background-color: @TP_White;
 	min-width: @gridRowWidth;
-}
-
-.page-header {
-	border-bottom-color: #E0E0E0;
 }
 
 BODY FOOTER {
@@ -20,21 +16,24 @@ BODY FOOTER {
 	margin-top: @em*( 18px )/@baseFontSize;
 	color: darken(@TP_DarkGrey,4%);
 	border-top: @em*( 1px )/@baseFontSize solid #E0E0E0;
+	border-bottom: @em*( 1px )/@baseFontSize solid #E0E0E0;
 	
 	.logo-text {
 		@imageHeight: 32px;
 		padding-top: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
 		padding-bottom: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
-		height: @em*( @imageHeight )/@baseFontSize;
 	}
+}
+
+.docHeader {
+	border-bottom-color: #E0E0E0;
 }
 
 .legal {
 	line-height: @em*( 60px )/@baseFontSize;
 }
 
-.show-grid > [class*="span"] {
-    background-color:#FFF;
-	//background-color: rgba(0, 0, 0, 0.05);
-	.box-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+.logo-text {
+	@imageHeight: 32px;
+	height: @em*( @imageHeight )/@baseFontSize;
 }
