@@ -1,0 +1,254 @@
+// Typography.less
+// Headings, body text, lists, code, and more for a versatile and durable typography system
+// ----------------------------------------------------------------------------------------
+
+
+// BODY TEXT
+// ---------
+
+p {
+  @thisFontSize: @baseFontSize;
+  font-size: @thisFontSize;
+  margin: 0 0 @em*( @baseLineHeight / 2 )/@thisFontSize;
+  small {
+  	@thisFontSize: @pSmallFontSize;
+    font-size: @thisFontSize;
+    color: @grayLight;
+  }
+}
+.lead {
+  @thisFontSize: @leadFontSize;
+  @thisLineHeight: @baseLineHeight * 1.5;
+  margin-bottom: @em*( @baseLineHeight )/@thisFontSize;
+  font-size: @thisFontSize;
+  font-weight: 200;
+  line-height: @em*( @thisLineHeight )/@thisFontSize;
+}
+
+// HEADINGS
+// --------
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: @headingsFontFamily;
+  font-weight: @headingsFontWeight;
+  color: @headingsColor;
+  text-rendering: optimizelegibility; // Fix the character spacing for headings
+  small {
+    font-weight: normal;
+    color: @grayLight;
+  }
+}
+h1 {
+  @thisFontSize: @h1FontSize;
+  @thisLineHeight: @baseLineHeight * 2;
+  font-size: @thisFontSize;
+  line-height: @em*@thisLineHeight/@thisFontSize;
+  small {
+  	font-size: @h1SmallFontSize;
+  }
+}
+h2 {
+  @thisFontSize: @h2FontSize;
+  @thisLineHeight: @baseLineHeight * 2;
+  font-size: @thisFontSize;
+  line-height: @em*@thisLineHeight/@thisFontSize;
+  small {
+  	font-size: @h2SmallFontSize;
+  }
+}
+h3 {
+  @thisFontSize: @h3FontSize;
+  @thisLineHeight: @baseLineHeight * 1.5;
+  font-size: @thisFontSize;
+  line-height: @em*@thisLineHeight/@thisFontSize;
+  small {
+    font-size: @h3SmallFontSize;
+  }
+}
+h4 {
+  @thisFontSize: @h4FontSize;
+  @thisLineHeight: @baseLineHeight;
+  font-size: @thisFontSize;
+  line-height: @em*( @thisLineHeight )/@thisFontSize;
+  small {
+  	font-size: @h4SmallFontSize;
+  }
+}
+h5 {
+  @thisFontSize: @h5FontSize;
+  @thisLineHeight: @baseLineHeight;
+  font-size: @thisFontSize;
+  line-height: @em*( @thisLineHeight )/@thisFontSize;
+}
+h6 {
+  @thisFontSize: @h6FontSize;
+  @thisLineHeight: @baseLineHeight;
+  font-size: @thisFontSize;
+  line-height: @em*( @thisLineHeight )/@thisFontSize;
+  color: @grayLight;
+  text-transform: uppercase;
+}
+
+// Page header
+.page-header {
+  padding-bottom: @em*( @baseLineHeight - 1 )/@baseFontSize;
+  margin: @em*@baseLineHeight/@baseFontSize 0;
+  border-bottom: @em*1px/@baseFontSize solid @grayLighter;
+}
+.page-header h1 {
+  line-height: 1;
+}
+
+
+
+// LISTS
+// -----
+
+// Unordered and Ordered lists
+ul, ol {
+  padding: 0;
+  margin: 0 0 @em*( @baseLineHeight/2 )/@baseFontSize @em*( 25px )/@baseFontSize;
+}
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin-bottom: 0;
+}
+ul {
+  list-style: disc;
+}
+ol {
+  list-style: decimal;
+}
+li {
+  @thisLineHeight: @baseLineHeight;
+  line-height: @em*( @thisLineHeight )/@baseFontSize;
+}
+ul.unstyled,
+ol.unstyled {
+  margin-left: 0;
+  list-style: none;
+}
+
+// Description Lists
+dl {
+  margin-bottom: @em*( @baseLineHeight )/@baseFontSize;
+}
+dt,
+dd {
+  @thisLineHeight: @baseLineHeight;
+  line-height: @em*( @thisLineHeight )/@baseFontSize;
+}
+dt {
+  font-weight: bold;
+  @thisLineHeight: @baseLineHeight - 1; // fix jank Helvetica Neue font bug
+  line-height: @em*( @thisLineHeight )/@baseFontSize; 
+}
+dd {
+  margin-left: @em*( @baseLineHeight/2 )/@baseFontSize;
+}
+// Horizontal layout (like forms)
+.dl-horizontal {
+  dt {
+  	float: left;
+    width: @em*( 120px )/@baseFontSize;
+    clear: left;
+    text-align: right;
+    .text-overflow();
+  }
+  dd {
+    margin-left: @em*( 130px )/@baseFontSize;
+  }
+}
+
+// MISC
+// ----
+
+// Horizontal rules
+hr {
+  margin: @em*( @baseLineHeight )/@baseFontSize 0;
+  border: 0;
+  border-top: @em*( 1px )/@baseFontSize solid @hrBorder;
+  border-bottom: @em*( 1px )/@baseFontSize solid @white;
+}
+
+// Emphasis
+strong {
+  font-weight: bold;
+}
+em {
+  font-style: italic;
+}
+.muted {
+  color: @grayLight;
+}
+
+// Abbreviations and acronyms
+abbr[title] {
+  cursor: help;
+  border-bottom: @em*( 1px )/@baseFontSize dotted @grayLight;
+}
+abbr[title].initialism {
+  border-bottom: @em*( 1px )/@abbrInitialismFontSize dotted @grayLight;
+}
+abbr.initialism {
+  font-size: @abbrInitialismFontSize;
+  text-transform: uppercase;
+}
+
+// Blockquotes
+blockquote {
+  padding: 0 0 0 @em*( 15px )/@baseFontSize;
+  margin: 0 0 @em*( @baseLineHeight )/@baseFontSize;
+  border-left: @em*( 5px )/@baseFontSize solid @grayLighter;
+  p {
+    margin-bottom: 0;
+    #font > .shorthand(@blockquotePFontSize,300,@em*( @baseLineHeight * 1.25 )/@blockquotePFontSize);
+  }
+  small {
+    display: block;
+    line-height: @em*( @baseLineHeight )/@baseFontSize;
+    color: @grayLight;
+    &:before {
+      content: '\2014 \00A0';
+    }
+  }
+
+  // Float right with text-align: right
+  &.pull-right {
+    float: right;
+    padding-right: @em*( 15px )/@baseFontSize;
+    padding-left: 0;
+    border-right: @em*( 5px )/@baseFontSize solid @grayLighter;
+    border-left: 0;
+    p,
+    small {
+      text-align: right;
+    }
+  }
+}
+
+// Quotes
+q:before,
+q:after,
+blockquote:before,
+blockquote:after {
+  content: "";
+}
+
+// Addresses
+address {
+  display: block;
+  margin-bottom: @em*( @baseLineHeight )/@baseFontSize;
+  font-style: normal;
+  line-height: @em*( @baseLineHeight )/@baseFontSize;
+}
+
+// Misc
+small {
+  font-size: @smallFontSize;
+}
+cite {
+  font-style: normal;
+}

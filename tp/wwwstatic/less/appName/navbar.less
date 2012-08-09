@@ -1,0 +1,60 @@
+// Navbar Styles
+// -------------------------
+
+.pageHeader {
+	#gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
+	
+	.navbar {
+		font-family: "Cantarell", "Arial Black", "Arial Bold", sans-serif;
+		font-weight: bold;
+		margin-bottom:0;
+	}
+
+	.navbar-inner {
+		padding-left:0;
+		padding-right:0;
+	}
+	
+	.brand {
+		margin-left:0;
+		padding-left:0 !important;
+	}
+	
+	.dropdown {
+		.caret {
+			border-top-color: @black !important;
+			border-bottom-color: @black !important;
+			opacity: 1;
+		}
+		
+		&:hover, &.open {
+			.caret {
+				border-top-color: @blueDark !important;
+				border-bottom-color: @blueDark !important;
+			}
+			> a {
+				color: @blueDark;
+			}
+		}
+	}
+}
+
+.nav li.divide-before {
+	border-left:@em*( 1px )/@baseFontSize solid @navbarBackground;
+	.box-shadow(@em*( -1px )/@baseFontSize 0 0 @navbarBackgroundHighlight);
+	padding-left:@em*( 10px )/@baseFontSize;
+}
+
+.nav li.divide-after {
+	border-left:@em*( 1px )/@baseFontSize solid @navbarBackground;
+	.box-shadow(@em*( -1px )/@baseFontSize 0 0 @navbarBackgroundHighlight);
+	padding-right:@em*( 10px )/@baseFontSize;
+}
+
+// CSS3 Styles
+// Filtered by Modernizr
+// ----------------------
+
+.boxshadow .pageHeader {
+	.box-shadow(rgba(0, 0, 0, 0.3) 0px 1px 2px 0px);
+}

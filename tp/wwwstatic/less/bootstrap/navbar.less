@@ -1,0 +1,389 @@
+// NAVBAR (FIXED AND STATIC)
+// -------------------------
+
+
+// COMMON STYLES
+// -------------
+
+.navbar {
+  // Fix for IE7's bad z-indexing so dropdowns don't appear below content that follows the navbar
+  *position: relative;
+  *z-index: 2;
+
+  overflow: visible;
+  margin-bottom: @em*( @baseLineHeight )/@baseFontSize;
+}
+
+// Gradient is applied to it's own element because overflow visible is not honored by IE when filter is present
+.navbar-inner {
+  min-height: @em*( @navbarHeight )/@baseFontSize;
+  padding-left:  @em*( 20px )/@baseFontSize;
+  padding-right: @em*( 20px )/@baseFontSize;
+  #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
+}
+
+.navbar:not(.navbar-fixed-top) .navbar-inner,
+.navbar:not(.navbar-fixed-top) .navbar-fixed-bottom {
+  .border-radius( @em * ( 4px ) / @baseFontSize);
+  .box-shadow(0 @em*( 1px )/@baseFontSize @em*( 3px )/@baseFontSize rgba(0,0,0,.25), inset 0 @em*( -1px )/@baseFontSize 0 rgba(0,0,0,.1));
+}
+
+// Set width to auto for default container
+// We then reset it for fixed navbars in the #gridSystem mixin
+.navbar .container {
+  width: auto;
+}
+
+// Override the default collapsed state
+.nav-collapse.collapse {
+  height: auto;
+}
+
+
+// Brand, links, text, and buttons
+.navbar {
+  color: @navbarText;
+  // Hover and active states
+  .brand:hover {
+    text-decoration: none;
+  }
+  // Website or project name
+  .brand {
+  	@thisFontSize: @navbarBrandFontSize;
+  	@thisElementHeight: @navbarBrandFontSize;
+    float: left;
+    display: block;
+    color: @navbarBrandColor;
+    font-weight: 200;
+    font-size: @thisFontSize;
+    
+    // Vertically center the text given @navbarHeight
+    // Note: @navbarHeight is not in the same reference font size, correct with base/this font size.
+    @elementHeight: @thisElementHeight/@thisFontSize;
+	@center: ((@navbarHeight * (@baseFontSize/@thisFontSize)) - @elementHeight)/2;
+	@adjust: @em*( 2px )/@thisFontSize; // 2 pixels up
+	
+	padding: (@center - @adjust) @em*( 20px )/@thisFontSize (@center + @adjust);
+
+    margin-left: @em*( -20px )/@thisFontSize; // negative indent to left-align the text down the page
+    line-height: @em*( 20px )/@thisFontSize;
+  }
+  // Plain text in topbar
+  .navbar-text {
+    margin-bottom: 0;
+    line-height: @em*( @navbarHeight )/@baseFontSize;
+  }
+  // Janky solution for now to account for links outside the .nav
+  .navbar-link {
+    color: @navbarLinkColor;
+    &:hover {
+      color: @navbarLinkColorHover;
+    }
+  }
+  // Buttons in navbar
+  .btn,
+  .btn-group {
+    .navbarVerticalAlign(@em*( 30px )/@baseFontSize); // Vertically center in navbar
+  }
+  .btn-group .btn {
+    margin: 0; // then undo the margin here so we don't accidentally double it
+  }
+}
+
+// Navbar forms
+.navbar-form {
+  margin-bottom: 0; // remove default bottom margin
+  .clearfix();
+  input,
+  select,
+  .radio,
+  .checkbox {
+    .navbarVerticalAlign(@em*( 30px )/@baseFontSize); // Vertically center in navbar
+  }
+  input,
+  select {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+  input[type="image"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    margin-top: @em*( 3px )/@baseFontSize;
+  }
+  .input-append,
+  .input-prepend {
+    margin-top: @em*( 6px )/@baseFontSize;
+    white-space: nowrap; // preven two  items from separating within a .navbar-form that has .pull-left
+    input {
+      margin-top: 0; // remove the margin on top since it's on the parent
+    }
+  }
+}
+
+// Navbar search
+.navbar-search {
+  position: relative;
+  float: left;
+  .navbarVerticalAlign(@em*( 28px )/@baseFontSize); // Vertically center in navbar
+  margin-bottom: 0;
+  .search-query {
+    padding: @em*( 4px )/@baseFontSize @em*( 9px )/@baseFontSize;
+    #font > .sans-serif(@em*( 13px )/@baseFontSize, normal, 1);
+    color: @white;
+    background-color: @navbarSearchBackground;
+    border: @em*( 1px )/@baseFontSize solid @navbarSearchBorder;
+    .box-shadow(inset 0 @em*( 1px )/@baseFontSize @em*( 2px )/@baseFontSize rgba(0,0,0,.1), 0 @em*( 1px )/@baseFontSize 0 rgba(255,255,255,.15));
+    .transition(none);
+
+    .placeholder(@navbarSearchPlaceholderColor);
+
+    // Focus states (we use .focused since IE7-8 and down doesn't support :focus)
+    &:focus,
+    &.focused {
+      padding: @em*( 5px )/@baseFontSize @em*( 10px )/@baseFontSize;
+      color: @grayDark;
+      text-shadow: 0 @em*( 1px )/@baseFontSize 0 @white;
+      background-color: @navbarSearchBackgroundFocus;
+      border: 0;
+      .box-shadow(0 0 @em*( 3px )/@baseFontSize rgba(0,0,0,.15));
+      outline: 0;
+    }
+  }
+}
+
+
+
+// FIXED NAVBAR
+// ------------
+
+// Shared (top/bottom) styles
+.navbar-fixed-top,
+.navbar-fixed-bottom {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: @zindexFixedNavbar;
+  margin-bottom: 0; // remove @em*( 18px )/@baseFontSize margin for static navbar
+}
+.navbar-fixed-top .navbar-inner,
+.navbar-fixed-bottom .navbar-inner {
+  padding-left:  0;
+  padding-right: 0;
+}
+
+.navbar-fixed-top .container,
+.navbar-fixed-bottom .container {
+  #grid > .core > .span(@gridColumns);
+}
+
+// Fixed to top
+.navbar-fixed-top {
+  top: 0;
+}
+
+// Fixed to bottom
+.navbar-fixed-bottom {
+  bottom: 0;
+}
+
+
+
+// NAVIGATION
+// ----------
+
+.navbar .nav {
+  position: relative;
+  left: 0;
+  display: block;
+  float: left;
+  margin: 0 @em*( 10px )/@baseFontSize 0 0;
+}
+.navbar .nav.pull-right {
+  float: right; // redeclare due to specificity
+}
+.navbar .nav > li {
+  display: block;
+  float: left;
+}
+
+// Links
+.navbar .nav > li > a {
+  @thisFontSize: @baseFontSize;
+  @thisElementHeight: 20px;
+  float: none;
+  // Vertically center the text given @navbarHeight
+  @elementHeight: @em*( 20px )/@baseFontSize;
+
+  @elementHeight: @thisElementHeight/@thisFontSize;
+  @center: ((@navbarHeight * (@baseFontSize/@thisFontSize)) - @elementHeight)/2;
+  @adjust: @em*( 0px )/@thisFontSize;
+  padding: (@center - @adjust) @em*( 10px )/@thisFontSize (@center + @adjust);
+
+  line-height: @em*( 20px )/@thisFontSize;
+  color: @navbarLinkColor;
+  text-decoration: none;
+  //text-shadow: 0 @em*( -1px )/@thisFontSize 0 rgba(0,0,0,.25);
+}
+// Buttons
+.navbar .btn {
+  @thisFontSize: @baseFontSize;
+  @thisElementHeight: 28px;
+  
+  display: inline-block;
+  padding: @em*( 4px )/@baseFontSize @em*( 10px )/@baseFontSize @em*( 4px )/@baseFontSize;
+  
+  // Vertically center the button given @navbarHeight
+  @elementHeight: @thisElementHeight/@thisFontSize;
+  @center: ((@navbarHeight * (@baseFontSize/@thisFontSize)) - @elementHeight)/2;
+  @adjust: @em*( 0 )/@thisFontSize;
+  margin: (@center - @adjust) @em*( 5px )/@thisFontSize (@center + @adjust);
+  
+  line-height: @em*( @baseLineHeight )/@baseFontSize;
+}
+.navbar .btn-group {
+  @thisFontSize: @baseFontSize;
+  @thisElementHeight: 28px;
+  
+  margin: 0;
+  // Vertically center the button given @navbarHeight
+  @elementHeight: @thisElementHeight/@thisFontSize;
+  @center: ((@navbarHeight * (@baseFontSize/@thisFontSize)) - @elementHeight)/2;
+  @adjust: @em*( 0 )/@thisFontSize;
+  margin: (@center - @adjust) @em*( 5px )/@thisFontSize (@center + @adjust);
+}
+// Hover
+.navbar .nav > li > a:hover {
+  background-color: @navbarLinkBackgroundHover; // "transparent" is default to differentiate :hover from .active
+  color: @navbarLinkColorHover;
+  text-decoration: none;
+}
+
+// Active nav items
+.navbar .nav .active > a,
+.navbar .nav .active > a:hover {
+  color: @navbarLinkColorActive;
+  text-decoration: none;
+  background-color: @navbarLinkBackgroundActive;
+  //border-bottom: @em*( 5px )/@baseFontSize solid #014493;
+}
+
+// Dividers (basically a vertical hr)
+.navbar .divider-vertical {
+  height: @em*( @navbarHeight )/@baseFontSize;
+  width: @em*( 1px )/@baseFontSize;
+  margin: 0 @em*( 9px )/@baseFontSize;
+  overflow: hidden;
+  background-color: @navbarBackground;
+  border-right: @em*( 1px )/@baseFontSize solid @navbarBackgroundHighlight;
+}
+
+// Secondary (floated right) nav in topbar
+.navbar .nav.pull-right {
+  margin-left: @em*( 10px )/@baseFontSize;
+  margin-right: 0;
+}
+
+// Navbar button for toggling navbar items in responsive layouts
+// These definitions need to come after '.navbar .btn'
+.navbar .btn-navbar {
+  display: none;
+  float: right;
+  padding: @em*( 7px )/@baseFontSize @em*( 10px )/@baseFontSize;
+  margin-left: @em*( 5px )/@baseFontSize;
+  margin-right: @em*( 5px )/@baseFontSize;
+  .buttonBackground(@navbarBackgroundHighlight, @navbarBackground);
+  .box-shadow(inset 0 @em*( 1px )/@baseFontSize 0 rgba(255,255,255,.1), 0 @em*( 1px )/@baseFontSize 0 rgba(255,255,255,.075));
+}
+.navbar .btn-navbar .icon-bar {
+  display: block;
+  width: @em*( 18px )/@baseFontSize;
+  height: @em*( 2px )/@baseFontSize;
+  background-color: #f5f5f5;
+  .border-radius(@em*( 1px )/@baseFontSize);
+  .box-shadow(0 @em*( 1px )/@baseFontSize 0 rgba(0,0,0,.25));
+}
+.btn-navbar .icon-bar + .icon-bar {
+  margin-top: @em*( 3px )/@baseFontSize;
+}
+
+
+// Dropdown menus
+// --------------
+
+// Menu position and menu carets
+.navbar .dropdown-menu {
+  &:before {
+    content: '';
+    display: inline-block;
+    border-left:   @em*( 7px )/@baseFontSize solid transparent;
+    border-right:  @em*( 7px )/@baseFontSize solid transparent;
+    border-bottom: @em*( 7px )/@baseFontSize solid #ccc;
+    border-bottom-color: @dropdownBorder;
+    position: absolute;
+    top: -@em*( 7px )/@baseFontSize;
+    left: @em*( 9px )/@baseFontSize;
+  }
+  &:after {
+    content: '';
+    display: inline-block;
+    border-left:   @em*( 6px )/@baseFontSize solid transparent;
+    border-right:  @em*( 6px )/@baseFontSize solid transparent;
+    border-bottom: @em*( 6px )/@baseFontSize solid @dropdownBackground;
+    position: absolute;
+    top: -@em*( 6px )/@baseFontSize;
+    left: @em*( 10px )/@baseFontSize;
+  }
+}
+// Menu position and menu caret support for dropups via extra dropup class
+.navbar-fixed-bottom .dropdown-menu {
+  &:before {
+    border-top: @em*( 7px )/@baseFontSize solid #ccc;
+    border-top-color: @dropdownBorder;
+    border-bottom: 0;
+    bottom: -@em*( 7px )/@baseFontSize;
+    top: auto;
+  }
+  &:after {
+    border-top: @em*( 6px )/@baseFontSize solid @dropdownBackground;
+    border-bottom: 0;
+    bottom: -@em*( 6px )/@baseFontSize;
+    top: auto;
+  }
+}
+// Dropdown toggle caret
+.navbar .nav li.dropdown .dropdown-toggle .caret,
+.navbar .nav li.dropdown.open .caret {
+  border-top-color: @white;
+  border-bottom-color: @white;
+}
+.navbar .nav li.dropdown.active .caret {
+  .opacity(100);
+}
+
+// Remove background color from open dropdown
+.navbar .nav li.dropdown.open > .dropdown-toggle,
+.navbar .nav li.dropdown.active > .dropdown-toggle,
+.navbar .nav li.dropdown.open.active > .dropdown-toggle {
+  background-color: transparent;
+}
+
+// Dropdown link on hover
+.navbar .nav li.dropdown.active > .dropdown-toggle:hover {
+  color: @white;
+}
+
+// Right aligned menus need alt position
+// TODO: rejigger this at some point to simplify the selectors
+.navbar .pull-right .dropdown-menu,
+.navbar .dropdown-menu.pull-right {
+  left: auto;
+  right: 0;
+  &:before {
+    left: auto;
+    right: @em*( 12px )/@baseFontSize;
+  }
+  &:after {
+    left: auto;
+    right: @em*( 13px )/@baseFontSize;
+  }
+}

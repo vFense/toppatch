@@ -1,0 +1,121 @@
+// CAROUSEL
+// --------
+
+.carousel {
+  position: relative;
+  margin-bottom: @em*( @baseLineHeight )/@baseFontSize;
+  line-height: 1;
+}
+
+.carousel-inner {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.carousel {
+
+  .item {
+    display: none;
+    position: relative;
+    .transition(.6s ease-in-out left);
+  }
+
+  // Account for jankitude on images
+  .item > img {
+    display: block;
+    line-height: 1;
+  }
+
+  .active,
+  .next,
+  .prev { display: block; }
+
+  .active {
+    left: 0;
+  }
+
+  .next,
+  .prev {
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  .next {
+    left: 100%;
+  }
+  .prev {
+    left: -100%;
+  }
+  .next.left,
+  .prev.right {
+    left: 0;
+  }
+
+  .active.left {
+    left: -100%;
+  }
+  .active.right {
+    left: 100%;
+  }
+
+}
+
+// Left/right controls for nav
+// ---------------------------
+.carousel-control {
+  @thisFontSize: @carouselControlFontSize;
+  font-size: @thisFontSize;
+  position: absolute;
+  top: 40%;
+  left: @em*( 15px )/@thisFontSize;
+  width: @em*( 40px )/@thisFontSize;
+  height: @em*( 40px )/@thisFontSize;
+  margin-top: @em*( -20px )/@thisFontSize;
+  font-weight: 100;
+  line-height: @em*( 30px )/@thisFontSize;
+  color: @white;
+  text-align: center;
+  background: @grayDarker;
+  border: @em*( 3px )/@thisFontSize solid @white;
+  .border-radius(@em*( 23px )/@thisFontSize);
+  .opacity(50);
+
+  // we can't have this transition here
+  // because webkit cancels the carousel
+  // animation if you trip this while
+  // in the middle of another animation
+  // ;_;
+  // .transition(opacity .2s linear);
+
+  // Reposition the right one
+  &.right {
+    left: auto;
+    right: @em*( 15px )/@thisFontSize;
+  }
+
+  // Hover state
+  &:hover {
+    color: @white;
+    text-decoration: none;
+    .opacity(90);
+  }
+}
+
+// Caption for text below images
+// -----------------------------
+
+.carousel-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: @em*( 10px )/@baseFontSize @em*( 15px )/@baseFontSize @em*( 5px )/@baseFontSize;
+  background: @grayDark;
+  background: rgba(0,0,0,.75);
+}
+.carousel-caption h4,
+.carousel-caption p {
+  color: @white;
+}

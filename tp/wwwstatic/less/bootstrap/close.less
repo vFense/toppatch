@@ -1,0 +1,32 @@
+// CLOSE ICONS
+// -----------
+
+// Alerts.less has a rule that modifies .close
+// Need reference to .close font size for proper em calculation
+.close {
+  @thisFontSize: @closeFontSize;
+  float: right;
+  font-size: @em*( @thisFontSize )/@baseFontSize;
+  font-weight: bold;
+  line-height: @em*( @baseLineHeight )/@thisFontSize;
+  color: @black;
+  text-shadow: 0 @em*( 1px )/@thisFontSize 0 rgba(255,255,255,1);
+  .opacity(20);
+  &:hover {
+    color: @black;
+    text-decoration: none;
+    cursor: pointer;
+    .opacity(40);
+  }
+}
+
+// Additional properties for button version
+// iOS requires the button element instead of an anchor tag.
+// If you want the anchor version, it requires `href="#"`.
+button.close {
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  -webkit-appearance: none;
+}

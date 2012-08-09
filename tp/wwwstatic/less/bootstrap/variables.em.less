@@ -1,0 +1,265 @@
+// Variables.less
+// Variables to customize the look and feel of Bootstrap
+// -----------------------------------------------------
+
+
+
+// GLOBAL VALUES
+// --------------------------------------------------
+
+
+// Grays
+// -------------------------
+@black:                 #000;
+@grayDarker:            #222;
+@grayDark:              #333;
+@gray:                  #555;
+@grayLight:             #999;
+@grayLighter:           #eee;
+@white:                 #fff;
+
+
+// Accent colors
+// -------------------------
+@blue:                  #049cdb;
+@blueDark:              #0064cd;
+@green:                 #46a546;
+@red:                   #9d261d;
+@yellow:                #ffc40d;
+@orange:                #f89406;
+@pink:                  #c3325f;
+@purple:                #7a43b6;
+
+
+// Scaffolding
+// -------------------------
+@bodyBackground:        @white;
+@textColor:             @grayDark;
+
+
+// Links
+// -------------------------
+@linkColor:             #08c;
+@linkColorHover:        darken(@linkColor, 15%);
+
+// Type Conversion
+// -------------------------
+@em:					1em;
+@px:					1px;
+@pct:					100%;
+
+// Typography
+// -------------------------
+@sansFontFamily:        "Helvetica Neue", Helvetica, Arial, sans-serif;
+@serifFontFamily:       Georgia, "Times New Roman", Times, serif;
+@monoFontFamily:        Menlo, Monaco, Consolas, "Courier New", monospace;
+
+@baseFontSize:          13px;
+@baseLineHeight:        18px;
+
+@baseFontFamily:        @sansFontFamily;
+@altFontFamily:         @serifFontFamily;
+
+@headingsFontFamily:    inherit; // empty to use BS default, @baseFontFamily
+@headingsFontWeight:    bold;    // instead of browser default, bold
+@headingsColor:         inherit; // empty to use BS default, @textColor
+
+// Element Font Sizes
+// -------------------------
+@pFontSize:					@baseFontSize;
+@pSmallFontSize:			@baseFontSize - 2;
+@codeFontSize: 				@baseFontSize - 1;
+@preFontSize: 				@baseFontSize * .925;
+@legendFontSize: 			@baseFontSize * 1.5;
+@legendSmallFontSize:		@baseLineHeight * .75;
+@libstFontSize: 			@baseFontSize;			// Label, Input, Button, Select, Text Area
+@h1FontSize:				30px;
+@h2FontSize:				24px;
+@h3FontSize:				18px;
+@h4FontSize:				14px;
+@h5FontSize:				12px;
+@h6FontSize:				11px;
+@h1SmallFontSize:			18px;
+@h2SmallFontSize:			18px;
+@h3SmallFontSize:			14px;
+@h4SmallFontSize:			12px;
+@blockquotePFontSize:		16px;
+@smallFontSize:				100%;
+
+// Class Font Sizes
+// -------------------------
+@leadFontSize:				20px;
+@abbrInitialismFontSize:	90%;
+@heroPFontSize:				18px;
+@heroH1FontSize:			60px;
+@navbarBrandFontSize:		20px;
+@progressBarFontSize:		12px;
+@closeFontSize:				20px;
+@labelFontSize:				@baseFontSize * .846;
+@badgeFontSize:				@baseFontSize * .846;
+@navHeaderFontSize:			11px;
+@carouselControlFontSize: 	60px;
+@btnFontSize:				@baseFontSize;
+@btnLargeFontSize:			@baseFontSize + 2px;
+@btnSmallFontSize:			@baseFontSize - 2px;
+@btnMiniFontSize:			@baseFontSize - 2px;
+@tooltipFontSize:			11px;
+
+
+// Tables
+// -------------------------
+@tableBackground:                   transparent; // overall background-color
+@tableBackgroundAccent:             #f9f9f9; // for striping
+@tableBackgroundHover:              #f5f5f5; // for hover
+@tableBorder:                       #ddd; // table and cell border
+
+
+// Buttons
+// -------------------------
+@btnBackground:                     @white;
+@btnBackgroundHighlight:            darken(@white, 10%);
+@btnBorder:                         #ccc;
+
+@btnPrimaryBackground:              @linkColor;
+@btnPrimaryBackgroundHighlight:     spin(@btnPrimaryBackground, 15%);
+
+@btnInfoBackground:                 #5bc0de;
+@btnInfoBackgroundHighlight:        #2f96b4;
+
+@btnSuccessBackground:              #62c462;
+@btnSuccessBackgroundHighlight:     #51a351;
+
+@btnWarningBackground:              lighten(@orange, 15%);
+@btnWarningBackgroundHighlight:     @orange;
+
+@btnDangerBackground:               #ee5f5b;
+@btnDangerBackgroundHighlight:      #bd362f;
+
+@btnInverseBackground:              @gray;
+@btnInverseBackgroundHighlight:     @grayDarker;
+
+
+// Forms
+// -------------------------
+@inputBackground:               @white;
+@inputBorder:                   #ccc;
+@inputBorderRadius:             3px;
+@inputDisabledBackground:       @grayLighter;
+@formActionsBackground:         #f5f5f5;
+
+// Dropdowns
+// -------------------------
+@dropdownBackground:            @white;
+@dropdownBorder:                rgba(0,0,0,.2);
+@dropdownLinkColor:             @grayDark;
+@dropdownLinkColorHover:        @white;
+@dropdownLinkBackgroundHover:   @linkColor;
+@dropdownDividerTop:            #e5e5e5;
+@dropdownDividerBottom:         @white;
+
+
+
+// COMPONENT VARIABLES
+// --------------------------------------------------
+
+// Z-index master list
+// -------------------------
+// Used for a bird's eye view of components dependent on the z-axis
+// Try to avoid customizing these :)
+@zindexDropdown:          1000;
+@zindexPopover:           1010;
+@zindexTooltip:           1020;
+@zindexFixedNavbar:       1030;
+@zindexModalBackdrop:     1040;
+@zindexModal:             1050;
+
+
+// Sprite icons path
+// -------------------------
+@iconSpritePath:          "../img/glyphicons-halflings.png";
+@iconWhiteSpritePath:     "../img/glyphicons-halflings-white.png";
+
+
+// Input placeholder text color
+// -------------------------
+@placeholderText:         @grayLight;
+
+
+// Hr border color
+// -------------------------
+@hrBorder:                #767676; //@grayLighter;
+
+
+// Navbar
+// -------------------------
+@targetNavbarHeight:              40px;
+@navbarHeight:                    @em*( @targetNavbarHeight )/@baseFontSize;
+@navbarBackground:                #cdd4da; //#222;
+@navbarBackgroundHighlight:       #FFF; //#333;
+
+@navbarText:                      @black; //#999
+@navbarLinkColor:                 @black; //#999;
+@navbarLinkColorHover:            @blueDark; //#FFF;
+@navbarLinkColorActive:           @navbarLinkColorHover;
+@navbarLinkBackgroundHover:       transparent;
+@navbarLinkBackgroundActive:      transparent; //@navbarBackground;
+
+@navbarSearchBackground:          lighten(@navbarBackground, 25%);
+@navbarSearchBackgroundFocus:     @white;
+@navbarSearchBorder:              darken(@navbarSearchBackground, 30%);
+@navbarSearchPlaceholderColor:    #ccc;
+@navbarBrandColor:                @navbarLinkColor;
+
+
+// Hero unit
+// -------------------------
+@heroUnitBackground:              @grayLighter;
+@heroUnitHeadingColor:            inherit;
+@heroUnitLeadColor:               inherit;
+
+
+// Form states and alerts
+// -------------------------
+@warningText:             #c09853;
+@warningBackground:       #fcf8e3;
+@warningBorder:           darken(spin(@warningBackground, -10), 3%);
+
+@errorText:               #b94a48;
+@errorBackground:         #f2dede;
+@errorBorder:             darken(spin(@errorBackground, -10), 3%);
+
+@successText:             #468847;
+@successBackground:       #dff0d8;
+@successBorder:           darken(spin(@successBackground, -10), 5%);
+
+@infoText:                #3a87ad;
+@infoBackground:          #d9edf7;
+@infoBorder:              darken(spin(@infoBackground, -10), 7%);
+
+
+
+// GRID
+// --------------------------------------------------
+
+// Fixed em based grid
+// Adapts to target grid width and number of columns
+// em conversion based on @baseFontSize above
+// --------------------------------------------------
+@gridWidth:				960; // in pixels
+@gridColumns:			12;
+
+// Calculate in Pixels
+@gutterWidth:			(@gridWidth/@gridColumns)/4;
+@columnWidth:			(@gridWidth/@gridColumns) - @gutterWidth;
+@rowWidth:				(@columnWidth * @gridColumns) + (@gutterWidth * (@gridColumns - 1));
+
+// Convert to em
+@gridColumnWidth:		@em * (@columnWidth/@baseFontSize);
+@gridGutterWidth:		@em * (@gutterWidth/@baseFontSize);
+@gridRowWidth:			@em * (@rowWidth   /@baseFontSize);
+
+// Fluid grid
+// Adapts to number of columns and grid width specified above
+// ----------------------------------------------------------
+@fluidGridColumnWidth:	@pct * @columnWidth/@rowWidth;
+@fluidGridGutterWidth:	@pct * @gutterWidth/@rowWidth;

@@ -1,0 +1,153 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<title>TopPatch App</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="viewport" content="width=device-width">
+	<link href='http://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
+	<link rel="stylesheet" href="css/style.css">
+	<script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+</head>
+<body>
+<noscript>
+	<div class="title">JavaScript is required.</div>
+	<div style="subtitle">&nbsp;</div>
+	<div class="subtitle">To use TopPatch, enable JavaScript in your browser and try again.</div>
+	<hr/>
+	<div class=""><a href="http://www.toppatch.com/"><img src="img/logo-text.png" class="logo-text" alt="Top Patch logo"/></a></div>
+</noscript>
+<header class="pageHeader">
+	<section class="navbar container">
+		<div class="navbar-inner noRadius noShadow">
+			<nav class="clearfix">
+				<a class="brand" href="#">TopPatch</a>
+				<ul class="nav pull-right">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<i class="icon-cog"></i><span>Settings </span><b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="javascript:;">Account Settings</a></li>
+							<li class="divider"></li>
+							<li><a href="javascript:;">Help</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<i class="icon-user"></i><span>Username </span><b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="javascript:;">My Profile</a></li>
+							<li class="divider"></li>
+							<li><a href="javascript:;">Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</section>
+</header>
+<!--[if lt IE 7]<section class="container"><div class="alert alert-error chromeframe" id="ie-warning"><a class="close" data-dismiss="alert">×</a><strong>Top Patch does not support your browser.</strong> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</div></section><![endif]-->
+<section class="container" role="main">
+	<header class="page-header">
+		<h1>Generic Report Title <small>Supporting text or tagline</small></h1>
+	</header>
+	<div class="row">
+		<div class="span4 widget">
+			<header>
+				<h2>Widget Title</h2>
+			</header>
+			<div>
+				<img src="http://placehold.it/300x200"/>
+			</div>
+		</div>
+		<div class="span8 widget">
+			<header>
+				<h2>Widget Title</h2>
+			</header>
+			<div id="example">
+				<img src="http://placehold.it/620x200"/>
+			</div>
+		</div>
+	</div>
+	<br />
+	<div class="row">
+		<div class="span12 widget">
+			<header>
+				<h2>Widget Title</h2>
+			</header>
+			<table id="data" class="table table-bordered table-striped"></table>
+			<div class="pagination pagination-centered">
+				<ul>
+					<li><a href="#">Prev</a></li>
+					<li class="active">
+						<a href="#">1</a>
+					</li>
+					<li><a href="#">2</a></li>
+					<li><a href="#">3</a></li>
+					<li><a href="#">4</a></li>
+					<li><a href="#">Next</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+<footer class="pageFooter">
+	<section class="container">
+		<div class="row">
+			<p class="span3"><img src="img/logo-text.png" class="logo-text" alt="Top Patch logo"/></p>
+			<p class="span9 legal">&copy; 2012 TopPatch Inc. All rights reserved.</p>
+		</div>
+	</section>
+</footer>
+<!--/container -->
+
+<!-- javascript libraries -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.4/bootstrap.min.js"></script>
+<script>
+	// The typeahead constructor is the last constructor defined in bootstrap.js
+	// If it exists then bootstrap.js has, most likely, loaded properly.
+	$.fn.typeahead.Constructor || document.write('<script src="js/libs/bootstrap/bootstrap.min.js"><\/script>');
+</script>
+<!--/javascript libraries -->
+
+<!-- javascript chart libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/2.8.1/d3.v2.min.js"></script>
+<script>window.d3 || document.write('<script src="js/libs/charts/d3.v2.min.js"><\/script>')</script>
+<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script>window.Raphael || document.write('<script src="js/libs/charts/raphael-min.js"><\/script>')</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/graphael/0.5.0/g.raphael-min.js"></script>
+<script>window.Raphael.g || document.write('<script src="js/libs/charts/g.raphael-min.js"><\/script>')</script>
+-->
+<!--/javascript chart libraries -->
+
+<!-- Top Patch javascript -->
+<script src="js/script.min.js"></script>
+<script>
+	jQuery(document).ready(function($) {
+		var table = $appName.generateTable().headerRow(true)
+				.sort(function (a, b) {
+					return a.score - b.score;
+				});
+
+		d3.json("test-ajax/proposed_data.json", function(data) {
+			d3.select("#data")
+				.datum(data)
+				.call(table);
+		});
+	});
+</script>
+<!--/Top Patch javascript -->
+
+</body>
+</html>
