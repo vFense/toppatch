@@ -24,6 +24,12 @@ from tornado.options import define, options
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
 
+class HeaderModule(tornado.web.UIModule):
+    def render(self):
+        return self.render_string(
+            "../templates/header.html"
+        )
+
 class Application(tornado.web.Application):
 
     def __init__(self, debug):
@@ -47,7 +53,12 @@ class Application(tornado.web.Application):
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler)]  # Returns specific product from respected vendor with vulnerabilities.
 
+        template_path = "/opt/TopPatch/tp/templates"
+        static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "wwwstatic" )
+        #ui_modules = { 'Header', HeaderModule }
+
         settings = {
+
             "cookie_secret": base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             "login_url": "/login",
             }
@@ -59,7 +70,7 @@ class Application(tornado.web.Application):
         self.account_manager = AccountManager(self.session)
         self.tokens = TokenManager(self.session)
 
-        tornado.web.Application.__init__(self, handlers, debug=debug, **settings)
+        tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
 
 
@@ -73,3 +84,5 @@ if __name__ == '__main__':
     https_server.listen(options.port)
 
     tornado.ioloop.IOLoop.instance().start()
+
+

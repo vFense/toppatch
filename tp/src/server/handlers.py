@@ -17,6 +17,9 @@ class RootHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
     def get(self):
+        self.render( "/opt/TopPatch/tp/wwwstatic/login.html" )
+
+        """
         self.write('<html>'
                     '<body>'
                         '<form action="/login" method="post">'
@@ -26,14 +29,18 @@ class LoginHandler(BaseHandler):
                         '</form>'
                         '<a href="/signup">Create Account</a>'
                     '</body></html>')
+        """
 
     def post(self):
-
-         if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
-            self.set_secure_cookie("user", self.get_argument("name"))
-            self.redirect("/")
+         username = self.get_argument("username")
+         login = self.application.account_manager.authenticate_account(str(username), str(self.get_argument("password")))
+         if login:
+            self.set_secure_cookie("username", username)
+            self.render( "login-template.html", current_user = login, name = username, login_header = "Welcome", page_title = "Login", header = True, footer = True, description = "Login Successful" )
+            #self.redirect("/")
          else:
-             self.write("Invalid username and/or password .")
+             #self.write("Invalid username and/or password .")
+             self.render( "login-template.html", current_user = login, name = username, login_header = "Permission Denied", page_title = "Login", header = True, footer = True, description = "Login Failed" )
 
 
 
@@ -46,7 +53,7 @@ class SignupHandler(BaseHandler):
                    'Password: <input type="password" name="password">'
                    '<input type="submit" value="Sign up">'
                    '</form>'
-                   '<a href="/login">Login</a>'
+                   '<a href="/login">Create</a>'
                    '</body></html>')
 
 

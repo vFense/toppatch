@@ -12,8 +12,8 @@
 	<meta name="author" content="">
 	<meta name="viewport" content="width=device-width">
 	<link href='http://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
-	<link rel="stylesheet" href="css/style.css">
-	<script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+	<link rel="stylesheet" href="{{ static_url('css/style.css') }}">
+	<script src="{{ static_url('js/libs/modernizr-2.5.3-respond-1.1.0.min.js') }}"></script> <!-- /js/libs/modernizr-2.5.3-respond-1.1.0.min.js -->
 </head>
 <body class="container">
 <noscript>
@@ -27,7 +27,7 @@
 <section class="" role="main">
 	<div class="login container-fluid">
 		<div class=" clearfix">
-			<form action="./" method="post">
+			<form action="/login" method="post">
 				<div class="logo">
 					<a href="http://www.toppatch.com/">
 						<img src="img/logo.png" class="logo-text" alt="TopPatch Logo"/>
@@ -49,11 +49,11 @@
 					</div>
 				</div>
 				<div class="actions clearfix">
+                    <button type="submit" class="button btn btn-primary btn-large pull-right">Sign In</button>
 					<div class="pull-left">
-						Don't have an account? <a href="#">Sign Up</a><br>
+						Don't have an account? <a href="/signup">Sign Up</a><br>
 						Forgot your <a href="#">Password</a>?
 					</div>
-					<button type="submit" class="button btn btn-primary btn-large pull-right">Sign In</button>
 				</div>
 			</form>
 		</div>
