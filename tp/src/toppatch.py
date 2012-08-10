@@ -21,6 +21,7 @@ from server.account.manager import AccountManager
 from server.oauth.token import TokenManager
 
 from tornado.options import define, options
+
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
 
@@ -36,23 +37,27 @@ class Application(tornado.web.Application):
 
             (r"/developer", DeveloperRegistrationHandler),
 
-            #### oAuth 2.0 Handlers
+            #### oAuth 2.0 Handlers ####
             (r"/login/oauth/authorize/?", AuthorizeHandler),
             (r"/login/oauth/access_token", AccessTokenHandler),
 
 
 
-            #### API Handlers
-            (r"/api/vendors/?", ApiHandler),                # Returns all vendors
-            (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
-            (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler)]  # Returns specific product from respected vendor with vulnerabilities.
+            #### API Handlers ####
+
+            # Return CVE data
+            (r"/api/vendors/?", CveHandler),                # Returns all vendors
+            (r"/api/vendors/?(\w+)/?", CveHandler),         # Returns vendor with products and respected vulnerabilities.
+            (r"/api/vendors/?(\w+)/?(\w+)/?", CveHandler),  # Returns specific product from respected vendor with vulnerabilities.
+
+            (r"/api/nodes/status/?", NodeHandler)]
 
         settings = {
             "cookie_secret": base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             "login_url": "/login",
             }
 
-        self.db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+        self.db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
 
         Session = sessionmaker(bind=self.db)
         self.session = Session()

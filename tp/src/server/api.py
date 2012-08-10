@@ -1,17 +1,15 @@
 """Hopefully, this is a RESTful implementation of the Top Patch API."""
 
-import tornado.httpserver
-import tornado.web
-
 try: import simplejson as json
 except ImportError: import json
 
 from models.application import *
+from models.scanner import Vulnerability
 from server.decorators import authenticated_request
 from server.handlers import BaseHandler
 
-class ApiHandler(BaseHandler):
-    """ Trying to figure out this whole RESTful api thing with json."""
+class CveHandler(BaseHandler):
+    """ API for CVE data """
 
     @authenticated_request
     def get(self, vendor=None, product=None):
@@ -101,15 +99,16 @@ class ApiHandler(BaseHandler):
                     cve_node["score"] = c.cvss.score
 
                     # Same method as above
-                    refs_list = []
-                    refs_node = {}
-
-                    for r in c.refs:
-                        refs_node["link"] = r.link
-                        refs_node["type"] = r.type
-
-                        refs_list.append(dict(refs_node))
-                        cve_node["refs"] = list(refs_list)
+#                    Don't add refs to the json. To much data. Use api providing the CVE id to get the refs
+#                    refs_list = []
+#                    refs_node = {}
+#
+#                    for r in c.refs:
+#                        refs_node["link"] = r.link
+#                        refs_node["type"] = r.type
+#
+#                        refs_list.append(dict(refs_node))
+#                        cve_node["refs"] = list(refs_list)
 
 
                     cve_list.append(dict(cve_node))
@@ -120,6 +119,10 @@ class ApiHandler(BaseHandler):
         return root_list
 
 
+class NodeHandler(BaseHandler):
+    """  Data for nodes on the network. """
 
-
+    @authenticated_request
+    def get(self):
+        print self.application.session.query(Vulnerability).filter_by(fixed=False).all()
 
