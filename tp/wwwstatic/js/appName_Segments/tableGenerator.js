@@ -25,10 +25,10 @@ $appName.generateTable = function () {
 			if (error) {
 				if (style === "table") {
 					if (!jQuery(parentElement).is("table")) { parentElement = parentElement.append("table"); }
-					parentElement.append("tbody").append("tr").append("td").attr("class","error")
+					parentElement.append("tbody").append("tr").append("td").attr("class", "error")
 						.text("Data parse error. Expected array of arrays, or array of objects. Found an array mixed with both arrays and objects.");
 				} else {
-					parentElement.append("div").attr("class","error")
+					parentElement.append("div").attr("class", "error")
 						.text("Data parse error. Expected array of arrays, or array of objects. Found an array mixed with both arrays and objects.");
 				}
 				return;

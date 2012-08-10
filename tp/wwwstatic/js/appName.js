@@ -9,4 +9,3 @@ var $appName = {
 //@codekit-append "AppName_Segments/timeSeriesChart.js";
 //@codekit-append "AppName_Segments/barCharts.js";
 //@codekit-append "AppName_Segments/tableGenerator.js";
-
