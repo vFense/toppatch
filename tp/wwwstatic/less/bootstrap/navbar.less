@@ -61,7 +61,7 @@
     // Note: @navbarHeight is not in the same reference font size, correct with base/this font size.
     @elementHeight: @thisElementHeight/@thisFontSize;
 	@center: ((@navbarHeight * (@baseFontSize/@thisFontSize)) - @elementHeight)/2;
-	@adjust: @em*( 2px )/@thisFontSize; // 2 pixels up
+	@adjust: @em*( @navbarBrandOffset )/@thisFontSize; // + up, - down
 	
 	padding: (@center - @adjust) @em*( 20px )/@thisFontSize (@center + @adjust);
 

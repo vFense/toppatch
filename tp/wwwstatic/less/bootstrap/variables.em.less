@@ -92,7 +92,6 @@
 @abbrInitialismFontSize:	90%;
 @heroPFontSize:				18px;
 @heroH1FontSize:			60px;
-@navbarBrandFontSize:		20px;
 @progressBarFontSize:		12px;
 @closeFontSize:				20px;
 @labelFontSize:				@baseFontSize * .846;
@@ -209,6 +208,8 @@
 @navbarSearchBorder:              darken(@navbarSearchBackground, 30%);
 @navbarSearchPlaceholderColor:    #ccc;
 @navbarBrandColor:                @navbarLinkColor;
+@navbarBrandFontSize:             24px;
+@navbarBrandOffset:               -2px; // + up, - down
 
 
 // Hero unit
@@ -246,7 +247,7 @@
 // em conversion based on @baseFontSize above
 // --------------------------------------------------
 @gridWidth:				960; // in pixels
-@gridColumns:			12;
+@gridColumns:			24;
 
 // Calculate in Pixels
 @gutterWidth:			(@gridWidth/@gridColumns)/4;

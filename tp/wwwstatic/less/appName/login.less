@@ -5,12 +5,12 @@
 
 .login {
 	background-color: #FFF;
-	width: 5 * @gridColumnWidth;
-	padding: 0.5 * @gridColumnWidth;
+	width: @em*( 300px )/@baseFontSize;
+	padding: @em*( 15px )/@baseFontSize;
 	margin: auto;
-	margin-top: 2 * @gridColumnWidth;
-	margin-bottom: 2 * @gridColumnWidth;
-	border: 1px solid #D5D5D5;
+	margin-top: @em*( 120px )/@baseFontSize;
+	margin-bottom: @em*( 120px )/@baseFontSize;
+	border: @em*( 1px )/@baseFontSize solid #D5D5D5;
 	
 	FORM {
 		margin-bottom: 0;
@@ -30,7 +30,7 @@
 		margin-bottom: 0.5em;
 	}
 	
-	.controls {
+	.controls INPUT {
 		@thisFontSize: @controlHeight;
 		position: relative;
 		font-size: @em*( @thisFontSize )/@libstFontSize;
@@ -55,7 +55,7 @@
 
 .boxshadow .login {
 	border-color: none;
-	.box-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+	.box-shadow(0 @em*( 1px )/@baseFontSize @em*( 3px )/@baseFontSize rgba(0, 0, 0, 0.3));
 }
 
 .borderradius .login {

@@ -10,3 +10,33 @@
 	border-top: @em*(  1px )/@baseFontSize solid #E0E0E0;
 	margin-top: @em*( 10px )/@baseFontSize;
 }
+
+// Alternate Widget Styles
+// --------------
+
+@altWidgetPadding: 6px;
+
+.widget-alternate {
+	border: 1px solid #E0E0E0;
+	padding: @altWidgetPadding;
+	.border-radius(5px);
+	overflow: hidden;
+	//.box-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
+	
+	HEADER {
+		margin-top: -@altWidgetPadding;
+		margin-left: -@altWidgetPadding;
+		padding-left: @altWidgetPadding;
+		margin-right: -@altWidgetPadding;
+		padding-right: @altWidgetPadding;
+		#gradient > .vertical (rgb(255,255,255), rgb(238,238,238));
+		color: rgb(7,89,164);
+	}
+
+	FOOTER {
+		margin-left: -@altWidgetPadding;
+		padding-left: @altWidgetPadding;
+		margin-right: -@altWidgetPadding;
+		padding-right: @altWidgetPadding;
+	}
+}

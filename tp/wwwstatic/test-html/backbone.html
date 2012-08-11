@@ -11,47 +11,59 @@
 		<script src="../js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
 	</head>
 	<body class="container">
-	<!--  content -->
-		<div class="output">
-			page loaded.
+		<!--  content -->
+		<div id="output">
+			page loading...
 		</div>
 		<div id="search_container">&nbsp;</div>
-	<!-- /content -->
-	<!--  Javascripts -->
-	<script src="../js/libs/jquery-1.7.2.min.js"></script>
-	<script src="../js/libs/bootstrap/bootstrap.min.js"></script>
-	<script src="../js/libs/underscore.js"></script>
-	<script src="../js/libs/backbone.js"></script>
-	<script src="../js/script.min.js"></script>
-	<div id="search_container"></div>
-
-<script type="text/javascript">
-    SearchView = Backbone.View.extend({
-        initialize: function(){
-            this.render();
-        },
-        render: function(){
-            // Compile the template using underscore
-            var template = _.template( $("#search_template").html(), {} );
-            // Load the compiled HTML into the Backbone "el"
-            this.$el.html( template );
-        }
-    });
-
-	var search_view;
-    jQuery().ready(function(e) {
-		search_view = new SearchView({ el: $("#search_container") });
-	});
-</script>
-
-<script type="text/template" id="search_template">
-	<div class="control-group">
-		<label class="control-label" for="search_input">Search</label>
-		<div class="controls input-append">
-			<input type="text" id="search_input" class="noMargin" /><input type="button" id="search_button" class="btn" value="Search" />
-		</div>
-	</div>
-</script>
-	<!-- /Javascripts -->
+		<!-- /content -->
+		<!--  Javascripts -->
+		<script src="../js/libs/jquery-1.7.2.min.js"></script>
+		<script src="../js/libs/bootstrap/bootstrap.min.js"></script>
+		<script src="../js/libs/underscore.js"></script>
+		<script src="../js/libs/backbone.js"></script>
+		<script src="../js/appName.min.js"></script>
+		<div id="search_container"></div>
+	
+		<script type="text/javascript">
+			SearchView = Backbone.View.extend({
+				initialize: function(){
+					this.render();
+				},
+				render: function(){
+					var variables = { search_label: "My Search" };
+					// Compile the template using underscore
+					var template = _.template( $("#search_template").html(), variables );
+					// Load the compiled HTML into the Backbone "el"
+					this.$el.html( template );
+				},
+				events: {
+					"click input[type=button]": "doSearch"
+				},
+				doSearch: function (event) {
+					var val = $("#search_input").val().trim()
+					if(val !== "") {
+						alert("Search for " + $("#search_input").val() );
+					}
+				}
+			});
+		
+			var search_view;
+			jQuery().ready(function(e) {
+				$("#output").text($("#output").text() + "page loaded.");
+				search_view = new SearchView({ el: $("#search_container") });
+			});
+		</script>
+		<!-- /Javascripts -->
+		<!-- Templates -->
+		<script type="text/template" id="search_template">
+			<div class="control-group">
+				<label class="control-label" for="search_input"><%= search_label %></label>
+				<div class="controls input-append">
+					<input type="text" id="search_input" class="noMargin" /><input type="button" id="search_button" class="btn btn-primary" value="Search" />
+				</div>
+			</div>
+		</script>
+		<!-- /Templates -->
 	</body>
 </html>
