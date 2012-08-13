@@ -61,12 +61,12 @@
     // Note: @navbarHeight is not in the same reference font size, correct with base/this font size.
     @elementHeight: @thisElementHeight/@thisFontSize;
 	@center: ((@navbarHeight * (@baseFontSize/@thisFontSize)) - @elementHeight)/2;
-	@adjust: @em*( @navbarBrandOffset )/@thisFontSize; // + up, - down
+	@adjust: @em*( @navbarBrandOffset )/@thisFontSize;
 	
 	padding: (@center - @adjust) @em*( 20px )/@thisFontSize (@center + @adjust);
 
     margin-left: @em*( -20px )/@thisFontSize; // negative indent to left-align the text down the page
-    line-height: @em*( 20px )/@thisFontSize;
+    line-height: @em*( @navbarBrandFontSize )/@thisFontSize;
   }
   // Plain text in topbar
   .navbar-text {

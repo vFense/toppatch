@@ -19,7 +19,8 @@ BODY FOOTER {
 	border-bottom: @em*( 1px )/@baseFontSize solid #E0E0E0;
 	
 	.logo-text {
-		@imageHeight: 32px;
+		@imageHeight: 36px;
+		height: @em*( @imageHeight )/@baseFontSize;
 		padding-top: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
 		padding-bottom: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
 	}
@@ -30,12 +31,5 @@ BODY FOOTER {
 }
 
 .legal {
-	line-height: @em*( 60px )/@baseFontSize;
-}
-
-.logo-text {
-	//@imageHeight:  32px;
-	@imageWidth:  156px;
-	//height: @em*( @imageHeight )/@baseFontSize;
-	width: @em*( @imageWidth )/@baseFontSize;
+	line-height: @em*( @pageFooterHeight )/@baseFontSize;
 }
