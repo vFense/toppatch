@@ -13,7 +13,13 @@
 	<meta name="viewport" content="width=device-width">
 	<link href='http://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
 	<link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="js/libs/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
 	<script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    <style>
+        #container {
+            height: 350px !important;
+        }
+    </style>
 </head>
 <body>
 <noscript>
@@ -59,22 +65,26 @@
 	<header class="page-header">
 		<h1>Generic Report Title <small>Supporting text or tagline</small></h1>
 	</header>
-	<div class="row">
+	<div id="container" class="row">
 		<div class="span4 widget">
-			<header>
-				<h2>Widget Title</h2>
-			</header>
-			<div>
-				<img src="http://placehold.it/300x200"/>
-			</div>
+            <div id="graphcontainer">
+                <header>
+                    <h2>Widget Title</h2>
+                </header>
+                <div id="pie">
+                    <!--<img src="http://placehold.it/300x200"/> -->
+                </div>
+            </div>
 		</div>
 		<div class="span8 widget">
-			<header>
-				<h2>Widget Title</h2>
-			</header>
-			<div id="example">
-				<img src="http://placehold.it/620x200"/>
-			</div>
+            <div id="graph2container">
+                <header>
+                    <h2>Widget Title</h2>
+                </header>
+                <div id="example">
+                    <!--<img src="http://placehold.it/620x200"/>-->
+                </div>
+            </div>
 		</div>
 	</div>
 	<br />
@@ -118,6 +128,8 @@
 	// If it exists then bootstrap.js has, most likely, loaded properly.
 	$.fn.typeahead.Constructor || document.write('<script src="js/libs/bootstrap/bootstrap.min.js"><\/script>');
 </script>
+<script src="js/libs/jquery-ui-1.8.22.custom/js/jquery-ui-1.8.22.custom.min.js"></script>
+
 <!--/javascript libraries -->
 
 <!-- javascript chart libraries -->
@@ -133,6 +145,7 @@
 
 <!-- Top Patch javascript -->
 <script src="js/script.min.js"></script>
+
 <script>
 	jQuery(document).ready(function($) {
 		var table = $appName.generateTable().headerRow(true)
@@ -147,6 +160,323 @@
 		});
 	});
 </script>
+<script type="text/javascript">
+
+    var w = 300,                        //width
+            h = 300,                            //height
+            r = 100,                            //radius
+            color = d3.scale.category20c();     //builtin range of colors
+
+    data = [{"label":"windows", "value":60},
+        {"label":"macos", "value":15},
+        {"label":"linux", "value":25}];
+
+    var vis = d3.select("#pie")
+            .append("svg:svg")              //create the SVG element inside the <body>
+            .data([data])                   //associate our data with the document
+            .attr("width", w)           //set the width and height of our visualization (these will be attributes of the <svg> tag
+            .attr("height", h)
+            .append("svg:g")                //make a group to hold our pie chart
+            .attr("transform", "translate(" + r + "," + r + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+
+    var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
+            .outerRadius(r);
+
+    var pie = d3.layout.pie()           //this will create arc data for us given a list of values
+            .value(function(d) { return d.value; });    //we must tell it out to access the value of each element in our data array
+
+    var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
+            .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
+            .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
+            .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
+            .attr("class", "slice");    //allow us to style things in the slices (like text)
+
+    arcs.append("svg:path")
+            .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
+            .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
+
+    arcs.append("svg:text")                                     //add a label to each slice
+            .attr("transform", function(d) {                    //set the label's origin to the center of the arc
+                //we have to make sure to set these before calling arc.centroid
+                d.innerRadius = 0;
+                d.outerRadius = r;
+                return "translate(" + arc.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
+            })
+            .attr("text-anchor", "middle")                          //center the text on it's origin
+            .text(function(d, i) { return data[i].label; });        //get the label from our original data array
+
+</script>
+<!--
+<script type="text/javascript">
+
+    var data = [{"label":"1990", "value":16},
+        {"label":"1991", "value":56},
+        {"label":"1992", "value":7},
+        {"label":"1993", "value":77},
+        {"label":"1994", "value":22},
+        {"label":"1995", "value":16},
+    ];
+
+    //maximum of data you want to use
+    var data_max = 80,
+
+    //number of tickmarks to use
+            num_ticks = 5,
+
+    //margins
+            left_margin = 60,
+            right_margin = 60,
+            top_margin = 30,
+            bottom_margin = 0;
+
+
+    var w = 500,                        //width
+            h = 500,                        //height
+            color = function(id) { return '#00b3dc' };
+
+    var x = d3.scale.linear()
+                    .domain([0, data_max])
+                    .range([0, w - ( left_margin + right_margin ) ])
+                    ,
+            y = d3.scale.ordinal()
+                    .domain(d3.range(data.length))
+                    .rangeBands([bottom_margin, h - top_margin], .5)
+                    ;
+
+
+    var chart_top = h - y.rangeBand()/2 - top_margin;
+    var chart_bottom = bottom_margin + y.rangeBand()/2;
+    var chart_left = left_margin;
+    var chart_right = w - right_margin;
+
+    /*
+     *  Setup the SVG element and position it
+     */
+    var vis = d3.select("#example")
+            .append("svg:svg")
+            .attr("width", w)
+            .attr("height", h)
+            .append("svg:g")
+            .attr("id", "barchart")
+            .attr("class", "barchart")
+
+
+    //Ticks
+    var rules = vis.selectAll("g.rule")
+            .data(x.ticks(num_ticks))
+            .enter()
+            .append("svg:g")
+            .attr("transform", function(d)
+            {
+                return "translate(" + (chart_left + x(d)) + ")";});
+    rules.append("svg:line")
+            .attr("class", "tick")
+            .attr("y1", chart_top)
+            .attr("y2", chart_top + 4)
+            .attr("stroke", "black");
+
+    rules.append("svg:text")
+            .attr("class", "tick_label")
+            .attr("text-anchor", "middle")
+            .attr("y", chart_top)
+            .text(function(d)
+            {
+                return d;
+            });
+    var bbox = vis.selectAll(".tick_label").node().getBBox();
+    vis.selectAll(".tick_label")
+            .attr("transform", function(d)
+            {
+                return "translate(0," + (bbox.height) + ")";
+            });
+
+    var bars = vis.selectAll("g.bar")
+            .data(data)
+            .enter()
+            .append("svg:g")
+            .attr("class", "bar")
+            .attr("transform", function(d, i) { return "translate(0, " + y(i) + ")"; });
+
+    bars.append("svg:rect")
+            .attr("x", right_margin)
+            .attr("width", function(d) {
+                return (x(d.value));
+            })
+            .attr("height", y.rangeBand())
+            .attr("fill", color(0))
+            .attr("stroke", color(0));
+
+
+
+    //Labels
+    var labels = vis.selectAll("g.bar")
+            .append("svg:text")
+            .attr("class", "label")
+            .attr("x", 0)
+            .attr("text-anchor", "right")
+            .text(function(d) {
+                return d.label;
+            });
+
+    var bbox = labels.node().getBBox();
+    vis.selectAll(".label")
+            .attr("transform", function(d) {
+                return "translate(0, " + (y.rangeBand()/2 + bbox.height/4) + ")";
+            });
+
+
+    labels = vis.selectAll("g.bar")
+            .append("svg:text")
+            .attr("class", "value")
+            .attr("x", function(d)
+            {
+                return x(d.value) + right_margin + 10;
+            })
+            .attr("text-anchor", "left")
+            .text(function(d)
+            {
+                return "" + d.value + "%";
+            });
+
+    bbox = labels.node().getBBox();
+    vis.selectAll(".value")
+            .attr("transform", function(d)
+            {
+                return "translate(0, " + (y.rangeBand()/2 + bbox.height/4) + ")";
+            });
+
+    //Axes
+    vis.append("svg:line")
+            .attr("class", "axes")
+            .attr("x1", chart_left)
+            .attr("x2", chart_left)
+            .attr("y1", chart_bottom)
+            .attr("y2", chart_top)
+            .attr("stroke", "black");
+    vis.append("svg:line")
+            .attr("class", "axes")
+            .attr("x1", chart_left)
+            .attr("x2", chart_right)
+            .attr("y1", chart_top)
+            .attr("y2", chart_top)
+            .attr("stroke", "black");
+
+</script> -->
+
+<script>
+var data = [{year: "vulnerable", books: 54},
+            {year: "secure", books: 43},
+            {year: "patched", books: 41},
+            {year: "pending", books: 44},
+            {year: "nodes", books: 65}];
+
+var barWidth = 70;
+var width = (barWidth + 10) * data.length;
+var height = 200;
+
+var x = d3.scale.linear()
+        .domain([0, data.length])
+        .range([0, width]);
+var y = d3.scale.linear()
+        .domain([0, d3.max(data, function(datum) { return datum.books; })])
+        .rangeRound([0, height]);
+
+// add the canvas to the DOM
+var barDemo = d3.select("#example").
+    append("svg:svg").
+    attr("width", width).
+    attr("height", height+20);
+
+barDemo.selectAll("rect").
+    data(data).
+    enter().
+    append("svg:rect").
+    attr("x", function(datum, index) { return x(index); }).
+    attr("y", function(datum) { return height - y(datum.books); }).
+    attr("height", function(datum) { return y(datum.books); }).
+    attr("width", barWidth).
+    attr("fill", "#2d578b");
+
+barDemo.selectAll("text").
+        data(data).
+        enter().
+        append("svg:text").
+        attr("x", function(datum, index) { return x(index) + barWidth-20; }).
+        attr("y", function(datum) { return height - y(datum.books); }).
+        attr("dx", -barWidth/2).
+        attr("dy", "1.2em").
+        attr("text-anchor", "middle").
+        attr("style", "font-size: 8").
+        text(function(datum) { return datum.books;}).
+        attr("fill", "white");
+
+barDemo.selectAll("text.yAxis")
+        .data(data)
+        .enter().append("svg:text")
+        .attr("x", function(datum, index) { return x(index) + barWidth-20; })
+        .attr("y", height+10)
+        .attr("dx", -barWidth/2)
+        .attr("text-anchor", "middle")
+        .attr("style", "font-size: 8")
+        .text(function(datum) { return datum.year;})
+        //.attr('transform', 'translate(0, 5)')
+        .attr("class", "yAxis");
+
+</script>
+<script>
+    $(document).ready(function() {
+        $("#graphcontainer").css("border","1px solid black");
+        $("#graphcontainer").draggable({ containment: "#container" })
+                            .resizable({ maxHeight: 350,
+                                         maxWidth: 350,
+                                         minHeight: 300,
+                                         minWidth: 250 });
+        $("#graph2container").css("border","1px solid black");
+        $("#graph2container").draggable({ containment: "#container" })
+                            .resizable({ maxHeight: 350,
+                                         maxWidth: 650,
+                                         minHeight: 300,
+                                         minWidth: 450 });
+
+    });
+</script>
+<!--
+<script>
+   // simple array
+   var data = [8, 12, 15, 30, 43];
+   // variables for chart width and height
+   var w = 20,
+           h = 50;
+   var chart = d3.select("#example").append("svg")
+           .attr("class", "chart")
+           .attr("width", w * data.length)
+           .attr("height", h);
+   var x = d3.scale.linear()
+           .domain([0, 1])
+           .range([0, w]);
+
+   var y = d3.scale.linear()
+           .domain([0, 50])
+           .rangeRound([0, h]); //rangeRound is used for antialiasing
+   // x and y are the lower-left position of the bar
+   // width is the width of the bar
+   // height is the height of the bar
+   // for crisp edges use -.5 (antialiasing)
+   chart.selectAll("rect")
+           .data(data)
+           .enter().append("rect")
+           .attr("x", function(d, i) { return x(i) - .5; })
+           .attr("y", function(d) { return h - y(d) - .5; })
+           .attr("width", w)
+           .attr("height", function(d) { return y(d); } );
+   chart.append("line")
+           .attr("x1", 0)
+           .attr("x2", w * data.length)
+           .attr("y1", h - .5)
+           .attr("y2", h - .5)
+           .style("stroke", "#000");
+</script> -->
+
 <!--/Top Patch javascript -->
 
 </body>
