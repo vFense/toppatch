@@ -16,9 +16,13 @@
     <link rel="stylesheet" href="js/libs/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
 	<script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
     <style>
+        /*
         #container {
-            height: 350px !important;
+         height: 350px !important;
         }
+        #sortable { list-style-type: none; margin: 0; padding: 0; }
+        #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 4em; text-align: center; }
+        */
     </style>
 </head>
 <body>
@@ -68,8 +72,18 @@
 	<div id="container" class="row">
 		<div class="span4 widget">
             <div id="graphcontainer">
-                <header>
+                <header style="position: relative;">
                     <h2>Widget Title</h2>
+                    <div id="menu1" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1"><i id="graph-one-options" class="icon-list-ul"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="remove">Hide</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </div>
                 </header>
                 <div id="pie">
                     <!--<img src="http://placehold.it/300x200"/> -->
@@ -78,8 +92,18 @@
 		</div>
 		<div class="span8 widget">
             <div id="graph2container">
-                <header>
+                <header style="position: relative;">
                     <h2>Widget Title</h2>
+                    <div id="menu2" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu2"><i id="graph-two-options" class="icon-list-ul"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="remove">Hide</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </div>
                 </header>
                 <div id="example">
                     <!--<img src="http://placehold.it/620x200"/>-->
@@ -425,18 +449,31 @@ barDemo.selectAll("text.yAxis")
 </script>
 <script>
     $(document).ready(function() {
-        $("#graphcontainer").css("border","1px solid black");
+        $("#graphcontainer").css({"border":"1px solid black", "height": "350px", "background-color":"white"});
+        /*
         $("#graphcontainer").draggable({ containment: "#container" })
                             .resizable({ maxHeight: 350,
                                          maxWidth: 350,
                                          minHeight: 300,
-                                         minWidth: 250 });
-        $("#graph2container").css("border","1px solid black");
+                                         minWidth: 250 })
+                            .mouseover(function(){ $(this).css("z-index","5"); })
+                            .mouseout(function(){ $(this).css("z-index","1"); });
+        */
+        $("#graph2container").css({"border":"1px solid black", "height": "350px", "background-color":"white"});
+        /*
         $("#graph2container").draggable({ containment: "#container" })
                             .resizable({ maxHeight: 350,
                                          maxWidth: 650,
                                          minHeight: 300,
-                                         minWidth: 450 });
+                                         minWidth: 450 })
+                            .mouseover(function(){ $(this).css("z-index","5"); })
+                            .mouseout(function(){ $(this).css("z-index","1"); });
+        */
+        $(".dropdown-toggle").dropdown();
+        $( ".row" ).sortable();
+        $(".remove").click(function(){ $(this).parent().parent().parent().parent().parent().parent().hide();});
+
+        //$( ".row" ).disableSelection();
 
     });
 </script>
