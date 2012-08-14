@@ -32,10 +32,17 @@ def print_status(status, size, url_path, nvd_path):
         print '%s Was downloaded to %s, but the size is %d' \
                 % ( url_path, nvd_path, size )
 
+"""
+Getting the daily nvdcve-2.0-modified.xml file
+"""
 mod_xml = cve_downloader(nvd_modified_url, nvd_modified_path)
 print_status(mod_xml[0], mod_xml[1], \
         nvd_modified_url, nvd_modified_path)
 
+"""
+If we have not yet downloaded the 2002 until now CVE's,
+please download then now
+"""
 while iter_year <= current_year:
     nvd = nvdcve + str(iter_year) + '.xml'
     full_url =  url_path + nvd
