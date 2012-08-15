@@ -12,26 +12,25 @@
 	<meta name="author" content="">
 	<meta name="viewport" content="width=device-width">
 	<link href='http://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
-	<link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="js/libs/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
-	<script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+	<link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../js/libs/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
+	<script src="../js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
     <style>
-        /*
-        #container {
-         height: 350px !important;
+        .window {
+            -moz-border-radius: 15px;
+            border-radius: 15px;
+            border: 4px solid #E0E0E0;
+            background-color: white;
+            padding: 5px;
         }
-        #sortable { list-style-type: none; margin: 0; padding: 0; }
-        #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 4em; text-align: center; }
-        */
     </style>
 </head>
 <body>
 <noscript>
 	<div class="title">JavaScript is required.</div>
-	<div style="subtitle">&nbsp;</div>
 	<div class="subtitle">To use TopPatch, enable JavaScript in your browser and try again.</div>
 	<hr/>
-	<div class=""><a href="http://www.toppatch.com/"><img src="img/logo-text.png" class="logo-text" alt="Top Patch logo"/></a></div>
+	<div class=""><a href="http://www.toppatch.com/"><img src="../img/logo-text.png" class="logo-text" alt="Top Patch logo"/></a></div>
 </noscript>
 <header class="pageHeader">
 	<section class="navbar container">
@@ -44,9 +43,10 @@
 							<i class="icon-cog"></i><span>Settings </span><b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="javascript:;">Account Settings</a></li>
+                            <li><a href="#" id="restore">Restore Defaults</a></li>
+							<li><a href="#">Account Settings</a></li>
 							<li class="divider"></li>
-							<li><a href="javascript:;">Help</a></li>
+							<li><a href="#">Help</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
@@ -54,9 +54,9 @@
 							<i class="icon-user"></i><span>Username </span><b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="javascript:;">My Profile</a></li>
+							<li><a href="#">My Profile</a></li>
 							<li class="divider"></li>
-							<li><a href="javascript:;">Logout</a></li>
+							<li><a href="#">Logout</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -70,15 +70,15 @@
 		<h1>Generic Report Title <small>Supporting text or tagline</small></h1>
 	</header>
 	<div id="container" class="row">
-		<div class="span4 widget">
-            <div id="graphcontainer">
+		<div id="widgetExample" class="span4 widget">
+            <div id="graphcontainer" class="window">
                 <header style="position: relative;">
                     <h2>Widget Title</h2>
                     <div id="menu1" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1"><i id="graph-one-options" class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="#" class="remove">Hide</a></li>
-                            <li><a href="#">Another action</a></li>
+                            <li><a data-toggle="modal" href="#widgetProperties">Properties</a></li>
                             <li><a href="#">Something else here</a></li>
                             <li class="divider"></li>
                             <li><a href="#">Separated link</a></li>
@@ -91,7 +91,7 @@
             </div>
 		</div>
 		<div class="span8 widget">
-            <div id="graph2container">
+            <div id="graph2container" class="window">
                 <header style="position: relative;">
                     <h2>Widget Title</h2>
                     <div id="menu2" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
@@ -133,10 +133,28 @@
 		</div>
 	</div>
 </section>
+<div class="modal hide" id="widgetProperties">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>Chose a size</h3>
+    </div>
+    <div class="modal-body">
+        <div id="size">
+            <input type="radio" name="radio" id="radio2"  value="3"/><label for="radio2">3</label>
+            <input type="radio" name="radio" id="radio3" value="4"/><label for="radio3">4</label>
+            <input type="radio" name="radio" id="radio4" value="6"/><label for="radio4">6</label>
+            <input type="radio" name="radio" id="radio5" value="12"/><label for="radio5">12</label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn btn-primary" id="apply">Save changes</a>
+    </div>
+</div>
 <footer class="pageFooter">
 	<section class="container">
 		<div class="row">
-			<p class="span3"><img src="img/logo-text.png" class="logo-text" alt="Top Patch logo"/></p>
+			<p class="span3"><img src="../img/logo-text.png" class="logo-text" alt="Top Patch logo"/></p>
 			<p class="span9 legal">&copy; 2012 TopPatch Inc. All rights reserved.</p>
 		</div>
 	</section>
@@ -145,20 +163,20 @@
 
 <!-- javascript libraries -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+<script>window.jQuery || document.write('<script src="../js/libs/jquery-1.7.2.min.js"><\/script>')</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.4/bootstrap.min.js"></script>
 <script>
 	// The typeahead constructor is the last constructor defined in bootstrap.js
 	// If it exists then bootstrap.js has, most likely, loaded properly.
-	$.fn.typeahead.Constructor || document.write('<script src="js/libs/bootstrap/bootstrap.min.js"><\/script>');
+	$.fn.typeahead.Constructor || document.write('<script src="../js/libs/bootstrap/bootstrap.min.js"><\/script>');
 </script>
-<script src="js/libs/jquery-ui-1.8.22.custom/js/jquery-ui-1.8.22.custom.min.js"></script>
+<script src="../js/libs/jquery-ui-1.8.22.custom/js/jquery-ui-1.8.22.custom.min.js"></script>
 
 <!--/javascript libraries -->
 
 <!-- javascript chart libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/2.8.1/d3.v2.min.js"></script>
-<script>window.d3 || document.write('<script src="js/libs/charts/d3.v2.min.js"><\/script>')</script>
+<script>window.d3 || document.write('<script src="../js/libs/charts/d3.v2.min.js"><\/script>')</script>
 <!--
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script>window.Raphael || document.write('<script src="js/libs/charts/raphael-min.js"><\/script>')</script>
@@ -168,7 +186,7 @@
 <!--/javascript chart libraries -->
 
 <!-- Top Patch javascript -->
-<script src="js/script.min.js"></script>
+<script src="../js/script.min.js"></script>
 
 <script>
 	jQuery(document).ready(function($) {
@@ -177,7 +195,7 @@
 					return a.score - b.score;
 				});
 
-		d3.json("test-ajax/proposed_data.json", function(data) {
+		d3.json("../test-ajax/proposed_data.json", function(data) {
 			d3.select("#data")
 				.datum(data)
 				.call(table);
@@ -186,8 +204,8 @@
 </script>
 <script type="text/javascript">
 
-    var w = 300,                        //width
-            h = 300,                            //height
+    var w = 220,                        //width
+            h = 220,                            //height
             r = 100,                            //radius
             color = d3.scale.category20c();     //builtin range of colors
 
@@ -430,7 +448,7 @@ barDemo.selectAll("text").
         attr("dx", -barWidth/2).
         attr("dy", "1.2em").
         attr("text-anchor", "middle").
-        attr("style", "font-size: 8").
+        attr("style", "font-size: 10").
         text(function(datum) { return datum.books;}).
         attr("fill", "white");
 
@@ -441,15 +459,15 @@ barDemo.selectAll("text.yAxis")
         .attr("y", height+10)
         .attr("dx", -barWidth/2)
         .attr("text-anchor", "middle")
-        .attr("style", "font-size: 8")
+        .attr("style", "font-size: 10")
         .text(function(datum) { return datum.year;})
-        //.attr('transform', 'translate(0, 5)')
+        .attr('transform', 'translate(15, 5)')
         .attr("class", "yAxis");
 
 </script>
 <script>
-    $(document).ready(function() {
-        $("#graphcontainer").css({"border":"1px solid black", "height": "350px", "background-color":"white"});
+    //$(document).ready(function() {
+        //$("#graphcontainer").css({"border":"1px solid black", "height": "350px", "background-color":"white"});
         /*
         $("#graphcontainer").draggable({ containment: "#container" })
                             .resizable({ maxHeight: 350,
@@ -459,7 +477,7 @@ barDemo.selectAll("text.yAxis")
                             .mouseover(function(){ $(this).css("z-index","5"); })
                             .mouseout(function(){ $(this).css("z-index","1"); });
         */
-        $("#graph2container").css({"border":"1px solid black", "height": "350px", "background-color":"white"});
+        //$("#graph2container").css({"border":"1px solid black", "height": "350px", "background-color":"white"});
         /*
         $("#graph2container").draggable({ containment: "#container" })
                             .resizable({ maxHeight: 350,
@@ -472,10 +490,18 @@ barDemo.selectAll("text.yAxis")
         $(".dropdown-toggle").dropdown();
         $( ".row" ).sortable();
         $(".remove").click(function(){ $(this).parent().parent().parent().parent().parent().parent().hide();});
-
+        $("#restore").click(function(){ $(".widget").show(); });
+        $("#size").buttonset();
+        $("#apply").click(function(){
+            var sizeval = $('input:radio[name=radio]:checked').val();
+            var myClass = $("#widgetExample").attr("class");
+            $("#widgetExample").removeClass(myClass);
+            $("#widgetExample").addClass("span"+sizeval+" widget");
+            $("#widgetProperties").modal('hide');
+        });
         //$( ".row" ).disableSelection();
 
-    });
+    //});
 </script>
 <!--
 <script>
