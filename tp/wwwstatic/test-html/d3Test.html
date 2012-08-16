@@ -29,7 +29,7 @@
 	<script type="text/javascript">
 		var table = $appName.generateTable().headerRow(true);
 	
-		jQuery(document).ready(function($) {
+		//jQuery(document).ready(function($) {
 			d3.csv("../test-ajax/sp500.csv", function(data) {
 				d3.select("#csv")
 					.datum(data)
@@ -41,7 +41,7 @@
 					.call(table);
 			});
 			
-		});
+		//});
 	</script>
 	<!-- /Javascripts -->
 	</body>

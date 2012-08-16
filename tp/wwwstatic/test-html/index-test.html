@@ -44,6 +44,7 @@
 						</a>
 						<ul class="dropdown-menu">
                             <li><a href="#" id="restore">Restore Defaults</a></li>
+                            <li><a href="#" id="addwidget">Add Widget</a></li>
 							<li><a href="#">Account Settings</a></li>
 							<li class="divider"></li>
 							<li><a href="#">Help</a></li>
@@ -69,50 +70,73 @@
 	<header class="page-header">
 		<h1>Generic Report Title <small>Supporting text or tagline</small></h1>
 	</header>
-	<div id="container" class="row">
-		<div id="widgetExample" class="span4 widget">
+	<div id="container" class="row movable">
+		<div id="widget1" class="span4 widget">
             <div id="graphcontainer" class="window">
                 <header style="position: relative;">
                     <h2>Widget Title</h2>
                     <div id="menu1" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1"><i id="graph-one-options" class="icon-list-ul"></i></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1"><i class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#" class="remove">Hide</a></li>
-                            <li><a data-toggle="modal" href="#widgetProperties">Properties</a></li>
+                            <li><a href="#" class="remove" onclick="hideWidget(this);">Hide</a></li>
+                            <li><a data-toggle="modal" href="#widgetProperties" onclick="setProperties(this);">Properties</a></li>
                             <li><a href="#">Something else here</a></li>
                             <li class="divider"></li>
                             <li><a href="#">Separated link</a></li>
                         </ul>
                     </div>
                 </header>
-                <div id="pie">
+                <div id="graph1">
                     <!--<img src="http://placehold.it/300x200"/> -->
                 </div>
             </div>
 		</div>
-		<div class="span8 widget">
+		<div id="widget2" class="span8 widget">
             <div id="graph2container" class="window">
                 <header style="position: relative;">
                     <h2>Widget Title</h2>
                     <div id="menu2" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu2"><i id="graph-two-options" class="icon-list-ul"></i></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu2"><i class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#" class="remove">Hide</a></li>
-                            <li><a href="#">Another action</a></li>
+                            <li><a href="#" class="remove" onclick="hideWidget(this);">Hide</a></li>
+                            <li><a href="#widgetProperties" data-toggle="modal" onclick="setProperties(this);">Properties</a></li>
                             <li><a href="#">Something else here</a></li>
                             <li class="divider"></li>
                             <li><a href="#">Separated link</a></li>
                         </ul>
                     </div>
                 </header>
-                <div id="example">
+                <div id="graph2">
                     <!--<img src="http://placehold.it/620x200"/>-->
                 </div>
             </div>
 		</div>
 	</div>
+    <div class="row movable">
+        <div id="widget3" class="span12 widget">
+            <div id="graph3container" class="window">
+                <header style="position: relative;">
+                    <h2>Widget Title</h2>
+                    <div id="menu3" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu3"><i class="icon-list-ul"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="remove" onclick="hideWidget(this);">Hide</a></li>
+                            <li><a href="#widgetProperties" data-toggle="modal" onclick="setProperties(this);">Properties</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </div>
+                </header>
+                <div id="example2">
+                    <!--<img src="http://placehold.it/620x200"/>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="insert" class="row movable"></div>
 	<br />
-	<div class="row">
+	<div class="row movable">
 		<div class="span12 widget">
 			<header>
 				<h2>Widget Title</h2>
@@ -165,6 +189,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="../js/libs/jquery-1.7.2.min.js"><\/script>')</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.4/bootstrap.min.js"></script>
+<script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+<script src="http://backbonejs.org/backbone-min.js"></script>
 <script>
 	// The typeahead constructor is the last constructor defined in bootstrap.js
 	// If it exists then bootstrap.js has, most likely, loaded properly.
@@ -213,13 +239,14 @@
         {"label":"macos", "value":15},
         {"label":"linux", "value":25}];
 
-    var vis = d3.select("#pie")
+
+    var vis = d3.select("#graph1")
             .append("svg:svg")              //create the SVG element inside the <body>
             .data([data])                   //associate our data with the document
             .attr("width", w)           //set the width and height of our visualization (these will be attributes of the <svg> tag
             .attr("height", h)
             .append("svg:g")                //make a group to hold our pie chart
-            .attr("transform", "translate(" + r + "," + r + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+            .attr("transform", "translate(" + r + "," + r + ")");  //move the center of the pie chart from 0, 0 to radius, radius
 
     var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
             .outerRadius(r);
@@ -424,7 +451,7 @@ var y = d3.scale.linear()
         .rangeRound([0, height]);
 
 // add the canvas to the DOM
-var barDemo = d3.select("#example").
+var barDemo = d3.select("#graph2").
     append("svg:svg").
     attr("width", width).
     attr("height", height+20);
@@ -463,7 +490,27 @@ barDemo.selectAll("text.yAxis")
         .text(function(datum) { return datum.year;})
         .attr('transform', 'translate(15, 5)')
         .attr("class", "yAxis");
-
+</script>
+<script type="text/template" id="widget_template">
+    <div id="<%= widget %>" class="<%= span %> widget">
+        <div id="<%= graphcontainer %>" class="window">
+            <header style="position: relative;">
+                <h2>Widget Title</h2>
+                <div id="<%= menu %>" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#<%= menu %>"><i class="icon-list-ul"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="remove" onclick="hideWidget(this);">Hide</a></li>
+                        <li><a data-toggle="modal" href="#widgetProperties" onclick="setProperties(this);">Properties</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </div>
+            </header>
+            <div id="<%= graph %>">
+            </div>
+        </div>
+    </div>
 </script>
 <script>
     //$(document).ready(function() {
@@ -486,19 +533,63 @@ barDemo.selectAll("text.yAxis")
                                          minWidth: 450 })
                             .mouseover(function(){ $(this).css("z-index","5"); })
                             .mouseout(function(){ $(this).css("z-index","1"); });
-        */
-        $(".dropdown-toggle").dropdown();
-        $( ".row" ).sortable();
-        $(".remove").click(function(){ $(this).parent().parent().parent().parent().parent().parent().hide();});
-        $("#restore").click(function(){ $(".widget").show(); });
-        $("#size").buttonset();
-        $("#apply").click(function(){
-            var sizeval = $('input:radio[name=radio]:checked').val();
-            var myClass = $("#widgetExample").attr("class");
-            $("#widgetExample").removeClass(myClass);
-            $("#widgetExample").addClass("span"+sizeval+" widget");
-            $("#widgetProperties").modal('hide');
-        });
+
+         */
+    WidgetView = Backbone.View.extend({
+        initialize: function(){
+            this.counter = 4;
+            //this.render();
+        },
+        render: function(){
+            //Pass variables in using Underscore.js Template
+            var variables = { widget: "widget"+this.counter,
+                              span: "span4",
+                              graphcontainer: "graphcontainer"+this.counter,
+                              menu: "menu"+this.counter,
+                              graph: "graph"+this.counter };
+            // Compile the template using underscore
+            var template = _.template( $("#widget_template").html(), variables );
+            // Load the compiled HTML into the Backbone "el"
+            $(this.el).append( template );
+            this.counter++;
+        }
+    });
+    var widgetview = new WidgetView({ el: $("#insert") });
+
+    Properties = Backbone.Model.extend({
+        defaults: {
+            widgetName: "widget1"
+        },
+        initialize: function(){
+            /*
+            this.bind("change:widgetName", function(){
+                var name = this.get("widgetName"); // 'Stewie Griffin'
+                alert("Changed my name to " + name );
+            }); */
+        }
+    });
+    var properties = new Properties;
+    function setProperties(obj){
+        properties.set({ widgetName: $(obj).parent().parent().parent().parent().parent().parent().attr("id") });
+    }
+    function hideWidget(obj){
+        $(obj).parent().parent().parent().parent().parent().parent().hide();
+    }
+
+    $(".dropdown-toggle").dropdown();
+    $( ".movable" ).sortable({ connectWith: '.movable' });
+    $("#restore").click(function(){ $(".widget").show(); });
+    $("#size").buttonset();
+    $("#apply").click(function(){
+        var sizeval = $('input:radio[name=radio]:checked').val();
+        var widget = properties.get("widgetName");
+        var myClass = $("#"+widget).attr("class");
+        //alert (sizeval + widget + myClass);
+        $("#"+widget).removeClass(myClass);
+        $("#"+widget).addClass("span"+sizeval+" widget");
+        $("#widgetProperties").modal('hide');
+    });
+    $("#addwidget").click(function(){ widgetview.render(); });
         //$( ".row" ).disableSelection();
 
     //});
