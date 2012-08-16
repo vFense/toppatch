@@ -5299,32 +5299,46 @@ BODY {
   font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
   min-width: 72.3076923076923em;
 }
-BODY FOOTER {
+BODY > HEADER .brand {
+  position: relative;
+}
+BODY > HEADER .brand IMG {
+  height: 0.75em;
+  vertical-align: baseline;
+}
+BODY > FOOTER {
   background-color: #F8F8F8;
-  height: 5.384615384615385em;
+  height: 3.076923076923077em;
   margin-top: 1.3846153846153846em;
   color: #535456;
   border-top: 0.07692307692307693em solid #e0e0e0;
   border-bottom: 0.07692307692307693em solid #e0e0e0;
 }
-BODY FOOTER .logo-text {
+BODY > FOOTER .logo-text {
   height: 2.769230769230769em;
-  padding-top: 1.3076923076923077em;
-  padding-bottom: 1.3076923076923077em;
+  padding-top: 0.15384615384615385em;
+  padding-bottom: 0.15384615384615385em;
 }
-.page-header {
-  border-bottom-color: #E0E0E0;
+li [class^="icon-"],
+li [class*=" icon-"] {
+  line-height: 1.25em;
+}
+.sidebar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-color: #f5f5f5;
+  padding-top: 1em;
 }
 .legal {
-  line-height: 5.384615384615385em;
+  line-height: 3.076923076923077em;
 }
 .login {
   background-color: #FFF;
   width: 23.076923076923077em;
   padding: 1.1538461538461537em;
   margin: auto;
-  margin-top: 9.23076923076923em;
-  margin-bottom: 9.23076923076923em;
+  margin-top: 10%;
   border: 0.07692307692307693em solid #d5d5d5;
 }
 .login FORM {
@@ -5431,6 +5445,8 @@ BODY FOOTER .logo-text {
   padding-right: 0.7692307692307693em;
 }
 .boxshadow .pageHeader {
+  position: relative;
+  z-index: 1;
   -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px;
   -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px 0px;
@@ -5466,7 +5482,6 @@ BODY FOOTER .logo-text {
   background-image: linear-gradient(top, #ffffff, #eeeeee);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
-  color: #0759a4;
 }
 .widget-alternate FOOTER {
   margin-left: -6px;
@@ -5522,6 +5537,9 @@ NOSCRIPT .subtitle {
   font-weight: 300;
   text-shadow: rgba(0, 0, 0, 0.5) 0.05555555555555555em 0.05555555555555555em 0.16666666666666666em;
 }
+NOSCRIPT IMG.brand {
+  height: 2.769230769230769em;
+}
 .noRadius {
   -webkit-border-radius: 0 !important;
   -moz-border-radius: 0 !important;
@@ -5538,6 +5556,15 @@ NOSCRIPT .subtitle {
 .noMargin {
   margin: 0;
 }
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.smallcaps {
+  font-variant: small-caps;
+}
 .show-grid > [class*="span"] {
   background-color: #FFF;
   background-color: rgba(0, 0, 0, 0.05);
@@ -5552,10 +5579,6 @@ NOSCRIPT .subtitle {
     text-shadow: none !important;
     filter: none !important;
     -ms-filter: none !important;
-  }
-  a,
-  a:visited {
-    text-decoration: underline;
   }
   abbr[title]:after {
     content: " (" attr(title) ")";
