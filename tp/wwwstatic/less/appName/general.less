@@ -8,32 +8,51 @@ BODY {
 	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
 	//background-color: @TP_White;
 	min-width: @gridRowWidth;
-}
-
-BODY FOOTER {
-	background-color: #F8F8F8;
-		height: @em*( @pageFooterHeight )/@baseFontSize;
-	margin-top: @em*( 18px )/@baseFontSize;
-	color: darken(@TP_DarkGrey,4%);
-	border-top: @em*( 1px )/@baseFontSize solid #E0E0E0;
-	border-bottom: @em*( 1px )/@baseFontSize solid #E0E0E0;
 	
-	.logo-text {
-		@imageHeight: 32px;
-		padding-top: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
-		padding-bottom: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
+	> HEADER {
+		.brand {
+			position: relative;
+			IMG {
+				@imageHeight: 18px;
+				height: @em*( @imageHeight )/@navbarBrandFontSize;
+				vertical-align:baseline;
+				//@marginAdjust: 0px;
+				//margin-top: @em*( @marginAdjust )/@navbarBrandFontSize;
+				//margin-bottom: @em*( @marginAdjust )/@navbarBrandFontSize;
+			}
+		}
+	}
+
+	> FOOTER {
+		background-color: #F8F8F8;
+			height: @em*( @pageFooterHeight )/@baseFontSize;
+		margin-top: @em*( 18px )/@baseFontSize;
+		color: darken(@TP_DarkGrey,4%);
+		border-top: @em*( 1px )/@baseFontSize solid #E0E0E0;
+		border-bottom: @em*( 1px )/@baseFontSize solid #E0E0E0;
+		
+		.logo-text {
+			@imageHeight: 36px;
+			height: @em*( @imageHeight )/@baseFontSize;
+			padding-top: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
+			padding-bottom: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
+		}
 	}
 }
 
-.docHeader {
-	border-bottom-color: #E0E0E0;
+li {
+	[class^="icon-"], [class*=" icon-"] {
+		line-height: 1.25em;
+	}
+}
+
+
+.sidebar {
+	position:absolute;top:0;bottom:0;
+	background-color:rgb(245,245,245);
+	padding-top:1em;
 }
 
 .legal {
-	line-height: @em*( 60px )/@baseFontSize;
-}
-
-.logo-text {
-	@imageHeight: 32px;
-	height: @em*( @imageHeight )/@baseFontSize;
+	line-height: @em*( @pageFooterHeight )/@baseFontSize;
 }
