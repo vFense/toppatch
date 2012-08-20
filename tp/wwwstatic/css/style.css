@@ -5326,7 +5326,7 @@ li [class*=" icon-"] {
 .sidebar {
   position: absolute;
   top: 0;
-  bottom: 0;
+  bottom: 0px;
   background-color: #f5f5f5;
   padding-top: 1em;
 }

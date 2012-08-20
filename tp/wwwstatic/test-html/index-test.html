@@ -13,6 +13,7 @@
 	<meta name="viewport" content="width=device-width">
 	<link href='http://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
 	<link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../js/libs/shutterstock-rickshaw-c5eabaf/rickshaw.min.css">
     <link rel="stylesheet" href="../js/libs/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
 	<script src="../js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
     <style>
@@ -22,6 +23,12 @@
             border: 4px solid #E0E0E0;
             background-color: white;
             padding: 5px;
+        }
+        .modified-sidebar {
+            padding: 9px 0;
+            position:absolute;
+            left:20px;
+            top:40px;
         }
     </style>
 </head>
@@ -67,9 +74,29 @@
 </header>
 <!--[if lt IE 7]<section class="container"><div class="alert alert-error chromeframe" id="ie-warning"><a class="close" data-dismiss="alert">×</a><strong>Top Patch does not support your browser.</strong> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</div></section><![endif]-->
 <section class="container" role="main">
+    <div class="row">
+        <aside class="span2 sidebar modified-sidebar">
+            <div class="sidebar-nav">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Heading 1</li>
+                    <li class="active"><a href="#test/dashboard">Section 1.1</a></li>
+                    <li class=""><a href="#test/payments">Section 1.2</a></li>
+                    <li class=""><a href="#test/customers">Section 1.3</a></li>
+                    <li class=""><a href="#test/transfers">Section 1.4</a></li>
+                    <li class="nav-header">Heading 2</li>
+                    <li class=""><a href="#test/plans">Section 2.1</a></li>
+                    <li class=""><a href="#test/coupons">Section 2.2</a></li>
+                    <li class="nav-header">Heading 3</li>
+                    <li class=""><a href="#test/events">Section 3.1</a></li>
+                    <li class=""><a href="#test/logs?method=not_get">Section 3.2</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
 	<header class="page-header">
 		<h1>Generic Report Title <small>Supporting text or tagline</small></h1>
 	</header>
+
 	<div id="container" class="row movable">
 		<div id="widget1" class="span4 widget">
             <div id="graphcontainer" class="window">
@@ -86,9 +113,8 @@
                         </ul>
                     </div>
                 </header>
-                <div id="graph1">
-                    <!--<img src="http://placehold.it/300x200"/> -->
-                </div>
+                <div id="graph1" class="graph"></div>
+                <!--<img src="http://placehold.it/300x200"/> -->
             </div>
 		</div>
 		<div id="widget2" class="span8 widget">
@@ -106,9 +132,8 @@
                         </ul>
                     </div>
                 </header>
-                <div id="graph2">
-                    <!--<img src="http://placehold.it/620x200"/>-->
-                </div>
+                <div id="graph2" class="graph"></div>
+                <!--<img src="http://placehold.it/620x200"/>-->
             </div>
 		</div>
 	</div>
@@ -128,9 +153,8 @@
                         </ul>
                     </div>
                 </header>
-                <div id="graph3">
-                    <!--<img src="http://placehold.it/620x200"/>-->
-                </div>
+                <div id="graph3" class="graph"></div>
+                <!--<img src="http://placehold.it/620x200"/>-->
             </div>
         </div>
     </div>
@@ -165,7 +189,7 @@
     <div class="modal-body">
         <div id="size">
             <input type="radio" name="radio" id="radio2"  value="3"/><label for="radio2">3</label>
-            <input type="radio" name="radio" id="radio3" value="4"/><label for="radio3">4</label>
+            <input type="radio" name="radio" id="radio3" value="4" checked="checked"/><label for="radio3">4</label>
             <input type="radio" name="radio" id="radio4" value="6"/><label for="radio4">6</label>
             <input type="radio" name="radio" id="radio5" value="12"/><label for="radio5">12</label>
         </div>
@@ -175,9 +199,20 @@
     </div>
     <div class="modal-body">
         <div id="graphType">
-            <input type="radio" name="graph" id="graphtype1"  value="pie"/><label for="graphtype1">Pie Graph</label>
-            <input type="radio" name="graph" id="graphtype2" value="bar"/><label for="graphtype2">Bar Graph</label>
+            <input type="radio" name="graph" id="graphtype1"  value="pie" /><label for="graphtype1">Pie Graph</label>
+            <input type="radio" name="graph" id="graphtype2" value="bar" checked="checked"/><label for="graphtype2">Bar Graph</label>
             <input type="radio" name="graph" id="graphtype3" value="line"/><label for="graphtype3">Line Graph</label>
+        </div>
+    </div>
+    <div id="dataToGraph" class="hide">
+        <div class="modal-header">
+            <h3>Choose type of Data</h3>
+        </div>
+        <div class="modal-body">
+            <div id="graphdata">
+                <input type="radio" name="graphdata" id="graphdata1"  value="os" checked="checked"/><label for="graphdata1">OS in Network</label>
+                <input type="radio" name="graphdata" id="graphdata2" value="node"/><label for="graphdata2">Nodes by OS</label>
+            </div>
         </div>
     </div>
     <div class="modal-footer">
@@ -188,7 +223,7 @@
 <footer class="pageFooter">
 	<section class="container">
 		<div class="row">
-			<p class="span3"><img src="../img/logo-text.png" class="logo-text" alt="Top Patch logo"/></p>
+			<p class="span3"><img src="../img/brand-logo-name-tag.png" class="logo-text" alt="Top Patch logo"/></p>
 			<p class="span9 legal">&copy; 2012 TopPatch Inc. All rights reserved.</p>
 		</div>
 	</section>
@@ -201,6 +236,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.4/bootstrap.min.js"></script>
 <script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
 <script src="http://backbonejs.org/backbone-min.js"></script>
+<script src="../js/libs/shutterstock-rickshaw-c5eabaf/rickshaw.min.js"></script>
 <script>
 	// The typeahead constructor is the last constructor defined in bootstrap.js
 	// If it exists then bootstrap.js has, most likely, loaded properly.
@@ -239,15 +275,53 @@
 	});
 </script>
 <script type="text/javascript">
-    function createPie(graphNumber){
+    function rickshawLine(graphNumber){
+        $("#"+graphNumber).html("");
+        var graph = new Rickshaw.Graph({
+            element: document.querySelector("#"+graphNumber),
+            renderer: 'line',
+            width: 300,
+            height: 210,
+            series: [{
+                name: "Vulnerability",
+                data: [ { x: 0, y: 40 }, { x: 10, y: 49 }, { x: 200, y: 45}, { x: 600, y: 36}, { x: 900, y: 80 } ],
+                color: 'steelblue'
+            }]
+        });
+        //var something = new Rickshaw.Graph.Y({ graph: graph });
+
+        var y_axis = new Rickshaw.Graph.Axis.Y( {
+            graph: graph,
+            orientation: 'left',
+            tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+            element: document.getElementById(graphNumber+'-y-axis')
+        } );
+        var time = new Rickshaw.Fixtures.Time();
+        var hour = time.unit("minute");
+        var x_axis = new Rickshaw.Graph.Axis.Time({ graph : graph, timeUnit: hour });
+        //alert(graphNumber+'-y-axis');
+        graph.render();
+    }
+    function createPie(graphNumber, graphData){
         var w = 220,                        //width
                 h = 220,                            //height
                 r = 100,                            //radius
                 color = d3.scale.category20c();     //builtin range of colors
+        if(graphData == "os") {
+            data = [{"label":"windows7", "value":60},
+                {"label":"windows8", "value":20},
+                {"label":"windowsXP", "value":13},
+                {"label":"macos", "value":15},
+                {"label":"linux", "value":25}];
 
-        data = [{"label":"windows", "value":60},
-            {"label":"macos", "value":15},
-            {"label":"linux", "value":25}];
+        } else if(graphData == "node"){
+            data = [{"label":"node1", "value":60},
+                {"label":"node2", "value":15},
+                {"label":"node3", "value":25},
+                {"label":"node4", "value":40},
+                {"label":"node5", "value":32}];
+
+        }
 
         $("#"+graphNumber).html("");
         var vis = d3.select("#"+graphNumber)
@@ -259,6 +333,7 @@
                 .attr("transform", "translate(" + r + "," + r + ")");  //move the center of the pie chart from 0, 0 to radius, radius
 
         var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
+                .innerRadius(0)
                 .outerRadius(r);
 
         var pie = d3.layout.pie()           //this will create arc data for us given a list of values
@@ -274,7 +349,7 @@
                 .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
                 .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
 
-        arcs.append("svg:text")                                     //add a label to each slice
+       /* arcs.append("svg:text")                                     //add a label to each slice
                 .attr("transform", function(d) {                    //set the label's origin to the center of the arc
                     //we have to make sure to set these before calling arc.centroid
                     d.innerRadius = 0;
@@ -283,6 +358,22 @@
                 })
                 .attr("text-anchor", "middle")                          //center the text on it's origin
                 .text(function(d, i) { return data[i].label; });        //get the label from our original data array
+                */
+
+
+        // Add a label to the larger arcs, translated to the arc centroid and rotated.
+        arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; }).append("svg:text")
+                .attr("dy", ".35em")
+                .attr("text-anchor", "middle")
+                .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
+                .text(function(d) { return d.data.label; });
+
+        // Computes the label angle of an arc, converting from radians to degrees.
+        function angle(d) {
+            var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+            return a > 90 ? a - 180 : a;
+        }
+
     }
     function createBar(graphNumber){
         var data = [{year: "vulnerable", books: 54},
@@ -691,19 +782,22 @@
     $("#restore").click(function(){ $(".widget").show(); });
     $("#size").buttonset();
     $("#graphType").buttonset();
+    $("#graphdata").buttonset();
     $("#apply").click(function(){
         var sizeval = $('input:radio[name=radio]:checked').val();
         var widget = properties.get("widgetName");
         var graph = $("#"+widget).children().children("div").attr("id");
         var myClass = $("#"+widget).attr("class");
         var graphType = $('input:radio[name=graph]:checked').val();
+        var graphData = $('input:radio[name=graphdata]:checked').val();
         //alert( graph + graphType );
         if(graphType == "pie"){
-            createPie(graph);
+            createPie(graph, graphData);
         } else if (graphType=="bar"){
             createBar(graph);
         } else if(graphType == "line"){
             createLine(graph);
+            //rickshawLine(graph);
         }
         //properties.set({ widgetGraph: graph });
         //alert (sizeval + widget + myClass);
@@ -712,9 +806,14 @@
         $("#widgetProperties").modal('hide');
     });
     $("#addwidget").click(function(){ widgetview.render(); });
-    createPie("graph1");
+    $("#graphtype1").click(function(){ $("#dataToGraph").show(); });
+    $("#graphtype2").click(function(){ $("#dataToGraph").hide(); });
+    $("#graphtype3").click(function(){ $("#dataToGraph").hide(); });
+    createPie("graph1","os");
     createBar("graph2");
-    createSmallBar("graph3");
+    createLine("graph3");
+    //rickshawLine("graph3");
+    //createSmallBar("graph3");
 </script>
 
 
