@@ -1,7 +1,11 @@
-// ALERT STYLES
-// ------------
+//
+// Alerts
+// --------------------------------------------------
 
-// Base alert styles
+
+// Base styles
+// -------------------------
+
 .alert {
   padding: @em*( 8px )/@baseFontSize @em*( 35px )/@baseFontSize @em*( 8px )/@baseFontSize @em*( 14px )/@baseFontSize;
   margin-bottom: @em*( @baseLineHeight )/@baseFontSize;
@@ -11,8 +15,8 @@
   .border-radius(@em*( 4px )/@baseFontSize);
   color: @warningText;
 }
-.alert-heading {
-  color: inherit;
+.alert h4 {
+  margin: 0;
 }
 
 // Adjust close link position
@@ -21,15 +25,16 @@
   position: relative;
   top: @em*( -2px )/@closeFontSize;
   right: @em*( -21px )/@closeFontSize;
-  line-height: @em*( 18px )/@closeFontSize;
+  line-height: @em*( @baseLineHeight )/@closeFontSize;
 }
 
+
 // Alternate styles
-// ----------------
+// -------------------------
 
 .alert-success {
   background-color: @successBackground;
-  border-color: @successBorder;  
+  border-color: @successBorder;
   color: @successText;
 }
 .alert-danger,
@@ -45,7 +50,8 @@
 }
 
 // Block alerts
-// ------------------------
+// -------------------------
+
 .alert-block {
   padding-top: @em*( 14px )/@baseFontSize;
   padding-bottom: @em*( 14px )/@baseFontSize;
