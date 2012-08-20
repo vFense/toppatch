@@ -1,5 +1,6 @@
-// BUTTON STYLES
-// -------------
+//
+// Buttons
+// --------------------------------------------------
 
 
 // Base styles
@@ -7,67 +8,64 @@
 
 // Core
 .btn {
-  @thisFontSize: @btnFontSize;
   display: inline-block;
   .ie7-inline-block();
-  padding: @em*( 4px )/@thisFontSize @em*( 10px )/@thisFontSize @em*( 4px )/@thisFontSize;
+  padding: @em*( 4px )/@btnFontSize @em*( 14px )/@btnFontSize;
   margin-bottom: 0; // For input.btn
-  font-size: @thisFontSize;
-  line-height: @em*( @baseLineHeight )/@thisFontSize;
-  *line-height: @em*( 20px )/@thisFontSize;
-  color: @grayDark;
+  font-size: @btnFontSize;
+  line-height: @em*( @baseLineHeight )/@btnFontSize;
+  *line-height: @em*( @baseLineHeight )/@btnFontSize;
   text-align: center;
-  text-shadow: 0 @em*( 1.2px )/@thisFontSize @em*( 1.2px )/@thisFontSize rgba(255,255,255,.75);
   vertical-align: middle;
   cursor: pointer;
-  .buttonBackground(@btnBackground, @btnBackgroundHighlight);
-  border: @em*( 1px )/@thisFontSize solid @btnBorder;
+  .buttonBackground(@btnBackground, @btnBackgroundHighlight, @grayDark, 0 @em*( 1px )/@btnFontSize @em*( 1px )/@btnFontSize rgba(255,255,255,.75));
+  border: @em*( 1px )/@btnFontSize solid @btnBorder;
   *border: 0; // Remove the border to prevent IE7's black border on input:focus
   border-bottom-color: darken(@btnBorder, 10%);
-  .border-radius(@em*( 4px )/@thisFontSize);
+  .border-radius(@em*( 4px )/@btnFontSize);
   .ie7-restore-left-whitespace(); // Give IE7 some love
-  .box-shadow(inset 0 @em*( 1px )/@thisFontSize 0 rgba(255,255,255,.2), 0 @em*( 1px )/@thisFontSize @em*( 2px )/@thisFontSize rgba(0,0,0,.05));
+  .box-shadow(inset 0 @em*( 1px )/@btnFontSize 0 rgba(255,255,255,.2), 0 @em*( 1px )/@btnFontSize @em*( 2px )/@btnFontSize rgba(0,0,0,.05));
+
+  // Hover state
+  &:hover {
+    color: @grayDark;
+    text-decoration: none;
+    background-color: darken(@white, 10%);
+    *background-color: darken(@white, 15%); // Buttons in IE7 don't get borders, so darken on hover
+    background-position: 0 @em*( -15px )@btnFontSize;
+
+    // transition is only when going to hover, otherwise the background
+    // behind the gradient (there for IE<=9 fallback) gets mismatched
+    .transition(background-position .1s linear);
+  }
+
+  // Focus state for keyboard and accessibility
+  &:focus {
+    .tab-focus();
+  }
+
+  // Active state
+  &.active,
+  &:active {
+    background-color: darken(@white, 10%);
+    background-color: darken(@white, 15%) e("\9");
+    background-image: none;
+    outline: 0;
+    .box-shadow(inset 0 @em*( 2px )@btnFontSize @em*( 4px )@btnFontSize rgba(0,0,0,.15), 0 @em*( 1px )@btnFontSize @em*( 2px )@btnFontSize rgba(0,0,0,.05));
+  }
+
+  // Disabled state
+  &.disabled,
+  &[disabled] {
+    cursor: default;
+    background-color: darken(@white, 10%);
+    background-image: none;
+    .opacity(65);
+    .box-shadow(none);
+  }
+
 }
 
-// Hover state
-.btn:hover {
-  @thisFontSize: @btnFontSize;
-  color: @grayDark;
-  text-decoration: none;
-  background-color: darken(@white, 10%);
-  *background-color: darken(@white, 15%); /* Buttons in IE7 don't get borders, so darken on hover */
-  background-position: 0 @em*( -15px )@thisFontSize;
-
-  // transition is only when going to hover, otherwise the background
-  // behind the gradient (there for IE<=9 fallback) gets mismatched
-  .transition(background-position .1s linear);
-}
-
-// Focus state for keyboard and accessibility
-.btn:focus {
-  .tab-focus();
-}
-
-// Active state
-.btn.active,
-.btn:active {
-  @thisFontSize: @btnFontSize;
-  background-color: darken(@white, 10%);
-  background-color: darken(@white, 15%) e("\9");
-  background-image: none;
-  outline: 0;
-  .box-shadow(inset 0 @em*( 2px )@thisFontSize @em*( 4px )@thisFontSize rgba(0,0,0,.15), 0 @em*( 1px )@thisFontSize @em*( 2px )@thisFontSize rgba(0,0,0,.05));
-}
-
-// Disabled state
-.btn.disabled,
-.btn[disabled] {
-  cursor: default;
-  background-color: darken(@white, 10%);
-  background-image: none;
-  .opacity(65);
-  .box-shadow(none);
-}
 
 
 // Button Sizes
@@ -75,75 +73,48 @@
 
 // Large
 .btn-large {
-  @thisFontSize: @btnLargeFontSize;
-  font-size: @thisFontSize;
-  padding: @em*( 9px )/@thisFontSize @em*( 14px )/@thisFontSize;
+  padding: @em*( 9px )/@btnLargeFontSize @em*( 14px )/@btnLargeFontSize;
+  font-size: @btnLargeFontSize;
   line-height: normal;
-  .border-radius(@em*( 5px )/@thisFontSize);
-  border: @em*( 1px )/@thisFontSize solid @btnBorder;
-  .box-shadow(inset 0 @em*( 1px )/@thisFontSize 0 rgba(255,255,255,.2), 0 @em*( 1px )/@thisFontSize @em*( 2px )/@thisFontSize rgba(0,0,0,.05));
+  .border-radius(@em*( 5px )/@btnLargeFontSize);
 }
 .btn-large [class^="icon-"] {
-  @thisFontSize: @btnLargeFontSize;
-  margin-top: @em*( 1px )/@thisFontSize;
+  margin-top: @em*( 2px )/@btnLargeFontSize;
 }
 
 // Small
 .btn-small {
-  @thisFontSize: @btnSmallFontSize;
-  font-size: @em*( @thisFontSize )/@baseFontSize;
-  padding: @em*( 5px )/@thisFontSize @em*( 9px )/@thisFontSize;
-  line-height: @em*( @baseLineHeight - 2px )/@thisFontSize;
-  border: @em*( 1px )/@thisFontSize solid @btnBorder;
-  .box-shadow(inset 0 @em*( 1px )/@thisFontSize 0 rgba(255,255,255,.2), 0 @em*( 1px )/@thisFontSize @em*( 2px )/@thisFontSize rgba(0,0,0,.05));
-  .border-radius(@em*( 4px )/@thisFontSize);
+  padding: @em*( 3px )/@btnSmallFontSize @em*( 9px )/@btnSmallFontSize;
+  font-size: @em*( @btnSmallFontSize )/@baseFontSize;
+  line-height: @em*( @baseLineHeight - 2px )/@btnSmallFontSize;
 }
-
 .btn-small [class^="icon-"] {
-  @thisFontSize: @btnSmallFontSize;
-  margin-top: @em*( -1px )/@thisFontSize;
+  margin-top: 0;
 }
 
 // Mini
 .btn-mini {
-  @thisFontSize: @btnMiniFontSize;
-  font-size: @em*( @thisFontSize )/@baseFontSize;
-  padding: @em*( 2px )/@thisFontSize @em*( 6px )/@thisFontSize;
-  line-height: @em*( @baseLineHeight - 4px )/@thisFontSize;
-  border: @em*( 1px )/@thisFontSize solid @btnBorder;
-  .box-shadow(inset 0 @em*( 1px )/@thisFontSize 0 rgba(255,255,255,.2), 0 @em*( 1px )/@thisFontSize @em*( 2px )/@thisFontSize rgba(0,0,0,.05));
-  .border-radius(@em*( 4px )/@thisFontSize);
+  padding: @em*( 2px )/@btnMiniFontSize @em*( 6px )/@btnMiniFontSize;
+  font-size: @em*( @btnMiniFontSize )/@baseFontSize;
+  line-height: @em*( @baseLineHeight - 4px )/@btnMiniFontSize;
 }
+
+// Block button
+.btn-block {
+  display: block;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  .box-sizing(border-box);
+}
+.btn-block + .btn-block {
+  margin-top: @em*( 5px )/@baseFontSize;
+}
+
 
 // Alternate buttons
 // --------------------------------------------------
 
-// Set text color
-// -------------------------
-.btn-primary,
-.btn-primary:hover,
-.btn-warning,
-.btn-warning:hover,
-.btn-danger,
-.btn-danger:hover,
-.btn-success,
-.btn-success:hover,
-.btn-info,
-.btn-info:hover,
-.btn-inverse,
-.btn-inverse:hover {
-  color: @white;
-  text-shadow: 0 @em*( -1px )/@btnFontSize 0 rgba(0,0,0,.25);
-  &.btn-large {
-    text-shadow: 0 @em*( -1px )/@btnLargeFontSize 0 rgba(0,0,0,.25);
-  }
-  &.btn-small {
-    text-shadow: 0 @em*( -1px )/@btnSmallFontSize 0 rgba(0,0,0,.25);
-  }
-  &.btn-mini {
-    text-shadow: 0 @em*( -1px )/@btnMiniFontSize 0 rgba(0,0,0,.25);
-  }
-}
 // Provide *some* extra contrast for those who can get it
 .btn-primary.active,
 .btn-warning.active,
@@ -158,8 +129,8 @@
 // -------------------------
 .btn {
   // reset here as of 2.0.3 due to Recess property order
-  border-color: #ccc;
-  border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) rgba(0,0,0,.25);
+  border-color: #c5c5c5;
+  border-color: rgba(0,0,0,.15) rgba(0,0,0,.15) rgba(0,0,0,.25);
 }
 .btn-primary {
   .buttonBackground(@btnPrimaryBackground, @btnPrimaryBackgroundHighlight);
@@ -199,8 +170,8 @@ input[type="submit"].btn {
   }
 
   // IE7 has some default padding on button controls
-  *padding-top: @em*( 2px )/@btnFontSize;
-  *padding-bottom: @em*( 2px )/@btnFontSize;
+  *padding-top: @em*( 3px )/@btnFontSize;
+  *padding-bottom: @em*( 3px )/@btnFontSize;
   &.btn-large {
     *padding-top: @em*( 7px )/@btnLargeFontSize;
     *padding-bottom: @em*( 7px )/@btnLargeFontSize;
@@ -213,4 +184,27 @@ input[type="submit"].btn {
     *padding-top: @em*( 1px )/@btnMiniFontSize;
     *padding-bottom: @em*( 1px )/@btnMiniFontSize;
   }
+}
+
+
+// Link buttons
+// --------------------------------------------------
+
+// Make a button look and behave like a link
+.btn-link,
+.btn-link:active {
+  background-color: transparent;
+  background-image: none;
+  .box-shadow(none);
+}
+.btn-link {
+  border-color: transparent;
+  cursor: pointer;
+  color: @linkColor;
+  .border-radius(0);
+}
+.btn-link:hover {
+  color: @linkColorHover;
+  text-decoration: underline;
+  background-color: transparent;
 }

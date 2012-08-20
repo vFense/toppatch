@@ -18,11 +18,60 @@
 <body>
 <header class="pageHeader">
 	<section class="navbar container">
-		<div class="navbar-inner noRadius noShadow">
+		<div class="navbar-inner noBorder noRadius noShadow" id="primaryNav">
 			<nav class="clearfix">
 				<a class="brand" href="#">
 					<img src="img/brand-name.png" alt="Top Patch brand"/> | AppName
 				</a>
+				<ul class="nav pull-right">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<i class="icon-user"></i><span> Username </span><i class="icon-caret-down"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="javascript:;">My Profile</a></li>
+							<li class="divider"></li>
+							<li><a href="javascript:;">Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<div class="navbar-inner">
+			<nav class="clearfix">
+				<ul class="nav">
+					<li class="dropdown" role="menu" aria-labeledby="dlabel">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<span> Admin </span><i class="icon-caret-down"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li class="dropdown-submenu">
+								<a tabindex="-1" href="#">Option 1</a>
+								<ul class="dropdown-menu">
+									<li><a tabindex="-1" href="#">Second Level Link</a></li>
+									<li><a tabindex="-1" href="#">Second Level Link</a></li>
+									<li><a tabindex="-1" href="#">Second Level Link</a></li>
+									<li><a tabindex="-1" href="#">Second Level Link</a></li>
+									<li><a tabindex="-1" href="#">Second Level Link</a></li>
+								</ul>
+							</li>
+							<li><a href="javascript:;">Option 2</a></li>
+							<li><a href="javascript:;">Option 3</a></li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<i class="icon-file"></i><span> Reports </span><i class="icon-caret-down"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="javascript:;">Basic Report</a></li>
+							<li><a href="javascript:;">Generic Report 2</a></li>
+							<li><a href="javascript:;">Generic Report 3</a></li>
+						</ul>
+					</li>
+				</ul>
 				<ul class="nav pull-right">
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -32,16 +81,6 @@
 							<li><a href="javascript:;">Account Settings</a></li>
 							<li class="divider"></li>
 							<li><a href="javascript:;">Help</a></li>
-						</ul>
-					</li>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="icon-user"></i><span>Username </span><b class="caret"></b>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a href="javascript:;">My Profile</a></li>
-							<li class="divider"></li>
-							<li><a href="javascript:;">Logout</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -58,6 +97,28 @@
 			<div>
 		</section>
 	</header>
+	<div class="row">
+		<div class="span3">
+			<div class="widget number">
+				<h4>Nodes</h4>10,007
+			</div>
+		</div>
+		<div class="span3">
+			<div class="widget number">
+				<h4>Patched Today</h4>3,096
+			</div>
+		</div>
+		<div class="span3">
+			<div class="widget number">
+				<h4>Unpatched</h4>537
+			</div>
+		</div>
+		<div class="span3">
+			<div class="widget number">
+				<h4>Failed Patches</h4>3
+			</div>
+		</div>
+	</div>
 	<div class="row">
 		<div class="span4">
 			<div class="widget">
@@ -80,7 +141,6 @@
 			</div>
 		</div>
 	</div>
-	<br />
 	<div class="row">
 		<div class="span12">
 			<div class="widget">

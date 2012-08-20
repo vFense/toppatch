@@ -2,8 +2,6 @@
 // -------------------------
 
 .pageHeader {
-	#gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
-	
 	.navbar {
 		font-family: "Cantarell", "Arial Black", "Arial Bold", sans-serif;
 		font-weight: bold;
@@ -37,26 +35,4 @@
 			}
 		}
 	}
-}
-
-.nav li.divide-before {
-	border-left:@em*( 1px )/@baseFontSize solid @navbarBackground;
-	.box-shadow(@em*( -1px )/@baseFontSize 0 0 @navbarBackgroundHighlight);
-	padding-left:@em*( 10px )/@baseFontSize;
-}
-
-.nav li.divide-after {
-	border-left:@em*( 1px )/@baseFontSize solid @navbarBackground;
-	.box-shadow(@em*( -1px )/@baseFontSize 0 0 @navbarBackgroundHighlight);
-	padding-right:@em*( 10px )/@baseFontSize;
-}
-
-// CSS3 Styles
-// Filtered by Modernizr
-// ----------------------
-
-.boxshadow .pageHeader {
-	position:relative;
-	z-index:1;
-	.box-shadow(rgba(0, 0, 0, 0.3) 0px 1px 2px 0px);
 }
