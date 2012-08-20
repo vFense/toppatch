@@ -18,7 +18,7 @@
 <body>
 <header class="pageHeader">
 	<section class="navbar container">
-		<div class="navbar-inner noRadius noShadow" id="primaryNav">
+		<div class="navbar-inner noBorder noRadius noShadow" id="primaryNav">
 			<nav class="clearfix">
 				<a class="brand" href="#">
 					<img src="img/brand-name.png" alt="Top Patch brand"/> | AppName
@@ -40,6 +40,27 @@
 		<div class="navbar-inner">
 			<nav class="clearfix">
 				<ul class="nav">
+					<li class="dropdown" role="menu" aria-labeledby="dlabel">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<span> Admin </span><i class="icon-caret-down"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li class="dropdown-submenu">
+								<a tabindex="-1" href="#">Option 1</a>
+								<ul class="dropdown-menu">
+									<li><a tabindex="-1" href="#">Second Level Link</a></li>
+									<li><a tabindex="-1" href="#">Second Level Link</a></li>
+									<li><a tabindex="-1" href="#">Second Level Link</a></li>
+									<li><a tabindex="-1" href="#">Second Level Link</a></li>
+									<li><a tabindex="-1" href="#">Second Level Link</a></li>
+								</ul>
+							</li>
+							<li><a href="javascript:;">Option 2</a></li>
+							<li><a href="javascript:;">Option 3</a></li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav">
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 							<i class="icon-file"></i><span> Reports </span><i class="icon-caret-down"></i>
@@ -48,27 +69,6 @@
 							<li><a href="javascript:;">Basic Report</a></li>
 							<li><a href="javascript:;">Generic Report 2</a></li>
 							<li><a href="javascript:;">Generic Report 3</a></li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="nav">
-					<li class="dropdown" role="menu" aria-labeledby="dlabel">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<span> Dropdown 2 </span><i class="icon-caret-down"></i>
-						</a>
-						<ul class="dropdown-menu">
-							<li class="dropdown-submenu">
-								<a tabindex="-1" href="#">Option 1</a>
-								<ul class="dropdown-menu">
-									<li>Second Level Link</li>
-									<li>Second Level Link</li>
-									<li>Second Level Link</li>
-									<li>Second Level Link</li>
-									<li>Second Level Link</li>
-								</ul>
-							</li>
-							<li><a href="javascript:;">Option 2</a></li>
-							<li><a href="javascript:;">Option 3</a></li>
 						</ul>
 					</li>
 				</ul>

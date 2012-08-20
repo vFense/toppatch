@@ -68,21 +68,21 @@
 // Set corners individual because sometimes a single button can be in a .btn-group and we need :first-child and :last-child to both match
 .btn-group > .btn:first-child {
   margin-left: 0;
-  .border-radius-left( @em*( 4px )/@btnFontSize );
+  .border-left-radius( @em*( 4px )/@btnFontSize );
 }
 // Need .dropdown-toggle since :last-child doesn't apply given a .dropdown-menu immediately after it
 .btn-group > .btn:last-child,
 .btn-group > .dropdown-toggle {
-  .border-radius-right( @em*( 4px )/@btnFontSize );
+  .border-right-radius( @em*( 4px )/@btnFontSize );
 }
 // Reset corners for large buttons
 .btn-group > .btn.large:first-child {
   margin-left: 0;
-  .border-radius-left( @em*( 6px )/@btnLargeFontSize );
+  .border-left-radius( @em*( 6px )/@btnLargeFontSize );
 }
 .btn-group > .btn.large:last-child,
 .btn-group > .large.dropdown-toggle {
-  .border-radius-right( @em*( 6px )/@btnLargeFontSize );
+  .border-right-radius( @em*( 6px )/@btnLargeFontSize );
 }
 
 // On hover/focus/active, bring the proper btn to front
