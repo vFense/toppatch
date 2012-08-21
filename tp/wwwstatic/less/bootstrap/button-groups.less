@@ -13,7 +13,14 @@
 
 // Space out series of button groups
 .btn-group + .btn-group {
-  margin-left: @em*( 5px )/@baseFontSize;
+  margin-left: @em*( 5px )/@baseFontSize; // Rule will not work because font-size is 0
+  
+  &:before {
+    content: "";
+    display: block;
+    font-size: 5px;
+    margin-left: @em*( 5px )/@baseFontSize;
+  }
 }
 
 // Optional: Group multiple button groups together for a toolbar
@@ -21,14 +28,41 @@
   font-size: 0; // Hack to remove whitespace that results from using inline-block
   margin-top: @em*( @baseLineHeight / 2 )/@baseFontSize;
   margin-bottom: @em*( @baseLineHeight / 2 )/@baseFontSize;
+  
+  &:before {
+    content: "";
+    display: block;
+    font-size: 5px;
+    margin-top: @em*( 5px )/@baseFontSize;
+  }
+  
+  &:after {
+    content: "";
+    display: block;
+    font-size: 5px;
+    margin-bottom: @em*( 5px )/@baseFontSize;
+  }
+  
   .btn-group {
     display: inline-block;
     .ie7-inline-block();
   }
   .btn + .btn,
-  .btn-group + .btn,
+  .btn-group + .btn {
+    margin-left: @em*( 5px )/@btnFontSize;
+    &.btn-large {margin-left: @em*( 5px )/@btnLargeFontSize;}
+    &.btn-small {margin-left: @em*( 5px )/@btnSmallFontSize;}
+    &.btn-mini  {margin-left: @em*( 5px )/@btnMiniFontSize;}
+  }
   .btn + .btn-group {
-    margin-left: @em*( 5px )/@baseFontSize;
+    margin-left: @em*( 5px )/@btnFontSize;
+    
+    &:before {
+      content: "";
+      display: block;
+      font-size: 5px;
+      margin-left: @em*( 5px )/@baseFontSize;
+    }
   }
 }
 
@@ -56,13 +90,13 @@
 
 // Reset fonts for other sizes
 .btn-group > .btn-mini {
-  font-size: @em*( 11px )/@btnMiniFontSize;
+  font-size: @btnMiniFontSize;
 }
 .btn-group > .btn-small {
-  font-size: @em*( 12px )/@btnSmallFontSize;
+  font-size: @btnSmallFontSize;
 }
 .btn-group > .btn-large {
-  font-size: @em*( 16px )/@btnLargeFontSize;
+  font-size: @btnLargeFontSize;
 }
 
 // Set corners individual because sometimes a single button can be in a .btn-group and we need :first-child and :last-child to both match
