@@ -41,11 +41,6 @@
 @linkColor:             #08c;
 @linkColorHover:        darken(@linkColor, 15%);
 
-// Type Conversion
-// -------------------------
-@em:					1em;
-@px:					1px;
-@pct:					100%;
 
 // Typography
 // -------------------------
@@ -61,55 +56,6 @@
 @headingsFontFamily:    inherit; // empty to use BS default, @baseFontFamily
 @headingsFontWeight:    bold;    // instead of browser default, bold
 @headingsColor:         inherit; // empty to use BS default, @textColor
-
-// Element Font Sizes
-// -------------------------
-@codeFontSize: 				12px;
-@preFontSize: 				@baseFontSize * .925;
-@legendFontSize: 			@baseFontSize * 1.5;
-@legendSmallFontSize:		@baseLineHeight * .75;
-@libstFontSize: 			@baseFontSize;			// Label, Input, Button, Select, Text Area
-
-@h1FontSize:				36px;
-@h2FontSize:				30px;
-@h3FontSize:				24px;
-@h4FontSize:				18px;
-@h5FontSize:				14px;
-@h6FontSize:				12px;
-
-@h1LineHeight:				40px;
-@h2LineHeight:				40px;
-@h3LineHeight:				40px;
-@h4LineHeight:				20px;
-@h5LineHeight:				20px;
-@h6LineHeight:				20px;
-
-@h1SmallFontSize:			24px;
-@h2SmallFontSize:			18px;
-@h3SmallFontSize:			14px;
-@h4SmallFontSize:			14px;
-
-@blockquotePFontSize:		16px;
-@smallFontSize:				100%;
-
-// Class Font Sizes
-// -------------------------
-@leadFontSize:				20px;
-@abbrInitialismFontSize:	90%;
-@heroPFontSize:				18px;
-@heroH1FontSize:			60px;
-@progressBarFontSize:		12px;
-@closeFontSize:				20px;
-@labelFontSize:				@baseFontSize * .846;
-@badgeFontSize:				@baseFontSize * .846;
-@navHeaderFontSize:			11px;
-@navbarSearchQuery:			13px;
-@carouselControlFontSize: 	60px;
-@btnFontSize:				@baseFontSize;
-@btnLargeFontSize:			16px;
-@btnSmallFontSize:			12px;
-@btnMiniFontSize:			11px;
-@tooltipFontSize:			11px;
 
 
 // Tables
@@ -198,7 +144,7 @@
 
 // Hr border color
 // -------------------------
-@hrBorder:                #767676; //@grayLighter;
+@hrBorder:                @grayLighter;
 
 
 // Wells
@@ -215,16 +161,14 @@
 @navbarBackgroundHighlight:       #ffffff;
 @navbarBorder:                    darken(@navbarBackground, 12%);
 
-@navbarText:                      @black; //#999
-@navbarLinkColor:                 @black; //#999;
-@navbarLinkColorHover:            @blueDark; //#FFF;
-@navbarLinkColorActive:           @navbarLinkColorHover;
+@navbarText:                      @gray;
+@navbarLinkColor:                 @gray;
+@navbarLinkColorHover:            @grayDark;
+@navbarLinkColorActive:           @gray;
 @navbarLinkBackgroundHover:       transparent;
 @navbarLinkBackgroundActive:      darken(@navbarBackground, 5%);
 
 @navbarBrandColor:                @navbarLinkColor;
-@navbarBrandFontSize:             20px;
-@navbarBrandOffset:               0px; // + up, - down
 
 // Inverted navbar
 @navbarInverseBackground:                #111111;
@@ -300,6 +244,7 @@
 // GRID
 // --------------------------------------------------
 
+
 // Fixed em based grid
 // Adapts to target grid width and number of columns
 // em conversion based on @baseFontSize above
@@ -322,3 +267,78 @@
 // ----------------------------------------------------------
 @fluidGridColumnWidth:	@pct * @columnWidth/@rowWidth;
 @fluidGridGutterWidth:	@pct * @gutterWidth/@rowWidth;
+
+
+// EM: Changes below
+// -------------------------
+
+// Type Conversion
+// -------------------------
+@em:					1em;
+@px:					1px;
+@pct:					100%;
+
+// Element Font Sizes
+// -------------------------
+@blockquotePFontSize:		16px;
+
+@codeFontSize: 				@baseFontSize - 2px;
+
+@h1FontSize:				36px;
+@h2FontSize:				30px;
+@h3FontSize:				24px;
+@h4FontSize:				18px;
+@h5FontSize:				14px;
+@h6FontSize:				12px;
+
+@h1LineHeight:				40px;
+@h2LineHeight:				40px;
+@h3LineHeight:				40px;
+@h4LineHeight:				20px;
+@h5LineHeight:				20px;
+@h6LineHeight:				20px;
+
+@h1SmallFontSize:			24px;
+@h2SmallFontSize:			18px;
+@h3SmallFontSize:			14px;
+@h4SmallFontSize:			14px;
+
+@legendFontSize: 			@baseFontSize * 1.5;
+@legendSmallFontSize:		@baseLineHeight * .75;
+@libstFontSize: 			@baseFontSize;			// Label, Input, Button, Select, Text Area
+
+@preFontSize: 				@baseFontSize - 1;
+
+@smallFontSize:				100%;
+
+// Class Font Sizes
+// -------------------------
+@abbrInitialismFontSize:	90%;
+
+@badgeFontSize:				@baseFontSize * .846;
+@btnFontSize:				@baseFontSize;
+@btnLargeFontSize:			@baseFontSize + 2px;
+@btnMiniFontSize:			@baseFontSize - 3px;
+@btnSmallFontSize:			@baseFontSize - 2px;
+
+@carouselControlFontSize: 	60px;
+@closeFontSize:				20px;
+
+@heroH1FontSize:			60px;
+@heroPFontSize:				18px;
+
+@labelFontSize:				@baseFontSize * .846;
+@leadFontSize:				20px;
+
+@navbarBrandFontSize:       20px;
+@navbarSearchQuery:			13px;
+@navHeaderFontSize:			11px;
+
+@popoverTitleFontSize:		14px; // New
+@progressBarFontSize:		12px;
+
+@tooltipFontSize:			11px;
+
+// Other
+// -------------------------
+@navbarBrandOffset:               0px; // + up, - down
