@@ -1,5 +1,7 @@
-// HERO UNIT
-// ---------
+//
+// Hero unit
+// --------------------------------------------------
+
 
 .hero-unit {
   padding: @em*( 60px )/@baseFontSize;
@@ -7,19 +9,16 @@
   background-color: @heroUnitBackground;
   .border-radius(@em*( 6px )/@baseFontSize);
   h1 {
-    @thisFontSize: @heroH1FontSize;
     margin-bottom: 0;
-    font-size: @em*( @thisFontSize )/@baseFontSize;
+    font-size: @em*( @heroH1FontSize )/@baseFontSize;
     line-height: 1;
     color: @heroUnitHeadingColor;
-    letter-spacing: @em*( -1px )/@thisFontSize;
+    letter-spacing: @em*( -1px )/@heroH1FontSize;
   }
   p {
-    @thisFontSize: @heroPFontSize;
-    font-size: @thisFontSize;
+    font-size: @heroPFontSize;
     font-weight: 200;
-    line-height: @em*( @baseLineHeight * 1.5 )/@thisFontSize;
+    line-height: @em*( @baseLineHeight * 1.5 )/@heroPFontSize;
     color: @heroUnitLeadColor;
-    margin-bottom: @em*( @baseLineHeight / 2 )/@thisFontSize;
   }
 }

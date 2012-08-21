@@ -1,5 +1,7 @@
-// CAROUSEL
-// --------
+//
+// Carousel
+// --------------------------------------------------
+
 
 .carousel {
   position: relative;
@@ -64,15 +66,16 @@
 
 // Left/right controls for nav
 // ---------------------------
+
 .carousel-control {
   @thisFontSize: @carouselControlFontSize;
-  font-size: @thisFontSize;
   position: absolute;
   top: 40%;
   left: @em*( 15px )/@thisFontSize;
   width: @em*( 40px )/@thisFontSize;
   height: @em*( 40px )/@thisFontSize;
   margin-top: @em*( -20px )/@thisFontSize;
+  font-size: @thisFontSize;
   font-weight: 100;
   line-height: @em*( 30px )/@thisFontSize;
   color: @white;
@@ -103,6 +106,7 @@
   }
 }
 
+
 // Caption for text below images
 // -----------------------------
 
@@ -118,4 +122,11 @@
 .carousel-caption h4,
 .carousel-caption p {
   color: @white;
+  line-height: @em*( @baseLineHeight )/@baseFontSize;
+}
+.carousel-caption h4 {
+  margin: 0 0 5px;
+}
+.carousel-caption p {
+  margin-bottom: 0;
 }

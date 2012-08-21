@@ -1,5 +1,7 @@
-// DROPDOWN MENUS
-// --------------
+//
+// Dropdown menus
+// --------------------------------------------------
+
 
 // Use the .menu class on any <li> element within the topbar or ul.tabs and you'll get some superfancy dropdowns
 .dropup,
@@ -22,11 +24,11 @@
   width: 0;
   height: 0;
   vertical-align: top;
-  content: "";
-  .opacity(30);
   border-top:   @em*( 4px )/@btnFontSize solid @black;
   border-right: @em*( 4px )/@btnFontSize solid transparent;
   border-left:  @em*( 4px )/@btnFontSize solid transparent;
+  content: "";
+  
   &.btn-large {
   	border-top:   @em*( 4px )/@btnLargeFontSize solid @black;
 	border-right: @em*( 4px )/@btnLargeFontSize solid transparent;
@@ -48,6 +50,7 @@
 .dropdown .caret {
   margin-top: @em*( 8px )/@btnFontSize;
   margin-left: @em*( 2px )/@btnFontSize;
+  
   &.btn-large {
   	margin-top: @em*( 8px )/@btnLargeFontSize;
 	margin-left: @em*( 2px )/@btnLargeFontSize;
@@ -80,8 +83,8 @@
   margin: @em*( 2px )/@baseFontSize 0 0; // override default ul
   list-style: none;
   background-color: @dropdownBackground;
-  border: @em*( 1px )/@baseFontSize solid #ccc;
-  border: @em*( 1px )/@baseFontSize solid rgba(0,0,0,.2);
+  border: @em*( 1px )/@baseFontSize solid #ccc; // Fallback for IE7-8
+  border: @em*( 1px )/@baseFontSize solid @dropdownBorder;
   *border-right-width: @em*( 2px )/@baseFontSize;
   *border-bottom-width: @em*( 2px )/@baseFontSize;
   .border-radius(@em*( 6px )/@baseFontSize);
@@ -179,6 +182,7 @@
     border-top: 0;
     border-bottom: @em*( 4px )/@btnFontSize solid @black;
     content: "\2191";
+    
     &.btn-large {
       border-bottom: @em*( 4px )/@btnLargeFontSize solid @black;
     }

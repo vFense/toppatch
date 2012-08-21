@@ -131,11 +131,10 @@
   .navbarVerticalAlign(@em*( 30px )/@baseFontSize); // Vertically center in navbar
   margin-bottom: 0;
   .search-query {
-  	@thisFontSize: 13px;
     margin-bottom: 0;
-    padding: @em*( 4px )/@thisFontSize @em*( 14px )/@thisFontSize;
-    #font > .sans-serif(@thisFontSize, normal, 1);
-    .border-radius(@em*( 15px )/@thisFontSize); // redeclare because of specificity of the type attribute
+    padding: @em*( 4px )/@navbarSearchQuery @em*( 14px )/@navbarSearchQuery;
+    #font > .sans-serif(@navbarSearchQuery, normal, 1);
+    .border-radius(@em*( 15px )/@navbarSearchQuery); // redeclare because of specificity of the type attribute
   }
 }
 

@@ -1,6 +1,6 @@
-// Forms.less
-// Base styles for various input types, form layouts, and states
-// -------------------------------------------------------------
+//
+// Forms
+// --------------------------------------------------
 
 
 // GENERAL STYLES
@@ -19,21 +19,19 @@ fieldset {
 
 // Groups of fields with labels on top (legends)
 legend {
-  @thisFontSize: @legendFontSize;
   display: block;
   width: 100%;
   padding: 0;
-  font-size: @thisFontSize;
-  margin-bottom: @em*( @baseLineHeight * 1.5 )/@thisFontSize;
-  line-height: @em*( @baseLineHeight * 2 )/@thisFontSize;
+  margin-bottom: @em*( @baseLineHeight )/@legendFontSize;
+  font-size: @legendFontSize;
+  line-height: @em*( @baseLineHeight * 2 )/@legendFontSize;
   color: @grayDark;
   border: 0;
-  border-bottom: @em*( 1px )/@thisFontSize solid #e5e5e5;
+  border-bottom: @em*( 1px )/@legendFontSize solid #e5e5e5;
 
   // Small
   small {
-    @thisFontSize: @legendSmallFontSize;
-    font-size: @thisFontSize;
+    font-size: @legendSmallFontSize;
     color: @grayLight;
   }
 }
@@ -44,10 +42,7 @@ input,
 button,
 select,
 textarea {
-  @thisFontSize: @libstFontSize;
-  font-size: @thisFontSize;
-  font-weight: normal;
-  line-height: @em*( @baseLineHeight )/@thisFontSize;
+  #font > .shorthand(@libstFontSize,normal,@em*( @baseLineHeight )/@libstFontSize); // Set size, weight, line-height here
 }
 input,
 button,
@@ -83,14 +78,14 @@ input[type="search"],
 input[type="tel"],
 input[type="color"],
 .uneditable-input {
-  @thisFontSize: @baseFontSize;
   display: inline-block;
-  font-size: @thisFontSize;
-  height: @em*( @baseLineHeight )/@thisFontSize;
-  padding: @em*( 4px )/@thisFontSize;
-  margin-bottom: @em*( 9px )/@thisFontSize;
-  line-height: @em*( @baseLineHeight )/@thisFontSize;
+  height: @em*( @baseLineHeight )/@libstFontSize;
+  padding: @em*( 4px )/@libstFontSize @em*( 6px )/@libstFontSize;
+  margin-bottom: @em*( 9px )/@libstFontSize;
+  font-size: @libstFontSize;
+  line-height: @em*( @baseLineHeight )/@libstFontSize;
   color: @gray;
+  .border-radius(@em*( @inputBorderRadius )/@libstFontSize);
 }
 
 // Reset appearance properties for textual inputs and textarea
@@ -120,34 +115,33 @@ input[type="search"],
 input[type="tel"],
 input[type="color"],
 .uneditable-input {
-  @thisFontSize:  @libstFontSize;
   background-color: @inputBackground;
   border: @em*( 1px )/@baseFontSize solid @inputBorder;
-  .border-radius(@em*( @inputBorderRadius )/@thisFontSize);
-  .box-shadow(inset 0 @em*( 1px )/@thisFontSize @em*( 1px )/@thisFontSize rgba(0,0,0,.075));
-  @transition: border linear .2s, box-shadow linear .2s;
-  .transition(@transition);
+  .box-shadow(inset 0 @em*( 1px )/@libstFontSize @em*( 1px )/@libstFontSize rgba(0,0,0,.075));
+  .transition(~"border linear .2s, box-shadow linear .2s");
 
   // Focus state
   &:focus {
     border-color: rgba(82,168,236,.8);
     outline: 0;
     outline: thin dotted \9; /* IE6-9 */
-    .box-shadow(inset 0 @em*( 1px )/@thisFontSize @em*( 1px )/@thisFontSize rgba(0,0,0,.075), 0 0 @em*( 8px )/@thisFontSize rgba(82,168,236,.6));
+    .box-shadow(inset 0 @em*( 1px )/@libstFontSize @em*( 1px )/@libstFontSize rgba(0,0,0,.075), 0 0 @em*( 8px )/@libstFontSize rgba(82,168,236,.6));
   }
 }
 
 // Position radios and checkboxes better
 input[type="radio"],
 input[type="checkbox"] {
-  @thisFontSize:  @libstFontSize;
-  margin: @em*( 3px )/@thisFontSize 0;
+  margin: @em*( 4px )/@libstFontSize 0 0;
   *margin-top: 0; /* IE7 */
+  margin-top: 1px \9; /* IE8-9 */
   line-height: normal;
   cursor: pointer;
 }
 
-// Reset width of input buttons, radios, checkboxes
+// Reset width of input images, buttons, radios, checkboxes
+input[type="file"],
+input[type="image"],
 input[type="submit"],
 input[type="reset"],
 input[type="button"],
@@ -156,26 +150,19 @@ input[type="checkbox"] {
   width: auto; // Override of generic input selector
 }
 
-// Make uneditable textareas behave like a textarea
-.uneditable-textarea {
-  width: auto;
-  height: auto;
-}
-
 // Set the height of select and file controls to match text inputs
 select,
 input[type="file"] {
-  @thisFontSize:  @libstFontSize;
-  height: @em*( 28px )/@thisFontSize; /* In IE7, the height of the select element cannot be changed by height, only font-size */
-  *margin-top: @em*( 4px )/@thisFontSize; /* For IE7, add top margin to align select with labels */
-  line-height: @em*( 28px )/@thisFontSize;
+  height: @em*( 30px )/@libstFontSize; /* In IE7, the height of the select element cannot be changed by height, only font-size */
+  *margin-top: @em*( 4px )/@libstFontSize; /* For IE7, add top margin to align select with labels */
+  line-height: @em*( 30px )/@libstFontSize;
 }
 
 // Make select elements obey height by applying a border
 select {
-  @thisFontSize:  @libstFontSize;
-  width: @em*( 220px )/@thisFontSize; // default input width + 10px of padding that doesn't get applied
-  border: @em*( 1px )/@thisFontSize solid #bbb;
+  width: @em*( 220px )/@libstFontSize; // default input width + 10px of padding that doesn't get applied
+  border: @em*( 1px )/@libstFontSize solid #bbb;
+  background-color: @inputBackground; // Chrome on Linux and Mobile Safari need background-color
 }
 
 // Make multiple select elements height not fixed
@@ -193,6 +180,41 @@ input[type="checkbox"]:focus {
 }
 
 
+// Uneditable inputs
+// -------------------------
+
+// Make uneditable inputs look inactive
+.uneditable-input,
+.uneditable-textarea {
+  color: @grayLight;
+  background-color: darken(@inputBackground, 1%);
+  border-color: @inputBorder;
+  .box-shadow(inset 0 @em*( 1px )/@libstFontSize @em*( 2px )/@libstFontSize rgba(0,0,0,.025));
+  cursor: not-allowed;
+}
+
+// For text that needs to appear as an input but should not be an input
+.uneditable-input {
+  overflow: hidden; // prevent text from wrapping, but still cut it off like an input does
+  white-space: nowrap;
+}
+
+// Make uneditable textareas behave like a textarea
+.uneditable-textarea {
+  width: auto;
+  height: auto;
+}
+
+
+// Placeholder
+// -------------------------
+
+// Placeholder text gets special styles; can't be bundled together though for some reason
+input,
+textarea {
+  .placeholder();
+}
+
 
 // CHECKBOXES & RADIOS
 // -------------------
@@ -200,38 +222,33 @@ input[type="checkbox"]:focus {
 // Indent the labels to position radios/checkboxes as hanging
 .radio,
 .checkbox {
-  @thisFontSize:  @libstFontSize;
-  min-height: @em*( 18px )/@thisFontSize; // clear the floating input if there is no label text
-  padding-left: @em*( 18px )/@thisFontSize;
+  min-height: @em*( 18px )/@libstFontSize; // clear the floating input if there is no label text
+  padding-left: @em*( 18px )/@libstFontSize;
 }
 .radio input[type="radio"],
 .checkbox input[type="checkbox"] {
-  @thisFontSize:  @libstFontSize;
   float: left;
-  margin-left: @em*( -18px )/@thisFontSize;
+  margin-left: @em*( -18px )/@libstFontSize;
 }
 
 // Move the options list down to align with labels
 .controls > .radio:first-child,
 .controls > .checkbox:first-child {
-  @thisFontSize:  @libstFontSize;
-  padding-top: @em*( 5px )/@thisFontSize; // has to be padding because margin collaspes
+  padding-top: @em*( 5px )/@libstFontSize; // has to be padding because margin collaspes
 }
 
 // Radios and checkboxes on same line
 // TODO v3: Convert .inline to .control-inline
 .radio.inline,
 .checkbox.inline {
-  @thisFontSize:  @libstFontSize;
   display: inline-block;
-  padding-top: @em*( 5px )/@thisFontSize;
+  padding-top: @em*( 5px )/@libstFontSize;
   margin-bottom: 0;
   vertical-align: middle;
 }
 .radio.inline + .radio.inline,
 .checkbox.inline + .checkbox.inline {
-  @thisFontSize:  @libstFontSize;
-  margin-left: @em*( 10px )/@thisFontSize; // space out consecutive inline controls
+  margin-left: @em*( 10px )/@libstFontSize; // space out consecutive inline controls
 }
 
 
@@ -265,6 +282,10 @@ textarea[class*="span"],
 .input-append .uneditable-input[class*="span"],
 .input-prepend input[class*="span"],
 .input-prepend .uneditable-input[class*="span"],
+.row-fluid input[class*="span"],
+.row-fluid select[class*="span"],
+.row-fluid textarea[class*="span"],
+.row-fluid .uneditable-input[class*="span"],
 .row-fluid .input-prepend [class*="span"],
 .row-fluid .input-append [class*="span"] {
   display: inline-block;
@@ -275,7 +296,17 @@ textarea[class*="span"],
 // GRID SIZING FOR INPUTS
 // ----------------------
 
+// Grid sizes
 #grid > .input(@gridColumnWidth, @gridGutterWidth);
+
+// Control row for multiple inputs per line
+.controls-row {
+  .clearfix(); // Clear the float from controls
+}
+.controls-row [class*="span"] {
+  float: left; // Float to collapse white-space for proper grid alignment
+}
+
 
 
 
@@ -291,7 +322,6 @@ select[readonly],
 textarea[readonly] {
   cursor: not-allowed;
   background-color: @inputDisabledBackground;
-  border-color: #ddd;
 }
 // Explicitly reset the colors here
 input[type="radio"][disabled],
@@ -325,12 +355,11 @@ input[type="checkbox"][readonly] {
 input:focus:required:invalid,
 textarea:focus:required:invalid,
 select:focus:required:invalid {
-  @thisFontSize: @libstFontSize;
   color: #b94a48;
   border-color: #ee5f5b;
   &:focus {
     border-color: darken(#ee5f5b, 10%);
-    .box-shadow(0 0 @em*( 6px )/@thisFontSize lighten(#ee5f5b, 20%));
+    .box-shadow(0 0 @em*( 6px )/@libstFontSize lighten(#ee5f5b, 20%));
   }
 }
 
@@ -340,28 +369,13 @@ select:focus:required:invalid {
 // ------------
 
 .form-actions {
-  @thisFontSize: @libstFontSize;
-  padding: @em*( @baseLineHeight - 1 )/@thisFontSize @em*( 20px )/@thisFontSize @em*( @baseLineHeight )/@thisFontSize;
-  margin-top: @em*( @baseLineHeight )/@thisFontSize;
-  margin-bottom: @em*( @baseLineHeight )/@thisFontSize;
+  padding: @em*( @baseLineHeight - 1 )/@libstFontSize @em*( 20px )/@libstFontSize @em*( @baseLineHeight )/@libstFontSize;
+  margin-top: @em*( @baseLineHeight )/@libstFontSize;
+  margin-bottom: @em*( @baseLineHeight )/@libstFontSize;
   background-color: @formActionsBackground;
-  border-top: @em*( 1px )/@baseFontSize solid #e5e5e5;
+  border-top: @em*( 1px )/@libstFontSize solid #e5e5e5;
   .clearfix(); // Adding clearfix to allow for .pull-right button containers
 }
-
-// For text that needs to appear as an input but should not be an input
-.uneditable-input {
-  @thisFontSize: @libstFontSize;
-  overflow: hidden; // prevent text from wrapping, but still cut it off like an input does
-  white-space: nowrap;
-  cursor: not-allowed;
-  background-color: @inputBackground;
-  border-color: #eee;
-  .box-shadow(inset 0 @em*( 1px )/@thisFontSize @em*( 2px )/@thisFontSize rgba(0,0,0,.025));
-}
-
-// Placeholder text gets special styles; can't be bundled together though for some reason
-.placeholder();
 
 
 
@@ -370,21 +384,19 @@ select:focus:required:invalid {
 
 .help-block,
 .help-inline {
-  color: @gray; // lighten the text some for contrast
+  color: lighten(@textColor, 15%); // lighten the text some for contrast
 }
 
 .help-block {
-  @thisFontSize: @libstFontSize;
   display: block; // account for any element using help-block
-  margin-bottom: @em*( @baseLineHeight / 2 )/@thisFontSize;
+  margin-bottom: @em*( @baseLineHeight / 2 )/@libstFontSize;
 }
 
 .help-inline {
-  @thisFontSize: @libstFontSize;
   display: inline-block;
   .ie7-inline-block();
   vertical-align: middle;
-  padding-left: @em*( 5px )/@thisFontSize;
+  padding-left: @em*( 5px )/@libstFontSize;
 }
 
 
@@ -393,45 +405,52 @@ select:focus:required:invalid {
 // ------------
 
 // Allow us to put symbols and text within the input field for a cleaner look
-.input-prepend,
-.input-append {
-  @thisFontSize: @libstFontSize;
-  margin-bottom: @em*( 5px )/@thisFontSize;
+.input-append,
+.input-prepend {
+  margin-bottom: @em*( 5px )/@baseFontSize; // Font size is 0, margin bottom will not work. See &:after below.
+  font-size: 0;
+  white-space: nowrap; // Prevent span and input from separating
+
+  // Temporary em based margin bottom fix.
+  &:after {
+    content: "";
+    display: block;
+    font-size: 5px;
+    margin-bottom: 1em;
+  }
+
   input,
   select,
   .uneditable-input {
     position: relative; // placed here by default so that on :focus we can place the input above the .add-on for full border and box-shadow goodness
     margin-bottom: 0; // prevent bottom margin from screwing up alignment in stacked forms
     *margin-left: 0;
-    vertical-align: middle;
-    .border-radius(0 @em*( @inputBorderRadius )/@thisFontSize @em*( @inputBorderRadius )/@thisFontSize 0);
+    font-size: @libstFontSize;
+    vertical-align: top;
+    .border-radius(0 @em*( @inputBorderRadius )/@libstFontSize @em*( @inputBorderRadius )/@libstFontSize 0);
     // Make input on top when focused so blue border and shadow always show
     &:focus {
       z-index: 2;
     }
   }
-  .uneditable-input {
-    border-left-color: #ccc;
-  }
   .add-on {
-    @thisFontSize: @libstFontSize;
     display: inline-block;
     width: auto;
-    height: @em*( @baseLineHeight )/@thisFontSize;
-    min-width: @em*( 16px )/@thisFontSize;
-    padding: @em*( 4px )/@thisFontSize @em*( 5px )/@thisFontSize;
+    height: @em*( @baseLineHeight )/@baseFontSize;
+    min-width: @em*( 16px )/@baseFontSize;
+    padding: @em*( 4px )/@baseFontSize @em*( 5px )/@baseFontSize;
+    font-size: @baseFontSize;
     font-weight: normal;
-    line-height: @em*( @baseLineHeight )/@thisFontSize;
+    line-height: @em*( @baseLineHeight )/@baseFontSize;
     text-align: center;
-    text-shadow: 0 @em*( 1px )/@thisFontSize 0 @white;
-    vertical-align: middle;
+    text-shadow: 0 @em*( 1px )/@baseFontSize 0 @white;
     background-color: @grayLighter;
-    border: @em*( 1px )/@thisFontSize solid #ccc;
+    border: @em*( 1px )/@baseFontSize solid #ccc;
   }
   .add-on,
   .btn {
-    @thisFontSize: @libstFontSize;
-    margin-left: @em*( -1px )/@thisFontSize;
+    margin-left: @em*( -1px )/@libstFontSize;
+    vertical-align: top;
     .border-radius(0);
   }
   .active {
@@ -442,30 +461,22 @@ select:focus:required:invalid {
 .input-prepend {
   .add-on,
   .btn {
-    @thisFontSize: @libstFontSize;
-    margin-right: @em*( -1px )/@thisFontSize;
+    margin-right: @em*( -1px )/@libstFontSize;
   }
   .add-on:first-child,
   .btn:first-child {
-    @thisFontSize: @libstFontSize;
-    .border-radius(@em*( @inputBorderRadius )/@thisFontSize 0 0 @em*( @inputBorderRadius )/@thisFontSize);
+    .border-radius(@em*( @inputBorderRadius )/@libstFontSize 0 0 @em*( @inputBorderRadius )/@libstFontSize);
   }
 }
 .input-append {
   input,
   select,
   .uneditable-input {
-    @thisFontSize: @libstFontSize;
-    .border-radius(@em*( @inputBorderRadius )/@thisFontSize 0 0 @em*( @inputBorderRadius )/@thisFontSize);
-  }
-  .uneditable-input {
-    border-right-color: #ccc;
-    border-left-color: #eee;
+    .border-left-radius(@em*( @inputBorderRadius )/@libstFontSize 0 0 @em*( @inputBorderRadius )/@libstFontSize);
   }
   .add-on:last-child,
   .btn:last-child {
-    @thisFontSize: @libstFontSize;
-    .border-radius(0 @em*( @inputBorderRadius )/@thisFontSize @em*( @inputBorderRadius )/@thisFontSize 0);
+    .border-radius(0 @em*( @inputBorderRadius )/@libstFontSize @em*( @inputBorderRadius )/@libstFontSize 0);
   }
 }
 // Remove all border-radius for inputs with both prepend and append
@@ -477,15 +488,13 @@ select:focus:required:invalid {
   }
   .add-on:first-child,
   .btn:first-child {
-    @thisFontSize: @libstFontSize;
-    margin-right: @em*( -1px )/@thisFontSize;
-    .border-radius(@em*( @inputBorderRadius )/@thisFontSize 0 0 @em*( @inputBorderRadius )/@thisFontSize);
+    margin-right: @em*( -1px )/@libstFontSize;
+    .border-radius(@em*( @inputBorderRadius )/@libstFontSize 0 0 @em*( @inputBorderRadius )/@libstFontSize);
   }
   .add-on:last-child,
   .btn:last-child {
-    @thisFontSize: @libstFontSize;
-    margin-left: @em*( -1px )/@thisFontSize;
-    .border-radius(0 @em*( @inputBorderRadius )/@thisFontSize @em*( @inputBorderRadius )/@thisFontSize 0);
+    margin-left: @em*( -1px )/@libstFontSize;
+    .border-radius(0 @em*( @inputBorderRadius )/@libstFontSize @em*( @inputBorderRadius )/@libstFontSize 0);
   }
 }
 
@@ -494,15 +503,33 @@ select:focus:required:invalid {
 // SEARCH FORM
 // -----------
 
-.search-query {
-  @thisFontSize: @libstFontSize;
-  padding-right: @em*( 14px )/@thisFontSize;
-  padding-right: @em*( 4px )/@thisFontSize ~"\9";
-  padding-left: @em*( 14px )/@thisFontSize;
-  padding-left: @em*( 4px )/@thisFontSize ~"\9"; /* IE7-8 doesn't have border-radius, so don't indent the padding */
-  margin-bottom: 0; // remove the default margin on all inputs
-  .border-radius(@em*( 14px )/@thisFontSize);
+input.search-query {
+  padding-right: @em*( 14px )/@libstFontSize;
+  padding-right: @em*( 4px )/@libstFontSize ~"\9";
+  padding-left: @em*( 14px )/@libstFontSize;
+  padding-left: @em*( 4px )/@libstFontSize ~"\9"; /* IE7-8 doesn't have border-radius, so don't indent the padding */
+  margin-bottom: 0; // Remove the default margin on all inputs
+  .border-radius(@em*( 15px )/@libstFontSize);
 }
+
+/* Allow for input prepend/append in search forms */
+.form-search .input-append .search-query,
+.form-search .input-prepend .search-query {
+  .border-radius(0); // Override due to specificity
+}
+.form-search .input-append .search-query {
+  .border-radius(@em*( 14px )/@libstFontSize 0 0 @em*( 14px )/@libstFontSize)
+}
+.form-search .input-append .btn {
+  .border-radius(0 @em*( 14px )/@libstFontSize @em*( 14px )/@libstFontSize 0)
+}
+.form-search .input-prepend .search-query {
+  .border-radius(0 @em*( 14px )/@libstFontSize @em*( 14px )/@libstFontSize 0)
+}
+.form-search .input-prepend .btn {
+  .border-radius(@em*( 14px )/@libstFontSize 0 0 @em*( 14px )/@libstFontSize)
+}
+
 
 
 
@@ -525,6 +552,7 @@ select:focus:required:invalid {
     display: inline-block;
     .ie7-inline-block();
     margin-bottom: 0;
+    vertical-align: middle;
   }
   // Re-hide hidden elements due to specifity
   .hide {
@@ -532,7 +560,9 @@ select:focus:required:invalid {
   }
 }
 .form-search label,
-.form-inline label {
+.form-inline label,
+.form-search .btn-group,
+.form-inline .btn-group {
   display: inline-block;
 }
 // Remove margin for input-prepend/-append
@@ -556,23 +586,20 @@ select:focus:required:invalid {
 .form-search .checkbox input[type="checkbox"],
 .form-inline .radio input[type="radio"],
 .form-inline .checkbox input[type="checkbox"] {
-  @thisFontSize: @libstFontSize;
   float: left;
-  margin-right: @em*( 3px )/@thisFontSize;
+  margin-right: @em*( 3px )/@libstFontSize;
   margin-left: 0;
 }
 
 
 // Margin to space out fieldsets
 .control-group {
-  @thisFontSize: @libstFontSize;
-  margin-bottom: @em*( @baseLineHeight / 2 )/@thisFontSize;
+  margin-bottom: @em*( @baseLineHeight / 2 )/@libstFontSize;
 }
 
 // Legend collapses margin, so next element is responsible for spacing
 legend + .control-group {
-  @thisFontSize: @libstFontSize;
-  margin-top: @em*( @baseLineHeight )/@thisFontSize;
+  margin-top: @em*( @baseLineHeight )/@libstFontSize;
   -webkit-margin-top-collapse: separate;
 }
 
@@ -580,17 +607,16 @@ legend + .control-group {
 // --------------------------
 
 .form-horizontal {
-  @thisFontSize: @libstFontSize;
   // Increase spacing between groups
   .control-group {
-    margin-bottom: @em*( @baseLineHeight )/@thisFontSize;
+    margin-bottom: @em*( @baseLineHeight )/@libstFontSize;
     .clearfix();
   }
   // Float the labels left
   .control-label {
     float: left;
-    width: @em*( 140px )/@thisFontSize;
-    padding-top: @em*( 5px )/@thisFontSize;
+    width: @em*( 140px )/@libstFontSize;
+    padding-top: @em*( 5px )/@libstFontSize;
     text-align: right;
   }
   // Move over all input controls and content
@@ -598,20 +624,20 @@ legend + .control-group {
     // Super jank IE7 fix to ensure the inputs in .input-append and input-prepend
     // don't inherit the margin of the parent, in this case .controls
     *display: inline-block;
-    *padding-left: @em*( 20px )/@thisFontSize;
-    margin-left: @em*( 160px )/@thisFontSize;
+    *padding-left: @em*( 20px )/@libstFontSize;
+    margin-left: @em*( 160px )/@libstFontSize;
     *margin-left: 0;
     &:first-child {
-      *padding-left: @em*( 160px )/@thisFontSize;
+      *padding-left: @em*( 160px )/@libstFontSize;
     }
   }
   // Remove bottom margin on block level help text since that's accounted for on .control-group
   .help-block {
-    margin-top: @em*( @baseLineHeight / 2 )/@thisFontSize;
+    margin-top: @em*( @baseLineHeight / 2 )/@libstFontSize;
     margin-bottom: 0;
   }
   // Move over buttons in .form-actions to align with .controls
   .form-actions {
-    padding-left: @em*( 160px )/@thisFontSize;
+    padding-left: @em*( 160px )/@libstFontSize;
   }
 }
