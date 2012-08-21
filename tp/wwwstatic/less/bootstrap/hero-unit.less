@@ -9,8 +9,9 @@
   background-color: @heroUnitBackground;
   .border-radius(@em*( 6px )/@baseFontSize);
   h1 {
+    margin-top: @em*(@baseLineHeight / 2)/@heroH1FontSize; // New font size for H1, fix the top margin
     margin-bottom: 0;
-    font-size: @em*( @heroH1FontSize )/@baseFontSize;
+    font-size: @heroH1FontSize;
     line-height: 1;
     color: @heroUnitHeadingColor;
     letter-spacing: @em*( -1px )/@heroH1FontSize;
