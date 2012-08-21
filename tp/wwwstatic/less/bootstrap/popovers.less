@@ -30,13 +30,13 @@
 
 .popover-title {
   margin: 0; // reset heading margin
-  padding: @em*( 8px )/@baseFontSize @em*( 14px )/@baseFontSize;
-  font-size: @em*( 14px )/@baseFontSize;
+  padding: @em*( 8px )/@popoverTitleFontSize @em*( 14px )/@popoverTitleFontSize;
+  font-size: @em*( @popoverTitleFontSize )/@baseFontSize;
   font-weight: normal;
-  line-height: @em*( 18px )/@baseFontSize;
+  line-height: @em*( 18px )/@popoverTitleFontSize;
   background-color: @popoverTitleBackground;
-  border-bottom: @em*( 1px )/@baseFontSize solid darken(@popoverTitleBackground, 5%);
-  .border-radius(@em*( 5px )/@baseFontSize @em*( 5px )/@baseFontSize 0 0);
+  border-bottom: @em*( 1px )/@popoverTitleFontSize solid darken(@popoverTitleBackground, 5%);
+  .border-radius(@em*( 5px )/@popoverTitleFontSize @em*( 5px )/@popoverTitleFontSize 0 0);
 }
 
 .popover-content {
