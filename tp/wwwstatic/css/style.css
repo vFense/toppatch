@@ -671,19 +671,19 @@ address {
 }
 code,
 pre {
-  padding: 0 0.23076923076923078em 0.15384615384615385em;
+  padding: 0 0.25em 0.16666666666666666em;
   font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-  font-size: 13px;
+  font-size: 12px;
   color: #333333;
-  -webkit-border-radius: 0.23076923076923078em;
-  -moz-border-radius: 0.23076923076923078em;
-  border-radius: 0.23076923076923078em;
+  -webkit-border-radius: 0.25em;
+  -moz-border-radius: 0.25em;
+  border-radius: 0.25em;
 }
 code {
-  padding: 0.15384615384615385em 0.3076923076923077em;
+  padding: 0.16666666666666666em 0.3333333333333333em;
   color: #d14;
   background-color: #f7f7f9;
-  border: 0.07692307692307693em solid #e1e1e8;
+  border: 0.08333333333333333em solid #e1e1e8;
 }
 pre {
   display: block;
@@ -3107,9 +3107,9 @@ ul.icons li .icon-large:before {
   border-left: 0.3333333333333333em solid transparent;
 }
 .caret.btn-mini {
-  border-top: 0.3333333333333333em solid #000000;
-  border-right: 0.3333333333333333em solid transparent;
-  border-left: 0.3333333333333333em solid transparent;
+  border-top: 0.36363636363636365em solid #000000;
+  border-right: 0.36363636363636365em solid transparent;
+  border-left: 0.36363636363636365em solid transparent;
 }
 .dropdown .caret {
   margin-top: 0.5714285714285714em;
@@ -3124,8 +3124,8 @@ ul.icons li .icon-large:before {
   margin-left: 0.16666666666666666em;
 }
 .dropdown .caret.btn-mini {
-  margin-top: 0.6666666666666666em;
-  margin-left: 0.16666666666666666em;
+  margin-top: 0.7272727272727273em;
+  margin-left: 0.18181818181818182em;
 }
 .dropdown:hover .caret,
 .open .caret {
@@ -3245,7 +3245,7 @@ ul.icons li .icon-large:before {
 }
 .dropup .caret.btn-mini,
 .navbar-fixed-bottom .dropdown .caret.btn-mini {
-  border-bottom: 0.3333333333333333em solid #000000;
+  border-bottom: 0.36363636363636365em solid #000000;
 }
 .dropup .dropdown-menu,
 .navbar-fixed-bottom .dropdown .dropdown-menu {
@@ -3468,6 +3468,7 @@ button.close {
   padding: 0.5625em 0.875em;
   font-size: 16px;
   line-height: normal;
+  border: 0.0625em solid #bbbbbb;
   -webkit-border-radius: 0.3125em;
   -moz-border-radius: 0.3125em;
   border-radius: 0.3125em;
@@ -3479,14 +3480,16 @@ button.close {
   padding: 0.25em 0.75em;
   font-size: 0.8571428571428571em;
   line-height: 1.5em;
+  border: 0.08333333333333333em solid #bbbbbb;
 }
 .btn-small [class^="icon-"] {
   margin-top: 0;
 }
 .btn-mini {
-  padding: 0.16666666666666666em 0.5em;
-  font-size: 0.8571428571428571em;
-  line-height: 1.3333333333333333em;
+  padding: 0.18181818181818182em 0.5454545454545454em;
+  font-size: 0.7857142857142857em;
+  line-height: 1.4545454545454546em;
+  border: 0.09090909090909091em solid #bbbbbb;
 }
 .btn-block {
   display: block;
@@ -3720,8 +3723,8 @@ input[type="submit"].btn.btn-small {
 }
 button.btn.btn-mini,
 input[type="submit"].btn.btn-mini {
-  *padding-top: 0.08333333333333333em;
-  *padding-bottom: 0.08333333333333333em;
+  *padding-top: 0.09090909090909091em;
+  *padding-bottom: 0.09090909090909091em;
 }
 .btn-link,
 .btn-link:active {
@@ -3756,10 +3759,28 @@ input[type="submit"].btn.btn-mini {
 .btn-group + .btn-group {
   margin-left: 0.35714285714285715em;
 }
+.btn-group + .btn-group:before {
+  content: "";
+  display: block;
+  font-size: 5px;
+  margin-left: 0.35714285714285715em;
+}
 .btn-toolbar {
   font-size: 0;
   margin-top: 0.7142857142857143em;
   margin-bottom: 0.7142857142857143em;
+}
+.btn-toolbar:before {
+  content: "";
+  display: block;
+  font-size: 5px;
+  margin-top: 0.35714285714285715em;
+}
+.btn-toolbar:after {
+  content: "";
+  display: block;
+  font-size: 5px;
+  margin-bottom: 0.35714285714285715em;
 }
 .btn-toolbar .btn-group {
   display: inline-block;
@@ -3769,8 +3790,28 @@ input[type="submit"].btn.btn-mini {
   *zoom: 1;
 }
 .btn-toolbar .btn + .btn,
-.btn-toolbar .btn-group + .btn,
+.btn-toolbar .btn-group + .btn {
+  margin-left: 0.35714285714285715em;
+}
+.btn-toolbar .btn + .btn.btn-large,
+.btn-toolbar .btn-group + .btn.btn-large {
+  margin-left: 0.3125em;
+}
+.btn-toolbar .btn + .btn.btn-small,
+.btn-toolbar .btn-group + .btn.btn-small {
+  margin-left: 0.4166666666666667em;
+}
+.btn-toolbar .btn + .btn.btn-mini,
+.btn-toolbar .btn-group + .btn.btn-mini {
+  margin-left: 0.45454545454545453em;
+}
 .btn-toolbar .btn + .btn-group {
+  margin-left: 0.35714285714285715em;
+}
+.btn-toolbar .btn + .btn-group:before {
+  content: "";
+  display: block;
+  font-size: 5px;
   margin-left: 0.35714285714285715em;
 }
 .btn-group > .btn {
@@ -3789,20 +3830,20 @@ input[type="submit"].btn.btn-mini {
   margin-left: -0.08333333333333333em;
 }
 .btn-group > .btn + .btn.btn-mini {
-  margin-left: -0.08333333333333333em;
+  margin-left: -0.09090909090909091em;
 }
 .btn-group > .btn,
 .btn-group > .dropdown-menu {
   font-size: 14px;
 }
 .btn-group > .btn-mini {
-  font-size: 0.9166666666666666em;
+  font-size: 11px;
 }
 .btn-group > .btn-small {
-  font-size: 1em;
+  font-size: 12px;
 }
 .btn-group > .btn-large {
-  font-size: 1em;
+  font-size: 16px;
 }
 .btn-group > .btn:first-child {
   margin-left: 0;
@@ -3860,10 +3901,10 @@ input[type="submit"].btn.btn-mini {
   *padding-bottom: 0.35714285714285715em;
 }
 .btn-group > .btn-mini + .dropdown-toggle {
-  padding-left: 0.4166666666666667em;
-  padding-right: 0.4166666666666667em;
-  *padding-top: 0.16666666666666666em;
-  *padding-bottom: 0.16666666666666666em;
+  padding-left: 0.45454545454545453em;
+  padding-right: 0.45454545454545453em;
+  *padding-top: 0.18181818181818182em;
+  *padding-bottom: 0.18181818181818182em;
 }
 .btn-group > .btn-small + .dropdown-toggle {
   *padding-top: 0.4166666666666667em;
@@ -3892,9 +3933,9 @@ input[type="submit"].btn.btn-mini {
   box-shadow: inset 0 0.16666666666666666em 0.3333333333333333em rgba(0, 0, 0, 0.15), 0 0.08333333333333333em 0.16666666666666666em rgba(0, 0, 0, 0.05);
 }
 .btn-group.open .dropdown-toggle.btn-mini {
-  -webkit-box-shadow: inset 0 0.16666666666666666em 0.3333333333333333em rgba(0, 0, 0, 0.15), 0 0.08333333333333333em 0.16666666666666666em rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 0 0.16666666666666666em 0.3333333333333333em rgba(0, 0, 0, 0.15), 0 0.08333333333333333em 0.16666666666666666em rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 0.16666666666666666em 0.3333333333333333em rgba(0, 0, 0, 0.15), 0 0.08333333333333333em 0.16666666666666666em rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: inset 0 0.18181818181818182em 0.36363636363636365em rgba(0, 0, 0, 0.15), 0 0.09090909090909091em 0.18181818181818182em rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 0.18181818181818182em 0.36363636363636365em rgba(0, 0, 0, 0.15), 0 0.09090909090909091em 0.18181818181818182em rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 0.18181818181818182em 0.36363636363636365em rgba(0, 0, 0, 0.15), 0 0.09090909090909091em 0.18181818181818182em rgba(0, 0, 0, 0.05);
 }
 .btn-group.open .btn.dropdown-toggle {
   background-color: #e6e6e6;
@@ -4386,12 +4427,12 @@ input[type="submit"].btn.btn-mini {
 .navbar .brand {
   float: left;
   display: block;
-  padding: 0.4166666666666667em 0.8333333333333334em 0.4166666666666667em;
-  margin-left: 1em -1.4285714285714286px;
-  font-size: 24px;
+  padding: 0.5em 1em 0.5em;
+  margin-left: -1em;
+  font-size: 20px;
   font-weight: 200;
   color: #000000;
-  text-shadow: 0 0.041666666666666664em 0 #ffffff;
+  text-shadow: 0 0.05em 0 #ffffff;
 }
 .navbar .brand:hover {
   text-decoration: none;
@@ -5714,8 +5755,9 @@ a.badge:hover {
   border-radius: 0.42857142857142855em;
 }
 .hero-unit h1 {
+  margin-top: 0.16666666666666666em;
   margin-bottom: 0;
-  font-size: 4.285714285714286em;
+  font-size: 60px;
   line-height: 1;
   color: inherit;
   letter-spacing: -0.016666666666666666em;
