@@ -554,6 +554,13 @@ input.search-query {
     margin-bottom: 0;
     vertical-align: middle;
   }
+  // Remove margin-bottom hack when font-size is 0
+  .input-prepend,
+  .input-append {
+  	&::after {
+  		margin-bottom: 0;
+  	}
+  }
   // Re-hide hidden elements due to specifity
   .hide {
     display: none;
