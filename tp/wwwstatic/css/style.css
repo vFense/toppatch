@@ -1386,6 +1386,14 @@ input.search-query {
   margin-bottom: 0;
   vertical-align: middle;
 }
+.form-search .input-prepend::after,
+.form-inline .input-prepend::after,
+.form-horizontal .input-prepend::after,
+.form-search .input-append::after,
+.form-inline .input-append::after,
+.form-horizontal .input-append::after {
+  margin-bottom: 0;
+}
 .form-search .hide,
 .form-inline .hide,
 .form-horizontal .hide {
@@ -3763,9 +3771,8 @@ input[type="submit"].btn.btn-mini {
 }
 .btn-group + .btn-group:before {
   content: "";
-  display: block;
   font-size: 5px;
-  margin-left: 0.35714285714285715em;
+  margin-left: 1em;
 }
 .btn-toolbar {
   font-size: 0;
@@ -3775,14 +3782,18 @@ input[type="submit"].btn.btn-mini {
 .btn-toolbar:before {
   content: "";
   display: block;
-  font-size: 5px;
-  margin-top: 0.35714285714285715em;
+  font-size: 10px;
+  margin-top: 1em;
 }
 .btn-toolbar:after {
   content: "";
   display: block;
-  font-size: 5px;
-  margin-bottom: 0.35714285714285715em;
+  font-size: 10px;
+  margin-bottom: 1em;
+}
+.btn-toolbar.noMargin:before,
+.btn-toolbar.noMargin:after {
+  margin: 0;
 }
 .btn-toolbar .btn-group {
   display: inline-block;
@@ -3814,7 +3825,7 @@ input[type="submit"].btn.btn-mini {
   content: "";
   display: block;
   font-size: 5px;
-  margin-left: 0.35714285714285715em;
+  margin-left: 1em;
 }
 .btn-group > .btn {
   position: relative;
