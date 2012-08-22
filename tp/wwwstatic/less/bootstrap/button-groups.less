@@ -17,9 +17,8 @@
   
   &:before {
     content: "";
-    display: block;
     font-size: 5px;
-    margin-left: @em*( 5px )/@baseFontSize;
+    margin-left: 1em;
   }
 }
 
@@ -29,18 +28,25 @@
   margin-top: @em*( @baseLineHeight / 2 )/@baseFontSize;
   margin-bottom: @em*( @baseLineHeight / 2 )/@baseFontSize;
   
+  // EM: Hack to fake margin-top when font-size is 0
   &:before {
     content: "";
     display: block;
-    font-size: 5px;
-    margin-top: @em*( 5px )/@baseFontSize;
+    font-size: @baseLineHeight / 2;
+    margin-top: 1em;
   }
   
+  // EM: Hack to fake margin-bottom when font-size is 0
   &:after {
     content: "";
     display: block;
-    font-size: 5px;
-    margin-bottom: @em*( 5px )/@baseFontSize;
+    font-size: @baseLineHeight / 2;
+    margin-bottom: 1em;
+  }
+  
+  &.noMargin:before,
+  &.noMargin:after {
+    margin: 0;
   }
   
   .btn-group {
@@ -61,7 +67,7 @@
       content: "";
       display: block;
       font-size: 5px;
-      margin-left: @em*( 5px )/@baseFontSize;
+      margin-left: 1em;
     }
   }
 }
