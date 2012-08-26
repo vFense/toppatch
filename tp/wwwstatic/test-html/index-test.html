@@ -6,16 +6,16 @@
 <html class="no-js" lang="en">
 <!--<![endif]-->
 <head>
-	<meta charset="utf-8">
-	<title>TopPatch App</title>
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<meta name="viewport" content="width=device-width">
-	<link href='http://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
-	<link rel="stylesheet" href="../css/style.css">
+    <meta charset="utf-8">
+    <title>TopPatch App</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../js/libs/shutterstock-rickshaw-c5eabaf/rickshaw.min.css">
     <link rel="stylesheet" href="../js/libs/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
-	<script src="../js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    <script src="../js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
     <style>
         .window {
             -moz-border-radius: 15px;
@@ -24,89 +24,130 @@
             background-color: white;
             padding: 5px;
         }
-        .modified-sidebar {
-            padding: 9px 0;
-            position:absolute;
-            left:20px;
-            top:40px;
+        #widgetProperties {
+            overflow-y: auto !important;
         }
     </style>
 </head>
 <body>
 <noscript>
-	<div class="title">JavaScript is required.</div>
-	<div class="subtitle">To use TopPatch, enable JavaScript in your browser and try again.</div>
-	<hr/>
-	<div class=""><a href="http://www.toppatch.com/"><img src="../img/logo-text.png" class="logo-text" alt="Top Patch logo"/></a></div>
+    <div class="title">JavaScript is required.</div>
+    <div class="subtitle">To use TopPatch, enable JavaScript in your browser and try again.</div>
+    <hr/>
+    <div class=""><a href="http://www.toppatch.com/"><img src="../img/logo-text.png" class="logo-text" alt="Top Patch logo"/></a></div>
 </noscript>
+
 <header class="pageHeader">
-	<section class="navbar container">
-		<div class="navbar-inner noRadius noShadow">
-			<nav class="clearfix">
-				<a class="brand" href="#">TopPatch</a>
-				<ul class="nav pull-right">
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="icon-cog"></i><span>Settings </span><b class="caret"></b>
-						</a>
-						<ul class="dropdown-menu">
+    <section class="navbar container">
+        <div class="navbar-inner noBorder noRadius noShadow" id="primaryNav">
+            <nav class="clearfix">
+                <a class="brand" href="#" style="color: #223666">
+                    <img src="../img/brand-name.png" alt="Top Patch brand"/> | Remediation Vault
+                </a>
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-user"></i><span> Username </span><i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:;">My Profile</a></li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:;">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="navbar-inner">
+            <nav class="clearfix">
+                <ul class="nav">
+                    <li class="dropdown" role="menu" aria-labeledby="dlabel">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span> Admin </span><i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-submenu">
+                                <a tabindex="-1" href="#">Patching</a>
+                                <ul class="dropdown-menu">
+                                    <li><a tabindex="-1" href="#" id="deploy">Deploy Patches</a></li>
+                                    <li><a tabindex="-1" href="#">Second Level Link</a></li>
+                                    <li><a tabindex="-1" href="#">Second Level Link</a></li>
+                                    <li><a tabindex="-1" href="#">Second Level Link</a></li>
+                                    <li><a tabindex="-1" href="#">Second Level Link</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="javascript:;">Option 2</a></li>
+                            <li><a href="javascript:;">Option 3</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-file"></i><span> Reports </span><i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:;">Basic Report</a></li>
+                            <li><a href="javascript:;">Generic Report 2</a></li>
+                            <li><a href="javascript:;">Generic Report 3</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-cog"></i><span>Settings </span><b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
                             <li><a href="#" id="restore">Restore Defaults</a></li>
-                            <li><a href="#" id="addwidget">Add Widget</a></li>
-							<li><a href="#">Account Settings</a></li>
-							<li class="divider"></li>
-							<li><a href="#">Help</a></li>
-						</ul>
-					</li>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="icon-user"></i><span>Username </span><b class="caret"></b>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a href="#">My Profile</a></li>
-							<li class="divider"></li>
-							<li><a href="#">Logout</a></li>
-						</ul>
-					</li>
-				</ul>
-			</nav>
-		</div>
-	</section>
+                            <li><a href="#widgetProperties" data-toggle="modal" id="addwidget" onclick="setProperties(this, 'new');">Add Widget</a></li>
+                            <li><a href="#">Account Settings</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Help</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </section>
 </header>
 <!--[if lt IE 7]<section class="container"><div class="alert alert-error chromeframe" id="ie-warning"><a class="close" data-dismiss="alert">×</a><strong>Top Patch does not support your browser.</strong> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</div></section><![endif]-->
-<section class="container" role="main">
-    <div class="row">
-        <aside class="span2 sidebar modified-sidebar">
-            <div class="sidebar-nav">
-                <ul class="nav nav-list">
-                    <li class="nav-header">Heading 1</li>
-                    <li class="active"><a href="#test/dashboard">Section 1.1</a></li>
-                    <li class=""><a href="#test/payments">Section 1.2</a></li>
-                    <li class=""><a href="#test/customers">Section 1.3</a></li>
-                    <li class=""><a href="#test/transfers">Section 1.4</a></li>
-                    <li class="nav-header">Heading 2</li>
-                    <li class=""><a href="#test/plans">Section 2.1</a></li>
-                    <li class=""><a href="#test/coupons">Section 2.2</a></li>
-                    <li class="nav-header">Heading 3</li>
-                    <li class=""><a href="#test/events">Section 3.1</a></li>
-                    <li class=""><a href="#test/logs?method=not_get">Section 3.2</a></li>
-                </ul>
+<section class="container" role="main" id="main">
+    <header class="page-header">
+        <h1>DASHBOARD <small>Customize your needs</small></h1>
+    </header>
+    <div class="row movable">
+        <div class="span3">
+            <div class="widget number">
+                <h4>Nodes</h4>10,007
             </div>
-        </aside>
+        </div>
+        <div class="span3">
+            <div class="widget number">
+                <h4>Patched Today</h4>3,096
+            </div>
+        </div>
+        <div class="span3">
+            <div class="widget number">
+                <h4>Unpatched</h4>537
+            </div>
+        </div>
+        <div class="span3">
+            <div class="widget number">
+                <h4>Failed Patches</h4>3
+            </div>
+        </div>
     </div>
-	<header class="page-header">
-		<h1>Generic Report Title <small>Supporting text or tagline</small></h1>
-	</header>
-
-	<div id="container" class="row movable">
-		<div id="widget1" class="span4 widget">
+    <div id="container" class="row movable">
+        <div id="widget1" class="span4 widget">
             <div id="graphcontainer" class="window">
                 <header style="position: relative;">
-                    <h2>Widget Title</h2>
+                    <h2>OS in Networks</h2>
                     <div id="menu1" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1"><i class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="#" class="remove" onclick="hideWidget(this);">Hide</a></li>
-                            <li><a data-toggle="modal" href="#widgetProperties" onclick="setProperties(this);">Properties</a></li>
+                            <li><a data-toggle="modal" href="#widgetProperties" onclick="setProperties(this, 'existing');">Properties</a></li>
                             <li><a href="#">Something else here</a></li>
                             <li class="divider"></li>
                             <li><a href="#">Separated link</a></li>
@@ -116,16 +157,16 @@
                 <div id="graph1" class="graph"></div>
                 <!--<img src="http://placehold.it/300x200"/> -->
             </div>
-		</div>
-		<div id="widget2" class="span8 widget">
+        </div>
+        <div id="widget2" class="span8 widget">
             <div id="graph2container" class="window">
                 <header style="position: relative;">
-                    <h2>Widget Title</h2>
+                    <h2>Vulnerabilities by Nodes</h2>
                     <div id="menu2" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu2"><i class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="#" class="remove" onclick="hideWidget(this);">Hide</a></li>
-                            <li><a href="#widgetProperties" data-toggle="modal" onclick="setProperties(this);">Properties</a></li>
+                            <li><a href="#widgetProperties" data-toggle="modal" onclick="setProperties(this, 'existing');">Properties</a></li>
                             <li><a href="#">Something else here</a></li>
                             <li class="divider"></li>
                             <li><a href="#">Separated link</a></li>
@@ -135,18 +176,18 @@
                 <div id="graph2" class="graph"></div>
                 <!--<img src="http://placehold.it/620x200"/>-->
             </div>
-		</div>
-	</div>
+        </div>
+    </div>
     <div class="row movable">
         <div id="widget3" class="span12 widget">
             <div id="graph3container" class="window">
                 <header style="position: relative;">
-                    <h2>Widget Title</h2>
+                    <h2>Vulnerabilities by Time</h2>
                     <div id="menu3" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu3"><i class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="#" class="remove" onclick="hideWidget(this);">Hide</a></li>
-                            <li><a href="#widgetProperties" data-toggle="modal" onclick="setProperties(this);">Properties</a></li>
+                            <li><a href="#widgetProperties" data-toggle="modal" onclick="setProperties(this, 'existing');">Properties</a></li>
                             <li><a href="#">Something else here</a></li>
                             <li class="divider"></li>
                             <li><a href="#">Separated link</a></li>
@@ -159,59 +200,68 @@
         </div>
     </div>
     <div id="insert" class="row movable"></div>
-	<br />
-	<div class="row movable">
-		<div class="span12 widget">
-			<header>
-				<h2>Widget Title</h2>
-			</header>
-			<table id="data" class="table table-bordered table-striped"></table>
-			<div class="pagination pagination-centered">
-				<ul>
-					<li><a href="#">Prev</a></li>
-					<li class="active">
-						<a href="#">1</a>
-					</li>
-					<li><a href="#">2</a></li>
-					<li><a href="#">3</a></li>
-					<li><a href="#">4</a></li>
-					<li><a href="#">Next</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
+    <br />
+    <div class="row movable">
+        <div class="span12 widget">
+            <header>
+                <h2>Widget Title</h2>
+            </header>
+            <table id="data" class="table table-bordered table-striped"></table>
+            <div class="pagination pagination-centered">
+                <ul>
+                    <li><a href="#">Prev</a></li>
+                    <li class="active">
+                        <a href="#">1</a>
+                    </li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">Next</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </section>
 <div class="modal hide" id="widgetProperties">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3>Choose a size</h3>
+        <h3>Widget Properties</h3>
     </div>
     <div class="modal-body">
-        <div id="size">
-            <input type="radio" name="radio" id="radio2"  value="3"/><label for="radio2">3</label>
-            <input type="radio" name="radio" id="radio3" value="4" checked="checked"/><label for="radio3">4</label>
-            <input type="radio" name="radio" id="radio4" value="6"/><label for="radio4">6</label>
-            <input type="radio" name="radio" id="radio5" value="12"/><label for="radio5">12</label>
+        <h4>Choose a widget</h4>
+        <div id="type">
+            <input type="radio" name="type" id="type1"  value="graph" /><label for="type1">Graph</label>
+            <input type="radio" name="type" id="type2" value="text" /><label for="type2">Text</label>
         </div>
-    </div>
-    <div class="modal-header">
-        <h3>Choose type of graph</h3>
-    </div>
-    <div class="modal-body">
-        <div id="graphType">
-            <input type="radio" name="graph" id="graphtype1"  value="pie" /><label for="graphtype1">Pie Graph</label>
-            <input type="radio" name="graph" id="graphtype2" value="bar" checked="checked"/><label for="graphtype2">Bar Graph</label>
-            <input type="radio" name="graph" id="graphtype3" value="line"/><label for="graphtype3">Line Graph</label>
+        <div id="textSettings" class="hide">
+            <h4>Choose a parameter</h4>
+            <div id="parameter">
+                <input type="radio" name="param" id="param1"  value="Nodes"/><label for="param1">Nodes</label>
+                <input type="radio" name="param" id="param2" value="Patched Today" /><label for="param2">Patched</label>
+                <input type="radio" name="param" id="param3" value="Unpatched"/><label for="param3">Unpatched</label>
+                <input type="radio" name="param" id="param4" value="Failed Patches"/><label for="param4">Failed</label>
+            </div>
         </div>
-    </div>
-    <div id="dataToGraph" class="hide">
-        <div class="modal-header">
-            <h3>Choose type of Data</h3>
-        </div>
-        <div class="modal-body">
-            <div id="graphdata">
-                <input type="radio" name="graphdata" id="graphdata1"  value="os" checked="checked"/><label for="graphdata1">OS in Network</label>
-                <input type="radio" name="graphdata" id="graphdata2" value="node"/><label for="graphdata2">Nodes by OS</label>
+        <div id="graphSettings" class="hide">
+            <h4>Choose a size</h4>
+            <div id="size">
+                <input type="radio" name="radio" id="radio2"  value="3"/><label for="radio2">3</label>
+                <input type="radio" name="radio" id="radio3" value="4" checked="checked"/><label for="radio3">4</label>
+                <input type="radio" name="radio" id="radio4" value="6"/><label for="radio4">6</label>
+                <input type="radio" name="radio" id="radio5" value="12"/><label for="radio5">12</label>
+            </div>
+            <h4>Choose type of graph</h4>
+            <div id="graphType">
+                <input type="radio" name="graph" id="graphtype1"  value="pie" /><label for="graphtype1">Pie Graph</label>
+                <input type="radio" name="graph" id="graphtype2" value="bar" checked="checked"/><label for="graphtype2">Bar Graph</label>
+                <input type="radio" name="graph" id="graphtype3" value="line"/><label for="graphtype3">Line Graph</label>
+            </div>
+            <div id="dataToGraph" class="hide">
+                <h4>Choose type of Data</h4>
+                <div id="graphdata">
+                    <input type="radio" name="graphdata" id="graphdata1"  value="os" checked="checked"/><label for="graphdata1">OS in Network</label>
+                    <input type="radio" name="graphdata" id="graphdata2" value="node"/><label for="graphdata2">Nodes by OS</label>
+                </div>
             </div>
         </div>
     </div>
@@ -221,12 +271,12 @@
     </div>
 </div>
 <footer class="pageFooter">
-	<section class="container">
-		<div class="row">
-			<p class="span3"><img src="../img/brand-logo-name-tag.png" class="logo-text" alt="Top Patch logo"/></p>
-			<p class="span9 legal">&copy; 2012 TopPatch Inc. All rights reserved.</p>
-		</div>
-	</section>
+    <section class="container">
+        <div class="row">
+            <p class="span3"><img src="../img/brand-logo-name-tag.png" class="logo-text" alt="Top Patch logo"/></p>
+            <p class="span9 legal">&copy; 2012 TopPatch Inc. All rights reserved.</p>
+        </div>
+    </section>
 </footer>
 <!--/container -->
 
@@ -238,9 +288,9 @@
 <script src="http://backbonejs.org/backbone-min.js"></script>
 <script src="../js/libs/shutterstock-rickshaw-c5eabaf/rickshaw.min.js"></script>
 <script>
-	// The typeahead constructor is the last constructor defined in bootstrap.js
-	// If it exists then bootstrap.js has, most likely, loaded properly.
-	$.fn.typeahead.Constructor || document.write('<script src="../js/libs/bootstrap/bootstrap.min.js"><\/script>');
+    // The typeahead constructor is the last constructor defined in bootstrap.js
+    // If it exists then bootstrap.js has, most likely, loaded properly.
+    $.fn.typeahead.Constructor || document.write('<script src="../js/libs/bootstrap/bootstrap.min.js"><\/script>');
 </script>
 <script src="../js/libs/jquery-ui-1.8.22.custom/js/jquery-ui-1.8.22.custom.min.js"></script>
 
@@ -258,281 +308,307 @@
 <!--/javascript chart libraries -->
 
 <!-- Top Patch javascript -->
-<script src="../js/script.min.js"></script>
+<script src="../js/appName.min.js"></script>
 
 <script>
-	jQuery(document).ready(function($) {
-		var table = $appName.generateTable().headerRow(true)
-				.sort(function (a, b) {
-					return a.score - b.score;
-				});
-
-		d3.json("../test-ajax/proposed_data.json", function(data) {
-			d3.select("#data")
-				.datum(data)
-				.call(table);
-		});
-	});
+    jQuery(document).ready(function($) {
+        var table = $appName.generateTable().headerRow(true)
+                .sort(function (a, b) {
+                    return a.score - b.score;
+                });
+        var data = [{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2011-3658","score":"7.5"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0451","score":"4.3"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0454","score":"7.5"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0455","score":"4.3"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0456","score":"5.0"}];
+        d3.select("#data").datum(data).call(table);
+        /*
+         d3.json("../test-ajax/proposed_data.json", function(data) {
+         d3.select("#data")
+         .datum(data)
+         .call(table);
+         });
+         */
+    });
 </script>
 <script type="text/javascript">
-    function rickshawLine(graphNumber){
-        $("#"+graphNumber).html("");
-        var graph = new Rickshaw.Graph({
-            element: document.querySelector("#"+graphNumber),
-            renderer: 'line',
-            width: 300,
-            height: 210,
-            series: [{
-                name: "Vulnerability",
-                data: [ { x: 0, y: 40 }, { x: 10, y: 49 }, { x: 200, y: 45}, { x: 600, y: 36}, { x: 900, y: 80 } ],
-                color: 'steelblue'
-            }]
-        });
-        //var something = new Rickshaw.Graph.Y({ graph: graph });
+function rickshawLine(graphNumber){
+    $("#"+graphNumber).html("");
+    var graph = new Rickshaw.Graph({
+        element: document.querySelector("#"+graphNumber),
+        renderer: 'line',
+        width: 300,
+        height: 210,
+        series: [{
+            name: "Vulnerability",
+            data: [ { x: 0, y: 40 }, { x: 10, y: 49 }, { x: 200, y: 45}, { x: 600, y: 36}, { x: 900, y: 80 } ],
+            color: 'steelblue'
+        }]
+    });
+    //var something = new Rickshaw.Graph.Y({ graph: graph });
 
-        var y_axis = new Rickshaw.Graph.Axis.Y( {
-            graph: graph,
-            orientation: 'left',
-            tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-            element: document.getElementById(graphNumber+'-y-axis')
-        } );
-        var time = new Rickshaw.Fixtures.Time();
-        var hour = time.unit("minute");
-        var x_axis = new Rickshaw.Graph.Axis.Time({ graph : graph, timeUnit: hour });
-        //alert(graphNumber+'-y-axis');
-        graph.render();
-    }
-    function createPie(graphNumber, graphData){
-        var w = 220,                        //width
-                h = 220,                            //height
-                r = 100,                            //radius
-                color = d3.scale.category20c();     //builtin range of colors
-        if(graphData == "os") {
-            data = [{"label":"windows7", "value":60},
-                {"label":"windows8", "value":20},
-                {"label":"windowsXP", "value":13},
-                {"label":"macos", "value":15},
-                {"label":"linux", "value":25}];
+    var y_axis = new Rickshaw.Graph.Axis.Y( {
+        graph: graph,
+        orientation: 'left',
+        tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+        element: document.getElementById(graphNumber+'-y-axis')
+    } );
+    var time = new Rickshaw.Fixtures.Time();
+    var hour = time.unit("minute");
+    var x_axis = new Rickshaw.Graph.Axis.Time({ graph : graph, timeUnit: hour });
+    //alert(graphNumber+'-y-axis');
+    graph.render();
+}
+function createPie(graphNumber, graphData){
+    var w = 220,                        //width
+            h = 220,                            //height
+            r = 100,                            //radius
+            color = d3.scale.category20c();     //builtin range of colors
+    if(graphData == "os") {
+        data = [{"label":"windows7", "value":60},
+            {"label":"windows8", "value":20},
+            {"label":"windowsXP", "value":13},
+            {"label":"macos", "value":15},
+            {"label":"linux", "value":25}];
 
-        } else if(graphData == "node"){
-            data = [{"label":"node1", "value":60},
-                {"label":"node2", "value":15},
-                {"label":"node3", "value":25},
-                {"label":"node4", "value":40},
-                {"label":"node5", "value":32}];
-
-        }
-
-        $("#"+graphNumber).html("");
-        var vis = d3.select("#"+graphNumber)
-                .append("svg:svg")              //create the SVG element inside the <body>
-                .data([data])                   //associate our data with the document
-                .attr("width", w)           //set the width and height of our visualization (these will be attributes of the <svg> tag
-                .attr("height", h)
-                .append("svg:g")                //make a group to hold our pie chart
-                .attr("transform", "translate(" + r + "," + r + ")");  //move the center of the pie chart from 0, 0 to radius, radius
-
-        var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
-                .innerRadius(0)
-                .outerRadius(r);
-
-        var pie = d3.layout.pie()           //this will create arc data for us given a list of values
-                .value(function(d) { return d.value; });    //we must tell it out to access the value of each element in our data array
-
-        var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
-                .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
-                .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
-                .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
-                .attr("class", "slice");    //allow us to style things in the slices (like text)
-
-        arcs.append("svg:path")
-                .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
-                .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
-
-       /* arcs.append("svg:text")                                     //add a label to each slice
-                .attr("transform", function(d) {                    //set the label's origin to the center of the arc
-                    //we have to make sure to set these before calling arc.centroid
-                    d.innerRadius = 0;
-                    d.outerRadius = r;
-                    return "translate(" + arc.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
-                })
-                .attr("text-anchor", "middle")                          //center the text on it's origin
-                .text(function(d, i) { return data[i].label; });        //get the label from our original data array
-                */
-
-
-        // Add a label to the larger arcs, translated to the arc centroid and rotated.
-        arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; }).append("svg:text")
-                .attr("dy", ".35em")
-                .attr("text-anchor", "middle")
-                .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
-                .text(function(d) { return d.data.label; });
-
-        // Computes the label angle of an arc, converting from radians to degrees.
-        function angle(d) {
-            var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
-            return a > 90 ? a - 180 : a;
-        }
+    } else if(graphData == "node"){
+        data = [{"label":"node1", "value":60},
+            {"label":"node2", "value":15},
+            {"label":"node3", "value":25},
+            {"label":"node4", "value":40},
+            {"label":"node5", "value":32}];
 
     }
-    function createBar(graphNumber){
-        var data = [{year: "vulnerable", books: 54},
-            {year: "secure", books: 43},
-            {year: "patched", books: 41},
-            {year: "pending", books: 44},
-            {year: "nodes", books: 65}];
 
-        var barWidth = 70;
-        var width = (barWidth + 10) * data.length;
-        var height = 200;
+    $("#"+graphNumber).html("");
+    var vis = d3.select("#"+graphNumber)
+            .append("svg:svg")              //create the SVG element inside the <body>
+            .data([data])                   //associate our data with the document
+            .attr("width", w)           //set the width and height of our visualization (these will be attributes of the <svg> tag
+            .attr("height", h)
+            .append("svg:g")                //make a group to hold our pie chart
+            .attr("transform", "translate(" + r + "," + r + ")");  //move the center of the pie chart from 0, 0 to radius, radius
 
-        var x = d3.scale.linear()
-                .domain([0, data.length])
-                .range([0, width]);
-        var y = d3.scale.linear()
-                .domain([0, d3.max(data, function(datum) { return datum.books; })])
-                .rangeRound([0, height]);
-        $("#"+graphNumber).html("");
+    var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
+            .innerRadius(0)
+            .outerRadius(r);
+
+    var pie = d3.layout.pie()           //this will create arc data for us given a list of values
+            .value(function(d) { return d.value; });    //we must tell it out to access the value of each element in our data array
+
+    var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
+            .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
+            .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
+            .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
+            .attr("class", "slice");    //allow us to style things in the slices (like text)
+
+    arcs.append("svg:path")
+            .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
+            .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
+
+    /* arcs.append("svg:text")                                     //add a label to each slice
+     .attr("transform", function(d) {                    //set the label's origin to the center of the arc
+     //we have to make sure to set these before calling arc.centroid
+     d.innerRadius = 0;
+     d.outerRadius = r;
+     return "translate(" + arc.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
+     })
+     .attr("text-anchor", "middle")                          //center the text on it's origin
+     .text(function(d, i) { return data[i].label; });        //get the label from our original data array
+     */
+
+
+    // Add a label to the larger arcs, translated to the arc centroid and rotated.
+    arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; }).append("svg:text")
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
+            .text(function(d) { return d.data.label; });
+
+    // Computes the label angle of an arc, converting from radians to degrees.
+    function angle(d) {
+        var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+        return a > 90 ? a - 180 : a;
+    }
+
+}
+function createBar(graphNumber){
+    var data = [{year: "vulnerable", books: 54},
+        {year: "secure", books: 43},
+        {year: "patched", books: 41},
+        {year: "pending", books: 44},
+        {year: "nodes", books: 65}];
+
+    var barWidth = 70;
+    var width = (barWidth + 10) * data.length;
+    var height = 200;
+
+    var x = d3.scale.linear()
+            .domain([0, data.length])
+            .range([0, width]);
+    var y = d3.scale.linear()
+            .domain([0, d3.max(data, function(datum) { return datum.books; })])
+            .rangeRound([0, height]);
+    $("#"+graphNumber).html("");
 // add the canvas to the DOM
-        var barDemo = d3.select("#"+graphNumber).
-                append("svg:svg").
-                attr("width", width).
-                attr("height", height+20);
+    var barDemo = d3.select("#"+graphNumber).
+            append("svg:svg").
+            attr("width", width).
+            attr("height", height+20);
 
-        barDemo.selectAll("rect").
-                data(data).
-                enter().
-                append("svg:rect").
-                attr("x", function(datum, index) { return x(index); }).
-                attr("y", function(datum) { return height - y(datum.books); }).
-                attr("height", function(datum) { return y(datum.books); }).
-                attr("width", barWidth).
-                attr("fill", "#2d578b");
+    barDemo.selectAll("rect").
+            data(data).
+            enter().
+            append("svg:rect").
+            attr("x", function(datum, index) { return x(index); }).
+            attr("y", function(datum) { return height - y(datum.books); }).
+            attr("height", function(datum) { return y(datum.books); }).
+            attr("width", barWidth).
+            attr("fill", "#2d578b");
 
-        barDemo.selectAll("text").
-                data(data).
-                enter().
-                append("svg:text").
-                attr("x", function(datum, index) { return x(index) + barWidth-20; }).
-                attr("y", function(datum) { return height - y(datum.books); }).
-                attr("dx", -barWidth/2).
-                attr("dy", "1.2em").
-                attr("text-anchor", "middle").
-                attr("style", "font-size: 10").
-                text(function(datum) { return datum.books;}).
-                attr("fill", "white");
+    barDemo.selectAll("text").
+            data(data).
+            enter().
+            append("svg:text").
+            attr("x", function(datum, index) { return x(index) + barWidth-20; }).
+            attr("y", function(datum) { return height - y(datum.books); }).
+            attr("dx", -barWidth/2).
+            attr("dy", "1.2em").
+            attr("text-anchor", "middle").
+            attr("style", "font-size: 10").
+            text(function(datum) { return datum.books;}).
+            attr("fill", "white");
 
-        barDemo.selectAll("text.yAxis")
-                .data(data)
-                .enter().append("svg:text")
-                .attr("x", function(datum, index) { return x(index) + barWidth-20; })
-                .attr("y", height+10)
-                .attr("dx", -barWidth/2)
-                .attr("text-anchor", "middle")
-                .attr("style", "font-size: 10")
-                .text(function(datum) { return datum.year;})
-                .attr('transform', 'translate(15, 5)')
-                .attr("class", "yAxis");
+    barDemo.selectAll("text.yAxis")
+            .data(data)
+            .enter().append("svg:text")
+            .attr("x", function(datum, index) { return x(index) + barWidth-20; })
+            .attr("y", height+10)
+            .attr("dx", -barWidth/2)
+            .attr("text-anchor", "middle")
+            .attr("style", "font-size: 10")
+            .text(function(datum) { return datum.year;})
+            .attr('transform', 'translate(15, 5)')
+            .attr("class", "yAxis");
+}
+function createLine(graphNumber){
+    var m = [80, 80, 80, 80]; // margins
+    var w = 1000 - m[1] - m[3]; // width
+    var h = 400 - m[0] - m[2]; // height
+    var year = 1900;
+
+    // create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
+    var data = [3, 6, 2, 7, 5, 2, 6, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
+    var labels = new Array();
+    var label_array = new Array();
+    var val_array1 = new Array();
+    var sampsize = data.length;
+    //var maxval = 0;
+    for ( var k = 0; k < data.length; k++){
+        labels[k] = year;
+        year = year + 10;
     }
-    function createLine(graphNumber){
-        var m = [80, 80, 80, 80]; // margins
-        var w = 1000 - m[1] - m[3]; // width
-        var h = 400 - m[0] - m[2]; // height
-
-        // create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
-        var data = [3, 6, 2, 7, 5, 2, 0, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
-
-        // X scale will fit all values from data[] within pixels 0-w
-        var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
-        // Y scale will fit values from 0-10 within pixels h-0 (Note the inverted domain for the y-scale: bigger is up!)
-        var y = d3.scale.linear().domain([0, 10]).range([h, 0]);
-        // automatically determining max range can work something like this
-        // var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
-        $("#"+graphNumber).html("");
-        // create a line function that can convert data[] into x and y points
-        var line = d3.svg.line()
-            // assign the X function to plot our line as we wish
-                .x(function(d,i) {
-                    // verbose logging to show what's actually being done
-                    console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
-                    // return the X coordinate where we want to plot this datapoint
-                    return x(i);
-                })
-                .y(function(d) {
-                    // verbose logging to show what's actually being done
-                    console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
-                    // return the Y coordinate where we want to plot this datapoint
-                    return y(d);
-                })
-
-        // Add an SVG element with the desired dimensions and margin.
-        var graph = d3.select("#"+graphNumber).append("svg:svg")
-                .attr("width", w + m[1] + m[3])
-                .attr("height", h + m[0] + m[2])
-                .append("svg:g")
-                .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
-
-        // create yAxis
-        var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
-        // Add the x-axis.
-        graph.append("svg:g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + h + ")")
-                .call(xAxis);
-
-
-        // create left yAxis
-        var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
-        // Add the y-axis to the left
-        graph.append("svg:g")
-                .attr("class", "y axis")
-                .attr("transform", "translate(-25,0)")
-                .call(yAxisLeft);
-
-        // Add the line by appending an svg:path element with the data line we created above
-        // do this AFTER the axes above so that the line is above the tick-lines
-        graph.append("svg:path")
-                .attr("fill", "none")
-                .attr("stroke", "steelblue")
-                .attr("stroke-width", "1")
-                .attr("d", line(data));
+    for (var i=0; i < sampsize; i++) {
+        label_array[i] = parseInt(labels[i]);
+        val_array1[i] = { x: label_array[i], y: parseFloat(data[i]) };
+        //maxval = Math.max(maxval, parseFloat( data[i] ) );
     }
-    function createSmallBar(graphNumber){
-        $("#"+graphNumber).html("");
-        // simple array
-        var data = [8, 12, 15, 30, 43];
-        // variables for chart width and height
-        var w = 50,
-                h = 200;
-        var chart = d3.select("#"+graphNumber).append("svg")
-                .attr("class", "chart")
-                .attr("width", w * data.length)
-                .attr("height", h);
-        var x = d3.scale.linear()
-                .domain([0, 1])
-                .range([0, w]);
+    //maxval = (1 + Math.floor(maxval / 10)) * 10;
+    //alert(labels[29]);
+    //var labels = [year, 1910, 2, 7, 5, 2, 6, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
 
-        var y = d3.scale.linear()
-                .domain([0, 50])
-                .rangeRound([0, h]); //rangeRound is used for antialiasing
-        // x and y are the lower-left position of the bar
-        // width is the width of the bar
-        // height is the height of the bar
-        // for crisp edges use -.5 (antialiasing)
-        chart.selectAll("rect")
-                .data(data)
-                .enter().append("rect")
-                .attr("x", function(d, i) { return x(i) - .5; })
-                .attr("y", function(d) { return h - y(d) - .5; })
-                .attr("width", w)
-                .attr("height", function(d) { return y(d); } );
-        chart.append("line")
-                .attr("x1", 0)
-                .attr("x2", w * data.length)
-                .attr("y1", h - .5)
-                .attr("y2", h - .5)
-                .style("stroke", "#000");
-    }
+    // X scale will fit all values from data[] within pixels 0-w
+    //var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
+    var x = d3.scale.linear().domain([labels[0], labels[labels.length-1]]).range([0, w]);
+    // Y scale will fit values from 0-10 within pixels h-0 (Note the inverted domain for the y-scale: bigger is up!)
+    var y = d3.scale.linear().domain([0, 10]).range([h, 0]);
+    // automatically determining max range can work something like this
+    // var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
+    $("#"+graphNumber).html("");
+    // create a line function that can convert data[] into x and y points
+    var line = d3.svg.line()
+        // assign the X function to plot our line as we wish
+            .x(function(d, i) {
+                // verbose logging to show what's actually being done
+                //alert(x(0)+" "+ labels[0]);
+                console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(d.x) + ' using our xScale.');
+                // return the X coordinate where we want to plot this datapoint
+                //alert(x(i));
+                return x(d.x);
+            })
+            .y(function(d) {
+                // verbose logging to show what's actually being done
+                console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
+                // return the Y coordinate where we want to plot this datapoint
+                return y(d.y);
+            })
+
+    // Add an SVG element with the desired dimensions and margin.
+    var graph = d3.select("#"+graphNumber).append("svg:svg")
+            .attr("width", w + m[1] + m[3])
+            .attr("height", h + m[0] + m[2])
+            .append("svg:g")
+            .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+    // create yAxis
+    var xAxis = d3.svg.axis().scale(x).tickSize(1);
+    //.tickSubdivide(true);
+    // Add the x-axis.
+    graph.append("svg:g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + h + ")")
+            .call(xAxis);
+
+
+    // create left yAxis
+    var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
+    // Add the y-axis to the left
+    graph.append("svg:g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(-25,0)")
+            .call(yAxisLeft);
+
+    // Add the line by appending an svg:path element with the data line we created above
+    // do this AFTER the axes above so that the line is above the tick-lines
+    graph.append("svg:path")
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", "1")
+            .attr("d", line(val_array1));
+    //.attr("d", line(data));
+}
+function createSmallBar(graphNumber){
+    $("#"+graphNumber).html("");
+    // simple array
+    var data = [8, 12, 15, 30, 43];
+    // variables for chart width and height
+    var w = 50,
+            h = 200;
+    var chart = d3.select("#"+graphNumber).append("svg")
+            .attr("class", "chart")
+            .attr("width", w * data.length)
+            .attr("height", h);
+    var x = d3.scale.linear()
+            .domain([0, 1])
+            .range([0, w]);
+
+    var y = d3.scale.linear()
+            .domain([0, 50])
+            .rangeRound([0, h]); //rangeRound is used for antialiasing
+    // x and y are the lower-left position of the bar
+    // width is the width of the bar
+    // height is the height of the bar
+    // for crisp edges use -.5 (antialiasing)
+    chart.selectAll("rect")
+            .data(data)
+            .enter().append("rect")
+            .attr("x", function(d, i) { return x(i) - .5; })
+            .attr("y", function(d) { return h - y(d) - .5; })
+            .attr("width", w)
+            .attr("height", function(d) { return y(d); } );
+    chart.append("line")
+            .attr("x1", 0)
+            .attr("x2", w * data.length)
+            .attr("y1", h - .5)
+            .attr("y2", h - .5)
+            .style("stroke", "#000");
+}
 
 </script>
 <!--
@@ -700,7 +776,7 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#<%= menu %>"><i class="icon-list-ul"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="#" class="remove" onclick="hideWidget(this);">Hide</a></li>
-                        <li><a data-toggle="modal" href="#widgetProperties" onclick="setProperties(this);">Properties</a></li>
+                        <li><a data-toggle="modal" href="#widgetProperties" onclick="setProperties(this, 'existing');">Properties</a></li>
                         <li><a href="#">Something else here</a></li>
                         <li class="divider"></li>
                         <li><a href="#">Separated link</a></li>
@@ -712,104 +788,167 @@
         </div>
     </div>
 </script>
+<script type="text/template" id="text_template">
+    <div id="<%= widget %>" class="<%= span %>">
+        <div id="<%= graphcontainer %>" class="widget number">
+            <h4><%= title %></h4>537
+        </div>
+    </div>
+</script>
+<script type="text/template" id="patch_template">
+    <header class="page-header">
+        <h1>PATCH MANAGER <small>apply custom patches</small></h1>
+    </header>
+    <table id="table" class="table table-bordered table-striped"></table>
+    <script type="text/javascript">
+        var data = [{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2011-3658","score":"7.5"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0451","score":"4.3"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0454","score":"7.5"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0455","score":"4.3"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0456","score":"5.0"}];
+        var table = $appName.generateTable().headerRow(true)
+        .sort(function (a, b) {
+        return a.score - b.score;
+        });
+        d3.select("#table").datum(data).call(table);
+        //alert(data);
+    </script>
+</script>
 <script>
-    //$(document).ready(function() {
-        //$("#graphcontainer").css({"border":"1px solid black", "height": "350px", "background-color":"white"});
-        /*
-        $("#graphcontainer").draggable({ containment: "#container" })
-                            .resizable({ maxHeight: 350,
-                                         maxWidth: 350,
-                                         minHeight: 300,
-                                         minWidth: 250 })
-                            .mouseover(function(){ $(this).css("z-index","5"); })
-                            .mouseout(function(){ $(this).css("z-index","1"); });
-        */
-        //$("#graph2container").css({"border":"1px solid black", "height": "350px", "background-color":"white"});
-        /*
-        $("#graph2container").draggable({ containment: "#container" })
-                            .resizable({ maxHeight: 350,
-                                         maxWidth: 650,
-                                         minHeight: 300,
-                                         minWidth: 450 })
-                            .mouseover(function(){ $(this).css("z-index","5"); })
-                            .mouseout(function(){ $(this).css("z-index","1"); });
-
-         */
-    WidgetView = Backbone.View.extend({
-        initialize: function(){
-            this.counter = 4;
-            //this.render();
+    var Properties = Backbone.Model.extend({
+        defaults: {
+            widgetName: "widget1",
+            currentWidget: "existing"
+            //widgetGraph: "pie"
         },
-        render: function(){
-            //Pass variables in using Underscore.js Template
-            var variables = { widget: "widget"+this.counter,
-                              span: "span4",
-                              graphcontainer: "graphcontainer"+this.counter,
-                              menu: "menu"+this.counter,
-                              graph: "graph"+this.counter };
-            // Compile the template using underscore
-            var template = _.template( $("#widget_template").html(), variables );
-            // Load the compiled HTML into the Backbone "el"
-            $(this.el).append( template );
-            this.counter++;
+        initialize: function () {
+            'use strict';
+        }
+    });
+    var properties = new Properties();
+
+    var WidgetView = Backbone.View.extend({
+        initialize: function () {
+            'use strict';
+            this.counter = 4;
+        },
+        render: function () {
+            'use strict';
+            var current, type, widget, sizeval, variables, graphType, graphData, graph, template, title, matches, myClass, parent;
+            current = properties.get("currentWidget");
+            type = $('input:radio[name=type]:checked').val();
+            if (current === "new") {
+                widget = "widget" + this.counter;
+                if (type === "graph") {
+                    sizeval = $('input:radio[name=radio]:checked').val();
+                    variables = { widget: widget,
+                        span: "span" + sizeval,
+                        graphcontainer: "graphcontainer" + this.counter,
+                        menu: "menu" + this.counter,
+                        graph: "graph" + this.counter };
+                    graphType = $('input:radio[name=graph]:checked').val();
+                    graphData = $('input:radio[name=graphdata]:checked').val();
+                    // Compile the template using underscore
+                    template = _.template($("#widget_template").html(), variables);
+                    // Load the compiled HTML into the Backbone "el"
+                    $(this.el).append(template);
+                    this.counter += 1;
+                    graph = $("#" + widget).children().children("div").attr("id");
+                    if (graphType === "pie") {
+                        createPie(graph, graphData);
+                    } else if (graphType === "bar") {
+                        createBar(graph);
+                    } else if (graphType === "line") {
+                        createLine(graph);
+                    }
+                } else {
+                    sizeval = "3";
+                    title = $('input:[name=param]:checked').val();
+                    variables = { widget: widget, span: "span" + sizeval, graphcontainer: "graphcontainer" + this.counter, title: title };
+                    template = _.template($("#text_template").html(), variables);
+                    $(this.el).append(template);
+                    this.counter += 1;
+                }
+                //Pass variables in using Underscore.js Template
+
+            } else {
+                widget = properties.get("widgetName");
+                if (type === "graph") {
+                    myClass = $("#" + widget).attr("class");
+                    sizeval = $('input:radio[name=radio]:checked').val();
+                    graph = $("#" + widget).children().children("div").attr("id");
+                    graphType = $('input:radio[name=graph]:checked').val();
+                    graphData = $('input:radio[name=graphdata]:checked').val();
+                    //alert( graph + graphType );
+                    if (graphType === "pie") {
+                        createPie(graph, graphData);
+                    } else if (graphType === "bar") {
+                        createBar(graph);
+                    } else if (graphType === "line") {
+                        createLine(graph);
+                        //rickshawLine(graph);
+                    }
+                    $("#" + widget).removeClass(myClass);
+                    $("#" + widget).addClass("span" + sizeval + " widget");
+                } else {
+                    matches = widget.match(/\d+$/);
+                    parent = $("#" + widget).parent().attr("id");
+                    title = $('input:[name=param]:checked').val();
+                    sizeval = "3";
+                    variables = { widget: widget, span: "span" + sizeval, graphcontainer: "graphcontainer" + matches[0], title: title };
+                    template = _.template($("#text_template").html(), variables);
+                    $("#" + widget).remove();
+                    $("#" + parent).append(template);
+                }
+            }
         }
     });
     var widgetview = new WidgetView({ el: $("#insert") });
 
-    Properties = Backbone.Model.extend({
-        defaults: {
-            widgetName: "widget1"
-            //widgetGraph: "pie"
-        },
-        initialize: function(){
-            /*
-            this.bind("change:widgetName", function(){
-                var name = this.get("widgetName"); // 'Stewie Griffin'
-                alert("Changed my name to " + name );
-            }); */
+    function setProperties(obj, param) {
+        'use strict';
+        if (param === "existing") {
+            properties.set({
+                widgetName: $(obj).parent().parent().parent().parent().parent().parent().attr("id"),
+                currentWidget: "existing"
+            });
+        } else if (param === "new") {
+            properties.set({
+                currentWidget: "new"
+            });
         }
-    });
-    var properties = new Properties;
-    function setProperties(obj){
-        properties.set({ widgetName: $(obj).parent().parent().parent().parent().parent().parent().attr("id") });
     }
-    function hideWidget(obj){
+    function hideWidget(obj) {
+        'use strict';
         $(obj).parent().parent().parent().parent().parent().parent().hide();
     }
 
     $(".dropdown-toggle").dropdown();
-    $( ".movable" ).sortable({ connectWith: '.movable' });
-    $("#restore").click(function(){ $(".widget").show(); });
+    $(".movable").sortable({ connectWith: '.movable' });
+    $("#restore").click(function () { $(".widget").show(); });
     $("#size").buttonset();
     $("#graphType").buttonset();
     $("#graphdata").buttonset();
-    $("#apply").click(function(){
-        var sizeval = $('input:radio[name=radio]:checked').val();
-        var widget = properties.get("widgetName");
-        var graph = $("#"+widget).children().children("div").attr("id");
-        var myClass = $("#"+widget).attr("class");
-        var graphType = $('input:radio[name=graph]:checked').val();
-        var graphData = $('input:radio[name=graphdata]:checked').val();
-        //alert( graph + graphType );
-        if(graphType == "pie"){
-            createPie(graph, graphData);
-        } else if (graphType=="bar"){
-            createBar(graph);
-        } else if(graphType == "line"){
-            createLine(graph);
-            //rickshawLine(graph);
-        }
-        //properties.set({ widgetGraph: graph });
-        //alert (sizeval + widget + myClass);
-        $("#"+widget).removeClass(myClass);
-        $("#"+widget).addClass("span"+sizeval+" widget");
+    $("#type").buttonset();
+    $("#parameter").buttonset();
+    $("#type1").click(function () {
+        $("#graphSettings").show();
+        $("#textSettings").hide();
+    });
+    $("#type2").click(function () {
+        $("#graphSettings").hide();
+        $("#textSettings").show();
+    });
+    $("#apply").click(function () {
+        widgetview.render();
         $("#widgetProperties").modal('hide');
     });
-    $("#addwidget").click(function(){ widgetview.render(); });
-    $("#graphtype1").click(function(){ $("#dataToGraph").show(); });
-    $("#graphtype2").click(function(){ $("#dataToGraph").hide(); });
-    $("#graphtype3").click(function(){ $("#dataToGraph").hide(); });
-    createPie("graph1","os");
+    $("#deploy").click(function () {
+        //$("#main").load("patching.html");
+        var template = _.template($("#patch_template").html());
+        // Load the compiled HTML into the Backbone "el"
+        $("#main").html(template);
+    });
+    $("#graphtype1").click(function () { $("#dataToGraph").show(); });
+    $("#graphtype2").click(function () { $("#dataToGraph").hide(); });
+    $("#graphtype3").click(function () { $("#dataToGraph").hide(); });
+    createPie("graph1", "os");
     createBar("graph2");
     createLine("graph3");
     //rickshawLine("graph3");
