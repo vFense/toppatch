@@ -5,31 +5,29 @@
 
 // Base class
 .tooltip {
-  @thisFontSize: @tooltipFontSize;
   position: absolute;
   z-index: @zindexTooltip;
   display: block;
   visibility: visible;
-  padding: @em*( 5px )/@thisFontSize;
-  font-size: @em*( 11px )/@thisFontSize;
+  padding: @em*( 5px )/@tooltipFontSize;
+  font-size: @em*( 11px )/@tooltipFontSize;
   .opacity(0);
   &.in     { .opacity(80); }
-  &.top    { margin-top:  @em*( -3px )/@thisFontSize; }
-  &.right  { margin-left:  @em*( 3px )/@thisFontSize; }
-  &.bottom { margin-top:   @em*( 3px )/@thisFontSize; }
-  &.left   { margin-left: @em*( -3px )/@thisFontSize; }
+  &.top    { margin-top:  @em*( -3px )/@tooltipFontSize; }
+  &.right  { margin-left:  @em*( 3px )/@tooltipFontSize; }
+  &.bottom { margin-top:   @em*( 3px )/@tooltipFontSize; }
+  &.left   { margin-left: @em*( -3px )/@tooltipFontSize; }
 }
 
 // Wrapper for the tooltip content
 .tooltip-inner {
-  @thisFontSize: @tooltipFontSize;
-  max-width: @em*( 200px )/@thisFontSize;
-  padding: @em*( 3px )/@thisFontSize @em*( 8px )/@thisFontSize;
+  max-width: @em*( 200px )/@tooltipFontSize;
+  padding: @em*( 3px )/@tooltipFontSize @em*( 8px )/@tooltipFontSize;
   color: @tooltipColor;
   text-align: center;
   text-decoration: none;
   background-color: @tooltipBackground;
-  .border-radius(@em*( 4px )/@thisFontSize);
+  .border-radius(@em*( 4px )/@tooltipFontSize);
 }
 
 // Arrows

@@ -1,6 +1,6 @@
-// NAVIGATIONS
-// -----------
-
+//
+// Navs
+// --------------------------------------------------
 
 
 // BASE CLASS
@@ -27,22 +27,21 @@
 }
 
 // Nav headers (for dropdowns and lists)
-.nav .nav-header {
-  @thisFontSize: @navHeaderFontSize;
+.nav-header {
   display: block;
-  padding: @em*( 3px )/@baseFontSize @em*( 15px )/@thisFontSize;
-  font-size: @thisFontSize;
+  padding: @em*( 3px )/@navHeaderFontSize @em*( 15px )/@navHeaderFontSize;
+  font-size: @navHeaderFontSize;
   font-weight: bold;
-  line-height: @em*( @baseLineHeight )/@thisFontSize;
+  line-height: @em*( @baseLineHeight )/@navHeaderFontSize;
   color: @grayLight;
-  text-shadow: 0 @em*( 1px )/@thisFontSize 0 rgba(255,255,255,.5);
+  text-shadow: 0 @em*( 1px )/@navHeaderFontSize 0 rgba(255,255,255,.5);
   text-transform: uppercase;
 }
 // Space them out when they follow another list item (link)
 .nav li + .nav-header {
-  @thisFontSize: @navHeaderFontSize;
-  margin-top: @em*( 9px )/@thisFontSize;
+  margin-top: @em*( 9px )/@navHeaderFontSize;
 }
+
 
 
 // NAV LIST
@@ -53,16 +52,11 @@
   padding-right: @em*( 15px )/@baseFontSize;
   margin-bottom: 0;
 }
-.nav-list > li > a {
+.nav-list > li > a,
+.nav-list .nav-header {
   margin-left:  @em*( -15px )/@baseFontSize;
   margin-right: @em*( -15px )/@baseFontSize;
   text-shadow: 0 @em*( 1px )/@baseFontSize 0 rgba(255,255,255,.5);
-}
-.nav-list .nav-header {
-  @thisFontSize: @navHeaderFontSize;
-  margin-left:  @em*( -15px )/@thisFontSize;
-  margin-right: @em*( -15px )/@thisFontSize;
-  text-shadow: 0 @em*( 1px )/@thisFontSize 0 rgba(255,255,255,.5);
 }
 .nav-list > li > a {
   padding: @em*( 3px )/@baseFontSize @em*( 15px )/@baseFontSize;
@@ -177,10 +171,10 @@
   .border-radius(0);
 }
 .nav-tabs.nav-stacked > li:first-child > a {
-  .border-radius(@em*( 4px )/@baseFontSize @em*( 4px )/@baseFontSize 0 0);
+  .border-top-radius(@em*( 4px )/@baseFontSize);
 }
 .nav-tabs.nav-stacked > li:last-child > a {
-  .border-radius(0 0 @em*( 4px )/@baseFontSize @em*( 4px )/@baseFontSize);
+  .border-bottom-radius(@em*( 4px )/@baseFontSize);
 }
 .nav-tabs.nav-stacked > li > a:hover {
   border-color: #ddd;
@@ -201,39 +195,43 @@
 // ---------
 
 .nav-tabs .dropdown-menu {
-  .border-radius(0 0 @em*( 5px )/@baseFontSize @em*( 5px )/@baseFontSize); // remove the top rounded corners here since there is a hard edge above the menu
+  .border-radius(0 0 @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize); // remove the top rounded corners here since there is a hard edge above the menu
 }
 .nav-pills .dropdown-menu {
-  .border-radius(@em*( 4px )/@baseFontSize); // make rounded corners match the pills
+  .border-radius(@em*( 6px )/@baseFontSize); // make rounded corners match the pills
 }
 
 // Default dropdown links
 // -------------------------
 // Make carets use linkColor to start
-.nav-tabs .dropdown-toggle .caret,
-.nav-pills .dropdown-toggle .caret {
+.nav .dropdown-toggle .caret {
   border-top-color: @linkColor;
   border-bottom-color: @linkColor;
   margin-top: @em*( 6px )/@baseFontSize;
 }
-.nav-tabs .dropdown-toggle:hover .caret,
-.nav-pills .dropdown-toggle:hover .caret {
+.nav .dropdown-toggle:hover .caret {
   border-top-color: @linkColorHover;
   border-bottom-color: @linkColorHover;
+}
+/* move down carets for tabs */
+.nav-tabs .dropdown-toggle .caret {
+  margin-top: @em*( 8px )/@baseFontSize;
 }
 
 // Active dropdown links
 // -------------------------
-.nav-tabs .active .dropdown-toggle .caret,
-.nav-pills .active .dropdown-toggle .caret {
-  border-top-color: @grayDark;
-  border-bottom-color: @grayDark;
+.nav .active .dropdown-toggle .caret {
+  border-top-color: #fff;
+  border-bottom-color: #fff;
+}
+.nav-tabs .active .dropdown-toggle .caret {
+  border-top-color: @gray;
+  border-bottom-color: @gray;
 }
 
 // Active:hover dropdown links
 // -------------------------
 .nav > .dropdown.active > a:hover {
-  color: @black;
   cursor: pointer;
 }
 
@@ -367,4 +365,20 @@
 .tabs-right > .nav-tabs .active > a:hover {
   border-color: #ddd #ddd #ddd transparent;
   *border-left-color: @white;
+}
+
+
+
+// DISABLED STATES
+// ---------------
+
+// Gray out text
+.nav > .disabled > a {
+  color: @grayLight;
+}
+// Nuke hover effects
+.nav > .disabled > a:hover {
+  text-decoration: none;
+  background-color: transparent;
+  cursor: default;
 }

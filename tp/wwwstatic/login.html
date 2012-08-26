@@ -7,16 +7,23 @@
 <!--<![endif]-->
 <head>
 	<meta charset="utf-8">
-	<title>TopPatch App: Login</title>
+	<title>TopPatch Remediation Vault: Login</title>
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<meta name="viewport" content="width=device-width">
 	<link href='http://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
+<<<<<<< HEAD
 	<link rel="stylesheet" href="{{ static_url('css/style.css') }}">
 	<script src="{{ static_url('js/libs/modernizr-2.5.3-respond-1.1.0.min.js') }}"></script> <!-- /js/libs/modernizr-2.5.3-respond-1.1.0.min.js -->
+=======
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/appName.css">
+	<script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+>>>>>>> 66534af23aef6d16136feddd3bf247b915b24ad3
 </head>
 <body class="container">
 <!--[if lt IE 7]<section class="container"><div class="alert alert-error chromeframe" id="ie-warning"><a class="close" data-dismiss="alert">×</a><strong>Top Patch does not support your browser.</strong> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</div></section><![endif]-->
+<!-- main -->
 <section class="" role="main">
 	<div class="login container-fluid">
 		<div class=" clearfix">
@@ -26,7 +33,7 @@
 						<img src="img/brand-logo.png" class="logo" alt="TopPatch Logo"/>
 					</a>
 				</div>
-				<h1>AppName</h1>
+				<h2>Remediation Vault</h2>
 				<div class="fields">
 					<div class="control-group">
 						<label class="control-label" for="username">Username:</label>
@@ -55,24 +62,40 @@
 <section>
 	<p class="legal" style="text-align:center;">&copy; 2012 TopPatch Inc. All rights reserved.</p>
 </section>
-<!--/container -->
+<!--/main -->
 <noscript>
 	<div class="title">JavaScript is required.</div>
 	<div style="subtitle">&nbsp;</div>
-	<div class="subtitle">To use TopPatch, enable JavaScript in your browser and try again.</div>
+	<div class="subtitle">To use TopPatch Remediation Vault, enable JavaScript in your browser and try again.</div>
 	<hr/>
-	<div class=""><a href="http://www.toppatch.com/"><img src="img/brand-logo-name-tag.png" class="logo-text" alt="Top Patch logo"/></a></div>
+	<div class=""><a href="http://www.toppatch.com/"><img src="img/brand-name-tag.png" class="brand" alt="Top Patch brand"/></a></div>
 </noscript>
 <!-- javascript libraries -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.8.0.min.js"><\/script>')</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+<script>window.jQuery.ui || document.write('<script src="js/libs/jquery-ui.custom.min.js"><\/script>')</script>
+<!--
+Cloudflare does not have Bootstrap 2.1.0 yet (08/24/2012)
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.4/bootstrap.min.js"></script>
-<script>
-	// The typeahead constructor is the last constructor defined in bootstrap.js
-	// If it exists then bootstrap.js has, most likely, loaded properly.
-	$.fn.typeahead.Constructor || document.write('<script src="js/libs/bootstrap/bootstrap.min.js"><\/script>');
-</script>
+-->
+<script>window.jQuery.fn.typeahead || document.write('<script src="js/libs/bootstrap/bootstrap.min.js"><\/script>');</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.3/underscore-min.js"></script>
+<script>window._ || document.write('<script src="js/libs/underscore-min.js"><\/script>');</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js"></script>
+<script>window.Backbone || document.write('<script src="js/libs/backbone-min.js"><\/script>');</script>
 <!--/javascript libraries -->
+
+<!-- javascript chart libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/2.8.1/d3.v2.min.js"></script>
+<script>window.d3 || document.write('<script src="js/libs/charts/d3.v2.min.js"><\/script>')</script>
+<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script>window.Raphael || document.write('<script src="js/libs/charts/raphael-min.js"><\/script>')</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/graphael/0.5.0/g.raphael-min.js"></script>
+<script>window.Raphael.g || document.write('<script src="js/libs/charts/g.raphael-min.js"><\/script>')</script>
+-->
+<!--/javascript chart libraries -->
 
 </body>
 </html>

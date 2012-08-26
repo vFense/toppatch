@@ -1,5 +1,7 @@
-// CAROUSEL
-// --------
+//
+// Carousel
+// --------------------------------------------------
+
 
 .carousel {
   position: relative;
@@ -64,22 +66,22 @@
 
 // Left/right controls for nav
 // ---------------------------
+
 .carousel-control {
-  @thisFontSize: @carouselControlFontSize;
-  font-size: @thisFontSize;
   position: absolute;
   top: 40%;
-  left: @em*( 15px )/@thisFontSize;
-  width: @em*( 40px )/@thisFontSize;
-  height: @em*( 40px )/@thisFontSize;
-  margin-top: @em*( -20px )/@thisFontSize;
+  left: @em*( 15px )/@carouselControlFontSize;
+  width: @em*( 40px )/@carouselControlFontSize;
+  height: @em*( 40px )/@carouselControlFontSize;
+  margin-top: @em*( -20px )/@carouselControlFontSize;
+  font-size: @carouselControlFontSize;
   font-weight: 100;
-  line-height: @em*( 30px )/@thisFontSize;
+  line-height: @em*( 30px )/@carouselControlFontSize;
   color: @white;
   text-align: center;
   background: @grayDarker;
-  border: @em*( 3px )/@thisFontSize solid @white;
-  .border-radius(@em*( 23px )/@thisFontSize);
+  border: @em*( 3px )/@carouselControlFontSize solid @white;
+  .border-radius(@em*( 23px )/@carouselControlFontSize);
   .opacity(50);
 
   // we can't have this transition here
@@ -92,7 +94,7 @@
   // Reposition the right one
   &.right {
     left: auto;
-    right: @em*( 15px )/@thisFontSize;
+    right: @em*( 15px )/@carouselControlFontSize;
   }
 
   // Hover state
@@ -103,6 +105,7 @@
   }
 }
 
+
 // Caption for text below images
 // -----------------------------
 
@@ -111,11 +114,18 @@
   left: 0;
   right: 0;
   bottom: 0;
-  padding: @em*( 10px )/@baseFontSize @em*( 15px )/@baseFontSize @em*( 5px )/@baseFontSize;
+  padding: @em*( 15px )/@baseFontSize;
   background: @grayDark;
   background: rgba(0,0,0,.75);
 }
 .carousel-caption h4,
 .carousel-caption p {
   color: @white;
+  line-height: @em*( @baseLineHeight )/@baseFontSize;
+}
+.carousel-caption h4 {
+  margin: 0 0 5px;
+}
+.carousel-caption p {
+  margin-bottom: 0;
 }

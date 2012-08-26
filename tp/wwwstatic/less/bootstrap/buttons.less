@@ -31,7 +31,7 @@
     color: @grayDark;
     text-decoration: none;
     background-color: darken(@white, 10%);
-    *background-color: darken(@white, 15%); // Buttons in IE7 don't get borders, so darken on hover
+    *background-color: darken(@white, 15%); /* Buttons in IE7 don't get borders, so darken on hover */
     background-position: 0 @em*( -15px )@btnFontSize;
 
     // transition is only when going to hover, otherwise the background
@@ -76,6 +76,7 @@
   padding: @em*( 9px )/@btnLargeFontSize @em*( 14px )/@btnLargeFontSize;
   font-size: @btnLargeFontSize;
   line-height: normal;
+  border: @em*( 1px )/@btnLargeFontSize solid @btnBorder; // Recreate border based on btn-large font size
   .border-radius(@em*( 5px )/@btnLargeFontSize);
 }
 .btn-large [class^="icon-"] {
@@ -87,6 +88,7 @@
   padding: @em*( 3px )/@btnSmallFontSize @em*( 9px )/@btnSmallFontSize;
   font-size: @em*( @btnSmallFontSize )/@baseFontSize;
   line-height: @em*( @baseLineHeight - 2px )/@btnSmallFontSize;
+  border: @em*( 1px )/@btnSmallFontSize solid @btnBorder; // Recreate border based on btn-small font size
 }
 .btn-small [class^="icon-"] {
   margin-top: 0;
@@ -97,6 +99,7 @@
   padding: @em*( 2px )/@btnMiniFontSize @em*( 6px )/@btnMiniFontSize;
   font-size: @em*( @btnMiniFontSize )/@baseFontSize;
   line-height: @em*( @baseLineHeight - 4px )/@btnMiniFontSize;
+  border: @em*( 1px )/@btnMiniFontSize solid @btnBorder; // Recreate border based on btn-mini font size
 }
 
 // Block button

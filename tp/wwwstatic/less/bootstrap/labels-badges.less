@@ -1,12 +1,14 @@
-// LABELS & BADGES
-// ---------------
+//
+// Labels and badges
+// --------------------------------------------------
+
 
 // Base classes
 .label,
 .badge {
   font-size: @em*( @labelFontSize )/@baseFontSize;
   font-weight: bold;
-  line-height: @em*( 18px )/@labelFontSize; // ensure proper line-height if floated
+  line-height: @em*( 14px )/@labelFontSize; // ensure proper line-height if floated
   color: @white;
   vertical-align: baseline;
   white-space: nowrap;
@@ -52,4 +54,19 @@ a {
   // Inverse (black)
   &-inverse           { background-color: @grayDark; }
   &-inverse[href]     { background-color: darken(@grayDark, 10%); }
+}
+
+// Quick fix for labels/badges in buttons
+.btn {
+  .label,
+  .badge {
+    position: relative;
+    top: @em*( -1px )/@libstFontSize;
+  }
+}
+.btn-mini {
+  .label,
+  .badge {
+    top: 0;
+  }
 }
