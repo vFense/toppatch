@@ -12,8 +12,8 @@
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width">
     <link href='http://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../js/libs/shutterstock-rickshaw-c5eabaf/rickshaw.min.css">
+    <link rel="stylesheet" href="../css/appName.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
     <link rel="stylesheet" href="../js/libs/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
     <script src="../js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
     <style>
@@ -142,7 +142,7 @@
         <div id="widget1" class="span4 widget">
             <div id="graphcontainer" class="window">
                 <header style="position: relative;">
-                    <h2>OS in Networks</h2>
+                    <h2 id="widget1-title">OS in Networks</h2>
                     <div id="menu1" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1"><i class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
@@ -158,10 +158,10 @@
                 <!--<img src="http://placehold.it/300x200"/> -->
             </div>
         </div>
-        <div id="widget2" class="span8 widget">
+        <div id="widget2" class="span6 widget">
             <div id="graph2container" class="window">
                 <header style="position: relative;">
-                    <h2>Vulnerabilities by Nodes</h2>
+                    <h2 id="widget2-title">Vulnerabilities by Nodes</h2>
                     <div id="menu2" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu2"><i class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
@@ -182,7 +182,7 @@
         <div id="widget3" class="span12 widget">
             <div id="graph3container" class="window">
                 <header style="position: relative;">
-                    <h2>Vulnerabilities by Time</h2>
+                    <h2 id="widget3-title">Vulnerabilities by Time</h2>
                     <div id="menu3" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu3"><i class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
@@ -309,6 +309,8 @@
 
 <!-- Top Patch javascript -->
 <script src="../js/appName.min.js"></script>
+<script src="../js/appName_Segments/pieCharts.js"></script>
+<script src="../js/appName_Segments/barCharts.js"></script>
 
 <script>
     jQuery(document).ready(function($) {
@@ -328,191 +330,24 @@
     });
 </script>
 <script type="text/javascript">
-function rickshawLine(graphNumber){
-    $("#"+graphNumber).html("");
-    var graph = new Rickshaw.Graph({
-        element: document.querySelector("#"+graphNumber),
-        renderer: 'line',
-        width: 300,
-        height: 210,
-        series: [{
-            name: "Vulnerability",
-            data: [ { x: 0, y: 40 }, { x: 10, y: 49 }, { x: 200, y: 45}, { x: 600, y: 36}, { x: 900, y: 80 } ],
-            color: 'steelblue'
-        }]
-    });
-    //var something = new Rickshaw.Graph.Y({ graph: graph });
-
-    var y_axis = new Rickshaw.Graph.Axis.Y( {
-        graph: graph,
-        orientation: 'left',
-        tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-        element: document.getElementById(graphNumber+'-y-axis')
-    } );
-    var time = new Rickshaw.Fixtures.Time();
-    var hour = time.unit("minute");
-    var x_axis = new Rickshaw.Graph.Axis.Time({ graph : graph, timeUnit: hour });
-    //alert(graphNumber+'-y-axis');
-    graph.render();
-}
-function createPie(graphNumber, graphData){
-    var w = 220,                        //width
-            h = 220,                            //height
-            r = 100,                            //radius
-            color = d3.scale.category20c();     //builtin range of colors
-    if(graphData == "os") {
-        data = [{"label":"windows7", "value":60},
-            {"label":"windows8", "value":20},
-            {"label":"windowsXP", "value":13},
-            {"label":"macos", "value":15},
-            {"label":"linux", "value":25}];
-
-    } else if(graphData == "node"){
-        data = [{"label":"node1", "value":60},
-            {"label":"node2", "value":15},
-            {"label":"node3", "value":25},
-            {"label":"node4", "value":40},
-            {"label":"node5", "value":32}];
-
-    }
-
-    $("#"+graphNumber).html("");
-    var vis = d3.select("#"+graphNumber)
-            .append("svg:svg")              //create the SVG element inside the <body>
-            .data([data])                   //associate our data with the document
-            .attr("width", w)           //set the width and height of our visualization (these will be attributes of the <svg> tag
-            .attr("height", h)
-            .append("svg:g")                //make a group to hold our pie chart
-            .attr("transform", "translate(" + r + "," + r + ")");  //move the center of the pie chart from 0, 0 to radius, radius
-
-    var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
-            .innerRadius(0)
-            .outerRadius(r);
-
-    var pie = d3.layout.pie()           //this will create arc data for us given a list of values
-            .value(function(d) { return d.value; });    //we must tell it out to access the value of each element in our data array
-
-    var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
-            .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
-            .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
-            .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
-            .attr("class", "slice");    //allow us to style things in the slices (like text)
-
-    arcs.append("svg:path")
-            .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
-            .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
-
-    /* arcs.append("svg:text")                                     //add a label to each slice
-     .attr("transform", function(d) {                    //set the label's origin to the center of the arc
-     //we have to make sure to set these before calling arc.centroid
-     d.innerRadius = 0;
-     d.outerRadius = r;
-     return "translate(" + arc.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
-     })
-     .attr("text-anchor", "middle")                          //center the text on it's origin
-     .text(function(d, i) { return data[i].label; });        //get the label from our original data array
-     */
-
-
-    // Add a label to the larger arcs, translated to the arc centroid and rotated.
-    arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; }).append("svg:text")
-            .attr("dy", ".35em")
-            .attr("text-anchor", "middle")
-            .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
-            .text(function(d) { return d.data.label; });
-
-    // Computes the label angle of an arc, converting from radians to degrees.
-    function angle(d) {
-        var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
-        return a > 90 ? a - 180 : a;
-    }
-
-}
-function createBar(graphNumber){
-    var data = [{year: "vulnerable", books: 54},
-        {year: "secure", books: 43},
-        {year: "patched", books: 41},
-        {year: "pending", books: 44},
-        {year: "nodes", books: 65}];
-
-    var barWidth = 70;
-    var width = (barWidth + 10) * data.length;
-    var height = 200;
-
-    var x = d3.scale.linear()
-            .domain([0, data.length])
-            .range([0, width]);
-    var y = d3.scale.linear()
-            .domain([0, d3.max(data, function(datum) { return datum.books; })])
-            .rangeRound([0, height]);
-    $("#"+graphNumber).html("");
-// add the canvas to the DOM
-    var barDemo = d3.select("#"+graphNumber).
-            append("svg:svg").
-            attr("width", width).
-            attr("height", height+20);
-
-    barDemo.selectAll("rect").
-            data(data).
-            enter().
-            append("svg:rect").
-            attr("x", function(datum, index) { return x(index); }).
-            attr("y", function(datum) { return height - y(datum.books); }).
-            attr("height", function(datum) { return y(datum.books); }).
-            attr("width", barWidth).
-            attr("fill", "#2d578b");
-
-    barDemo.selectAll("text").
-            data(data).
-            enter().
-            append("svg:text").
-            attr("x", function(datum, index) { return x(index) + barWidth-20; }).
-            attr("y", function(datum) { return height - y(datum.books); }).
-            attr("dx", -barWidth/2).
-            attr("dy", "1.2em").
-            attr("text-anchor", "middle").
-            attr("style", "font-size: 10").
-            text(function(datum) { return datum.books;}).
-            attr("fill", "white");
-
-    barDemo.selectAll("text.yAxis")
-            .data(data)
-            .enter().append("svg:text")
-            .attr("x", function(datum, index) { return x(index) + barWidth-20; })
-            .attr("y", height+10)
-            .attr("dx", -barWidth/2)
-            .attr("text-anchor", "middle")
-            .attr("style", "font-size: 10")
-            .text(function(datum) { return datum.year;})
-            .attr('transform', 'translate(15, 5)')
-            .attr("class", "yAxis");
-}
 function createLine(graphNumber){
-    var m = [80, 80, 80, 80]; // margins
-    var w = 1000 - m[1] - m[3]; // width
+    var m = [40, 40, 40, 40]; // margins
+    var w = 950 - m[1] - m[3]; // width
     var h = 400 - m[0] - m[2]; // height
     var year = 1900;
 
     // create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
     var data = [3, 6, 2, 7, 5, 2, 6, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
     var labels = new Array();
-    var label_array = new Array();
     var val_array1 = new Array();
     var sampsize = data.length;
-    //var maxval = 0;
     for ( var k = 0; k < data.length; k++){
         labels[k] = year;
         year = year + 10;
     }
     for (var i=0; i < sampsize; i++) {
-        label_array[i] = parseInt(labels[i]);
-        val_array1[i] = { x: label_array[i], y: parseFloat(data[i]) };
-        //maxval = Math.max(maxval, parseFloat( data[i] ) );
+        val_array1[i] = { x: labels[i], y: parseFloat(data[i]) };
     }
-    //maxval = (1 + Math.floor(maxval / 10)) * 10;
-    //alert(labels[29]);
-    //var labels = [year, 1910, 2, 7, 5, 2, 6, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
-
     // X scale will fit all values from data[] within pixels 0-w
     //var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
     var x = d3.scale.linear().domain([labels[0], labels[labels.length-1]]).range([0, w]);
@@ -527,24 +362,26 @@ function createLine(graphNumber){
             .x(function(d, i) {
                 // verbose logging to show what's actually being done
                 //alert(x(0)+" "+ labels[0]);
-                console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(d.x) + ' using our xScale.');
+                console.log('Plotting X value for data point: ' + d.x + ' using index: ' + i + ' to be at: ' + x(d.x) + ' using our xScale.');
                 // return the X coordinate where we want to plot this datapoint
                 //alert(x(i));
                 return x(d.x);
             })
             .y(function(d) {
                 // verbose logging to show what's actually being done
-                console.log('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
+                console.log('Plotting Y value for data point: ' + d.y + ' to be at: ' + y(d.y) + " using our yScale.");
                 // return the Y coordinate where we want to plot this datapoint
                 return y(d.y);
-            })
+            });
 
     // Add an SVG element with the desired dimensions and margin.
     var graph = d3.select("#"+graphNumber).append("svg:svg")
+            .data([val_array1])
             .attr("width", w + m[1] + m[3])
             .attr("height", h + m[0] + m[2])
             .append("svg:g")
             .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
 
     // create yAxis
     var xAxis = d3.svg.axis().scale(x).tickSize(1);
@@ -561,7 +398,7 @@ function createLine(graphNumber){
     // Add the y-axis to the left
     graph.append("svg:g")
             .attr("class", "y axis")
-            .attr("transform", "translate(-25,0)")
+            .attr("transform", "translate(-1,0)")
             .call(yAxisLeft);
 
     // Add the line by appending an svg:path element with the data line we created above
@@ -569,8 +406,13 @@ function createLine(graphNumber){
     graph.append("svg:path")
             .attr("fill", "none")
             .attr("stroke", "steelblue")
-            .attr("stroke-width", "1")
+            .attr("stroke-width", "2")
             .attr("d", line(val_array1));
+    graph.selectAll("path")
+            .on("mouseover", function (d, i){
+                //alert(d[i].y);
+                //alert(i);
+            });
     //.attr("d", line(data));
 }
 function createSmallBar(graphNumber){
@@ -611,167 +453,11 @@ function createSmallBar(graphNumber){
 }
 
 </script>
-<!--
-<script type="text/javascript">
-
-    var data = [{"label":"1990", "value":16},
-        {"label":"1991", "value":56},
-        {"label":"1992", "value":7},
-        {"label":"1993", "value":77},
-        {"label":"1994", "value":22},
-        {"label":"1995", "value":16},
-    ];
-
-    //maximum of data you want to use
-    var data_max = 80,
-
-    //number of tickmarks to use
-            num_ticks = 5,
-
-    //margins
-            left_margin = 60,
-            right_margin = 60,
-            top_margin = 30,
-            bottom_margin = 0;
-
-
-    var w = 500,                        //width
-            h = 500,                        //height
-            color = function(id) { return '#00b3dc' };
-
-    var x = d3.scale.linear()
-                    .domain([0, data_max])
-                    .range([0, w - ( left_margin + right_margin ) ])
-                    ,
-            y = d3.scale.ordinal()
-                    .domain(d3.range(data.length))
-                    .rangeBands([bottom_margin, h - top_margin], .5)
-                    ;
-
-
-    var chart_top = h - y.rangeBand()/2 - top_margin;
-    var chart_bottom = bottom_margin + y.rangeBand()/2;
-    var chart_left = left_margin;
-    var chart_right = w - right_margin;
-
-    /*
-     *  Setup the SVG element and position it
-     */
-    var vis = d3.select("#example")
-            .append("svg:svg")
-            .attr("width", w)
-            .attr("height", h)
-            .append("svg:g")
-            .attr("id", "barchart")
-            .attr("class", "barchart")
-
-
-    //Ticks
-    var rules = vis.selectAll("g.rule")
-            .data(x.ticks(num_ticks))
-            .enter()
-            .append("svg:g")
-            .attr("transform", function(d)
-            {
-                return "translate(" + (chart_left + x(d)) + ")";});
-    rules.append("svg:line")
-            .attr("class", "tick")
-            .attr("y1", chart_top)
-            .attr("y2", chart_top + 4)
-            .attr("stroke", "black");
-
-    rules.append("svg:text")
-            .attr("class", "tick_label")
-            .attr("text-anchor", "middle")
-            .attr("y", chart_top)
-            .text(function(d)
-            {
-                return d;
-            });
-    var bbox = vis.selectAll(".tick_label").node().getBBox();
-    vis.selectAll(".tick_label")
-            .attr("transform", function(d)
-            {
-                return "translate(0," + (bbox.height) + ")";
-            });
-
-    var bars = vis.selectAll("g.bar")
-            .data(data)
-            .enter()
-            .append("svg:g")
-            .attr("class", "bar")
-            .attr("transform", function(d, i) { return "translate(0, " + y(i) + ")"; });
-
-    bars.append("svg:rect")
-            .attr("x", right_margin)
-            .attr("width", function(d) {
-                return (x(d.value));
-            })
-            .attr("height", y.rangeBand())
-            .attr("fill", color(0))
-            .attr("stroke", color(0));
-
-
-
-    //Labels
-    var labels = vis.selectAll("g.bar")
-            .append("svg:text")
-            .attr("class", "label")
-            .attr("x", 0)
-            .attr("text-anchor", "right")
-            .text(function(d) {
-                return d.label;
-            });
-
-    var bbox = labels.node().getBBox();
-    vis.selectAll(".label")
-            .attr("transform", function(d) {
-                return "translate(0, " + (y.rangeBand()/2 + bbox.height/4) + ")";
-            });
-
-
-    labels = vis.selectAll("g.bar")
-            .append("svg:text")
-            .attr("class", "value")
-            .attr("x", function(d)
-            {
-                return x(d.value) + right_margin + 10;
-            })
-            .attr("text-anchor", "left")
-            .text(function(d)
-            {
-                return "" + d.value + "%";
-            });
-
-    bbox = labels.node().getBBox();
-    vis.selectAll(".value")
-            .attr("transform", function(d)
-            {
-                return "translate(0, " + (y.rangeBand()/2 + bbox.height/4) + ")";
-            });
-
-    //Axes
-    vis.append("svg:line")
-            .attr("class", "axes")
-            .attr("x1", chart_left)
-            .attr("x2", chart_left)
-            .attr("y1", chart_bottom)
-            .attr("y2", chart_top)
-            .attr("stroke", "black");
-    vis.append("svg:line")
-            .attr("class", "axes")
-            .attr("x1", chart_left)
-            .attr("x2", chart_right)
-            .attr("y1", chart_top)
-            .attr("y2", chart_top)
-            .attr("stroke", "black");
-
-</script> -->
 <script type="text/template" id="widget_template">
     <div id="<%= widget %>" class="<%= span %> widget">
         <div id="<%= graphcontainer %>" class="window">
             <header style="position: relative;">
-                <h2>Widget Title</h2>
+                <h2 id="<%= widget %>-title">Widget Title</h2>
                 <div id="<%= menu %>" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#<%= menu %>"><i class="icon-list-ul"></i></a>
                     <ul class="dropdown-menu">
@@ -791,7 +477,7 @@ function createSmallBar(graphNumber){
 <script type="text/template" id="text_template">
     <div id="<%= widget %>" class="<%= span %>">
         <div id="<%= graphcontainer %>" class="widget number">
-            <h4><%= title %></h4>537
+            <h4 id="<%= widget %>-title"><%= title %></h4>537
         </div>
     </div>
 </script>
@@ -810,11 +496,48 @@ function createSmallBar(graphNumber){
         //alert(data);
     </script>
 </script>
-<script>
+    <script>
+    function pieGraph(selection, graphData) {
+        var title;
+        if (graphData === "os") {
+            data = [{"label":"windows 7", "value":60},
+                {"label":"windows 8", "value":20},
+                {"label":"windows XP", "value":13},
+                {"label":"macos", "value":15},
+                {"label":"linux", "value":25}];
+            title = "OS in Network";
+        } else if (graphData === "node") {
+            data = [{"label":"node 1", "value":20},
+                {"label":"node 2", "value":75},
+                {"label":"node 3", "value":15},
+                {"label":"node 4", "value":40},
+                {"label":"node 5", "value":30},
+                {"label":"node 6", "value":5},
+                {"label":"node 7", "value":9},
+                {"label":"node 8", "value":32}];
+            title = "Nodes by OS";
+        }
+        var pieChart = $appName.pieChart().title(title);
+        d3.select(selection).datum(data).call(pieChart);
+    }
+    function barGraph(selection) {
+        var data = [{label: "vulnerable", value: 54},
+                    {label: "secure", value: 43},
+                    {label: "patched", value: 41},
+                    {label: "pending", value: 44},
+                    {label: "failed", value: 15},
+                    {label: "nodes", value: 65}],
+                title = "Vulnerabilities by Nodes",
+        width = $(selection).width(),
+        barWidth = (width / data.length ) - 10;
+        var graphBar = $appName.verticalBarChart().title(title).barWidth(barWidth);
+        d3.select(selection).datum(data).call(graphBar);
+    }
     var Properties = Backbone.Model.extend({
         defaults: {
             widgetName: "widget1",
-            currentWidget: "existing"
+            currentWidget: "existing",
+            widgetType: "graph"
             //widgetGraph: "pie"
         },
         initialize: function () {
@@ -851,9 +574,9 @@ function createSmallBar(graphNumber){
                     this.counter += 1;
                     graph = $("#" + widget).children().children("div").attr("id");
                     if (graphType === "pie") {
-                        createPie(graph, graphData);
+                        pieGraph("#" + graph, graphData);
                     } else if (graphType === "bar") {
-                        createBar(graph);
+                        barGraph("#" + graph);
                     } else if (graphType === "line") {
                         createLine(graph);
                     }
@@ -875,17 +598,16 @@ function createSmallBar(graphNumber){
                     graph = $("#" + widget).children().children("div").attr("id");
                     graphType = $('input:radio[name=graph]:checked').val();
                     graphData = $('input:radio[name=graphdata]:checked').val();
-                    //alert( graph + graphType );
-                    if (graphType === "pie") {
-                        createPie(graph, graphData);
-                    } else if (graphType === "bar") {
-                        createBar(graph);
-                    } else if (graphType === "line") {
-                        createLine(graph);
-                        //rickshawLine(graph);
-                    }
                     $("#" + widget).removeClass(myClass);
                     $("#" + widget).addClass("span" + sizeval + " widget");
+                    if (graphType === "pie") {
+                        //createPie(graph, graphData);
+                        pieGraph("#" + graph, graphData);
+                    } else if (graphType === "bar") {
+                        barGraph("#" + graph);
+                    } else if (graphType === "line") {
+                        createLine(graph);
+                    }
                 } else {
                     matches = widget.match(/\d+$/);
                     parent = $("#" + widget).parent().attr("id");
@@ -918,7 +640,6 @@ function createSmallBar(graphNumber){
         'use strict';
         $(obj).parent().parent().parent().parent().parent().parent().hide();
     }
-
     $(".dropdown-toggle").dropdown();
     $(".movable").sortable({ connectWith: '.movable' });
     $("#restore").click(function () { $(".widget").show(); });
@@ -927,6 +648,7 @@ function createSmallBar(graphNumber){
     $("#graphdata").buttonset();
     $("#type").buttonset();
     $("#parameter").buttonset();
+
     $("#type1").click(function () {
         $("#graphSettings").show();
         $("#textSettings").hide();
@@ -940,19 +662,15 @@ function createSmallBar(graphNumber){
         $("#widgetProperties").modal('hide');
     });
     $("#deploy").click(function () {
-        //$("#main").load("patching.html");
         var template = _.template($("#patch_template").html());
-        // Load the compiled HTML into the Backbone "el"
         $("#main").html(template);
     });
     $("#graphtype1").click(function () { $("#dataToGraph").show(); });
     $("#graphtype2").click(function () { $("#dataToGraph").hide(); });
     $("#graphtype3").click(function () { $("#dataToGraph").hide(); });
-    createPie("graph1", "os");
-    createBar("graph2");
+    pieGraph("#graph1", "os");
+    barGraph("#graph2");
     createLine("graph3");
-    //rickshawLine("graph3");
-    //createSmallBar("graph3");
 </script>
 
 
