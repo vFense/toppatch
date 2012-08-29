@@ -27,13 +27,6 @@
 		color: #001678;
 		margin-left:0;
 		padding-left:0;
-	}
-	
-	.dropdown {
-		.caret {
-			border-top-color: @black !important;
-			border-bottom-color: @black !important;
-			opacity: 1;
 		text-transform:uppercase;
 		position: relative;
 		
@@ -42,14 +35,7 @@
 			line-height: 1em;
 		}
 		
-		&:hover, &.open {
 			.caret {
-				border-top-color: @blueDark !important;
-				border-bottom-color: @blueDark !important;
-			}
-			> a {
-				color: @blueDark;
-			}
 		IMG {
 			@imageHeight: 18px;
 			height: @em*( @imageHeight )/@navbarBrandFontSize;
@@ -59,8 +45,4 @@
 			//margin-bottom: @em*( @marginAdjust )/@navbarBrandFontSize;
 		}
 	}
-}
-
-.navbar .nav {
-	margin-right:0;
 }
