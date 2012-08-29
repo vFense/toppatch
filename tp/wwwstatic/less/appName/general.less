@@ -35,6 +35,61 @@ li {
 
 H1, H2, H3, H4, H5, H6 { margin:0; }
 
+SUMMARY {
+	margin-bottom: 1em;
+	
+	DL {
+		text-align: center;
+		margin: 0;
+		border: @em*( 1px )/@baseFontSize solid #E6E6E6;
+		
+		DT {
+			background-color: #E6E6E6;
+			border-bottom: @em*( 1px )/@baseFontSize solid #E6E6E6;
+			margin:0;
+		}
+		DD {
+			font-size: 20px;
+			line-height: 2em;
+			margin: 0;
+		}
+	}
+	
+	.success {
+		//background-color: @successBackground;
+		//border-color: @successBorder;
+  		//color: @successText;
+  		
+  		DT {
+  			background-color: @successBackground;
+  			border-color: @successBorder;
+  			color: @successText;
+  		}
+	}
+	
+	.error {
+		//background-color: @errorBackground;
+		//border-color: @errorBorder;
+  		//color: @errorText;
+  		
+  		DT {
+  			background-color: @errorBackground;
+  			border-color: @errorBorder;
+  			color: @errorText;
+  		}
+	}
+	
+	.info {
+		//background-color: @infoBackground;
+		//border-color: @infoBorder;
+  		//color: @infoText;
+  		
+  		DT {
+  			background-color: @infoBackground;
+  			border-color: @infoBorder;
+  			color: @infoText;
+  		}
+	}	
 }
 
 .legal {
