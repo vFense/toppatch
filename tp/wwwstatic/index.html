@@ -17,115 +17,27 @@
 	<script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
 </head>
 <body>
-<header class="pageHeader">
+<header id="pageHeader">
 	<section class="navbar container">
 		<div class="navbar-inner noBorder noRadius noShadow" id="primaryNav">
 			<nav class="clearfix">
 				<span class="brand">
-					<a href="#"><img src="img/brand-name.png" alt="Top Patch brand"/></a> | Remediation Vault
+					<a href="#"><img src="img/brand-name.png" alt="Top Patch brand"/></a> | R<small>emediation</small> V<small>ault</small>
 				</span>
-				<ul class="nav pull-right">
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="icon-user"></i><span> Username </span><i class="icon-caret-down"></i>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a href="javascript:;">My Profile</a></li>
-							<li class="divider"></li>
-							<li><a href="javascript:;">Logout</a></li>
-						</ul>
-					</li>
-				</ul>
+				<ul class="nav pull-right" id="account-dropdown">&nbsp;</ul>
 			</nav>
 		</div>
-		<div class="navbar-inner">
-			<nav class="clearfix">
-				<ul class="nav">
-					<li class="dropdown" role="menu" aria-labeledby="dlabel">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<span> Admin </span><i class="icon-caret-down"></i>
-						</a>
-						<ul class="dropdown-menu">
-							<li class="dropdown-submenu">
-								<a tabindex="-1" href="#">Option 1</a>
-								<ul class="dropdown-menu">
-									<li><a tabindex="-1" href="#">Second Level Link</a></li>
-									<li><a tabindex="-1" href="#">Second Level Link</a></li>
-									<li><a tabindex="-1" href="#">Second Level Link</a></li>
-									<li><a tabindex="-1" href="#">Second Level Link</a></li>
-									<li><a tabindex="-1" href="#">Second Level Link</a></li>
-								</ul>
-							</li>
-							<li><a href="javascript:;">Option 2</a></li>
-							<li><a href="javascript:;">Option 3</a></li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="nav">
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="icon-file"></i><span> Reports </span><i class="icon-caret-down"></i>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a href="javascript:;">Basic Report</a></li>
-							<li><a href="javascript:;">Generic Report 2</a></li>
-							<li><a href="javascript:;">Generic Report 3</a></li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="nav pull-right">
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<i class="icon-cog"></i><span>Settings </span><span><i class="icon-caret-down"></i>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a href="javascript:;">Account Settings</a></li>
-							<li class="divider"></li>
-							<li><a href="javascript:;">Help</a></li>
-						</ul>
-					</li>
-				</ul>
-			</nav>
-		</div>
+		<div class="navbar-inner" id="dashboardNav">&nbsp;</div>
 	</section>
 </header>
 <!--[if lt IE 7]<section class="container"><div class="alert alert-error chromeframe" id="ie-warning"><a class="close" data-dismiss="alert">×</a><strong>Top Patch does not support your browser.</strong> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</div></section><![endif]-->
 <!-- main -->
-<section class="container" role="main">
-	<header class="row">
-		<section class="span12">
-			<div class="page-header">
-				<h1>Generic Report Title <small>Supporting text or tagline</small></h1>
-			<div>
-		</section>
-	</header>
-	<div class="row">
-		<div class="span3">
-			<div class="widget number">
-				<h4>Nodes</h4>10,007
-			</div>
-		</div>
-		<div class="span3">
-			<div class="widget number">
-				<h4>Patched Today</h4>3,096
-			</div>
-		</div>
-		<div class="span3">
-			<div class="widget number">
-				<h4>Unpatched</h4>537
-			</div>
-		</div>
-		<div class="span3">
-			<div class="widget number">
-				<h4>Failed Patches</h4>3
-			</div>
-		</div>
-	</div>
+<section class="container" id="dashboard-view" role="main">
 	<div class="row">
 		<div class="span4">
 			<div class="widget">
 				<header>
-					<h2>Widget Title</h2>
+					<h3>Widget Title</h3>
 				</header>
 				<div>
 					<img src="http://placehold.it/300x200"/>
@@ -135,7 +47,7 @@
 		<div class="span8">
 			<div class="widget">
 				<header>
-					<h2>Widget Title</h2>
+					<h3>Widget Title</h3>
 				</header>
 				<div id="example">
 					<img src="http://placehold.it/620x200"/>
@@ -143,11 +55,12 @@
 			</div>
 		</div>
 	</div>
+	<!--
 	<div class="row">
 		<div class="span12">
 			<div class="widget">
 				<header>
-					<h2>Widget Title</h2>
+					<h3>Widget Title</h3>
 				</header>
 				<table id="data" class="table table-bordered table-striped"></table>
 				<div class="pagination pagination-centered">
@@ -165,6 +78,7 @@
 			</div>
 		</div>
 	</div>
+	-->
 </section>
 <footer class="pageFooter">
 	<section class="container">
@@ -191,10 +105,14 @@ Cloudflare does not have Bootstrap 2.1.0 yet (08/24/2012)
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.0.4/bootstrap.min.js"></script>
 -->
 <script>window.jQuery.fn.typeahead || document.write('<script src="js/libs/bootstrap/bootstrap.min.js"><\/script>');</script>
+<!--
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.3/underscore-min.js"></script>
 <script>window._ || document.write('<script src="js/libs/underscore-min.js"><\/script>');</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js"></script>
 <script>window.Backbone || document.write('<script src="js/libs/backbone-min.js"><\/script>');</script>
+-->
+<script src="js/libs/underscore.js"></script>
+<script src="js/libs/backbone.js"></script>
 <!--/javascript libraries -->
 
 <!-- javascript chart libraries -->
@@ -210,19 +128,38 @@ Cloudflare does not have Bootstrap 2.1.0 yet (08/24/2012)
 
 <!-- Top Patch javascript -->
 <script src="js/appName.min.js"></script>
+<script src="js/templates.min.js"></script>
 <script>
-	jQuery(document).ready(function($) {
-		var table = $appName.generateTable().headerRow(true)
-				.sort(function (a, b) {
-					return a.score - b.score;
-				});
+var user = {
+		"name": "Luis Aleman",
+		"access" : {
+			"patches": true
+		}
+	},
+	summary = {
+		"count": 4,
+		"keys": ["Nodes", "Patched", "Scheduled Patches", "Failed Patches"],
+		"data": [10000, 3207, 508, -3]
+	};
 
-		d3.json("test-ajax/proposed_data.json", function(data) {
-			d3.select("#data")
-				.datum(data)
-				.call(table);
-		});
+jQuery(document).ready(function ($) {
+	"use strict";
+	$('#account-dropdown').html(_.template(TEMPLATES["account/dropdownMenu"](), user));
+	$('#dashboardNav').html(_.template(TEMPLATES["dashboard/navigation"](), user));
+	$('#dashboard-view').append(_.template(TEMPLATES["dashboard/summary/list"](), summary));
+	/*
+	var table = $appName.generateTable().headerRow(true)
+			.sort(function (a, b) {
+				return a.score - b.score;
+			});
+
+	d3.json("test-ajax/proposed_data.json", function(data) {
+		d3.select("#data")
+			.datum(data)
+			.call(table);
 	});
+	*/
+});
 </script>
 <!--/Top Patch javascript -->
 </body>
