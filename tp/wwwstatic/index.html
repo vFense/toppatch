@@ -139,7 +139,8 @@ var user = {
 	summary = {
 		"count": 4,
 		"keys": ["Nodes", "Patched", "Scheduled Patches", "Failed Patches"],
-		"data": [10000, 3207, 508, -3]
+		"data": [10000, 3207, 508, 3],
+		"format": [,,,function(value) {var out = "";out += (value > 0)? " error":"";return out;}]
 	};
 
 jQuery(document).ready(function ($) {

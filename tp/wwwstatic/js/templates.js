@@ -29,7 +29,8 @@ var TEMPLATES = {
 		template.push('<summary class="row-fluid clearfix">');
 		template.push('<% var span = ["span12","span6","span4","span3"]; %>');
 		template.push('<% for(var i = 0, len = count; i < len; i += 1) { var extraClass= data[i] < 0?" error":"";%>');
-		template.push('<dl class="<%= span[len-1] || "span2" %><%= extraClass %>">\n<dt><%= keys[i] %></dt>\n<dd><%= Math.abs(data[i]) %></dd>\n</dl>\n');
+		template.push('<dl class="<%= span[len-1] || "span2" %><% if(obj.format && $.type(obj.format[i]) === "function") { print(obj.format[i].apply(window, [data[i]])); } %>">\n');
+		template.push('<dt><%= keys[i] %></dt>\n<dd><%= Math.abs(data[i]) %></dd>\n</dl>\n');
 		template.push('<% } %>');
 		template.push('</summary>');
 
