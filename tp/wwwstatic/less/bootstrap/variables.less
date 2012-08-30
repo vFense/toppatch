@@ -249,24 +249,54 @@
 // Adapts to target grid width and number of columns
 // em conversion based on @baseFontSize above
 // --------------------------------------------------
-@gridWidth:				960; // in pixels
-@gridColumns:			12;
+@gridColumns:         12;
 
-// Calculate in Pixels
-@gutterWidth:			(@gridWidth/@gridColumns)/4;
-@columnWidth:			(@gridWidth/@gridColumns) - @gutterWidth;
-@rowWidth:				(@columnWidth * @gridColumns) + (@gutterWidth * (@gridColumns - 1));
+// 960 grid
+@gridWidth:           960px;
+@gutterWidth:         (@gridWidth/@gridColumns)/4;
+@columnWidth:         (@gridWidth/@gridColumns) - @gutterWidth;
+@rowWidth:            (@columnWidth * @gridColumns) + (@gutterWidth * (@gridColumns - 1));
+
+// 1200px min
+@gutterWidth1200:     30px;
+@columnWidth1200:     70px;
+@rowWidth1200:        (@gridColumns * @columnWidth1200) + (@gutterWidth1200 * (@gridColumns - 1));
+
+// 768px-979px
+@gutterWidth768:      20px;
+@columnWidth768:      42px;
+@rowWidth768:         (@gridColumns * @columnWidth768) + (@gutterWidth768 * (@gridColumns - 1));
 
 // Convert to em
-@gridColumnWidth:		@em * (@columnWidth/@baseFontSize);
-@gridGutterWidth:		@em * (@gutterWidth/@baseFontSize);
-@gridRowWidth:			@em * (@rowWidth   /@baseFontSize);
+// --------------------------------------------------
+
+// 960 Grid
+@gridColumnWidth:         @em * (@columnWidth/@baseFontSize);
+@gridGutterWidth:         @em * (@gutterWidth/@baseFontSize);
+@gridRowWidth:            @em * (@rowWidth   /@baseFontSize);
+
+// 1200 Grid
+@gridColumnWidth1200:     @em * (@columnWidth1200/@baseFontSize);
+@gridGutterWidth1200:     @em * (@gutterWidth1200/@baseFontSize);
+@gridRowWidth1200:        @em * (@rowWidth1200   /@baseFontSize);
+
+// 768 Grid
+@gridColumnWidth768:      @em * (@columnWidth768/@baseFontSize);
+@gridGutterWidth768:      @em * (@gutterWidth768/@baseFontSize);
+@gridRowWidth768:         @em * (@rowWidth768   /@baseFontSize);
 
 // Fluid grid
-// Adapts to number of columns and grid width specified above
 // ----------------------------------------------------------
-@fluidGridColumnWidth:	@pct * @columnWidth/@rowWidth;
-@fluidGridGutterWidth:	@pct * @gutterWidth/@rowWidth;
+@fluidGridColumnWidth:    percentage(@columnWidth/@rowWidth);
+@fluidGridGutterWidth:    percentage(@gutterWidth/@rowWidth);
+
+// 1200px min
+@fluidGridColumnWidth1200:    percentage(@columnWidth1200/@rowWidth1200);
+@fluidGridGutterWidth1200:    percentage(@gutterWidth1200/@rowWidth1200);
+
+// 768px-979px
+@fluidGridColumnWidth768:     percentage(@columnWidth768/@rowWidth768);
+@fluidGridGutterWidth768:     percentage(@gutterWidth768/@rowWidth768);
 
 
 // EM: Changes below
