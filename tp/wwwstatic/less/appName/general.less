@@ -8,25 +8,12 @@ BODY {
 	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
 	//background-color: @TP_White;
 	min-width: @gridRowWidth;
-	
-	> HEADER {
-		.brand {
-			position: relative;
-			IMG {
-				@imageHeight: 18px;
-				height: @em*( @imageHeight )/@navbarBrandFontSize;
-				vertical-align:baseline;
-				//@marginAdjust: 0px;
-				//margin-top: @em*( @marginAdjust )/@navbarBrandFontSize;
-				//margin-bottom: @em*( @marginAdjust )/@navbarBrandFontSize;
-			}
-		}
-	}
+	padding-top: 1em;
+	padding-bottom: 1em;
 
 	> FOOTER {
 		background-color: #F8F8F8;
-			height: @em*( @pageFooterHeight )/@baseFontSize;
-		margin-top: @em*( 18px )/@baseFontSize;
+		height: @em*( @pageFooterHeight )/@baseFontSize;
 		color: darken(@TP_DarkGrey,4%);
 		border-top: @em*( 1px )/@baseFontSize solid #E0E0E0;
 		border-bottom: @em*( 1px )/@baseFontSize solid #E0E0E0;
@@ -48,16 +35,57 @@ li {
 
 H1, H2, H3, H4, H5, H6 { margin:0; }
 
-#primaryNav {
-	background-image: none !important;
-	filter: none !important;
-	background-color: transparent;
-}
-
-.sidebar {
-	position:absolute;top:0;bottom:0;
-	background-color:rgb(245,245,245);
-	padding-top:1em;
+SUMMARY {
+	margin-bottom: 1em;
+	
+	DL {
+		text-align: center;
+		margin: 0;
+		border: @em*( 1px )/@baseFontSize solid #E6E6E6;
+		
+		DT {
+			background-color: #E6E6E6;
+			border-bottom: @em*( 1px )/@baseFontSize solid #E6E6E6;
+			margin:0;
+		}
+		DD {
+			font-size: 20px;
+			line-height: 2em;
+			margin: 0;
+		}
+	}
+	
+	.info {
+		DT {
+  			background-color: @infoBackground;
+  			border-color: @infoBorder;
+  			color: @infoText;
+  		}
+	}
+	
+	.success {
+		DT {
+  			background-color: @successBackground;
+  			border-color: @successBorder;
+  			color: @successText;
+  		}
+	}
+	
+	.warning {
+		DT {
+  			background-color: @warningBackground;
+  			border-color: @warningBorder;
+  			color: @warningText;
+  		}
+	}
+	
+	.error {
+  		DT {
+  			background-color: @errorBackground;
+  			border-color: @errorBorder;
+  			color: @errorText;
+  		}
+	}	
 }
 
 .legal {

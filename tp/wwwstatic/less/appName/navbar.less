@@ -1,11 +1,15 @@
 // Navbar Styles
 // -------------------------
 
-.pageHeader {
+#pageHeader {
 	.navbar {
 		font-family: "Cantarell", "Arial Black", "Arial Bold", sans-serif;
-		font-weight: bold;
+		//font-weight: bold;
 		margin-bottom:0;
+		
+		.nav {
+			margin-right:0;
+		}
 	}
 
 	.navbar-inner {
@@ -13,32 +17,31 @@
 		padding-right:0;
 	}
 	
+	#primaryNav {
+		background-image: none !important;
+		filter: none !important;
+		background-color: transparent;
+	}
+	
 	.brand {
 		color: #001678;
 		margin-left:0;
 		padding-left:0;
-		font-variant: small-caps;
-	}
-	
-	.dropdown {
-		.caret {
-			border-top-color: @black !important;
-			border-bottom-color: @black !important;
-			opacity: 1;
+		text-transform:uppercase;
+		position: relative;
+		
+		SMALL {
+			font-size: 75%;
+			line-height: 1em;
 		}
 		
-		&:hover, &.open {
-			.caret {
-				border-top-color: @blueDark !important;
-				border-bottom-color: @blueDark !important;
-			}
-			> a {
-				color: @blueDark;
-			}
+		IMG {
+			@imageHeight: 18px;
+			height: @em*( @imageHeight )/@navbarBrandFontSize;
+			vertical-align:baseline;
+			//@marginAdjust: 0px;
+			//margin-top: @em*( @marginAdjust )/@navbarBrandFontSize;
+			//margin-bottom: @em*( @marginAdjust )/@navbarBrandFontSize;
 		}
 	}
-}
-
-.navbar .nav {
-	margin-right:0;
 }
