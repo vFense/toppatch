@@ -1,4 +1,4 @@
-$appName.timeSeriesChart = function () {
+$application.timeSeriesChart = function () {
 	"use strict";
 	var margin = {top: 20, right: 20, bottom: 20, left: 20},
 		width = 760,
