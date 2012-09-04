@@ -3539,7 +3539,7 @@ button.close {
 }
 .btn-primary {
   color: #ffffff;
-  text-shadow: 0 1em -0.07142857142857142px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 -0.07142857142857142em 0 rgba(0, 0, 0, 0.25);
   background-color: #006dcc;
   background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
@@ -3570,7 +3570,7 @@ button.close {
 }
 .btn-warning {
   color: #ffffff;
-  text-shadow: 0 1em -0.07142857142857142px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 -0.07142857142857142em 0 rgba(0, 0, 0, 0.25);
   background-color: #faa732;
   background-image: -moz-linear-gradient(top, #fbb450, #f89406);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));
@@ -3601,7 +3601,7 @@ button.close {
 }
 .btn-danger {
   color: #ffffff;
-  text-shadow: 0 1em -0.07142857142857142px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 -0.07142857142857142em 0 rgba(0, 0, 0, 0.25);
   background-color: #da4f49;
   background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
@@ -3632,7 +3632,7 @@ button.close {
 }
 .btn-success {
   color: #ffffff;
-  text-shadow: 0 1em -0.07142857142857142px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 -0.07142857142857142em 0 rgba(0, 0, 0, 0.25);
   background-color: #5bb75b;
   background-image: -moz-linear-gradient(top, #62c462, #51a351);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
@@ -3663,7 +3663,7 @@ button.close {
 }
 .btn-info {
   color: #ffffff;
-  text-shadow: 0 1em -0.07142857142857142px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 -0.07142857142857142em 0 rgba(0, 0, 0, 0.25);
   background-color: #49afcd;
   background-image: -moz-linear-gradient(top, #5bc0de, #2f96b4);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#2f96b4));
@@ -3694,7 +3694,7 @@ button.close {
 }
 .btn-inverse {
   color: #ffffff;
-  text-shadow: 0 1em -0.07142857142857142px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 -0.07142857142857142em 0 rgba(0, 0, 0, 0.25);
   background-color: #363636;
   background-image: -moz-linear-gradient(top, #444444, #222222);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#444444), to(#222222));
@@ -4485,9 +4485,9 @@ input[type="submit"].btn.btn-mini {
 }
 .navbar .divider-vertical {
   height: 40px;
-  margin: 0 1em 0.6428571428571429px;
-  border-left: 1em 0.07142857142857142px solid #f2f2f2;
-  border-right: 1em 0.07142857142857142px solid #ffffff;
+  margin: 0 0.6428571428571429em;
+  border-left: 0.07142857142857142em solid #f2f2f2;
+  border-right: 0.07142857142857142em solid #ffffff;
 }
 .navbar .btn,
 .navbar .btn-group {
@@ -4628,7 +4628,7 @@ input[type="submit"].btn.btn-mini {
   text-shadow: 0 0.07142857142857142em 0 #ffffff;
 }
 .navbar .nav .dropdown-toggle .caret {
-  margin-top: 1em 0.5714285714285714px;
+  margin-top: 0.5714285714285714em;
 }
 .navbar .nav > li > a:focus,
 .navbar .nav > li > a:hover {
@@ -4653,7 +4653,7 @@ input[type="submit"].btn.btn-mini {
   margin-left: 0.35714285714285715em;
   margin-right: 0.35714285714285715em;
   color: #ffffff;
-  text-shadow: 0 1em -0.07142857142857142px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 -0.07142857142857142em 0 rgba(0, 0, 0, 0.25);
   background-color: #fafafa;
   background-image: -moz-linear-gradient(top, #ffffff, #f2f2f2);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#f2f2f2));
@@ -4794,7 +4794,7 @@ input[type="submit"].btn.btn-mini {
 .navbar-inverse .brand,
 .navbar-inverse .nav > li > a {
   color: #999999;
-  text-shadow: 0 1em -0.07142857142857142px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 -0.07142857142857142em 0 rgba(0, 0, 0, 0.25);
 }
 .navbar-inverse .brand:hover,
 .navbar-inverse .nav > li > a:hover {
@@ -4841,10 +4841,10 @@ input[type="submit"].btn.btn-mini {
   color: #ffffff;
   background-color: #515151;
   border-color: #111111;
-  -webkit-box-shadow: inset 0 1em 0.07142857142857142px 1em 0.14285714285714285px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
-  -moz-box-shadow: inset 0 1em 0.07142857142857142px 1em 0.14285714285714285px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
-  -o-box-shadow: inset 0 1em 0.07142857142857142px 1em 0.14285714285714285px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0 1em 0.07142857142857142px 1em 0.14285714285714285px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+  -webkit-box-shadow: inset 0 0.07142857142857142em 0.14285714285714285em rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+  -moz-box-shadow: inset 0 0.07142857142857142em 0.14285714285714285em rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+  -o-box-shadow: inset 0 0.07142857142857142em 0.14285714285714285em rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 0.07142857142857142em 0.14285714285714285em rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
   -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
@@ -4861,20 +4861,20 @@ input[type="submit"].btn.btn-mini {
 }
 .navbar-inverse .navbar-search .search-query:focus,
 .navbar-inverse .navbar-search .search-query.focused {
-  padding: 1em 0.35714285714285715px 1em 1.0714285714285714px;
+  padding: 0.35714285714285715em 1.0714285714285714em;
   color: #333333;
-  text-shadow: 0 1em 0.07142857142857142px 0 #ffffff;
+  text-shadow: 0 0.07142857142857142em 0 #ffffff;
   background-color: #ffffff;
   border: 0;
-  -webkit-box-shadow: 0 0 1em 0.21428571428571427px rgba(0, 0, 0, 0.15);
-  -moz-box-shadow: 0 0 1em 0.21428571428571427px rgba(0, 0, 0, 0.15);
-  -o-box-shadow: 0 0 1em 0.21428571428571427px rgba(0, 0, 0, 0.15);
-  box-shadow: 0 0 1em 0.21428571428571427px rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 0 0 0.21428571428571427em rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 0 0 0.21428571428571427em rgba(0, 0, 0, 0.15);
+  -o-box-shadow: 0 0 0.21428571428571427em rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 0.21428571428571427em rgba(0, 0, 0, 0.15);
   outline: 0;
 }
 .navbar-inverse .btn-navbar {
   color: #ffffff;
-  text-shadow: 0 1em -0.07142857142857142px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 -0.07142857142857142em 0 rgba(0, 0, 0, 0.25);
   background-color: #0e0e0e;
   background-image: -moz-linear-gradient(top, #151515, #040404);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#151515), to(#040404));
@@ -5200,29 +5200,29 @@ input[type="submit"].btn.btn-mini {
 .tooltip.top .tooltip-arrow {
   bottom: 0;
   left: 50%;
-  margin-left: 1em -0.45454545454545453px;
-  border-width: 1em 0.45454545454545453px 1em 0.45454545454545453px 0;
+  margin-left: -0.45454545454545453em;
+  border-width: 0.45454545454545453em 0.45454545454545453em 0;
   border-top-color: #000000;
 }
 .tooltip.right .tooltip-arrow {
   top: 50%;
   left: 0;
-  margin-top: 1em -0.45454545454545453px;
-  border-width: 1em 0.45454545454545453px 1em 0.45454545454545453px 1em 0.45454545454545453px 0;
+  margin-top: -0.45454545454545453em;
+  border-width: 0.45454545454545453em 0.45454545454545453em 0.45454545454545453em 0;
   border-right-color: #000000;
 }
 .tooltip.left .tooltip-arrow {
   top: 50%;
   right: 0;
-  margin-top: 1em -0.45454545454545453px;
-  border-width: 1em 0.45454545454545453px 0 1em 0.45454545454545453px 1em 0.45454545454545453px;
+  margin-top: -0.45454545454545453em;
+  border-width: 0.45454545454545453em 0 0.45454545454545453em 0.45454545454545453em;
   border-left-color: #000000;
 }
 .tooltip.bottom .tooltip-arrow {
   top: 0;
   left: 50%;
-  margin-left: 1em -0.45454545454545453px;
-  border-width: 0 1em 0.45454545454545453px 1em 0.45454545454545453px;
+  margin-left: -0.45454545454545453em;
+  border-width: 0 0.45454545454545453em 0.45454545454545453em;
   border-bottom-color: #000000;
 }
 .popover {
