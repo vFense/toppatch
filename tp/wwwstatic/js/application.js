@@ -3,7 +3,7 @@ var $application = {
 	// Semantic versioning
 	// See: http://semver.org/
 	"version": "0.1.0",
-	"versionDescription": "Initial Development"
+	"versionDescription": "Initial Development",
 	"models": {},
 	"views": {},
 	"controllers": {}
