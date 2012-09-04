@@ -9,6 +9,6 @@ var $application = {
 	"controllers": {}
 };
 
-//@codekit-append "application/timeSeriesChart.js";
-//@codekit-append "application/barCharts.js";
-//@codekit-append "application/tableGenerator.js";
+//@codekit-append "application/d3Charts/timeSeriesChart.js";
+//@codekit-append "application/d3Charts/barCharts.js";
+//@codekit-append "application/d3Charts/tableGenerator.js";
