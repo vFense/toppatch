@@ -27,6 +27,15 @@
         #widgetProperties {
             overflow-y: auto !important;
         }
+        .point {
+            fill: rgb(51, 156, 255);
+            stroke-width: 2px;
+            stroke: rgb(255,255,255);
+        }
+        .point.max {
+            fill: rgb(200,0,0);
+            stroke-width: 2px;
+        }
     </style>
 </head>
 <body>
@@ -36,7 +45,7 @@
     <hr/>
     <div class=""><a href="http://www.toppatch.com/"><img src="../img/logo-text.png" class="logo-text" alt="Top Patch logo"/></a></div>
 </noscript>
-
+<!--
 <header class="pageHeader">
     <section class="navbar container">
         <div class="navbar-inner noBorder noRadius noShadow" id="primaryNav">
@@ -111,12 +120,27 @@
         </div>
     </section>
 </header>
+-->
+<header id="pageHeader">
+    <section class="navbar container">
+        <div class="navbar-inner noBorder noRadius noShadow" id="primaryNav">
+            <nav class="clearfix">
+				<span class="brand">
+					<a href="#"><img src="../img/brand-name.png" alt="Top Patch brand"/></a> | R<small>emediation</small> V<small>ault</small>
+				</span>
+                <ul class="nav pull-right" id="account-dropdown">&nbsp;</ul>
+            </nav>
+        </div>
+        <div class="navbar-inner" id="dashboardNav">&nbsp;</div>
+    </section>
+</header>
 <!--[if lt IE 7]<section class="container"><div class="alert alert-error chromeframe" id="ie-warning"><a class="close" data-dismiss="alert">×</a><strong>Top Patch does not support your browser.</strong> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</div></section><![endif]-->
 <section class="container" role="main" id="main">
     <header class="page-header">
         <h1>DASHBOARD <small>Customize your needs</small></h1>
     </header>
-    <div class="row movable">
+    <summary class="row-fluid clearfix movable">
+        <!--
         <div class="span3">
             <div class="widget number">
                 <h4>Nodes</h4>10,007
@@ -132,13 +156,29 @@
                 <h4>Unpatched</h4>537
             </div>
         </div>
-        <div class="span3">
+        <div class="span3 error">
             <div class="widget number">
                 <h4>Failed Patches</h4>3
             </div>
-        </div>
-    </div>
-    <div id="container" class="row movable">
+        </div> -->
+        <dl class="span3 info">
+            <dt>Nodes</dt>
+            <dd>10000</dd>
+        </dl>
+        <dl class="span3 success">
+            <dt>Patched</dt>
+            <dd>3207</dd>
+        </dl>
+        <dl class="span3 warning">
+            <dt>Scheduled Patches</dt>
+            <dd>508</dd>
+        </dl>
+        <dl class="span3 error">
+            <dt>Failed Patches</dt>
+            <dd>3</dd>
+        </dl>
+    </summary>
+    <summary id="container" class="row-fluid movable">
         <div id="widget1" class="span4 widget">
             <div id="graphcontainer" class="window">
                 <header style="position: relative;">
@@ -177,8 +217,8 @@
                 <!--<img src="http://placehold.it/620x200"/>-->
             </div>
         </div>
-    </div>
-    <div class="row movable">
+    </summary>
+    <summary class="row-fluid movable">
         <div id="widget3" class="span12 widget">
             <div id="graph3container" class="window">
                 <header style="position: relative;">
@@ -198,10 +238,10 @@
                 <!--<img src="http://placehold.it/620x200"/>-->
             </div>
         </div>
-    </div>
-    <div id="insert" class="row movable"></div>
+    </summary>
+    <summary id="insert" class="row-fluid movable"></summary>
     <br />
-    <div class="row movable">
+    <summary class="row-fluid movable">
         <div class="span12 widget">
             <header>
                 <h2>Widget Title</h2>
@@ -220,7 +260,7 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </summary>
 </section>
 <div class="modal hide" id="widgetProperties">
     <div class="modal-header">
@@ -237,8 +277,8 @@
             <h4>Choose a parameter</h4>
             <div id="parameter">
                 <input type="radio" name="param" id="param1"  value="Nodes"/><label for="param1">Nodes</label>
-                <input type="radio" name="param" id="param2" value="Patched Today" /><label for="param2">Patched</label>
-                <input type="radio" name="param" id="param3" value="Unpatched"/><label for="param3">Unpatched</label>
+                <input type="radio" name="param" id="param2" value="Patched" /><label for="param2">Patched</label>
+                <input type="radio" name="param" id="param3" value="Scheduled Patches"/><label for="param3">Unpatched</label>
                 <input type="radio" name="param" id="param4" value="Failed Patches"/><label for="param4">Failed</label>
             </div>
         </div>
@@ -255,6 +295,7 @@
                 <input type="radio" name="graph" id="graphtype1"  value="pie" /><label for="graphtype1">Pie Graph</label>
                 <input type="radio" name="graph" id="graphtype2" value="bar" checked="checked"/><label for="graphtype2">Bar Graph</label>
                 <input type="radio" name="graph" id="graphtype3" value="line"/><label for="graphtype3">Line Graph</label>
+                <input type="radio" name="graph" id="graphtype4" value="time"/><label for="graphtype4">Time Series</label>
             </div>
             <div id="dataToGraph" class="hide">
                 <h4>Choose type of Data</h4>
@@ -299,6 +340,7 @@
 <!-- javascript chart libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/2.8.1/d3.v2.min.js"></script>
 <script>window.d3 || document.write('<script src="../js/libs/charts/d3.v2.min.js"><\/script>')</script>
+<script src="../js/libs/cubism.js"></script>
 <!--
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script>window.Raphael || document.write('<script src="js/libs/charts/raphael-min.js"><\/script>')</script>
@@ -309,8 +351,11 @@
 
 <!-- Top Patch javascript -->
 <script src="../js/appName.min.js"></script>
+<script src="../js/templates.js"></script>
 <script src="../js/appName_Segments/pieCharts.js"></script>
 <script src="../js/appName_Segments/barCharts.js"></script>
+<script src="../js/appName_Segments/timeSeriesChart.js"></script>
+<script src="../js/appName_Segments/lineChart.js"></script>
 
 <script>
     jQuery(document).ready(function($) {
@@ -330,128 +375,60 @@
     });
 </script>
 <script type="text/javascript">
-function createLine(graphNumber){
-    var m = [40, 40, 40, 40]; // margins
-    var w = 950 - m[1] - m[3]; // width
-    var h = 400 - m[0] - m[2]; // height
-    var year = 1900;
+    function cubismGraph(selection) {
+        var width = $(selection).width(),
+            context = cubism.context()
+                .serverDelay(0)
+                .clientDelay(0)
+                .step(1e3)
+                .size(width);
+        $(selection).html("");
 
-    // create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
-    var data = [3, 6, 2, 7, 5, 2, 6, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
-    var labels = new Array();
-    var val_array1 = new Array();
-    var sampsize = data.length;
-    for ( var k = 0; k < data.length; k++){
-        labels[k] = year;
-        year = year + 10;
+        var foo = random("foo", context);
+            //bar = random("bar", context);
+        d3.select(selection).call(function(div) {
+
+            div.append("div")
+                    .attr("class", "axis")
+                    .call(context.axis().orient("top"));
+
+            div.selectAll(".horizon")
+                    .data([foo])
+                    .enter().append("div")
+                    .attr("class", "horizon")
+                    .call(context.horizon().title(function (d) { return "Number of vulnerabilities: "; }).extent([0,200]).height(220).mode("mirror"));
+
+            div.append("div")
+                    .attr("class", "rule")
+                    .call(context.rule());
+
+        });
+
+        // On mousemove, reposition the chart values to match the rule.
+        context.on("focus", function(i) {
+            d3.selectAll(".value").style("right", i == null ? null : context.size() - i + "px");
+        });
     }
-    for (var i=0; i < sampsize; i++) {
-        val_array1[i] = { x: labels[i], y: parseFloat(data[i]) };
+    function random(name, context) {
+        var value = 0,
+                values = [],
+                i = 0,
+                last;
+
+        return context.metric(function(start, stop, step, callback) {
+            start = +start;
+            stop = +stop;
+
+            if (isNaN(last)) last = start;
+            while (last < stop) {
+                last += step;
+                //value = Math.max(-10, Math.min(10, value + .8 * Math.random() - .4 + .2 * Math.cos(i += .2)));
+                value = 50 - Math.random() * 21 - 10;
+                values.push(value);
+            }
+            callback(null, values = values.slice((start - stop) / step));
+        }, name);
     }
-    // X scale will fit all values from data[] within pixels 0-w
-    //var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
-    var x = d3.scale.linear().domain([labels[0], labels[labels.length-1]]).range([0, w]);
-    // Y scale will fit values from 0-10 within pixels h-0 (Note the inverted domain for the y-scale: bigger is up!)
-    var y = d3.scale.linear().domain([0, 10]).range([h, 0]);
-    // automatically determining max range can work something like this
-    // var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
-    $("#"+graphNumber).html("");
-    // create a line function that can convert data[] into x and y points
-    var line = d3.svg.line()
-        // assign the X function to plot our line as we wish
-            .x(function(d, i) {
-                // verbose logging to show what's actually being done
-                //alert(x(0)+" "+ labels[0]);
-                console.log('Plotting X value for data point: ' + d.x + ' using index: ' + i + ' to be at: ' + x(d.x) + ' using our xScale.');
-                // return the X coordinate where we want to plot this datapoint
-                //alert(x(i));
-                return x(d.x);
-            })
-            .y(function(d) {
-                // verbose logging to show what's actually being done
-                console.log('Plotting Y value for data point: ' + d.y + ' to be at: ' + y(d.y) + " using our yScale.");
-                // return the Y coordinate where we want to plot this datapoint
-                return y(d.y);
-            });
-
-    // Add an SVG element with the desired dimensions and margin.
-    var graph = d3.select("#"+graphNumber).append("svg:svg")
-            .data([val_array1])
-            .attr("width", w + m[1] + m[3])
-            .attr("height", h + m[0] + m[2])
-            .append("svg:g")
-            .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
-
-
-    // create yAxis
-    var xAxis = d3.svg.axis().scale(x).tickSize(1);
-    //.tickSubdivide(true);
-    // Add the x-axis.
-    graph.append("svg:g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + h + ")")
-            .call(xAxis);
-
-
-    // create left yAxis
-    var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
-    // Add the y-axis to the left
-    graph.append("svg:g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(-1,0)")
-            .call(yAxisLeft);
-
-    // Add the line by appending an svg:path element with the data line we created above
-    // do this AFTER the axes above so that the line is above the tick-lines
-    graph.append("svg:path")
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", "2")
-            .attr("d", line(val_array1));
-    graph.selectAll("path")
-            .on("mouseover", function (d, i){
-                //alert(d[i].y);
-                //alert(i);
-            });
-    //.attr("d", line(data));
-}
-function createSmallBar(graphNumber){
-    $("#"+graphNumber).html("");
-    // simple array
-    var data = [8, 12, 15, 30, 43];
-    // variables for chart width and height
-    var w = 50,
-            h = 200;
-    var chart = d3.select("#"+graphNumber).append("svg")
-            .attr("class", "chart")
-            .attr("width", w * data.length)
-            .attr("height", h);
-    var x = d3.scale.linear()
-            .domain([0, 1])
-            .range([0, w]);
-
-    var y = d3.scale.linear()
-            .domain([0, 50])
-            .rangeRound([0, h]); //rangeRound is used for antialiasing
-    // x and y are the lower-left position of the bar
-    // width is the width of the bar
-    // height is the height of the bar
-    // for crisp edges use -.5 (antialiasing)
-    chart.selectAll("rect")
-            .data(data)
-            .enter().append("rect")
-            .attr("x", function(d, i) { return x(i) - .5; })
-            .attr("y", function(d) { return h - y(d) - .5; })
-            .attr("width", w)
-            .attr("height", function(d) { return y(d); } );
-    chart.append("line")
-            .attr("x1", 0)
-            .attr("x2", w * data.length)
-            .attr("y1", h - .5)
-            .attr("y2", h - .5)
-            .style("stroke", "#000");
-}
-
 </script>
 <script type="text/template" id="widget_template">
     <div id="<%= widget %>" class="<%= span %> widget">
@@ -475,11 +452,14 @@ function createSmallBar(graphNumber){
     </div>
 </script>
 <script type="text/template" id="text_template">
-    <div id="<%= widget %>" class="<%= span %>">
-        <div id="<%= graphcontainer %>" class="widget number">
-            <h4 id="<%= widget %>-title"><%= title %></h4>537
-        </div>
-    </div>
+    <dl id="<%= widget %>" class="<%= span %> <%= type %>">
+        <dt id="<%= widget %>-title">
+            <%= title %>
+        </dt>
+        <dd>
+            <%= data %>
+        </dd>
+    </dl>
 </script>
 <script type="text/template" id="patch_template">
     <header class="page-header">
@@ -500,39 +480,70 @@ function createSmallBar(graphNumber){
     function pieGraph(selection, graphData) {
         var title;
         if (graphData === "os") {
-            data = [{"label":"windows 7", "value":60},
-                {"label":"windows 8", "value":20},
-                {"label":"windows XP", "value":13},
-                {"label":"macos", "value":15},
-                {"label":"linux", "value":25}];
+            data = [{"label":"windows 7", "value": Math.floor(Math.random() * 100)},
+                {"label":"windows 8", "value": Math.floor(Math.random() * 100)},
+                {"label":"windows XP", "value": Math.floor(Math.random() * 100)},
+                {"label":"Mac OS X", "value": Math.floor(Math.random() * 100)},
+                {"label":"linux", "value": Math.floor(Math.random() * 100)}];
             title = "OS in Network";
         } else if (graphData === "node") {
-            data = [{"label":"node 1", "value":20},
-                {"label":"node 2", "value":75},
-                {"label":"node 3", "value":15},
-                {"label":"node 4", "value":40},
-                {"label":"node 5", "value":30},
-                {"label":"node 6", "value":5},
-                {"label":"node 7", "value":9},
-                {"label":"node 8", "value":32}];
+            data = [{"label":"node 1", "value": Math.floor(Math.random() * 100)},
+                {"label":"node 2", "value": Math.floor(Math.random() * 100)},
+                {"label":"node 3", "value": Math.floor(Math.random() * 100)},
+                {"label":"node 4", "value": Math.floor(Math.random() * 100)},
+                {"label":"node 5", "value": Math.floor(Math.random() * 100)},
+                {"label":"node 6", "value": Math.floor(Math.random() * 100)},
+                {"label":"node 7", "value": Math.floor(Math.random() * 100)},
+                {"label":"node 8", "value": Math.floor(Math.random() * 100)}];
             title = "Nodes by OS";
         }
         var pieChart = $appName.pieChart().title(title);
         d3.select(selection).datum(data).call(pieChart);
     }
     function barGraph(selection) {
-        var data = [{label: "vulnerable", value: 54},
-                    {label: "secure", value: 43},
-                    {label: "patched", value: 41},
-                    {label: "pending", value: 44},
-                    {label: "failed", value: 15},
-                    {label: "nodes", value: 65}],
+        var data = [{label: "vulnerable", value: Math.floor(Math.random() * 100)},
+                    {label: "secure", value: Math.floor(Math.random() * 100)},
+                    {label: "patched", value: Math.floor(Math.random() * 100)},
+                    {label: "pending", value: Math.floor(Math.random() * 100)},
+                    {label: "failed", value: Math.floor(Math.random() * 100)},
+                    {label: "nodes", value: Math.floor(Math.random() * 100)}],
                 title = "Vulnerabilities by Nodes",
         width = $(selection).width(),
         barWidth = (width / data.length ) - 10;
         var graphBar = $appName.verticalBarChart().title(title).barWidth(barWidth);
         d3.select(selection).datum(data).call(graphBar);
     }
+    function lineGraph(selection) {
+        var data = [{"label": new Date('1960').getFullYear(), "value":60},
+            {"label": new Date('1970').getFullYear(), "value":20},
+            {"label": new Date('1980').getFullYear(), "value":43},
+            {"label": new Date('1990').getFullYear(), "value":15},
+            {"label": new Date('2000').getFullYear(), "value":5},
+            {"label": new Date('2010').getFullYear(), "value":25},
+            {"label": new Date('2012').getFullYear(), "value":65}],
+            title = "Line Chart";
+        var lineChart = $appName.lineChart().title(title);
+        d3.select(selection).datum(data).call(lineChart);
+    }
+    var User = Backbone.Model.extend({
+       defaults: {
+           config: {
+               name: "Guest",
+               access: {
+                   patches: true
+               },
+               textWidgets: 4,
+               textKey: ["Nodes", "Patched", "Scheduled Patches", "Failed Patches"],
+               graphWidgets: 3,
+               graphKey: ["pie", "bar", "line"]
+           }
+       },
+       initialize: function() {
+           $('#account-dropdown').html(_.template(TEMPLATES["account/dropdownMenu"](), this.get("config")));
+           $('#dashboardNav').html(_.template(TEMPLATES["dashboard/navigation"](), this.get("config")));
+       }
+    });
+    var user = new User();
     var Properties = Backbone.Model.extend({
         defaults: {
             widgetName: "widget1",
@@ -550,11 +561,44 @@ function createSmallBar(graphNumber){
         initialize: function () {
             'use strict';
             this.counter = 4;
+            $("#size").buttonset();
+            $("#graphType").buttonset();
+            $("#graphdata").buttonset();
+            $("#type").buttonset();
+            $("#parameter").buttonset();
+        },
+        events: {
+            'click #type1': 'graphSetting',
+            'click #type2': 'textSetting',
+            'click #apply': 'generate',
+            'click #graphtype1': 'pieData',
+            'click #graphtype2': 'otherData',
+            'click #graphtype3': 'otherData',
+            'click #graphtype4': 'otherData'
+        },
+        pieData: function () {
+            $("#dataToGraph").show();
+        },
+        otherData: function () {
+            $("#dataToGraph").hide();
+        },
+        generate: function () {
+            $("#widgetProperties").modal('hide');
+            this.render();
+        },
+        graphSetting: function () {
+            $("#graphSettings").show();
+            $("#textSettings").hide();
+        },
+        textSetting: function () {
+            $("#graphSettings").hide();
+            $("#textSettings").show();
         },
         render: function () {
             'use strict';
-            var current, type, widget, sizeval, variables, graphType, graphData, graph, template, title, matches, myClass, parent;
+            var current, type, widget, sizeval, variables, graphType, graphData, graph, template, title, matches, myClass, parent, classType, index;
             current = properties.get("currentWidget");
+            classType = ["info", "success", "warning", "error"];
             type = $('input:radio[name=type]:checked').val();
             if (current === "new") {
                 widget = "widget" + this.counter;
@@ -570,22 +614,26 @@ function createSmallBar(graphNumber){
                     // Compile the template using underscore
                     template = _.template($("#widget_template").html(), variables);
                     // Load the compiled HTML into the Backbone "el"
-                    $(this.el).append(template);
+                    $("#insert").append(template);
                     this.counter += 1;
-                    graph = $("#" + widget).children().children("div").attr("id");
+                    graph = "#" + $("#" + widget).children().children("div").attr("id");
                     if (graphType === "pie") {
-                        pieGraph("#" + graph, graphData);
+                        pieGraph(graph, graphData);
                     } else if (graphType === "bar") {
-                        barGraph("#" + graph);
+                        barGraph(graph);
                     } else if (graphType === "line") {
-                        createLine(graph);
+                        lineGraph(graph);
+                    } else if (graphType === "time") {
+                        cubismGraph(graph);
                     }
                 } else {
                     sizeval = "3";
-                    title = $('input:[name=param]:checked').val();
-                    variables = { widget: widget, span: "span" + sizeval, graphcontainer: "graphcontainer" + this.counter, title: title };
+                    title = $('input:[name=param]:checked');
+                    index =  $("input:radio[name='param']").index(title);
+                    title = title.val();
+                    variables = { widget: widget, span: "span" + sizeval, type: classType[index], title: title, data: Math.floor(Math.random() * 500) };
                     template = _.template($("#text_template").html(), variables);
-                    $(this.el).append(template);
+                    $("#insert").append(template);
                     this.counter += 1;
                 }
                 //Pass variables in using Underscore.js Template
@@ -595,33 +643,37 @@ function createSmallBar(graphNumber){
                 if (type === "graph") {
                     myClass = $("#" + widget).attr("class");
                     sizeval = $('input:radio[name=radio]:checked').val();
-                    graph = $("#" + widget).children().children("div").attr("id");
+                    graph = "#" + $("#" + widget).children().children("div").attr("id");
                     graphType = $('input:radio[name=graph]:checked').val();
                     graphData = $('input:radio[name=graphdata]:checked').val();
                     $("#" + widget).removeClass(myClass);
                     $("#" + widget).addClass("span" + sizeval + " widget");
                     if (graphType === "pie") {
                         //createPie(graph, graphData);
-                        pieGraph("#" + graph, graphData);
+                        pieGraph(graph, graphData);
                     } else if (graphType === "bar") {
-                        barGraph("#" + graph);
+                        barGraph(graph);
                     } else if (graphType === "line") {
-                        createLine(graph);
+                        lineGraph(graph);
+                    } else if (graphType === "time") {
+                        cubismGraph(graph);
                     }
                 } else {
-                    matches = widget.match(/\d+$/);
-                    parent = $("#" + widget).parent().attr("id");
-                    title = $('input:[name=param]:checked').val();
+                    parent = $("#" + widget).parent();
+                    title = $('input:[name=param]:checked');
+                    index =  $("input:radio[name='param']").index(title);
+                    title = title.val();
+                    console.log(parent);
                     sizeval = "3";
-                    variables = { widget: widget, span: "span" + sizeval, graphcontainer: "graphcontainer" + matches[0], title: title };
+                    variables = { widget: widget, span: "span" + sizeval, title: title, type: classType[index], data: Math.floor(Math.random() * 500) };
                     template = _.template($("#text_template").html(), variables);
                     $("#" + widget).remove();
-                    $("#" + parent).append(template);
+                    $(parent).append(template);
                 }
             }
         }
     });
-    var widgetview = new WidgetView({ el: $("#insert") });
+    var widgetview = new WidgetView({ el: 'body' });
 
     function setProperties(obj, param) {
         'use strict';
@@ -643,34 +695,14 @@ function createSmallBar(graphNumber){
     $(".dropdown-toggle").dropdown();
     $(".movable").sortable({ connectWith: '.movable' });
     $("#restore").click(function () { $(".widget").show(); });
-    $("#size").buttonset();
-    $("#graphType").buttonset();
-    $("#graphdata").buttonset();
-    $("#type").buttonset();
-    $("#parameter").buttonset();
-
-    $("#type1").click(function () {
-        $("#graphSettings").show();
-        $("#textSettings").hide();
-    });
-    $("#type2").click(function () {
-        $("#graphSettings").hide();
-        $("#textSettings").show();
-    });
-    $("#apply").click(function () {
-        widgetview.render();
-        $("#widgetProperties").modal('hide');
-    });
     $("#deploy").click(function () {
         var template = _.template($("#patch_template").html());
         $("#main").html(template);
     });
-    $("#graphtype1").click(function () { $("#dataToGraph").show(); });
-    $("#graphtype2").click(function () { $("#dataToGraph").hide(); });
-    $("#graphtype3").click(function () { $("#dataToGraph").hide(); });
     pieGraph("#graph1", "os");
     barGraph("#graph2");
-    createLine("graph3");
+    lineGraph("#graph3");
+    //cubismGraph("#graph3");
 </script>
 
 

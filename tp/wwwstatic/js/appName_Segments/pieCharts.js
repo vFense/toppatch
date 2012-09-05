@@ -10,7 +10,7 @@ $appName.pieChart = function () {
     var r	= 100,
         width	= 280,	// Golden Ratio 1000/Phi
         height	= 220,
-        color = d3.scale.category20c(),
+        color = d3.scale.category20(),
         title = "Default";
 
     function chart(selection) {
@@ -55,13 +55,25 @@ $appName.pieChart = function () {
                 })
                 .on("mouseover", function (d, i) {
                     d3.select(this).select("path").transition().duration(500)
-                        .attr("fill", color(i + 5))
+                        .attr("fill", color(i + 2))
                         .attr("d", arcOver);
                     d3.select(this).select("text").transition().duration(500)
                         .attr("dy", ".35em")
                         .attr("text-anchor", "middle")
-                        .style("font-size", "16px")
-                        .attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")")
+                        .style("font-size", "15px")
+                        .style("fill", function () {
+                            return "black";
+                        })
+                        .attr("transform", function(d) {
+                            var c = arc.centroid(d),
+                                x = c[0],
+                                y = c[1],
+                                labelr = r / 1.6,
+                            // pythagorean theorem for hypotenuse
+                                h = Math.sqrt(x * x + y * y);
+                            return "translate(" + (x / h * labelr) + ',' + (y / h * labelr) +  ") rotate(" + angle(d) + ")";
+                        })
+                        //.attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")")
                         .text(d.data.label);
                 })
                 .on("mouseout", function (d, i) {
@@ -73,6 +85,7 @@ $appName.pieChart = function () {
                         .attr("dy", ".35em")
                         .attr("text-anchor", "middle")
                         .style("font-size", "10px")
+                        .style("fill", "black")
                         .attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")")
                         .text(d.data.label);
                 });
@@ -90,11 +103,12 @@ $appName.pieChart = function () {
                 d3.select(that).datum(data).call(pieChart);
             }
             arcs.append("svg:title")
-                .text(function (d, i) { return d.data.value; });
+                .text(function (d, i) { return d.data.label + ": " + d.data.value; });
             arcs.append("svg:path")
                 .attr("fill", function (d, i) { return color(i); }) //set the color for each slice to be chosen from the color function defined above
                 .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
-            arcs.filter(function (d) { return d.endAngle - d.startAngle > .2; }).append("svg:text")
+            arcs.filter(function (d) { return d.endAngle - d.startAngle > .2; })
+                .append("svg:text")
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
                 .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })

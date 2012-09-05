@@ -15,12 +15,12 @@ $appName.timeSeriesChart = function () {
 
 	function chart(selection) {
 		selection.each(function (data) {
+
 			// Convert data to standard representation greedily;
 			// this is needed for nondeterministic accessors.
 			data = data.map(function (d, i) {
 				return [xValue.call(data, d, i), yValue.call(data, d, i)];
 			});
-
 			// Update the x-scale.
 			xScale
 				.domain(d3.extent(data, function (d) { return d[0]; }))

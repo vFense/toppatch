@@ -82,7 +82,8 @@ $appName.verticalBarChart = function () {
                 attr("y", function(datum) { return height - y(datum.value); }).
                 attr("height", function(datum) { return y(datum.value); }).
                 attr("width", barWidth).
-                attr("fill", "#2d578b");
+                attr("fill", "#2d578b").
+                append("svg:title").text(function (d) { console.log(d.label); return d.label + ": " + d.value; });
 
             barDemo.selectAll("text").
                 data(data).
@@ -108,6 +109,11 @@ $appName.verticalBarChart = function () {
                 .text(function(datum) { return datum.label;})
                 .attr('transform', 'translate(15, 5)')
                 .attr("class", "yAxis");
+
+            /*barDemo.selectAll("rect")
+                .data(data)
+                .enter().append("svg:title")
+                .text(function (d) { console.log(d.label); return d.label + ": " + d.value; });*/
         });
     }
 
