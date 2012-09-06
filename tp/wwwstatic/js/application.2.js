@@ -7,6 +7,7 @@ require.config({
 		'underscore':       'libs/underscore/underscore-min',
 		'backbone':         'libs/backbone/backbone-min',
 		d3:                 'libs/d3/d3.v2.min'
+		text:				'libs/require/plugins/text',
 	},
 	shim: {
 		'jquery.ui': {
