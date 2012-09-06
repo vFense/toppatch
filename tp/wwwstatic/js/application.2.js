@@ -108,6 +108,15 @@ define([
 			_.each(this.collection.models, function (item) {
 				that.renderDashButton(item);
 			}, this);
+	// Use TP locally to modify the global object
+	var TP = window.TopPatch = {
+		App: {
+			// Semantic versioning
+			// See: http://semver.org/
+			version: "0.1.0",
+			versionDescription: "Initial Development",
+			dispatch: _.extend({}, Backbone.Events),
+			options: {}
 		},
 
 		renderDashButton: function (item) {
