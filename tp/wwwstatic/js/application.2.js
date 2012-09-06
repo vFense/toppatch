@@ -1,6 +1,8 @@
 require.config({
 	paths: {
 		// libs
+		// Create shortcuts
+		// i.e. Use 'jquery' insteaad of 'libs/jquery/jquery-1.8.0.min'
 		jquery:             'libs/jquery/jquery-1.8.0.min',
 		'jquery.ui':        'libs/jquery-ui/jquery-ui.custom.min',
 		'jquery.bootstrap': 'libs/bootstrap/bootstrap.min',
