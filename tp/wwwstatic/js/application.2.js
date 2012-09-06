@@ -7,7 +7,11 @@ require.config({
 		'underscore':       'libs/underscore/underscore-min',
 		'backbone':         'libs/backbone/backbone-min',
 		d3:                 'libs/d3/d3.v2.min'
+		d3:                 'libs/d3/d3.v2.min',
 		text:				'libs/require/plugins/text',
+		app:				'application',
+		modules:			'application/modules',
+		templates:			'application/templates'
 	},
 	shim: {
 		'jquery.ui': {
