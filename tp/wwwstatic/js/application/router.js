@@ -1,9 +1,4 @@
 // Filename: router.js
-define([
-	'jquery',
-	'underscore',
-	'backbone'
-], function ($, _, Backbone) {
 	"use strict";
 	var AppRouter = Backbone.Router.extend({
 		routes: {
@@ -12,6 +7,9 @@ define([
 			'patchAdmin/installed':  'showInstalledPatchAdmin',
 			'patchAdmin/hidden':     'showHiddenPatchAdmin',
 			'patchAdmin/detail/:id': 'showPatchDetail',
+define(
+	['backbone', 'modules/viewManager', 'modules/navBar' ],
+	function (Backbone, ViewManager, NavBar) {
 
 			// Default/Dashboard
 			'dashboard': 'defaultAction',
