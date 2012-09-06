@@ -36,10 +36,12 @@ define([
 	// before executing the next function
 	'jquery',
 	'backbone', // Backbone will load underscore for us
+	'application/router',
 	'd3',
 	'jquery.ui',
 	'jquery.bootstrap'
 ], function ($, Backbone) {
+], function ($, Backbone, Router) {
 	"use strict";
 
 	var user = {},
