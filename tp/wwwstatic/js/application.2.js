@@ -125,6 +125,12 @@ define([
 				model: item
 			});
 			this.$el.append(buttonView.render().el);
+		user: {
+			name: 'Luis',
+			access: [
+				{ name: 'Dashboard', href: '#dashboard' },
+				{ name: 'Patches', href: '#patchAdmin' }
+			]
 		}
 	});
 
