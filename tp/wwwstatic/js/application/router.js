@@ -1,39 +1,53 @@
 // Filename: router.js
-	"use strict";
-	var AppRouter = Backbone.Router.extend({
-		routes: {
-			// Patch Routes
-			'patchAdmin':            'showPatchAdmin',
-			'patchAdmin/installed':  'showInstalledPatchAdmin',
-			'patchAdmin/hidden':     'showHiddenPatchAdmin',
-			'patchAdmin/detail/:id': 'showPatchDetail',
 define(
 	['backbone', 'modules/viewManager', 'modules/navBar' ],
 	function (Backbone, ViewManager, NavBar) {
+		"use strict";
 
-			// Default/Dashboard
-			'dashboard': 'defaultAction',
-			'*other':  'defaultAction'
-		},
-		showPatchAdmin: function () {
-			console.log('show patchAdmin');
-		},
-		showInstalledPatchAdmin: function () {
-		},
-		showHiddenPatchAdmin: function () {
-		},
-		showPatchDetail: function () {
-		},
-		defaultAction: function (other) {
-			if(other !== '') { console.log('>'+other+'<'); }
-			console.log('show default');
-		}
-	}),
-		initialize = function () {
-			var app_router = new AppRouter();
-			Backbone.history.start();
+		var AppRouter = Backbone.Router.extend({
+			routes: {
+				// Dashboard
+				'': 'home',
+				'dashboard': 'home',
+
+				// Patch Routes
+				'patchAdmin':            'showPatchAdmin',
+
+				// Default
+				'*other':  'defaultAction'
+			},
+			initialize: function () {
+				// Start the Dashboard Nav Bar
+				this.navBar = new NavBar.View();
+				
+				// Create a new ViewManager with #dashboard-view as its target element
+				// All views sent to the ViewManager will render in the target element
+				this.viewManager = new ViewManager('#dashboard-view');
+			},
+			home: function () {
+				// Set the active Dashboard Nav Button
+				this.navBar.setActive({target:$('#dashboardNav a[href$="dashboard"]')});
+				
+				// Update the main dashboard view
+				this.viewManager.showView({ el: 'Home', render: function () {return true; }, close: function () { return true; }});
+			},
+			showPatchAdmin: function () {
+				// Set the active Dashboard Nav Button
+				this.navBar.setActive({target:$('#dashboardNav a[href$="patchAdmin"]')});
+				
+				// Update the main dashboard view
+				this.viewManager.showView({ el: 'Patch Admin', render: function () {return true; }, close: function () { return true; }});
+			},
+			defaultAction: function (other) {
+				this.viewManager.showView({ el: '404: Not Found', render: function () { return true; }, close: function () {  return true; }});
+			}
+		});
+
+		return {
+			initialize: function () {
+				this.app_router = new AppRouter();
+				Backbone.history.start();
+			}
 		};
-	return {
-		initialize: initialize
-	};
-});
+	}
+);
