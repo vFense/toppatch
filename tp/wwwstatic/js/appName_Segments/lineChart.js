@@ -40,14 +40,14 @@ $application.lineChart = function () {
                     .x(function(d, i) {
                         // verbose logging to show what's actually being done
                         //alert(x(0)+" "+ labels[0]);
-                        console.log('Plotting X value for data point: ' + d.x + ' using index: ' + i + ' to be at: ' + x(d.x) + ' using our xScale.');
+                        //console.log('Plotting X value for data point: ' + d.x + ' using index: ' + i + ' to be at: ' + x(d.x) + ' using our xScale.');
                         // return the X coordinate where we want to plot this datapoint
                         //alert(x(i));
                         return x(d.x);
                     })
                     .y(function(d) {
                         // verbose logging to show what's actually being done
-                        console.log('Plotting Y value for data point: ' + d.y + ' to be at: ' + y(d.y) + " using our yScale.");
+                        //console.log('Plotting Y value for data point: ' + d.y + ' to be at: ' + y(d.y) + " using our yScale.");
                         // return the Y coordinate where we want to plot this datapoint
                         return y(d.y);
                     });
@@ -93,17 +93,17 @@ $application.lineChart = function () {
                         return 4;
                     }
                 }).attr("cx", function(d) {
-                    console.log( x(d.x) );
+                    //console.log( x(d.x) );
                     return x(d.x);
                 }).attr("cy", function(d) {
-                    console.log( y(d.y) );
+                    //console.log( y(d.y) );
                     return y(d.y);
                 }).on('mouseover', function() {
                     return d3.select(this).attr('r', 8);
                 }).on('mouseout', function() {
                     return d3.select(this).attr('r', 4);
                 }).on('click', function(d, i) {
-                    return console.log(d, i);
+                    console.log(d, i);
                 });
             point.append("svg:title")
                 .text(function (d, i) { return d.x + ", " + d.y; });

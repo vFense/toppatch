@@ -83,7 +83,7 @@ $application.verticalBarChart = function () {
                 attr("height", function(datum) { return y(datum.value); }).
                 attr("width", barWidth).
                 attr("fill", "#2d578b").
-                append("svg:title").text(function (d) { console.log(d.label); return d.label + ": " + d.value; });
+                append("svg:title").text(function (d) { return d.label + ": " + d.value; });
 
             barDemo.selectAll("text").
                 data(data).

@@ -1,4 +1,4 @@
-$appName.generateTable = function () {
+$application.generateTable = function () {
 	"use strict";
 	var headerRow = false,
 		headerCol = false,
