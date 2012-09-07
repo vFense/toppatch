@@ -1,5 +1,5 @@
 define(
-	['jquery', 'backbone','text!templates/navButton.html'],
+	['jquery', 'backbone', 'text!templates/navButton.html'],
 	function ($, Backbone, buttonTemplate) {
 		"use strict";
 		var navButton = {
