@@ -11,6 +11,7 @@ require.config({
 		text:				'libs/require/plugins/text',
 		app:				'application',
 		modules:			'application/modules',
+		vent:				'application/modules/vent',
 		templates:			'application/templates'
 	},
 	shim: {
