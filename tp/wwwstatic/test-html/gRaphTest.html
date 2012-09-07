@@ -329,43 +329,12 @@
                         .attr("width", x.rangeBand() / 4)
                         .on("click", function(d) {
                             if(barExists) {
-                                tempBar.selectAll("rect").transition().duration(50)
-                                    .attr("width", 0);
-                                secondRect.transition().duration(50)
-                                        .style("opacity", 0);
                                 tempBar.remove();
                                 secondSet.remove();
                             }
                             if (that === this) {
-                                /*
-                                label = valgroup.filter(function (d) { return y(d[0].y) > 25; })
-                                        .selectAll("text").
-                                        data(function(d){ return d; }).
-                                        enter().
-                                        append("svg:text").transition().delay(100).duration(500).
-                                        text(function(d) {  return d.label; }).
-                                        attr("x", function(d) { return x.rangeBand() - 40; }).
-                                        attr("dx", "50").
-                                        attr("y", function(d) { return -y(d.y0) - y(d.y) / 2; }).
-                                        attr("style", "font-size: 1.2em").
-                                        attr("stroke", "none").
-                                        attr("fill", "black");
-                                lines = valgroup.filter(function (d) { return y(d[0].y) > 25; })
-                                        .selectAll("line")
-                                        .data(function(d) { return d; })
-                                        .enter()
-                                        .append("svg:path").transition().delay(100).duration(500)
-                                        .attr("class", "line")
-                                        .attr("fill", "black")
-                                        .attr("stroke", "black")
-                                        .attr("stroke-width", "2")
-                                        .attr("d", function (d) {
-                                            var array = new Array();
-                                            array[0] = { x: x.rangeBand() / 4 + 10, y: -y(d.y0) - y(d.y) / 2 };
-                                            array[1] = { x: x.rangeBand(), y: -y(d.y0) - y(d.y) / 2 };
-                                            return line(array);
-                                        });
-                                        */
+                                label.transition().duration(350).attr("opacity", 1);
+                                lines.transition().duration(350).attr("opacity", 1);
                                 that = false;
                             } else {
                                 var secondData = [{"label":"node 1", "value": Math.floor(Math.random() * 100)},
@@ -462,9 +431,8 @@
                                             array[1] = { x: x.rangeBand(), y: -y2(d.y0) - y2(d.y) / 4 };
                                             return line(array);
                                         });
-                                console.log(label);
-                                label.remove();
-                                lines.remove();
+                                label.transition().duration(100).attr("opacity", 0);
+                                lines.transition().duration(100).attr("opacity", 0);
                                 barExists = true;
                                 that = this;
                             }
@@ -481,7 +449,8 @@
                         //attr("dy", "-40").
                         attr("style", "font-size: 1.2em").
                         attr("stroke", "none").
-                        attr("fill", "black");
+                        attr("fill", "black").
+                        on("click", function(d) { console.log(this); });
                 lines = valgroup.filter(function (d) { return y(d[0].y) > 25; })
                         .selectAll("line")
                         .data(function(d) { return d; })
