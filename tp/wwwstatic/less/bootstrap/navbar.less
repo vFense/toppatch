@@ -78,9 +78,9 @@
 // -------------------------
 .navbar .divider-vertical {
   height: @navbarHeight;
-  margin: 0 @em( 9px )/@baseFontSize;
-  border-left: @em( 1px )/@baseFontSize solid @navbarBackground;
-  border-right: @em( 1px )/@baseFontSize solid @navbarBackgroundHighlight;
+  margin: 0 @em*( 9px )/@baseFontSize;
+  border-left: @em*( 1px )/@baseFontSize solid @navbarBackground;
+  border-right: @em*( 1px )/@baseFontSize solid @navbarBackgroundHighlight;
 }
 
 // Buttons in navbar
@@ -236,7 +236,7 @@
   text-shadow: 0 @em*( 1px )/@baseFontSize 0 @navbarBackgroundHighlight;
 }
 .navbar .nav .dropdown-toggle .caret {
-  margin-top: @em( 8px )/@baseFontSize;
+  margin-top: @em*( 8px )/@baseFontSize;
 }
 
 // Hover
@@ -383,7 +383,7 @@
   .brand,
   .nav > li > a {
     color: @navbarInverseLinkColor;
-    text-shadow: 0 @em( -1px )/@baseFontSize 0 rgba(0,0,0,.25);
+    text-shadow: 0 @em*( -1px )/@baseFontSize 0 rgba(0,0,0,.25);
     &:hover {
       color: @navbarInverseLinkColorHover;
     }
@@ -440,19 +440,19 @@
       color: @white;
       background-color: @navbarInverseSearchBackground;
       border-color: @navbarInverseSearchBorder;
-      .box-shadow(inset 0 @em( 1px )/@baseFontSize @em( 2px )/@baseFontSize rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15));
+      .box-shadow(inset 0 @em*( 1px )/@baseFontSize @em*( 2px )/@baseFontSize rgba(0,0,0,.1), 0 1px 0 rgba(255,255,255,.15));
       .transition(none);
       .placeholder(@navbarInverseSearchPlaceholderColor);
 
       // Focus states (we use .focused since IE7-8 and down doesn't support :focus)
       &:focus,
       &.focused {
-        padding: @em( 5px )/@baseFontSize @em( 15px )/@baseFontSize;
+        padding: @em*( 5px )/@baseFontSize @em*( 15px )/@baseFontSize;
         color: @grayDark;
-        text-shadow: 0 @em( 1px )/@baseFontSize 0 @white;
+        text-shadow: 0 @em*( 1px )/@baseFontSize 0 @white;
         background-color: @navbarInverseSearchBackgroundFocus;
         border: 0;
-        .box-shadow(0 0 @em( 3px )/@baseFontSize rgba(0,0,0,.15));
+        .box-shadow(0 0 @em*( 3px )/@baseFontSize rgba(0,0,0,.15));
         outline: 0;
       }
     }
