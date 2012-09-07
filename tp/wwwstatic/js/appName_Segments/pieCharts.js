@@ -5,7 +5,7 @@
  * Time: 9:27 AM
  * To change this template use File | Settings | File Templates.
  */
-$appName.pieChart = function () {
+$application.pieChart = function () {
     "use strict";
     var r	= 100,
         width	= 280,	// Golden Ratio 1000/Phi

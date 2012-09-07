@@ -15,7 +15,7 @@
 <!--  Javascripts -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/2.8.1/d3.v2.min.js"></script>
-<script src="../js/appName.min.js"></script>
+<script src="../js/application.min.js"></script>
 <script>
     jQuery.fn.center = function () {
         this.css("position","absolute");
@@ -25,7 +25,7 @@
                 $(window).scrollLeft()) + "px");
         return this;
     }
-    $appName.resizablePieChart = function () {
+    $application.resizablePieChart = function () {
         "use strict";
         var r	= 100,
                 width	= 280,	// Golden Ratio 1000/Phi
@@ -258,7 +258,7 @@
 
         return chart;
     };
-    $appName.stackedVerticalChart = function () {
+    $application.stackedVerticalChart = function () {
         "use strict";
         var n = 4, // number of layers
             m = 1,
@@ -333,7 +333,7 @@
                                 secondSet.remove();
                             }
                             if (that === this) {
-                                label.transition().duration(350).attr("opacity", 1);
+                                label.transition().duration(350).attr("x",  x.rangeBand() - 40);
                                 lines.transition().duration(350).attr("opacity", 1);
                                 that = false;
                             } else {
@@ -409,7 +409,7 @@
                                         .text(function (d) { return d.label })
                                         .attr("x", function(d) { return x.rangeBand() - 40; })
                                         .attr("dx", "50")
-                                        .attr("y", function(d) { return (-y2(d.y0) - y2(d.y) / 4); })
+                                        .attr("y", function(d) { return (-y2(d.y0) - y2(d.y) / 2); })
                                     //attr("dy", "-40")
                                         .attr("opacity", 0)
                                         .attr("style", "font-size: 1.2em")
@@ -431,7 +431,7 @@
                                             array[1] = { x: x.rangeBand(), y: -y2(d.y0) - y2(d.y) / 4 };
                                             return line(array);
                                         });
-                                label.transition().duration(100).attr("opacity", 0);
+                                label.transition().duration(350).attr("x", function(d) { console.log(x(0)); return x(0) - x.rangeBand() / 16; });
                                 lines.transition().duration(100).attr("opacity", 0);
                                 barExists = true;
                                 that = this;
@@ -508,7 +508,7 @@
                 {"label":"node 8", "value": Math.floor(Math.random() * 100)}];
             title = "Nodes by OS";
         }
-        var pieChart = $appName.resizablePieChart().title(title);
+        var pieChart = $application.resizablePieChart().title(title);
         d3.select(selection).datum(data).call(pieChart);
     }
     function verticalGraph(selection, graphData) {
@@ -531,7 +531,7 @@
                 {"label":"node 8", "value": Math.floor(Math.random() * 100)}];
             title = "Nodes by OS";
         }
-        var stackedChart = $appName.stackedVerticalChart().title(title);
+        var stackedChart = $application.stackedVerticalChart().title(title);
         d3.select(selection).datum(data).call(stackedChart);
     }
     pieGraph("#test","node");

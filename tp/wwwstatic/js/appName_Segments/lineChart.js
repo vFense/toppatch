@@ -5,7 +5,7 @@
  * Time: 12:21 PM
  * To change this template use File | Settings | File Templates.
  */
-$appName.lineChart = function () {
+$application.lineChart = function () {
     "use strict";
     var margin	= [40, 40, 40, 40],
         width = 950 - margin[1] - margin[3],

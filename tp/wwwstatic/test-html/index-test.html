@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../css/appName.css">
     <link rel="stylesheet" href="../css/bootstrap.css">
     <link rel="stylesheet" href="../js/libs/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
-    <script src="../js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    <script src="../js/libs/Modernizr/modernizr-2.5.3-respond-1.1.0.min.js"></script>
     <style>
         .window {
             -moz-border-radius: 15px;
@@ -350,8 +350,8 @@
 <!--/javascript chart libraries -->
 
 <!-- Top Patch javascript -->
-<script src="../js/appName.min.js"></script>
-<script src="../js/templates.js"></script>
+<script src="../js/application.min.js"></script>
+<script src="../js/application/templates/templates.js"></script>
 <script src="../js/appName_Segments/pieCharts.js"></script>
 <script src="../js/appName_Segments/barCharts.js"></script>
 <script src="../js/appName_Segments/timeSeriesChart.js"></script>
@@ -359,7 +359,7 @@
 
 <script>
     jQuery(document).ready(function($) {
-        var table = $appName.generateTable().headerRow(true)
+        var table = $application.generateTable().headerRow(true)
                 .sort(function (a, b) {
                     return a.score - b.score;
                 });
@@ -468,7 +468,7 @@
     <table id="table" class="table table-bordered table-striped"></table>
     <script type="text/javascript">
         var data = [{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2011-3658","score":"7.5"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0451","score":"4.3"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0454","score":"7.5"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0455","score":"4.3"},{"vendor":"mozilla","product":"firefox","version":"8.0:--:--","cveid":"CVE-2012-0456","score":"5.0"}];
-        var table = $appName.generateTable().headerRow(true)
+        var table = $application.generateTable().headerRow(true)
         .sort(function (a, b) {
         return a.score - b.score;
         });
@@ -497,7 +497,7 @@
                 {"label":"node 8", "value": Math.floor(Math.random() * 100)}];
             title = "Nodes by OS";
         }
-        var pieChart = $appName.pieChart().title(title);
+        var pieChart = $application.pieChart().title(title);
         d3.select(selection).datum(data).call(pieChart);
     }
     function barGraph(selection) {
@@ -510,7 +510,7 @@
                 title = "Vulnerabilities by Nodes",
         width = $(selection).width(),
         barWidth = (width / data.length ) - 10;
-        var graphBar = $appName.verticalBarChart().title(title).barWidth(barWidth);
+        var graphBar = $application.verticalBarChart().title(title).barWidth(barWidth);
         d3.select(selection).datum(data).call(graphBar);
     }
     function lineGraph(selection) {
@@ -522,7 +522,7 @@
             {"label": new Date('2010').getFullYear(), "value":25},
             {"label": new Date('2012').getFullYear(), "value":65}],
             title = "Line Chart";
-        var lineChart = $appName.lineChart().title(title);
+        var lineChart = $application.lineChart().title(title);
         d3.select(selection).datum(data).call(lineChart);
     }
     var User = Backbone.Model.extend({
