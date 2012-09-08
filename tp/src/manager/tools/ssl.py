@@ -1,7 +1,7 @@
+import os
+import socket
 from OpenSSL import crypto
 
-TYPE_RSA = crypto.TYPE_RSA
-TYPE_DSA = crypto.TYPE_DSA
 FILE_TYPE_PEM = crypto.FILETYPE_PEM
 DUMP_PKEY = crypto.dump_privatekey
 DUMP_CERT = crypto.dump_certificate
@@ -89,5 +89,31 @@ def createCertificateAuthority(pkey, serial,\
     ca.gmtime_adj_notAfter(notAfter)
     ca.set_issuer(ca.get_subject())
     ca.set_pubkey(pkey)
+    ca.sign(pkey, digest)
+    return ca
+
+ def createSigningCertificateAuthority(pkey, serial,\
+        (CN, O, OU, C, ST, L),\
+        (notBefore, notAfter), digest="sha512"):
+    ca = crypto.X509()
+    ca.set_version(3)
+    subj = ca.get_subject()
+    subj.CN=CN
+    subj.O=O
+    subj.OU=OU
+    subj.C=C
+    subj.ST=ST
+    subj.L=L
+    ca.set_serial_number(serial)
+    ca.gmtime_adj_notBefore(notBefore)
+    ca.gmtime_adj_notAfter(notAfter)
+    ca.set_issuer(ca.get_subject())
+    ca.set_pubkey(pkey)
+    ca.add_extensions([
+        crypto.X509Extension("basicConstraints", True,"CA:TRUE, pathlen:0"),
+        crypto.X509Extension("keyUsage", True,"keyCertSign, cRLSign"),
+        crypto.X509Extension("subjectKeyIdentifier", False, "hash",subject=ca),
+        ])
+
     ca.sign(pkey, digest)
     return ca
