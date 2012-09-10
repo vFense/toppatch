@@ -8,7 +8,7 @@ define(
 					active: false
 				}
 			}),
-			View : Backbone.View.extend({
+			View: Backbone.View.extend({
 				tagName: "li",
 				className: "",
 				template: buttonTemplate,
