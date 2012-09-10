@@ -1,7 +1,7 @@
 // Filename: router.js
 define(
-	['backbone', 'modules/viewManager', 'modules/navBar' ],
-	function (Backbone, ViewManager, NavBar) {
+	['backbone', 'app' ],
+	function (Backbone, app) {
 		"use strict";
 
 		var AppRouter = Backbone.Router.extend({
@@ -22,7 +22,8 @@ define(
 				
 				// Create a new ViewManager with #dashboard-view as its target element
 				// All views sent to the ViewManager will render in the target element
-				this.viewManager = new ViewManager('#dashboard-view');
+                this.vent = app.vent;
+				this.viewManager = new app.ViewManager('#dashboard-view');
 			},
 			home: function () {
 				// Set the active Dashboard Nav Button
