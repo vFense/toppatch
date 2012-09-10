@@ -7,9 +7,6 @@ define(
 				model: navButton.Model
 			}),
 			View: Backbone.View.extend({
-				el: $('<ul>')
-					.addClass('nav')
-					.appendTo('#dashboardNav'),
 				events: {},
 				initialize: function () {
 					this.collection = new NavBar.ButtonSet(window.TopPatch.user.access);
