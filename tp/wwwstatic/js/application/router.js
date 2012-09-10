@@ -22,12 +22,10 @@ define(
 				this.viewManager = new app.ViewManager('#dashboard-view');
 			},
 			home: function () {
-				// Set the active Dashboard Nav Button
 				// Update the main dashboard view
 				this.viewManager.showView({ el: 'Home', render: function () { return true; }, close: function () { return true; }});
 			},
 			showPatchAdmin: function () {
-				// Set the active Dashboard Nav Button
 				// Update the main dashboard view
 				this.viewManager.showView({ el: 'Patch Admin', render: function () { return true; }, close: function () { return true; }});
 			},
