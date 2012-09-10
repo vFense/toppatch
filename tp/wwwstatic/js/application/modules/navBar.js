@@ -1,6 +1,6 @@
 define(
-	['jquery', 'backbone', './navButton'],
-	function ($, Backbone, navButton) {
+	['jquery', 'backbone', 'app', './navButton'],
+	function ($, Backbone, app, navButton) {
 		"use strict";
 		var NavBar = {
 			ButtonSet: Backbone.Collection.extend({
@@ -13,6 +13,8 @@ define(
 				events: {},
 				initialize: function () {
 					this.collection = new NavBar.ButtonSet(window.TopPatch.user.access);
+                    this.vent = app.vent;
+                    this.vent.bind('all', this.setActive, this);
 					this.render();
 				},
 				render: function () {
