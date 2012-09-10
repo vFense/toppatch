@@ -3,18 +3,17 @@ define(
 	['backbone', 'app' ],
 	function (Backbone, app) {
 		"use strict";
-
 		var AppRouter = Backbone.Router.extend({
 			routes: {
 				// Dashboard
-				'': 'home',
-				'dashboard': 'home',
+				'':           'home',
+				'dashboard':  'home',
 
 				// Patch Routes
-				'patchAdmin':            'showPatchAdmin',
+				'patchAdmin': 'showPatchAdmin',
 
 				// Default
-				'*other':  'defaultAction'
+				'*other':     'defaultAction'
 			},
 			initialize: function () {
 				// Start the Dashboard Nav Bar
