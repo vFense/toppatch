@@ -8,7 +8,7 @@
 $application.lineChart = function () {
     "use strict";
     var margin	= [40, 40, 40, 40],
-        width = 950 - margin[1] - margin[3],
+        width = 600 - margin[1] - margin[3],
         height	= 280 - margin[0] - margin[2],
         val_array = new Array(),
         title = "Default",
@@ -31,7 +31,7 @@ $application.lineChart = function () {
             max = d3.max(val_array, function(d) {
                 return d.y;
             });
-            x.domain([val_array[0].x, val_array[val_array.length-1].x]).range([0, width]);
+            x.domain([val_array[0].x, val_array[val_array.length-1].x]).range([0, width - margin[3] - margin[2]]);
             y.domain([0, max]).range([height, 0]);
             var xAxis = d3.svg.axis().scale(x).tickSize(1),
                 yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left"),
@@ -54,7 +54,7 @@ $application.lineChart = function () {
             var graph = d3.select(this)
                 .append("svg:svg")
                 .data([val_array])
-                .attr("width", width + margin[1] + margin[3])
+                .attr("width", width)
                 .attr("height", height + margin[0] + margin[2])
                 .append("svg:g")
                 .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
@@ -129,7 +129,7 @@ $application.lineChart = function () {
         if(!arguments.length) { return title; }
         title = value;
         return chart;
-    }
+    };
 
     return chart;
 };

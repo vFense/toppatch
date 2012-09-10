@@ -19,8 +19,6 @@ $application.stackedVerticalChart = function () {
         title = "Default",
         barExists = false;
 
-
-
     function chart(selection) {
         selection.each(function (data) {
             // generate chart here; `d` is the data and `this` is the element
@@ -31,7 +29,6 @@ $application.stackedVerticalChart = function () {
             $(widget + "-title").html(title);
             var x = d3.scale.ordinal().rangeRoundBands([0, width-50]),
             y = d3.scale.linear().range([0, height]);
-            console.log(width);
             var y0 = [],
                 data_array = [];
             y0[0] = 0;
@@ -57,7 +54,7 @@ $application.stackedVerticalChart = function () {
                     return d.y;
                 });
             var svg = d3.select(this).append("svg:svg")
-                .attr("class", "chart")
+                .attr("class", "hi")
                 .attr("width", width + 80)
                 .attr("height", height + 10)
                 .append("svg:g")
@@ -74,7 +71,7 @@ $application.stackedVerticalChart = function () {
             var rect = valgroup.selectAll("rect")
                 .data(function(d){return d;})
                 .enter().append("svg:rect")
-                .attr("x", function(d) { console.log(x(d.x));return x(d.x); })
+                .attr("x", function(d) { return x(d.x); })
                 .attr("y", function(d) { return -y(d.y0) - y(d.y); })
                 .attr("height", function(d) { return y(d.y); })
                 .attr("width", x.rangeBand() / 4)
@@ -84,7 +81,16 @@ $application.stackedVerticalChart = function () {
                         secondSet.remove();
                     }
                     if (that === this) {
-                        label.transition().duration(350).attr("x", x.rangeBand() - x.rangeBand() / 8 + 10);
+                        label.transition().duration(350)
+                            .attr("x", x.rangeBand() - x.rangeBand() / 8 + 10)
+                            .attr("style",function(d) {
+                                if(x.rangeBand() / 4 > 100) {
+                                    return "font-size: 1.2em";
+                                } else {
+                                    var fontSize = x.rangeBand() / 4 / 65;
+                                    return "font-size: " + fontSize + "em";
+                                }
+                            });
                         lines.transition().duration(350).attr("opacity", 1);
                         that = false;
                     } else {
@@ -158,12 +164,17 @@ $application.stackedVerticalChart = function () {
                             .data(function (d) { return d; })
                             .enter().append("svg:text")
                             .text(function (d) { return d.label })
-                            .attr("x", function(d) { return x.rangeBand() - x.rangeBand() / 8; })
-                            .attr("dx", "50")
-                            .attr("y", function(d) { return (-y2(d.y0) - y2(d.y) / 2); })
-                            //attr("dy", "-40")
+                            .attr("x", function(d) { return x.rangeBand() - x.rangeBand() / 8 + 10; })
+                            .attr("y", function(d) { return -y2(d.y0) - y2(d.y) / 2; })
                             .attr("opacity", 0)
-                            .attr("style", "font-size: 1.2em")
+                            .attr("style", function(d) {
+                                if(x.rangeBand() / 4 > 100) {
+                                    return "font-size: 1.2em";
+                                } else {
+                                    var fontSize = x.rangeBand() / 4 / 65;
+                                    return "font-size: " + fontSize + "em";
+                                }
+                            })
                             .attr("stroke", "none")
                             .attr("fill", "black");
                         secondLabel.transition().delay(350).duration(500)
@@ -178,11 +189,20 @@ $application.stackedVerticalChart = function () {
                             .attr("stroke-width", "2")
                             .attr("d", function (d) {
                                 var array = new Array();
-                                array[0] = { x: (x.rangeBand() / 2) + 20, y: -y2(d.y0) - y2(d.y) / 4 };
-                                array[1] = { x: x.rangeBand() - x.rangeBand() / 8, y: -y2(d.y0) - y2(d.y) / 4 };
+                                array[0] = { x: (x.rangeBand() / 2) + 20, y: -y2(d.y0) - y2(d.y) / 2 };
+                                array[1] = { x: x.rangeBand() - x.rangeBand() / 8, y: -y2(d.y0) - y2(d.y) / 2 };
                                 return line(array);
                             });
-                        label.transition().duration(350).attr("x", function(d) { return 10; });
+                        label.transition().duration(350).
+                            attr("x", function(d) { return 5; }).
+                            attr("style", function(d) {
+                                if(x.rangeBand() / 4 > 100) {
+                                    return "font-size: 1.2em";
+                                } else {
+                                    var fontSize = x.rangeBand() / 4 / 80;
+                                    return "font-size: " + fontSize + "em";
+                                }
+                            });
                         lines.transition().duration(100).attr("opacity", 0);
                         barExists = true;
                         that = this;
@@ -194,11 +214,18 @@ $application.stackedVerticalChart = function () {
                 enter().
                 append("svg:text").
                 text(function(d) {  return d.label; }).
-                attr("x", function(d) { console.log(x.rangeBand()); return x.rangeBand() - x.rangeBand() / 8 + 10; }).
+                attr("x", function(d) { return x.rangeBand() - x.rangeBand() / 8 + 10; }).
                 //attr("dx", "50").
                 attr("y", function(d) { return -y(d.y0) - y(d.y) / 2; }).
                 //attr("dy", "-40").
-                attr("style", "font-size: 1.2em").
+                attr("style", function(d) {
+                    if(x.rangeBand() / 4 > 100) {
+                        return "font-size: 1.2em";
+                    } else {
+                        var fontSize = x.rangeBand() / 4 / 65;
+                        return "font-size: " + fontSize + "em";
+                    }
+                }).
                 attr("stroke", "none").
                 attr("fill", "black");
 

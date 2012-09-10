@@ -7,9 +7,9 @@
  */
 $application.pieChart = function () {
     "use strict";
-    var r	= 100,
-        width	= 280,	// Golden Ratio 1000/Phi
+    var width	= 280,	// Golden Ratio 1000/Phi
         height	= 220,
+        r = width / 3,
         color = d3.scale.category20(),
         title = "Default";
 
@@ -92,7 +92,7 @@ $application.pieChart = function () {
             function newgraph() {
                 //createPie(selection, "node");
                 //alert("hi");
-                var pieChart = $appName.pieChart().title("Nodes by OS");
+                var pieChart = $application.pieChart().title("Nodes by OS");
 
                 data = [{"label":"node1", "value":20},
                     {"label":"node2", "value":75},

@@ -7,18 +7,22 @@
  */
 $application.interactiveGraph = function () {
     "use strict";
-    var w = 1120,
-        h = 600,
-        x = d3.scale.linear().range([0, w]),
-        y = d3.scale.linear().range([0, h]);
+    var title = 'Summary',
+        w = 500,
+        h = 220;
 
 
     function chart(selection) {
         selection.each(function (root, i) {
-            var vis = d3.select(this).append("div")
-                .attr("class", "chart")
-                .style("width", w + "px")
-                .style("height", h + "px")
+            var that = this,
+                matches = that.id.match(/\d+$/),
+                widget = "#widget" + matches[0];
+            $(widget + "-title").html(title);
+            $(this).html("");
+            w = $(this).width();
+            var x = d3.scale.linear().range([0, w]),
+                y = d3.scale.linear().range([0, h]);
+            var vis = d3.select(this)
                 .append("svg:svg")
                 .attr("width", w)
                 .attr("height", h);
@@ -36,13 +40,13 @@ $application.interactiveGraph = function () {
             g.append("svg:rect")
                 .attr("width", root.dy * kx)
                 .attr("height", function(d) { return d.dx * ky; })
-                .attr("class", function(d) { return d.children ? "parent" : "child"; });
+                .attr("class", function(d) { return d.children ? "tree parent" : "tree child"; });
 
             g.append("svg:text")
                 .attr("transform", transform)
                 .attr("dy", ".35em")
                 .style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
-                .text(function(d) { return d.name; })
+                .text(function(d) { return d.size ? d.name + ": " + d.size : d.name; })
 
             d3.select(window)
                 .on("click", function() { click(root); })
@@ -78,6 +82,11 @@ $application.interactiveGraph = function () {
 
         });
     }
+    chart.title = function (value) {
+        if(!arguments.length) { return title; }
+        title = value;
+        return chart;
+    };
 
     return chart;
 };
