@@ -8,9 +8,8 @@
 $application.interactiveGraph = function () {
     "use strict";
     var title = 'Summary',
-        w = 500,
-        h = 220;
-
+        width = 500,
+        height = 220;
 
     function chart(selection) {
         selection.each(function (root, i) {
@@ -19,13 +18,13 @@ $application.interactiveGraph = function () {
                 widget = "#widget" + matches[0];
             $(widget + "-title").html(title);
             $(this).html("");
-            w = $(this).width();
-            var x = d3.scale.linear().range([0, w]),
-                y = d3.scale.linear().range([0, h]);
+            width = $(this).width();
+            var x = d3.scale.linear().range([0, width]),
+                y = d3.scale.linear().range([0, height]);
             var vis = d3.select(this)
                 .append("svg:svg")
-                .attr("width", w)
-                .attr("height", h);
+                .attr("width", width)
+                .attr("height", height);
 
             var partition = d3.layout.partition()
                 .value(function(d) { return d.size; });
@@ -35,8 +34,8 @@ $application.interactiveGraph = function () {
                 .enter().append("svg:g")
                 .attr("transform", function(d) { return "translate(" + x(d.y) + "," + y(d.x) + ")"; })
                 .on("click", click);
-            var kx = w / root.dx,
-                ky = h / 1;
+            var kx = width / root.dx,
+                ky = height / 1;
             g.append("svg:rect")
                 .attr("width", root.dy * kx)
                 .attr("height", function(d) { return d.dx * ky; })
@@ -48,15 +47,15 @@ $application.interactiveGraph = function () {
                 .style("opacity", function(d) { return d.dx * ky > 12 ? 1 : 0; })
                 .text(function(d) { return d.size ? d.name + ": " + d.size : d.name; })
 
-            d3.select(window)
+            d3.select(this)
                 .on("click", function() { click(root); })
 
             function click(d) {
                 if (!d.children) return;
 
-                kx = (d.y ? w - 40 : w) / (1 - d.y);
-                ky = h / d.dx;
-                x.domain([d.y, 1]).range([d.y ? 40 : 0, w]);
+                kx = (d.y ? width - 40 : width) / (1 - d.y);
+                ky = height / d.dx;
+                x.domain([d.y, 1]).range([d.y ? 40 : 0, width]);
                 y.domain([d.x, d.x + d.dx]);
 
                 var t = g.transition()
@@ -85,6 +84,16 @@ $application.interactiveGraph = function () {
     chart.title = function (value) {
         if(!arguments.length) { return title; }
         title = value;
+        return chart;
+    };
+    chart.width = function (value) {
+        if(!arguments.length) { return width; }
+        width = value;
+        return chart;
+    };
+    chart.height = function (value) {
+        if(!arguments.length) { return height; }
+        height = value;
         return chart;
     };
 

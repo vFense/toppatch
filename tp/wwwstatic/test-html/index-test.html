@@ -56,7 +56,6 @@
             cursor: pointer;
             fill: steelblue;
         }
-
         text {
             pointer-events: none;
         }
@@ -170,21 +169,7 @@
                 <h4>Nodes</h4>10,007
             </div>
         </div>
-        <div class="span3">
-            <div class="widget number">
-                <h4>Patched Today</h4>3,096
-            </div>
-        </div>
-        <div class="span3">
-            <div class="widget number">
-                <h4>Unpatched</h4>537
-            </div>
-        </div>
-        <div class="span3 error">
-            <div class="widget number">
-                <h4>Failed Patches</h4>3
-            </div>
-        </div> -->
+        -->
         <dl class="span3 info">
             <dt>Nodes</dt>
             <dd>10000</dd>
@@ -1377,10 +1362,18 @@
     var WidgetView = Backbone.View.extend({
         initialize: function () {
             'use strict';
+            this.widget = "widget1";
+            this.type = "graph";
+            this.current = "new";
+            this.sizeval = "3";
+            this.classType = ["info", "success", "warning", "error"];
             this.counter = 4;
             this.graphType = 'pie';
             this.graph = '#graph1';
             this.graphData = 'os';
+            this.template = "";
+            this.title = "Default";
+            this.myClass = "span";
         },
         events: {
             'click #type1': 'graphSetting',
@@ -1427,74 +1420,78 @@
         },
         render: function () {
             'use strict';
-            var current, type, widget, sizeval, variables, template, title, matches, myClass, parent, classType, index;
-            current = properties.get("currentWidget");
-            classType = ["info", "success", "warning", "error"];
-            type = $('input:radio[name=type]:checked').val();
-            if (current === "new") {
-                widget = "widget" + this.counter;
-                if (type === "graph") {
-                    sizeval = $('input:radio[name=radio]:checked').val();
-                    variables = { widget: widget,
-                        span: "span" + sizeval,
-                        graphcontainer: "graphcontainer" + this.counter,
-                        menu: "menu" + this.counter,
-                        graph: "graph" + this.counter };
-                    this.graphType = $('input:radio[name=graph]:checked').val();
-                    // Compile the template using underscore
-                    template = _.template($("#widget_template").html(), variables);
-                    // Load the compiled HTML into the Backbone "el"
-                    $("#insert").append(template);
-                    this.graphData = $('input:radio[name=graphdata]:checked').val();
-                    this.graph = "#" + $("#" + widget).children().children("div").attr("id");
-                    this.counter += 1;
-                    this.displayChart();
-                } else {
-                    sizeval = "3";
-                    title = $('input:[name=param]:checked');
-                    index =  $("input:radio[name='param']").index(title);
-                    title = title.val();
-                    variables = {
-                        widget: widget,
-                        span: "span" + sizeval,
-                        type: classType[index],
-                        title: title,
-                        data: Math.floor(Math.random() * 500)
-                    };
-                    template = _.template($("#text_template").html(), variables);
-                    $("#insert").append(template);
-                    this.counter += 1;
-                }
-                //Pass variables in using Underscore.js Template
-
+            this.current = properties.get("currentWidget");
+            this.type = $('input:radio[name=type]:checked').val();
+            if (this.current === "new") {
+                this.renderNew();
             } else {
-                widget = properties.get("widgetName");
-                if (type === "graph") {
-                    myClass = $("#" + widget).attr("class");
-                    sizeval = $('input:radio[name=radio]:checked').val();
-                    this.graphType = $('input:radio[name=graph]:checked').val();
-                    this.graph = "#" + $("#" + widget).children().children("div").attr("id");
-                    this.graphData = $('input:radio[name=graphdata]:checked').val();
-                    $("#" + widget).removeClass(myClass);
-                    $("#" + widget).addClass("span" + sizeval + " widget");
-                    this.displayChart();
-                } else {
-                    parent = $("#" + widget).parent();
-                    title = $('input:[name=param]:checked').val();
-                    index =  $("input:radio[name='param']").index(title);
-                    title = title.val();
-                    sizeval = "3";
-                    variables = {
-                        widget: widget,
-                        span: "span" + sizeval,
-                        title: title,
-                        type: classType[index],
-                        data: Math.floor(Math.random() * 500)
-                    };
-                    template = _.template($("#text_template").html(), variables);
-                    $("#" + widget).remove();
-                    $(parent).append(template);
-                }
+                this.renderExisting();
+            }
+        },
+        renderNew: function() {
+            var variables, index;
+            this.widget = "widget" + this.counter;
+            if (this.type === "graph") {
+                this.sizeval = $('input:radio[name=radio]:checked').val();
+                variables = {
+                    widget: this.widget,
+                    span: "span" + this.sizeval,
+                    graphcontainer: "graphcontainer" + this.counter,
+                    menu: "menu" + this.counter,
+                    graph: "graph" + this.counter
+                };
+                this.graphType = $('input:radio[name=graph]:checked').val();
+                // Compile the template using underscore
+                this.template = _.template($("#widget_template").html(), variables);
+                // Load the compiled HTML into the Backbone "el"
+                $("#insert").append(this.template);
+                this.graphData = $('input:radio[name=graphdata]:checked').val();
+                this.graph = "#" + $("#" + this.widget).children().children("div").attr("id");
+                this.counter += 1;
+                this.displayChart();
+            } else {
+                this.sizeval = "3";
+                this.title = $('input:[name=param]:checked');
+                index =  $("input:radio[name='param']").index(this.title);
+                variables = {
+                    widget: this.widget,
+                    span: "span" + this.sizeval,
+                    type: this.classType[index],
+                    title: this.title.val(),
+                    data: Math.floor(Math.random() * 500)
+                };
+                this.template = _.template($("#text_template").html(), variables);
+                $("#insert").append(this.template);
+                this.counter += 1;
+            }
+        },
+        renderExisting: function() {
+            var variables, index, parent;
+            this.widget = "#" + properties.get("widgetName");
+            if (this.type === "graph") {
+                this.myClass = $(this.widget).attr("class");
+                this.sizeval = $('input:radio[name=radio]:checked').val();
+                this.graphType = $('input:radio[name=graph]:checked').val();
+                this.graph = "#" + $(this.widget).children().children("div").attr("id");
+                this.graphData = $('input:radio[name=graphdata]:checked').val();
+                $(this.widget).removeClass(this.myClass);
+                $(this.widget).addClass("span" + this.sizeval + " widget");
+                this.displayChart();
+            } else {
+                parent = $(this.widget).parent();
+                this.title = $('input:[name=param]:checked');
+                index =  $("input:radio[name='param']").index(this.title);
+                this.sizeval = "3";
+                variables = {
+                    widget: this.widget,
+                    span: "span" + this.sizeval,
+                    title: this.title.val(),
+                    type: this.classType[index],
+                    data: Math.floor(Math.random() * 500)
+                };
+                this.template = _.template($("#text_template").html(), variables);
+                $(this.widget).remove();
+                $(parent).append(this.template);
             }
         }
     });
