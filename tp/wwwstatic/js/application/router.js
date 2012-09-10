@@ -22,14 +22,20 @@ define(
 				this.viewManager = new app.ViewManager('#dashboard-view');
 			},
 			home: function () {
+                this.vent.trigger('nav:dashboard');
+
 				// Update the main dashboard view
 				this.viewManager.showView({ el: 'Home', render: function () { return true; }, close: function () { return true; }});
 			},
 			showPatchAdmin: function () {
+                this.vent.trigger('nav:patchAdmin');
+
 				// Update the main dashboard view
 				this.viewManager.showView({ el: 'Patch Admin', render: function () { return true; }, close: function () { return true; }});
 			},
 			defaultAction: function (other) {
+                this.vent.trigger('nav:404');
+
 				this.viewManager.showView({ el: '404: Not Found', render: function () { return true; }, close: function () {  return true; }});
 			}
 		});
