@@ -7,7 +7,6 @@ define(
 				model: navButton.Model
 			}),
 			View: Backbone.View.extend({
-				events: {},
 				initialize: function () {
 					this.collection = new NavBar.ButtonSet(window.TopPatch.user.access);
                     this.vent = app.vent;
