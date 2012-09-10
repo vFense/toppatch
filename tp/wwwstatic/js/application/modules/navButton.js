@@ -12,11 +12,13 @@ define(
 				tagName: "li",
 				className: "",
 				template: buttonTemplate,
-				events: {},
+				events: {
+					'change': 'render'
+				},
 				initialize: function () {},
 				render: function () {
 					var tmpl = _.template(this.template);
-					$(this.el).html(tmpl(this.model.toJSON()));
+					$(this.el).html(tmpl(this.model.toJSON())).toggleClass('active', this.model.get('active'));
 					return this;
 				}
 			})
