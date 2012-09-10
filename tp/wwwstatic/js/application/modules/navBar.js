@@ -8,7 +8,7 @@ define(
 			}),
 			View: Backbone.View.extend({
 				initialize: function () {
-					this.collection = new NavBar.ButtonSet(window.TopPatch.user.access);
+					this.collection =  new NavBar.ButtonSet(window.User.get('access'));
                     this.vent = app.vent;
                     this.vent.bind('all', this.setActive, this);
 					this.render();
