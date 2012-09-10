@@ -35,17 +35,17 @@ define(
 				},
 				setActive: function (e) {
 					// Check to make sure e and e.target are defined.
-					if(e && e.target) {
+					if (e && e.target) {
 						// The target should always be an anchor element
 						// We want its parent li
 						var $clicked = $(e.target).parent();
-						
+
 						// Check to see if the li element is part of this view's created element
-						if ( $($clicked, this.$el).length === 1 ) {
+						if ($($clicked, this.$el).length === 1) {
 							// If the li is not the active li, continue
-							if(!$clicked.hasClass('active')) {
+							if (!$clicked.hasClass('active')) {
 								// Set the li to active, and its siblings to not active
-								$clicked.toggleClass('active', true).siblings().toggleClass('active',false);
+								$clicked.toggleClass('active', true).siblings().toggleClass('active', false);
 							}
 						}
 					}
