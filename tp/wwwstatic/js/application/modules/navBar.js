@@ -13,12 +13,18 @@ define(
                     this.vent.bind('all', this.setActive, this);
 					this.render();
 				},
+                beforeRender: $.noop,
+                onRender: $.noop,
 				render: function () {
+                    if (this.beforeRender !== $.noop) { this.beforeRender(); }
+
 					var that = this;
 					this.$el.html('');
 					_.each(this.collection.models, function (item) {
 						that.renderButton(item);
 					}, this);
+
+                    if (this.onRender !== $.noop) { this.onRender(); }
 				},
 				renderButton: function (item) {
 					var buttonView = new navButton.View({
