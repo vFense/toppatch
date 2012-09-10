@@ -32,20 +32,21 @@ a:hover {
 // Images
 // -------------------------
 
+// Rounded corners
 .img-rounded {
   .border-radius(@em*( 6px )/@baseFontSize);
 }
 
+// Add polaroid-esque trim
 .img-polaroid {
   padding: @em*( 4px )/@baseFontSize;
   background-color: #fff;
   border: 1px solid #ccc;
   border: 1px solid rgba(0,0,0,.2);
-  -webkit-box-shadow: 0 @em*( 1px )/@baseFontSize @em*( 3px )/@baseFontSize rgba(0,0,0,.1);
-     -moz-box-shadow: 0 @em*( 1px )/@baseFontSize @em*( 3px )/@baseFontSize rgba(0,0,0,.1);
-          box-shadow: 0 @em*( 1px )/@baseFontSize @em*( 3px )/@baseFontSize rgba(0,0,0,.1);
+  .box-shadow(0 @em*( 1px )/@baseFontSize @em*( 3px )/@baseFontSize rgba(0,0,0,.1));
 }
 
+// Perfect circle
 .img-circle {
-  .border-radius(@em*( 500px )/@baseFontSize);
+  .border-radius(@em*( 500px )/@baseFontSize); // crank the border-radius so it works with most reasonably sized images
 }

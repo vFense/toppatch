@@ -27,6 +27,9 @@
   border: @em*( 1px )/@baseFontSize solid @navbarBorder;
   .border-radius(@em*( 4px )/@baseFontSize);
   .box-shadow(0 @em*( 1px )/@baseFontSize @em*( 4px )/@baseFontSize rgba(0,0,0,.065));
+  
+  // Prevent floats from breaking the navbar
+  .clearfix();
 }
 
 // Set width to auto for default container
@@ -87,13 +90,16 @@
 // -------------------------
 .navbar .btn,
 .navbar .btn-group {
-  .navbarVerticalAlign(@em*( 28px )/@baseFontSize); // Vertically center in navbar
+  .navbarVerticalAlign(@em*( 30px )/@baseFontSize); // Vertically center in navbar
 }
-.navbar .btn-group .btn {
-  margin: 0; // then undo the margin here so we don't accidentally double it
+.navbar .btn-group .btn,
+.navbar .input-prepend .btn,
+.navbar .input-append .btn {
+  margin-top: 0; // then undo the margin here so we don't accidentally double it
 }
 
 // Navbar forms
+// -------------------------
 .navbar-form {
   margin-bottom: 0; // remove default bottom margin
   .clearfix();
@@ -125,6 +131,7 @@
 }
 
 // Navbar search
+// -------------------------
 .navbar-search {
   position: relative;
   float: left;
@@ -166,12 +173,12 @@
   z-index: @zindexFixedNavbar;
   margin-bottom: 0; // remove 18px margin for default navbar
 }
-.navbar-fixed-top,
-.navbar-fixed-bottom,
-.navbar-static-top {
-  .navbar-inner {
-    border: 0;
+.navbar-fixed-top .navbar-inner,
+.navbar-static-top .navbar-inner {
+  border-width: 0 0 @em*( 1px )/@baseFontSize;
   }
+.navbar-fixed-bottom .navbar-inner {
+  border-width: @em*( 1px )/@baseFontSize 0 0;
 }
 .navbar-fixed-top .navbar-inner,
 .navbar-fixed-bottom .navbar-inner {
@@ -195,7 +202,7 @@
 .navbar-fixed-top,
 .navbar-static-top {
   .navbar-inner {
-    .box-shadow(inset 0 @em*( -1px )/@baseFontSize 0 rgba(0,0,0,.1), 0 @em*( -1px )/@baseFontSize @em*( 10px )/@baseFontSize rgba(0,0,0,.1));
+    .box-shadow(inset 0 @em*( -1px )/@baseFontSize 0 rgba(0,0,0,.1), 0 @em*( 1px )/@baseFontSize @em*( 10px )/@baseFontSize rgba(0,0,0,.1));
   }
 }
 
@@ -203,7 +210,7 @@
 .navbar-fixed-bottom {
   bottom: 0;
   .navbar-inner {
-    .box-shadow(inset 0 @em*( -1px )/@baseFontSize 0 rgba(0,0,0,.1), 0 @em*( -1px )/@baseFontSize @em*( 10px )/@baseFontSize rgba(0,0,0,.1));
+    .box-shadow(inset 0 @em*( 1px )/@baseFontSize 0 rgba(0,0,0,.1), 0 @em*( -1px )/@baseFontSize @em*( 10px )/@baseFontSize rgba(0,0,0,.1));
   }
 }
 
@@ -221,6 +228,7 @@
 }
 .navbar .nav.pull-right {
   float: right; // redeclare due to specificity
+  margin-right: 0; // remove margin on float right nav
 }
 .navbar .nav > li {
   float: left;
@@ -254,9 +262,7 @@
   color: @navbarLinkColorActive;
   text-decoration: none;
   background-color: @navbarLinkBackgroundActive;
-  -webkit-box-shadow: inset 0 @em*( 3px )/@baseFontSize @em*( 8px )/@baseFontSize rgba(0,0,0,.125);
-     -moz-box-shadow: inset 0 @em*( 3px )/@baseFontSize @em*( 8px )/@baseFontSize rgba(0,0,0,.125);
-          box-shadow: inset 0 @em*( 3px )/@baseFontSize @em*( 8px )/@baseFontSize rgba(0,0,0,.125);
+  .box-shadow(inset 0 @em*( 3px )/@baseFontSize @em*( 8px )/@baseFontSize rgba(0,0,0,.125));
 }
 
 // Navbar button for toggling navbar items in responsive layouts
@@ -267,7 +273,7 @@
   padding: @em*( 7px )/@baseFontSize @em*( 10px )/@baseFontSize;
   margin-left: @em*( 5px )/@baseFontSize;
   margin-right: @em*( 5px )/@baseFontSize;
-  .buttonBackground(@navbarBackgroundHighlight, @navbarBackground);
+  .buttonBackground(darken(@navbarBackgroundHighlight, 5%), darken(@navbarBackground, 5%));
   .box-shadow(inset 0 @em*( 1px )/@baseFontSize 0 rgba(255,255,255,.1), 0 @em*( 1px )/@baseFontSize 0 rgba(255,255,255,.075));
 }
 .navbar .btn-navbar .icon-bar {
