@@ -25,6 +25,7 @@ define(
 					}, this);
 
                     if (this.onRender !== $.noop) { this.onRender(); }
+					return this;
 				},
 				renderButton: function (item) {
 					var buttonView = new navButton.View({
