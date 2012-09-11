@@ -19,7 +19,7 @@ define(
 				// Create a new ViewManager with #dashboard-view as its target element
 				// All views sent to the ViewManager will render in the target element
                 this.vent = app.vent;
-				this.viewManager = new app.ViewManager('#dashboard-view');
+			    this.viewManager = new app.ViewManager();
 			},
 			home: function () {
                 this.vent.trigger('nav:dashboard');
