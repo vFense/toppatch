@@ -1,0 +1,10 @@
+<summary class="row-fluid clearfix">
+    <% var span = ["span12","span6","span4","span3"]; %>
+    <% for(var i = 0, len = count; i < len; i += 1) { var extraClass= data[i] < 0?" error":"";%>
+        <dl class="<%= span[len-1] || 'span2' %>">
+            <% if(obj.format && $.type(obj.format[i]) === "function") { print(obj.format[i].apply(window, [data[i]])); } %>
+            <dt><%= keys[i] %></dt>
+            <dd><%= data[i] %></dd>
+        </dl>
+    <% } %>
+</summary>
