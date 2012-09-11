@@ -21,18 +21,33 @@ define(
 		// Object to manage transitions between views
 		// Inspired by: Derick Bailey
 		// See: http://bit.ly/odAfKo
-		var viewManager = function () {
-			var that = this;
-			that.showView = function (selector, view) {
+		var ViewManager = function (options) {
+			var that = this,
+                final,
+                lastSelect;
+            that.selector = 'body';
+            that.$selector = undefined;
+            that.set = function (opts) { _.extend(that, opts); final(); };
+            that.get = function (name) { return that[name]; };
+			that.showView = function (view) {
 				if (this.currentView) {
 					this.currentView.close();
 				}
-                $(selector).html(view.render().el);
+                that.$selector.html(view.render().el);
 				this.currentView = view;
 				return view;
 			};
+            _.extend(that, options);
+
+            // Self invoking function for final set up
+            final = (function () {
+                if ($.type(that.selector) === 'string' && that.selector !== lastSelect) {
+                    that.$selector = $(that.selector);
+                    lastSelect = that.selector;
+                }
+            }());
 		};
 
-		return viewManager;
+        return ViewManager;
 	}
 );
