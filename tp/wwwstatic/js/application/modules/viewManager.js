@@ -21,16 +21,15 @@ define(
 		// Object to manage transitions between views
 		// By: Derick Bailey
 		// See: http://bit.ly/odAfKo
-		var viewManager = function (target) {
+		var viewManager = function () {
 			var that = this;
-			that.target = target;
-			that.showView = function (view) {
+			that.showView = function (selector, view) {
 				if (this.currentView) {
 					this.currentView.close();
 				}
+                $(selector).html(view.render().el);
 				this.currentView = view;
-				this.currentView.render();
-				$(that.target).html(this.currentView.el);
+				return view;
 			};
 		};
 
