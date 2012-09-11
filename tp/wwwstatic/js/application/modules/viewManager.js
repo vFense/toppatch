@@ -7,13 +7,15 @@ define(
 		// Add close function to Backbone.View to prevent "Zombies"
 		// By: Derick Bailey
 		// See: http://bit.ly/odAfKo
-		Backbone.View.prototype.close = function () {
-			this.remove();
-			this.unbind();
-			if (this.onClose) {
-				this.onClose();
-			}
-		};
+        _.extend(Backbone.View.prototype, {
+            close: function () {
+                if (this.beforeClose) {
+                    this.beforeClose();
+                }
+                this.remove();
+                this.unbind();
+            }
+        });
 
 		// Zombie Prevention Part 2
 		// Object to manage transitions between views
