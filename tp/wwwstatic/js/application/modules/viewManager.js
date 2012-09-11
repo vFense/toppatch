@@ -23,11 +23,13 @@ define(
 		// See: http://bit.ly/odAfKo
 		var ViewManager = function (options) {
 			var that = this,
+                allowed = ['selector'],
+                extender,
                 final,
                 lastSelect;
             that.selector = 'body';
             that.$selector = undefined;
-            that.set = function (opts) { _.extend(that, opts); final(); };
+            that.set = function (opts) { extender(opts); final(); };
             that.get = function (name) { return that[name]; };
 			that.showView = function (view) {
 				if (this.currentView) {
@@ -37,9 +39,15 @@ define(
 				this.currentView = view;
 				return view;
 			};
-            _.extend(that, options);
+
+            // Self invoking function that extends this object
+            // with options passed to the constructor
+            extender = (function (opts) {
+                _.extend(that, _.pick(opts, allowed));
+            }(options));
 
             // Self invoking function for final set up
+            // - Set '$selector' based on 'selector'
             final = (function () {
                 if ($.type(that.selector) === 'string' && that.selector !== lastSelect) {
                     that.$selector = $(that.selector);
