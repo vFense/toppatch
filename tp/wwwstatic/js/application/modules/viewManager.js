@@ -5,7 +5,7 @@ define(
 
 		// Zombie Prevention Part 1
 		// Add close function to Backbone.View to prevent "Zombies"
-		// By: Derick Bailey
+		// Inspired by: Derick Bailey
 		// See: http://bit.ly/odAfKo
         _.extend(Backbone.View.prototype, {
             close: function () {
@@ -19,7 +19,7 @@ define(
 
 		// Zombie Prevention Part 2
 		// Object to manage transitions between views
-		// By: Derick Bailey
+		// Inspired by: Derick Bailey
 		// See: http://bit.ly/odAfKo
 		var viewManager = function () {
 			var that = this;
