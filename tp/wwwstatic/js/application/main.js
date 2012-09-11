@@ -21,6 +21,9 @@ require(
         });
         window.User = new User.Model();
 
+        // Load jQueryUI and Bootstrap
+        require(['jquery.ui', 'jquery.bootstrap']);
+
         deferred = new $.Deferred();
         require(['modules/pageHeader', 'modules/navBar'], function (PageHeader, DashNav) {
             var pageHeader = app.views.pageHeader = new PageHeader.View();
