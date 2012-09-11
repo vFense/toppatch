@@ -19,7 +19,7 @@ define(
 				// Create a new ViewManager with #dashboard-view as its target element
 				// All views sent to the ViewManager will render in the target element
                 this.vent = app.vent;
-			    this.viewManager = new app.ViewManager();
+			    this.viewManager = new app.ViewManager({'selector': '#dashboard-view'});
 			},
 			home: function () {
                 var that = this;
@@ -28,7 +28,7 @@ define(
 				// Update the main dashboard view
                 require(['modules/mainDash'], function (myView) {
                     var view = new myView.View();
-                    that.viewManager.showView('#dashboard-view', view);
+                    that.viewManager.showView(view);
                 });
 			},
 			showPatchAdmin: function () {
@@ -36,13 +36,13 @@ define(
                 this.vent.trigger('nav', 'patchAdmin');
 
 				// Update the main dashboard view
-                this.showView({ el: 'Patch Admin Page', render: function () { return this.el; }, close: function () {  return true; }});
+                this.viewManager.showView({ el: 'Patch Admin Page', render: function () { return this.el; }, close: function () {  return true; }});
 			},
 			defaultAction: function (other) {
                 var that = this;
                 this.vent.trigger('nav', '404');
 
-				this.showView({ el: '404: Not Found', render: function () { return true; }, close: function () {  return true; }});
+				this.viewManager.showView({ el: '404: Not Found', render: function () { return true; }, close: function () {  return true; }});
 			}
 		});
 
