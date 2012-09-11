@@ -22,21 +22,27 @@ define(
 			    this.viewManager = new app.ViewManager();
 			},
 			home: function () {
-                this.vent.trigger('nav:dashboard');
+                var that = this;
+                this.vent.trigger('nav', 'dashboard');
 
 				// Update the main dashboard view
-				this.viewManager.showView({ el: 'Home', render: function () { return true; }, close: function () { return true; }});
+                require(['modules/mainDash'], function (myView) {
+                    var view = new myView.View();
+                    that.viewManager.showView('#dashboard-view', view);
+                });
 			},
 			showPatchAdmin: function () {
-                this.vent.trigger('nav:patchAdmin');
+                var that = this;
+                this.vent.trigger('nav', 'patchAdmin');
 
 				// Update the main dashboard view
-				this.viewManager.showView({ el: 'Patch Admin', render: function () { return true; }, close: function () { return true; }});
+                this.showView({ el: 'Patch Admin Page', render: function () { return this.el; }, close: function () {  return true; }});
 			},
 			defaultAction: function (other) {
-                this.vent.trigger('nav:404');
+                var that = this;
+                this.vent.trigger('nav', '404');
 
-				this.viewManager.showView({ el: '404: Not Found', render: function () { return true; }, close: function () {  return true; }});
+				this.showView({ el: '404: Not Found', render: function () { return true; }, close: function () {  return true; }});
 			}
 		});
 
