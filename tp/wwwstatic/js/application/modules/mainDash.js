@@ -1,22 +1,30 @@
 define(
-    ['jquery', 'backbone', 'text!templates/mainDash.html'],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'backbone', 'text!templates/mainDash.html', 'modules/overview' ],
+    function ($, Backbone, myTemplate, Overview) {
         "use strict";
-        var exports = {};
-        exports.Model = Backbone.Model.extend({});
-        exports.View = Backbone.View.extend({
-            template: myTemplate,
+        var mainDash = {};
+        mainDash.Model = Backbone.Model.extend({});
+        mainDash.View = Backbone.View.extend({
             initialize: function () {
-                this.model = exports.Model;
+                //this.model = window.tempModel = new mainDash.Model();
+                this.template = myTemplate;
             },
             render: function () {
-                var tmpl = _.template(this.template);
-                this.$el.html(tmpl(
-                    //this.model.toJSON()
-                ));
+                var tmpl = _.template(this.template),
+                    that = this;
+
+                this.$el.html('');
+
+                this.overview = new Overview.View({
+                    el: $('<summary>').addClass('row-fluid clearfix')
+                });
+                this.$el.append(that.overview.render().$el);
+
+                this.$el.append(tmpl());
+
                 return this;
             }
         });
-        return exports;
+        return mainDash;
     }
 );
