@@ -1,6 +1,4 @@
 define(
-	['underscore', 'backbone'],
-	function (_, Backbone) {
 	['jquery', 'backbone'],
 	function ($, Backbone) {
 		"use strict";
