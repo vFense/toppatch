@@ -1,7 +1,7 @@
 // Filename: router.js
 define(
-	['backbone', 'app' ],
-	function (Backbone, app) {
+	['jquery', 'backbone', 'app' ],
+	function ($, Backbone, app) {
 		"use strict";
 		var AppRouter = Backbone.Router.extend({
 			routes: {
