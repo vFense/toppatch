@@ -3,12 +3,12 @@ define(
 	function ($, Backbone, app, navButton) {
 		"use strict";
 		var NavBar = {
-			ButtonSet: Backbone.Collection.extend({
+			Collection: Backbone.Collection.extend({
 				model: navButton.Model
 			}),
 			View: Backbone.View.extend({
 				initialize: function () {
-					this.collection =  new NavBar.ButtonSet(window.User.get('access'));
+					this.collection =  new NavBar.Collection(window.User.get('access'));
                     this.vent = app.vent;
                     this.vent.bind('all', this.setActive, this);
 					this.render();
