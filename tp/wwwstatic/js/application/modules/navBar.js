@@ -9,14 +9,14 @@ define(
 			View: Backbone.View.extend({
 				initialize: function () {
 					this.collection =  new exports.Collection(window.User.get('access'));
-                    this.vent = app.vent;
-                    this.vent.bind('nav', this.setActive, this);
+					this.vent = app.vent;
+					this.vent.bind('nav', this.setActive, this);
 					this.render();
 				},
-                beforeRender: $.noop,
-                onRender: $.noop,
+				beforeRender: $.noop,
+				onRender: $.noop,
 				render: function () {
-                    if (this.beforeRender !== $.noop) { this.beforeRender(); }
+					if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
 					var that = this;
 					this.$el.html('');
@@ -24,7 +24,7 @@ define(
 						that.renderButton(item);
 					}, this);
 
-                    if (this.onRender !== $.noop) { this.onRender(); }
+					if (this.onRender !== $.noop) { this.onRender(); }
 					return this;
 				},
 				renderButton: function (item) {
