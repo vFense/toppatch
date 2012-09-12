@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'backbone', 'modules/vent', 'modules/ViewManager'],
+    ['jquery', 'backbone', 'utilities/vent', 'utilities/viewManager'],
     function ($, Backbone, vent, ViewManager) {
         "use strict";
 
