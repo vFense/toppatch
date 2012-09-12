@@ -2,7 +2,7 @@ define(
     ['jquery', 'backbone', 'app', './overviewDetail'],
     function ($, Backbone, app, Detail) {
         "use strict";
-        var Overview = {
+        var exports = {
             Collection: Backbone.Collection.extend({
                 model: Detail.Model,
                 url: 'test-ajax/overview.json'
@@ -10,7 +10,7 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     var that = this;
-                    this.collection =  new Overview.Collection([
+                    this.collection =  new exports.Collection([
                         {key: 'Available Patches'},
                         {key: 'Scheduled Patches'},
                         {key: 'Completed Patches'},
@@ -46,6 +46,6 @@ define(
                 }
             })
         };
-        return Overview;
+        return exports;
     }
 );
