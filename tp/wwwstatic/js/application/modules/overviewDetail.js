@@ -6,7 +6,7 @@ define(
             Model: Backbone.Model.extend({
                 defaults: {
                     key: 'n/a',
-                    data: 0
+                    data: '-'
                 }
             }),
             View: Backbone.View.extend({
