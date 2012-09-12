@@ -39,32 +39,26 @@ define(
                         apply = false;
 
                     if (rule === 'e') {
-                        // If data === value
                         if (data === value) {
                             apply = true;
                         }
                     } else if (rule === 'ne') {
-                        // If data !== value
                         if (data !== value) {
                             apply = true;
                         }
                     } else if (rule === 'gt') {
-                        // If data > value
                         if (data > value) {
                             apply = true;
                         }
                     } else if (rule === 'lt') {
-                        // If data < value
                         if (data < value) {
                             apply = true;
                         }
                     } else if (rule === 'gte') {
-                        // If data >= value
                         if (data >= value) {
                             apply = true;
                         }
                     } else if (rule === 'lte') {
-                        // If data <= value
                         if (data <= value) {
                             apply = true;
                         }
