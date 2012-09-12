@@ -23,7 +23,7 @@ define(
 			},
 			home: function () {
                 var that = this;
-                this.vent.trigger('nav', 'dashboard');
+                this.vent.trigger('nav', '#dashboard');
 
 				// Update the main dashboard view
                 require(['modules/mainDash'], function (myView) {
@@ -33,7 +33,7 @@ define(
 			},
 			showPatchAdmin: function () {
                 var that = this;
-                this.vent.trigger('nav', 'patchAdmin');
+                this.vent.trigger('nav', '#patchAdmin');
 
 				// Update the main dashboard view
                 this.viewManager.showView({ el: 'Patch Admin Page', render: function () { return this.el; }, close: function () {  return true; }});

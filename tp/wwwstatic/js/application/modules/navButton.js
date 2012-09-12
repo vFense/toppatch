@@ -12,10 +12,9 @@ define(
 				tagName: "li",
 				className: "",
 				template: buttonTemplate,
-				events: {
-					'change': 'render'
+				initialize: function () {
+					this.model.on('change', this.render, this);
 				},
-				initialize: function () {},
 				render: function () {
 					var tmpl = _.template(this.template);
 					$(this.el).html(tmpl(this.model.toJSON())).toggleClass('active', this.model.get('active'));
