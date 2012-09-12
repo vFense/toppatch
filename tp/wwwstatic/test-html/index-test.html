@@ -162,14 +162,15 @@
     <header class="page-header">
         <h1>DASHBOARD <small>Customize your needs</small></h1>
     </header>
-    <summary class="row-fluid clearfix movable">
+    <summary class="row-fluid clearfix movable" id="summary">
         <!--
         <div class="span3">
             <div class="widget number">
                 <h4>Nodes</h4>10,007
             </div>
         </div>
-        -->
+
+
         <dl class="span3 info">
             <dt>Nodes</dt>
             <dd>10000</dd>
@@ -186,12 +187,13 @@
             <dt>Failed Patches</dt>
             <dd>3</dd>
         </dl>
+        -->
     </summary>
     <summary id="container" class="row-fluid movable">
         <div id="widget1" class="span4 widget">
             <div id="graphcontainer" class="window">
                 <header style="position: relative;">
-                    <h2 id="widget1-title">OS in Networks</h2>
+                    <h3 id="widget1-title">OS in Networks</h3>
                     <div id="menu1" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1"><i class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
@@ -210,7 +212,7 @@
         <div id="widget2" class="span6 widget">
             <div id="graph2container" class="window">
                 <header style="position: relative;">
-                    <h2 id="widget2-title">Vulnerabilities by Nodes</h2>
+                    <h3 id="widget2-title">Vulnerabilities by Nodes</h3>
                     <div id="menu2" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu2"><i class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
@@ -231,7 +233,7 @@
         <div id="widget3" class="span12 widget">
             <div id="graph3container" class="window">
                 <header style="position: relative;">
-                    <h2 id="widget3-title">Vulnerabilities by Time</h2>
+                    <h3 id="widget3-title">Vulnerabilities by Time</h3>
                     <div id="menu3" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu3"><i class="icon-list-ul"></i></a>
                         <ul class="dropdown-menu">
@@ -447,7 +449,7 @@
     <div id="<%= widget %>" class="<%= span %> widget">
         <div id="<%= graphcontainer %>" class="window">
             <header style="position: relative;">
-                <h2 id="<%= widget %>-title">Widget Title</h2>
+                <h3 id="<%= widget %>-title">Widget Title</h3>
                 <div id="<%= menu %>" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#<%= menu %>"><i class="icon-list-ul"></i></a>
                     <ul class="dropdown-menu">
@@ -505,11 +507,17 @@
         console.log("#<%= type %>-form");
         $("#<%= type %>-form").submit(function (d) {
             console.log($(this).serialize());
-            var data = { "status": "active", "name": "node" }
+        var rowArr=$(this).serialize();
+
+        rowArr = unserializeJQuery(rowArr);
+        console.log(rowArr);
+
+
+        var data = { "status": "active", "name": "node" }
             var variables = { type: "nodes", data: data };
             var template = _.template($("#patch_template").html(), variables);
             $("#main").html(template);
-            return true;
+            return false;
         });
         function toggleChecked(status) {
             $(":checkbox").each( function() {
@@ -536,15 +544,21 @@
     </script>
 </script>
     <script>
+    function unserializeJQuery(rubble) {
+        var bricks = rubble.split('&'), build = [], walls, value;
+        console.log(bricks);
+        $.each( bricks, function(i, d) {
+            value = d;
+            walls = value.split('=');
+            build.push({ key: decodeURIComponent(walls[0]), value: decodeURIComponent(walls[1]) });
+        });
+        return build;
+    }
     function pieGraph(selection, graphData) {
         var title;
         if (graphData === "os") {
-            data = [{"label":"windows 7", "value": Math.floor(Math.random() * 100)},
-                {"label":"windows 8", "value": Math.floor(Math.random() * 100)},
-                {"label":"windows XP", "value": Math.floor(Math.random() * 100)},
-                {"label":"Mac OS X", "value": Math.floor(Math.random() * 100)},
-                {"label":"linux", "value": Math.floor(Math.random() * 100)}];
-            title = "OS in Network";
+            var data = globalData.get("osData");
+            title = "OS types in Network";
         } else if (graphData === "node") {
             data = [{"label":"node 1", "value": Math.floor(Math.random() * 100)},
                 {"label":"node 2", "value": Math.floor(Math.random() * 100)},
@@ -561,15 +575,10 @@
         d3.select(selection).datum(data).call(pieChart);
     }
     function barGraph(selection) {
-        var data = [{label: "vulnerable", value: Math.floor(Math.random() * 100)},
-                    {label: "secure", value: Math.floor(Math.random() * 100)},
-                    {label: "patched", value: Math.floor(Math.random() * 100)},
-                    {label: "pending", value: Math.floor(Math.random() * 100)},
-                    {label: "failed", value: Math.floor(Math.random() * 100)},
-                    {label: "nodes", value: Math.floor(Math.random() * 100)}],
-                title = "Vulnerabilities by Nodes",
-        width = $(selection).width(),
-        barWidth = (width / data.length ) - 10;
+        var data = globalData.get("osData"),
+            title = "OS types in Network",
+            width = $(selection).width(),
+            barWidth = (width / data.length ) - 10;
         var graphBar = $application.verticalBarChart().title(title).barWidth(barWidth);
         d3.select(selection).datum(data).call(graphBar);
     }
@@ -587,758 +596,141 @@
         d3.select(selection).datum(data).call(lineChart);
     }
     function stackedGraph(selection) {
-        var data = [{"label":"windows 7", "value": Math.floor(Math.random() * 100)},
-            {"label":"windows 8", "value": Math.floor(Math.random() * 100)},
-            {"label":"windows XP", "value": Math.floor(Math.random() * 100)},
-            {"label":"Mac OS X", "value": Math.floor(Math.random() * 100)},
-            {"label":"linux", "value": Math.floor(Math.random() * 100)}];
+        var data = globalData.get("osData");
         var title = "OS in Network";
         var width = $(selection).width();
         var stackedChart = $application.stackedVerticalChart().title(title).width(width);
         d3.select(selection).datum(data).call(stackedChart);
     }
     function interactiveGraph(selection) {
-        var data = [{"label":"windows 7", "value": Math.floor(Math.random() * 100)},
-            {"label":"windows 8", "value": Math.floor(Math.random() * 100)},
-            {"label":"windows XP", "value": Math.floor(Math.random() * 100)},
-            {"label":"Mac OS X", "value": Math.floor(Math.random() * 100)},
-            {"label":"linux", "value": Math.floor(Math.random() * 100)}];
-        var root =
-            {
-                "name": "Network",
-                "children": [
-                    {
-                        "name": "Linux",
-                        "children": [
-                            {
-                                "name": "Ubuntu",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "Fedora",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "Debian",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Mac OS",
-                        "children": [
-                            {
-                                "name": "Mac OS X Server",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "Mountain Lion",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "Lion",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "Snow Leopard",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Windows",
-                        "children": [
-                            {
-                                "name": "Windows Vista",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "Windows Server 2003",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "Windows XP",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "Windows Server 2008",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "Windows 8",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "name": "Windows 7",
-                                "children": [
-                                    {
-                                        "name": "Node 1",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 2",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 3",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 4",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    },
-                                    {
-                                        "name": "Node 5",
-                                        "children": [
-                                            {"name": "Failed", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Secure", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Patched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Unpatched", "size": Math.floor(Math.random() * 12000)},
-                                            {"name": "Pending", "size": Math.floor(Math.random() * 12000)}
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            };
+        var data = globalData.get("summaryData");
         var interGraph = $application.interactiveGraph();//.title(title).width(width);
-        d3.select(selection).datum(root).call(interGraph);
+        d3.select(selection).datum(data).call(interGraph);
     }
-    var User = Backbone.Model.extend({
+
+
+    var osArray = ["Windows 7", "Windows 8", "Windows XP", "Mac OS X", "Linux"];
+    var nodeArray=[], Counter = new Object(), win7 = [], win8 = [], winxp = [], macos = [], linux = [];
+    Counter.numNodes = Math.floor(Math.random() * 5 + 5);
+    Counter.wincounter = 0;
+    Counter.win7 = 0;
+    Counter.win8 = 0;
+    Counter.winxp = 0;
+    Counter.lincounter = 0;
+    Counter.maccounter = 0;
+    Counter.patched = 0;
+    Counter.unpatched = 0;
+    Counter.failed = 0;
+    Counter.pending = 0;
+    for(var k = 0; k < Counter.numNodes; k++) {
+        var patched = Math.floor(Math.random() * 10);
+        var unpatched = Math.floor(Math.random() * 5);
+        var failed = Math.floor(Math.random() * 2);
+        var pending = Math.floor(Math.random() * 5);
+        var name = "node " + k;
+        Counter.patched += patched;
+        Counter.unpatched += unpatched;
+        Counter.failed += failed;
+        Counter.pending += pending;
+
+        var random = Math.floor(Math.random() * 5);
+        if(random < 3) {
+            Counter.wincounter++;
+            if(random === 0) {
+                Counter.win7++;
+            } else if(random === 1) {
+                Counter.win8++;
+            } else if(random === 2) {
+                Counter.winxp++;
+            }
+        }
+        else if(random === 3) { Counter.maccounter++; }
+        else if(random === 4) { Counter.lincounter++; }
+        nodeArray.push({ "name": name, "os": osArray[random], "children": [{"name": "Patched", "size": patched, "graphData": {"label": name, "value": patched}}, {"name": "Unpatched", "size": unpatched, "graphData": {"label": name, "value": unpatched}}, {"name": "Pending", "size": pending, "graphData": {"label": name, "value": pending}},{"name": "Failed", "size": failed, "graphData": {"label": name, "value": failed}}] });
+        if(osArray[random] === "Windows 7") {
+            win7.push(nodeArray[k]);
+        } else if(osArray[random] === "Windows 8") {
+            win8.push(nodeArray[k]);
+        } else if(osArray[random] === "Windows XP") {
+            winxp.push(nodeArray[k]);
+        } else if(osArray[random] === "Mac OS X") {
+            macos.push(nodeArray[k]);
+        } else if(osArray[random] === "Linux") {
+            linux.push(nodeArray[k]);
+        }
+    }
+    var randomData = Backbone.Model.extend({
        defaults: {
-           config: {
-               name: "Guest",
-               access: {
-                   patches: true
-               },
-               textWidgets: 4,
-               textKey: ["Nodes", "Patched", "Scheduled Patches", "Failed Patches"],
-               graphWidgets: 3,
-               graphKey: ["pie", "bar", "line"]
-           }
+            osData: [],
+            nodeData: { "Patched": Counter.patched,
+                        "Unpatched": Counter.unpatched,
+                        "Pending": Counter.pending,
+                        "Failed": Counter.failed,
+                        "Nodes": Counter.numNodes },
+            summaryData: []
        },
        initialize: function() {
-           $('#account-dropdown').html(_.template(TEMPLATES["account/dropdownMenu"](), this.get("config")));
-           $('#dashboardNav').html(_.template(TEMPLATES["dashboard/navigation"](), this.get("config")));
+           var tempArray = [], tempData = new Object();
+           if(Counter.win7 != 0) {
+                tempArray.push({"label": "Windows 7", "value": Counter.win7, "data": win7 });
+           }
+           if(Counter.win8 != 0) {
+                tempArray.push({"label": "Windows 8", "value": Counter.win8, "data": win8 });
+           }
+           if(Counter.winxp != 0) {
+               tempArray.push({"label": "Windows XP", "value": Counter.winxp, "data": winxp });
+           }
+           if(Counter.maccounter != 0) {
+               tempArray.push({"label": "Mac OS X", "value": Counter.maccounter, "data": macos });
+           }
+           if(Counter.lincounter != 0) {
+               tempArray.push({"label": "Linux", "value": Counter.lincounter, "data": linux });
+           }
+           tempData.name = "Network";
+           tempData.children = [];
+           console.log(Counter);
+           for(var j = 0; j < tempArray.length; j++) {
+               tempData.children[j] = { "name": tempArray[j].label }
+               tempData.children[j].children = [];
+               for(var z = 0; z < tempArray[j].data.length; z++) {
+                    tempData.children[j].children[z] =  { "name": tempArray[j].data[z].name,
+                                                           "children": tempArray[j].data[z].children };
+               }
+           }
+           this.set({osData : tempArray, summaryData: tempData });
        }
+    });
+    var globalData = new randomData();
+    var User = Backbone.Model.extend({
+        defaults: {
+            config: {
+                name: "Guest",
+                access: {
+                    patches: true
+                },
+                textWidgets: 4,
+                textKey: ["Nodes", "Patched", "Scheduled Patches", "Failed Patches"],
+                graphWidgets: 3,
+                graphKey: ["pie", "bar", "line"],
+                classType: ["info", "success", "warning", "error"],
+                getData: [ globalData.get("nodeData").Nodes, globalData.get("nodeData").Patched, globalData.get("nodeData").Pending, globalData.get("nodeData").Failed]
+            }
+        },
+        initialize: function() {
+            $('#account-dropdown').html(_.template(TEMPLATES["account/dropdownMenu"](), this.get("config")));
+            $('#dashboardNav').html(_.template(TEMPLATES["dashboard/navigation"](), this.get("config")));
+            for(var i = 0; i < 4; i++){
+                var variables = {
+                    widget: "text" + i,
+                    span: "span3",
+                    title: this.get("config").textKey[i],
+                    type: this.get("config").classType[i],
+                    data: this.get("config").getData[i]
+                };
+                var template = _.template($("#text_template").html(), variables);
+                $("#summary").append(template);
+            }
+        }
     });
     var user = new User();
     var Properties = Backbone.Model.extend({
@@ -1374,6 +766,7 @@
             this.template = "";
             this.title = "Default";
             this.myClass = "span";
+            this.tempData = "";
         },
         events: {
             'click #type1': 'graphSetting',
@@ -1453,12 +846,13 @@
                 this.sizeval = "3";
                 this.title = $('input:[name=param]:checked');
                 index =  $("input:radio[name='param']").index(this.title);
+                this.tempData = this.getOverviewData();
                 variables = {
                     widget: this.widget,
                     span: "span" + this.sizeval,
                     type: this.classType[index],
                     title: this.title.val(),
-                    data: Math.floor(Math.random() * 500)
+                    data: this.tempData
                 };
                 this.template = _.template($("#text_template").html(), variables);
                 $("#insert").append(this.template);
@@ -1481,17 +875,30 @@
                 parent = $(this.widget).parent();
                 this.title = $('input:[name=param]:checked');
                 index =  $("input:radio[name='param']").index(this.title);
+                this.tempData = this.getOverviewData();
                 this.sizeval = "3";
                 variables = {
                     widget: this.widget,
                     span: "span" + this.sizeval,
                     title: this.title.val(),
                     type: this.classType[index],
-                    data: Math.floor(Math.random() * 500)
+                    data: this.tempData
                 };
                 this.template = _.template($("#text_template").html(), variables);
                 $(this.widget).remove();
                 $(parent).append(this.template);
+            }
+        },
+        getOverviewData: function() {
+            var type = $(this.title).val();
+            if(type === "Patched") {
+                return globalData.get("nodeData").Patched;
+            } else if(type === "Scheduled Patches") {
+                return globalData.get("nodeData").Unpatched;
+            } else if(type === "Nodes") {
+                return globalData.get("nodeData").Nodes;
+            } else if(type === "Failed Patches") {
+                return globalData.get("nodeData").Failed;
             }
         }
     });

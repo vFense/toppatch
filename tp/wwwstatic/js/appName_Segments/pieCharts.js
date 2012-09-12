@@ -46,12 +46,13 @@ $application.pieChart = function () {
                 .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
                 .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
                 .attr("class", "slice")    //allow us to style things in the slices (like text)
-                .on("click", function () {
-                    d3.selectAll(this.parentNode.childNodes).select("text").text("");
-                    d3.selectAll(this.parentNode.childNodes).select("path").transition().duration(1000)
-                        .attr("d", arcOut).each("end", newgraph);
-
-                    //createPie(graphNumber, "node");
+                .on("click", function (d, i) {
+                    if(d.data.data) {
+                        d3.selectAll(this.parentNode.childNodes).select("text").text("");
+                        d3.selectAll(this.parentNode.childNodes).select("path").transition().duration(1000).attr("d", arcOut);
+                        d3.selectAll(this.parentNode.childNodes).select("path").transition().delay(900)
+                            .style("opacity", function() { newgraph(d); return "1"; });
+                    }
                 })
                 .on("mouseover", function (d, i) {
                     d3.select(this).select("path").transition().duration(500)
@@ -89,18 +90,16 @@ $application.pieChart = function () {
                         .attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")")
                         .text(d.data.label);
                 });
-            function newgraph() {
-                //createPie(selection, "node");
-                //alert("hi");
-                var pieChart = $application.pieChart().title("Nodes by OS");
-
-                data = [{"label":"node1", "value":20},
-                    {"label":"node2", "value":75},
-                    {"label":"node3", "value":15},
-                    {"label":"node4", "value":40},
-                    {"label":"node5", "value":32}];
-
-                d3.select(that).datum(data).call(pieChart);
+            function newgraph(d) {
+                var tempData = [];
+                if(d.data.data.length){
+                    for(var i = 0; i < d.data.data.length; i++){
+                        //console.log(d.data.data[i].children[0].graphData);
+                        tempData.push(d.data.data[i].children[0].graphData);
+                    }
+                    var pieChart = $application.pieChart().title(d.data.data[0].children[0].name + " nodes in " + d.data.data[0].os);
+                    d3.select(that).datum(tempData).call(pieChart);
+                }
             }
             arcs.append("svg:title")
                 .text(function (d, i) { return d.data.label + ": " + d.data.value; });
