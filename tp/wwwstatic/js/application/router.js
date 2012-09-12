@@ -36,7 +36,10 @@ define(
                 this.vent.trigger('nav', '#patchAdmin');
 
 				// Update the main dashboard view
-                this.viewManager.showView({ el: 'Patch Admin Page', render: function () { return this.el; }, close: function () {  return true; }});
+				require(['modules/patchAdmin'], function (myView) {
+					var view = new myView.View();
+					that.viewManager.showView(view);
+				});
 			},
 			defaultAction: function (other) {
                 var that = this;
