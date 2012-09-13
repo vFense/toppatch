@@ -6,12 +6,12 @@ require.config({
         // Create shortcuts
         // i.e. Use 'jquery' insteaad of typing out 'libs/jquery/jquery-1.8.1.min'
         'jquery'            : '../libs/jquery/jquery-1.8.1',
-        'jquery.ui'            : '../libs/jquery-ui/jquery-ui.custom.min',
-        'jquery.bootstrap'    : '../libs/bootstrap/bootstrap.min',
+        'jquery.ui'         : '../libs/jquery-ui/jquery-ui.custom.min',
+        'jquery.bootstrap'  : '../libs/bootstrap/bootstrap.min',
         'underscore'        : '../libs/underscore/underscore',
-        'backbone'            : '../libs/backbone/backbone',
-        d3                    : '../libs/d3/d3.v2.min',
-        text                : '../libs/require/plugins/text'
+        'backbone'          : '../libs/backbone/backbone',
+        'd3'                : '../libs/d3/d3.v2.min',
+        'text'              : '../libs/require/plugins/text'
     },
 
     shim: {
