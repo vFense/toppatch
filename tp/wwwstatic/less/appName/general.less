@@ -5,87 +5,87 @@
 */
 
 BODY {
-	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
-	//background-color: @TP_White;
-	min-width: @gridRowWidth;
-	padding-top: 1em;
-	padding-bottom: 1em;
+    font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    //background-color: @TP_White;
+    min-width: @gridRowWidth;
+    padding-top: 1em;
+    padding-bottom: 1em;
 
-	> FOOTER {
-		background-color: #F8F8F8;
-		height: @em*( @pageFooterHeight )/@baseFontSize;
-		color: darken(@TP_DarkGrey,4%);
-		border-top: @em*( 1px )/@baseFontSize solid #E0E0E0;
-		border-bottom: @em*( 1px )/@baseFontSize solid #E0E0E0;
+    > FOOTER {
+        background-color: #F8F8F8;
+        height: @em*( @pageFooterHeight )/@baseFontSize;
+        color: darken(@TP_DarkGrey,4%);
+        border-top: @em*( 1px )/@baseFontSize solid #E0E0E0;
+        border-bottom: @em*( 1px )/@baseFontSize solid #E0E0E0;
 
-		.logo-text {
-			@imageHeight: 36px;
-			height: @em*( @imageHeight )/@baseFontSize;
-			padding-top: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
-			padding-bottom: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
-		}
-	}
+        .logo-text {
+            @imageHeight: 36px;
+            height: @em*( @imageHeight )/@baseFontSize;
+            padding-top: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
+            padding-bottom: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
+        }
+    }
 }
 
 li {
-	[class^="icon-"], [class*=" icon-"] {
-		line-height: 1.25em;
-	}
+    [class^="icon-"], [class*=" icon-"] {
+        line-height: 1.25em;
+    }
 }
 
 H1, H2, H3, H4, H5, H6 { margin:0; }
 
 SUMMARY {
-	DL {
-		text-align: center;
-		margin: 0;
-		border: @em*( 1px )/@baseFontSize solid #E6E6E6;
+    DL {
+        text-align: center;
+        margin: 0;
+        border: @em*( 1px )/@baseFontSize solid #E6E6E6;
 
-		DT {
-			background-color: #E6E6E6;
-			border-bottom: @em*( 1px )/@baseFontSize solid #E6E6E6;
-			margin:0;
-		}
-		DD {
-			font-size: 20px;
-			line-height: 2em;
-			margin: 0;
-		}
-	}
+        DT {
+            background-color: #E6E6E6;
+            border-bottom: @em*( 1px )/@baseFontSize solid #E6E6E6;
+            margin:0;
+        }
+        DD {
+            font-size: 20px;
+            line-height: 2em;
+            margin: 0;
+        }
+    }
 
-	.info {
-		DT {
-			background-color: @infoBackground;
-			border-color: @infoBorder;
-			color: @infoText;
-		}
-	}
+    .info {
+        DT {
+            background-color: @infoBackground;
+            border-color: @infoBorder;
+            color: @infoText;
+        }
+    }
 
-	.success {
-		DT {
-			background-color: @successBackground;
-			border-color: @successBorder;
-			color: @successText;
-		}
-	}
+    .success {
+        DT {
+            background-color: @successBackground;
+            border-color: @successBorder;
+            color: @successText;
+        }
+    }
 
-	.warning {
-		DT {
-			background-color: @warningBackground;
-			border-color: @warningBorder;
-			color: @warningText;
-		}
-	}
+    .warning {
+        DT {
+            background-color: @warningBackground;
+            border-color: @warningBorder;
+            color: @warningText;
+        }
+    }
 
-	.error {
-		DT {
-			background-color: @errorBackground;
-			border-color: @errorBorder;
-			color: @errorText;
-		}
-	}
+    .error {
+        DT {
+            background-color: @errorBackground;
+            border-color: @errorBorder;
+            color: @errorText;
+        }
+    }
 }
 
 .legal {
-	line-height: @em*( @pageFooterHeight )/@baseFontSize;
+    line-height: @em*( @pageFooterHeight )/@baseFontSize;
 }

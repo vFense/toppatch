@@ -4,49 +4,49 @@
 @controlHeight: 1.4 * @libstFontSize;
 
 .login {
-	background-color: #FFF;
-	width: @em*( 300px )/@baseFontSize;
-	padding: @em*( 15px )/@baseFontSize;
-	margin: auto;
-	margin-top: 10%; //@em*( 120px )/@baseFontSize;
-	//margin-bottom: @em*( 120px )/@baseFontSize;
-	border: @em*( 1px )/@baseFontSize solid #D5D5D5;
+    background-color: #FFF;
+    width: @em*( 300px )/@baseFontSize;
+    padding: @em*( 15px )/@baseFontSize;
+    margin: auto;
+    margin-top: 10%; //@em*( 120px )/@baseFontSize;
+    //margin-bottom: @em*( 120px )/@baseFontSize;
+    border: @em*( 1px )/@baseFontSize solid #D5D5D5;
 
-	FORM {
-		margin-bottom: 0;
-	}
+    FORM {
+        margin-bottom: 0;
+    }
 
-	.logo {
-		text-align: center;
-		IMG {
-			height: @em*( 75px )/@baseFontSize;
-		}
-	}
+    .logo {
+        text-align: center;
+        IMG {
+            height: @em*( 75px )/@baseFontSize;
+        }
+    }
 
-	H1, H2 {
-		color: #004D99;
-		text-align:center;
-		margin: auto;
-		margin-bottom: 0.5em;
-	}
+    H1, H2 {
+        color: #004D99;
+        text-align:center;
+        margin: auto;
+        margin-bottom: 0.5em;
+    }
 
-	.controls INPUT {
-		@thisFontSize: @controlHeight;
-		position: relative;
-		font-size: @em*( @thisFontSize )/@libstFontSize;
-	}
+    .controls INPUT {
+        @thisFontSize: @controlHeight;
+        position: relative;
+        font-size: @em*( @thisFontSize )/@libstFontSize;
+    }
 
-	span.checkcox {
-		margin-top:    @em*( 9px )/@baseFontSize;
-		margin-bottom: @em*( 9px )/@baseFontSize;
-		LABEL {
-			margin-bottom: 0;
-		}
-	}
+    span.checkcox {
+        margin-top:    @em*( 9px )/@baseFontSize;
+        margin-bottom: @em*( 9px )/@baseFontSize;
+        LABEL {
+            margin-bottom: 0;
+        }
+    }
 }
 
 .control-group LABEL {
-	display: none;
+    display: none;
 }
 
 // CSS3 Styles
@@ -54,14 +54,14 @@
 // ----------------------
 
 .boxshadow .login {
-	border-color: none;
-	.box-shadow(0 @em*( 1px )/@baseFontSize @em*( 3px )/@baseFontSize rgba(0, 0, 0, 0.3));
+    border-color: none;
+    .box-shadow(0 @em*( 1px )/@baseFontSize @em*( 3px )/@baseFontSize rgba(0, 0, 0, 0.3));
 }
 
 .borderradius .login {
-	@thisRadius: 5px;
-	.border-radius( @em*(@thisRadius)/@baseFontSize );
+    @thisRadius: 5px;
+    .border-radius( @em*(@thisRadius)/@baseFontSize );
 }
 .cssgradients .login {
-	#gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
+    #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
 }

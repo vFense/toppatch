@@ -1,18 +1,18 @@
 define(
-	['jquery', 'backbone', 'utilities/vent', 'utilities/viewManager'],
-	function ($, Backbone, vent, ViewManager) {
-		"use strict";
+    ['jquery', 'backbone', 'utilities/vent', 'utilities/viewManager'],
+    function ($, Backbone, vent, ViewManager) {
+        "use strict";
 
-		var app = {
-			root: '/'
-		};
+        var app = {
+            root: '/'
+        };
 
-		_.extend(app, {
-			vent: vent,
-			ViewManager: ViewManager,
-			views: {}
-		});
+        _.extend(app, {
+            vent: vent,
+            ViewManager: ViewManager,
+            views: {}
+        });
 
-		return app;
-	}
+        return app;
+    }
 );

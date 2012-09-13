@@ -2,35 +2,35 @@
 // --------------
 
 .widget {
-	HEADER {
-		border-bottom: @em*(  1px )/@baseFontSize solid #E0E0E0;
-		margin-bottom: @em*( 10px )/@baseFontSize;
-	}
+    HEADER {
+        border-bottom: @em*(  1px )/@baseFontSize solid #E0E0E0;
+        margin-bottom: @em*( 10px )/@baseFontSize;
+    }
 
-	FOOTER {
-		border-top: @em*(  1px )/@baseFontSize solid #E0E0E0;
-		margin-top: @em*( 10px )/@baseFontSize;
-	}
+    FOOTER {
+        border-top: @em*(  1px )/@baseFontSize solid #E0E0E0;
+        margin-top: @em*( 10px )/@baseFontSize;
+    }
 
-	&.number {
-		font-size: 24px;
-		line-height: 2.5em;
-		text-align:center;
-		background-color:#F0F0F0;
+    &.number {
+        font-size: 24px;
+        line-height: 2.5em;
+        text-align:center;
+        background-color:#F0F0F0;
 
-		h4 {
-			background-color:#DDD;
-			line-height: 1.5em;
-		}
+        h4 {
+            background-color:#DDD;
+            line-height: 1.5em;
+        }
 
-		.row-fluid {
-			font-size: @baseFontSize;
-		}
-	}
+        .row-fluid {
+            font-size: @baseFontSize;
+        }
+    }
 }
 
 .show-grid .widget {
-	.box-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+    .box-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
 }
 
 // Alternate Widget Styles
@@ -39,26 +39,26 @@
 @altWidgetPadding: 6px;
 
 .widget-alternate {
-	border: 1px solid #E0E0E0;
-	padding: @altWidgetPadding;
-	.border-radius(5px);
-	overflow: hidden;
-	//.box-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
+    border: 1px solid #E0E0E0;
+    padding: @altWidgetPadding;
+    .border-radius(5px);
+    overflow: hidden;
+    //.box-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
 
-	HEADER {
-		margin-top: -@altWidgetPadding;
-		margin-left: -@altWidgetPadding;
-		padding-left: @altWidgetPadding;
-		margin-right: -@altWidgetPadding;
-		padding-right: @altWidgetPadding;
-		#gradient > .vertical (rgb(255,255,255), rgb(238,238,238));
-		//color: rgb(7,89,164);
-	}
+    HEADER {
+        margin-top: -@altWidgetPadding;
+        margin-left: -@altWidgetPadding;
+        padding-left: @altWidgetPadding;
+        margin-right: -@altWidgetPadding;
+        padding-right: @altWidgetPadding;
+        #gradient > .vertical (rgb(255,255,255), rgb(238,238,238));
+        //color: rgb(7,89,164);
+    }
 
-	FOOTER {
-		margin-left: -@altWidgetPadding;
-		padding-left: @altWidgetPadding;
-		margin-right: -@altWidgetPadding;
-		padding-right: @altWidgetPadding;
-	}
+    FOOTER {
+        margin-left: -@altWidgetPadding;
+        padding-left: @altWidgetPadding;
+        margin-right: -@altWidgetPadding;
+        padding-right: @altWidgetPadding;
+    }
 }
