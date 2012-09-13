@@ -10,7 +10,8 @@ define(
         _.extend(app, {
             vent: vent,
             ViewManager: ViewManager,
-            views: {}
+            views: {},
+            chart: {}
         });
 
         return app;
