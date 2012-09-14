@@ -16,14 +16,19 @@ require.config({
 
     shim: {
         'jquery.ui': {
-            deps: ['jquery']    // jQuery UI depends on jQuery
+            deps: ['jquery'],    // jQuery UI depends on jQuery
+            exports: 'jQuery'
         },
         'jquery.bootstrap': {
-            deps: ['jquery']    // Bootstrap depends on jQuery
+            deps: ['jquery'],    // Bootstrap depends on jQuery
+            exports: 'jQuery'
         },
         'backbone': {
             deps: ['jquery', 'underscore'],    // Backbone depends on jQuery and Underscore
             exports: 'Backbone'
+        },
+        'd3': {
+            exports: 'd3'
         }
     }
 });
