@@ -1,0 +1,3 @@
+Underscore.js
+GitHub: https://github.com/documentcloud/underscore/tags
+Version: 1.3.3

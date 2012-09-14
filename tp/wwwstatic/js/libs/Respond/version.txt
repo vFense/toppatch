@@ -1,0 +1,3 @@
+Respond.js
+GitHub: https://github.com/scottjehl/Respond/tags
+Version: 1.2.0
