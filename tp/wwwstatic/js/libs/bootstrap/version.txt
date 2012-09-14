@@ -1,3 +1,4 @@
 Bootstrap.js
-GitHub: https://github.com/documentcloud/backbone/tags
-Version: 2.1.1
+Home:       http://twitter.github.com/bootstrap/
+GitHub:     https://github.com/documentcloud/backbone/tags
+Version:    2.1.1

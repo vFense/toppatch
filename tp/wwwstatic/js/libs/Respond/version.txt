@@ -1,3 +1,4 @@
 Respond.js
-GitHub: https://github.com/scottjehl/Respond/tags
-Version: 1.2.0
+Home:       https://github.com/scottjehl/Respond
+GitHub:     https://github.com/scottjehl/Respond/tags
+Version:    1.2.0
