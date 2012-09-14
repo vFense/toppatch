@@ -10,7 +10,7 @@ require.config({
         'jquery.bootstrap'  : '../libs/bootstrap/bootstrap.min',
         'underscore'        : '../libs/underscore/underscore',
         'backbone'          : '../libs/backbone/backbone',
-        'd3'                : '../libs/d3/d3.v2.min',
+        'd3'                : '../libs/d3/d3.v2',
         'text'              : '../libs/require/plugins/text'
     },
 
