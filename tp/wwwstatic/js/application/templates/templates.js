@@ -15,10 +15,11 @@ var TEMPLATES = {
 
         template.push('<nav class="clearfix">\n');
         template.push('<ul class="nav">\n<li class="active"><a href="#dashboard">Dashboard</a></li>\n');
-        template.push('<% if( access && access.patches === true ) { %> <li><a href="#patches">Patches</a></li>\n <% } %>');
+		template.push('<% if( access && access.patches === true ) { %> <li><a id="deploy" href="#patches">Patches</a></li>\n <% } %>');
         template.push('</ul>\n');
-        template.push('<ul class="nav pull-right">\n<li class="dropdown">\n<a href="#" class="dropdown-toggle" data-toggle="dropdown">\n<i class="icon-cog"></i><span>Settings </span><span><i class="icon-caret-down"></i>\n</a>\n<ul class="dropdown-menu">\n<li><a href="javascript:;">Account Settings</a></li>\n<li class="divider"></li>\n<li><a href="javascript:;">Help</a></li>\n</ul>\n</li>\n</ul>');
+		template.push('<ul class="nav pull-right">\n<li class="dropdown">\n<a href="#" class="dropdown-toggle" data-toggle="dropdown">\n<i class="icon-cog"></i><span>Settings </span><span><i class="icon-caret-down"></i>\n</a>\n<ul class="dropdown-menu">\n<li><a href="javascript:;">Account Settings</a></li>\n<li><a href="#" id="restore">Restore Defaults</a></li>\n<li><a href="#widgetProperties" data-toggle="modal" id="addwidget">Add Widget</a></li>\n<li class="divider"></li>\n<li><a href="javascript:;">Help</a></li>\n</ul>\n</li>\n</ul>');
         template.push('</nav>');
+
 
         return template.join("");
     },

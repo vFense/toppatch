@@ -7,7 +7,7 @@ require(
             deferred;
         User.Model = Backbone.Model.extend({
             defaults: {
-                name: 'Luis',
+                name: 'Guest',
                 show: {
                     brandHeader: true,
                     dashNav: true,
@@ -15,7 +15,7 @@ require(
                 },
                 access: [
                     { name: 'Dashboard', href: '#dashboard', active: false },
-                    { name: 'Patches', href: '#patchAdmin', active: false }
+                    { name: 'Patch Manager', href: '#patchAdmin', active: false }
                 ]
             }
         });

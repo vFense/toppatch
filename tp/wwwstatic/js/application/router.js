@@ -48,7 +48,6 @@ define(
                 this.viewManager.showView({ el: '404: Not Found', render: function () { return true; }, close: function () {  return true; }});
             }
         });
-
         return {
             initialize: function () {
                 this.app_router = new AppRouter();
