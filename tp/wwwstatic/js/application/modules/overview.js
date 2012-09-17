@@ -4,12 +4,16 @@ define(
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
-                model: Detail.Model,
-                url: 'test-ajax/overview.json'
+                model: Detail.Model
+                //url: 'test-ajax/overview.json'
             }),
             View: Backbone.View.extend({
                 initialize: function () {
                     var that = this;
+                    this.collection =  new exports.Collection(
+                    	app.data.overviewData
+                    );
+                    /*
                     this.collection =  new exports.Collection([
                         {key: 'Available Patches'},
                         {key: 'Scheduled Patches'},
@@ -19,6 +23,8 @@ define(
                     this.collection.fetch({
                         success: function () { that.render(); }
                     });
+                    */
+                    that.render();
                 },
                 beforeRender: $.noop,
                 onRender: function () {
