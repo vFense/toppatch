@@ -15,7 +15,7 @@ require(
                 },
                 access: [
                     { name: 'Dashboard', href: '#dashboard', active: false },
-                    { name: 'Patches', href: '#patchAdmin', active: false }
+                    { name: 'Patch Manager', href: '#patchAdmin', active: false }
                 ]
             }
         });

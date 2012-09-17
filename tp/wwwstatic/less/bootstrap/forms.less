@@ -91,8 +91,9 @@ input[type="color"],
 // Reset appearance properties for textual inputs and textarea
 // Declare width for legacy (can't be on input[type=*] selectors or it's too specific)
 input,
-textarea {
-  width: @em*( 210px )/@baseFontSize;
+textarea,
+.uneditable-input {
+  width: @em*( 206px )/@baseFontSize; // plus 12px padding and 2px border
 }
 // Reset height since textareas have rows
 textarea {
@@ -161,7 +162,7 @@ input[type="file"] {
 // Make select elements obey height by applying a border
 select {
   width: @em*( 220px )/@libstFontSize; // default input width + 10px of padding that doesn't get applied
-  border: @em*( 1px )/@libstFontSize solid #bbb;
+  border: @em*( 1px )/@libstFontSize solid @inputBorder;
   background-color: @inputBackground; // Chrome on Linux and Mobile Safari need background-color
 }
 
@@ -209,7 +210,7 @@ input[type="checkbox"]:focus {
 // Placeholder
 // -------------------------
 
-// Placeholder text gets special styles; can't be bundled together though for some reason
+// Placeholder text gets special styles because when browsers invalidate entire lines if it doesn’t understand a selector
 input,
 textarea {
   .placeholder();
@@ -349,6 +350,10 @@ input[type="checkbox"][readonly] {
 .control-group.success {
   .formFieldState(@successText, @successText, @successBackground);
 }
+// Success
+.control-group.info {
+  .formFieldState(@infoText, @infoText, @infoBackground);
+}
 
 // HTML5 invalid states
 // Shares styles with the .control-group.error above
@@ -449,7 +454,6 @@ select:focus:required:invalid {
   }
   .add-on,
   .btn {
-    margin-left: @em*( -1px )/@libstFontSize;
     vertical-align: top;
     .border-radius(0);
   }
@@ -473,6 +477,10 @@ select:focus:required:invalid {
   select,
   .uneditable-input {
     .border-left-radius(@em*( @inputBorderRadius )/@libstFontSize 0 0 @em*( @inputBorderRadius )/@libstFontSize);
+  }
+  .add-on,
+  .btn {
+    margin-left: @em*( -1px )/@libstFontSize;
   }
   .add-on:last-child,
   .btn:last-child {
@@ -505,9 +513,9 @@ select:focus:required:invalid {
 
 input.search-query {
   padding-right: @em*( 14px )/@libstFontSize;
-  padding-right: @em*( 4px )/@libstFontSize ~"\9";
+  padding-right: @em*( 4px )/@libstFontSize \9;
   padding-left: @em*( 14px )/@libstFontSize;
-  padding-left: @em*( 4px )/@libstFontSize ~"\9"; /* IE7-8 doesn't have border-radius, so don't indent the padding */
+  padding-left: @em*( 4px )/@libstFontSize \9; /* IE7-8 doesn't have border-radius, so don't indent the padding */
   margin-bottom: 0; // Remove the default margin on all inputs
   .border-radius(@em*( 15px )/@libstFontSize);
 }
@@ -518,16 +526,16 @@ input.search-query {
   .border-radius(0); // Override due to specificity
 }
 .form-search .input-append .search-query {
-  .border-radius(@em*( 14px )/@libstFontSize 0 0 @em*( 14px )/@libstFontSize)
+  .border-radius(@em*( 14px )/@libstFontSize 0 0 @em*( 14px )/@libstFontSize);
 }
 .form-search .input-append .btn {
-  .border-radius(0 @em*( 14px )/@libstFontSize @em*( 14px )/@libstFontSize 0)
+  .border-radius(0 @em*( 14px )/@libstFontSize @em*( 14px )/@libstFontSize 0);
 }
 .form-search .input-prepend .search-query {
-  .border-radius(0 @em*( 14px )/@libstFontSize @em*( 14px )/@libstFontSize 0)
+  .border-radius(0 @em*( 14px )/@libstFontSize @em*( 14px )/@libstFontSize 0);
 }
 .form-search .input-prepend .btn {
-  .border-radius(@em*( 14px )/@libstFontSize 0 0 @em*( 14px )/@libstFontSize)
+  .border-radius(@em*( 14px )/@libstFontSize 0 0 @em*( 14px )/@libstFontSize);
 }
 
 
@@ -622,7 +630,7 @@ legend + .control-group {
   // Float the labels left
   .control-label {
     float: left;
-    width: @em*( 140px )/@libstFontSize;
+    width: @em*( @horizontalComponentOffset - 20 )/@libstFontSize;
     padding-top: @em*( 5px )/@libstFontSize;
     text-align: right;
   }
@@ -632,19 +640,26 @@ legend + .control-group {
     // don't inherit the margin of the parent, in this case .controls
     *display: inline-block;
     *padding-left: @em*( 20px )/@libstFontSize;
-    margin-left: @em*( 160px )/@libstFontSize;
+    margin-left: @em*( @horizontalComponentOffset )/@libstFontSize;
     *margin-left: 0;
     &:first-child {
-      *padding-left: @em*( 160px )/@libstFontSize;
+      *padding-left: @em*( @horizontalComponentOffset )/@libstFontSize;
     }
   }
   // Remove bottom margin on block level help text since that's accounted for on .control-group
   .help-block {
-    margin-top: @em*( @baseLineHeight / 2 )/@libstFontSize;
     margin-bottom: 0;
+  }
+  // And apply it only to .help-block instances that follow a form control
+  input,
+  select,
+  textarea {
+    + .help-block {
+      margin-top: @em*( @baseLineHeight / 2 )/@libstFontSize;
+    }
   }
   // Move over buttons in .form-actions to align with .controls
   .form-actions {
-    padding-left: @em*( 160px )/@libstFontSize;
+    padding-left: @em*( @horizontalComponentOffset )/@libstFontSize;
   }
 }

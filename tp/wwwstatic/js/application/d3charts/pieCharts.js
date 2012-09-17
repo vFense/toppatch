@@ -101,7 +101,7 @@ define(['jquery','d3'], function($, d3) {
                             //console.log(d.data.data[i].children[0].graphData);
                             tempData.push(d.data.data[i].children[0].graphData);
                         }
-                        var pieChart = graph.pieGraph().title(d.data.data[0].children[0].name + " nodes in " + d.data.data[0].os);
+                        var pieChart = graph.pieGraph().title(d.data.data[0].children[0].name + " in "+ d.data.data[0].os + " by nodes");
                         //console.log(pieChart);
                         d3.select(that).datum(tempData).call(pieChart);
                     }

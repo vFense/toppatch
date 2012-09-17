@@ -2,85 +2,12 @@ define(
     ['jquery', 'backbone', 'app', 'text!templates/testBody.html', 'modules/overview', 'jquery.ui', 'jquery.bootstrap' ],
     function ($, Backbone, app, myTemplate, Overview) {
         "use strict";
-        /*
-        function onInitFs (fs) {
-
-            fs.root.getFile('data.json', {create: false}, function(fileEntry) {
-                fileEntry.remove(function() {
-                    console.log('File removed.');
-                }, errorHandler);
-            }, errorHandler);
-
-            setTimeout(function () {
-                fs.root.getFile('data.json', {create: true}, function(fileEntry) {
-
-                    // Create a FileWriter object for our FileEntry (log.txt).
-                    fileEntry.createWriter(function(fileWriter) {
-
-                        fileWriter.onwriteend = function(e) {
-                            console.log('Write completed.');
-                        };
-
-                        fileWriter.onerror = function(e) {
-                            console.log('Write failed: ' + e.toString());
-                        };
-
-                        // Create a new Blob and write it to log.txt.
-                        var osData = globalData.get("summaryData");
-                        console.log(osData);
-                        var jsonData = JSON.stringify(osData);//globalData.get("osData").toString();
-                        var blob = new Blob([jsonData], {type: 'application/json'});
-                        fileWriter.write(blob);
-
-                    }, errorHandler);
-
-                    fileEntry.file(function(file) {
-                        var reader = new FileReader();
-
-                        reader.onloadend = function(e) {
-                            var txtArea = document.createElement('textarea');
-                            txtArea.value = this.result;
-                            document.body.appendChild(txtArea);
-                        };
-
-                        reader.readAsText(file);
-                    }, errorHandler);
-
-                }, errorHandler);
-            }, 100);
-
-        }
-        function errorHandler(e) {
-            var msg = '';
-
-            switch (e.code) {
-                case FileError.QUOTA_EXCEEDED_ERR:
-                    msg = 'QUOTA_EXCEEDED_ERR';
-                    break;
-                case FileError.NOT_FOUND_ERR:
-                    msg = 'NOT_FOUND_ERR';
-                    break;
-                case FileError.SECURITY_ERR:
-                    msg = 'SECURITY_ERR';
-                    break;
-                case FileError.INVALID_MODIFICATION_ERR:
-                    msg = 'INVALID_MODIFICATION_ERR';
-                    break;
-                case FileError.INVALID_STATE_ERR:
-                    msg = 'INVALID_STATE_ERR';
-                    break;
-                default:
-                    msg = 'Unknown Error';
-                    break;
-            };
-
-            console.log('Error: ' + msg);
-        } */
         var Properties = Backbone.Model.extend({
             defaults: {
                 widgetName: "widget1",
                 currentWidget: "existing",
-                widgetType: "graph"
+                widgetType: "graph",
+                widgetTitle: "Default"
                 //widgetGraph: "pie"
             },
             initialize: function () {
@@ -105,6 +32,7 @@ define(
                 this.title = "Default";
                 this.myClass = "span";
                 this.tempData = "";
+                this.title = "Default";
             },
             events: {
                 'click #type1': 'graphSetting',
@@ -153,6 +81,8 @@ define(
                 'use strict';
                 this.current = properties.get("currentWidget");
                 this.type = $('input:radio[name=type]:checked').val();
+                this.title = $('#title').val() === "" ? "Default" : $('#title').val();
+                properties.set({ widgetTitle: this.title });
                 if (this.current === "new") {
                     this.renderNew();
                 } else {
@@ -247,7 +177,7 @@ define(
 
         function barGraph(selection) {
             var data = app.data.osData,
-                title = "OS types in Network",
+                title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
                 width = $(selection).width(),
                 barWidth = (width / data.length ) - 10;
             var graphBar = app.chart.barGraph().title(title).barWidth(barWidth);
@@ -255,13 +185,14 @@ define(
         }
         function interactiveGraph(selection) {
             var data = app.data.summaryData;
-            var interGraph = app.chart.interGraph();
+            var title = properties.get('widgetTitle') === 'Default' ? "Summary Chart" : properties.get('widgetTitle');
+            var interGraph = app.chart.interGraph().chartTitle(title);
             d3.select(selection).datum(data).call(interGraph);
         }
         function pieGraph(selection) {
             var title, data, width, pieChart;
             data = app.data.osData;
-            title = "OS types in Network";
+            title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle');
             width = $(selection).width();
             pieChart = app.chart.pieGraph().title(title).width(width);
             d3.select(selection).datum(data).call(pieChart);
@@ -274,29 +205,35 @@ define(
                     {"label": new Date('2000').getFullYear(), "value":5},
                     {"label": new Date('2010').getFullYear(), "value":25},
                     {"label": new Date('2012').getFullYear(), "value":65}],
-                title = "Line Chart",
+                title = properties.get('widgetTitle') === 'Default' ? "Line Graph" : properties.get('widgetTitle'),
                 width = $(selection).width();
             var lineChart = app.chart.lineGraph().title(title).width(width);
             d3.select(selection).datum(data).call(lineChart);
         }
         function stackedGraph(selection) {
-            var data = app.data.osData;
-            var title = "OS in Network";
-            var width = $(selection).width();
-            var stackedChart = app.chart.stackedGraph().title(title).width(width);
+            var data = app.data.osData,
+                title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
+                width = $(selection).width(),
+                stackedChart = app.chart.stackedGraph().title(title).width(width);
             d3.select(selection).datum(data).call(stackedChart);
         }
         function setProperties(obj, param) {
             'use strict';
             if (param === "existing") {
+                var widgetName = $(obj).parent().parent().parent().parent().parent().parent().attr("id"),
+                    title = $("#" + widgetName + "-title").html();
                 properties.set({
-                    widgetName: $(obj).parent().parent().parent().parent().parent().parent().attr("id"),
+                    widgetName: widgetName,
                     currentWidget: "existing"
                 });
+                $('#title').val('');
+                $('#title').attr("placeholder", title);
             } else if (param === "new") {
                 properties.set({
                     currentWidget: "new"
                 });
+                $('#title').val('');
+                $('#title').attr("placeholder", "Default");
             }
         }
         function hideWidget(obj) {
@@ -332,7 +269,7 @@ define(
                         $(".movable").sortable({ connectWith: '.movable' });
                         $("#restore").click(function () { $(".widget").show(); });
                         $(".properties").click(function () { setProperties(this, 'existing'); });
-                        $('#addwidget').click(function () { setProperties(this, 'new'); });
+                        $('#addwidget').click(function () { console.log('new'); setProperties(this, 'new'); });
                         $('.remove').click(function () { hideWidget(this); });
                         $(".movable").sortable({ connectWith: '.movable' });
                         barGraph("#graph2");

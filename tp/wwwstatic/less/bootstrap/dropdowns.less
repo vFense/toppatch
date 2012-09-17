@@ -181,7 +181,7 @@
   .caret {
     border-top: 0;
     border-bottom: @em*( 4px )/@btnFontSize solid @black;
-    content: "\2191";
+    content: "";
     
     &.btn-large {
       border-bottom: @em*( 4px )/@btnLargeFontSize solid @black;
@@ -215,7 +215,7 @@
      -moz-border-radius: 0 @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize;
           border-radius: 0 @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize;
 }
-.dropdown-submenu:hover .dropdown-menu {
+.dropdown-submenu:hover > .dropdown-menu {
   display: block;
 }
 

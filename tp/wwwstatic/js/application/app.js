@@ -42,7 +42,7 @@ define(
             }
             else if(random === 3) { Counter.maccounter++; }
             else if(random === 4) { Counter.lincounter++; }
-            nodeArray.push({ "name": name, "os": osArray[random], "children": [{"name": "Patched", "size": patched, "graphData": {"label": name, "value": patched}}, {"name": "Unpatched", "size": unpatched, "graphData": {"label": name, "value": unpatched}}, {"name": "Pending", "size": pending, "graphData": {"label": name, "value": pending}},{"name": "Failed", "size": failed, "graphData": {"label": name, "value": failed}}] });
+            nodeArray.push({ "name": name, "os": osArray[random], "children": [{"name": "Patches Applied", "size": patched, "graphData": {"label": name, "value": patched}}, {"name": "Patches Available", "size": unpatched, "graphData": {"label": name, "value": unpatched}}, {"name": "Patches Pending", "size": pending, "graphData": {"label": name, "value": pending}},{"name": "Patches Failed", "size": failed, "graphData": {"label": name, "value": failed}}] });
             if(osArray[random] === "Windows 7") {
                 win7.push(nodeArray[k]);
             } else if(osArray[random] === "Windows 8") {
@@ -86,7 +86,7 @@ define(
                 nodeArray.push({ "name": linux[z].name, "os": linux[z].os });
             }
         }
-        tempData.name = "Network";
+        tempData.name = "192.168.1.0";
         tempData.children = [];
         //console.log(Counter);
         for(var j = 0; j < tempArray.length; j++) {
@@ -174,14 +174,14 @@ define(
                                         }
                                     ],
                 summaryData: tempData,
-                patches: [{ "date": new Date(), "name": "Security Update for Microsoft XML Editor 2010 (KB2251489)" },
-                    { "date": new Date(), "name": "Security Update for Microsoft Visual C++ 2008 Service Pack 1 Redistributable Package (KB2538243)" },
-                    { "date": new Date(), "name": "Security Update for Microsoft Visual Studio 2010 (KB2542054)" },
-                    { "date": new Date(), "name": "Security Update for Microsoft Visual Studio 2008 Service Pack 1 (KB2669970)" },
-                    { "date": new Date(), "name": "Update for Microsoft Tools for Office Runtime Redistributable (KB2525428)" },
-                    { "date": new Date(), "name": "Security Update for Microsoft .NET Framework 4 on XP, Server 2003, Vista, Windows 7, Server 2008, Server 2008 R2 for x64 (KB2604121)" },
-                    { "date": new Date(), "name": "Microsoft Security Essentials - KB2691894" },
-                    { "date": new Date(), "name": "Security Update for Windows 7 for x64-based Systems (KB2731847)" }]
+                patches: [{ "date": new Date(), "name": "Security Update for Microsoft XML Editor 2010 (KB2251489)", "os": "windows" },
+                    { "date": new Date(), "name": "Security Update for Microsoft Visual C++ 2008 Service Pack 1 Redistributable Package (KB2538243)", "os": "windows" },
+                    { "date": new Date(), "name": "Security Update for Microsoft Visual Studio 2010 (KB2542054)", "os": "windows" },
+                    { "date": new Date(), "name": "Security Update for Microsoft Visual Studio 2008 Service Pack 1 (KB2669970)", "os": "windows" },
+                    { "date": new Date(), "name": "Update for Microsoft Tools for Office Runtime Redistributable (KB2525428)", "os": "windows" },
+                    { "date": new Date(), "name": "Security Update for Microsoft .NET Framework 4 on XP, Server 2003, Vista, Windows 7, Server 2008, Server 2008 R2 for x64 (KB2604121)", "os": "windows" },
+                    { "date": new Date(), "name": "Microsoft Security Essentials - KB2691894", "os": "windows" },
+                    { "date": new Date(), "name": "Security Update for Windows 7 for x64-based Systems (KB2731847)", "os": "windows" }]
             }
         });
 
