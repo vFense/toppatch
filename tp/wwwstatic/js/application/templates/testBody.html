@@ -1,0 +1,199 @@
+<summary class="row-fluid clearfix movable" id="summary">
+    <!--
+    <div class="span3">
+        <div class="widget number">
+            <h4>Nodes</h4>10,007
+        </div>
+    </div>
+
+    <dl class="span3 info">
+        <dt>Nodes</dt>
+        <dd>10000</dd>
+    </dl>
+    <dl class="span3 success">
+        <dt>Patched</dt>
+        <dd>3207</dd>
+    </dl>
+    <dl class="span3 warning">
+        <dt>Scheduled Patches</dt>
+        <dd>508</dd>
+    </dl>
+    <dl class="span3 error">
+        <dt>Failed Patches</dt>
+        <dd>3</dd>
+    </dl>
+    -->
+</summary>
+
+<summary id="container" class="row-fluid clearfix movable">
+    <div id="widget1" class="span6 widget">
+        <div id="graphcontainer" class="window">
+            <header style="position: relative;">
+                <h4 id="widget1-title">OS in Networks</h4>
+                <div id="menu1" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1"><i class="icon-list-ul"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="remove">Hide</a></li>
+                        <li><a data-toggle="modal" href="#widgetProperties" class="properties" >Properties</a></li>
+                        <!--
+                        <li><a href="#">Something else here</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Separated link</a></li> -->
+                    </ul>
+                </div>
+            </header>
+            <div id="graph1" class="graph"></div>
+            <!--<img src="http://placehold.it/300x200"/> -->
+        </div>
+    </div>
+    <div id="widget2" class="span6 widget">
+        <div id="graph2container" class="window">
+            <header style="position: relative;">
+                <h4 id="widget2-title">Vulnerabilities by Nodes</h4>
+                <div id="menu2" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#menu2"><i class="icon-list-ul"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="remove">Hide</a></li>
+                        <li><a href="#widgetProperties" data-toggle="modal" class="properties" >Properties</a></li>
+                    </ul>
+                </div>
+            </header>
+            <div id="graph2" class="graph"></div>
+            <!--<img src="http://placehold.it/620x200"/>-->
+        </div>
+    </div>
+</summary>
+<summary class="row-fluid clearfix movable">
+    <div id="widget3" class="span12 widget">
+        <div id="graph3container" class="window">
+            <header style="position: relative;">
+                <h4 id="widget3-title">Vulnerabilities by Time</h4>
+                <div id="menu3" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#menu3"><i class="icon-list-ul"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="remove">Hide</a></li>
+                        <li><a href="#widgetProperties" data-toggle="modal" class="properties" >Properties</a></li>
+                    </ul>
+                </div>
+            </header>
+            <div id="graph3" class="graph"></div>
+            <!--<img src="http://placehold.it/620x200"/>-->
+        </div>
+    </div>
+</summary>
+<summary id="insert" class="row-fluid clearfix movable"></summary>
+<!--
+<summary class="row-fluid movable">
+    <div class="span12 widget">
+        <header>
+            <h2>Widget Title</h2>
+        </header>
+        <table id="data" class="table table-bordered table-striped"></table>
+        <div class="pagination pagination-centered">
+            <ul>
+                <li><a href="#">Prev</a></li>
+                <li class="active">
+                    <a href="#">1</a>
+                </li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">Next</a></li>
+            </ul>
+        </div>
+    </div>
+</summary>
+-->
+<div class="modal hide" id="widgetProperties">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>Widget Properties</h3>
+    </div>
+    <div class="modal-body">
+        <h4>Choose a widget</h4>
+        <div id="type">
+            <label for="type1" class="radio inline">
+                <input type="radio" name="type" id="type1"  value="graph" />Graph
+            </label>
+            <label for="type2" class="radio inline">
+                <input type="radio" name="type" id="type2" value="text" />Text
+            </label>
+        </div>
+        <div id="textSettings" class="hide">
+            <h4>Choose a parameter</h4>
+            <div id="parameter">
+                <label for="param1" class="radio inline">
+                    <input type="radio" name="param" id="param1"  value="Nodes"/>Nodes
+                </label>
+                <label for="param2" class="radio inline">
+                    <input type="radio" name="param" id="param2" value="Patched" />Patched
+                </label>
+                <label for="param3" class="radio inline">
+                    <input type="radio" name="param" id="param3" value="Scheduled Patches"/>Unpatched
+                </label>
+                <label for="param4" class="radio inline">
+                    <input type="radio" name="param" id="param4" value="Failed Patches"/>Failed
+                </label>
+            </div>
+        </div>
+        <div id="graphSettings" class="hide">
+            <h4>Widget Title</h4>
+                <input type="text" id="title" placeholder="title">
+            <h4>Choose a size</h4>
+            <div id="size">
+                <label for="radio2" class="radio inline">
+                    <input type="radio" name="radio" id="radio2"  value="3"/>3
+                </label>
+                <label for="radio3" class="radio inline">
+                    <input type="radio" name="radio" id="radio3" value="4" checked="checked"/>4
+                </label>
+                <label for="radio4" class="radio inline">
+                    <input type="radio" name="radio" id="radio4" value="6"/>6
+                </label>
+                <label for="radio5" class="radio inline">
+                    <input type="radio" name="radio" id="radio5" value="12"/>12
+                </label>
+            </div>
+            <h4>Choose type of graph</h4>
+            <div id="graphType" class="radio-graph">
+                <label for="graphtype1" class="radio inline">
+                    <input type="radio" name="graph" id="graphtype1"  value="pie" />Pie Graph
+                </label>
+                <label for="graphtype2" class="radio inline">
+                    <input type="radio" name="graph" id="graphtype2" value="bar" checked="checked"/>Bar Graph
+                </label>
+                <label for="graphtype3" class="radio inline">
+                    <input type="radio" name="graph" id="graphtype3" value="line"/>Line Graph
+                </label>
+                <!--
+                <label for="graphtype4" class="radio inline">
+                    <input type="radio" name="graph" id="graphtype4" value="time"/>Time Series
+                </label>
+                -->
+                <label for="graphtype5" class="radio inline">
+                    <input type="radio" name="graph" id="graphtype5" value="stacked"/>Stacked Bar
+                </label>
+                <label for="graphtype6" class="radio inline">
+                    <input type="radio" name="graph" id="graphtype6" value="summary"/>Summary Chart
+                </label>
+            </div>
+            <!--
+            <div id="dataToGraph" class="hide">
+                <h4>Choose type of Data</h4>
+                <div id="graphdata">
+                    <label for="graphdata1" class="radio inline">
+                        <input type="radio" name="graphdata" id="graphdata1"  value="os" checked="checked"/>OS in Network
+                    </label>
+                    <label for="graphdata2" class="radio inline">
+                        <input type="radio" name="graphdata" id="graphdata2" value="node"/>Nodes by OS
+                    </label>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn btn-primary" id="apply">Save changes</a>
+    </div>
+</div>
