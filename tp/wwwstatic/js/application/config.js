@@ -6,7 +6,7 @@ require.config({
         // Create shortcuts
         // i.e. Use 'jquery' insteaad of typing out 'libs/jquery/jquery-1.8.1.min'
         'jquery'            : '../libs/jquery/jquery-1.8.1',
-        //'jquery.ui'         : '../libs/jquery-ui/jquery-ui.custom.min',
+        'jquery.ui'         : '../libs/jquery-ui/jquery-ui.custom.min',
         'jquery.bootstrap'  : '../libs/bootstrap/bootstrap.min',
         'underscore'        : '../libs/underscore/underscore',
         'backbone'          : '../libs/backbone/backbone',
