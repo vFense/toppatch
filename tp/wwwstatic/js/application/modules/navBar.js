@@ -1,52 +1,46 @@
 define(
-	['jquery', 'backbone', './navButton'],
-	function ($, Backbone, navButton) {
-		"use strict";
-		var NavBar = {
-			ButtonSet: Backbone.Collection.extend({
-				model: navButton.Model
-			}),
-			View: Backbone.View.extend({
-				el: $('<ul>')
-					.addClass('nav')
-					.appendTo('#dashboardNav'),
-				events: {},
-				initialize: function () {
-					this.collection = new NavBar.ButtonSet(window.TopPatch.user.access);
-					this.render();
-				},
-				render: function () {
-					var that = this;
-					this.$el.html('');
-					_.each(this.collection.models, function (item) {
-						that.renderButton(item);
-					}, this);
-				},
-				renderButton: function (item) {
-					var buttonView = new navButton.View({
-						model: item
-					});
-					this.$el.append(buttonView.render().el);
-				},
-				setActive: function (e) {
-					// Check to make sure e and e.target are defined.
-					if(e && e.target) {
-						// The target should always be an anchor element
-						// We want its parent li
-						var $clicked = $(e.target).parent();
-						
-						// Check to see if the li element is part of this view's created element
-						if ( $($clicked, this.$el).length === 1 ) {
-							// If the li is not the active li, continue
-							if(!$clicked.hasClass('active')) {
-								// Set the li to active, and its siblings to not active
-								$clicked.toggleClass('active', true).siblings().toggleClass('active',false);
-							}
-						}
-					}
-				}
-			})
-		};
-		return NavBar;
-	}
+    ['jquery', 'backbone', 'app', './navButton'],
+    function ($, Backbone, app, navButton) {
+        "use strict";
+        var exports = {
+            Collection: Backbone.Collection.extend({
+                model: navButton.Model
+            }),
+            View: Backbone.View.extend({
+                initialize: function () {
+                    this.collection =  new exports.Collection(window.User.get('access'));
+                    this.vent = app.vent;
+                    this.vent.bind('nav', this.setActive, this);
+                    this.render();
+                },
+                beforeRender: $.noop,
+                onRender: $.noop,
+                render: function () {
+                    if (this.beforeRender !== $.noop) { this.beforeRender(); }
+
+                    var that = this;
+                    this.$el.html('');
+                    _.each(this.collection.models, function (item) {
+                        that.renderButton(item);
+                    }, this);
+
+                    if (this.onRender !== $.noop) { this.onRender(); }
+                    return this;
+                },
+                renderButton: function (item) {
+                    var buttonView = new navButton.View({
+                        model: item
+                    });
+                    this.$el.append(buttonView.render().el);
+                },
+                setActive: function (hrefTarget) {
+                    _.each(this.collection.models, function (model) {
+                        //console.log(model.get('href') === hrefTarget);
+                        model.set('active', model.get('href') === hrefTarget);
+                    });
+                }
+            })
+        };
+        return exports;
+    }
 );
