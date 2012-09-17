@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'backbone', 'text!templates/mainDash.html', 'modules/overview' ],
+    ['jquery', 'backbone', 'text!templates/mainDash.html', 'modules/overview'],
     function ($, Backbone, myTemplate, Overview) {
         "use strict";
         var exports = {
