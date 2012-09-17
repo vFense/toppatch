@@ -11,7 +11,7 @@ define(
                 initialize: function () {
                     var that = this;
                     this.collection =  new exports.Collection(
-                    	app.data.overviewData
+                        app.data.overviewData
                     );
                     /*
                     this.collection =  new exports.Collection([

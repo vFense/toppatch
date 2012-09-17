@@ -9,12 +9,12 @@ define(['jquery','d3'], function($, d3) {
 
     return function () {
         "use strict";
-        var width	= 280,	// Golden Ratio 1000/Phi
-            height	= 220,
-            r = width / 3,
-            color = d3.scale.category20(),
-            title = "Default",
-            graph = this;
+        var width  = 280,
+            height = 220,
+            r      = width / 3,
+            color  = d3.scale.category20(),
+            title  = "Default",
+            graph  = this;
 
         function chart(selection) {
             selection.each(function (data) {

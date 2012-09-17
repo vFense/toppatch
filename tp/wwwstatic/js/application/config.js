@@ -15,22 +15,22 @@ require.config({
         
         // jQuery.ui modules
         'jquery.ui.Core'        : '../libs/jquery-ui/dev/jquery.ui.Core',
-		'jquery.ui.Widget'      : '../libs/jquery-ui/dev/jquery.ui.Widget',
-		'jquery.ui.Mouse'       : '../libs/jquery-ui/dev/jquery.ui.Mouse',
-		'jquery.ui.Position'    : '../libs/jquery-ui/dev/jquery.ui.Position',
-		'jquery.ui.Draggable'   : '../libs/jquery-ui/dev/jquery.ui.Draggable',
-		'jquery.ui.Droppable'   : '../libs/jquery-ui/dev/jquery.ui.Droppable',
-		'jquery.ui.Resizable'   : '../libs/jquery-ui/dev/jquery.ui.Resizable',
-		'jquery.ui.Selectable'  : '../libs/jquery-ui/dev/jquery.ui.Selectable',
-		'jquery.ui.Sortable'    : '../libs/jquery-ui/dev/jquery.ui.Sortable',
-		'jquery.ui.Accordion'   : '../libs/jquery-ui/dev/jquery.ui.Accordion',
-		'jquery.ui.Autocomplete': '../libs/jquery-ui/dev/jquery.ui.Autocomplete',
-		'jquery.ui.Button'      : '../libs/jquery-ui/dev/jquery.ui.Button',
-		'jquery.ui.Dialog'      : '../libs/jquery-ui/dev/jquery.ui.Dialog',
-		'jquery.ui.Slider'      : '../libs/jquery-ui/dev/jquery.ui.Slider',
-		'jquery.ui.Tabs'        : '../libs/jquery-ui/dev/jquery.ui.Tabs',
-		'jquery.ui.Datepicker'  : '../libs/jquery-ui/dev/jquery.ui.Datepicker',
-		'jquery.ui.Progressbar' : '../libs/jquery-ui/dev/jquery.ui.Progressbar'
+        'jquery.ui.Widget'      : '../libs/jquery-ui/dev/jquery.ui.Widget',
+        'jquery.ui.Mouse'       : '../libs/jquery-ui/dev/jquery.ui.Mouse',
+        'jquery.ui.Position'    : '../libs/jquery-ui/dev/jquery.ui.Position',
+        'jquery.ui.Draggable'   : '../libs/jquery-ui/dev/jquery.ui.Draggable',
+        'jquery.ui.Droppable'   : '../libs/jquery-ui/dev/jquery.ui.Droppable',
+        'jquery.ui.Resizable'   : '../libs/jquery-ui/dev/jquery.ui.Resizable',
+        'jquery.ui.Selectable'  : '../libs/jquery-ui/dev/jquery.ui.Selectable',
+        'jquery.ui.Sortable'    : '../libs/jquery-ui/dev/jquery.ui.Sortable',
+        'jquery.ui.Accordion'   : '../libs/jquery-ui/dev/jquery.ui.Accordion',
+        'jquery.ui.Autocomplete': '../libs/jquery-ui/dev/jquery.ui.Autocomplete',
+        'jquery.ui.Button'      : '../libs/jquery-ui/dev/jquery.ui.Button',
+        'jquery.ui.Dialog'      : '../libs/jquery-ui/dev/jquery.ui.Dialog',
+        'jquery.ui.Slider'      : '../libs/jquery-ui/dev/jquery.ui.Slider',
+        'jquery.ui.Tabs'        : '../libs/jquery-ui/dev/jquery.ui.Tabs',
+        'jquery.ui.Datepicker'  : '../libs/jquery-ui/dev/jquery.ui.Datepicker',
+        'jquery.ui.Progressbar' : '../libs/jquery-ui/dev/jquery.ui.Progressbar'
     },
 
     shim: {

@@ -8,11 +8,11 @@
 define(['jquery','d3'], function($, d3) {
     return function () {
         "use strict";
-        var margin	= [40, 40, 40, 40],
-            width = 600 - margin[1] - margin[3],
-            height	= 280 - margin[0] - margin[2],
+        var margin    = [40, 40, 40, 40],
+            width     = 600 - margin[1] - margin[3],
+            height    = 280 - margin[0] - margin[2],
             val_array = new Array(),
-            title = "Default",
+            title     = "Default",
             max,
             x = d3.scale.linear(),
             y = d3.scale.linear();
