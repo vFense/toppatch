@@ -2,21 +2,31 @@ define(
     ['jquery', 'backbone', 'utilities/vent', 'utilities/viewManager', 'd3charts/interactiveGraph', 'd3charts/pieCharts', 'd3charts/barCharts', 'd3charts/stackedBarChart', 'd3charts/tableGenerator', 'd3charts/lineChart'],
     function ($, Backbone, vent, ViewManager, interGraph, pieGraph, barGraph, stackedGraph, generateTable, lineGraph) {
         "use strict";
-        var osArray = ["Windows 7", "Windows 8", "Windows XP", "Mac OS X", "Linux"];
-        var nodeArray=[], Counter = new Object(), win7 = [], win8 = [], winxp = [], macos = [], linux = [];
-        Counter.numNodes = Math.floor(Math.random() * 5 + 5);
-        Counter.wincounter = 0;
-        Counter.win7 = 0;
-        Counter.win8 = 0;
-        Counter.winxp = 0;
-        Counter.lincounter = 0;
-        Counter.maccounter = 0;
-        Counter.patched = 0;
-        Counter.unpatched = 0;
-        Counter.failed = 0;
-        Counter.pending = 0;
-        Counter.available = 0;
-        for(var k = 0; k < Counter.numNodes; k++) {
+        var osArray = ["Windows 7", "Windows 8", "Windows XP", "Mac OS X", "Linux"],
+            nodeArray = [],
+            Counter = {},
+            win7 = [],
+            win8 = [],
+            winxp = [],
+            macos = [],
+            linux = [];
+
+        _.extend(Counter, {
+            numNodes: Math.floor(Math.random() * 5 + 5),
+            wincounter: 0,
+            win7: 0,
+            win8: 0,
+            winxp: 0,
+            lincounter: 0,
+            maccounter: 0,
+            patched: 0,
+            unpatched: 0,
+            failed: 0,
+            pending: 0,
+            available: 0
+        });
+
+        for (var k = 0; k < Counter.numNodes; k++) {
             var patched = Math.floor(Math.random() * 10);
             var unpatched = Math.floor(Math.random() * 5);
             var failed = Math.floor(Math.random() * 2);
