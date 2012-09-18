@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'backbone','utilities/vent', 'utilities/viewManager', 'd3charts/interactiveGraph', 'd3charts/pieCharts', 'd3charts/barCharts', 'd3charts/stackedBarChart', 'd3charts/tableGenerator', 'd3charts/lineChart'],
+    ['jquery', 'backbone', 'utilities/vent', 'utilities/viewManager', 'd3charts/interactiveGraph', 'd3charts/pieCharts', 'd3charts/barCharts', 'd3charts/stackedBarChart', 'd3charts/tableGenerator', 'd3charts/lineChart'],
     function ($, Backbone, vent, ViewManager, interGraph, pieGraph, barGraph, stackedGraph, generateTable, lineGraph) {
         "use strict";
         var osArray = ["Windows 7", "Windows 8", "Windows XP", "Mac OS X", "Linux"];
@@ -124,55 +124,55 @@ define(
                     "Available": Counter.available,
                     "Nodes": Counter.numNodes },
                 overviewData: [
-                                        {
-                                            "key": "Available Patches",
-                                            "data": Counter.available,
-                                            "format": [
-                                                {
-                                                    "rule": "gt",
-                                                    "value": 0,
-                                                    "style": "info",
-                                                    "stop": true
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "key": "Scheduled Patches",
-                                            "data": Counter.pending,
-                                            "format": [
-                                                {
-                                                    "rule": "gt",
-                                                    "value": 0,
-                                                    "style": "warning",
-                                                    "stop": true
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "key": "Completed Patches",
-                                            "data": Counter.patched,
-                                            "format": [
-                                                {
-                                                    "rule": "gt",
-                                                    "value": 0,
-                                                    "style": "success",
-                                                    "stop": true
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "key": "Failed Patches",
-                                            "data": Counter.failed,
-                                            "format": [
-                                                {
-                                                    "rule": "gt",
-                                                    "value": 0,
-                                                    "style": "error",
-                                                    "stop": true
-                                                }
-                                            ]
-                                        }
-                                    ],
+                    {
+                        "key": "Available Patches",
+                        "data": Counter.available,
+                        "format": [
+                            {
+                                "rule": "gt",
+                                "value": 0,
+                                "style": "info",
+                                "stop": true
+                            }
+                        ]
+                    },
+                    {
+                        "key": "Scheduled Patches",
+                        "data": Counter.pending,
+                        "format": [
+                            {
+                                "rule": "gt",
+                                "value": 0,
+                                "style": "warning",
+                                "stop": true
+                            }
+                        ]
+                    },
+                    {
+                        "key": "Completed Patches",
+                        "data": Counter.patched,
+                        "format": [
+                            {
+                                "rule": "gt",
+                                "value": 0,
+                                "style": "success",
+                                "stop": true
+                            }
+                        ]
+                    },
+                    {
+                        "key": "Failed Patches",
+                        "data": Counter.failed,
+                        "format": [
+                            {
+                                "rule": "gt",
+                                "value": 0,
+                                "style": "error",
+                                "stop": true
+                            }
+                        ]
+                    }
+                ],
                 summaryData: tempData,
                 patches: [{ "date": new Date(), "name": "Security Update for Microsoft XML Editor 2010 (KB2251489)", "os": "windows" },
                     { "date": new Date(), "name": "Security Update for Microsoft Visual C++ 2008 Service Pack 1 Redistributable Package (KB2538243)", "os": "windows" },
