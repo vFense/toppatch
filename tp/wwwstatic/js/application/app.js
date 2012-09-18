@@ -104,6 +104,7 @@ define(
 
         _.extend(app, {
             $doc: $(document),
+            title: $(document).attr('title'),
             vent: vent,
             ViewManager: ViewManager,
             views: {},
