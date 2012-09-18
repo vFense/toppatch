@@ -103,6 +103,7 @@ define(
         };
 
         _.extend(app, {
+            $doc: $(document),
             vent: vent,
             ViewManager: ViewManager,
             views: {},
