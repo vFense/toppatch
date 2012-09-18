@@ -38,6 +38,11 @@ require(
             var pageFooter = new PageFooter.View();
             $('body').append(pageFooter.render().$el);
         });
+
+        app.vent.on("domchange:title", function (title) {
+            app.$doc.attr('title', app.title + ': ' + title);
+        });
+
         deferred.done(function () {
             require(['router'], function (Router) {
                 Router.initialize();
