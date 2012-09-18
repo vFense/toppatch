@@ -8,11 +8,8 @@ define(
                 currentWidget: "existing",
                 widgetType: "graph",
                 widgetTitle: "Default"
-                //widgetGraph: "pie"
             },
-            initialize: function () {
-                'use strict';
-            }
+            initialize: function () {}
         });
         var properties = new Properties();
 
@@ -246,7 +243,11 @@ define(
                 initialize: function () {
                     this.template = myTemplate;
                 },
+                beforeRender: $.noop,
+                onRender: $.noop,
                 render: function () {
+                    if (this.beforeRender !== $.noop) { this.beforeRender(); }
+
                     var tmpl = _.template(this.template),
                         that = this;
 
@@ -261,6 +262,9 @@ define(
 
                     this.test();
 
+                    app.vent.trigger('domchange:title', 'Dashboard');
+
+                    if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 },
                 test: function () {
