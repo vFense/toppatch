@@ -247,7 +247,7 @@ define(
                         this.$el.html('');
                         this.$el.append('<header class="page-header"><h1>DASHBOARD <small>Customize your needs</small></h1></header>');
                         this.overview = new Overview.View({
-                            el: $('<summary>').addClass('row-fluid clearfix movable')
+                            el: $('<div>').addClass('row-fluid clearfix movable').attr('id', 'overview')
                         });
                         this.$el.append(that.overview.render().$el);
 
