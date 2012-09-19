@@ -12,6 +12,8 @@ define(
                 // Patch Routes
                 'patchAdmin': 'showPatchAdmin',
 
+                'test': 'showTest',
+
                 // Default
                 '*other':     'defaultAction'
             },
@@ -38,6 +40,17 @@ define(
                 // Update the main dashboard view
                 require(['modules/patchAdmin'], function (myView) {
                     var view = new myView.View();
+                    that.viewManager.showView(view);
+                });
+            },
+            showTest: function () {
+                var that = this;
+                this.vent.trigger('nav', '#test');
+
+                // Update the main dashboard view
+                require(['modules/widget'], function (myView) {
+                    var model = new myView.Model({}),
+                        view = new myView.View({model: model});
                     that.viewManager.showView(view);
                 });
             },
