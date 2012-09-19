@@ -5,7 +5,7 @@
  * Time: 9:27 AM
  * To change this template use File | Settings | File Templates.
  */
-define(['jquery','d3'], function($, d3) {
+define(['jquery', 'd3'], function ($, d3) {
 
     return function () {
         "use strict";
@@ -101,7 +101,7 @@ define(['jquery','d3'], function($, d3) {
                             //console.log(d.data.data[i].children[0].graphData);
                             tempData.push(d.data.data[i].children[0].graphData);
                         }
-                        var pieChart = graph.pieGraph().title(d.data.data[0].children[0].name + " in "+ d.data.data[0].os + " by nodes");
+                        var pieChart = graph.pie().title(d.data.data[0].children[0].name + " in "+ d.data.data[0].os + " by nodes");
                         //console.log(pieChart);
                         d3.select(that).datum(tempData).call(pieChart);
                     }
