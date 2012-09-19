@@ -9,11 +9,12 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tornado.options
+import tornado.websocket
 
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
-from server.handlers import RootHandler, LoginHandler, SignupHandler, LogoutHandler, DeveloperRegistrationHandler
+from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, LogoutHandler, DeveloperRegistrationHandler
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
 from server.api import *
@@ -32,8 +33,8 @@ class Application(tornado.web.Application):
             (r"/?", RootHandler),
             (r"/login/?", LoginHandler),
             (r"/signup/?", SignupHandler),
+            (r"/ws/?", WebsocketHandler),
             (r"/logout/?", LogoutHandler),
-
             (r"/developer", DeveloperRegistrationHandler),
 
             #### oAuth 2.0 Handlers
@@ -69,7 +70,7 @@ if __name__ == '__main__':
         ssl_options={
             "certfile": os.path.join("data/ssl", "server.crt"),
             "keyfile": os.path.join("data/ssl", "server.key"),
-            })
+        })
     https_server.listen(options.port)
 
     tornado.ioloop.IOLoop.instance().start()
