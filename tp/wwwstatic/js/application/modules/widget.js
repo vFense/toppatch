@@ -1,13 +1,23 @@
 define(
-    ['jquery', 'backbone', 'text!templates/widget.html' ],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'backbone', 'app', 'text!templates/widget.html' ],
+    function ($, Backbone, app, myTemplate) {
         "use strict";
         var currentSpan = 0,
             exports = {
                 Model: Backbone.Model.extend({
                     defaults: {
                         span: 6,
-                        showMenu: false
+                        showMenu: false,
+                        menuItems: [
+                            { name: 'Properties', href: '#properties'},
+                            'divider',
+                            { name: 'Close Widget', href: '#close'}
+                        ],
+                        content: {
+                            header: 'Header',
+                            body: 'Content',
+                            footer: 'Footer'
+                        }
                     },
                     validate: function (attrs) {
                         if (attrs.span < 1 || attrs.span > 12) {
@@ -21,6 +31,12 @@ define(
                     initialize: function () {
                         this.template = myTemplate;
                         this.model.bind('change:span', this.renderSpan, this);
+                        this.model.bind('change:showMenu', this.render, this);
+
+                        // Listen for app wide events
+                        this.vent = app.vent;
+
+                        this.vent.bind('edit:widgets', this.setEditable, this);
                     },
                     beforeRender: $.noop,
                     onRender: $.noop,
@@ -44,13 +60,21 @@ define(
                     renderSpan: function () {
                         var newSpan = this.model.get('span');
                         this.$el.toggleClass(
+                            // Remove old span class
                             'span' + currentSpan,
                             false
                         ).toggleClass(
+                            // Add new span class
                             'span' + this.model.get('span'),
                             true
                         );
                         currentSpan = newSpan;
+                    },
+                    setEditable: function (bool) {
+                        if (_.isBoolean(bool)) {
+                            this.model.set('showMenu', bool);
+                            this.$el.toggleClass('editable', bool);
+                        }
                     }
                 })
             };
