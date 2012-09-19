@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/testBody.html', 'modules/overview', 'jquery.ui', 'jquery.bootstrap' ],
-    function ($, Backbone, app, myTemplate, Overview) {
+    ['jquery', 'backbone', 'd3', 'app', 'text!templates/testBody.html', 'modules/overview', 'jquery.ui.Sortable' ],
+    function ($, Backbone, d3, app, myTemplate, Overview) {
         "use strict";
         var Properties = Backbone.Model.extend({
             defaults: {
