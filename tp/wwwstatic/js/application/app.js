@@ -1,9 +1,9 @@
 define(
-    ['jquery', 'backbone', 'utilities/vent', 'utilities/viewManager', 'utilities/dataGenerator', 'd3Charts/loadAll'],
+    ['jquery', 'backbone', 'utilities/vent', 'utilities/viewManager', 'utilities/dataGenerator', 'd3charts/loadAll'],
     function ($, Backbone, vent, ViewManager, dataGenerator, charts) {
         "use strict";
 
-        var app = {
+        var app = window.app = {
             root: '/'
         };
 
