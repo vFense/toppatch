@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'utilities/vent', 'utilities/viewManager', 'd3charts/interactiveGraph', 'd3charts/pieCharts', 'd3charts/barCharts', 'd3charts/stackedBarChart', 'd3charts/tableGenerator', 'd3charts/lineChart'],
-    function ($, Backbone, vent, ViewManager, interGraph, pieGraph, barGraph, stackedGraph, generateTable, lineGraph) {
+    ['jquery', 'backbone', 'utilities/vent', 'utilities/viewManager', 'utilities/dataGenerator', 'd3Charts/loadAll'],
+    function ($, Backbone, vent, ViewManager, dataGenerator, charts) {
         "use strict";
 
         var app = {
@@ -14,12 +14,12 @@ define(
             ViewManager: ViewManager,
             views: {},
             chart: {
-                interGraph: interGraph,
-                pieGraph: pieGraph,
-                barGraph: barGraph,
-                stackedGraph: stackedGraph,
-                generateTable: generateTable,
-                lineGraph: lineGraph
+                partition: charts.partition,
+                pie: charts.pie,
+                bar: charts.bar,
+                stackedBar: charts.stackedBar,
+                generateTable: charts.generateTable,
+                line: charts.line
             },
             data: {
                 osData: dataGenerator.tempArray,
