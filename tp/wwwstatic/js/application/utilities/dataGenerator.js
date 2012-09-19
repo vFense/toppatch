@@ -11,6 +11,7 @@ define([], function () {
         tempArray = [],
         tempData  = {},
 
+        ipData    = _.shuffle(_.range(2, 254)),
         k;
 
     _.extend(counter, {
@@ -34,7 +35,7 @@ define([], function () {
         var failed = Math.floor(Math.random() * 2);
         var pending = Math.floor(Math.random() * 5);
         var available = Math.floor(Math.random() * 5);
-        var name = "node " + k;
+        var name = "192.168.1." + ipData[k];
         counter.patched += patched;
         counter.unpatched += unpatched;
         counter.failed += failed;
