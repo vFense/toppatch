@@ -10,6 +10,28 @@ BODY > HEADER {
         .nav {
             margin-right:0;
         }
+
+        .brand {
+            color: #001678;
+            margin-left:0;
+            padding-left:0;
+            text-transform:uppercase;
+            position: relative;
+
+            SMALL {
+                font-size: 75%;
+                line-height: 1em;
+            }
+
+            IMG {
+                @imageHeight: 18px;
+                height: @em*( @imageHeight )/@navbarBrandFontSize;
+                vertical-align:baseline;
+            //@marginAdjust: 0px;
+            //margin-top: @em*( @marginAdjust )/@navbarBrandFontSize;
+            //margin-bottom: @em*( @marginAdjust )/@navbarBrandFontSize;
+            }
+        }
     }
 
     .navbar-inner {
@@ -21,27 +43,5 @@ BODY > HEADER {
         background-image: none !important;
         filter: none !important;
         background-color: transparent;
-    }
-
-    .brand {
-        color: #001678;
-        margin-left:0;
-        padding-left:0;
-        text-transform:uppercase;
-        position: relative;
-
-        SMALL {
-            font-size: 75%;
-            line-height: 1em;
-        }
-
-        IMG {
-            @imageHeight: 18px;
-            height: @em*( @imageHeight )/@navbarBrandFontSize;
-            vertical-align:baseline;
-            //@marginAdjust: 0px;
-            //margin-top: @em*( @marginAdjust )/@navbarBrandFontSize;
-            //margin-bottom: @em*( @marginAdjust )/@navbarBrandFontSize;
-        }
     }
 }
