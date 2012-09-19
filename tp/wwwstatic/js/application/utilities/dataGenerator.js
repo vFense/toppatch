@@ -4,13 +4,12 @@ define([], function () {
         nodeArray = [],
         counter   = {},
         win7      = [],
-        win8      = [],
+        win2008      = [],
         winxp     = [],
-        macos     = [],
-        linux     = [],
+        win2003     = [],
+        winVis     = [],
         tempArray = [],
         tempData  = {},
-
         ipData    = _.shuffle(_.range(2, 254)),
         k;
 
@@ -18,10 +17,11 @@ define([], function () {
         numNodes: Math.floor(Math.random() * 5 + 5),
         wincounter: 0,
         win7: 0,
-        win8: 0,
+        winS2008: 0,
+        winVista: 0,
+        winS2003: 0,
         winxp: 0,
-        lincounter: 0,
-        maccounter: 0,
+
         patched: 0,
         unpatched: 0,
         failed: 0,
@@ -43,18 +43,20 @@ define([], function () {
         counter.available += available;
 
         var random = Math.floor(Math.random() * 5);
-        if (random < 3) {
-            counter.wincounter += 1;
-            if (random === 0) {
-                counter.win7 += 1;
-            } else if (random === 1) {
-                counter.win8 += 1;
-            } else if (random === 2) {
-                counter.winxp += 1;
-            }
+
+        counter.wincounter += 1;
+        if (random === 0) {
+            counter.win7 += 1;
+        } else if (random === 1) {
+            counter.winS2008 += 1;
+        } else if (random === 2) {
+            counter.winxp += 1;
+        } else if (random === 3) {
+            counter.winS2003 += 1;
+        } else if (random === 4) {
+            counter.winVista += 1;
         }
-        else if (random === 3) { counter.maccounter += 1; }
-        else if (random === 4) { counter.lincounter += 1; }
+
         nodeArray.push({
             "name": name,
             "os": osArray[random],
@@ -68,13 +70,13 @@ define([], function () {
         if (osArray[random] === "Windows 7") {
             win7.push(nodeArray[k]);
         } else if (osArray[random] === "Windows 8") {
-            win8.push(nodeArray[k]);
+            win2008.push(nodeArray[k]);
         } else if (osArray[random] === "Windows XP") {
             winxp.push(nodeArray[k]);
         } else if (osArray[random] === "Mac OS X") {
-            macos.push(nodeArray[k]);
+            win2003.push(nodeArray[k]);
         } else if (osArray[random] === "Linux") {
-            linux.push(nodeArray[k]);
+            winVis.push(nodeArray[k]);
         }
     }
 
@@ -84,10 +86,16 @@ define([], function () {
             nodeArray.push({ "name": win7[z].name, "os": win7[z].os });
         }
     }
-    if (counter.win8 !== 0) {
-        tempArray.push({"label": "Windows 8", "value": counter.win8, "data": win8 });
-        for (var z = 0; z < win8.length; z++) {
-            nodeArray.push({ "name": win8[z].name, "os": win8[z].os });
+    if (counter.winS2008 !== 0) {
+        tempArray.push({"label": "Win2K8", "value": counter.winS2008, "data": win2008 });
+        for (var z = 0; z < win2008.length; z++) {
+            nodeArray.push({ "name": win2008[z].name, "os": win2008[z].os });
+        }
+    }
+    if (counter.winVista !== 0) {
+        tempArray.push({"label": "Vista", "value": counter.winVista, "data": winVis });
+        for (var z = 0; z < winVis.length; z++) {
+            nodeArray.push({ "name": winVis[z].name, "os": winVis[z].os });
         }
     }
     if (counter.winxp !== 0) {
@@ -96,16 +104,10 @@ define([], function () {
             nodeArray.push({ "name": winxp[z].name, "os": winxp[z].os });
         }
     }
-    if (counter.maccounter !== 0) {
-        tempArray.push({"label": "Mac OS X", "value": counter.maccounter, "data": macos });
-        for (var z = 0; z < macos.length; z++) {
-            nodeArray.push({ "name": macos[z].name, "os": macos[z].os });
-        }
-    }
-    if (counter.lincounter !== 0) {
-        tempArray.push({"label": "Linux", "value": counter.lincounter, "data": linux });
-        for (var z = 0; z < linux.length; z++) {
-            nodeArray.push({ "name": linux[z].name, "os": linux[z].os });
+    if (counter.winS2003 !== 0) {
+        tempArray.push({"label": "Win2K3", "value": counter.winS2003, "data": win2003 });
+        for (var z = 0; z < win2003.length; z++) {
+            nodeArray.push({ "name": win2003[z].name, "os": win2003[z].os });
         }
     }
     tempData.name = "192.168.1.0";
