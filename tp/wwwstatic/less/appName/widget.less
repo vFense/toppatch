@@ -29,14 +29,16 @@
     }
 
     &.editable {
-        //border: solid 5px white;
-        padding: 0 3px;
-        .box-shadow(0 0 5px rgba(0, 0, 0, 0.3));
-    }
-}
+        padding: 0 @em*( 3px )/@baseFontSize;
+        .box-shadow(0 0 @em*( 5px )/@baseFontSize rgba(0, 0, 0, 0.3));
 
-.show-grid .widget {
-    .box-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+        NAV {
+            background-color: #F8F8F8;
+            border-bottom: @em*( 1px )/@baseFontSize solid #F0F0F0;
+            margin: 0 @em*( -3px )/@baseFontSize;
+            padding: 0 @em*( 3px )/@baseFontSize;
+        }
+    }
 }
 
 // Alternate Widget Styles
