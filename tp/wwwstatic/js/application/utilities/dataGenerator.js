@@ -1,6 +1,6 @@
 define([], function () {
     "use strict";
-    var osArray   = ["Windows 7", "Windows 8", "Windows XP", "Mac OS X", "Linux"],
+    var osArray   = ["Windows 7", "Windows 2K8", "Windows XP", "Windows 2K3", "Windows Vista"],
         nodeArray = [],
         counter   = {},
         win7      = [],
@@ -69,13 +69,13 @@ define([], function () {
         });
         if (osArray[random] === "Windows 7") {
             win7.push(nodeArray[k]);
-        } else if (osArray[random] === "Windows 8") {
+        } else if (osArray[random] === "Windows 2K8") {
             win2008.push(nodeArray[k]);
         } else if (osArray[random] === "Windows XP") {
             winxp.push(nodeArray[k]);
-        } else if (osArray[random] === "Mac OS X") {
+        } else if (osArray[random] === "Windows 2K3") {
             win2003.push(nodeArray[k]);
-        } else if (osArray[random] === "Linux") {
+        } else if (osArray[random] === "Windows Vista") {
             winVis.push(nodeArray[k]);
         }
     }

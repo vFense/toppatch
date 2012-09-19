@@ -12,7 +12,9 @@ define(
                 // Patch Routes
                 'patchAdmin': 'showPatchAdmin',
 
+                // Testers
                 'test': 'showTest',
+                'testPatch': 'showPatchTest',
 
                 // Default
                 '*other':     'defaultAction'
@@ -52,6 +54,15 @@ define(
                     var model = new myView.Model({}),
                         view = new myView.View({model: model});
                     that.viewManager.showView(view);
+                });
+            },
+            showPatchTest: function () {
+                var that = this;
+                this.vent.trigger('nav', '#test');
+
+                // Update the main dashboard view
+                require(['utilities/newDataGen'], function (myView) {
+                    //console.log(myView);
                 });
             },
             defaultAction: function (other) {
