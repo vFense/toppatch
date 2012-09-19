@@ -63,12 +63,12 @@ define(['jquery','d3'], function($, d3) {
                         } else if(d.depth === 2) {
                             if(thirdTitle === false) {
                                 thirdTitle = true;
-                                return "Node Name";
+                                return "IP Address";
                             }
                         } else if(d.depth === 3) {
                             if(fourthTitle === false) {
                                 fourthTitle = true;
-                                return "Node Stats";
+                                return "Statistics";
                             }
                         }
                     });
