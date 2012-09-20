@@ -264,7 +264,7 @@ define(
                             $(".movable").sortable({ connectWith: '.movable' });
                             $("#restore").click(function () { $(".widget").show(); });
                             $(".properties").click(function () { setProperties(this, 'existing'); });
-                            $('#addwidget').click(function () { console.log('new'); setProperties(this, 'new'); });
+                            $('#addwidget').click(function () { setProperties(this, 'new'); });
                             $('.remove').click(function () { hideWidget(this); });
                             barGraph("#graph2");
                             interactiveGraph("#graph3");
