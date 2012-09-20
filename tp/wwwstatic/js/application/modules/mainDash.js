@@ -267,6 +267,16 @@ define(
                                 stop: function () { app.vent.trigger('widget:change'); },
                                 distance: 20
                             });
+                            $("#dashboard-view").sortable({
+                                items: '.row, .row-fluid',
+                                handle: '.row-handle',
+                                placeholder: "ui-state-highlight",
+                                start: function (event, ui) {
+                                    ui.placeholder.css('height', ui.helper.css('height'));
+                                    ui.placeholder.css('width', ui.helper.css('width'));
+                                },
+                                distance: 20
+                            }).disableSelection();
                             $("#restore").click(function () { $(".widget").show(); });
                             $(".properties").click(function () { setProperties(this, 'existing'); });
                             $('#addwidget').click(function () { setProperties(this, 'new'); });
