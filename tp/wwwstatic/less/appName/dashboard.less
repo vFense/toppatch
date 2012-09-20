@@ -4,8 +4,14 @@
 #dashboard-view {
     padding: @gridGutterWidth 0;
 
+    .row,
+    .row-fluid {
+        position: relative;
+        min-height: @em*( 60 )/@baseFontSize;
+        z-index: 5;
             background-color: white;
 
+    }
 
     DL {
         text-align: center;
