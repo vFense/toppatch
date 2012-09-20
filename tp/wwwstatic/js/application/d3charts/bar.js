@@ -13,6 +13,9 @@ define(
             function chart(selection) {
                 selection.each(function (data) {
                     // generate chart here; `d` is the data and `this` is the element
+                    if (barWidth > 100) {
+                        barWidth = 100;
+                    }
                     width = (barWidth + 10) * data.length;
                     var x = d3.scale.linear().domain([0, data.length]).range([0, width]),
                         y = d3.scale.linear().domain([0, d3.max(data, function (datum) { return datum.value; })]).rangeRound([0, height]),
