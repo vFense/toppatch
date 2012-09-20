@@ -75,7 +75,7 @@ define(
                 render: function () {
                     this.current = properties.get("currentWidget");
                     this.type = $('input:radio[name=type]:checked').val();
-                    this.title = $('#title').val() === "" ? "Default" : $('#title').val();
+                    this.title = this.$el.find('#title').val() === "" ? "Default" : this.$el.find('#title').val();
                     properties.set({ widgetTitle: this.title });
                     if (this.current === "new") {
                         this.renderNew();
