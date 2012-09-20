@@ -41,6 +41,9 @@ define(
                         that.renderDetail(item);
                     }, this);
 
+                    // Demo Only Append
+                    this.$el.append('<nav class="row-handle">&nbsp;</nav>');
+
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 },
