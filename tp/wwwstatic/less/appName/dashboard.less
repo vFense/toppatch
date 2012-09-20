@@ -4,56 +4,57 @@
 #dashboard-view {
     padding: @gridGutterWidth 0;
 
-    #overview {
-        DL {
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 0;
-            border: @em*( 1px )/@baseFontSize solid #E6E6E6;
             background-color: white;
 
+
+    DL {
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 0;
+        border: @em*( 1px )/@baseFontSize solid #E6E6E6;
+        background-color: white;
+
+        DT {
+            background-color: #E6E6E6;
+            border-bottom: @em*( 1px )/@baseFontSize solid #E6E6E6;
+            margin:0;
+        }
+
+        DD {
+            font-size: 20px;
+            line-height: 2em;
+            margin: 0;
+        }
+
+        &.info {
             DT {
-                background-color: #E6E6E6;
-                border-bottom: @em*( 1px )/@baseFontSize solid #E6E6E6;
-                margin:0;
+                background-color: @infoBackground;
+                border-color: @infoBorder;
+                color: @infoText;
             }
+        }
 
-            DD {
-                font-size: 20px;
-                line-height: 2em;
-                margin: 0;
+        &.success {
+            DT {
+                background-color: @successBackground;
+                border-color: @successBorder;
+                color: @successText;
             }
+        }
 
-            &.info {
-                DT {
-                    background-color: @infoBackground;
-                    border-color: @infoBorder;
-                    color: @infoText;
-                }
+        &.warning {
+            DT {
+                background-color: @warningBackground;
+                border-color: @warningBorder;
+                color: @warningText;
             }
+        }
 
-            &.success {
-                DT {
-                    background-color: @successBackground;
-                    border-color: @successBorder;
-                    color: @successText;
-                }
-            }
-
-            &.warning {
-                DT {
-                    background-color: @warningBackground;
-                    border-color: @warningBorder;
-                    color: @warningText;
-                }
-            }
-
-            &.error {
-                DT {
-                    background-color: @errorBackground;
-                    border-color: @errorBorder;
-                    color: @errorText;
-                }
+        &.error {
+            DT {
+                background-color: @errorBackground;
+                border-color: @errorBorder;
+                color: @errorText;
             }
         }
     }
