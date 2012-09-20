@@ -14,14 +14,13 @@ define([], function () {
         k;
 
     _.extend(counter, {
-        numNodes: Math.floor(Math.random() * 5 + 5),
+        numNodes: Math.floor(Math.random() * 10 + 10),
         wincounter: 0,
         win7: 0,
         winS2008: 0,
         winVista: 0,
         winS2003: 0,
         winxp: 0,
-
         patched: 0,
         unpatched: 0,
         failed: 0,
