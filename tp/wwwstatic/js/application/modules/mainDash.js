@@ -274,6 +274,7 @@ define(
                                     ui.placeholder.css('height', ui.helper.css('height'));
                                     ui.placeholder.css('width', ui.helper.css('width'));
                                 },
+                                axis: 'y',
                                 distance: 20
                             }).disableSelection();
                             $("#restore").click(function () { $(".widget").show(); });
