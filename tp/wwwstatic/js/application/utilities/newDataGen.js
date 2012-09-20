@@ -13,36 +13,33 @@ define(
                 { name: 'Windows XP', short: "winXP" }
             ],
             node,
-            nodes;
-
-        node = Backbone.Model.extend({
+            nodes,
+            exports = {}
+        exports.Model = Backbone.Model.extend({
             defaults: {
-                patches: {
-                    need: [],
-                    patched: [],
-                    failed: []
-                }
+                "patch/need": [],
+                "patch/done": [],
+                "patch/fail": []
             },
             initialize: function () {
-                this.ip = this.ip || (function () {
-                    var temp = ipTable[ipAvailable];
+                this.set('ip', this.get('ip') || (function () {
+                    var temp = "192.168.1." + ipTable[ipAvailable];
                     ipAvailable += 1;
                     return temp;
-                }());
+                }()));
 
-                this.os = this.os || _.shuffle(osList)[0];
+                this.set('os', this.get('os') || _.shuffle(osList)[0]);
 
-                var myPatches = patchList[this.os.short].patches,
+                var myPatches = patchList[this.get('os').short].patches,
                     pick = Math.ceil(Math.random() * myPatches.length);
 
-                if (!this.patches) { this.patches = {}; }
-                this.patches.need = _.first(myPatches, pick);
-                this.patches.patched = _.rest(myPatches, pick);
+
+                this.set("patch/need", _.first(myPatches, pick));
+                this.set("patch/done", _.rest(myPatches, pick));
             }
         });
-
-        nodes = new (Backbone.Collection.extend({
-            model: node
+        exports.collection = new (Backbone.Collection.extend({
+            model: exports.Model
         }))(
             // Initialize the collection with a
             // random length array of empty objects
@@ -57,11 +54,25 @@ define(
                 return out;
             }())
         );
+        exports.View = Backbone.View.extend({
+            initialize: function () {
+                this.collection =  exports.collection;
+            },
+            beforeRender: $.noop,
+            onRender: $.noop,
+            render: function () {
+                if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
+                this.$el.html('See the console log...');
+                console.log(this.collection.toJSON());
 
-        console.log({nodes: nodes});
+                if (this.onRender !== $.noop) { this.onRender(); }
+                return this;
+            },
+            renderModel: function (item) {}
+        });
 
-        return nodes;
+        return exports;
         /*  nodes.json
             [
                 {
