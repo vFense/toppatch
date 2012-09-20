@@ -216,7 +216,8 @@ define(
                         title = $("#" + widgetName + "-title").html();
                     properties.set({
                         widgetName: widgetName,
-                        currentWidget: "existing"
+                        currentWidget: "existing",
+                        widgetTitle: title
                     });
                     $('#title').val('').attr("placeholder", title);
                 } else if (param === "new") {
