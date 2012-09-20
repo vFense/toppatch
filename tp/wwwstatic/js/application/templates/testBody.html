@@ -1,58 +1,51 @@
 <section id="container" class="row-fluid clearfix movable">
-    <div id="widget1" class="span6 widget">
+    <article id="widget1" class="span6 widget editable">
         <div id="graphcontainer" class="window">
-            <header style="position: relative;">
-                <h4 id="widget1-title">OS in Networks</h4>
-                <div id="menu1" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
+            <nav class="clearfix">
+                <div id="menu1" class="dropdown pull-right">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1"><i class="icon-list-ul"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="#" class="remove">Hide</a></li>
                         <li><a data-toggle="modal" href="#widgetProperties" class="properties" >Properties</a></li>
-                        <!--
-                        <li><a href="#">Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Separated link</a></li> -->
                     </ul>
                 </div>
-            </header>
-            <div id="graph1" class="graph"></div>
-            <!--<img src="http://placehold.it/300x200"/> -->
+            </nav>
+            <header id="widget1-title">OS in Networks</header>
+            <section id="graph1" class="graph">&nbsp;</section>
         </div>
-    </div>
-    <div id="widget2" class="span6 widget">
+    </article>
+    <article id="widget2" class="span6 widget editable">
         <div id="graph2container" class="window">
-            <header style="position: relative;">
-                <h4 id="widget2-title">Vulnerabilities by Nodes</h4>
-                <div id="menu2" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
+            <nav class="clearfix">
+                <div id="menu2" class="dropdown pull-right">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#menu2"><i class="icon-list-ul"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="#" class="remove">Hide</a></li>
                         <li><a href="#widgetProperties" data-toggle="modal" class="properties" >Properties</a></li>
                     </ul>
                 </div>
-            </header>
-            <div id="graph2" class="graph"></div>
-            <!--<img src="http://placehold.it/620x200"/>-->
+            </nav>
+            <header id="widget2-title">Vulnerabilities by Nodes</header>
+            <section id="graph2" class="graph">&nbsp;</section>
         </div>
-    </div>
+    </article>
 </section>
-<section class="row-fluid clearfix movable">
-    <div id="widget3" class="span12 widget">
+<section id="container" class="row-fluid clearfix movable">
+    <article id="widget3" class="span12 widget editable">
         <div id="graph3container" class="window">
-            <header style="position: relative;">
-                <h4 id="widget3-title">Vulnerabilities by Time</h4>
-                <div id="menu3" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
+            <nav class="clearfix">
+                <div id="menu3" class="dropdown pull-right">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#menu3"><i class="icon-list-ul"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="#" class="remove">Hide</a></li>
                         <li><a href="#widgetProperties" data-toggle="modal" class="properties" >Properties</a></li>
                     </ul>
                 </div>
-            </header>
-            <div id="graph3" class="graph"></div>
-            <!--<img src="http://placehold.it/620x200"/>-->
+            </nav>
+            <header id="widget1-title">Summary Chart</header>
+            <section id="graph3" class="graph">&nbsp;</section>
         </div>
-    </div>
+    </article>
 </section>
 <div class="modal hide" id="widgetProperties">
     <div class="modal-header">
