@@ -261,7 +261,12 @@ define(
                     },
                     test: function () {
                         setTimeout(function () {
-                            $(".movable").sortable({ connectWith: '.movable' });
+                            $(".movable").sortable({
+                                connectWith: '.movable',
+                                items: 'dl, .widget',
+                                stop: function () { app.vent.trigger('widget:change'); },
+                                distance: 20
+                            });
                             $("#restore").click(function () { $(".widget").show(); });
                             $(".properties").click(function () { setProperties(this, 'existing'); });
                             $('#addwidget').click(function () { setProperties(this, 'new'); });
