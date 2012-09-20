@@ -154,7 +154,6 @@ define(
                 },
                 getOverviewData: function () {
                     var type = $(this.title).val();
-                    console.log(type);
                     if (type === "Patched") {
                         return app.data.nodeData.Patched;
                     } else if (type === "Scheduled Patches") {
