@@ -227,7 +227,7 @@ define(
                 }
             },
             hideWidget = function (obj) {
-                $(obj).parents('.widget').hide();
+                $(obj).parents('.widget').remove();
             },
             exports = {
                 Model: Backbone.Model.extend({}),
