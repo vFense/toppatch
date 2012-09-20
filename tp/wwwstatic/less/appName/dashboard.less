@@ -9,7 +9,21 @@
         position: relative;
         min-height: @em*( 60 )/@baseFontSize;
         z-index: 5;
+
+        .row-handle {
+            z-index: -1;
             background-color: white;
+            position: absolute;
+            text-align: left;
+            padding: @em*( 2px )/@baseFontSize @em*( 5px )/@baseFontSize;
+            left: @em*( -20px )/@baseFontSize;
+            right: @em*( -20px )/@baseFontSize;
+            top: @em*( 5px )/@baseFontSize;
+            bottom: @em*( 5px )/@baseFontSize;
+            cursor: move;
+            .box-shadow(inset 0 0 @em*( 5px )/@baseFontSize rgba(0, 0, 0, 0.3), 0 0 @em*( 5px )/@baseFontSize rgba(0, 0, 0, 0.3));
+            .border-radius(@em*( 5px )/@baseFontSize);
+        }
 
     }
 
