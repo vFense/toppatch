@@ -62,7 +62,8 @@ define(
 
                 // Update the main dashboard view
                 require(['utilities/newDataGen'], function (myView) {
-                    //console.log(myView);
+                    var view = new myView.View();
+                    that.viewManager.showView(view);
                 });
             },
             defaultAction: function (other) {
