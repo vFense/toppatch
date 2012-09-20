@@ -25,6 +25,11 @@
             .border-radius(@em*( 5px )/@baseFontSize);
         }
 
+        /* This rule took me a solid hour of full concentration to figure out! (3:30 AM - 4:30 AM) */
+        [class*="span"]:first-child[style*="absolute"] + [class*="span"],
+        [class*="span"]:first-child[class*="absolute"] + [class*="span"]{
+            margin-left: 0;
+        }
     }
 
     DL {
