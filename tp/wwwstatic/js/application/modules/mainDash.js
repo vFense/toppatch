@@ -264,7 +264,6 @@ define(
                             $(".movable").sortable({
                                 connectWith: '.movable',
                                 items: 'dl, .widget',
-                                stop: function () { app.vent.trigger('widget:change'); },
                                 distance: 20
                             });
                             $("#dashboard-view").sortable({
