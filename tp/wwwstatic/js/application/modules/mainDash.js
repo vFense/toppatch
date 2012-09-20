@@ -130,10 +130,9 @@ define(
                         this.myClass = $(this.widget).attr("class");
                         this.sizeval = $('input:radio[name=radio]:checked').val();
                         this.graphType = $('input:radio[name=graph]:checked').val();
-                        this.graph = "#" + $(this.widget).children().children("div").attr("id");
+                        this.graph = "#" + $(this.widget + " .graph").attr("id");
                         this.graphData = $('input:radio[name=graphdata]:checked').val();
-                        $(this.widget).removeClass(this.myClass);
-                        $(this.widget).addClass("span" + this.sizeval + " widget");
+                        $(this.widget).removeClass(this.myClass).addClass("span" + this.sizeval + " widget editable");
                         this.displayChart();
                     } else {
                         parent = $(this.widget).parent();
