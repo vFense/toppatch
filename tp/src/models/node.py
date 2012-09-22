@@ -101,10 +101,11 @@ class Results(Base):
     }
     id = Column(BIGINT(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(BIGINT(unsigned=True),ForeignKey("node_info.id"))
-    operation_id = Column(BIGINT(unsigned=True),ForeignKey("operations.id"))
-    patch_id = Column(BIGINT(unsigned=True),
-        ForeignKey("windows_update.toppatch_id", use_alter=True,
+    operation_id = Column(BIGINT(unsigned=True),
+        ForeignKey("operations.id", use_alter=True,
         name="fk_result_operations_id"))
+    patch_id = Column(BIGINT(unsigned=True),
+        ForeignKey("windows_update.toppatch_id"))
     result = Column(BOOLEAN)   # True = Pass, False = Failed
     message = Column(VARCHAR(64), nullable=True)
     def __init__(self, result, message):
