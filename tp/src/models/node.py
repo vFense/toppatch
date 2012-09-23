@@ -16,11 +16,11 @@ class NodeInfo(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(BIGINT(unsigned=True),primary_key=True, autoincrement=True)
-    host_name = Column(VARCHAR(32), nullable=False)
-    ip_address = Column(VARCHAR(16), nullable=False)
+    host_name = Column(VARCHAR(32), nullable=False, unique=True)
+    ip_address = Column(VARCHAR(16), nullable=False, unique=True)
     os_code = Column(VARCHAR(16), nullable=False)
     os_string = Column(VARCHAR(32), nullable=False)
-    os_version_major = Column(VARCHAR(6), nullable=False)
+    os_version_major = Column(VARCHAR(6), nullable=True)
     os_version_minor = Column(VARCHAR(6), nullable=True)
     os_version_build = Column(VARCHAR(8), nullable=True)
     os_meta = Column(VARCHAR(32), nullable=True)
@@ -47,9 +47,9 @@ class NodeInfo(Base):
         self.last_agent_update = last_agent_update
         self.last_node_update = last_node_update
     def __repr__(self):
-        return "<NodeInfo(%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                id, self.host_name, self.ip_address,
+                self.host_name, self.ip_address,
                 self.os_code, self.os_string, self.os_version_major,
                 self.os_version_minor, self.os_version_build,
                 self.os_meta, self.host_status, self.agent_status,
@@ -74,18 +74,19 @@ class Operations(Base):
     operation_type = Column(VARCHAR(16), nullable=False)
     operation_sent = Column(DATETIME, nullable=True)
     operation_received = Column(DATETIME, nullable=True)
-    def __init__(self, operation_type,
+    def __init__(self, node_id, results_id, operation_type,
             operation_sent=None,
             operation_received=None
             ):
-        self.operation = operation
-        self.node_name = node_name
+        self.node_id = node_id
+        self.results_id = results_id
+        self.operation_type = operation_type
         self.operation_sent = operation_sent
         self.operation_received = operation_received
     def __repr__(self):
-        return "<Operations(%d, %s, %s, %s, %s,)>" %\
+        return "<Operations(%s, %s, %s, %s, %s)>" %\
                 (
-                id, node_id, results_id, self.operation_type, 
+                self.node_id, self.results_id, self.operation_type, 
                 self.operation_sent,self.operation_received
                 )
 
@@ -108,13 +109,17 @@ class Results(Base):
         ForeignKey("windows_update.toppatch_id"))
     result = Column(BOOLEAN)   # True = Pass, False = Failed
     message = Column(VARCHAR(64), nullable=True)
-    def __init__(self, result, message):
+    def __init__(self, node_id, operation_id, patch_id,
+                result, message):
+        self.node_id = node_id
+        self.operation_id = operation_id
+        self.patch_id = patch_id
         self.result = result
         self.message = message
     def __repr__(self):
-        return "<Results(%d, %d, %d, %d, %s, %s)>" %\
+        return "<Results(%s, %s, %s, %s, %s)>" %\
                 (
-                id, node_id ,operation_id, patch_id,
+                self.node_id ,self.operation_id, self.patch_id,
                 self.result, self.message
                 )
 
@@ -138,7 +143,10 @@ class SoftwareInstalled(Base):
     version = Column(VARCHAR(32), nullable=False)
     vendor = Column(VARCHAR(32), nullable=False)
     date_installed = Column(DATETIME, nullable=True)
-    def __init__(self, name, vendor, vendor_id, description, operating_system, version, support_url=None, date_installed=None):
+    def __init__(self, node_id, name, vendor, vendor_id,
+                description, operating_system, version,
+                support_url=None, date_installed=None):
+        self.node_id = node_id
         self.name = name
         self.vendor = vendor
         self.vendor_id = vendor_id
@@ -150,7 +158,7 @@ class SoftwareInstalled(Base):
     def __repr__(self):
         return "<SoftwareInstalled(%d,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                node_id, self.name, self.vendor, self.vendor_id,
+                self.node_id, self.name, self.vendor, self.vendor_id,
                 self.description, self.operating_system,
                 self.version, self.support_url,
                 self.date_installed

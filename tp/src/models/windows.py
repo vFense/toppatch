@@ -15,11 +15,11 @@ class WindowsUpdate(Base):
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8'
     }
-    toppatch_id = Column(BIGINT(unsigned=True), primary_key=True, autoincrement=False )
-    vendor_id = Column(BIGINT(unsigned=True))
+    toppatch_id = Column(BIGINT(unsigned=True), primary_key=True, autoincrement=False, unique=True )
+    vendor_id = Column(VARCHAR(32), nullable=False)
     title = Column(VARCHAR(128),nullable=False)
-    description = Column(VARCHAR(128), nullable=False)
-    support_url = Column(VARCHAR(128), nullable=False)
+    description = Column(VARCHAR(128), nullable=True)
+    support_url = Column(VARCHAR(128), nullable=True)
     severity = Column(VARCHAR(16), nullable=False)
     date_pub = Column(DATETIME)
     def __init__(self, toppatch_id, vendor_id, title, description,support_url, severity, date_pub):
