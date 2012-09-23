@@ -23,7 +23,8 @@ b = session.query(Operations.id).filter_by(node_id=a.id).first()
 c = session.query(WindowsUpdate.toppatch_id).filter_by(title="Firefox 15").first()
 r1 = Results(a.id, b.id, c.toppatch_id, True, None)
 session.add(r1)
-o1 =  session.query(Operations).filter_by(node_id=a.id).first()
-session.execute(o1.__table__.update().values(operation_received=datetime.datetime.now()))
+#o1 =  session.query(Operations).filter_by(node_id=a.id).first()
+#session.execute(o1.__table__.update().values(operation_received=datetime.datetime.now(), results_id=r1.id))
+o1 =  session.query(Operations).filter_by(node_id=a.id).update({'operation_received' : datetime.datetime.now()}
 session.commit()
 
