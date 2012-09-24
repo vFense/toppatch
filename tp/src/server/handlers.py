@@ -1,5 +1,17 @@
 
 import tornado.web
+import tornado.websocket
+from models.nodes import NodeInfo
+from server.decorators import authenticated_request
+
+
+def printToSocket(fn):
+    def wrapped():
+        if WebsocketHandler.socket:
+            return WebsocketHandler.socket.write_message(fn())
+        else:
+            print fn()
+    return wrapped
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -17,9 +29,6 @@ class RootHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
     def get(self):
-        self.render( "/opt/TopPatch/tp/wwwstatic/login.html" )
-
-        """
         self.write('<html>'
                     '<body>'
                         '<form action="/login" method="post">'
@@ -29,18 +38,18 @@ class LoginHandler(BaseHandler):
                         '</form>'
                         '<a href="/signup">Create Account</a>'
                     '</body></html>')
-        """
 
     def post(self):
-         username = self.get_argument("username")
-         login = self.application.account_manager.authenticate_account(str(username), str(self.get_argument("password")))
-         if login:
-            self.set_secure_cookie("username", username)
-            self.render( "login-template.html", current_user = login, name = username, login_header = "Welcome", page_title = "Login", header = True, footer = True, description = "Login Successful" )
-            #self.redirect("/")
+
+         if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
+            @printToSocket
+            def sign():
+                return '{ "user": "%s", "status": "signed in" }' % self.get_argument('name')
+            sign()
+            self.set_secure_cookie("user", self.get_argument("name"))
+            self.redirect("/")
          else:
-             #self.write("Invalid username and/or password .")
-             self.render( "login-template.html", current_user = login, name = username, login_header = "Permission Denied", page_title = "Login", header = True, footer = True, description = "Login Failed" )
+             self.write("Invalid username and/or password .")
 
 
 
@@ -53,7 +62,7 @@ class SignupHandler(BaseHandler):
                    'Password: <input type="password" name="password">'
                    '<input type="submit" value="Sign up">'
                    '</form>'
-                   '<a href="/login">Create</a>'
+                   '<a href="/login">Login</a>'
                    '</body></html>')
 
 
@@ -68,8 +77,36 @@ class SignupHandler(BaseHandler):
         else:
             self.write("Username already exist.")
 
+class testHandler(BaseHandler):
+    def get(self):
+        self.render('../data/templates/websocket-test.html')
+
+class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
+
+    socket = ""
+    @authenticated_request
+    def open(self):
+        print 'new connection'
+        global socket
+        WebsocketHandler.socket = self
+
+    def on_message(self, message):
+        print 'message received %s' % message
+
+    def on_close(self):
+        print 'connection closed...'
+        WebsocketHandler.socket = ""
+
+    def callback(self):
+        self.write_message(globalMessage)
+
 class LogoutHandler(BaseHandler):
     def get(self):
+        @printToSocket
+        def sign():
+            return '{ "user": "%s", "status": "logged out" }' % self.current_user
+        sign()
+        WebsocketHandler.socket.close()
         self.clear_all_cookies()
         self.write("Goodbye!" + '<br><a href="/login">Login</a>')
 

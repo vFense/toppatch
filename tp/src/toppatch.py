@@ -13,7 +13,7 @@ import tornado.options
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
-from server.handlers import RootHandler, LoginHandler, SignupHandler, LogoutHandler, DeveloperRegistrationHandler
+from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
 from server.api import *
@@ -39,6 +39,8 @@ class Application(tornado.web.Application):
             (r"/login/?", LoginHandler),
             (r"/signup/?", SignupHandler),
             (r"/logout/?", LogoutHandler),
+            (r"/ws/?", WebsocketHandler),
+            (r"/test/?", testHandler),
 
             (r"/developer", DeveloperRegistrationHandler),
 
@@ -49,6 +51,7 @@ class Application(tornado.web.Application):
 
 
             #### API Handlers
+            (r"/api/testData/?", TestHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler)]  # Returns specific product from respected vendor with vulnerabilities.

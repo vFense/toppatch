@@ -9,6 +9,12 @@ except ImportError: import json
 from models.application import *
 from server.decorators import authenticated_request
 from server.handlers import BaseHandler
+from models.base import Base
+from models.windows import *
+from models.nodes import *
+from sqlalchemy.orm import sessionmaker, class_mapper
+
+from collections import OrderedDict
 
 class ApiHandler(BaseHandler):
     """ Trying to figure out this whole RESTful api thing with json."""
@@ -119,6 +125,37 @@ class ApiHandler(BaseHandler):
 
         return root_list
 
+
+
+
+def asdict(obj):
+    return dict((col.name, getattr(obj, col.name))
+        for col in class_mapper(obj.__class__).mapped_table.c)
+
+class TestHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        resultjson = []
+        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+        db.echo = True
+        Session = sessionmaker(bind=db)
+        session = Session()
+        for u in session.query(NodeInfo):#.id, NodeInfo.host_name, NodeInfo.ip_address, NodeInfo.os_code, NodeInfo.os_string, NodeInfo.os_version_major, NodeInfo.os_version_minor, NodeInfo.os_version_build, NodeInfo.os_meta, NodeInfo.host_status, NodeInfo.agent_status):#, NodeInfo.last_agent_update, NodeInfo.last_node_update):
+            print u
+            resultjson.append({"id" : u.id})
+            resultjson.append({"host_name" : u.host_name})
+            resultjson.append({"host_name" : u.host_name})
+            resultjson.append({"host_name" : u.host_name})
+            resultjson.append({"host_name" : u.host_name})
+            resultjson.append({"host_name" : u.host_name})
+            resultjson.append({"host_name" : u.host_name})
+            resultjson.append({"host_name" : u.host_name})
+            resultjson.append({"host_name" : u.host_name})
+        print resultjson
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(resultjson, indent=4))
 
 
 
