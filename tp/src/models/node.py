@@ -51,7 +51,7 @@ class SystemInfo(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
-    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
+    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"), unique=True)
     os_code = Column(VARCHAR(16), nullable=False)
     os_string = Column(VARCHAR(32), nullable=False)
     os_version_major = Column(VARCHAR(6), nullable=True)
@@ -90,7 +90,8 @@ class Operations(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
-    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
+    node_id = Column(INTEGER(unsigned=True),
+        ForeignKey("node_info.id"))
     results_id = Column(INTEGER(unsigned=True),
         ForeignKey("results.id", use_alter=True,
         name="fk_operations_result_id"))
@@ -127,7 +128,7 @@ class Results(Base):
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     operation_id = Column(INTEGER(unsigned=True),
         ForeignKey("operations.id", use_alter=True,
-        name="fk_result_operations_id"))
+        name="fk_result_operations_id"),unique=True)
     patch_id = Column(INTEGER(unsigned=True),
         ForeignKey("windows_update.toppatch_id"))
     result = Column(BOOLEAN)   # True = Pass, False = Failed
@@ -166,8 +167,8 @@ class SoftwareInstalled(Base):
     version = Column(VARCHAR(32), nullable=False)
     vendor = Column(VARCHAR(32), nullable=False)
     date_installed = Column(DATETIME, nullable=True)
-    def __init__(self, node_id, name, vendor, vendor_id,
-                description, operating_system, version,
+    def __init__(self, node_id, name, vendor,
+                vendor_id, description, operating_system, version,
                 support_url=None, date_installed=None):
         self.node_id = node_id
         self.name = name
@@ -179,10 +180,10 @@ class SoftwareInstalled(Base):
         self.support_url = support_url
         self.date_installed = date_installed
     def __repr__(self):
-        return "<SoftwareInstalled(%d,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<SoftwareInstalled(%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.node_id, self.name, self.vendor, self.vendor_id,
-                self.description, self.operating_system,
-                self.version, self.support_url,
-                self.date_installed
+                self.node_id, self.name, self.vendor,
+                self.vendor_id, self.description,
+                self.operating_system, self.version,
+                self.support_url, self.date_installed
                 )
