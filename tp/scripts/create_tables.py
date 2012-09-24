@@ -7,6 +7,7 @@ from sqlalchemy import create_engine
 db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
 db.echo = True
 db.drop(NodeInfo)
+db.drop(SystemInfo)
 db.drop(Operations)
 db.drop(Results)
 db.drop(SoftwareInstalled)

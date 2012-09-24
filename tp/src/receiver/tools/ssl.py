@@ -43,7 +43,7 @@ def saveKey(location, key, extension, name=socket.gethostname()):
         elif e.errno == 13:
             print 'Do not have sufficient permission to write to %s'\
                     % (location)
-    return(status)
+    return(path_to_key, status)
 
 def createCertRequest(pkey, (CN, O, OU, C, ST, L), digest="sha512"):
     csr = crypto.X509Req()
@@ -70,6 +70,11 @@ def createSignedCertificate(csr, (issuerCert, issuerKey), serial,\
     cert.set_subject(csr.get_subject())
     cert.set_pubkey(csr.get_pubkey())
     cert.sign(issuerKey, digest)
+#    cert.add_extensions([
+#        crypto.X509Extension("basicConstraints", True,"CA:TRUE, pathlen:0"),
+#        crypto.X509Extension("keyUsage", True,"keyCertSign, cRLSign"),
+#        crypto.X509Extension("subjectKeyIdentifier", False, "hash",subject=cert),
+#        ])
     return cert
 
 def createCertificateAuthority(pkey, serial,\
@@ -92,9 +97,10 @@ def createCertificateAuthority(pkey, serial,\
     ca.sign(pkey, digest)
     return ca
 
- def createSigningCertificateAuthority(pkey, serial,\
-        (CN, O, OU, C, ST, L),\
-        (notBefore, notAfter), digest="sha512"):
+def createSigningCertificateAuthority(pkey, serial,\
+        (CN, O, OU, C, ST, L),
+        (notBefore, notAfter),
+        digest="sha512"):
     ca = crypto.X509()
     ca.set_version(3)
     subj = ca.get_subject()
