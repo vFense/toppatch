@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from models.base import Base
 from sqlalchemy import String, Column, Integer, Text, ForeignKey, schema, types, create_engine
-from sqlalchemy.dialects.mysql import BIGINT, BOOLEAN, CHAR, DATETIME, TEXT, TINYINT, VARCHAR
+from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN, CHAR, DATETIME, TEXT, TINYINT, VARCHAR
 from sqlalchemy.orm import relationship, backref
 
 
@@ -15,46 +15,69 @@ class NodeInfo(Base):
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8'
     }
-    id = Column(BIGINT(unsigned=True),primary_key=True, autoincrement=True)
-    host_name = Column(VARCHAR(32), nullable=False, unique=True)
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    host_name = Column(VARCHAR(32), nullable=True, unique=True)
     ip_address = Column(VARCHAR(16), nullable=False, unique=True)
+    host_status = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
+    agent_status = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
+    last_agent_update = Column(DATETIME, nullable=True)
+    last_node_update = Column(DATETIME, nullable=True)
+    def __init__(self, ip_address, host_name,
+                host_status=False, agent_status=False,
+                last_agent_update=None, last_node_update=None
+                ):
+        self.host_name = host_name
+        self.ip_address = ip_address
+        self.host_status = host_status
+        self.agent_status = agent_status
+        self.last_agent_update = last_agent_update
+        self.last_node_update = last_node_update
+    def __repr__(self):
+        return "<NodeInfo(%s,%s,%s,%s,%s,%s)>" %\
+                (
+                self.host_name, self.ip_address,
+                self.host_status, self.agent_status,
+                self.last_agent_update, self.last_node_update
+                )
+
+class SystemInfo(Base):
+    """
+    Represents one row from the hosts table.
+    """
+    __tablename__ = "system_info"
+    __visit_name__ = "column"
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     os_code = Column(VARCHAR(16), nullable=False)
     os_string = Column(VARCHAR(32), nullable=False)
     os_version_major = Column(VARCHAR(6), nullable=True)
     os_version_minor = Column(VARCHAR(6), nullable=True)
     os_version_build = Column(VARCHAR(8), nullable=True)
     os_meta = Column(VARCHAR(32), nullable=True)
-    host_status = Column(BOOLEAN)   # True = Up, False = Down
-    agent_status = Column(BOOLEAN)   # True = Up, False = Down
-    last_agent_update = Column(DATETIME, nullable=False)
-    last_node_update = Column(DATETIME, nullable=False)
-    def __init__(self, ip_address, host_name, os_code,
-            os_string, os_version_major, os_version_minor,
-            os_version_build, os_meta, host_status=False,
-            agent_status=False, last_agent_update=None,
-            last_node_update=None
-            ):
-        self.host_name = host_name
-        self.ip_address = ip_address
+    def __init__(
+                self, node_id, os_code, os_string,
+                os_version_major, os_version_minor,
+                os_version_build, os_meta
+                ):
+        self.node_id = node_id
         self.os_code = os_code
         self.os_string = os_string
         self.os_version_major = os_version_major
         self.os_version_minor = os_version_minor
         self.os_version_build = os_version_build
         self.os_meta = os_meta
-        self.host_status = host_status
-        self.agent_status = agent_status
-        self.last_agent_update = last_agent_update
-        self.last_node_update = last_node_update
     def __repr__(self):
-        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.host_name, self.ip_address,
-                self.os_code, self.os_string, self.os_version_major,
-                self.os_version_minor, self.os_version_build,
-                self.os_meta, self.host_status, self.agent_status,
-                self.last_agent_update, self.last_node_update
+                self.node_id, self.os_code, self.os_string,
+                self.os_version_major, self.os_version_minor,
+                self.os_version_build, self.os_meta
                 )
+
 
 class Operations(Base):
     """
@@ -66,9 +89,9 @@ class Operations(Base):
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8'
     }
-    id = Column(BIGINT(unsigned=True),primary_key=True, autoincrement=True)
-    node_id = Column(BIGINT(unsigned=True),ForeignKey("node_info.id"))
-    results_id = Column(BIGINT(unsigned=True),
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
+    results_id = Column(INTEGER(unsigned=True),
         ForeignKey("results.id", use_alter=True,
         name="fk_operations_result_id"))
     operation_type = Column(VARCHAR(16), nullable=False)
@@ -100,12 +123,12 @@ class Results(Base):
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8'
     }
-    id = Column(BIGINT(unsigned=True),primary_key=True, autoincrement=True)
-    node_id = Column(BIGINT(unsigned=True),ForeignKey("node_info.id"))
-    operation_id = Column(BIGINT(unsigned=True),
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
+    operation_id = Column(INTEGER(unsigned=True),
         ForeignKey("operations.id", use_alter=True,
         name="fk_result_operations_id"))
-    patch_id = Column(BIGINT(unsigned=True),
+    patch_id = Column(INTEGER(unsigned=True),
         ForeignKey("windows_update.toppatch_id"))
     result = Column(BOOLEAN)   # True = Pass, False = Failed
     message = Column(VARCHAR(64), nullable=True)
@@ -133,10 +156,10 @@ class SoftwareInstalled(Base):
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8'
     }
-    id = Column(BIGINT(unsigned=True), primary_key=True, autoincrement=True )
-    node_id = Column(BIGINT(unsigned=True),ForeignKey("node_info.id"))
+    id = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True )
+    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     name = Column(VARCHAR(128),nullable=False)
-    vendor_id = Column(BIGINT(unsigned=True))
+    vendor_id = Column(INTEGER(unsigned=True))
     description = Column(VARCHAR(128), nullable=True)
     support_url = Column(VARCHAR(128), nullable=True)
     operating_system = Column(VARCHAR(32), nullable=False)
