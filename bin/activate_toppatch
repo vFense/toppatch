@@ -35,6 +35,7 @@ deactivate () {
     unset LD_LIBRARY_PATH
     unset VIRTUAL_ENV
     unset PYTHONSTARTUP
+    unset VIMINIT
 }
 
 # unset irrelavent variables
@@ -46,6 +47,9 @@ export VIRTUAL_ENV
 
 PYTHONSTARTUP="$VIRTUAL_ENV/conf/pythonstartup"
 export PYTHONSTARTUP
+
+VIMINIT="$VIRTUAL_ENV/conf/vimrc"
+export VIMINIT
 
 LD_LIBRARY_PATH="/opt/TopPatch/python/current/lib:/opt/TopPatch/python/python-2.7.3/lib/python2.7/lib-dynload:/opt/TopPatch/mysql/current/lib:/opt/TopPatch/lib/x86_64"
 export LD_LIBRARY_PATH
