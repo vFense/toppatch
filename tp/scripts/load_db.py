@@ -147,6 +147,7 @@ else:
     print "Creating MySQL data directory."
     owd = os.getcwd()
     os.chdir(mysql_dir)
+    print os.getcwd()
 
     subprocess.call(['./scripts/mysql_install_db'])
     subprocess.call(['./support-files/mysql.server', 'start'])
