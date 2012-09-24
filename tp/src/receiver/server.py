@@ -6,7 +6,7 @@ from twisted.internet.protocol import Factory, Protocol
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from dbupdate import *
+from addupdates import *
 from dbquery import *
 
 

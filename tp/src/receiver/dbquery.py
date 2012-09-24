@@ -14,6 +14,6 @@ def nodeExists(session, node):
 
 def operationExists(session, oper_id):
     oper = \
-        session.query(Operations).filter_by(operation_id=oper_id)
+        session.query(Operations).filter_by(id=oper_id)
     exists = oper.first()
     return(exists, oper)

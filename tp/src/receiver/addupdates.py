@@ -23,18 +23,18 @@ def addNode(session, client_ip):
         print e
 
 
-def addSystemInfo(session, data, operation):
-    exists, operation = operationsExists(session, data['operation_id'])
+def addSystemInfo(session, data, node_info):
+    exists, operation = operationExists(session, data['operation_id'])
     if exists:
         operation.update({'operation_received' : datetime.now()})
-    system_info = SystemInfo(node_info.id, data['os_code'],
-        data['os_string'], data['os_version_major'],
-        data['os_version_minor'], data['os_version_build'],
-        data['os_meta']
-        )
-    if system_info:
-        session.add(system_info)
-        session.commit()
+        system_info = SystemInfo(node_info.id, data['os_code'],
+            data['os_string'], data['os_version_major'],
+            data['os_version_minor'], data['os_version_build'],
+            data['os_meta']
+            )
+        if system_info:
+            session.add(system_info)
+            session.commit()
 
 #def addOperationReceived(session, data):
 
