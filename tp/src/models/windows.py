@@ -63,16 +63,18 @@ class ManagedWindowsUpdate(Base):
     hidden = Column(BOOLEAN)
     installed = Column(BOOLEAN)
     date_installed = Column(DATETIME)
-    def __init__(self, date_installed, hidden=False,
-                installed=False
+    def __init__(self, node_id, toppatch_id, date_installed,
+                hidden=False, installed=False
                 ):
+        self.node_id = node_id
+        self_toppatch_id = toppatch_id
         self.date_installed = date_installed
         self.hidden = hidden
         self.installed = installed
     def __repr__(self):
         return "<ManagedWindowsUpdate(%s,%s,%s,%s,%s,%s)>" %\
                 (
-                node_id, toppatch_id, self.hidden,
+                self.node_id, self.toppatch_id, self.hidden,
                 self.installed, self.date, self.installed
                 )
 
