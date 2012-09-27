@@ -252,38 +252,3 @@ class NetworkStats(Base):
                 self.patches_available, self.patches_pending,
                 self.patches_failed
                 )
-
-
-class SslInfo(Base):
-    """
-    Represents one row from the hosts table.
-    """
-    __tablename__ = "ssl_info"
-    __visit_name__ = "column"
-    __table_args__ = {
-        'mysql_engine': 'InnoDB',
-        'mysql_charset': 'utf8'
-    }
-    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
-    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
-    signed_cert_name = Column(VARCHAR(128),nullable=False)
-    signed_cert_location = Column(VARCHAR(128),nullable=False)
-    csr_name = Column(VARCHAR(128),nullable=False)
-    csr_location = Column(VARCHAR(128),nullable=False)
-    def __init__(self, node_id, patches_installed,
-                patches_available, patches_pending,
-                ):
-        self.node_id = node_id
-        self.patches_installed = patches_installed
-        self.patches_available = patches_available
-        self.patches_pending = patches_pending
-        self.patches_failed = patches_failed
-    def __repr__(self):
-        return "<NodeStats(%d,%d,%d,%d)>" %\
-                (
-                self.node_id, self.patches_installed,
-                self.patches_available, self.patches_pending,
-                self.patches_failed
-                )
-
-
