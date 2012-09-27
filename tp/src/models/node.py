@@ -71,7 +71,7 @@ class SystemInfo(Base):
         self.os_version_build = os_version_build
         self.os_meta = os_meta
     def __repr__(self):
-        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<SystemInfo(%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.node_id, self.os_code, self.os_string,
                 self.os_version_major, self.os_version_minor,
@@ -214,7 +214,7 @@ class NodeStats(Base):
         self.patches_pending = patches_pending
         self.patches_failed = patches_failed
     def __repr__(self):
-        return "<NodeStats(%d,%d,%d,%d)>" %\
+        return "<NodeStats(%d,%d,%d,%d,%d)>" %\
                 (
                 self.node_id, self.patches_installed,
                 self.patches_available, self.patches_pending,
@@ -246,7 +246,7 @@ class NetworkStats(Base):
         self.patches_pending = patches_pending
         self.patches_failed = patches_failed
     def __repr__(self):
-        return "<NetworkStats(%d,%d,%d,%d)>" %\
+        return "<NetworkStats(%d,%d,%d,%d,%d)>" %\
                 (
                 self.node_id, self.patches_installed,
                 self.patches_available, self.patches_pending,
