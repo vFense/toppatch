@@ -67,7 +67,7 @@ class ManagedWindowsUpdate(Base):
                 hidden=False, installed=False
                 ):
         self.node_id = node_id
-        self_toppatch_id = toppatch_id
+        self.toppatch_id = toppatch_id
         self.date_installed = date_installed
         self.hidden = hidden
         self.installed = installed
