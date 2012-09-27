@@ -207,6 +207,7 @@ class NodeStats(Base):
     patches_failed = Column(INTEGER(unsigned=True))
     def __init__(self, node_id, patches_installed,
                 patches_available, patches_pending,
+                patches_failed
                 ):
         self.node_id = node_id
         self.patches_installed = patches_installed
@@ -238,6 +239,7 @@ class NetworkStats(Base):
     patches_failed = Column(INTEGER(unsigned=True))
     def __init__(self, patches_installed,
                 patches_available, patches_pending,
+                patches_failed
                 ):
         self.patches_installed = patches_installed
         self.patches_available = patches_available
