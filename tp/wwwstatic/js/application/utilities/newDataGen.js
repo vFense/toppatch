@@ -14,7 +14,7 @@ define(
             ],
             node,
             nodes,
-            exports = {}
+            exports = {};
         exports.Model = Backbone.Model.extend({
             defaults: {
                 "patch/need": [],
