@@ -12,6 +12,7 @@ from server.handlers import BaseHandler
 from models.base import Base
 from models.windows import *
 from models.node import *
+from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
 
@@ -204,9 +205,6 @@ class SummaryHandler(BaseHandler):
         root = {}
         resultjson = []
         osResult = []
-        osTypeResult = []
-        nodeResult = []
-        nodeResult = []
         db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
         db.echo = True
         Session = sessionmaker(bind=db)
@@ -230,3 +228,29 @@ class SummaryHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(root, indent=4))
 
+
+class GraphHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        resultjson = []
+        osType = []
+        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+        db.echo = True
+        Session = sessionmaker(bind=db)
+        session = Session()
+        for u in session.query(SystemInfo.os_string, func.count(SystemInfo.os_string)).group_by(SystemInfo.os_string).all():
+            nodeResult = []
+            for v in session.query(NodeInfo, SystemInfo, NodeStats).filter(SystemInfo.os_string == u[0]).join(SystemInfo).join(NodeStats).all():
+                print v
+                nodeResult.append({"name" : v[0].ip_address,
+                                   "os" : v[1].os_string,
+                                   "children" : [{"name" : "Patches Installed", "size" : v[2].patches_installed, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_installed}},
+                                                {"name" : "Patches Available", "size" : v[2].patches_available, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_available}},
+                                                {"name" : "Patches Pending", "size" : v[2].patches_pending, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_pending}},
+                                                {"name" : "Patches Failed", "size" : v[2].patches_failed, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_failed}}]})
+            osType.append({"label" : u[0], "value" : u[1], "data" : nodeResult})
+        resultjson = osType
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(resultjson, indent=4))

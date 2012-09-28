@@ -55,6 +55,7 @@ class Application(tornado.web.Application):
             (r"/api/networkData/?", NetworkHandler),
             (r"/api/summaryData/?", SummaryHandler),
             (r"/api/patchData/?", PatchHandler),
+            (r"/api/graphData/?", GraphHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler)]  # Returns specific product from respected vendor with vulnerabilities.

@@ -24,11 +24,14 @@ class RootHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         name = tornado.escape.xhtml_escape(self.current_user)
-        self.write("Hello, " + name + '<br><a href="/logout">Logout</a>')
+        #self.write("Hello, " + name + '<br><a href="/logout">Logout</a>')
+        self.render('../wwwstatic/index.html')
 
 
 class LoginHandler(BaseHandler):
     def get(self):
+        self.render('../wwwstatic/login.html')
+        """
         self.write('<html>'
                     '<body>'
                         '<form action="/login" method="post">'
@@ -38,6 +41,7 @@ class LoginHandler(BaseHandler):
                         '</form>'
                         '<a href="/signup">Create Account</a>'
                     '</body></html>')
+        """
 
     def post(self):
 
@@ -106,9 +110,11 @@ class LogoutHandler(BaseHandler):
         def sign():
             return '{ "user": "%s", "status": "logged out" }' % self.current_user
         sign()
-        WebsocketHandler.socket.close()
+        if WebsocketHandler.socket:
+            WebsocketHandler.socket.close()
         self.clear_all_cookies()
-        self.write("Goodbye!" + '<br><a href="/login">Login</a>')
+        self.redirect('/login')
+        #self.write("Goodbye!" + '<br><a href="/login">Login</a>')
 
 class DeveloperRegistrationHandler(BaseHandler):
     def get(self):

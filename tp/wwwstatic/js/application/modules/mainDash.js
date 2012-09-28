@@ -167,25 +167,31 @@ define(
             }),
             widgetview = new WidgetView({ el: 'body' }),
             barGraph = function (selection) {
-                var data = app.data.osData,
-                    title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
-                    width = $(selection).width(),
-                    barWidth = (width / data.length) - 10,
+                //var data = app.data.osData,
+                var title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
+                    width = $(selection).width();
+                d3.json("../api/graphData", function(json) {
+                    var barWidth = (width / json.length) - 10,
                     graphBar = app.chart.bar().title(title).barWidth(barWidth);
-                d3.select(selection).datum(data).call(graphBar);
+                    d3.select(selection).datum(json).call(graphBar);
+                });
             },
             interactiveGraph = function (selection) {
-                var data = app.data.summaryData,
-                    title = properties.get('widgetTitle') === 'Default' ? "Summary Chart" : properties.get('widgetTitle'),
+                //var data = app.data.summaryData,
+                var title = properties.get('widgetTitle') === 'Default' ? "Summary Chart" : properties.get('widgetTitle'),
                     interGraph = app.chart.partition().chartTitle(title);
-                d3.select(selection).datum(data).call(interGraph);
+                d3.json("../api/summaryData", function(json) {
+                    d3.select(selection).datum(json).call(interGraph);
+                });
             },
             pieGraph = function (selection) {
-                var data = app.data.osData,
-                    title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
+                //var data = app.data.osData;
+                var title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
                     width = $(selection).width(),
                     pieChart = app.chart.pie().title(title).width(width);
-                d3.select(selection).datum(data).call(pieChart);
+                d3.json("../api/graphData", function(json) {
+                    d3.select(selection).datum(json).call(pieChart);
+                });
             },
             lineGraph = function (selection) {
                 var data = [
@@ -203,11 +209,13 @@ define(
                 d3.select(selection).datum(data).call(lineChart);
             },
             stackedGraph = function (selection) {
-                var data = app.data.osData,
-                    title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
+                //var data = app.data.osData,
+                var title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
                     width = $(selection).width(),
                     stackedChart = app.chart.stackedBar().title(title).width(width);
-                d3.select(selection).datum(data).call(stackedChart);
+                d3.json("../api/graphData", function(json) {
+                    d3.select(selection).datum(json).call(stackedChart);
+                });
             },
             setProperties = function (obj, param) {
                 if (param === "existing") {

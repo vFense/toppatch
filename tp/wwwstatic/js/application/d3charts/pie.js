@@ -16,12 +16,13 @@ define(['jquery','d3'], function($, d3) {
             title = "Default",
             previousTitle = '',
             previousData = [],
+            osData = [],
             graph = this;
 
         function chart(selection) {
             selection.each(function (data) {
                 // generate chart here; `d` is the data and `this` is the element
-                var that = this,
+                var that = this, link, options,
                     matches = that.id.match(/\d+$/),
                     widget = "#widget" + matches[0];
                 $(widget + "-title").html(title);
@@ -33,26 +34,17 @@ define(['jquery','d3'], function($, d3) {
                     .attr("width", width)           //set the width and height of our visualization (these will be attributes of the <svg> tag
                     .attr("height", height);
                 if(previousData.length != 0) {
-                    var link = vis.selectAll('link')
-                        .data([1])
-                        .enter()
-                        .append("svg:text")
-                        .attr('x', 8)
-                        .attr('y', 10)
-                        .attr('fill', 'blue')
-                        .text('Back');
-
-                    var circle = vis.append('svg:g')
-                        .selectAll('circle')
-                        .data([1]).enter()
-                        .append('svg:circle')
-                        .attr('opacity', '0')
-                        .attr('transform', 'translate(15,10)')
-                        .attr("r", 20)
-                        .on('mouseover', function () { linkMouseOver(); })
-                        .on('mouseout', function () { linkMouseOut(); })
-                        .on("click", function (d) { disappear('previous', d) });
+                    renderLinks();
                 }
+                var warning = vis.selectAll('warning')
+                    .data(['warning']).enter()
+                    .append('svg:text')
+                    .attr('x', (width / 4) - 40)
+                    .attr('y', height / 2)
+                    .style('font-size', '2em')
+                    .style('opacity', '0')
+                    .text('');
+
                 var container = vis.append("svg:g")                //make a group to hold our pie chart
                     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");  //move the center of the pie chart from 0, 0 to radius, radius
 
@@ -74,7 +66,8 @@ define(['jquery','d3'], function($, d3) {
                     .attr("class", "slice")    //allow us to style things in the slices (like text)
                     .on("click", function (d, i) {
                         if(d.data.data) {
-                            disappear('new', d);
+                            osData = d;
+                            disappear('new', d, 'Installed');
                         }
                     })
                     .on("mouseover", function (d, i) {
@@ -114,34 +107,88 @@ define(['jquery','d3'], function($, d3) {
                             .attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")")
                             .text(d.data.label);
                     });
-                function linkMouseOver() {
-                    link.style('text-decoration', 'underline');
+                function linkMouseOver(el) {
+                    $(el).css('text-decoration', 'underline');
                 }
-                function linkMouseOut() {
-                    link.style('text-decoration', 'none');
+                function linkMouseOut(el) {
+                    $(el).css('text-decoration', 'none');
                 }
-                function disappear(string, d) {
-                    arcs.select("text").text("");
+                function disappear(string, d, type) {
+                    arcs.select("text").style('opacity', 0);
                     arcs.select("path").transition().duration(1000).attr("d", arcOut);
                     arcs.select("path").transition().delay(900)
-                        .style("opacity", function() { string === 'previous' ? previousGraph() : newGraph(d); return "1"; });
+                        .style("opacity", function(d2, i) {
+                            if(i === 0) {
+                                string === 'previous' ? previousGraph() : newGraph(d, type);
+                            }
+                            return "1";
+                        });
                 }
-                function newGraph(d) {
-                    var tempData = [];
-                    if(d.data.data.length){
-                        for(var i = 0; i < d.data.data.length; i++){
-                            //console.log(d.data.data[i].children[0].graphData);
-                            tempData.push(d.data.data[i].children[0].graphData);
+                function newGraph(d, type) {
+                    var tempData = [], position;
+                    console.log(d);
+                    if(d.data.data.length) {
+                        if(type === 'Installed') {
+                            position = 0;
+                        } else if(type === 'Available') {
+                            position = 1;
+                        } else if(type === 'Pending') {
+                            position = 2;
+                        } else if(type === 'Failed') {
+                            position = 3;
                         }
-
-                        var pieChart = graph.pie().title(d.data.data[0].children[0].name + " in "+ d.data.data[0].os + " by nodes").previousData(data).previousTitle(title).width(width);
-                        //console.log(pieChart);
-                        d3.select(that).datum(tempData).call(pieChart);
+                        for(var i = 0; i < d.data.data.length; i++){
+                            var value = d.data.data[i].children[position].graphData.value;
+                            if(value != 0) {
+                                tempData.push(d.data.data[i].children[position].graphData);
+                            }
+                        }
+                        data = previousData.length != 0 ? previousData : data;
+                        title = previousTitle != '' ? previousTitle : title;
+                        var pieChart = graph.pie().title(d.data.data[0].children[position].name + " in "+ d.data.data[0].os + " by nodes").previousData(data).previousTitle(title).width(width).osData(osData);
+                        if(tempData.length != 0) {
+                            d3.select(that).datum(tempData).call(pieChart);
+                        } else {
+                            //alert('No data to display');
+                            previousData.length != 0 ? '' : renderLinks();
+                            warning.style('opacity', '1').text('No data to display for ' + type + ' Patches');
+                            arcs.remove();
+                        }
                     }
                 }
                 function previousGraph() {
                     var pieChart = graph.pie().title(previousTitle).width(width);
                     d3.select(that).datum(previousData).call(pieChart);
+                }
+                function renderLinks() {
+                    link = vis.selectAll('link')
+                        .data(['Back'])
+                        .enter()
+                        .append("svg:text")
+                        .attr('x', 8)
+                        .attr('y', 10)
+                        .attr('fill', 'blue')
+                        .style('pointer-events', 'all')
+                        .text(function(d){ return d; })
+                        .on('mouseover', function () { linkMouseOver(this); })
+                        .on('mouseout', function () { linkMouseOut(this); })
+                        .on("click", function (d) { disappear('previous', d, 'None') });
+
+                    options = vis.selectAll('options')
+                        .data(['Installed', 'Available', 'Pending', 'Failed'])
+                        .enter()
+                        .append('svg:text')
+                        .attr('x', width - 80)
+                        .attr('y', function(d , i) { return 20 + i * 20;})
+                        .attr('fill', 'blue')
+                        .style('font-size', '1em')
+                        .style('pointer-events', 'all')
+                        .text(function (d) {return d;})
+                        .on('mouseover', function () { linkMouseOver(this); })
+                        .on('mouseout', function () { linkMouseOut(this); })
+                        .on('click', function (d, i) {
+                            disappear('new', osData, d);
+                        });
                 }
                 arcs.append("svg:title")
                     .text(function (d, i) { return d.data.label + ": " + d.data.value; });
@@ -163,7 +210,6 @@ define(['jquery','d3'], function($, d3) {
 
             });
         }
-
         chart.r = function (value) {
             if (!arguments.length) { return r; }
             r = value;
@@ -194,6 +240,11 @@ define(['jquery','d3'], function($, d3) {
         chart.previousTitle = function (value) {
             if(!arguments.length) { return previousTitle; }
             previousTitle = value;
+            return chart;
+        };
+        chart.osData = function (value) {
+            if(!arguments.length) { return osData; }
+            osData = value;
             return chart;
         };
 
