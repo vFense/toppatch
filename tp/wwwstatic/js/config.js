@@ -24,7 +24,7 @@ require.config({
         'backbone'          : 'libs/backbone/backbone',
         'd3'                : 'libs/d3/d3.v2',
         'text'              : 'libs/require/plugins/text',
-        
+
         // jQuery.ui modules
         'jquery.ui.core'        : 'libs/jquery-ui/dev/jquery.ui.core',
         'jquery.ui.widget'      : 'libs/jquery-ui/dev/jquery.ui.widget',
@@ -54,6 +54,9 @@ require.config({
             deps: ['jquery'],    // Bootstrap depends on jQuery
             exports: 'jQuery'
         },
+        'underscore': {
+            exports: '_'
+        },
         'backbone': {
             deps: ['jquery', 'underscore'],    // Backbone depends on jQuery and Underscore
             exports: 'Backbone'
@@ -61,7 +64,7 @@ require.config({
         'd3': {
             exports: 'd3'
         },
-        
+
         // jQuery.ui modules
         'jquery.ui.core'        : {exports: 'jQuery'},
         'jquery.ui.widget'      : {exports: 'jQuery'},
