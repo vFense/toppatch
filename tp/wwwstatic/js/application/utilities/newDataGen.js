@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'test-json/patchLoader'],
-    function ($, Backbone, patchList) {
+    ['jquery', 'underscore', 'backbone', 'test-json/patchLoader'],
+    function ($, _, Backbone, patchList) {
         "use strict";
 
         var ipTable = _.shuffle(_.range(1, 254)),
