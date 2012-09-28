@@ -44,11 +44,11 @@ define(
             // Initialize the collection with a
             // random length array of empty objects
             (function () {
-                var i, q,
+                var i, length,
                     out = [],   // Our array
                     min = 5,    // Minimum length of array
                     max = 15;   // Maximum length of array
-                for (i = 0, q = _.shuffle(_.range(min, max))[0]; i < q; i += 1) {
+                for (i = 0, length = _.shuffle(_.range(min, max))[0]; i < length; i += 1) {
                     out.push({});
                 }
                 return out;
