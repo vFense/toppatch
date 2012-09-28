@@ -3,7 +3,7 @@ define(
     function ($, Backbone, patchList) {
         "use strict";
 
-        var ipTable = _.shuffle(_.range(2, 254)),
+        var ipTable = _.shuffle(_.range(1, 254)),
             ipAvailable = 0,
             osList = [
                 { name: 'Windows 7', short: "win7" },
