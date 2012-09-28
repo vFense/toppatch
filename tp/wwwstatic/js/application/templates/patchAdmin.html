@@ -5,13 +5,13 @@
 <form id="<%= type %>-form" method="get" style="display: inline">
     <div class="pull-left inline">
         <h4><% (type === 'patches') ? print('Step 1: <small>Choose available patches</small>') : print('Step 2: <small>Choose nodes to apply patches</small>') %></h4>
-    </div>
+            </div>
     <div class="pull-right inline">
         <label class="checkbox inline" for="selectAll">
             <input type="checkbox" id="selectAll" onclick="toggleChecked(this.checked);"/>Select / Deselect All&nbsp;&nbsp;
         </label>
         <input class="btn" type="submit" id="submitPatches" name="submitPatches" value="<% data[0].date ? print('Next') : print('Apply') %>"/>
-    </div>
+        </div>
     <table class="table table-bordered table-striped table-hover">
         <thead>
         <tr>

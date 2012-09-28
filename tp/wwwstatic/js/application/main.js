@@ -21,8 +21,8 @@ require(
         });
         window.User = new User.Model();
 
-        // Load jQueryUI and Bootstrap
-        require(['jquery.ui', 'jquery.bootstrap']);
+        // Load Bootstrap
+        require(['jquery.bootstrap']);
 
         deferred = new $.Deferred();
         require(['modules/pageHeader', 'modules/navBar'], function (PageHeader, DashNav) {
@@ -38,6 +38,11 @@ require(
             var pageFooter = new PageFooter.View();
             $('body').append(pageFooter.render().$el);
         });
+
+        app.vent.on("domchange:title", function (title) {
+            app.$doc.attr('title', app.title + ': ' + title);
+        });
+
         deferred.done(function () {
             require(['router'], function (Router) {
                 Router.initialize();

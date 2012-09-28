@@ -8,18 +8,21 @@ define(
             initialize: function () {
                 this.template = myTemplate;
             },
+            beforeRender: $.noop,
+            onRender: $.noop,
             render: function () {
-                var data = app.data.patches;
+                if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                var variables = { type: "patches", data: data };
-
-                var tmpl = _.template(this.template, variables),
+                var tmpl = _.template(this.template),
                     that = this;
 
                 this.$el.html('');
 
-                this.$el.append(tmpl);
+                this.$el.append(tmpl({ type: "patches", data: app.data.patches }));
 
+                app.vent.trigger('domchange:title', 'Patch Administration');
+
+                if (this.onRender !== $.noop) { this.onRender(); }
                 return this;
             }
         });

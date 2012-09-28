@@ -3,311 +3,47 @@
 <head>
 	<meta charset="utf-8">
 	<title>D3 Test Page</title>
-    <style>
-        body {
-            overflow: auto;
-        }
-    </style>
+	<style>
+		div {width:100%;}
+	</style>
 </head>
 <body>
-<div id="test"></div>
-<div id="graph2"></div>
+<div id="holder"></div>
+
 <!--  Javascripts -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/2.8.1/d3.v2.min.js"></script>
-<script src="../js/application.min.js"></script>
-<script src="../js/application/d3charts/stackedBarChart.js"></script>
+<script src="../js/libs/charts/raphael-min.js"></script>
+<script src="../js/libs/charts/g.raphael-min.js"></script>
+<script src="../js/libs/charts/g.bar-min.js"></script>
+<script src="../js/libs/charts/g.pie-min.js"></script>
+<script src="../js/libs/charts/g.line-min.js"></script>
+<script src="../js/libs/charts/g.dot-min.js"></script>
 <script>
-    jQuery.fn.center = function () {
-        this.css("position","absolute");
-        this.css("top", Math.max(0, (($(window).height() - this.outerHeight()) / 2) +
-                $(window).scrollTop()) + "px");
-        this.css("left", Math.max(0, (($(window).width() - this.outerWidth()) / 2) +
-                $(window).scrollLeft()) + "px");
-        return this;
-    }
-    $application.resizablePieChart = function () {
-        "use strict";
-        var r	= 100,
-                width	= 280,	// Golden Ratio 1000/Phi
-                height	= 220,
-                color = d3.scale.category20(),
-                title = "Default";
-        function chart(selection) {
-            selection.each(function (data) {
-                // generate chart here; `d` is the data and `this` is the element
-                var that = this;
-                $(this).html("");
-                r = $(window).height() / 3;
-                height =  $(document).height() / 2;
-                width = $(document).width() / 2 ;
-                //console.log("computed width: " + width + ", width: " + $(window).width() + ", innerWidth: " + $(window).innerWidth() + ", outerWidth: " + $(window).outerWidth() );
-                //console.log("computed height: " + height + ", height: " + $(window).height() + ", innerHeight: " + $(window).innerHeight() + ", outerHeight: " + $(window).outerHeight() );
-                var vis = d3.select(this)
-                        .append("svg:svg")              //create the SVG element inside the <body>
-                        .data([data])                   //associate our data with the document
-                        .attr("width", "100%")           //set the width and height of our visualization (these will be attributes of the <svg> tag
-                        .attr("height", "100%")
-                        .attr("viewBox", "0 0 " + width * 2  + " " + height * 2 + "")
-                        .append("svg:g")                //make a group to hold our pie chart
-                        .attr("transform", "translate(" + width + "," + height + ")");  //move the center of the pie chart from 0, 0 to radius, radius
-                //console.log(width + " " + height);
-                var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
-                        .innerRadius(0)
-                        .outerRadius(r);
+	window.onload = function() {
+		var radius = 100,
+			hoverScale = 1.5,
+			position = radius * hoverScale,
+			r = Raphael("holder"),
+			pie = r.piechart(position, position, radius, [1,2,3,4,5,6,7,8]);
 
-                var arcOver = d3.svg.arc()
-                        .outerRadius(r + 10);
-                var arcOut = d3.svg.arc()
-                        .outerRadius(1);
-                var pie = d3.layout.pie().sort(null)          //this will create arc data for us given a list of values
-                        .value(function (d) { return d.value; });    //we must tell it out to access the value of each element in our data array
-                var line = d3.svg.line()
-                        .x(function (d) {
-                            return d.x;
-                        })
-                        .y(function (d) {
-                            return d.y;
-                        });
-                var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
-                        .data(pie(data))                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
-                        .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
-                        .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
-                        .attr("class", "slice")    //allow us to style things in the slices (like text)
-                        .on("click", function () {
-                            d3.selectAll(this.parentNode.childNodes).select("text").text("");
-                            d3.selectAll(this.parentNode.childNodes).select("path").transition().duration(1000)
-                                    .attr("d", arcOut).each("end", newgraph);
+			 pie.hover(function () {
+				this.sector.stop();
+				this.sector.scale(hoverScale, hoverScale, this.cx, this.cy);
 
-                            //createPie(graphNumber, "node");
-                        })
-                        .on("mouseover", function (d, i) {
-                            d3.select(this).select("path").transition().duration(500)
-                                    .attr("fill", color(i + 2))
-                                    .style("opacity", function () {
-                                        d3.selectAll("g.slice")
-                                                .select("path")
-                                                .style("opacity",function (j, l) {
-                                                    var pi = 3.15,
-                                                        midAngle = (d.endAngle + d.startAngle) / 2;
-                                                    //console.log("Midangle: " + midAngle + "Inside loop index: " + l + " Outside loop Index: " + i);
-                                                    //console.log(j);
-                                                    //console.log(d);
-                                                    if(j.startAngle < pi / 2){
-                                                        if(l > i){
-                                                            return "0.1";
-                                                        }
-                                                    } else if (j.startAngle < pi) {
-                                                        if(l > i){
-                                                            return "1";
-                                                        }
-                                                    } else if (j.startAngle < 3 * pi / 2 && midAngle > pi) {
-                                                        if(l > i){
-                                                            return "0.1";
-                                                        }
-                                                    } else if(j.startAngle < 2 * pi) {
-                                                        if(l > i){
-                                                            return "1";
-                                                        }
-                                                    } else {
-                                                        return "1";
-                                                    }
-                                                });
-                                        return "1";
-                                    })
-                                    .attr("d", arcOver);
-                            d3.select(this).select("text").transition().duration(500)
-                                    .attr("dy", ".35em")
-                                    .attr("text-anchor", "middle")
-                                    .style("font-size", "16px")
-                                    .style("fill", "black")
-                                    .attr("transform", function(d) {
-                                        var c = arc.centroid(d),
-                                                x = c[0],
-                                                y = c[1],
-                                                labelr = r * 1.5,//r / 1.6,
-                                        // pythagorean theorem for hypotenuse
-                                                h = Math.sqrt(x * x + y * y);
-                                        //console.log( d.startAngle + ", " + d.endAngle);
-                                        if(((d.endAngle + d.startAngle) / 2) <  3.15) {
-                                            return "translate(" + labelr + ',' + 0 +  ")"; //rotate(" + angle(d) + ")";
-                                        } else {
-                                            return "translate(" + -labelr + ',' + 0 + ")";
-                                        }
-                                    })
-                                //.attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")")
-                                    .text(d.data.label);
-                            d3.select(this).selectAll("path.line").transition().duration(500)
-                                    .attr("d", function (d, i){
-                                        var array = new Array();
-                                        var c = arc.centroid(d),
-                                                x = c[0],
-                                                y = c[1],
-                                                labelr = r * 1.2,
-                                                h = Math.sqrt(x * x + y * y);
-                                        array[0] = { x: 0, y: 0 };
-                                        if(((d.endAngle + d.startAngle) / 2) <  3.15) {
-                                            array[1] = { x: labelr, y: 0 };
-                                        } else {
-                                            array[1] = { x: -labelr, y: 0 };
-                                        }
-                                        return line(array);
-                                    });
-                        })
-                        .on("mouseout", function (d, i) {
-                            d3.select(this).select("path").transition()
-                                    .duration(500)
-                                    .attr("fill", color(i))
-                                    .style("opacity",function () {
-                                        return "1";
-                                    })
-                                    .attr("d", arc);
-                            d3.select(this).select("text").transition().duration(500)
-                                    .attr("dy", ".35em")
-                                    .style("opacity","1")
-                                    .attr("text-anchor", "middle")
-                                    .style("font-size", "12px")
-                                    .style("fill", "black")
-                                    .attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")")
-                                    .text(d.data.label);
-                            d3.select(this).selectAll("path.line").transition().duration(500)
-                                    .attr("d", function (d, i){
-                                        var array = new Array();
-                                        var c = arc.centroid(d),
-                                                x = c[0],
-                                                y = c[1],
-                                                labelr = r / 4,
-                                                h = Math.sqrt(x * x + y * y);
-                                        array[0] = { x: 0, y: 0 }
-                                        array[1] = { x: x / h * labelr, y: y / h * labelr };
-                                        return line(array);
-                                    });
-                        });
-                arcs.append("svg:title")
-                        .text(function (d, i) { return d.data.label + ": " + d.data.value; });
-                arcs.append("svg:path")
-                        .attr("fill", function (d, i) { return color(i); }) //set the color for each slice to be chosen from the color function defined above
-                        .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
-                arcs.filter(function (d) { return d.endAngle - d.startAngle > .2; })
-                        .append("svg:path")
-                        .attr("class", "line")
-                        .attr("fill", "none")
-                        .attr("stroke", "black")
-                        .attr("stroke-width", "2")
-                        .attr("d", function (d, i){
-                            var array = new Array();
-                            var c = arc.centroid(d),
-                                    x = c[0],
-                                    y = c[1],
-                                    labelr = r / 4,
-                                    h = Math.sqrt(x * x + y * y);
-                            array[0] = { x: 0, y: 0 }
-                            array[1] = { x: x / h * labelr, y: y / h * labelr };
-                            return line(array);
-                        });
-                arcs.filter(function (d) { return d.endAngle - d.startAngle > .2; })
-                        .append("svg:text")
-                        .attr("dy", ".35em")
-                        .attr("text-anchor", "middle")
-                        .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
-                        .text(function (d) { return d.data.label; });
+				if (this.label) {
+					this.label[0].stop();
+					this.label[0].attr({ r: 7.5 });
+					this.label[1].attr({ "font-weight": 800 });
+				}
+			}, function () {
+				this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 500, "bounce");
 
-                // Computes the label angle of an arc, converting from radians to degrees.
-                function angle(d) {
-                    var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
-                    return a > 90 ? a - 180 : a;
-                }
-                function newgraph() {
-                    //createPie(selection, "node");
-                    //alert("hi");
-                    var pieChart = $appName.resizablePieChart().title("Nodes by OS");
-
-                    data = [{"label":"node1", "value":20},
-                        {"label":"node2", "value":75},
-                        {"label":"node3", "value":15},
-                        {"label":"node4", "value":40},
-                        {"label":"node5", "value":32}];
-
-                    d3.select(that).datum(data).call(pieChart);
-                }
-
-            });
-        }
-
-        chart.r = function (value) {
-            if (!arguments.length) { return r; }
-            r = value;
-            return chart;
-        };
-
-        chart.width = function (value) {
-            if (!arguments.length) { return width; }
-            width = value;
-            return chart;
-        };
-
-        chart.height = function (value) {
-            if (!arguments.length) { return height; }
-            height = value;
-            return chart;
-        };
-        chart.title = function (value) {
-            if(!arguments.length) { return title; }
-            title = value;
-            return chart;
-        };
-
-        return chart;
-    };
-
-    function pieGraph(selection, graphData) {
-        var title, data;
-        if (graphData === "os") {
-            data = [{"label":"windows 7", "value": Math.floor(Math.random() * 100)},
-                {"label":"windows 8", "value": Math.floor(Math.random() * 100)},
-                {"label":"windows XP", "value": Math.floor(Math.random() * 100)},
-                {"label":"Mac OS X", "value": Math.floor(Math.random() * 100)},
-                {"label":"linux", "value": Math.floor(Math.random() * 100)}];
-            title = "OS in Network";
-        } else if (graphData === "node") {
-            data = [{"label":"node 1", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 2", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 3", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 4", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 5", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 6", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 7", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 8", "value": Math.floor(Math.random() * 100)}];
-            title = "Nodes by OS";
-        }
-        var pieChart = $application.resizablePieChart().title(title);
-        d3.select(selection).datum(data).call(pieChart);
-    }
-    function verticalGraph(selection, graphData) {
-        var title, data;
-        if (graphData === "os") {
-            data = [{"label":"windows 7", "value": Math.floor(Math.random() * 100)},
-                {"label":"windows 8", "value": Math.floor(Math.random() * 100)},
-                {"label":"windows XP", "value": Math.floor(Math.random() * 100)},
-                {"label":"Mac OS X", "value": Math.floor(Math.random() * 100)},
-                {"label":"linux", "value": Math.floor(Math.random() * 100)}];
-            title = "OS in Network";
-        } else if (graphData === "node") {
-            data = [{"label":"node 1", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 2", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 3", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 4", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 5", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 6", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 7", "value": Math.floor(Math.random() * 100)},
-                {"label":"node 8", "value": Math.floor(Math.random() * 100)}];
-            title = "Nodes by OS";
-        }
-        var stackedChart = $application.stackedVerticalChart().title(title);
-        d3.select(selection).datum(data).call(stackedChart);
-    }
-    pieGraph("#test","node");
-    verticalGraph("#graph2","os");
+				if (this.label) {
+					this.label[0].animate({ r: 5 }, 500, "bounce");
+					this.label[1].attr({ "font-weight": 400 });
+				}
+			});
+	}
 </script>
+<!-- /Javascripts -->
 </body>
 </html>

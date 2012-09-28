@@ -1,7 +1,7 @@
 
 import tornado.web
 import tornado.websocket
-from models.nodes import NodeInfo
+from models.node import NodeInfo
 from server.decorators import authenticated_request
 
 

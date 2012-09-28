@@ -35,66 +35,57 @@ li {
 
 H1, H2, H3, H4, H5, H6 { margin:0; }
 
-SUMMARY {
-    DL {
-        text-align: center;
-        margin: 0;
-        border: @em*( 1px )/@baseFontSize solid #E6E6E6;
-
-        DT {
-            background-color: #E6E6E6;
-            border-bottom: @em*( 1px )/@baseFontSize solid #E6E6E6;
-            margin:0;
-        }
-        DD {
-            font-size: 20px;
-            line-height: 2em;
-            margin: 0;
-        }
-    }
-
-    .info {
-        DT {
-            background-color: @infoBackground;
-            border-color: @infoBorder;
-            color: @infoText;
-        }
-    }
-
-    .success {
-        DT {
-            background-color: @successBackground;
-            border-color: @successBorder;
-            color: @successText;
-        }
-    }
-
-    .warning {
-        DT {
-            background-color: @warningBackground;
-            border-color: @warningBorder;
-            color: @warningText;
-        }
-    }
-
-    .error {
-        DT {
-            background-color: @errorBackground;
-            border-color: @errorBorder;
-            color: @errorText;
-        }
-    }
-}
-
 .legal {
     line-height: @em*( @pageFooterHeight )/@baseFontSize;
 }
 
 .container {
-	.row + .row,
-	.row + .row-fluid,
-	.row-fluid + .row,
-	.row-fluid + .row-fluid {
-		margin-top: 1em;
-	}
+    .row + .row,
+    .row + .row-fluid,
+    .row-fluid + .row,
+    .row-fluid + .row-fluid {
+        margin-top: 1em;
+    }
+}
+
+/* Sergio's Styles: To be sorted */
+
+/*.window {
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    border: 4px solid #E0E0E0;
+    background-color: white;
+    padding: 5px;
+}*/
+.radio-graph {
+    font-size: 0.7em;
+}
+.point {
+    fill: rgb(51, 156, 255);
+    stroke-width: 2px;
+    stroke: rgb(255,255,255);
+}
+.point.max {
+    fill: rgb(200,0,0);
+    stroke-width: 2px;
+}
+.chart {
+    display: block;
+    margin: auto;
+    margin-top: 60px;
+    font-size: 11px;
+}
+
+.tree {
+    stroke: #eee;
+    fill: #aaa;
+    fill-opacity: .8;
+}
+
+.tree.parent {
+    cursor: pointer;
+    fill: steelblue;
+}
+text {
+    pointer-events: none;
 }

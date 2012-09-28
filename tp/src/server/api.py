@@ -11,10 +11,9 @@ from server.decorators import authenticated_request
 from server.handlers import BaseHandler
 from models.base import Base
 from models.windows import *
-from models.nodes import *
+from models.node import *
 from sqlalchemy.orm import sessionmaker, class_mapper
 
-from collections import OrderedDict
 
 class ApiHandler(BaseHandler):
     """ Trying to figure out this whole RESTful api thing with json."""
@@ -125,14 +124,7 @@ class ApiHandler(BaseHandler):
 
         return root_list
 
-
-
-
-def asdict(obj):
-    return dict((col.name, getattr(obj, col.name))
-        for col in class_mapper(obj.__class__).mapped_table.c)
-
-class TestHandler(BaseHandler):
+class NodeHandler(BaseHandler):
 
     @authenticated_request
     def get(self):
@@ -141,22 +133,100 @@ class TestHandler(BaseHandler):
         db.echo = True
         Session = sessionmaker(bind=db)
         session = Session()
-        for u in session.query(NodeInfo):#.id, NodeInfo.host_name, NodeInfo.ip_address, NodeInfo.os_code, NodeInfo.os_string, NodeInfo.os_version_major, NodeInfo.os_version_minor, NodeInfo.os_version_build, NodeInfo.os_meta, NodeInfo.host_status, NodeInfo.agent_status):#, NodeInfo.last_agent_update, NodeInfo.last_node_update):
+        for u in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo, NodeStats):
             print u
-            resultjson.append({"id" : u.id})
-            resultjson.append({"host_name" : u.host_name})
-            resultjson.append({"host_name" : u.host_name})
-            resultjson.append({"host_name" : u.host_name})
-            resultjson.append({"host_name" : u.host_name})
-            resultjson.append({"host_name" : u.host_name})
-            resultjson.append({"host_name" : u.host_name})
-            resultjson.append({"host_name" : u.host_name})
-            resultjson.append({"host_name" : u.host_name})
-        print resultjson
+            resultjson.append({"id" : u[0].id,
+                               "host_name" : u[0].host_name,
+                               "ip_address" : u[0].ip_address,
+                               "host_status" : u[0].host_status,
+                               "agent_status" : u[0].agent_status,
+                               "os_code" : u[1].os_code,
+                               "os_string" : u[1].os_string,
+                               "os_version_mayor" : u[1].os_version_major,
+                               "os_version_minor" : u[1].os_version_minor,
+                               "os_version_build" : u[1].os_version_build,
+                               "os_meta" : u[1].os_meta,
+                               "installed" : u[2].patches_installed,
+                               "available" : u[2].patches_available,
+                               "pending" : u[2].patches_pending,
+                               "failed" : u[2].patches_failed})
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
 
 
+class NetworkHandler(BaseHandler):
 
+    @authenticated_request
+    def get(self):
+        resultjson = []
+        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+        db.echo = True
+        Session = sessionmaker(bind=db)
+        session = Session()
+        for u in session.query(NetworkStats).all():
+            resultjson.append({"key" : "installed", "data" : u.patches_installed})
+            resultjson.append({"key" : "available", "data" : u.patches_available})
+            resultjson.append({"key" : "pending", "data" : u.patches_pending})
+            resultjson.append({"key" : "failed", "data" : u.patches_failed})
+        print resultjson
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(resultjson, indent=4))
+
+class PatchHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        resultjson = []
+        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+        db.echo = True
+        Session = sessionmaker(bind=db)
+        session = Session()
+        for u in session.query(WindowsUpdate).all():
+            print u
+            resultjson.append({"reference" : {
+                "toppatch" : u.toppatch_id,
+                "developer" : u.vendor_id
+            },
+            "date" : str(u.date_pub),
+           "name" : u.title,
+           "description" : u.description,
+           "severity" : u.severity})
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(resultjson, indent=4))
+
+class SummaryHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        root = {}
+        resultjson = []
+        osResult = []
+        osTypeResult = []
+        nodeResult = []
+        nodeResult = []
+        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+        db.echo = True
+        Session = sessionmaker(bind=db)
+        session = Session()
+        for u in session.query(SystemInfo.os_code).distinct().all():
+            osTypeResult = []
+            for v in session.query(SystemInfo.os_string).filter(SystemInfo.os_code == u.os_code).distinct().all():
+                nodeResult = []
+                for w in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).filter(SystemInfo.os_string == v.os_string).distinct().all():
+                    print w
+                    nodeResult.append({"name" : w[0].id,
+                                       "children" : [{"name" : "Patches Installed", "size" : w[2].patches_installed},
+                                           {"name" : "Patches Available", "size" : w[2].patches_available},
+                                           {"name" : "Patches Pending", "size" : w[2].patches_pending},
+                                           {"name" : "Patches Failed", "size" : w[2].patches_failed}]})
+                osTypeResult.append({"name" : v.os_string, "children" : nodeResult})
+            osResult.append({"name" : u.os_code, "children" : osTypeResult})
+        print resultjson
+        root = {"name" : "192.168.1.0", "children" : osResult }
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(root, indent=4))
 

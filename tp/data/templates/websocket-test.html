@@ -47,6 +47,14 @@
                     $('#main').append("<br>Started socket connection.");
                 };
             });
+            $("#testbutton").click(function() {
+                $.ajax({
+                    url: '/api/nodeData/',
+                    success: function(data) {
+                        console.log(data);
+                    }
+                });
+            });
         });
     </script>
 </head>
@@ -61,6 +69,7 @@
     <label for="uri">uri:</label>
     <input type="text" id="uri" value="/ws" style="background:#ff0000;"/><br />
     <input type="submit" id="open" value="open" />
+    <input type="submit" id="testbutton" value="test" />
 </div>
 </body>
 </html>

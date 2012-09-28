@@ -6,14 +6,14 @@ define(['jquery','d3'], function($, d3) {
             key = null,
             sort = null,
             style = "table";
-
+    
         function table(selection) {
             selection.each(function (data) {
                 var parentElement = d3.select(this),
                     typeOfFirstElement,
                     error = false;
-
-
+    
+    
                 // Validate matching data
                 jQuery.each(data, function (k, v) {
                     if (!typeOfFirstElement) {
@@ -34,7 +34,7 @@ define(['jquery','d3'], function($, d3) {
                     }
                     return;
                 }
-
+    
                 // Render header row
                 if (headerRow) {
                     parentElement.append("thead")
@@ -53,7 +53,7 @@ define(['jquery','d3'], function($, d3) {
                         .attr("scope", "colgroup")
                         .text(function (d) { return d; });
                 }
-
+    
                 parentElement.append("tbody")
                     .selectAll("tr")
                     .data(data)
@@ -78,19 +78,19 @@ define(['jquery','d3'], function($, d3) {
                     .text(function (d) { return d; });
             });
         }
-
+    
         table.headerRow = function (value) {
             if (!arguments.length) { return headerRow; }
             headerRow = value;
             return table;
         };
-
+    
         table.headerCol = function (value) {
             if (!arguments.length) { return headerCol; }
             headerCol = value;
             return table;
         };
-
+    
         table.style = function (value) {
             if (!arguments.length) { return style; }
             var lValue = value.toLowerCase();
@@ -101,13 +101,13 @@ define(['jquery','d3'], function($, d3) {
             }
             return table;
         };
-
+    
         table.sort = function (value) {
             if (!arguments.length) { return sort; }
             headerCol = sort;
             return table;
         };
-
+    
         return table;
     }
 });

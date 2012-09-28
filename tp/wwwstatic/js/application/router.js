@@ -3,8 +3,6 @@ define(
     ['jquery', 'backbone', 'app' ],
     function ($, Backbone, app) {
         "use strict";
-        var deferred;
-        deferred = new $.Deferred();
         var AppRouter = Backbone.Router.extend({
             routes: {
                 // Dashboard
@@ -13,6 +11,10 @@ define(
 
                 // Patch Routes
                 'patchAdmin': 'showPatchAdmin',
+
+                // Testers
+                'test': 'showTest',
+                'testPatch': 'showPatchTest',
 
                 // Default
                 '*other':     'defaultAction'
@@ -39,6 +41,27 @@ define(
 
                 // Update the main dashboard view
                 require(['modules/patchAdmin'], function (myView) {
+                    var view = new myView.View();
+                    that.viewManager.showView(view);
+                });
+            },
+            showTest: function () {
+                var that = this;
+                this.vent.trigger('nav', '#test');
+
+                // Update the main dashboard view
+                require(['modules/widget'], function (myView) {
+                    var model = new myView.Model({}),
+                        view = new myView.View({model: model});
+                    that.viewManager.showView(view);
+                });
+            },
+            showPatchTest: function () {
+                var that = this;
+                this.vent.trigger('nav', '#test');
+
+                // Update the main dashboard view
+                require(['utilities/newDataGen'], function (myView) {
                     var view = new myView.View();
                     that.viewManager.showView(view);
                 });

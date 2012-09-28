@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
@@ -7,154 +7,45 @@
 <!--<![endif]-->
 <head>
     <meta charset="utf-8">
-    <title>TopPatch App</title>
+    <title>TopPatch Remediation Vault</title>
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width">
     <link href='http://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
-    <link rel="stylesheet" href="css/appName.css">
     <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="js/libs/jquery-ui-1.8.22.custom/css/ui-lightness/jquery-ui-1.8.22.custom.css">
-    <script src="js/libs/Modernizr/modernizr-2.5.3-respond-1.1.0.min.js"></script>
-    <style>
-        .window {
-            -moz-border-radius: 15px;
-            border-radius: 15px;
-            border: 4px solid #E0E0E0;
-            background-color: white;
-            padding: 5px;
-        }
-        .radio-graph {
-            font-size: 0.7em;
-        }
-        .point {
-            fill: rgb(51, 156, 255);
-            stroke-width: 2px;
-            stroke: rgb(255,255,255);
-        }
-        .point.max {
-            fill: rgb(200,0,0);
-            stroke-width: 2px;
-        }
-        .chart {
-            display: block;
-            margin: auto;
-            margin-top: 60px;
-            font-size: 11px;
-        }
-
-        .tree {
-            stroke: #eee;
-            fill: #aaa;
-            fill-opacity: .8;
-        }
-
-        .tree.parent {
-            cursor: pointer;
-            fill: steelblue;
-        }
-        text {
-            pointer-events: none;
-        }
-    </style>
+    <link rel="stylesheet" href="css/appName.css">
+    <script src="js/libs/modernizr/modernizr-2.5.3-respond-1.1.0.min.js"></script>
 </head>
 <body>
+<!--[if lt IE 7]<section class="container"><div class="alert alert-error chromeframe" id="ie-warning"><a class="close" data-dismiss="alert">×</a><strong>Top Patch does not support your browser.</strong> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</div></section><![endif]-->
+<!-- main -->
+<section class="container" id="dashboard-view" role="main">&nbsp;</section>
+<!--/main -->
 <noscript>
     <div class="title">JavaScript is required.</div>
-    <div class="subtitle">To use TopPatch, enable JavaScript in your browser and try again.</div>
+    <div class="subtitle">&nbsp;</div>
+    <div class="subtitle">To use TopPatch Remediation Vault, enable JavaScript in your browser and try again.</div>
     <hr/>
-    <div class=""><a href="http://www.toppatch.com/"><img src="img/logo-text.png" class="logo-text" alt="Top Patch logo"/></a></div>
+    <div class=""><a href="http://www.toppatch.com/"><img src="img/brand-name-tag.png" class="brand" alt="Top Patch brand"/></a></div>
 </noscript>
-<header id="pageHeader">
-
-    <section class="navbar container">
-    </section>
-
-</header>
-<!--[if lt IE 7]<section class="container"><div class="alert alert-error chromeframe" id="ie-warning"><a class="close" data-dismiss="alert">×</a><strong>Top Patch does not support your browser.</strong> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</div></section><![endif]-->
-
-
-<section class="container" role="main" id="dashboard-view">
-
-</section>
-
-<!-- javascript libraries -->
-<script data-main="js/application/config" src="js/libs/require/require.js"></script>
-<!-- Top Patch javascript -->
-
-<script type="text/javascript">
-    function cubismGraph(selection) {
-        var width = $(selection).width(),
-                context = cubism.context()
-                        .serverDelay(0)
-                        .clientDelay(0)
-                        .step(1e3)
-                        .size(width);
-        $(selection).html("");
-
-        var foo = random("foo", context);
-        //bar = random("bar", context);
-        d3.select(selection).call(function(div) {
-
-            div.append("div")
-                    .attr("class", "axis")
-                    .call(context.axis().orient("top"));
-
-            div.selectAll(".horizon")
-                    .data([foo])
-                    .enter().append("div")
-                    .attr("class", "horizon")
-                    .call(context.horizon().title(function (d) { return "Number of vulnerabilities: "; }).extent([0,200]).height(220).mode("mirror"));
-
-            div.append("div")
-                    .attr("class", "rule")
-                    .call(context.rule());
-
-        });
-
-        // On mousemove, reposition the chart values to match the rule.
-        context.on("focus", function(i) {
-            d3.selectAll(".value").style("right", i == null ? null : context.size() - i + "px");
-        });
-    }
-    function random(name, context) {
-        var value = 0,
-                values = [],
-                i = 0,
-                last;
-
-        return context.metric(function(start, stop, step, callback) {
-            start = +start;
-            stop = +stop;
-
-            if (isNaN(last)) last = start;
-            while (last < stop) {
-                last += step;
-                //value = Math.max(-10, Math.min(10, value + .8 * Math.random() - .4 + .2 * Math.cos(i += .2)));
-                value = 50 - Math.random() * 21 - 10;
-                values.push(value);
-            }
-            callback(null, values = values.slice((start - stop) / step));
-        }, name);
-    }
-</script>
+<script data-main="js/config" src="js/libs/require/require.js"></script>
 <script type="text/template" id="widget_template">
-    <div id="<%= widget %>" class="<%= span %> widget">
+    <article id="<%= widget %>" class="<%= span %> widget editable">
         <div id="<%= graphcontainer %>" class="window">
-            <header style="position: relative;">
-                <h4 id="<%= widget %>-title">Widget Title</h4>
-                <div id="<%= menu %>" class="dropdown pull-right" style="position: absolute; top: 0; right: 5px; line-height: 36px;">
+            <nav class="clearfix hidden-print">
+                <div id="<%= menu %>" class="dropdown pull-right">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#<%= menu %>"><i class="icon-list-ul"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="#" class="remove">Hide</a></li>
                         <li><a data-toggle="modal" href="#widgetProperties" class="properties">Properties</a></li>
                     </ul>
                 </div>
-            </header>
-            <div id="<%= graph %>">
-            </div>
+            </nav>
+            <header id="<%= widget %>-title">Widget Title</header>
+            <div id="<%= graph %>" class="graph">&nbsp;</div>
         </div>
-    </div>
+        <nav class="row-handle">&nbsp;</nav>
+    </article>
 </script>
 <script type="text/template" id="text_template">
     <dl id="<%= widget %>" class="<%= span %> <%= type %>">
@@ -166,10 +57,5 @@
         </dd>
     </dl>
 </script>
-
-
-
-<!--/Top Patch javascript -->
-
 </body>
 </html>

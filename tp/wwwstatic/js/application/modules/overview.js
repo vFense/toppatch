@@ -5,20 +5,25 @@ define(
         var exports = {
             Collection: Backbone.Collection.extend({
                 model: Detail.Model
-                //url: '../test-ajax/overview.json'
+                //url: 'test-ajax/overview.json'
             }),
             View: Backbone.View.extend({
                 initialize: function () {
                     var that = this;
-                    //this.collection.add(app.data.overviewData);
                     this.collection =  new exports.Collection(
                         app.data.overviewData
-                        /*{key: 'Available Patches'},
+                    );
+                    /*
+                    this.collection =  new exports.Collection([
+                        {key: 'Available Patches'},
                         {key: 'Scheduled Patches'},
                         {key: 'Completed Patches'},
-                        {key: 'Failed Patches'}*/
-                    );
-                    //console.log(this.collection);
+                        {key: 'Failed Patches'}
+                    ]);
+                    this.collection.fetch({
+                        success: function () { that.render(); }
+                    });
+                    */
                     that.render();
                 },
                 beforeRender: $.noop,
@@ -35,6 +40,9 @@ define(
                     _.each(this.collection.models, function (item) {
                         that.renderDetail(item);
                     }, this);
+
+                    // Demo Only Append
+                    this.$el.append('<nav class="row-handle">&nbsp;</nav>');
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;

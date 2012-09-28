@@ -2,9 +2,13 @@
 // --------------
 
 .widget {
+    background-color: white;
+
     HEADER {
-        border-bottom: @em*(  1px )/@baseFontSize solid #E0E0E0;
-        margin-bottom: @em*( 10px )/@baseFontSize;
+        font-size: @h4FontSize;
+        line-height: 1.25em;
+        border-bottom: @em*(  1px )/@h4FontSize solid #E0E0E0;
+        margin-bottom: @em*( 10px )/@h4FontSize;
     }
 
     FOOTER {
@@ -12,53 +16,15 @@
         margin-top: @em*( 10px )/@baseFontSize;
     }
 
-    &.number {
-        font-size: 24px;
-        line-height: 2.5em;
-        text-align:center;
-        background-color:#F0F0F0;
+    &.editable {
+        padding: 0 @em*( 3px )/@baseFontSize;
+        .box-shadow(0 0 @em*( 5px )/@baseFontSize rgba(0, 0, 0, 0.3));
 
-        h4 {
-            background-color:#DDD;
-            line-height: 1.5em;
+        NAV {
+            background-color: #F8F8F8;
+            border-bottom: @em*( 1px )/@baseFontSize solid #F0F0F0;
+            margin: 0 @em*( -3px )/@baseFontSize;
+            padding: 0 @em*( 3px )/@baseFontSize;
         }
-
-        .row-fluid {
-            font-size: @baseFontSize;
-        }
-    }
-}
-
-.show-grid .widget {
-    .box-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
-}
-
-// Alternate Widget Styles
-// --------------
-
-@altWidgetPadding: 6px;
-
-.widget-alternate {
-    border: 1px solid #E0E0E0;
-    padding: @altWidgetPadding;
-    .border-radius(5px);
-    overflow: hidden;
-    //.box-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
-
-    HEADER {
-        margin-top: -@altWidgetPadding;
-        margin-left: -@altWidgetPadding;
-        padding-left: @altWidgetPadding;
-        margin-right: -@altWidgetPadding;
-        padding-right: @altWidgetPadding;
-        #gradient > .vertical (rgb(255,255,255), rgb(238,238,238));
-        //color: rgb(7,89,164);
-    }
-
-    FOOTER {
-        margin-left: -@altWidgetPadding;
-        padding-left: @altWidgetPadding;
-        margin-right: -@altWidgetPadding;
-        padding-right: @altWidgetPadding;
     }
 }
