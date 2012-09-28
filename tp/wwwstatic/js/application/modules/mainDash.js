@@ -185,7 +185,7 @@ define(
                 });
             },
             pieGraph = function (selection) {
-                //var data = app.data.osData;
+                var data = app.data.osData;
                 var title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
                     width = $(selection).width(),
                     pieChart = app.chart.pie().title(title).width(width);

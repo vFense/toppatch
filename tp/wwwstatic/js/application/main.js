@@ -4,23 +4,26 @@ require(
         "use strict";
 
         var User = {},
+            userSettings,
             deferred;
-        User.Model = Backbone.Model.extend({
-            defaults: {
-                name: 'Guest',
-                show: {
-                    brandHeader: true,
-                    dashNav: true,
-                    copyFooter: true
-                },
-                access: [
-                    { name: 'Dashboard', href: '#dashboard', active: false },
-                    { name: 'Patch Manager', href: '#patchAdmin', active: false }
-                ]
-            }
+        $.getJSON("/api/userInfo", function(json) {
+            userSettings = json;
+            User.Model = Backbone.Model.extend({
+                defaults: {
+                    name: userSettings['name'],
+                    show: {
+                        brandHeader: true,
+                        dashNav: true,
+                        copyFooter: true
+                    },
+                    access: [
+                        { name: 'Dashboard', href: '#dashboard', active: false },
+                        { name: 'Patch Manager', href: '#patchAdmin', active: false }
+                    ]
+                }
+            });
+            window.User = new User.Model();
         });
-        window.User = new User.Model();
-
         // Load Bootstrap
         require(['jquery.bootstrap']);
 

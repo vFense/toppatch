@@ -254,3 +254,44 @@ class GraphHandler(BaseHandler):
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
+
+class OsHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        resultjson = []
+        installed = 0
+        available = 0
+        pending = 0
+        failed = 0
+        type = self.get_argument('type')
+        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+        db.echo = True
+        Session = sessionmaker(bind=db)
+        session = Session()
+        for u in session.query(NodeInfo, SystemInfo, NodeStats).filter(SystemInfo.os_string == type).join(SystemInfo).join(NodeStats).all():
+            installed += u[2].patches_installed
+            available += u[2].patches_available
+            pending += u[2].patches_pending
+            failed += u[2].patches_failed
+        if installed or available or pending or failed:
+            resultjson.append({"label" : "Installed", "value" : installed})
+            resultjson.append({"label" : "Available", "value" : available})
+            resultjson.append({"label" : "Pending", "value" : pending})
+            resultjson.append({"label" : "Failed", "value" : failed})
+            self.session = self.application.session
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(resultjson, indent=4))
+        else:
+            resultjson.append({'error' : 'no data to display'})
+            self.write(json.dumps(resultjson, indent=4))
+
+
+class UserHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        resultjson = {"name" : self.current_user}
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(resultjson, indent=4))

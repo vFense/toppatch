@@ -67,7 +67,7 @@ define(['jquery','d3'], function($, d3) {
                     .on("click", function (d, i) {
                         if(d.data.data) {
                             osData = d;
-                            disappear('new', d, 'Installed');
+                            disappear('new', d.data.label);
                         }
                     })
                     .on("mouseover", function (d, i) {
@@ -113,52 +113,39 @@ define(['jquery','d3'], function($, d3) {
                 function linkMouseOut(el) {
                     $(el).css('text-decoration', 'none');
                 }
-                function disappear(string, d, type) {
+                function disappear(string, type) {
                     arcs.select("text").style('opacity', 0);
                     arcs.select("path").transition().duration(1000).attr("d", arcOut);
                     arcs.select("path").transition().delay(900)
                         .style("opacity", function(d2, i) {
                             if(i === 0) {
-                                string === 'previous' ? previousGraph() : newGraph(d, type);
+                                string === 'previous' ? previousGraph() : newGraph(type);
                             }
                             return "1";
                         });
                 }
-                function newGraph(d, type) {
+                function newGraph(type) {
                     var tempData = [], position;
-                    console.log(d);
-                    if(d.data.data.length) {
-                        if(type === 'Installed') {
-                            position = 0;
-                        } else if(type === 'Available') {
-                            position = 1;
-                        } else if(type === 'Pending') {
-                            position = 2;
-                        } else if(type === 'Failed') {
-                            position = 3;
-                        }
-                        for(var i = 0; i < d.data.data.length; i++){
-                            var value = d.data.data[i].children[position].graphData.value;
-                            if(value != 0) {
-                                tempData.push(d.data.data[i].children[position].graphData);
-                            }
-                        }
-                        data = previousData.length != 0 ? previousData : data;
+                    $.getJSON("/api/osData/", {type: type}, function(json) {
+                        data = previousData.length != 0 ? json : data;
                         title = previousTitle != '' ? previousTitle : title;
-                        var pieChart = graph.pie().title(d.data.data[0].children[position].name + " in "+ d.data.data[0].os + " by nodes").previousData(data).previousTitle(title).width(width).osData(osData);
-                        if(tempData.length != 0) {
-                            d3.select(that).datum(tempData).call(pieChart);
-                        } else {
-                            //alert('No data to display');
+                        var pieChart = graph.pie().title(type + " Patch Statistics").previousData(data).previousTitle(title).width(width).osData(osData);
+                        if(json[0]['error']) {
                             previousData.length != 0 ? '' : renderLinks();
                             warning.style('opacity', '1').text('No data to display for ' + type + ' Patches');
+                            $(widget + "-title").html('No Data Available');
                             arcs.remove();
+                        } else {
+                            d3.select(that).datum(json).call(pieChart);
                         }
-                    }
+                    });
                 }
                 function previousGraph() {
-                    var pieChart = graph.pie().title(previousTitle).width(width);
-                    d3.select(that).datum(previousData).call(pieChart);
+                    var tempData, tempTitle;
+                    tempData = previousData.length != 0 ? previousData : data;
+                    tempTitle = previousTitle != '' ? previousTitle : title;
+                    var pieChart = graph.pie().title(tempTitle).width(width);
+                    d3.select(that).datum(tempData).call(pieChart);
                 }
                 function renderLinks() {
                     link = vis.selectAll('link')
@@ -172,23 +159,7 @@ define(['jquery','d3'], function($, d3) {
                         .text(function(d){ return d; })
                         .on('mouseover', function () { linkMouseOver(this); })
                         .on('mouseout', function () { linkMouseOut(this); })
-                        .on("click", function (d) { disappear('previous', d, 'None') });
-
-                    options = vis.selectAll('options')
-                        .data(['Installed', 'Available', 'Pending', 'Failed'])
-                        .enter()
-                        .append('svg:text')
-                        .attr('x', width - 80)
-                        .attr('y', function(d , i) { return 20 + i * 20;})
-                        .attr('fill', 'blue')
-                        .style('font-size', '1em')
-                        .style('pointer-events', 'all')
-                        .text(function (d) {return d;})
-                        .on('mouseover', function () { linkMouseOver(this); })
-                        .on('mouseout', function () { linkMouseOut(this); })
-                        .on('click', function (d, i) {
-                            disappear('new', osData, d);
-                        });
+                        .on("click", function (d) { disappear('previous', 'None') });
                 }
                 arcs.append("svg:title")
                     .text(function (d, i) { return d.data.label + ": " + d.data.value; });
