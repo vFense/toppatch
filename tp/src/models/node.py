@@ -160,31 +160,26 @@ class SoftwareInstalled(Base):
     id = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True )
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     name = Column(VARCHAR(128),nullable=False)
-    vendor_id = Column(INTEGER(unsigned=True))
     description = Column(VARCHAR(128), nullable=True)
     support_url = Column(VARCHAR(128), nullable=True)
-    operating_system = Column(VARCHAR(32), nullable=False)
     version = Column(VARCHAR(32), nullable=False)
     vendor = Column(VARCHAR(32), nullable=False)
     date_installed = Column(DATETIME, nullable=True)
     def __init__(self, node_id, name, vendor,
-                vendor_id, description, operating_system, version,
+                description, version,
                 support_url=None, date_installed=None):
         self.node_id = node_id
         self.name = name
         self.vendor = vendor
-        self.vendor_id = vendor_id
         self.description = description
-        self.operating_system = operating_system
         self.version = version
         self.support_url = support_url
         self.date_installed = date_installed
     def __repr__(self):
-        return "<SoftwareInstalled(%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<SoftwareInstalled(%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.node_id, self.name, self.vendor,
-                self.vendor_id, self.description,
-                self.operating_system, self.version,
+                self.description, self.version,
                 self.support_url, self.date_installed
                 )
 
