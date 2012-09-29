@@ -30,7 +30,7 @@ class SslInfo(Base):
         self.signed_cert_location = signed_cert_location
         self.cert_expiration = cert_expiration
     def __repr__(self):
-        return "<NodeStats(%s,%s,%s,%s,%s)>" %\
+        return "<SslInfo(%s,%s,%s,%s,%s)>" %\
                 (
                 self.node_id, self.csr_id,
                 self.signed_cert_name, self.signed_cert_location,
@@ -63,7 +63,7 @@ class CsrInfo(Base):
         self.is_csr_signed = is_csr_signed
         self.csr_signed_date = csr_signed_date
     def __repr__(self):
-        return "<NodeStats(%d,%d,%d,%d)>" %\
+        return "<CsrInfo(%s,%s,%s,%s,%s)>" %\
                 (
                 self.csr_name, self.ip_address,
                 self.csr_location, self.is_csr_signed,

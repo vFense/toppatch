@@ -71,7 +71,7 @@ class SystemInfo(Base):
         self.os_version_build = os_version_build
         self.os_meta = os_meta
     def __repr__(self):
-        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<SystemInfo(%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.node_id, self.os_code, self.os_string,
                 self.os_version_major, self.os_version_minor,
@@ -202,6 +202,7 @@ class NodeStats(Base):
     patches_failed = Column(INTEGER(unsigned=True))
     def __init__(self, node_id, patches_installed,
                 patches_available, patches_pending,
+                patches_failed
                 ):
         self.node_id = node_id
         self.patches_installed = patches_installed
@@ -209,7 +210,7 @@ class NodeStats(Base):
         self.patches_pending = patches_pending
         self.patches_failed = patches_failed
     def __repr__(self):
-        return "<NodeStats(%d,%d,%d,%d)>" %\
+        return "<NodeStats(%d,%d,%d,%d,%d)>" %\
                 (
                 self.node_id, self.patches_installed,
                 self.patches_available, self.patches_pending,
@@ -227,15 +228,14 @@ class NetworkStats(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
-    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     patches_installed = Column(INTEGER(unsigned=True))
     patches_available = Column(INTEGER(unsigned=True))
     patches_pending = Column(INTEGER(unsigned=True))
     patches_failed = Column(INTEGER(unsigned=True))
-    def __init__(self, node_id, patches_installed,
+    def __init__(self, patches_installed,
                 patches_available, patches_pending,
+                patches_failed
                 ):
-        self.node_id = node_id
         self.patches_installed = patches_installed
         self.patches_available = patches_available
         self.patches_pending = patches_pending
@@ -243,7 +243,7 @@ class NetworkStats(Base):
     def __repr__(self):
         return "<NetworkStats(%d,%d,%d,%d)>" %\
                 (
-                self.node_id, self.patches_installed,
+                self.patches_installed,
                 self.patches_available, self.patches_pending,
                 self.patches_failed
                 )
