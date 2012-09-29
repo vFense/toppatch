@@ -10,7 +10,7 @@ define(
                 initialize: function () {
                     this.collection =  new exports.Collection(window.User.get('access'));
                     this.vent = app.vent;
-                    this.vent.bind('nav', this.setActive, this);
+                    this.vent.bind('navigation:#dashboard-view', this.setActive, this);
                     this.render();
                 },
                 beforeRender: $.noop,
