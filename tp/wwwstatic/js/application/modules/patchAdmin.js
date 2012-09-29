@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/patchAdmin.html' ],
-    function ($, Backbone, app, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'text!templates/patchAdmin.html' ],
+    function ($, _, Backbone, app, myTemplate) {
         "use strict";
         var exports = {};
         exports.Model = Backbone.Model.extend({});

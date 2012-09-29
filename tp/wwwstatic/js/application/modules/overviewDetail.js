@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/overviewDetail.html'],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/overviewDetail.html'],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var exports = {
             Model: Backbone.Model.extend({

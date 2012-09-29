@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'app', './navButton'],
-    function ($, Backbone, app, navButton) {
+    ['jquery', 'underscore', 'backbone', 'app', './navButton'],
+    function ($, _, Backbone, app, navButton) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({

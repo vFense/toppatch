@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/widget.html' ],
-    function ($, Backbone, app, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'text!templates/widget.html' ],
+    function ($, _, Backbone, app, myTemplate) {
         "use strict";
         var currentSpan = 0,
             exports = {

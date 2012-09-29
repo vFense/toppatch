@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/navButton.html'],
-    function ($, Backbone, buttonTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/navButton.html'],
+    function ($, _, Backbone, buttonTemplate) {
         "use strict";
         var navButton = {
             Model: Backbone.Model.extend({
