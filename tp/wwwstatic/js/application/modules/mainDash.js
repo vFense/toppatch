@@ -262,7 +262,7 @@ define(
                     test: function () {
                         setTimeout(function () {
                             $(".movable").sortable({
-                                containment: '#dashboard-view',
+                                containment: 'body',
                                 appendTo: '#dashboard-view',
                                 helper: 'clone',
                                 connectWith: '.movable',
@@ -270,7 +270,7 @@ define(
                                 distance: 20
                             });
                             $("#dashboard-view").sortable({
-                                containment: '#dashboard-view',
+                                containment: 'body',
                                 appendTo: '#dashboard-view',
                                 helper: 'clone',
                                 items: '.row, .row-fluid',
