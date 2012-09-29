@@ -254,8 +254,6 @@ define(
 
                         this.test();
 
-                        app.vent.trigger('domchange:title', 'Dashboard');
-
                         if (this.onRender !== $.noop) { this.onRender(); }
                         return this;
                     },
