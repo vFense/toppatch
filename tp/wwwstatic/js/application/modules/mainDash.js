@@ -290,7 +290,7 @@ define(
                             barGraph("#graph2");
                             interactiveGraph("#graph3");
                             pieGraph("#graph1");
-                        }, 100);
+                        }, 200);
                     }
                 })
             };
