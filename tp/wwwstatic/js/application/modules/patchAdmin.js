@@ -18,8 +18,7 @@ define(
 
                 this.$el.html('');
 
-                this.$el.append(tmpl({ type: "patches", data: app.data.patches }));
-
+                this.$el.append(tmpl({}));
 
                 if (this.onRender !== $.noop) { this.onRender(); }
                 return this;

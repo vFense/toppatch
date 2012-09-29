@@ -1,146 +1,40 @@
-<header class="page-header">
-    <h1>PATCH MANAGER <small>apply custom patches</small></h1>
-</header>
-
-<form id="<%= type %>-form" method="get" style="display: inline">
-    <div class="pull-left inline">
-        <h4><% (type === 'patches') ? print('Step 1: <small>Choose available patches</small>') : print('Step 2: <small>Choose nodes to apply patches</small>') %></h4>
-            </div>
-    <div class="pull-right inline">
-        <label class="checkbox inline" for="selectAll">
-            <input type="checkbox" id="selectAll" onclick="toggleChecked(this.checked);"/>Select / Deselect All&nbsp;&nbsp;
-        </label>
-        <input class="btn" type="submit" id="submitPatches" name="submitPatches" value="<% data[0].date ? print('Next') : print('Apply') %>"/>
+<div class="row">
+    <div class="span12">
+        <div class="clearfix" data-pjax="">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#patchAdmin/byNode" data-filter="">
+                        Node List
+                    </a>
+                </li>
+                <li>
+                    <a href="#patchAdmin/byPatch" data-filter="" class="">
+                        Patch List
+                    </a>
+                </li>
+            </ul>
         </div>
-    <table class="table table-bordered table-striped table-hover">
-        <thead>
-        <tr>
-            <th>Name of <%= type %></th><% data[0].os ? print('<th>Operating System</th>') : "" %><th><% data[0].date ? print('Release date') : print('Operating System') %></th><th>select</th>
-        </tr>
-        </thead>
-        <tbody>
-        <% for (var i = 0; i < data.length; i ++) {
-        var current = data[i]; %>
-        <tr>
-            <td><%= current.name %></td><% current.os ? print('<td>' + current.os + '</td>') : "" %><td><% current.date ? print(current.date) : print(current.os) %></td><td><input id="patch-<%= i%>" name="patch-<%= i %>" type="checkbox" value="<%= current.name %>" /></td>
-        </tr>
-        <% } %>
-        </tbody>
-    </table>
-</form>
-<% if(type === 'nodes') { %>
-<div class="modal hide" id="progress">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3>Patching Progress</h3>
-    </div>
-    <div class="modal-body">
-        <h5 class="barTitle">Starting...</h5>
-        <div id="progressBar" class="progress progress-striped active">
-            <div class="bar" style="width: 0%;" data-percentage="100"></div>
+        <div class="">Sending Request…</div>
+        <div class="" style="display:none">
+            <p>There was an error serving your request</p>
         </div>
-    </div>
-    <div class="modal-footer hide">
-        <a href="#dashboard" class="btn btn-primary" id="accept">Okay</a>
+        <div class="" id="patchList">
+            <% if (true) { %>
+                <div class="none">
+                    <p>
+                        No nodes/patches to show.
+                        <a href="javascript:;">
+                            Clear active filters.
+                        </a>
+                    </p>
+                </div>
+            <% } else { %>
+                <table>
+                    <thead></thead>
+                    <tfoot></tfoot>
+                    <tbody></tbody>
+                </table>
+            <% }%>
+        </div>
     </div>
 </div>
-<% } %>
-<script type="text/javascript">
-require(['jquery', 'app', 'text!templates/patchAdmin.html', 'jquery.bootstrap'], function ($, app, myTemplate) {
-    setTimeout(function () {
-        var counter = 40, nodeName = [], patchName = [];
-        $("#patches-form").submit(function () {
-            var patchData = $(this).serialize();
-            patchData = patchData ? unserializeJQuery(patchData) : null;
-            var data = app.data.indNodes;
-            var variables = { type: "nodes", data: data, patchData: patchData };
-            var template = _.template(myTemplate, variables);
-            $("#dashboard-view").html(template);
-            return false;
-        });
-        /<% if(type === 'nodes') { %>/
-            $("#nodes-form").submit(function () {
-                var nodeData = $(this).serialize();
-                nodeData = nodeData ? unserializeJQuery(nodeData) : null;
-                if(!nodeData) { alert("No nodes were selected. Please select a node."); return false; }
-                for (var i = 0; i < nodeData.length; i ++) {
-                    nodeName.push(nodeData[i].value);
-                }
-                /<% for (var i = 0; i < patchData.length; i ++) { %>/
-                    patchName.push('<%= patchData[i].value %>');
-                /<% } %>/
-                $('#progress').modal('show');
-                var bar = $('.bar');
-                var perc = bar.attr("data-percentage");
-                var current_perc = 0, patchPercent = 0, nodeLength, patchLength, count = 0, patchCount = 0, lastPercent = 0;
-                var progress = setInterval(function () {
-                    if (current_perc >= perc) {
-                        clearInterval(progress);
-                        bar.parent().removeClass('active');
-                        $('.modal-footer').removeClass('hide');
-                        $('.barTitle').html('Complete');
-                    } else {
-                        nodeLength = nodeData.length;
-                        patchLength = '<%= patchData.length %>';
-                        current_perc = Math.floor((count + 1) / nodeLength * 100);
-                        var patchProgress = setInterval(function () {
-                            if ((lastPercent + patchPercent) >= current_perc) {
-                                clearInterval(patchProgress);
-                            } else {
-                                console.log('-------------------------------------------');
-                                console.log('current%: ' + current_perc);
-                                console.log('single%: ' + ((patchCount + 1) / patchLength));
-                                patchPercent = ((patchCount + 1 ) / patchLength) * (current_perc - lastPercent);
-                                console.log('patch%: ' + patchPercent);
-                                console.log('patchCount: ' + patchCount);
-                                console.log('bar%: ' + (lastPercent + patchPercent));
-                                console.log('count: ' + count);
-                                $('.barTitle').html('Applying patch \'' + patchName[patchCount] + '\' on node \'' + nodeName[count-1] +'\'');
-                                bar.css('width', (lastPercent + patchPercent) + '%');
-                                patchCount++;
-                                console.log('-------------------------------------------');
-                            }
-                            bar.text((lastPercent + patchPercent) + '%');
-                        }, 500);
-                        lastPercent = (count === 0) ? 0 : lastPercent + patchPercent;
-                        patchPercent = 0;
-                        console.log('+++++outside++++');
-                        console.log('lastPercent: ' + lastPercent);
-                        patchCount = 0;
-                        count++;
-                        //bar.css('width', (current_perc) + '%');
-                    }
-                    //bar.text((current_perc) + '%');
-                }, 4000);
-                return false;
-            });
-        /<% } %>/
-        $('#accept').click(function (){ $('#progress').modal('hide'); });
-    }, 100);
-});
-function unserializeJQuery(rubble) {
-    var bricks = rubble.split('&'), build = [], walls, value, decodedValue;
-    $.each( bricks, function(i, d) {
-        value = d;
-        walls = value.split('=');
-        decodedValue = decodeURIComponent(walls[1]);
-        build.push({ key: decodeURIComponent(walls[0]), value: decodedValue.replace(/\+/g," ") });
-    });
-    return build;
-}
-function toggleChecked(status) {
-    $(":checkbox").each( function() {
-        $(this).attr("checked", status);
-    });
-}
-
-    /*
-     $("#submitPatches").click(function () {
-     var data = { "status": "active", "name": "node" }
-     var variables = { type: "nodes", data: data };
-     var template = _.template($("#patch_template").html(), variables);
-     $("#main").html(template);
-     });
-     */
-
-</script>
