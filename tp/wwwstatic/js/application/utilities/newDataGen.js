@@ -30,7 +30,7 @@ define(
 
                 this.set('os', this.get('os') || _.shuffle(osList)[0]);
 
-                var myPatches = patchList[this.get('os').short].patches,
+                var myPatches = _.pluck(patchList[this.get('os').short].patches, "KBID"),
                     pick = Math.ceil(Math.random() * myPatches.length);
 
 
@@ -64,6 +64,9 @@ define(
                 if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                 this.$el.html('See the console log...');
+
+                window.patchCollection = this.collection.toJSON();
+
                 console.log(this.collection.toJSON());
 
                 if (this.onRender !== $.noop) { this.onRender(); }
