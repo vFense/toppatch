@@ -22,6 +22,7 @@ require.config({
         'jquery.bootstrap'  : 'libs/bootstrap/bootstrap.min',
         'underscore'        : 'libs/underscore/underscore',
         'backbone'          : 'libs/backbone/backbone',
+        'respond'           : 'libs/respond/respond.src',
         'd3'                : 'libs/d3/d3.v2',
         'text'              : 'libs/require/plugins/text',
 
@@ -85,6 +86,7 @@ require.config({
         'jquery.ui.progressbar' : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']}
     },
 
-    // Initialize the app with the main application file
-    deps: ['main']
+    // Load Respond.js, bootstrap, and our main application file
+    // Modernizr must be in the document head for proper operation in IE.
+    deps: ['respond', 'jquery.bootstrap', 'main']
 });
