@@ -9,5 +9,3 @@
 .ssh
 *.pyc
 *.log
-
-tp/wwwstatic/js/application/boilerplate.js
