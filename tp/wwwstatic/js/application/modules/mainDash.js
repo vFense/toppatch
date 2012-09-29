@@ -262,11 +262,17 @@ define(
                     test: function () {
                         setTimeout(function () {
                             $(".movable").sortable({
+                                containment: '#dashboard-view',
+                                appendTo: '#dashboard-view',
+                                helper: 'clone',
                                 connectWith: '.movable',
                                 items: 'dl, .widget',
                                 distance: 20
                             });
                             $("#dashboard-view").sortable({
+                                containment: '#dashboard-view',
+                                appendTo: '#dashboard-view',
+                                helper: 'clone',
                                 items: '.row, .row-fluid',
                                 handle: '.row-handle',
                                 placeholder: "ui-state-highlight",
