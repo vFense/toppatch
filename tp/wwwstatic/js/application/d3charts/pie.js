@@ -152,6 +152,7 @@ define(['jquery','d3'], function($, d3) {
                             //alert('No data to display');
                             previousData.length != 0 ? '' : renderLinks();
                             warning.style('opacity', '1').text('No data to display for ' + type + ' Patches');
+                            $(widget + "-title").html('No Data Available');
                             arcs.remove();
                         }
                     }

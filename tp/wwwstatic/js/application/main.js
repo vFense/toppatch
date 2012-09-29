@@ -4,6 +4,7 @@ require(
         "use strict";
 
         var User = {},
+            userSettings,
             deferred;
         User.Model = Backbone.Model.extend({
             defaults: {
