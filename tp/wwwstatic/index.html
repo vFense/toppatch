@@ -29,5 +29,33 @@
     <div class=""><a href="http://www.toppatch.com/"><img src="img/brand-name-tag.png" class="brand" alt="Top Patch brand"/></a></div>
 </noscript>
 <script data-main="js/config" src="js/libs/require/require.js"></script>
+<script type="text/template" id="widget_template">
+    <article id="<%= widget %>" class="<%= span %> widget editable">
+        <div id="<%= graphcontainer %>" class="window">
+            <nav class="clearfix hidden-print">
+                <div id="<%= menu %>" class="dropdown pull-right">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#<%= menu %>"><i class="icon-list-ul"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="remove">Hide</a></li>
+                        <li><a data-toggle="modal" href="#widgetProperties" class="properties">Properties</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <header id="<%= widget %>-title">Widget Title</header>
+            <div id="<%= graph %>" class="graph">&nbsp;</div>
+        </div>
+        <nav class="row-handle">&nbsp;</nav>
+    </article>
+</script>
+<script type="text/template" id="text_template">
+    <dl id="<%= widget %>" class="<%= span %> <%= type %>">
+        <dt id="<%= widget %>-title">
+            <%= title %>
+        </dt>
+        <dd>
+            <%= data %>
+        </dd>
+    </dl>
+</script>
 </body>
 </html>
