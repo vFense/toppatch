@@ -6,13 +6,28 @@ FILE_TYPE_PEM = crypto.FILETYPE_PEM
 DUMP_PKEY = crypto.dump_privatekey
 DUMP_CERT = crypto.dump_certificate
 DUMP_CERT_REQUEST = crypto.dump_certificate_request
+LOAD_PKEY = crypto.load_privatekey
+LOAD_CERT = crypto.load_certificate
+LOAD_CERT_REQUEST = crypto.load_certificate_request
+CLIENT_CSR_DIR = '/opt/TopPatch/var/lib/ssl/client/csr'
+CLIENT_KEY_DIR = '/opt/TopPatch/var/lib/ssl/client/keys'
+SERVER_KEY_DIR = '/opt/TopPatch/var/lib/ssl/server/keys'
+TYPE_CSR = 1
+TYPE_CERT = 2
+TYPE_PKEY = 3
+EXTENSION = {
+            1 : '.csr',
+            2 : '.cert',
+            3 : '.key'
+            }
 
 def generatePrivateKey(type, bits):
     pkey = crypto.PKey()
     pkey.generate_key(type, bits)
     return pkey
 
-def saveKey(location, key, extension, name=socket.gethostname()):
+def saveKey(location, key, key_type, name=socket.gethostname()):
+    extension = EXTENSION[key_type]
     path_to_key = os.path.join(location, name + extension)
     status = False
     if type(key) == crypto.PKeyType:
@@ -32,7 +47,7 @@ def saveKey(location, key, extension, name=socket.gethostname()):
     try:
         file_exists = os.stat(path_to_key)
         if file_exists:
-            print 'File %s already exists, and it will' % (path_key)
+            print 'File %s already exists' % (path_to_key)
             print ' not be overwritten'
     except OSError as e:
         if e.errno == 2:
@@ -70,11 +85,6 @@ def createSignedCertificate(csr, (issuerCert, issuerKey), serial,\
     cert.set_subject(csr.get_subject())
     cert.set_pubkey(csr.get_pubkey())
     cert.sign(issuerKey, digest)
-#    cert.add_extensions([
-#        crypto.X509Extension("basicConstraints", True,"CA:TRUE, pathlen:0"),
-#        crypto.X509Extension("keyUsage", True,"keyCertSign, cRLSign"),
-#        crypto.X509Extension("subjectKeyIdentifier", False, "hash",subject=cert),
-#        ])
     return cert
 
 def createCertificateAuthority(pkey, serial,\
@@ -120,6 +130,28 @@ def createSigningCertificateAuthority(pkey, serial,\
         crypto.X509Extension("keyUsage", True,"keyCertSign, cRLSign"),
         crypto.X509Extension("subjectKeyIdentifier", False, "hash",subject=ca),
         ])
-
     ca.sign(pkey, digest)
     return ca
+
+def verifyValidFormat(data, ssl_type):
+    verified = True
+    error = None
+    if ssl_type == TYPE_CSR:
+        try:
+            LOAD_CERT_REQUEST(FILE_TYPE_PEM, data)
+        except Exception as e:
+            error =  'INVALID CSR'
+            verified = False
+    if ssl_type == TYPE_CERT:
+        try:
+            LOAD_CERT(FILE_TYPE_PEM, data)
+        except Exception as e:
+            error =  'INVALID CERT'
+            verified = False
+    if ssl_type == TYPE_PKEY:
+        try:
+            LOAD_PKEY(FILE_TYPE_PEM, data)
+        except Exception as e:
+            error =  'INVALID PKEY'
+            verified = False
+    return(verified, error)
