@@ -7,7 +7,7 @@ from models.base import Base
 from models.windows import *
 from models.node import *
 
-from dbquery import *
+from query_table import *
 
 def addNode(session, client_ip):
     try:
@@ -21,6 +21,17 @@ def addNode(session, client_ip):
         session.commit()
     except Exception as e:
         print e
+
+def addCsr(session, client_ip, location):
+    csr_name = client_ip + '.csr'
+    csr_location = location + '/' + csr_name
+    try:
+        add_csr = CsrInfo(csr_name, client_ip, csr_location, None, None)
+        session.add(add_csr)
+        session.commit()
+    except Exception as e:
+        print e
+
 
 
 def addSystemInfo(session, data, node_info):
