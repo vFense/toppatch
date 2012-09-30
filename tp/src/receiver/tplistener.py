@@ -6,8 +6,9 @@ from twisted.internet.protocol import Factory, Protocol
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from addupdates import *
-from dbquery import *
+from db.update_table import *
+from db.query_table import *
+from db.client import connect as db_connect
 
 
 ALLOWED_CIPHER_LIST = 'TLSv1+HIGH:!SSLv2:RC4+MEDIUM:!aNULL:!eNULL:!3DES:@STRENGTH'
@@ -19,10 +20,11 @@ SYSTEM_INFO = 'system_info'
 
 class GetJson(Protocol):
     def connectionMade(self):
-        self.db = create_engine(
-            'mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
-        Session = sessionmaker(bind=self.db)
-        self.session = Session()
+        #self.db = create_engine(
+        #    'mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
+        #Session = sessionmaker(bind=self.db)
+        #self.session = Session()
+        self.session = db_connect()
         self.client_ip = self.transport.getPeer()
         self.node_exists = nodeExists(self.session,
             self.client_ip.host)
@@ -54,7 +56,8 @@ if __name__ == '__main__':
     factory.protocol = GetJson
 
     myContextFactory = ssl.DefaultOpenSSLContextFactory(
-        '/opt/TopPatch/var/lib/ssl/server/keys/server.key', '/opt/TopPatch/var/lib/ssl/server/keys/server.cert'
+        '/opt/TopPatch/var/lib/ssl/server/keys/server.key',
+        '/opt/TopPatch/var/lib/ssl/server/keys/server.cert'
         )
 
     ctx = myContextFactory.getContext()
@@ -64,9 +67,6 @@ if __name__ == '__main__':
         SSL.VERIFY_PEER | SSL.VERIFY_FAIL_IF_NO_PEER_CERT,
         verifyCallback
         )
-
-    # Since we have self-signed certs we have to explicitly
-    # tell the server to trust them.
 
     reactor.listenSSL(9000, factory, myContextFactory)
     reactor.run()
