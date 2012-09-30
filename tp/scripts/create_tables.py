@@ -2,6 +2,7 @@
 from models.base import Base
 from models.windows import *
 from models.node import *
+from models.ssl import *
 from sqlalchemy import create_engine
 
 db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
