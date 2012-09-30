@@ -16,7 +16,7 @@ class SslInfo(Base):
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
-    csr_id = Column(INTEGER(unsigned=True),ForeignKey("csr.id"))
+    csr_id = Column(INTEGER(unsigned=True),ForeignKey("csr_info.id"))
     signed_cert_name = Column(VARCHAR(128),nullable=False)
     signed_cert_location = Column(VARCHAR(128),nullable=False)
     cert_expiration = Column(DATETIME, nullable=True)
