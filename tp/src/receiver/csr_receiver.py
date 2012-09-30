@@ -12,6 +12,15 @@ from db.update_table import *
 
 
 class CsrReceiver(Protocol):
+    """
+       This class does one thing and one thing only.
+       It receives a Certificate Request in a Json Message.
+       1st it verifies if the message is in a Valid Json Format.
+       2nd, it verifies the Json message contains and operation
+       the csr. 3rd, it saves the csr in the filesystem. 4th, 
+       it then checks if this csr is already in the database.
+       If it is not in the database, it than adds it.
+    """
     def dataReceived(self, data):
         if verifyJsonIsValid(data):
             data = loads(data)
