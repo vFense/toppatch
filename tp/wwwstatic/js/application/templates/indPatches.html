@@ -1,0 +1,32 @@
+<header><h3>Patch Details</h3></header>
+<section>
+    <% $.each(models, function (k, model) { %>
+        <% if(id == model.get('reference').toppatch) { %>
+            <div  class="well">
+                <table class="table table-striped table-condensed table-hover">
+                    <tr>
+                        <th>Patch ID:</th><td><% print(model.get('reference').toppatch); %></td>
+                    </tr>
+                    <tr>
+                        <th>Patch Name:</th><td><% print(model.get('name')); %></td>
+                    </tr>
+                    <tr>
+                        <th>Vendor:</th><td><% print(model.get('reference').developer); %>"</td>
+                    </tr>
+                    <tr>
+                        <th>Release Date:</th><td><% print(model.get('date')); %>"</td>
+                    </tr>
+                    <tr>
+                        <th>Severity:</th><td><% print(model.get('severity')); %>"</td>
+                    </tr>
+                    <tr>
+                        <th>Description:</th><td><% print(model.get('description')); %>"</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="pull-left"><a href="#patches">Back</a></td>
+                    </tr>
+                </table>
+            </div>
+        <% } %>
+    <% }); %>
+</section>

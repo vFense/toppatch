@@ -41,7 +41,6 @@ class Application(tornado.web.Application):
             (r"/logout/?", LogoutHandler),
             (r"/ws/?", WebsocketHandler),
             (r"/test/?", testHandler),
-
             (r"/developer", DeveloperRegistrationHandler),
 
             #### oAuth 2.0 Handlers
@@ -57,6 +56,7 @@ class Application(tornado.web.Application):
             (r"/api/summaryData/?", SummaryHandler),
             (r"/api/patchData/?", PatchHandler),
             (r"/api/graphData/?", GraphHandler),
+            (r"/api/nodes.json/?", TestHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.

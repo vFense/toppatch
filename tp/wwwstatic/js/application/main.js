@@ -24,8 +24,6 @@ require(
             });
             window.User = new User.Model();
         });
-        // Load Bootstrap
-        require(['jquery.bootstrap']);
 
         deferred = new $.Deferred();
         require(['modules/pageHeader', 'modules/navBar'], function (PageHeader, DashNav) {

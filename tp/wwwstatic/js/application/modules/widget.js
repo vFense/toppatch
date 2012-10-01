@@ -49,7 +49,6 @@ define(
                         window.view = this;
 
                         this.$el.html('');
-
                         this.$el.append(tmpl(this.model.toJSON()));
 
                         this.renderSpan();

@@ -1,0 +1,11 @@
+<section>
+    <% $.each(models, function (k, model) { %>
+        <div>
+            <ul style="display: inline;">
+                <li class="pull-left" style="display: inline;"><% print(model.get('reference').toppatch); %></li>
+                <li style="display: inline;"><% print(model.get('name')); %></li>
+                <li class="pull-right" style="display: inline;"><% print(model.get('date')); %>&nbsp;&nbsp;<a href="#patches/<% print(model.get('reference').toppatch); %>">></a></li>
+            </ul>
+        </div>
+    <% }); %>
+</section>

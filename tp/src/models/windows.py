@@ -72,8 +72,8 @@ class ManagedWindowsUpdate(Base):
         self.hidden = hidden
         self.installed = installed
     def __repr__(self):
-        return "<ManagedWindowsUpdate(%s,%s,%s,%s,%s,%s)>" %\
+        return "<ManagedWindowsUpdate(%s,%s,%s,%s,%s)>" %\
                (
-                   self.node_id, self.toppatch_id, self.hidden,
-                   self.installed, self.date, self.installed
+                   self.node_id, self.toppatch_id, self.date_installed,
+                   self.hidden, self.installed
                    )

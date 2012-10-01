@@ -10,11 +10,13 @@ define(
                 'dashboard':  'home',
 
                 // Patch Routes
-                'patchAdmin': 'showPatchAdmin',
+                'patchAdmin': 'patchAdmin',
 
                 // Testers
                 'test': 'showTest',
                 'testPatch': 'showPatchTest',
+                'patches': 'showPatches',
+                'patches/:id': 'showPatchesById',
 
                 // Default
                 '*other':     'defaultAction'
@@ -22,55 +24,64 @@ define(
             initialize: function () {
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
-                this.vent = app.vent;
-                this.viewManager = new app.ViewManager({'selector': '#dashboard-view'});
+                this.viewTarget = '#dashboard-view';
+                this.viewManager = new app.ViewManager({'selector': this.viewTarget});
             },
             home: function () {
-                var that = this;
-                this.vent.trigger('nav', '#dashboard');
-
-                // Update the main dashboard view
-                require(['modules/mainDash'], function (myView) {
-                    var view = new myView.View();
-                    that.viewManager.showView(view);
-                });
+                this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
             },
-            showPatchAdmin: function () {
-                var that = this;
-                this.vent.trigger('nav', '#patchAdmin');
-
-                // Update the main dashboard view
-                require(['modules/patchAdmin'], function (myView) {
-                    var view = new myView.View();
-                    that.viewManager.showView(view);
-                });
+            patchAdmin: function () {
+                this.show({hash: '#patchAdmin', title: 'Patch Administration', view: 'modules/patchAdmin'});
             },
             showTest: function () {
-                var that = this;
-                this.vent.trigger('nav', '#test');
-
-                // Update the main dashboard view
-                require(['modules/widget'], function (myView) {
-                    var model = new myView.Model({}),
-                        view = new myView.View({model: model});
-                    that.viewManager.showView(view);
-                });
+                this.show({hash: '#test', title: 'Test Page', view: 'modules/widget'});
             },
             showPatchTest: function () {
+                this.show({hash: '#testPatch', title: 'Patch Test Page', view: 'utilities/newDataGen'});
+            },
+            showPatches: function () {
+                this.show({hash: '#patches', title: 'Patch Info Page', view: 'modules/patches'});
+            },
+            showPatchesById: function (id) {
                 var that = this;
-                this.vent.trigger('nav', '#test');
-
-                // Update the main dashboard view
-                require(['utilities/newDataGen'], function (myView) {
-                    var view = new myView.View();
-                    that.viewManager.showView(view);
+                require(['modules/indPatches'], function (myView) {
+                    var view = new (myView.View.extend({id: id}))()
+                    that.show({hash: '#patches', title: 'Patch Info Page', view: view});
                 });
             },
             defaultAction: function (other) {
-                var that = this;
-                this.vent.trigger('nav', '404');
+                this.show(
+                    {
+                        hash: '#404',
+                        title: 'Page Not Found',
+                        view: new (Backbone.View.extend({
+                            render: function () {
+                                this.$el.html('<h1>404: <small>Not Found</small></h1>');
+                                return this;
+                            }
+                        }))()
+                    }
+                );
+            },
+            show: function (options) {
+                var that = this,
+                    settings = $.extend({
+                        hash: null,
+                        title: null,
+                        view: null
+                    }, options);
 
-                this.viewManager.showView({ el: '404: Not Found', render: function () { return true; }, close: function () {  return true; }});
+                app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
+                app.vent.trigger('domchange:title', settings.title);
+
+                if ($.type(settings.view) === 'string') {
+                    require([settings.view], function (myView) {
+                        var view = new myView.View();
+                        that.viewManager.showView(view);
+                    });
+                } else if (settings.view instanceof Backbone.View) {
+                    that.viewManager.showView(settings.view);
+                }
             }
         });
         return {

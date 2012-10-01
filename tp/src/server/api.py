@@ -286,6 +286,37 @@ class OsHandler(BaseHandler):
             resultjson.append({'error' : 'no data to display'})
             self.write(json.dumps(resultjson, indent=4))
 
+class TestHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        resultjson = []
+        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+        db.echo = True
+        Session = sessionmaker(bind=db)
+        session = Session()
+        for u in session.query(NodeInfo, SystemInfo).join(SystemInfo):
+            installed = []
+            failed = []
+            pending = []
+            available = []
+            resultnode = {}
+            for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
+                print v.node_id
+                print '^v_id'
+                print u[1].node_id
+                print '^u_id'
+                if v.installed:
+                    installed.append(v.toppatch_id)
+                else:
+                    available.append(v.toppatch_id)
+            resultnode = {'patch/need': available, 'patch/done': installed, 'patch/fail': failed, 'patch/pending': pending, 'ip': u[0].ip_address, 'os/name':u[1].os_string }
+            resultjson.append(resultnode)
+            print u
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(resultjson, indent=4))
+
 
 class UserHandler(BaseHandler):
 
