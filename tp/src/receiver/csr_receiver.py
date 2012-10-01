@@ -31,17 +31,16 @@ class CsrReceiver(Protocol):
                 self.csr_exists = csrExists(self.session,
                     self.client_ip.host)
                 if not self.csr_exists:
-                    addCsr(self.session, self.client_ip.host,
-                        ssl_tools.SSL_CLIENT_CSR_DIR )
-                    self.csr_exists = csrExists(self.session,
-                        self.client_ip.host)
-                verified, error = ssl_tools.verifyValidFormat(data['csr'],
-                    ssl_tools.TYPE_CSR)
-                if verified:
-                    self.path_to_csr, self.csr_error = \
-                        ssl_tools.saveKey(ssl_tools.CLIENT_CSR_DIR,
-                            data['csr'], ssl_tools.TYPE_CSR,
-                            name=self.client_ip.host)
+                    verified, error = ssl_tools.verifyValidFormat(data['csr'],
+                        ssl_tools.TYPE_CSR)
+                    if verified:
+                        self.path_to_csr, self.csr_error = \
+                            ssl_tools.saveKey(ssl_tools.CLIENT_CSR_DIR,
+                                data['csr'], ssl_tools.TYPE_CSR,
+                                name=self.client_ip.host)
+                        addCsr(self.session, self.client_ip.host,
+                            ssl_tools.SSL_CLIENT_CSR_DIR )
+                self.session.close()
                 else:
                     print 'csr for %s %s' % (self.client_ip.host, error)
 

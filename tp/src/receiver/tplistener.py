@@ -24,6 +24,8 @@ class GetJson(Protocol):
         #    'mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
         #Session = sessionmaker(bind=self.db)
         #self.session = Session()
+        print self.transport.getPeer()
+    def dataReceived(self, data):
         self.session = db_connect()
         self.client_ip = self.transport.getPeer()
         self.node_exists = nodeExists(self.session,
@@ -32,7 +34,6 @@ class GetJson(Protocol):
             addNode(self.session, self.client_ip.host)
             self.node_exists = nodeExists(self.session,
                 self.client_ip.host)
-    def dataReceived(self, data):
         try:
             json_data = loads(data)
         except ValueError as e:
@@ -41,6 +42,7 @@ class GetJson(Protocol):
         if json_data[OPERATION] == SYSTEM_INFO:
             addSystemInfo(self.session, json_data,
                 self.node_exists)
+        self.session.close()
         self.transport.write(dumps(json_data))
 
 def verifyCallback(connection, x509, errnum, errdepth, ok):
@@ -63,10 +65,10 @@ if __name__ == '__main__':
     ctx = myContextFactory.getContext()
     ctx.set_cipher_list(ALLOWED_CIPHER_LIST)
     ctx.load_verify_locations("/opt/TopPatch/var/lib/ssl/server/keys/server.cert")
-    ctx.set_verify(
-        SSL.VERIFY_PEER | SSL.VERIFY_FAIL_IF_NO_PEER_CERT,
-        verifyCallback
-        )
+    #ctx.set_verify(
+    #    SSL.VERIFY_PEER | SSL.VERIFY_FAIL_IF_NO_PEER_CERT,
+    #    verifyCallback
+    #    )
 
     reactor.listenSSL(9000, factory, myContextFactory)
     reactor.run()
