@@ -83,4 +83,62 @@
             }
         }
     }
+
+    .list {
+        HEADER {
+            //line-height: 20px;
+            border-top: 1px solid #E6E6E6;
+            border-bottom: 1px solid #E6E6E6;
+            padding: 2px 0;
+        }
+
+        FOOTER {
+            //line-height: 20px;
+            border-bottom: 1px solid #E6E6E6;
+            padding: 2px 0;
+        }
+
+        .legend {
+            line-height: 30px;
+            border-bottom: 1px solid #E6E6E6;
+        }
+
+        .item {
+            line-height: 30px;
+            border-bottom: 1px solid #E6E6E6;
+
+            &:first-child {
+                /* Add top border to first list item */
+                border-top: 1px solid #E6E6E6;
+            }
+
+            &:hover {
+                background-color: #F5F5F5;
+            }
+
+            A {
+                color: #000;
+                display: block;
+                text-decoration: none;
+
+                STRONG {
+                    color: @linkColor;
+                }
+            }
+        }
+
+        HEADER + .item {
+            /* Remove top border from first list item when list header present */
+            border-top: none;
+        }
+
+        &.nodes {
+            .patches {
+                .done { color: @successText; }
+                .pend { color: @infoText; }
+                .need { color: @warningText; }
+                .fail { color: @errorText; }
+            }
+        }
+    }
 }
