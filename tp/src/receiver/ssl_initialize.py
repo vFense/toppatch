@@ -72,21 +72,21 @@ if not file_exists:
     #ca_cert = createSigningCertificateAuthority(ca_pkey, 1,
     #    TOPPATCH_CA, EXPIRATION
     #)
-    server_pkey = generatePrivateKey(TYPE_RSA, 4098)
+    server_pkey = generatePrivateKey(TYPE_RSA, 2048)
     server_cert = createSigningCertificateAuthority(server_pkey, 1,
         TOPPATCH_SERVER, EXPIRATION
     )
-    client_pkey = generatePrivateKey(TYPE_RSA, 4098)
+    client_pkey = generatePrivateKey(TYPE_RSA, 2048)
     client_csr = createCertRequest(client_pkey, TOPPATCH_CLIENT)
     client_cert = createSignedCertificate(client_csr, (server_cert, server_pkey), 1, EXPIRATION, digest="sha512")
     #keys_written.append(saveKey(SERVER_KEY_DIR, ca_pkey, '.key', name='CA'))
     #keys_written.append(saveKey(SERVER_KEY_DIR, ca_cert, '.cert', name='CA'))
-    keys_written.append(saveKey(SERVER_KEY_DIR, server_pkey, '.key', name='server'))
+    keys_written.append(saveKey(SERVER_KEY_DIR, server_pkey, TYPE_PKEY, name='server'))
     #keys_written.append(saveKey(SERVER_KEY_DIR, server_csr, '.csr', name='server'))
-    keys_written.append(saveKey(SERVER_KEY_DIR, server_cert, '.cert', name='server'))
-    keys_written.append(saveKey(CLIENT_KEY_DIR, client_pkey, '.key', name='client'))
-    keys_written.append(saveKey(CLIENT_KEY_DIR, client_csr, '.csr', name='client'))
-    keys_written.append(saveKey(CLIENT_KEY_DIR, client_cert, '.cert', name='client'))
+    keys_written.append(saveKey(SERVER_KEY_DIR, server_cert, TYPE_CERT, name='server'))
+    keys_written.append(saveKey(CLIENT_KEY_DIR, client_pkey, TYPE_PKEY, name='client'))
+    keys_written.append(saveKey(CLIENT_KEY_DIR, client_csr, TYPE_CSR, name='client'))
+    keys_written.append(saveKey(CLIENT_KEY_DIR, client_cert, TYPE_CERT, name='client'))
 
 for certs in keys_written:
     logger.info('%s has been created' % (certs[0]))
