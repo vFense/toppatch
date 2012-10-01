@@ -13,6 +13,14 @@ define(
             vent: vent,
             ViewManager: ViewManager,
             views: {},
+            parseQuery: function (query) {
+                var params = {};
+                _.each(query.split('&'), function (value) {
+                    var param = value.split('=');
+                    params[param[0]] = param[1];
+                });
+                return params;
+            },
             chart: {
                 partition: charts.partition,
                 pie: charts.pie,
