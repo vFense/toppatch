@@ -15,6 +15,7 @@ define(
                 // New Pages
                 'nodes': 'showNodes',
                 'nodes?:query': 'showNodes',
+                'nodes/:id': 'showNode',
 
                 // Testers
                 'test': 'showTest',
@@ -48,6 +49,8 @@ define(
                     that.show({hash: '#nodes', title: 'Nodes', view: new myView.View()});
                 });
             },
+            showNode: function (id) {
+                console.log('showNode:' + id);
             },
             defaultAction: function (other) {
                 this.show(
