@@ -70,7 +70,7 @@ define(
         });
         return {
             initialize: function () {
-                this.app_router = new AppRouter();
+                app.router = new AppRouter();
                 Backbone.history.start();
             }
         };
