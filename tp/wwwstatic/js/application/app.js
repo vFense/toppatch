@@ -5,8 +5,22 @@ define(
 
         var app = window.app = {
             root: '/'
-        };
-
+        }, overviewInstalled = {}, overviewPending = {}, overviewAvailable = {}, overviewFailed = {};
+        //overviewInstalled.data = 1;
+        //overviewPending.data = 1;
+        //overviewAvailable.data = 1;
+        //overviewFailed.data = 1;
+        $.ajax({
+            url: '/api/networkData',
+            dataType: 'json',
+            async: false,
+            success: function (json) {
+                overviewInstalled = json[0];
+                overviewAvailable = json[1];
+                overviewPending = json[2];
+                overviewFailed = json[3];
+            }
+        });
         _.extend(app, {
             $doc: $(document),
             title: $(document).attr('title'),
@@ -35,22 +49,26 @@ define(
                 overviewData: [
                     {
                         "key": "Available Patches",
-                        "data": dataGenerator.counter.available,
+                        "link": "available",
+                        "data": overviewAvailable.data,//dataGenerator.counter.available,
                         "format": [{"rule": "gt", "value": 0, "style": "info", "stop": true}]
                     },
                     {
                         "key": "Scheduled Patches",
-                        "data": dataGenerator.counter.pending,
+                        "link": "pending",
+                        "data": overviewPending.data,//dataGenerator.counter.pending,
                         "format": [{"rule": "gt", "value": 0, "style": "warning", "stop": true}]
                     },
                     {
                         "key": "Completed Patches",
-                        "data": dataGenerator.counter.patched,
+                        "link": "installed",
+                        "data": overviewInstalled.data,//dataGenerator.counter.patched,
                         "format": [{"rule": "gt", "value": 0, "style": "success", "stop": true}]
                     },
                     {
                         "key": "Failed Patches",
-                        "data": dataGenerator.counter.failed,
+                        "link": "failed",
+                        "data": overviewFailed.data,//dataGenerator.counter.failed,
                         "format": [{"rule": "gt", "value": 0, "style": "error", "stop": true}]
                     }
                 ],
@@ -65,7 +83,6 @@ define(
                     { "date": new Date(), "name": "Security Update for Windows 7 for x64-based Systems (KB2731847)", "os": "windows" }]
             }
         });
-
         return app;
     }
 );

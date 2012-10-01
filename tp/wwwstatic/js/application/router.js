@@ -17,6 +17,7 @@ define(
                 'testPatch': 'showPatchTest',
                 'patches': 'showPatches',
                 'patches/:id': 'showPatchesById',
+                'patches-overview/:type': 'showOverview',
 
                 // Default
                 '*other':     'defaultAction'
@@ -48,6 +49,14 @@ define(
                     var view = new (myView.View.extend({id: id}))()
                     that.show({hash: '#patches', title: 'Patch Info Page', view: view});
                 });
+            },
+            showOverview: function (type) {
+                var that = this;
+                require(['modules/patchOverview'], function (myView) {
+                    var collection = new (myView.Collection.extend({type: type}))()
+                    var view = new (myView.View.extend({collection: collection}))()
+                    that.show({hash: '#patches', title: 'Patch Info Page', view: view});
+                })
             },
             defaultAction: function (other) {
                 this.show(

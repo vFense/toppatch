@@ -180,20 +180,58 @@ class PatchHandler(BaseHandler):
     @authenticated_request
     def get(self):
         resultjson = []
+        try:
+            type = self.get_argument('type')
+        except:
+            type = None
+        else:
+            pass
         db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
         db.echo = True
         Session = sessionmaker(bind=db)
         session = Session()
-        for u in session.query(WindowsUpdate).all():
-            print u
-            resultjson.append({"reference" : {
-                "toppatch" : u.toppatch_id,
-                "developer" : u.vendor_id
-            },
-            "date" : str(u.date_pub),
-           "name" : u.title,
-           "description" : u.description,
-           "severity" : u.severity})
+        if type == 'available':
+            for u in session.query(WindowsUpdate).all():
+                noderesult = []
+                for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False).join(WindowsUpdate).all():
+                    noderesult.append(v.node_id)
+                resultjson.append({"reference" : {
+                    "toppatch" : u.toppatch_id,
+                    "developer" : u.vendor_id
+                },
+               "date" : str(u.date_pub),
+               "name" : u.title,
+               "description" : u.description,
+               "severity" : u.severity,
+               "node": noderesult})
+        elif type == 'pending':
+            pass
+        elif type == 'installed':
+            for u in session.query(WindowsUpdate).all():
+                noderesult = []
+                for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).join(WindowsUpdate).all():
+                    noderesult.append(v.node_id)
+                resultjson.append({"reference" : {
+                    "toppatch" : u.toppatch_id,
+                    "developer" : u.vendor_id
+                },
+               "date" : str(u.date_pub),
+               "name" : u.title,
+               "description" : u.description,
+               "severity" : u.severity,
+               "node": noderesult})
+        elif type == 'failed':
+            pass
+        else:
+            for u in session.query(WindowsUpdate).all():
+                resultjson.append({"reference" : {
+                    "toppatch" : u.toppatch_id,
+                    "developer" : u.vendor_id
+                },
+                "date" : str(u.date_pub),
+               "name" : u.title,
+               "description" : u.description,
+               "severity" : u.severity})
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
