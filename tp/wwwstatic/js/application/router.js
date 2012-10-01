@@ -31,11 +31,7 @@ define(
             patchAdmin: function () {
                 this.show({hash: '#patchAdmin', title: 'Patch Administration', view: 'modules/patchAdmin'});
             },
-            showTest: function () {
-                this.show({hash: '#test', title: 'Test Page', view: 'modules/widget'});
             },
-            showPatchTest: function () {
-                this.show({hash: '#testPatch', title: 'Patch Test Page', view: 'utilities/newDataGen'});
             },
             defaultAction: function (other) {
                 this.show(
