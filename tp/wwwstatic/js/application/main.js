@@ -16,6 +16,8 @@ require(
                 },
                 access: [
                     { name: 'Dashboard', href: '#dashboard', active: false },
+                    { name: 'Nodes', href: '#nodes', active: false },
+                    { name: 'Patches', href: '#patches', active: false }
                 ]
             }
         });
