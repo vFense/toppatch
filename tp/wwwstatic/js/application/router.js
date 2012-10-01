@@ -12,6 +12,10 @@ define(
                 // Patch Routes
                 'patchAdmin': 'patchAdmin',
 
+                // New Pages
+                'nodes': 'showNodes',
+                'nodes?:query': 'showNodes',
+
                 // Testers
                 'test': 'showTest',
                 'testPatch': 'showPatchTest',
@@ -31,6 +35,18 @@ define(
             patchAdmin: function () {
                 this.show({hash: '#patchAdmin', title: 'Patch Administration', view: 'modules/patchAdmin'});
             },
+            showNodes: function (query) {
+                var that = this;
+                require(['modules/showNodes'], function (myView) {
+                    if ($.type(query) === 'string') {
+                        var params = app.parseQuery(query);
+                        myView.Collection = myView.Collection.extend({
+                            getCount: params.count,
+                            offset: params.offset
+                        });
+                    }
+                    that.show({hash: '#nodes', title: 'Nodes', view: new myView.View()});
+                });
             },
             },
             defaultAction: function (other) {
