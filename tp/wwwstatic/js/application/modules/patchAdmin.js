@@ -11,9 +11,6 @@ define(
                 this.url = function () {
                     return this.show + this.filter;
                 };
-                this.comparator = function (model) {
-
-                }
                 window.myCollection = this;
             }
         });
@@ -30,7 +27,7 @@ define(
                 });
             },
             events: {
-                'click a[data-show]': 'setOrder',
+                'click a[data-show]': 'setOrder'
             },
             beforeRender: $.noop,
             onRender: $.noop,
