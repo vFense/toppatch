@@ -16,8 +16,8 @@ define(
                 'test': 'showTest',
                 'testPatch': 'showPatchTest',
                 'patches': 'showPatches',
-                'patches/:id': 'showPatchesById',
-                'patches-overview/:type': 'showOverview',
+                'patches/:id': 'showPatch',
+                'patches?:type': 'showOverview',
 
                 // Default
                 '*other':     'defaultAction'
@@ -43,17 +43,18 @@ define(
             showPatches: function () {
                 this.show({hash: '#patches', title: 'Patch Info Page', view: 'modules/patches'});
             },
-            showPatchesById: function (id) {
+            showPatch: function (id) {
                 var that = this;
-                require(['modules/indPatches'], function (myView) {
+                require(['modules/patch'], function (myView) {
                     var view = new (myView.View.extend({id: id}))()
                     that.show({hash: '#patches', title: 'Patch Info Page', view: view});
                 });
             },
-            showOverview: function (type) {
+            showOverview: function (query) {
                 var that = this;
+                var params = app.parseQuery(query);
                 require(['modules/patchOverview'], function (myView) {
-                    var collection = new (myView.Collection.extend({type: type}))()
+                    var collection = new (myView.Collection.extend({type: params.type}))()
                     var view = new (myView.View.extend({collection: collection}))()
                     that.show({hash: '#patches', title: 'Patch Info Page', view: view});
                 })

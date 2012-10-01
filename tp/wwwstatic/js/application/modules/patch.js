@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/indPatches.html' ],
+    ['jquery', 'backbone', 'app', 'text!templates/patch.html' ],
     function ($, Backbone, app, myTemplate) {
         "use strict";
         var exports = {};

@@ -151,6 +151,7 @@ class NodeHandler(BaseHandler):
                                "available" : u[2].patches_available,
                                "pending" : u[2].patches_pending,
                                "failed" : u[2].patches_failed})
+        session.close()
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
@@ -170,7 +171,7 @@ class NetworkHandler(BaseHandler):
             resultjson.append({"key" : "available", "data" : u.patches_available})
             resultjson.append({"key" : "pending", "data" : u.patches_pending})
             resultjson.append({"key" : "failed", "data" : u.patches_failed})
-        print resultjson
+        session.close()
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
@@ -224,14 +225,27 @@ class PatchHandler(BaseHandler):
             pass
         else:
             for u in session.query(WindowsUpdate).all():
+                nodeAvailable = []
+                nodeInstalled = []
+                nodePending = []
+                nodeFailed = []
+                for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id).all():
+                    if v.installed:
+                        nodeInstalled.append(v.node_id)
+                    else:
+                        nodeAvailable.append(v.node_id)
                 resultjson.append({"reference" : {
                     "toppatch" : u.toppatch_id,
-                    "developer" : u.vendor_id
-                },
+                    "developer" : u.vendor_id},
                 "date" : str(u.date_pub),
-               "name" : u.title,
-               "description" : u.description,
-               "severity" : u.severity})
+                "name" : u.title,
+                "description" : u.description,
+                "severity" : u.severity,
+                "available": nodeAvailable,
+                "installed": nodeInstalled,
+                "pending": nodePending,
+                "failed": nodeFailed})
+        session.close()
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
@@ -260,8 +274,8 @@ class SummaryHandler(BaseHandler):
                                            {"name" : "Patches Failed", "size" : w[2].patches_failed}]})
                 osTypeResult.append({"name" : v.os_string, "children" : nodeResult})
             osResult.append({"name" : u.os_code, "children" : osTypeResult})
-        print resultjson
         root = {"name" : "192.168.1.0", "children" : osResult }
+        session.close()
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(root, indent=4))
@@ -289,6 +303,7 @@ class GraphHandler(BaseHandler):
                                                 {"name" : "Patches Failed", "size" : v[2].patches_failed, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_failed}}]})
             osType.append({"label" : u[0], "value" : u[1], "data" : nodeResult})
         resultjson = osType
+        session.close()
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
@@ -317,11 +332,13 @@ class OsHandler(BaseHandler):
             resultjson.append({"label" : "Available", "value" : available})
             resultjson.append({"label" : "Pending", "value" : pending})
             resultjson.append({"label" : "Failed", "value" : failed})
+            session.close()
             self.session = self.application.session
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson, indent=4))
         else:
-            resultjson.append({'error' : 'no data to display'})
+            session.close()
+            resultjson = {'error' : 'no data to display'}
             self.write(json.dumps(resultjson, indent=4))
 
 class TestHandler(BaseHandler):
@@ -333,24 +350,48 @@ class TestHandler(BaseHandler):
         db.echo = True
         Session = sessionmaker(bind=db)
         session = Session()
-        for u in session.query(NodeInfo, SystemInfo).join(SystemInfo):
-            installed = []
-            failed = []
-            pending = []
-            available = []
-            resultnode = {}
-            for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
-                print v.node_id
-                print '^v_id'
-                print u[1].node_id
-                print '^u_id'
-                if v.installed:
-                    installed.append(v.toppatch_id)
-                else:
-                    available.append(v.toppatch_id)
-            resultnode = {'patch/need': available, 'patch/done': installed, 'patch/fail': failed, 'patch/pending': pending, 'ip': u[0].ip_address, 'os/name':u[1].os_string }
-            resultjson.append(resultnode)
-            print u
+        try:
+            id = self.get_argument('id')
+            print id
+        except:
+            id = None
+        else:
+            pass
+        if id:
+            for u in session.query(NodeInfo, SystemInfo).filter(SystemInfo.node_id == id).join(SystemInfo):
+                installed = []
+                failed = []
+                pending = []
+                available = []
+                resultnode = {}
+                for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
+                    if v.installed:
+                        installed.append(v.toppatch_id)
+                    else:
+                        available.append(v.toppatch_id)
+                resultjson = {'id': u[1].node_id, 'patch/need': available, 'patch/done': installed, 'patch/fail': failed, 'patch/pending': pending, 'ip': u[0].ip_address, 'os/name':u[1].os_string }
+            if len(resultjson) == 0:
+                resultjson = {'error' : 'no data to display'}
+        else:
+            for u in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats):
+                resultnode = {}
+                """
+                for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
+                    if v.installed:
+                        installed.append(v.toppatch_id)
+                    else:
+                        available.append(v.toppatch_id)
+                """
+                resultnode = {'id': u[1].node_id,
+                              'ip': u[0].ip_address,
+                              'os/name':u[1].os_string,
+                              'patch/need': u[2].patches_available,
+                              'patch/done': u[2].patches_installed,
+                              'patch/fail': u[2].patches_failed,
+                              'patch/pending': u[2].patches_pending
+                               }
+                resultjson.append(resultnode)
+        session.close()
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
