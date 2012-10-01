@@ -1,0 +1,16 @@
+{
+    "patch/need": [
+        "KB2718523",
+        "KB2698365"
+    ],
+    "patch/done": [
+        "KB2728973",
+        "KB2719985",
+        "KB2691442",
+        "KB2655992"
+    ],
+    "patch/fail": [],
+    "ip": "192.168.1.146",
+    "os/name": "Windows XP",
+    "os/short": "winXP"
+}

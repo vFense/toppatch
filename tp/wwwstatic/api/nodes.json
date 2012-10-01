@@ -1,249 +1,105 @@
-[
-    {
-        "patch/need": [
-            "KB2735855",
-            "KB2719857",
-            "KB2741355",
-            "KB2707082",
-            "KB2718523",
-            "KB2655992"
-        ],
-        "patch/done": [
-            "KB2691442",
-            "KB2698365",
-            "KB2708075",
-            "KB2728973",
-            "KB2719985"
-        ],
-        "patch/fail": [],
-        "ip": "192.168.1.152",
-        "os/name": "Windows 7",
-        "os/short": "win7"
-    },
-    {
-        "patch/need": [
-            "KB2735855",
-            "KB2719857"
-        ],
-        "patch/done": [
-            "KB2741355",
-            "KB2707082",
-            "KB2718523",
-            "KB2655992",
-            "KB2691442",
-            "KB2698365",
-            "KB2708075",
-            "KB2728973",
-            "KB2719985"
-        ],
-        "patch/fail": [],
-        "ip": "192.168.1.250",
-        "os/name": "Windows 7",
-        "os/short": "win7"
-    },
-    {
-        "patch/need": [
-            "KB2655992",
-            "KB2691442",
-            "KB2718523",
-            "KB2698365",
-            "KB2728973"
-        ],
-        "patch/done": [
-            "KB2719985"
-        ],
-        "patch/fail": [],
-        "ip": "192.168.1.106",
-        "os/name": "Windows Vista",
-        "os/short": "winV"
-    },
-    {
-        "patch/need": [
-            "KB2735855",
-            "KB2719857",
-            "KB2741355",
-            "KB2707082",
-            "KB2718523"
-        ],
-        "patch/done": [
-            "KB2655992",
-            "KB2691442",
-            "KB2698365",
-            "KB2708075",
-            "KB2728973",
-            "KB2719985"
-        ],
-        "patch/fail": [],
-        "ip": "192.168.1.28",
-        "os/name": "Windows 7",
-        "os/short": "win7"
-    },
-    {
-        "patch/need": [
-            "KB2655992",
-            "KB2691442",
-            "KB2718523",
-            "KB2698365",
-            "KB2728973",
-            "KB2719985"
-        ],
-        "patch/done": [],
-        "patch/fail": [],
-        "ip": "192.168.1.42",
-        "os/name": "Windows Vista",
-        "os/short": "winV"
-    },
-    {
-        "patch/need": [
-            "KB2655992",
-            "KB2691442",
-            "KB2718523"
-        ],
-        "patch/done": [
-            "KB2698365",
-            "KB2728973",
-            "KB2719985"
-        ],
-        "patch/fail": [],
-        "ip": "192.168.1.69",
-        "os/name": "Windows Vista",
-        "os/short": "winV"
-    },
-    {
-        "patch/need": [
-            "KB2718523",
-            "KB2698365"
-        ],
-        "patch/done": [
-            "KB2728973",
-            "KB2719985",
-            "KB2691442",
-            "KB2655992"
-        ],
-        "patch/fail": [],
-        "ip": "192.168.1.248",
-        "os/name": "Windows XP",
-        "os/short": "winXP"
-    },
-    {
-        "patch/need": [
-            "KB2736233",
-            "KB2732052",
-            "KB2731847",
-            "KB2712808",
-            "KB2661254"
-        ],
-        "patch/done": [
-            "KB2705219",
-            "KB2722913",
-            "KB2722913",
-            "KB2722913",
-            "KB2691442",
-            "KB2718523",
-            "KB2698365",
-            "KB2655992",
-            "KB2719985",
-            "KB2728973"
-        ],
-        "patch/fail": [],
-        "ip": "192.168.1.82",
-        "os/name": "Windows Server 2008",
-        "os/short": "win2k8"
-    },
-    {
-        "patch/need": [
-            "KB2736233",
-            "KB2732052",
-            "KB2731847",
-            "KB2712808",
-            "KB2661254",
-            "KB2705219",
-            "KB2722913",
-            "KB2722913",
-            "KB2722913"
-        ],
-        "patch/done": [
-            "KB2691442",
-            "KB2718523",
-            "KB2698365",
-            "KB2655992",
-            "KB2719985",
-            "KB2728973"
-        ],
-        "patch/fail": [],
-        "ip": "192.168.1.194",
-        "os/name": "Windows Server 2008",
-        "os/short": "win2k8"
-    },
-    {
-        "patch/need": [
-            "KB2718523",
-            "KB2698365"
-        ],
-        "patch/done": [
-            "KB2728973",
-            "KB2719985",
-            "KB2691442",
-            "KB2655992"
-        ],
-        "patch/fail": [],
-        "ip": "192.168.1.146",
-        "os/name": "Windows XP",
-        "os/short": "winXP"
-    },
-    {
-        "patch/need": [
-            "KB2736233"
-        ],
-        "patch/done": [
-            "KB2732052",
-            "KB2661254",
-            "KB2712808",
-            "KB2705219",
-            "KB2731847",
-            "KB2722913",
-            "KB2722913",
-            "KB2722913",
-            "KB2721693",
-            "KB2718523",
-            "KB2655992",
-            "KB2691442",
-            "KB2728973"
-        ],
-        "patch/fail": [],
-        "ip": "192.168.1.94",
-        "os/name": "Windows Server 2003",
-        "os/short": "win2k3"
-    },
-    {
-        "patch/need": [
-            "KB2655992",
-            "KB2691442",
-            "KB2718523"
-        ],
-        "patch/done": [
-            "KB2698365",
-            "KB2728973",
-            "KB2719985"
-        ],
-        "patch/fail": [],
-        "ip": "192.168.1.228",
-        "os/name": "Windows Vista",
-        "os/short": "winV"
-    },
-    {
-        "patch/need": [
-            "KB2718523",
-            "KB2698365",
-            "KB2728973",
-            "KB2719985",
-            "KB2691442",
-            "KB2655992"
-        ],
-        "patch/done": [],
-        "patch/fail": [],
-        "ip": "192.168.1.215",
-        "os/name": "Windows XP",
-        "os/short": "winXP"
-    }
-]
+{
+    "count": 10,
+    "nodes": [
+        {
+            "patch/need": 6,
+            "patch/pend": 0,
+            "patch/done": 5,
+            "patch/fail": 0,
+            "ip": "192.168.1.152",
+            "id": 1,
+            "os/name": "Windows 7",
+            "os/short": "win7"
+        },
+        {
+            "patch/need": 2,
+            "patch/pend": 0,
+            "patch/done": 10,
+            "patch/fail": 0,
+            "ip": "192.168.1.250",
+            "id": 2,
+            "os/name": "Windows 7",
+            "os/short": "win7"
+        },
+        {
+            "patch/need": 5,
+            "patch/pend": 0,
+            "patch/done": 1,
+            "patch/fail": 0,
+            "ip": "192.168.1.106",
+            "id": 3,
+            "os/name": "Windows Vista",
+            "os/short": "winV"
+        },
+        {
+            "patch/need": 5,
+            "patch/pend": 0,
+            "patch/done": 6,
+            "patch/fail": 0,
+            "ip": "192.168.1.28",
+            "id": 4,
+            "os/name": "Windows 7",
+            "os/short": "win7"
+        },
+        {
+            "patch/need": 6,
+            "patch/pend": 0,
+            "patch/done": 0,
+            "patch/fail": 0,
+            "ip": "192.168.1.42",
+            "id": 5,
+            "os/name": "Windows Vista",
+            "os/short": "winV"
+        },
+        {
+            "patch/need": 3,
+            "patch/pend": 0,
+            "patch/done": 3,
+            "patch/fail": 0,
+            "ip": "192.168.1.69",
+            "id": 6,
+            "os/name": "Windows Vista",
+            "os/short": "winV"
+        },
+        {
+            "patch/need": 2,
+            "patch/pend": 0,
+            "patch/done": 4,
+            "patch/fail": 0,
+            "ip": "192.168.1.248",
+            "id": 7,
+            "os/name": "Windows XP",
+            "os/short": "winXP"
+        },
+        {
+            "patch/need": 5,
+            "patch/pend": 0,
+            "patch/done": 10,
+            "patch/fail": 0,
+            "ip": "192.168.1.82",
+            "id": 8,
+            "os/name": "Windows Server 2008",
+            "os/short": "win2k8"
+        },
+        {
+            "patch/need": 9,
+            "patch/pend": 0,
+            "patch/done": 6,
+            "patch/fail": 0,
+            "ip": "192.168.1.194",
+            "id": 9,
+            "os/name": "Windows Server 2008",
+            "os/short": "win2k8"
+        },
+        {
+            "patch/need": 2,
+            "patch/pend": 0,
+            "patch/done": 4,
+            "patch/fail": 0,
+            "ip": "192.168.1.146",
+            "id": 10,
+            "os/name": "Windows XP",
+            "os/short": "winXP"
+        }
+    ]
+}
