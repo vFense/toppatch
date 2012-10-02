@@ -61,6 +61,7 @@ def addWindowsUpdate(session, data):
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         operation.update({'operation_received' : datetime.now()})
+        session.commit()
         for update in data['updates']:
             win_update = WindowsUpdate(update['toppatch_id'],
                     update['kb'], update['vendor_id'],update['title'],
@@ -80,25 +81,28 @@ def addWindowsUpdatePerNode(session, data):
     node_id = exists.node_id
     if exists:
         operation.update({'operation_received' : datetime.now()})
+        session.commit()
         for addupdate in data['updates']:
-            if addupdate['date_installed'] == '':
-               date_installed = None
-            if addupdate['hidden']  == "true":
-                hidden = True
-            else:
-                hidden = False
-            node_update = ManagedWindowsUpdate(node_id,
-                    addupdate['toppatch_id'],
-                    date_installed, hidden
-                    )
-            if node_update:
-                try:
-                    session.add(node_update)
-                    session.commit()
-                except:
-                    session.rollback()
-                finally:
-                    addWindowsUpdate(session, data)
+            update_exists = nodeUpdateExists(session, node_id, addupdate['toppatch_id'])
+            if not update_exists:
+                if addupdate['date_installed'] == '':
+                    date_installed = None
+                if addupdate['hidden']  == "true":
+                    hidden = True
+                else:
+                    hidden = False
+                node_update = ManagedWindowsUpdate(node_id,
+                        addupdate['toppatch_id'],
+                        date_installed, hidden
+                        )
+                if node_update:
+                    try:
+                        session.add(node_update)
+                        session.commit()
+                    except:
+                        session.rollback()
+                    finally:
+                        addWindowsUpdate(session, data)
 
 #def addOperationReceived(session, data):
 
