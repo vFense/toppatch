@@ -415,13 +415,21 @@ class PatchesHandler(BaseHandler):
         for u in session.query(WindowsUpdate).all():
             nodeAvailable = []
             nodeInstalled = []
+            countAvailable = 0
+            countInstalled = 0
+            countFailed = 0
+            countPending = 0
             nodePending = []
             nodeFailed = []
+
             for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id).all():
                 if v.installed:
+                    countInstalled += 1
                     nodeInstalled.append(v.node_id)
                 else:
+                    countAvailable += 1
                     nodeAvailable.append(v.node_id)
+
             data.append({"vendor" : {
                                 "patchID" : '',         #forcing empty string in patchID
                                 "name" : 'Microsoft'    #forcing microsoft on all patch names
@@ -432,10 +440,10 @@ class PatchesHandler(BaseHandler):
                            "name" : u.title,
                            "description" : u.description,
                            "severity" : u.severity,
-                           "nodes/need": nodeAvailable,
-                           "nodes/done": nodeInstalled,
-                           "nodes/pend": nodePending,
-                           "nodes/fail": nodeFailed
+                           "nodes/need": countAvailable,
+                           "nodes/done": countInstalled,
+                           "nodes/pend": countPending,
+                           "nodes/fail": countFailed
             })
         for u in session.query(func.count(WindowsUpdate.toppatch_id)):
             count = u

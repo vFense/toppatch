@@ -1,67 +1,73 @@
-/**
- * Created with PyCharm.
- * User: parallels
- * Date: 9/30/12
- * Time: 3:52 AM
- * To change this template use File | Settings | File Templates.
- */
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/patches.html' ],
-    function ($, Backbone, app, myTemplate) {
+    ['jquery', 'backbone', 'text!templates/patches.html' ],
+    function ($, Backbone, myTemplate) {
         "use strict";
-        var exports = {};
-        exports.Collection = Backbone.Collection.extend({
-            model: Backbone.Model.extend({}),
+        var exports = {
+            Collection: Backbone.Collection.extend({
+                baseUrl: 'api/patches.json',
+                query: '',
+                url: function () {
+                    return this.baseUrl + this.query;
+                },
+                parse: function (response) {
+                    this.recordCount = response.count;
+                    return response.data;
+                },
+                initialize: function () {
+                    this.offset   = this.offset || 0;
+                    this.getCount = this.getCount  || 10;
+                    this.query    = '?'
+                        + 'count=' + this.getCount
+                        + '&offset=' + this.offset;
+                    window.myCollection = this;
+                }
+            }),
+            View: Backbone.View.extend({
+                initialize: function () {
+                    this.template = myTemplate;
+                    this.collection =  new exports.Collection();
+                    this.collection.bind('reset', this.render, this);
+                    this.collection.fetch();
+                },
+                beforeRender: $.noop,
+                onRender: $.noop,
+                render: function () {
+                    if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-            initialize: function () {
-                this.show = 'api/patchData';
-                this.filter = '';
-                this.url = function () {
-                    return this.show + this.filter;
-                };
-            }
-        });
-        exports.View = Backbone.View.extend({
-            initialize: function () {
-                var that = this;
-                this.template = myTemplate;
-                this.collection = new exports.Collection();
+                    var template = _.template(this.template),
+                        data = this.collection.toJSON(),
+                        payload = {
+                            getCount: +this.collection.getCount,
+                            offset: +this.collection.offset,
+                            start: +this.collection.offset + 1,
+                            end: +this.collection.offset + data.length,
+                            prevEnable: +this.collection.offset > 0,
+                            nextEnable: +this.collection.offset + data.length + 1 < +this.collection.recordCount,
+                            prevLink: '',
+                            nextLink: '',
+                            recordCount: this.collection.recordCount,
+                            data: data
+                        },
+                        that = this,
+                        temp;
 
-                this.collection.bind('all', function (e) { console.log(e); });
+                    temp = payload.offset - payload.getCount;
+                    payload.prevLink = '#patches?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
 
-                this.collection.fetch({
-                    success: function () { that.render(); }
-                });
-            },
-            events: {
+                    temp = payload.offset + payload.getCount;
+                    payload.nextLink = '#patches?count=' + payload.getCount + '&offset=' + temp;
 
-            },
-            beforeRender: $.noop,
-            onRender: $.noop,
-            render: function () {
-                if (this.beforeRender !== $.noop) { this.beforeRender(); }
+                    this.$el.html('');
 
-                var tmpl = _.template(this.template),
-                    that = this;
+                    this.$el.append(template(payload));
 
-                this.$el.html('');
+                    this.$el.find("a.disabled").on("click", false);
 
-                this.$el.append(tmpl({
-                    models: this.collection.models
-                }));
-                if (this.onRender !== $.noop) { this.onRender(); }
-                return this;
-            },
-            renderModel: function (item) {
-
-            },
-            setFilter: function (e) {
-
-            },
-            clearFilter: function () {
-                this.collection.filter = '';
-            }
-        });
+                    if (this.onRender !== $.noop) { this.onRender(); }
+                    return this;
+                }
+            })
+        };
         return exports;
     }
 );
