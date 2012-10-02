@@ -363,34 +363,40 @@ class TestHandler(BaseHandler):
                 failed = []
                 pending = []
                 available = []
-                resultnode = {}
                 for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
                     if v.installed:
                         installed.append(v.toppatch_id)
                     else:
                         available.append(v.toppatch_id)
-                resultjson = {'id': u[1].node_id, 'patch/need': available, 'patch/done': installed, 'patch/fail': failed, 'patch/pending': pending, 'ip': u[0].ip_address, 'os/name':u[1].os_string }
+                resultjson = {'id': u[1].node_id,
+                              'ip': u[0].ip_address,
+                              'host/name': u[0].host_name,
+                              'os/name':u[1].os_string,
+                              'host/status': u[0].host_status,
+                              'agent/status': u[0].agent_status,
+                              'patch/need': available,
+                              'patch/done': installed,
+                              'patch/fail': failed,
+                              'patch/pend': pending
+                               }
             if len(resultjson) == 0:
                 resultjson = {'error' : 'no data to display'}
         else:
+            data = []
+            count = 0
             for u in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats):
-                resultnode = {}
-                """
-                for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
-                    if v.installed:
-                        installed.append(v.toppatch_id)
-                    else:
-                        available.append(v.toppatch_id)
-                """
                 resultnode = {'id': u[1].node_id,
                               'ip': u[0].ip_address,
                               'os/name':u[1].os_string,
                               'patch/need': u[2].patches_available,
                               'patch/done': u[2].patches_installed,
                               'patch/fail': u[2].patches_failed,
-                              'patch/pending': u[2].patches_pending
+                              'patch/pend': u[2].patches_pending
                                }
-                resultjson.append(resultnode)
+                data.append(resultnode)
+            for u in session.query(func.count(SystemInfo.node_id)):
+                count = u
+            resultjson = {"count": count[0], "nodes": data}
         session.close()
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')

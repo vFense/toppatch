@@ -1,12 +1,5 @@
-/**
- * Created with PyCharm.
- * User: parallels
- * Date: 9/30/12
- * Time: 9:54 PM
- * To change this template use File | Settings | File Templates.
- */
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/patchOverview.html' ],
+    ['jquery', 'backbone', 'app', 'text!templates/node.html' ],
     function ($, Backbone, app, myTemplate) {
         "use strict";
         var exports = {};
@@ -14,8 +7,8 @@ define(
             model: Backbone.Model.extend({}),
 
             initialize: function () {
-                this.show = 'api/patchData';
-                this.filter = '?type=' + this.type;
+                this.show = 'api/nodes.json';
+                this.filter = '?id='+this.id;
                 this.url = function () {
                     return this.show + this.filter;
                 };
@@ -26,6 +19,8 @@ define(
                 var that = this;
                 this.template = myTemplate;
                 this.collection = new exports.Collection();
+
+                this.collection.bind('all', function (e) { console.log(e); });
 
                 this.collection.fetch({
                     success: function () { that.render(); }
@@ -43,9 +38,9 @@ define(
                     that = this;
 
                 this.$el.html('');
+                console.log(this.collection.models);
                 this.$el.append(tmpl({
-                    models: this.collection.models,
-                    type: this.collection.type
+                    models: this.collection.models
                 }));
                 if (this.onRender !== $.noop) { this.onRender(); }
                 return this;

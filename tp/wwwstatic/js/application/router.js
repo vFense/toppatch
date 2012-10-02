@@ -18,6 +18,9 @@ define(
                 'patches': 'showPatches',
                 'patches/:id': 'showPatch',
                 'patches?:type': 'showOverview',
+                'nodes': 'showNodes',
+                'nodes?:query': 'showNodes',
+                'nodes/:id': 'showNode',
 
                 // Default
                 '*other':     'defaultAction'
@@ -52,12 +55,37 @@ define(
             },
             showOverview: function (query) {
                 var that = this;
-                var params = app.parseQuery(query);
                 require(['modules/patchOverview'], function (myView) {
-                    var collection = new (myView.Collection.extend({type: params.type}))()
-                    var view = new (myView.View.extend({collection: collection}))()
-                    that.show({hash: '#patches', title: 'Patch Info Page', view: view});
+                    if ($.type(query) === 'string') {
+                        var params = app.parseQuery(query);
+                        myView.Collection = myView.Collection.extend({type: params.type});
+                        var view = new myView.View();
+                        that.show({hash: '#patches', title: 'Patch Info Page', view: view});
+                    } else {
+                        this.defaultAction();
+                    }
                 })
+            },
+            showNodes: function (query) {
+                var that = this;
+                require(['modules/nodes'], function (myView) {
+                    if ($.type(query) === 'string') {
+                        var params = app.parseQuery(query);
+                        myView.Collection = myView.Collection.extend({
+                            getCount: params.count,
+                            offset: params.offset
+                        });
+                    }
+                    that.show({hash: '#nodes', title: 'Nodes', view: new myView.View()});
+                });
+            },
+            showNode: function (id) {
+                var that = this;
+                require(['modules/node'], function (myView) {
+                    myView.Collection = myView.Collection.extend({id: id});
+                    var view = new myView.View();
+                    that.show({hash: '#nodes', title: 'Nodes', view: view});
+                });
             },
             defaultAction: function (other) {
                 this.show(

@@ -59,25 +59,25 @@ define(
                         "key": "Available Patches",
                         "link": "available",
                         "data": overviewAvailable.data,//dataGenerator.counter.available,
-                        "format": [{"rule": "gt", "value": 0, "style": "info", "stop": true}]
+                        "format": [{"rule": "gt", "value": -1, "style": "info", "stop": true}]
                     },
                     {
                         "key": "Scheduled Patches",
                         "link": "pending",
                         "data": overviewPending.data,//dataGenerator.counter.pending,
-                        "format": [{"rule": "gt", "value": 0, "style": "warning", "stop": true}]
+                        "format": [{"rule": "gt", "value": -1, "style": "warning", "stop": true}]
                     },
                     {
                         "key": "Completed Patches",
                         "link": "installed",
                         "data": overviewInstalled.data,//dataGenerator.counter.patched,
-                        "format": [{"rule": "gt", "value": 0, "style": "success", "stop": true}]
+                        "format": [{"rule": "gt", "value": -1, "style": "success", "stop": true}]
                     },
                     {
                         "key": "Failed Patches",
                         "link": "failed",
                         "data": overviewFailed.data,//dataGenerator.counter.failed,
-                        "format": [{"rule": "gt", "value": 0, "style": "error", "stop": true}]
+                        "format": [{"rule": "gt", "value": -1, "style": "error", "stop": true}]
                     }
                 ],
                 summaryData: dataGenerator.tempData,

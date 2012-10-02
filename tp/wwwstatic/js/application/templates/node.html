@@ -1,0 +1,89 @@
+<% $.each(models, function (k, model) { %>
+    <script>console.log('<% print(model) %>');</script>
+    <header><h3>Node Details</h3></header>
+    <section>
+        <div  class="well">
+            <table class="table table-bordered table-condensed table-hover noMargin">
+                <tr>
+                    <th>Node IP:</th><td><% print(model.get('ip')); %></td>
+                </tr>
+                <tr>
+                    <th>Hostname:</th><td><% print(model.get('host/name')); %></td>
+                </tr>
+                <tr>
+                    <th>Host Status:</th><td><% print(model.get('host/status')); %></td>
+                </tr>
+                <tr>
+                    <th>Agent Status:</th><td><% print(model.get('agent/status')); %></td>
+                </tr>
+                <tr>
+                    <th>Operating System:</th><td><% print(model.get('os/name')); %></td>
+                </tr>
+            </table>
+        </div>
+    </section>
+    <header><h4>Patches Available</h4></header>
+    <section>
+        <div class="well">
+            <% if(model.get("patch/need").length != 0) { %>
+                <table class="table table-bordered table-condensed table-hover noMargin">
+                    <% $.each(model.get("patch/need"), function (i, patch) { %>
+                        <tr>
+                            <th>Patch ID:</th><td><%= patch %></td>
+                        </tr>
+                    <% }); %>
+                </table>
+            <% }  else { %>
+                <h6>No patches to display</h6>
+            <% } %>
+        </div>
+    </section>
+    <header><h4>Patches Done</h4></header>
+    <section>
+        <div class="well">
+            <% if(model.get("patch/done").length != 0) { %>
+                <table class="table table-bordered table-condensed table-hover noMargin">
+                    <% $.each(model.get("patch/done"), function (i, patch) { %>
+                        <tr>
+                            <th>Patch ID:</th><td><%= patch %></td>
+                        </tr>
+                    <% }); %>
+                </table>
+            <% }  else { %>
+                <h6>No patches to display</h6>
+            <% } %>
+        </div>
+    </section>
+    <header><h4>Patches Pending</h4></header>
+    <section>
+        <div class="well">
+            <% if(model.get("patch/pend").length != 0) { %>
+                <table class="table table-bordered table-condensed table-hover noMargin">
+                    <% $.each(model.get("patch/pend"), function (i, patch) { %>
+                        <tr>
+                            <th>Patch ID:</th><td><%= patch %></td>
+                        </tr>
+                    <% }); %>
+                </table>
+            <% }  else { %>
+                <h6>No patches to display</h6>
+            <% } %>
+        </div>
+    </section>
+    <header><h4>Patches Failed</h4></header>
+    <section>
+        <div class="well">
+            <% if(model.get("patch/fail").length != 0) { %>
+                <table class="table table-bordered table-condensed table-hover noMargin">
+                    <% $.each(model.get("patch/fail"), function (i, patch) { %>
+                        <tr>
+                            <th>Patch ID:</th><td><%= patch %></td>
+                        </tr>
+                    <% }); %>
+                </table>
+            <% }  else { %>
+                <h6>No patches to display</h6>
+            <% } %>
+        </div>
+    </section>
+<% }); %>
