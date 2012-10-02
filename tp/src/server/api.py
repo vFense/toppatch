@@ -402,6 +402,49 @@ class TestHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
 
+class PatchesHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        data = []
+        count = 0
+        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+        db.echo = True
+        Session = sessionmaker(bind=db)
+        session = Session()
+        for u in session.query(WindowsUpdate).all():
+            nodeAvailable = []
+            nodeInstalled = []
+            nodePending = []
+            nodeFailed = []
+            for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id).all():
+                if v.installed:
+                    nodeInstalled.append(v.node_id)
+                else:
+                    nodeAvailable.append(v.node_id)
+            data.append({"vendor" : {
+                                "patchID" : '',         #forcing empty string in patchID
+                                "name" : 'Microsoft'    #forcing microsoft on all patch names
+                            },
+                           "type": "Patch",             #forcing Patch into type
+                           "id": u.toppatch_id,
+                           "date" : str(u.date_pub),
+                           "name" : u.title,
+                           "description" : u.description,
+                           "severity" : u.severity,
+                           "nodes/need": nodeAvailable,
+                           "nodes/done": nodeInstalled,
+                           "nodes/pend": nodePending,
+                           "nodes/fail": nodeFailed
+            })
+        for u in session.query(func.count(WindowsUpdate.toppatch_id)):
+            count = u
+        resultjson = {"count": count[0], "data": data}
+        session.close()
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(resultjson, indent=4))
+
 
 class UserHandler(BaseHandler):
 
