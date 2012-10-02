@@ -98,9 +98,8 @@ class Operations(Base):
     operation_type = Column(VARCHAR(16), nullable=False)
     operation_sent = Column(DATETIME, nullable=True)
     operation_received = Column(DATETIME, nullable=True)
-    def __init__(self, node_id, results_id, operation_type,
-            operation_sent=None,
-            operation_received=None
+    def __init__(self, node_id, operation_type, results_id=None,
+            operation_sent=None, operation_received=None
             ):
         self.node_id = node_id
         self.results_id = results_id

@@ -19,29 +19,34 @@ class WindowsUpdate(Base):
             primary_key=True, autoincrement=False,
             unique=True
             )
-    vendor_id = Column(VARCHAR(32), nullable=False)
+    kb = Column(VARCHAR(32), nullable=False)
+    vendor_id = Column(VARCHAR(128), nullable=False)
     title = Column(VARCHAR(128),nullable=False)
     description = Column(VARCHAR(128), nullable=True)
     support_url = Column(VARCHAR(128), nullable=True)
     severity = Column(VARCHAR(16), nullable=False)
     date_pub = Column(DATETIME)
+    file_size = Column(INTEGER(unsigned=True), nullable=False)
     def __init__(
-                self, toppatch_id, vendor_id, title,
-                description,support_url, severity, date_pub
+                self, toppatch_id, kb, vendor_id, title,
+                description,support_url, severity, date_pub,
+                file_size
                 ):
         self.toppatch_id = toppatch_id
+        self.kb = kb
         self.vendor_id = vendor_id
         self.title = title
         self.description = description
         self.support_url = support_url
         self.severity = severity
         self.date_pub = date_pub
+        self.file_size = file_size
     def __repr__(self):
-        return "<WindowsUpdate(%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<WindowsUpdate(%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.toppatch_id, self.vendor_id, self.title,
-                self.description, self.support_url,
-                self.severity, self.date_pub
+                self.toppatch_id, self.kb, self.vendor_id, 
+                self.title, self.description, self.support_url,
+                self.severity, self.date_pub, self.file_size
                 )
 
 class ManagedWindowsUpdate(Base):
@@ -68,13 +73,13 @@ class ManagedWindowsUpdate(Base):
                 ):
         self.node_id = node_id
         self.toppatch_id = toppatch_id
-        self.date_installed = date_installed
         self.hidden = hidden
         self.installed = installed
+        self.date_installed = date_installed
     def __repr__(self):
-        return "<ManagedWindowsUpdate(%s,%s,%s,%s,%s,%s)>" %\
+        return "<ManagedWindowsUpdate(%s,%s,%s,%s,%s)>" %\
                 (
                 self.node_id, self.toppatch_id, self.hidden,
-                self.installed, self.date, self.installed
+                self.installed, self.date_installed
                 )
 

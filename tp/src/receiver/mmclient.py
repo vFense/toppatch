@@ -3,18 +3,26 @@ from OpenSSL import SSL
 from twisted.internet import ssl, reactor
 from twisted.internet.protocol import ClientFactory, Protocol
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from db.update_table import *
+from db.query_table import *
+from db.client import connect as db_connect
+from tools.common import verifyJsonIsValid
+from datetime import datetime
+
+
 class EchoClient(Protocol):
     def connectionMade(self):
         #print "hello, world"
         #op_install = '{"operation" : "install","transaction_id" : "12234","updates" : [ "updateID1", "updateID2", "updateID3"]}'
-        op_system_info = '{"operation" : "system_info", "operation_id" : 1, "os_code" : "windows", "os_string" : "Windows 7", "os_version_major" : "", "os_version_minor" : "", "os_version_build" : "", "os_meta" : ""}'
+        #op_system_info = '{"operation" : "system_info", "operation_id" : 1, "os_code" : "windows", "os_string" : "Windows 7", "os_version_major" : "", "os_version_minor" : "", "os_version_build" : "", "os_meta" : ""}'
+        #session = db_connect()
+        #addOperation(session, "1", "updates_pending", result_id=None, operation_sent=datetime.now(), operation_received=None)
+        op_system_info = '{"operation" : "updates_pending", "operation_id" : "1"}'
         #self.transport.write("hello, world!")
         print op_system_info
         self.transport.write(op_system_info)
-        self.transport.loseConnection()
-
-    def dataReceived(self, data):
-        print "Server said:", data
         self.transport.loseConnection()
 
 class EchoClientFactory(ClientFactory):
@@ -29,7 +37,7 @@ class EchoClientFactory(ClientFactory):
         reactor.stop()
 
     def clientConnectionDone(self, connector, reason):
-        print "Connection Closed Cleanly - goodbye!"
+        print "Connection Done - goodbye!"
         reactor.stop()
 
 
@@ -37,11 +45,11 @@ class CtxFactory(ssl.ClientContextFactory):
     def getContext(self):
         self.method = SSL.SSLv3_METHOD
         ctx = ssl.ClientContextFactory.getContext(self)
-        ctx.use_certificate_file('/opt/TopPatch/var/lib/ssl/client/keys/client.cert')
-        ctx.use_privatekey_file('/opt/TopPatch/var/lib/ssl/client/keys/client.key')
+        ctx.use_certificate_file('/opt/TopPatch/var/lib/ssl/server/keys/server.cert')
+        ctx.use_privatekey_file('/opt/TopPatch/var/lib/ssl/server/keys/server.key')
         return ctx
 
 if __name__ == '__main__':
     factory = EchoClientFactory()
-    reactor.connectSSL('localhost', 9000, factory, CtxFactory())
+    reactor.connectSSL('192.168.1.18', 8002, factory, CtxFactory())
     reactor.run()

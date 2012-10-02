@@ -22,14 +22,16 @@ SYSTEM_INFO = 'system_info'
 
 
 class GetJson(Protocol):
+    total_data = ""
     def connectionMade(self):
         print self.transport.getPeer()
+
     def dataReceived(self, data):
-#        foo = encode(data)
-        #bar = decode(data)
-#        loads(foo)
-#        loads(data)
-        print data
+        self.total_data = self.total_data + data
+
+    def connectionLost(self, reason):
+        data = self.total_data
+        self.total_data = ""
         valid_json = verifyJsonIsValid(data)
         print valid_json
         if valid_json[0]:
@@ -45,31 +47,29 @@ class GetJson(Protocol):
             if json_data[OPERATION] == SYSTEM_INFO:
                 addSystemInfo(self.session, json_data,
                     self.node_exists)
-            self.session.commit()
-            print "session committed"
+            if json_data[OPERATION] == "updates_pending":
+                addWindowsUpdatePerNode(self.session, json_data)
             self.session.close()
-            print "session closed"
             self.transport.write(dumps(json_data))
 
-    def connectionLost(self, reason):
-         #print reason.printDetailedTraceback
-         print reason.value
+        #print reason.printDetailedTraceback
+        print reason.value
 
     def connectionDone(self, reason):
          #print dir(reason)
-         print reason.printDetailedTraceback
+        print reason.printDetailedTraceback
 
     def connectionAborted(self, reason):
-         print reason.printDetailedTraceback
+        print reason.printDetailedTraceback
 
     def SSLrror(self, reason):
-         print reason.printDetailedTraceback
+        print reason.printDetailedTraceback
 
     def PeerVerifyError(self, reason):
-         print reason.printDetailedTraceback
+        print reason.printDetailedTraceback
 
     def CertificateError(self, reason):
-         print reason.printDetailedTraceback
+        print reason.printDetailedTraceback
 
 
 
