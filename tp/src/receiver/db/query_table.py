@@ -24,7 +24,12 @@ def operationExists(session, oper_id):
     return(exists, oper)
 
 def csrExists(session, node=None):
-    node = \
+    csr = \
         session.query(CsrInfo).filter_by(ip_address=node).first()
-    return(node)
+    return(csr)
     
+
+def nodeUpdateExists(session, node=None, tp_id=None):
+    update = \
+        session.query(ManagedWindowsUpdate).filter_by(node_id=node).filter_by(toppatch_id=tp_id).first()
+    return(update)
