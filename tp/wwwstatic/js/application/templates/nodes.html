@@ -20,7 +20,7 @@ patch/need: 6
             </div>
         </header>
         <%
-            if (nodes.length > 0) {
+            if (data.length > 0) {
         %>
             <div class="legend">
                 <span><strong>Host Name</strong> — Host OS</span>
@@ -33,12 +33,12 @@ patch/need: 6
                 </span>
             </div>
         <%
-                _.each(nodes, function (node) {
+                _.each(data, function (node) {
         %>
             <div class="item clearfix">
                 <a href="#nodes/<%= node.id %>">
                     <span class="desc"><strong><%= node.ip %></strong> — <%= node['os/name'] %></span>
-                    <span class="patches pull-right">
+                    <span class="pull-right">
                         <span class="done"><%= node['patch/done'] %></span> /
                         <span class="pend"><%= node['patch/pend'] %></span> /
                         <span class="need"><%= node['patch/need'] %></span> /
@@ -52,7 +52,7 @@ patch/need: 6
             }
         %>
         <footer class="clearfix">
-            <small>Viewing <%= start %> – <%= end %> of <%= totalNodes %> Nodes</small>
+            <small>Viewing <%= start %> – <%= end %> of <%= recordCount %> Nodes</small>
             <div class="pull-right hidden-print">
                 <a class="btn btn-mini<% if(!prevEnable) { print(' disabled'); } %>" href="<% prevEnable ? print(prevLink) : print('javascript:;') %>">
                     Previous

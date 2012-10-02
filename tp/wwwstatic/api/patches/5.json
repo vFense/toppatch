@@ -1,0 +1,11 @@
+{
+    "name": "Security Update for Windows Server 2003 and Windows Server 2008",
+    "type": "Security Patch",
+    "vendor": {
+        "name": "Microsoft",
+        "patchID": "KB2705219"
+    },
+    "id": 5,
+    "description": "A security issue has been identified that could allow an unauthenticated remote attacker to compromise your system and gain control over it.",
+    "date": "8/13/2012"
+}

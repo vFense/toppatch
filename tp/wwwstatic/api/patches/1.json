@@ -1,0 +1,11 @@
+{
+    "name": "Security Update for ActiveX Killbits",
+    "type": "Security Patch",
+    "vendor": {
+        "name": "Microsoft",
+        "patchID": "KB2736233"
+    },
+    "id": 1,
+    "description": "This update addresses the vulnerability discussed in Microsoft Security Advisory KB2736233. To find out if other security updates are available for you, see the Overview section of this page.",
+    "date": "9/10/2012"
+}

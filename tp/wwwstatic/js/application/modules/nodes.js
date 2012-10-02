@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'backbone', 'text!templates/showNodes.html' ],
+    ['jquery', 'backbone', 'text!templates/nodes.html' ],
     function ($, Backbone, myTemplate) {
         "use strict";
         var exports = {
@@ -10,8 +10,8 @@ define(
                     return this.baseUrl + this.query;
                 },
                 parse: function (response) {
-                    this.totalNodes = response.count;
-                    return response.nodes;
+                    this.recordCount = response.count;
+                    return response.data;
                 },
                 initialize: function () {
                     this.offset   = this.offset || 0;
@@ -35,18 +35,18 @@ define(
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var template = _.template(this.template),
-                        nodes = this.collection.toJSON(),
+                        data = this.collection.toJSON(),
                         payload = {
                             getCount: +this.collection.getCount,
                             offset: +this.collection.offset,
                             start: +this.collection.offset + 1,
-                            end: +this.collection.offset + nodes.length,
+                            end: +this.collection.offset + data.length,
                             prevEnable: +this.collection.offset > 0,
-                            nextEnable: +this.collection.offset + nodes.length + 1 < +this.collection.totalNodes,
+                            nextEnable: +this.collection.offset + data.length + 1 < +this.collection.recordCount,
                             prevLink: '',
                             nextLink: '',
-                            totalNodes: this.collection.totalNodes,
-                            nodes: nodes
+                            recordCount: this.collection.recordCount,
+                            data: data
                         },
                         that = this,
                         temp;

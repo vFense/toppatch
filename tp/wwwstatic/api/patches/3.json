@@ -1,0 +1,11 @@
+{
+    "name": "Update for Windows Server 2003 and Windows Server 2008",
+    "type": "Update",
+    "vendor": {
+        "name": "Microsoft",
+        "patchID": "KB2661254"
+    },
+    "id": 3,
+    "description": "Install this update to keep your system up to date by increasing the minimum level of encryption on Windows systems.",
+    "date": "8/13/2012"
+}

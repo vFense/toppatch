@@ -86,14 +86,12 @@
 
     .list {
         HEADER {
-            //line-height: 20px;
             border-top: 1px solid #E6E6E6;
             border-bottom: 1px solid #E6E6E6;
             padding: 2px 0;
         }
 
         FOOTER {
-            //line-height: 20px;
             border-bottom: 1px solid #E6E6E6;
             padding: 2px 0;
         }
@@ -125,6 +123,14 @@
                     color: @linkColor;
                 }
             }
+
+            .desc {
+                display: inline-block;
+                width: 75%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
 
         HEADER + .item {
@@ -132,13 +138,9 @@
             border-top: none;
         }
 
-        &.nodes {
-            .patches {
-                .done { color: @successText; }
-                .pend { color: @infoText; }
-                .need { color: @warningText; }
-                .fail { color: @errorText; }
-            }
-        }
+        .done { color: @successText; }
+        .pend { color: @infoText; }
+        .need { color: @warningText; }
+        .fail { color: @errorText; }
     }
 }

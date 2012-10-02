@@ -9,17 +9,15 @@ define(
                 '':           'home',
                 'dashboard':  'home',
 
-                // Patch Routes
-                'patchAdmin': 'patchAdmin',
-
-                // New Pages
+                // Nodes
                 'nodes': 'showNodes',
                 'nodes?:query': 'showNodes',
                 'nodes/:id': 'showNode',
 
-                // Testers
-                'test': 'showTest',
-                'testPatch': 'showPatchTest',
+                // Patches
+                'patches': 'showPatches',
+                'patches?:query': 'showPatches',
+                'patches/:id': 'showPatch',
 
                 // Default
                 '*other':     'defaultAction'
@@ -38,7 +36,7 @@ define(
             },
             showNodes: function (query) {
                 var that = this;
-                require(['modules/showNodes'], function (myView) {
+                require(['modules/nodes'], function (myView) {
                     if ($.type(query) === 'string') {
                         var params = app.parseQuery(query);
                         myView.Collection = myView.Collection.extend({
@@ -51,6 +49,26 @@ define(
             },
             showNode: function (id) {
                 console.log('showNode:' + id);
+            },
+            showPatches: function (query) {
+                var that = this;
+                require(['modules/patches'], function (myView) {
+                    if ($.type(query) === 'string') {
+                        var params = app.parseQuery(query);
+                        myView.Collection = myView.Collection.extend({
+                            getCount: params.count,
+                            offset: params.offset
+                        });
+                    }
+                    that.show({hash: '#patches', title: 'Patches', view: new myView.View()});
+                });
+            },
+            showPatch: function (id) {
+                var that = this;
+                require(['modules/patch'], function (myView) {
+                    myView.Collection = myView.Collection.extend({id: id});
+                    that.show({hash: '#patches', title: 'Patch Detail', view: new myView.View()});
+                });
             },
             defaultAction: function (other) {
                 this.show(
