@@ -67,19 +67,25 @@ class ManagedWindowsUpdate(Base):
             ForeignKey("windows_update.toppatch_id"))
     hidden = Column(BOOLEAN)
     installed = Column(BOOLEAN)
+    attempts = Column(INTEGER)
+    pending = Column(BOOLEAN)
     date_installed = Column(DATETIME)
-    def __init__(self, node_id, toppatch_id, date_installed,
-                hidden=False, installed=False
+    def __init__(self, node_id, toppatch_id, date_installed=None,
+                hidden=False, installed=False, attempts=0,
+                pending=False
                 ):
         self.node_id = node_id
         self.toppatch_id = toppatch_id
         self.hidden = hidden
         self.installed = installed
         self.date_installed = date_installed
+        self.attempts = attempts
+        self.pending = pending
     def __repr__(self):
-        return "<ManagedWindowsUpdate(%s,%s,%s,%s,%s)>" %\
+        return "<ManagedWindowsUpdate(%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.node_id, self.toppatch_id, self.hidden,
-                self.installed, self.date_installed
+                self.installed, self.date_installed, self.attempts,
+                self.pending
                 )
 
