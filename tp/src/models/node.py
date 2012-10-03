@@ -71,7 +71,7 @@ class SystemInfo(Base):
         self.os_version_build = os_version_build
         self.os_meta = os_meta
     def __repr__(self):
-        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<SystemInfo(%s,%s,%s,%s,%s,%s,%s)>" %\
                (
                    self.node_id, self.os_code, self.os_string,
                    self.os_version_major, self.os_version_minor,
@@ -98,9 +98,8 @@ class Operations(Base):
     operation_type = Column(VARCHAR(16), nullable=False)
     operation_sent = Column(DATETIME, nullable=True)
     operation_received = Column(DATETIME, nullable=True)
-    def __init__(self, node_id, results_id, operation_type,
-                 operation_sent=None,
-                 operation_received=None
+    def __init__(self, node_id, operation_type, results_id=None,
+                 operation_sent=None, operation_received=None
     ):
         self.node_id = node_id
         self.results_id = results_id
@@ -160,31 +159,26 @@ class SoftwareInstalled(Base):
     id = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True )
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     name = Column(VARCHAR(128),nullable=False)
-    vendor_id = Column(INTEGER(unsigned=True))
     description = Column(VARCHAR(128), nullable=True)
     support_url = Column(VARCHAR(128), nullable=True)
-    operating_system = Column(VARCHAR(32), nullable=False)
     version = Column(VARCHAR(32), nullable=False)
     vendor = Column(VARCHAR(32), nullable=False)
     date_installed = Column(DATETIME, nullable=True)
     def __init__(self, node_id, name, vendor,
-                 vendor_id, description, operating_system, version,
+                 description, version,
                  support_url=None, date_installed=None):
         self.node_id = node_id
         self.name = name
         self.vendor = vendor
-        self.vendor_id = vendor_id
         self.description = description
-        self.operating_system = operating_system
         self.version = version
         self.support_url = support_url
         self.date_installed = date_installed
     def __repr__(self):
-        return "<SoftwareInstalled(%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<SoftwareInstalled(%s,%s,%s,%s,%s,%s,%s)>" %\
                (
                    self.node_id, self.name, self.vendor,
-                   self.vendor_id, self.description,
-                   self.operating_system, self.version,
+                   self.description, self.version,
                    self.support_url, self.date_installed
                    )
 
@@ -208,7 +202,7 @@ class NodeStats(Base):
     def __init__(self, node_id, patches_installed,
                  patches_available, patches_pending,
                  patches_failed
-                 ):
+    ):
         self.node_id = node_id
         self.patches_installed = patches_installed
         self.patches_available = patches_available
@@ -240,7 +234,7 @@ class NetworkStats(Base):
     def __init__(self, patches_installed,
                  patches_available, patches_pending,
                  patches_failed
-                 ):
+    ):
         self.patches_installed = patches_installed
         self.patches_available = patches_available
         self.patches_pending = patches_pending

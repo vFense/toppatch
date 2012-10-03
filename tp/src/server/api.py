@@ -16,6 +16,9 @@ from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
 
+db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+db.echo = True
+
 class ApiHandler(BaseHandler):
     """ Trying to figure out this whole RESTful api thing with json."""
 
@@ -130,8 +133,6 @@ class NodeHandler(BaseHandler):
     @authenticated_request
     def get(self):
         resultjson = []
-        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
-        db.echo = True
         Session = sessionmaker(bind=db)
         session = Session()
         for u in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo, NodeStats):
@@ -162,8 +163,6 @@ class NetworkHandler(BaseHandler):
     @authenticated_request
     def get(self):
         resultjson = []
-        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
-        db.echo = True
         Session = sessionmaker(bind=db)
         session = Session()
         for u in session.query(NetworkStats).all():
@@ -187,15 +186,14 @@ class PatchHandler(BaseHandler):
             type = None
         else:
             pass
-        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
-        db.echo = True
         Session = sessionmaker(bind=db)
         session = Session()
         if type == 'available':
             for u in session.query(WindowsUpdate).all():
                 noderesult = []
                 for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False).join(WindowsUpdate).all():
-                    noderesult.append(v.node_id)
+                    for j in session.query(NodeInfo).filter(NodeInfo.id == v.node_id).all():
+                        noderesult.append(j.ip_address)
                 resultjson.append({"reference" : {
                     "toppatch" : u.toppatch_id,
                     "developer" : u.vendor_id
@@ -211,7 +209,8 @@ class PatchHandler(BaseHandler):
             for u in session.query(WindowsUpdate).all():
                 noderesult = []
                 for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).join(WindowsUpdate).all():
-                    noderesult.append(v.node_id)
+                    for j in session.query(NodeInfo).filter(NodeInfo.id == v.node_id).all():
+                        noderesult.append(j.ip_address)
                 resultjson.append({"reference" : {
                     "toppatch" : u.toppatch_id,
                     "developer" : u.vendor_id
@@ -257,8 +256,6 @@ class SummaryHandler(BaseHandler):
         root = {}
         resultjson = []
         osResult = []
-        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
-        db.echo = True
         Session = sessionmaker(bind=db)
         session = Session()
         for u in session.query(SystemInfo.os_code).distinct().all():
@@ -287,8 +284,6 @@ class GraphHandler(BaseHandler):
     def get(self):
         resultjson = []
         osType = []
-        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
-        db.echo = True
         Session = sessionmaker(bind=db)
         session = Session()
         for u in session.query(SystemInfo.os_string, func.count(SystemInfo.os_string)).group_by(SystemInfo.os_string).all():
@@ -318,8 +313,6 @@ class OsHandler(BaseHandler):
         pending = 0
         failed = 0
         type = self.get_argument('type')
-        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
-        db.echo = True
         Session = sessionmaker(bind=db)
         session = Session()
         for u in session.query(NodeInfo, SystemInfo, NodeStats).filter(SystemInfo.os_string == type).join(SystemInfo).join(NodeStats).all():
@@ -346,8 +339,6 @@ class TestHandler(BaseHandler):
     @authenticated_request
     def get(self):
         resultjson = []
-        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
-        db.echo = True
         Session = sessionmaker(bind=db)
         session = Session()
         try:
@@ -408,8 +399,6 @@ class PatchesHandler(BaseHandler):
     def get(self):
         data = []
         count = 0
-        db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
-        db.echo = True
         Session = sessionmaker(bind=db)
         session = Session()
         for u in session.query(WindowsUpdate).all():
