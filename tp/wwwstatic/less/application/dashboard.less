@@ -36,12 +36,12 @@
         text-align: center;
         margin-top: 0;
         margin-bottom: 0;
-        border: @em*( 1px )/@baseFontSize solid #E6E6E6;
+        border: @em*( 1px )/@baseFontSize solid #E5E5E5;
         background-color: white;
 
         DT {
-            background-color: #E6E6E6;
-            border-bottom: @em*( 1px )/@baseFontSize solid #E6E6E6;
+            background-color: #E5E5E5;
+            border-bottom: @em*( 1px )/@baseFontSize solid #E5E5E5;
             margin:0;
         }
 
@@ -86,42 +86,49 @@
 
     .list {
         HEADER {
-            border-top: 1px solid #E6E6E6;
-            border-bottom: 1px solid #E6E6E6;
+            border-top: @em*(1px)/@baseFontSize solid #E5E5E5;
+            border-bottom: @em*(1px)/@baseFontSize solid #E5E5E5;
             padding: 2px 0;
         }
 
         FOOTER {
-            border-bottom: 1px solid #E6E6E6;
-            padding: 2px 0;
+            border-bottom: @em*(1px)/@baseFontSize solid #E5E5E5;
+            padding: @em*(2px)/@baseFontSize 0;
         }
 
         .legend {
-            line-height: 30px;
-            border-bottom: 1px solid #E6E6E6;
+            line-height: @em*(30px)/@baseFontSize;
+            border-bottom: @em*(1px)/@baseFontSize solid #E5E5E5;
         }
 
         .item {
-            line-height: 30px;
-            border-bottom: 1px solid #E6E6E6;
+            height: @em*(30px)/@baseFontSize;
+            line-height: @em*(30px)/@baseFontSize;
+            border-bottom: @em*(1px)/@baseFontSize solid #E5E5E5;
 
             &:first-child {
                 /* Add top border to first list item */
-                border-top: 1px solid #E6E6E6;
+                border-top: @em*(1px)/@baseFontSize solid #E5E5E5;
             }
 
-            &:hover {
+            &.linked {
+                A {
+                    color: #000;
+                    display: block;
+                    text-decoration: none;
+
+                    STRONG {
+                        color: @linkColor;
+                    }
+                }
+            }
+
+            &.linked:hover {
                 background-color: #F5F5F5;
             }
 
-            A {
-                color: #000;
-                display: block;
-                text-decoration: none;
-
-                STRONG {
-                    color: @linkColor;
-                }
+            &.linked:active {
+                background-color: #F0F0F0;
             }
 
             .desc {
@@ -146,7 +153,6 @@
 
     .well {
         background-color: lighten(@wellBackground, 3%);
-        text-align: center;
 
         DL {
             @dtColumnWidth: 2;
@@ -175,10 +181,21 @@
             }
         }
 
-        SMALL {
+        > SMALL {
+            display: block;
+            text-align:center;
             EM {
                 color: #575757;
             }
+        }
+
+        > .list .item {
+            padding: 0 1em;
+        }
+
+        &.noPadding {
+            .list > *:first-child {border-top: none;}
+            .list > *:last-child {border-bottom: none;}
         }
     }
 }
