@@ -48,7 +48,12 @@ define(
                 });
             },
             showNode: function (id) {
-                console.log('showNode:' + id);
+                var that = this;
+                require(['modules/node'], function (myView) {
+                    myView.Collection = myView.Collection.extend({id: id});
+                    var view = new myView.View();
+                    that.show({hash: '#nodes', title: 'Nodes', view: view});
+                });
             },
             showPatches: function (query) {
                 var that = this;
