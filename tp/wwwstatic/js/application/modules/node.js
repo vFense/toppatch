@@ -38,7 +38,6 @@ define(
                     that = this;
 
                 this.$el.html('');
-                console.log(this.collection.models);
                 this.$el.append(tmpl({
                     models: this.collection.models
                 }));

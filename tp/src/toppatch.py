@@ -13,7 +13,7 @@ import tornado.options
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
-from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler
+from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
 from server.api import *
@@ -42,6 +42,7 @@ class Application(tornado.web.Application):
             (r"/ws/?", WebsocketHandler),
             (r"/test/?", testHandler),
             (r"/developer", DeveloperRegistrationHandler),
+            (r"/submitForm", FormHandler),
 
             #### oAuth 2.0 Handlers
             (r"/login/oauth/authorize/?", AuthorizeHandler),

@@ -138,4 +138,14 @@ class DeveloperRegistrationHandler(BaseHandler):
         else:
             self.write("Developer account already exist.")
 
+class FormHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        node_id = self.request.arguments['node']
+        patches = self.request.arguments['patches']
+        operation = self.request.arguments['operation']
+        print patches
+        print node_id
+        print operation
+
 
