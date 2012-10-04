@@ -20,15 +20,16 @@
 </article>
 <article>
     <header><strong>Nodes that need this patch</strong></header>
-    <section class="well">
-        <% if(model.available && node.available.length != 0) { %>
-            <table class="table table-condensed noMargin">
-                <% _.each(model.available, function (node) { %>
-                    <tr>
-                        <th>Node ID:</th><td><%= node %></td>
-                    </tr>
+    <section class="well noPadding">
+        <% if(model.available && model.available.nodes && model.available.nodes.length != 0) { %>
+            <div class="list">
+                <% _.each(model.available.nodes, function (node) { %>
+                    <div class="item clearfix">
+                        <span class="desc">Node <%= node %></span>
+                        <span class="pull-right"><a href="#nodes/<%= node %>">More information</a><span>
+                    </div>
                 <% }); %>
-            </table>
+            </div>
         <% }  else { %>
             <small><em>No nodes to display</em></small>
         <% } %>
@@ -38,14 +39,15 @@
     <header><strong>Nodes that have this patch</strong></header>
     <section>
         <div class="well">
-            <% if(model.installed && model.installed.length != 0) { %>
-                <table class="table table-condensed noMargin">
+            <% if(model.installed && model.installed.nodes && model.installed.nodes.length != 0) { %>
+                <div class="list">
                     <% _.each(model.installed, function (node) { %>
-                        <tr>
-                            <th>Node ID:</th><td><%= node %></td>
-                        </tr>
+                        <div class="item clearfix">
+                            <span class="desc"><strong>Node ID:</strong> <%= node %></span>
+                            <span class="pull-right">More information<span>
+                        </div>
                     <% }); %>
-                </table>
+                </div>
             <% }  else { %>
             <small><em>No nodes to display</em></small>
             <% } %>
@@ -57,13 +59,14 @@
     <section>
         <div class="well">
             <% if(model.pending && model.pending.length != 0) { %>
-                <table class="table table-condensed noMargin">
+                <div class="well">
                     <% _.each(model.pending, function (node) { %>
-                        <tr>
-                            <th>Node ID:</th><td><%= node %></td>
-                        </tr>
+                        <div class="item clearfix">
+                            <span class="desc"><strong>Node ID:</strong> <%= node %></span>
+                                <span class="pull-right">More information<span>
+                        </div>
                     <% }); %>
-                </table>
+                </div>
             <% }  else { %>
                 <small><em>No nodes to display</em></small>
             <% } %>
@@ -74,13 +77,14 @@
     <section>
         <div class="well">
             <% if(model.failed && model.failed.length != 0) { %>
-                <table class="table table-condensed noMargin">
+                <div class="well">
                     <% $.each(model.failed, function (i, node) { %>
-                        <tr>
-                            <th>Node ID:</th><td><%= node %></td>
-                        </tr>
+                        <div class="item clearfix">
+                            <span class="desc"><strong>Node ID:</strong> <%= node %></span>
+                                <span class="pull-right">More information<span>
+                        </div>
                     <% }); %>
-                </table>
+                </div>
             <% }  else { %>
                 <small><em>No nodes to display</em></small>
             <% } %>
