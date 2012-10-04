@@ -78,8 +78,8 @@ def addWindowsUpdate(session, data):
 
 def addWindowsUpdatePerNode(session, data):
     exists, operation = operationExists(session, data['operation_id'])
-    node_id = exists.node_id
     if exists:
+        node_id = exists.node_id
         operation.update({'operation_received' : datetime.now()})
         session.commit()
         for addupdate in data['updates']:
