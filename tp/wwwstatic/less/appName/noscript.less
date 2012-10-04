@@ -2,38 +2,42 @@
 // -------------------------
 
 .no-js {
-	BODY {
-		HEADER, SECTION, FOOTER {
-			display: none !important;
-		}
-	}
+    BODY {
+        HEADER, SECTION, FOOTER {
+            display: none !important;
+        }
+    }
 }
 
 NOSCRIPT {
-	display:block;
-	margin: auto;
-	margin-top: 15%;
-	width: @em*( 700px )/@baseFontSize;
-	text-align: center;
-	overflow:hidden;
-	cursor:default;
-	-moz-user-select:-moz-none;
-	-khtml-user-select:none;
-	-webkit-user-select:none;
-	user-select:none;
-	
-	.title{
-		@thisFontSize: @h1FontSize;
-		font-size: @thisFontSize;
-		line-height: 1em;
-		font-weight:600;
-		text-shadow:rgba(0,0,0,0.5) @em*( 1px )/@thisFontSize @em*( 1px )/@thisFontSize @em*( 4px )/@thisFontSize;
-	}
-	.subtitle{
-		@thisFontSize: @h3FontSize;
-		font-size: @thisFontSize;
-		line-height: 1em;
-		font-weight:300;
-		text-shadow:rgba(0,0,0,0.5) @em*( 1px )/@thisFontSize @em*( 1px )/@thisFontSize @em*( 3px )/@thisFontSize;
-	}
+    display:block;
+    margin: auto;
+    margin-top: 15%;
+    width: @em*( 700px )/@baseFontSize;
+    text-align: center;
+    overflow:hidden;
+    cursor:default;
+    -moz-user-select:-moz-none;
+    -khtml-user-select:none;
+    -webkit-user-select:none;
+    user-select:none;
+
+    .title{
+        @thisFontSize: @h1FontSize;
+        font-size: @thisFontSize;
+        line-height: 1em;
+        font-weight:600;
+        text-shadow:rgba(0,0,0,0.5) @em*( 1px )/@thisFontSize @em*( 1px )/@thisFontSize @em*( 4px )/@thisFontSize;
+    }
+    .subtitle{
+        @thisFontSize: @h3FontSize;
+        font-size: @thisFontSize;
+        line-height: 1em;
+        font-weight:300;
+        text-shadow:rgba(0,0,0,0.5) @em*( 1px )/@thisFontSize @em*( 1px )/@thisFontSize @em*( 3px )/@thisFontSize;
+    }
+    IMG.brand {
+        @imageHeight: 36px;
+        height: @em*( @imageHeight )/@baseFontSize;
+    }
 }

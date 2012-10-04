@@ -1,16 +1,17 @@
-// CLOSE ICONS
-// -----------
+//
+// Close icons
+// --------------------------------------------------
+
 
 // Alerts.less has a rule that modifies .close
 // Need reference to .close font size for proper em calculation
 .close {
-  @thisFontSize: @closeFontSize;
   float: right;
-  font-size: @em*( @thisFontSize )/@baseFontSize;
+  font-size: @em*( @closeFontSize )/@baseFontSize;
   font-weight: bold;
-  line-height: @em*( @baseLineHeight )/@thisFontSize;
+  line-height: @em*( @baseLineHeight )/@closeFontSize;
   color: @black;
-  text-shadow: 0 @em*( 1px )/@thisFontSize 0 rgba(255,255,255,1);
+  text-shadow: 0 @em*( 1px )/@closeFontSize 0 rgba(255,255,255,1);
   .opacity(20);
   &:hover {
     color: @black;

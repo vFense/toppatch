@@ -1,52 +1,45 @@
-// Code.less
-// Code typography styles for the <code> and <pre> elements
-// --------------------------------------------------------
+//
+// Code (inline and blocK)
+// --------------------------------------------------
+
 
 // Inline and block code styles
 code,
 pre {
-  @thisFontSize: @codeFontSize;
-  @thisTopPad: 0;
-  @thisSidePad: 3px;
-  @thisBotPad: 2px;
-  @thisBorderRadius: 3px;
-
-  font-size: @thisFontSize;
-  padding: @em*( @thisTopPad )/@thisFontSize @em*( @thisSidePad )/@thisFontSize @em*( @thisBorderRadius )/@thisFontSize;
+  padding: 0 @em*( 3px )/@codeFontSize @em*( 2px )/@codeFontSize;
   #font > #family > .monospace;
+  font-size: @codeFontSize;
   color: @grayDark;
-  .border-radius(@em*( @thisBorderRadius )/@thisFontSize);
+  .border-radius(@em*( 3px )/@codeFontSize);
 }
 
 // Inline code
 code {
-  @thisFontSize: @codeFontSize;
-  padding: @em*( 2px )/@thisFontSize @em*( 4px )/@thisFontSize;
+  padding: @em*( 2px )/@codeFontSize @em*( 4px )/@codeFontSize;
   color: #d14;
   background-color: #f7f7f9;
-  border: @em*( 1px )/@thisFontSize solid #e1e1e8;
+  border: @em*( 1px )/@codeFontSize solid #e1e1e8;
 }
 
 // Blocks of code
 pre {
-  @thisFontSize: @preFontSize;
   display: block;
-  font-size: @preFontSize;
-  padding: @em*((@baseLineHeight - 1) / 2)/@thisFontSize;
-  margin: 0 0 @em*(@baseLineHeight / 2)/@thisFontSize;
-  line-height: @em*( @baseLineHeight )/@thisFontSize;
+  padding: @em*((@baseLineHeight - 1) / 2)/@preFontSize;
+  margin: 0 0 @em*(@baseLineHeight / 2)/@preFontSize;
+  font-size: @preFontSize; // 14px to 13px
+  line-height: @em*( @baseLineHeight )/@preFontSize;
   word-break: break-all;
   word-wrap: break-word;
   white-space: pre;
   white-space: pre-wrap;
   background-color: #f5f5f5;
-  border: @em*( 1px )/@thisFontSize solid #ccc; // fallback for IE7-8
-  border: @em*( 1px )/@thisFontSize solid rgba(0,0,0,.15);
-  .border-radius(@em*( 4px )/@thisFontSize);
+  border: @em*( 1px )/@preFontSize solid #ccc; // fallback for IE7-8
+  border: @em*( 1px )/@preFontSize solid rgba(0,0,0,.15);
+  .border-radius(@em*( 4px )/@preFontSize);
 
   // Make prettyprint styles more spaced out for readability
   &.prettyprint {
-    margin-bottom: @em*( @baseLineHeight )/@thisFontSize;
+    margin-bottom: @em*( @baseLineHeight )/@preFontSize;
   }
 
   // Account for some code outputs that place code tags in pre tags
@@ -60,7 +53,6 @@ pre {
 
 // Enable scrollable blocks of code
 .pre-scrollable {
-  @thisFontSize: @preFontSize;
-  max-height: @em*( 340px )/@thisFontSize;
+  max-height: @em*( 340px )/@preFontSize;
   overflow-y: scroll;
 }

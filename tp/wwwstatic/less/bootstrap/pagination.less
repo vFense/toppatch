@@ -1,5 +1,7 @@
-// PAGINATION
-// ----------
+//
+// Pagination (multiple pages)
+// --------------------------------------------------
+
 
 .pagination {
   height: @em*( @baseLineHeight * 2 )/@baseFontSize;
@@ -13,37 +15,43 @@
   .border-radius(@em*( 3px )/@baseFontSize);
   .box-shadow(0 @em*( 1px )/@baseFontSize @em*( 2px )/@baseFontSize rgba(0,0,0,.05));
 }
-.pagination li {
+.pagination ul > li {
     display: inline;
   }
-.pagination a {
+.pagination ul > li > a,
+.pagination ul > li > span {
   float: left;
   padding: 0 @em*( 14px )/@baseFontSize;
   line-height: @em*((@baseLineHeight * 2) - 2)/@baseFontSize;
   text-decoration: none;
-  border: @em*( 1px )/@baseFontSize solid #ddd;
+  background-color: @paginationBackground;
+  border: @em*( 1px )/@baseFontSize solid @paginationBorder;
   border-left-width: 0;
 }
-.pagination a:hover,
-.pagination .active a {
+.pagination ul > li > a:hover,
+.pagination ul > .active > a,
+.pagination ul > .active > span {
   background-color: #f5f5f5;
 }
-.pagination .active a {
+.pagination ul > .active > a,
+.pagination ul > .active > span {
   color: @grayLight;
   cursor: default;
 }
-.pagination .disabled span,
-.pagination .disabled a,
-.pagination .disabled a:hover {
+.pagination ul > .disabled > span,
+.pagination ul > .disabled > a,
+.pagination ul > .disabled > a:hover {
   color: @grayLight;
   background-color: transparent;
   cursor: default;
 }
-.pagination li:first-child a {
+.pagination ul > li:first-child > a,
+.pagination ul > li:first-child > span {
   border-left-width: @em*( 1px )/@baseFontSize;
   .border-radius(@em*( 3px )/@baseFontSize 0 0 @em*( 3px )/@baseFontSize);
 }
-.pagination li:last-child a {
+.pagination ul > li:last-child > a,
+.pagination ul > li:last-child > span {
   .border-radius(0 @em*( 3px )/@baseFontSize @em*( 3px )/@baseFontSize 0);
 }
 

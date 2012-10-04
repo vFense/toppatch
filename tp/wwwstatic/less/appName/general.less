@@ -5,35 +5,87 @@
 */
 
 BODY {
-	font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
-	//background-color: @TP_White;
-	min-width: @gridRowWidth;
+    font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    //background-color: @TP_White;
+    min-width: @gridRowWidth;
+    padding-top: 1em;
+    padding-bottom: 1em;
+
+    > FOOTER {
+        background-color: #F8F8F8;
+        height: @em*( @pageFooterHeight )/@baseFontSize;
+        color: darken(@TP_DarkGrey,4%);
+        border-top: @em*( 1px )/@baseFontSize solid #E0E0E0;
+        border-bottom: @em*( 1px )/@baseFontSize solid #E0E0E0;
+
+        .logo-text {
+            @imageHeight: 36px;
+            height: @em*( @imageHeight )/@baseFontSize;
+            padding-top: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
+            padding-bottom: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
+        }
+    }
 }
 
-BODY FOOTER {
-	background-color: #F8F8F8;
-		height: @em*( @pageFooterHeight )/@baseFontSize;
-	margin-top: @em*( 18px )/@baseFontSize;
-	color: darken(@TP_DarkGrey,4%);
-	border-top: @em*( 1px )/@baseFontSize solid #E0E0E0;
-	border-bottom: @em*( 1px )/@baseFontSize solid #E0E0E0;
-	
-	.logo-text {
-		@imageHeight: 32px;
-		padding-top: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
-		padding-bottom: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
-	}
+li {
+    [class^="icon-"], [class*=" icon-"] {
+        line-height: 1.25em;
+    }
 }
 
-.docHeader {
-	border-bottom-color: #E0E0E0;
-}
+H1, H2, H3, H4, H5, H6 { margin:0; }
 
 .legal {
-	line-height: @em*( 60px )/@baseFontSize;
+    line-height: @em*( @pageFooterHeight )/@baseFontSize;
 }
 
-.logo-text {
-	@imageHeight: 32px;
-	height: @em*( @imageHeight )/@baseFontSize;
+.container {
+    .row + .row,
+    .row + .row-fluid,
+    .row-fluid + .row,
+    .row-fluid + .row-fluid {
+        margin-top: 1em;
+    }
+}
+
+/* Sergio's Styles: To be sorted */
+
+/*.window {
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    border: 4px solid #E0E0E0;
+    background-color: white;
+    padding: 5px;
+}*/
+.radio-graph {
+    font-size: 0.7em;
+}
+.point {
+    fill: rgb(51, 156, 255);
+    stroke-width: 2px;
+    stroke: rgb(255,255,255);
+}
+.point.max {
+    fill: rgb(200,0,0);
+    stroke-width: 2px;
+}
+.chart {
+    display: block;
+    margin: auto;
+    margin-top: 60px;
+    font-size: 11px;
+}
+
+.tree {
+    stroke: #eee;
+    fill: #aaa;
+    fill-opacity: .8;
+}
+
+.tree.parent {
+    cursor: pointer;
+    fill: steelblue;
+}
+text {
+    pointer-events: none;
 }

@@ -1,8 +1,11 @@
-// MODALS
-// ------
+//
+// Modals
+// --------------------------------------------------
 
-// Recalculate z-index where appropriate
-.modal-open {
+
+// Recalculate z-index where appropriate,
+// but only apply to elements within modal
+.modal-open .modal {
   .dropdown-menu {  z-index: @zindexDropdown + @zindexModal; }
   .dropdown.open { *z-index: @zindexDropdown + @zindexModal; }
   .popover       {  z-index: @zindexPopover  + @zindexModal; }
@@ -35,7 +38,7 @@
   z-index: @zindexModal;
   overflow: auto;
   width: @em*( 560px )/@baseFontSize;
-  margin: -@em*( 250px )/@baseFontSize 0 0 -@em*( 280px )/@baseFontSize;
+  margin: @em*( -250px )/@baseFontSize 0 0 @em*( -280px )/@baseFontSize;
   background-color: @white;
   border: @em*( 1px )/@baseFontSize solid #999;
   border: @em*( 1px )/@baseFontSize solid rgba(0,0,0,.3);
@@ -54,6 +57,11 @@
   border-bottom: @em*( 1px )/@baseFontSize solid #eee;
   // Close icon
   .close { margin-top: @em*( 2px )/@baseFontSize; }
+  // Heading
+  h3 {
+    margin: 0;
+    line-height: 30px;
+  }
 }
 
 // Body (where all modal content resides)
@@ -85,6 +93,6 @@
   }
   // but override that for button groups
   .btn-group .btn + .btn {
-    margin-left: -@em*( 1px )/@baseFontSize;
+    margin-left: @em*( -1px )/@baseFontSize;
   }
 }

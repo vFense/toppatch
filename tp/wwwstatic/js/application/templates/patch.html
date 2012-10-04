@@ -1,0 +1,93 @@
+<% $.each(models, function (k, model) { %>
+    <% if(id == model.get('reference').toppatch) { %>
+        <header><h3>Patch Details</h3></header>
+        <section>
+            <div  class="well">
+                <table class="table table-bordered table-condensed table-hover noMargin">
+                    <tr>
+                        <th>Patch ID:</th><td><% print(model.get('reference').toppatch); %></td>
+                    </tr>
+                    <tr>
+                        <th>Patch Name:</th><td><% print(model.get('name')); %></td>
+                    </tr>
+                    <tr>
+                        <th>Vendor:</th><td><% print(model.get('reference').developer); %></td>
+                    </tr>
+                    <tr>
+                        <th>Release Date:</th><td><% print(model.get('date')); %></td>
+                    </tr>
+                    <tr>
+                        <th>Severity:</th><td><% print(model.get('severity')); %></td>
+                    </tr>
+                    <tr>
+                        <th>Description:</th><td><% print(model.get('description')); %></td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+        <header><h4>Nodes available</h4></header>
+        <section>
+            <div class="well">
+                <% if(model.get("available").length != 0) { %>
+                    <table class="table table-condensed table-hover noMargin">
+                        <% $.each(model.get("available"), function (i, node) { %>
+                            <tr>
+                                <th>Node ID:</th><td><%= node %></td>
+                            </tr>
+                        <% }); %>
+                    </table>
+                <% }  else { %>
+                    <h6>No nodes to display</h6>
+                <% } %>
+            </div>
+        </section>
+        <header><h4>Nodes installed</h4></header>
+        <section>
+            <div class="well">
+                <% if(model.get("installed").length != 0) { %>
+                    <table class="table table-condensed table-hover noMargin">
+                        <% $.each(model.get("installed"), function (i, node) { %>
+                            <tr>
+                                <th>Node ID:</th><td><%= node %></td>
+                            </tr>
+                        <% }); %>
+                    </table>
+                <% }  else { %>
+                    <h6>No nodes to display</h6>
+                <% } %>
+            </div>
+        </section>
+        <header><h4>Nodes pending</h4></header>
+        <section>
+            <div class="well">
+                <% if(model.get("pending").length != 0) { %>
+                    <table class="table table-condensed table-hover noMargin">
+                        <% $.each(model.get("pending"), function (i, node) { %>
+                            <tr>
+                                <th>Node ID:</th><td><%= node %></td>
+                            </tr>
+                        <% }); %>
+                    </table>
+                <% }  else { %>
+                    <h6>No nodes to display</h6>
+                <% } %>
+            </div>
+        </section>
+        <header><h4>Nodes failed</h4></header>
+        <section>
+            <div class="well">
+                <% if(model.get("failed").length != 0) { %>
+                    <table class="table table-condensed table-hover noMargin">
+                        <% $.each(model.get("failed"), function (i, node) { %>
+                            <tr>
+                                <th>Node ID:</th><td><%= node %></td>
+                            </tr>
+                        <% }); %>
+                    </table>
+                <% }  else { %>
+                    <h6>No nodes to display</h6>
+                <% } %>
+            </div>
+        </section>
+    <% } %>
+<% }); %>

@@ -1,5 +1,7 @@
-// DROPDOWN MENUS
-// --------------
+//
+// Dropdown menus
+// --------------------------------------------------
+
 
 // Use the .menu class on any <li> element within the topbar or ul.tabs and you'll get some superfancy dropdowns
 .dropup,
@@ -8,7 +10,7 @@
 }
 .dropdown-toggle {
   // The caret makes the toggle a bit too tall in IE7
-  *margin-bottom: -@em*( 3px )/@baseFontSize;
+  *margin-bottom: @em*( -3px )/@baseFontSize;
 }
 .dropdown-toggle:active,
 .open .dropdown-toggle {
@@ -22,11 +24,11 @@
   width: 0;
   height: 0;
   vertical-align: top;
-  content: "";
-  .opacity(30);
   border-top:   @em*( 4px )/@btnFontSize solid @black;
   border-right: @em*( 4px )/@btnFontSize solid transparent;
   border-left:  @em*( 4px )/@btnFontSize solid transparent;
+  content: "";
+  
   &.btn-large {
   	border-top:   @em*( 4px )/@btnLargeFontSize solid @black;
 	border-right: @em*( 4px )/@btnLargeFontSize solid transparent;
@@ -48,6 +50,7 @@
 .dropdown .caret {
   margin-top: @em*( 8px )/@btnFontSize;
   margin-left: @em*( 2px )/@btnFontSize;
+  
   &.btn-large {
   	margin-top: @em*( 8px )/@btnLargeFontSize;
 	margin-left: @em*( 2px )/@btnLargeFontSize;
@@ -76,15 +79,15 @@
   display: none; // none by default, but block on "open" of the menu
   float: left;
   min-width: @em*( 160px )/@baseFontSize;
-  padding: @em*( 4px )/@baseFontSize 0;
-  margin: @em*( 1px )/@baseFontSize 0 0; // override default ul
+  padding: @em*( 5px )/@baseFontSize 0;
+  margin: @em*( 2px )/@baseFontSize 0 0; // override default ul
   list-style: none;
   background-color: @dropdownBackground;
-  border: @em*( 1px )/@baseFontSize solid #ccc;
-  border: @em*( 1px )/@baseFontSize solid rgba(0,0,0,.2);
+  border: @em*( 1px )/@baseFontSize solid #ccc; // Fallback for IE7-8
+  border: @em*( 1px )/@baseFontSize solid @dropdownBorder;
   *border-right-width: @em*( 2px )/@baseFontSize;
   *border-bottom-width: @em*( 2px )/@baseFontSize;
-  .border-radius(@em*( 5px )/@baseFontSize);
+  .border-radius(@em*( 6px )/@baseFontSize);
   .box-shadow(0 @em*( 5px )/@baseFontSize @em*( 10px )/@baseFontSize rgba(0,0,0,.2));
   -webkit-background-clip: padding-box;
      -moz-background-clip: padding;
@@ -104,7 +107,7 @@
   // Links within the dropdown menu
   a {
     display: block;
-    padding: @em*( 3px )/@baseFontSize @em*( 15px )/@baseFontSize;
+    padding: @em*( 3px )/@baseFontSize @em*( 20px )/@baseFontSize;
     clear: both;
     font-weight: normal;
     line-height: @em*( @baseLineHeight )/@baseFontSize;
@@ -116,11 +119,37 @@
 // Hover state
 // -----------
 .dropdown-menu li > a:hover,
+.dropdown-menu li > a:focus,
+.dropdown-submenu:hover > a {
+  text-decoration: none;
+  color: @dropdownLinkColorHover;
+  background-color: @dropdownLinkBackgroundHover;
+  #gradient > .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
+}
+
+// Active state
+// ------------
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
   color: @dropdownLinkColorHover;
   text-decoration: none;
-  background-color: @dropdownLinkBackgroundHover;
+  outline: 0;
+  background-color: @dropdownLinkBackgroundActive;
+  #gradient > .vertical(@dropdownLinkBackgroundActive, darken(@dropdownLinkBackgroundActive, 5%));
+}
+
+// Disabled state
+// --------------
+// Gray out text and ensure the hover state remains gray
+.dropdown-menu .disabled > a,
+.dropdown-menu .disabled > a:hover {
+  color: @grayLight;
+}
+// Nuke hover effects
+.dropdown-menu .disabled > a:hover {
+  text-decoration: none;
+  background-color: transparent;
+  cursor: default;
 }
 
 // Open state for the dropdown
@@ -152,7 +181,8 @@
   .caret {
     border-top: 0;
     border-bottom: @em*( 4px )/@btnFontSize solid @black;
-    content: "\2191";
+    content: "";
+    
     &.btn-large {
       border-bottom: @em*( 4px )/@btnLargeFontSize solid @black;
     }
@@ -169,6 +199,50 @@
     bottom: 100%;
     margin-bottom: @em*( 1px )/@baseFontSize;
   }
+}
+
+// Sub menus
+// ---------------------------
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: @em*( -6px )/@baseFontSize;
+  margin-left: @em*( -1px )/@baseFontSize;
+  -webkit-border-radius: 0 @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize;
+     -moz-border-radius: 0 @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize;
+          border-radius: 0 @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize;
+}
+.dropdown-submenu:hover > .dropdown-menu {
+  display: block;
+}
+
+.dropdown-submenu > a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: @em*( 5px )/@baseFontSize 0 @em*( 5px )/@baseFontSize @em*( 5px )/@baseFontSize;
+  border-left-color: darken(@dropdownBackground, 20%);
+  margin-top: @em*( 5px )/@baseFontSize;
+  margin-right: @em*( -10px )/@baseFontSize;
+}
+.dropdown-submenu:hover > a:after {
+  border-left-color: @dropdownLinkColorHover;
+}
+
+
+// Tweak nav headers
+// -----------------
+// Increase padding from 15px to 20px on sides
+.dropdown .dropdown-menu .nav-header {
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 // Typeahead

@@ -1,60 +1,47 @@
 // Navbar Styles
 // -------------------------
 
-.pageHeader {
-	#gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
-	
-	.navbar {
-		font-family: "Cantarell", "Arial Black", "Arial Bold", sans-serif;
-		font-weight: bold;
-		margin-bottom:0;
-	}
+BODY > HEADER {
+    .navbar {
+        font-family: "Cantarell", "Arial Black", "Arial Bold", sans-serif;
+        //font-weight: bold;
+        margin-bottom:0;
 
-	.navbar-inner {
-		padding-left:0;
-		padding-right:0;
-	}
-	
-	.brand {
-		margin-left:0;
-		padding-left:0 !important;
-	}
-	
-	.dropdown {
-		.caret {
-			border-top-color: @black !important;
-			border-bottom-color: @black !important;
-			opacity: 1;
-		}
-		
-		&:hover, &.open {
-			.caret {
-				border-top-color: @blueDark !important;
-				border-bottom-color: @blueDark !important;
-			}
-			> a {
-				color: @blueDark;
-			}
-		}
-	}
-}
+        .nav {
+            margin-right:0;
+        }
 
-.nav li.divide-before {
-	border-left:@em*( 1px )/@baseFontSize solid @navbarBackground;
-	.box-shadow(@em*( -1px )/@baseFontSize 0 0 @navbarBackgroundHighlight);
-	padding-left:@em*( 10px )/@baseFontSize;
-}
+        .brand {
+            color: #001678;
+            margin-left:0;
+            padding-left:0;
+            text-transform:uppercase;
+            position: relative;
 
-.nav li.divide-after {
-	border-left:@em*( 1px )/@baseFontSize solid @navbarBackground;
-	.box-shadow(@em*( -1px )/@baseFontSize 0 0 @navbarBackgroundHighlight);
-	padding-right:@em*( 10px )/@baseFontSize;
-}
+            SMALL {
+                font-size: 75%;
+                line-height: 1em;
+            }
 
-// CSS3 Styles
-// Filtered by Modernizr
-// ----------------------
+            IMG {
+                @imageHeight: 18px;
+                height: @em*( @imageHeight )/@navbarBrandFontSize;
+                vertical-align:baseline;
+            //@marginAdjust: 0px;
+            //margin-top: @em*( @marginAdjust )/@navbarBrandFontSize;
+            //margin-bottom: @em*( @marginAdjust )/@navbarBrandFontSize;
+            }
+        }
+    }
 
-.boxshadow .pageHeader {
-	.box-shadow(rgba(0, 0, 0, 0.3) 0px 1px 2px 0px);
+    .navbar-inner {
+        padding-left:0;
+        padding-right:0;
+    }
+
+    #primaryNav {
+        background-image: none !important;
+        filter: none !important;
+        background-color: transparent;
+    }
 }
