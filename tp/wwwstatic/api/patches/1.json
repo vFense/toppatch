@@ -6,6 +6,7 @@
         "patchID": "KB2736233"
     },
     "id": 1,
+    "severity": "Critical",
     "description": "This update addresses the vulnerability discussed in Microsoft Security Advisory KB2736233. To find out if other security updates are available for you, see the Overview section of this page.",
     "date": "9/10/2012"
 }
