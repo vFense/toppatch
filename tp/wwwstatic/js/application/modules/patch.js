@@ -13,7 +13,6 @@ define(
                 initialize: function () {
                     this.template = myTemplate;
                     this.collection =  new exports.Collection();
-                    this.collection.bind('all', function (e) { console.log(e); } )
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
                 },
@@ -25,7 +24,6 @@ define(
                     var template = _.template(this.template),
                         data = this.collection.toJSON()[0];
 
-                    console.log(data);
                     this.$el.html('');
 
                     this.$el.append(template({model: data}));
