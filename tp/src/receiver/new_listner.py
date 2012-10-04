@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 
 from db.update_table import *
 from db.query_table import *
-from db.client import connect as db_connect
+from db.client import *
 from tools.common import verifyJsonIsValid
 
 
@@ -19,24 +19,30 @@ OPERATION = 'operation'
 OPERATION_ID = 'operation_id'
 INSTALL = 'install'
 SYSTEM_INFO = 'system_info'
+ENGINE = initEngine()
 
 
 class GetJson(Protocol):
     total_data = ""
+    count = 0
     def connectionMade(self):
         print self.transport.getPeer()
 
     def dataReceived(self, data):
+        self.count += 1
+        if self.count == 1:
+            print "THANK YOU"
+            self.transport.write("Thank You")
         self.total_data = self.total_data + data
 
     def connectionLost(self, reason):
         data = self.total_data
         self.total_data = ""
+        print data
         valid_json = verifyJsonIsValid(data)
-        print valid_json
         if valid_json[0]:
             json_data = valid_json[1]
-            self.session = db_connect()
+            self.session = createSession(ENGINE)
             self.client_ip = self.transport.getPeer()
             self.node_exists = nodeExists(self.session,
                 self.client_ip.host)
@@ -48,31 +54,15 @@ class GetJson(Protocol):
                 addSystemInfo(self.session, json_data,
                     self.node_exists)
             if json_data[OPERATION] == "updates_pending":
+                print "adding updates now"
                 addWindowsUpdatePerNode(self.session, json_data)
+                print "done adding updates"
+            else:
+                pass
             self.session.close()
-            self.transport.write(dumps(json_data))
 
         #print reason.printDetailedTraceback
         print reason.value
-
-    def connectionDone(self, reason):
-         #print dir(reason)
-        print reason.printDetailedTraceback
-
-    def connectionAborted(self, reason):
-        print reason.printDetailedTraceback
-
-    def SSLrror(self, reason):
-        print reason.printDetailedTraceback
-
-    def PeerVerifyError(self, reason):
-        print reason.printDetailedTraceback
-
-    def CertificateError(self, reason):
-        print reason.printDetailedTraceback
-
-
-
 
 
 def verifyCallback(connection, x509, errnum, errdepth, ok):
@@ -97,12 +87,12 @@ if __name__ == '__main__':
     ctx = myContextFactory.getContext()
     ctx.set_cipher_list(ALLOWED_CIPHER_LIST)
     ctx.load_verify_locations("/opt/TopPatch/var/lib/ssl/server/keys/server.cert")
-    print "Im goint to verify you in the mouth"
+    #print "Im goint to verify you in the mouth"
     #ctx.set_verify(
     #    SSL.VERIFY_PEER | SSL.VERIFY_FAIL_IF_NO_PEER_CERT | SSL.VERIFY_CLIENT_ONCE,
     #    verifyCallback
     #    )
-    print "YOU HAVE BEEN VERIFIED"
+    #print "YOU HAVE BEEN VERIFIED"
 
     reactor.listenSSL(9000, factory, myContextFactory)
     reactor.run()
