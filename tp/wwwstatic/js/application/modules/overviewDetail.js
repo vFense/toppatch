@@ -11,7 +11,7 @@ define(
             }),
             View: Backbone.View.extend({
                 tagName: 'dl',
-                className: '',
+                className: 'widget',
                 template: myTemplate,
                 events: {
                     'change': 'render'
