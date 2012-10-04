@@ -27,12 +27,12 @@
 
         /* This rule took me a solid hour of full concentration to figure out! (3:30 AM - 4:30 AM) */
         [class*="span"]:first-child[style*="absolute"] + [class*="span"],
-        [class*="span"]:first-child[class*="absolute"] + [class*="span"]{
+        [class*="span"]:first-child[class*="absolute"] + [class*="span"] {
             margin-left: 0;
         }
     }
 
-    DL {
+    DL.widget {
         text-align: center;
         margin-top: 0;
         margin-bottom: 0;
@@ -142,5 +142,53 @@
         .pend { color: @infoText; }
         .need { color: @warningText; }
         .fail { color: @errorText; }
+    }
+
+    .well {
+        background-color: lighten(@wellBackground, 3%);
+        text-align: center;
+
+        DL {
+            @dtColumnWidth: 2;
+            @ddColumnWidth: @gridColumns - @dtColumnWidth;
+            @dtWidth: (@fluidGridColumnWidth * @dtColumnWidth) + (@fluidGridGutterWidth * (@dtColumnWidth - 1));
+            @ddWidth: (@fluidGridColumnWidth * @ddColumnWidth)+(@fluidGridGutterWidth * (@ddColumnWidth - 1));
+
+            display: block;
+            margin:0;
+
+            DT {
+                width: @dtWidth;
+                font-weight: normal;
+                color: #575757;
+                display: block;
+                text-align: right;
+                float:left;
+            }
+
+            DD {
+                width: @ddWidth;
+                margin-left: @fluidGridGutterWidth;
+                display: block;
+                text-align: left;
+                float:left;
+            }
+        }
+
+        SMALL {
+            EM {
+                color: #575757;
+            }
+        }
+    }
+}
+
+#dashboard-view,
+#dashboard-view > div {
+    > .row + .row,
+    > .row + .row-fluid,
+    > .row-fluid + .row,
+    > .row-fluid + .row-fluid {
+        margin-top: 1em;
     }
 }
