@@ -1,6 +1,8 @@
 
 import tornado.web
 import tornado.websocket
+try: import simplejson as json
+except ImportError: import json
 from models.node import NodeInfo
 from server.decorators import authenticated_request
 
@@ -141,11 +143,19 @@ class DeveloperRegistrationHandler(BaseHandler):
 class FormHandler(BaseHandler):
     @authenticated_request
     def get(self):
+        resultjson = []
+        node = {}
         node_id = self.request.arguments['node']
-        patches = self.request.arguments['patches']
-        operation = self.request.arguments['operation']
-        print patches
-        print node_id
-        print operation
+        operation = self.get_argument('operation')
+        try:
+            patches = self.request.arguments['patches']
+            node['node'] = node_id
+            node[operation] = patches
+            resultjson.append(node)
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(resultjson, indent=4))
+        except:
+            self.write('Please provide a selection of patches')
+
 
 

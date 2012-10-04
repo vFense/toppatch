@@ -6,24 +6,29 @@ require(
         var User = {},
             userSettings,
             deferred;
-        $.getJSON("/api/userInfo", function(json) {
-            userSettings = json;
-            User.Model = Backbone.Model.extend({
-                defaults: {
-                    name: userSettings['name'],
-                    show: {
-                        brandHeader: true,
-                        dashNav: true,
-                        copyFooter: true
-                    },
-                    access: [
-                        { name: 'Dashboard', href: '#dashboard', active: false },
-                        { name: 'Nodes', href: '#nodes', active: false },
-                        { name: 'Patches', href: '#patches', active: false }
-                    ]
-                }
-            });
-            window.User = new User.Model();
+        $.ajax({
+            url: '/api/userInfo',
+            dataType: 'json',
+            async: false,
+            success: function (json) {
+                userSettings = json;
+                User.Model = Backbone.Model.extend({
+                    defaults: {
+                        name: userSettings['name'],
+                        show: {
+                            brandHeader: true,
+                            dashNav: true,
+                            copyFooter: true
+                        },
+                        access: [
+                            { name: 'Dashboard', href: '#dashboard', active: false },
+                            { name: 'Nodes', href: '#nodes', active: false },
+                            { name: 'Patches', href: '#patches', active: false }
+                        ]
+                    }
+                });
+                window.User = new User.Model();
+            }
         });
 
         deferred = new $.Deferred();
