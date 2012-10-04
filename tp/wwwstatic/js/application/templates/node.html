@@ -25,7 +25,7 @@
     <section>
         <div class="well">
             <% if(model.get("patch/need").length != 0) { %>
-                <form action="/submitForm" method="get">
+                <form action="/submitForm" method="post">
                     <table class="table table-bordered table-condensed table-hover noMargin">
                         <thead>
                             <tr>
@@ -69,7 +69,7 @@
     <section>
         <div class="well">
             <% if(model.get("patch/done").length != 0) { %>
-            <form action="/submitForm" method="get">
+            <form action="/submitForm" method="post">
                 <table class="table table-bordered table-condensed table-hover noMargin">
                     <thead>
                         <tr>
@@ -131,7 +131,7 @@
     <section>
         <div class="well">
             <% if(model.get("patch/fail").length != 0) { %>
-            <form action="/submitForm" method="get">
+            <form action="/submitForm" method="post">
                 <table class="table table-bordered table-condensed table-hover noMargin">
                     <thead>
                         <tr>

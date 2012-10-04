@@ -142,7 +142,7 @@ class DeveloperRegistrationHandler(BaseHandler):
 
 class FormHandler(BaseHandler):
     @authenticated_request
-    def get(self):
+    def post(self):
         resultjson = []
         node = {}
         node_id = self.request.arguments['node']
