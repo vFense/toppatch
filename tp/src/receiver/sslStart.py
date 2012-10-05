@@ -38,7 +38,7 @@ class SslConnector():
         self.node = node
         self.msg = msg
         self.port = 9000
-        self.point = SSL4ClientEndpoint(reactor, self.node, self.port, _CtxFactory(), .000000001)
+        self.point = SSL4ClientEndpoint(reactor, self.node, self.port, _CtxFactory(), 5)
         self.d = self.point.connect(_AgentFactory())
         self.d.addCallback(self._sendMessage)
         self.d.addErrback(self._returnError)
