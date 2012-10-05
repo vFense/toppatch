@@ -7,6 +7,8 @@ from db.update_table import *
 from db.query_table import *
 from tools.common import *
 
+
+COMMON_PATCH = '(install|uninstall|hide|show)'
 #SslConnector('127.0.0.1', '{"operation" : "updates_pending", "operation_id" : "1"}')
 class AgentOperation():
     def __init__(self, session, node_list):
@@ -32,7 +34,7 @@ class AgentOperation():
                     self.results.append((node_id, oper_id, results))
                     print self.results
         
-    def install(self, node_ip, oper_type, oper_id, patch_list):
+    def install_or_uninstall_or_hide_or_show(self, node_ip, oper_type, oper_id, patch_list):
         jsonobject = {
                         "operation" : oper_type,
                         "operation_id" : oper_id,
