@@ -98,19 +98,23 @@ class Operations(Base):
     operation_type = Column(VARCHAR(16), nullable=False)
     operation_sent = Column(DATETIME, nullable=True)
     operation_received = Column(DATETIME, nullable=True)
+    results_received = Column(DATETIME, nullable=True)
     def __init__(self, node_id, operation_type, results_id=None,
-            operation_sent=None, operation_received=None
+            operation_sent=None, operation_received=None,
+            results_received=None
             ):
         self.node_id = node_id
         self.results_id = results_id
         self.operation_type = operation_type
         self.operation_sent = operation_sent
         self.operation_received = operation_received
+        self.results_received = results_received
     def __repr__(self):
-        return "<Operations(%s, %s, %s, %s, %s)>" %\
+        return "<Operations(%s, %s, %s, %s, %s,%s)>" %\
                 (
                 self.node_id, self.results_id, self.operation_type, 
-                self.operation_sent,self.operation_received
+                self.operation_sent,self.operation_received,
+                self.results_received
                 )
 
 class Results(Base):
