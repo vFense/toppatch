@@ -5,7 +5,6 @@ from twisted.internet.protocol import Factory, Protocol
 from twisted.internet.endpoints import SSL4ClientEndpoint
 
 
-_results = None
 class _AgentSender(Protocol):
     def sendMessage(self, msg):
         self.transport.write(msg)
