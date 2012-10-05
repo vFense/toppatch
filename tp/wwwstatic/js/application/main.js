@@ -44,10 +44,10 @@ require(
                             name: test.name,
                             show: test.show,
                             widgets: test.widgets,
-                            spans: test.spans,
                             access: test.access
                         }
                     });
+                    console.log(test.widgets);
                     window.User = new User.Model();
                 }
 

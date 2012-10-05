@@ -306,7 +306,6 @@ define(
                             $('.remove').click(function () { hideWidget(this); });
                             var widgets = window.User.get('widgets').graph,
                                 settings = window.User.get('widgets');
-                            console.log(settings);
                             for(var i = 0; i < widgets.length; i++) {
                                 if($('#widget'+ (i+ 1)).length == 0) {
                                     var variables = {
@@ -319,6 +318,8 @@ define(
                                          },
                                         template = _.template($("#widget_template").html(), variables);
                                     $("#insert").append(template);
+                                    widgetview.counter++;
+                                    console.log(widgetview.counter);
                                     $(".properties").click(function () { setProperties(this, 'existing'); });
                                     $('.remove').click(function () { hideWidget(this); });
                                 }
