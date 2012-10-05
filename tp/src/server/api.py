@@ -264,7 +264,7 @@ class SummaryHandler(BaseHandler):
                 nodeResult = []
                 for w in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).filter(SystemInfo.os_string == v.os_string).distinct().all():
                     print w
-                    nodeResult.append({"name" : w[0].id,
+                    nodeResult.append({"name" : w[0].ip_address,
                                        "children" : [{"name" : "Patches Installed", "size" : w[2].patches_installed},
                                            {"name" : "Patches Available", "size" : w[2].patches_available},
                                            {"name" : "Patches Pending", "size" : w[2].patches_pending},
@@ -398,45 +398,87 @@ class PatchesHandler(BaseHandler):
     @authenticated_request
     def get(self):
         data = []
+        resultjson = {}
         count = 0
         Session = sessionmaker(bind=db)
         session = Session()
-        for u in session.query(WindowsUpdate).all():
-            nodeAvailable = []
-            nodeInstalled = []
-            countAvailable = 0
-            countInstalled = 0
-            countFailed = 0
-            countPending = 0
-            nodePending = []
-            nodeFailed = []
+        try:
+            id = self.get_argument('id')
+            print id
+        except:
+            id = None
+        else:
+            pass
+        if id:
+            for u in session.query(WindowsUpdate).filter(WindowsUpdate.toppatch_id == id).all():
+                nodeAvailable = []
+                nodeInstalled = []
+                nodePending = []
+                nodeFailed = []
+                countAvailable = 0
+                countInstalled = 0
+                countFailed = 0
+                countPending = 0
+                for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id).all():
+                    if v.installed:
+                        countInstalled += 1
+                        nodeInstalled.append(v.node_id)
+                    else:
+                        countAvailable += 1
+                        nodeAvailable.append(v.node_id)
+                resultjson = {
+                    "name" : u.title,
+                    "type": "Security Patch",             #forcing Patch into type
+                    "vendor" : {
+                        "patchID" : '',         #forcing empty string in patchID
+                        "name" : 'Microsoft'    #forcing microsoft on all patch names
+                    },
+                    "id": u.toppatch_id,
+                    "severity" : u.severity,
+                    "description" : u.description,
+                    "date" : str(u.date_pub),
+                    "available": {'count' :countAvailable, 'nodes': nodeAvailable},
+                    "installed": {'count' :countInstalled, 'nodes': nodeInstalled},
+                    "pending": {'count' :countPending, 'nodes': nodePending},
+                    "failed": {'count' :countFailed, 'nodes': nodeFailed}
+                }
+        else:
+            for u in session.query(WindowsUpdate).all():
+                nodeAvailable = []
+                nodeInstalled = []
+                countAvailable = 0
+                countInstalled = 0
+                countFailed = 0
+                countPending = 0
+                nodePending = []
+                nodeFailed = []
 
-            for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id).all():
-                if v.installed:
-                    countInstalled += 1
-                    nodeInstalled.append(v.node_id)
-                else:
-                    countAvailable += 1
-                    nodeAvailable.append(v.node_id)
+                for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id).all():
+                    if v.installed:
+                        countInstalled += 1
+                        nodeInstalled.append(v.node_id)
+                    else:
+                        countAvailable += 1
+                        nodeAvailable.append(v.node_id)
 
-            data.append({"vendor" : {
-                                "patchID" : '',         #forcing empty string in patchID
-                                "name" : 'Microsoft'    #forcing microsoft on all patch names
-                            },
-                           "type": "Patch",             #forcing Patch into type
-                           "id": u.toppatch_id,
-                           "date" : str(u.date_pub),
-                           "name" : u.title,
-                           "description" : u.description,
-                           "severity" : u.severity,
-                           "nodes/need": countAvailable,
-                           "nodes/done": countInstalled,
-                           "nodes/pend": countPending,
-                           "nodes/fail": countFailed
-            })
-        for u in session.query(func.count(WindowsUpdate.toppatch_id)):
-            count = u
-        resultjson = {"count": count[0], "data": data}
+                data.append({"vendor" : {
+                                    "patchID" : '',         #forcing empty string in patchID
+                                    "name" : 'Microsoft'    #forcing microsoft on all patch names
+                                },
+                               "type": "Patch",             #forcing Patch into type
+                               "id": u.toppatch_id,
+                               "date" : str(u.date_pub),
+                               "name" : u.title,
+                               "description" : u.description,
+                               "severity" : u.severity,
+                               "nodes/need": countAvailable,
+                               "nodes/done": countInstalled,
+                               "nodes/pend": countPending,
+                               "nodes/fail": countFailed
+                })
+            for u in session.query(func.count(WindowsUpdate.toppatch_id)):
+                count = u
+            resultjson = {"count": count[0], "data": data}
         session.close()
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')

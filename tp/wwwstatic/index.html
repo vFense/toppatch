@@ -11,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width">
-    <link href='https://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
+    <!--<link href='https://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>-->
     <link rel="stylesheet" href="{{ static_url('css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ static_url('css/application.css') }}">
     <script src="{{ static_url('js/libs/modernizr/modernizr-2.5.3-respond-1.1.0.min.js') }}"></script>
@@ -41,7 +41,7 @@
                     </ul>
                 </div>
             </nav>
-            <header id="<%= widget %>-title">Widget Title</header>
+            <header id="<%= widget %>-title"><%= title %></header>
             <div id="<%= graph %>" class="graph">&nbsp;</div>
         </div>
         <nav class="row-handle">&nbsp;</nav>

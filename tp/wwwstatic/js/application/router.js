@@ -49,8 +49,8 @@ define(
             showPatch: function (id) {
                 var that = this;
                 require(['modules/patch'], function (myView) {
-                    var view = new (myView.View.extend({id: id}))()
-                    that.show({hash: '#patches', title: 'Patch Info Page', view: view});
+                    myView.Collection = myView.Collection.extend({id: id});
+                    that.show({hash: '#patches', title: 'Patch Detail', view: new myView.View()});
                 });
             },
             showOverview: function (query) {

@@ -145,11 +145,11 @@ class FormHandler(BaseHandler):
     def post(self):
         resultjson = []
         node = {}
-        node_id = self.request.arguments['node']
+        node_id = self.get_argument('node')
         operation = self.get_argument('operation')
         try:
             patches = self.request.arguments['patches']
-            node['node'] = node_id
+            node['node_id'] = node_id
             node[operation] = patches
             resultjson.append(node)
             self.set_header('Content-Type', 'application/json')
