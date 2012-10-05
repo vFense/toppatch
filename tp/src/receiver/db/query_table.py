@@ -8,10 +8,10 @@ from models.windows import *
 from models.node import *
 from models.ssl import *
 
-def nodeExists(session, node=None, node_id=None):
+def nodeExists(session, node_ip=None, node_id=None):
     if not node_id:
         node = \
-            session.query(NodeInfo).filter_by(ip_address=node).first()
+            session.query(NodeInfo).filter_by(ip_address=node_ip).first()
     else:
         node = \
             session.query(NodeInfo).filter_by(id=node_id).first()
