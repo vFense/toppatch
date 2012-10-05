@@ -23,11 +23,10 @@ class AgentOperation():
                 jsonobject = json_valid[1]
                 node_id = jsonobject['node_id']
                 node_ip = nodeExists(self.session, node_id=node_id)
-                
                 if jsonobject.has_key('install'):
                     oper_type = 'install'
                     patch_list = jsonobject['install']
-                    oper_id = self.add_oper_get_oper(node_id, oper_type)
+                    oper_id = self.create_opertion(node_id, oper_type)
                     results = self.install(node_ip.ip_address,
                             oper_type, oper_id, patch_list
                             )
@@ -46,7 +45,7 @@ class AgentOperation():
         return connect.results
 
 
-    def add_oper_get_oper(self, node_id, oper_type):
+    def create_new_operation(self, node_id, oper_type):
         addOperation(self.session, node_id, oper_type,
                     operation_sent=datetime.now()
                     )
