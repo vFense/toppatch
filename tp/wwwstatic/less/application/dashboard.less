@@ -25,7 +25,9 @@
             .border-radius(@em*( 5px )/@baseFontSize);
         }
 
-        /* This rule took me a solid hour of full concentration to figure out! (3:30 AM - 4:30 AM) */
+        // This rule took me a solid hour of full concentration to figure out! (3:30 AM - 4:30 AM)
+        // When there are two consecutive spanned columns, and the first is absolutely positioned,
+        // remove the left margin from the second column to resolve a layout issue.
         [class*="span"]:first-child[style*="absolute"] + [class*="span"],
         [class*="span"]:first-child[class*="absolute"] + [class*="span"] {
             margin-left: 0;
@@ -111,6 +113,10 @@
                 border-top: @em*(1px)/@baseFontSize solid #E5E5E5;
             }
 
+            &:hover {
+                background-color: #F5F5F5;
+            }
+
             &.linked {
                 A {
                     color: #000;
@@ -121,10 +127,6 @@
                         color: @linkColor;
                     }
                 }
-            }
-
-            &.linked:hover {
-                background-color: #F5F5F5;
             }
 
             &.linked:active {
@@ -158,7 +160,7 @@
             @dtColumnWidth: 2;
             @ddColumnWidth: @gridColumns - @dtColumnWidth;
             @dtWidth: (@fluidGridColumnWidth * @dtColumnWidth) + (@fluidGridGutterWidth * (@dtColumnWidth - 1));
-            @ddWidth: (@fluidGridColumnWidth * @ddColumnWidth)+(@fluidGridGutterWidth * (@ddColumnWidth - 1));
+            @ddWidth: (@fluidGridColumnWidth * @ddColumnWidth) + (@fluidGridGutterWidth * (@ddColumnWidth - 1));
 
             display: block;
             margin:0;
@@ -184,6 +186,7 @@
         > SMALL {
             display: block;
             text-align:center;
+            line-height: 4em;
             EM {
                 color: #575757;
             }
