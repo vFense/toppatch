@@ -4,17 +4,17 @@
     <section class="well clearfix">
         <dl>
             <dt>Name:</dt>
-                <dd><% print(model.name); %></dd>
+            <dd><% print(model.name); %></dd>
             <dt>Vendor:</dt>
-                <dd><% print(model.vendor.name || '<em>Not listed</em>'); %></dd>
+            <dd><% print(model.vendor.name || '<em>Not listed</em>'); %></dd>
             <dt>Vendor Patch ID:</dt>
-                <dd><% print(model.vendor.patchID || '<em>Not listed</em>'); %></dd>
+            <dd><% print(model.vendor.patchID || '<em>Not listed</em>'); %></dd>
             <dt>Release Date:</dt>
-                <dd><% print(model.date || '<em>Not listed</em>'); %></dd>
+            <dd><% print(model.date || '<em>Not listed</em>'); %></dd>
             <dt>Severity:</dt>
-                <dd><% print(model.severity || '<em>Not listed</em>'); %></dd>
+            <dd><% print(model.severity || '<em>Not listed</em>'); %></dd>
             <dt>Description:</dt>
-                <dd><% print(model.description || '<em>Not listed</em>'); %></dd>
+            <dd><% print(model.description || '<em>Not listed</em>'); %></dd>
         </dl>
     </section>
 </article>
@@ -26,7 +26,7 @@
                 <% _.each(model.available.nodes, function (node) { %>
                     <div class="item clearfix">
                         <span class="desc">Node <%= node %></span>
-                        <span class="pull-right"><a href="#nodes/<%= node %>">More information</a><span>
+                        <span class="pull-right"><a href="#nodes/<%= node %>">More information</a></span>
                     </div>
                 <% }); %>
             </div>
@@ -37,57 +37,53 @@
 </article>
 <article>
     <header><strong>Nodes that have this patch</strong></header>
-    <section>
-        <div class="well">
-            <% if(model.installed && model.installed.nodes && model.installed.nodes.length != 0) { %>
-                <div class="list">
-                    <% _.each(model.installed, function (node) { %>
-                        <div class="item clearfix">
-                            <span class="desc"><strong>Node ID:</strong> <%= node %></span>
-                            <span class="pull-right">More information<span>
-                        </div>
-                    <% }); %>
-                </div>
-            <% }  else { %>
-            <small><em>No nodes to display</em></small>
-            <% } %>
-        </div>
+    <section class="well noPadding">
+        <% if(model.installed && model.installed.nodes && model.installed.nodes.length != 0) { %>
+            <div class="list">
+                <% _.each(model.installed, function (node) { %>
+                    <div class="item clearfix">
+                        <span class="desc"><strong>Node ID:</strong> <%= node %></span>
+                        <span class="pull-right">More information</span>
+                    </div>
+                <% }); %>
+            </div>
+        <% }  else { %>
+        <small><em>No nodes to display</em></small>
+        <% } %>
     </section>
 </article>
 <article>
     <header><strong>Nodes installing this patch</strong></header>
-    <section>
-        <div class="well">
-            <% if(model.pending && model.pending.length != 0) { %>
-                <div class="well">
-                    <% _.each(model.pending, function (node) { %>
-                        <div class="item clearfix">
-                            <span class="desc"><strong>Node ID:</strong> <%= node %></span>
-                                <span class="pull-right">More information<span>
-                        </div>
-                    <% }); %>
-                </div>
-            <% }  else { %>
-                <small><em>No nodes to display</em></small>
-            <% } %>
-        </div>
+    <section class="well noPadding">
+        <% if(model.pending && model.pending.length != 0) { %>
+            <div class="list">
+                <% _.each(model.pending, function (node) { %>
+                    <div class="item clearfix">
+                        <span class="desc"><strong>Node ID:</strong> <%= node %></span>
+                            <span class="pull-right">More information</span>
+                    </div>
+                <% }); %>
+            </div>
+        <% }  else { %>
+            <small><em>No nodes to display</em></small>
+        <% } %>
     </section>
 </article>
+<article>
     <header><strong>Nodes that failed to apply this patch</strong></header>
-    <section>
-        <div class="well">
-            <% if(model.failed && model.failed.length != 0) { %>
-                <div class="well">
-                    <% $.each(model.failed, function (i, node) { %>
-                        <div class="item clearfix">
-                            <span class="desc"><strong>Node ID:</strong> <%= node %></span>
-                                <span class="pull-right">More information<span>
-                        </div>
-                    <% }); %>
-                </div>
-            <% }  else { %>
-                <small><em>No nodes to display</em></small>
-            <% } %>
-        </div>
+    <section class="well noPadding">
+        <% if(model.failed && model.failed.length != 0) { %>
+            <div class="list">
+                <% $.each(model.failed, function (i, node) { %>
+                    <div class="item clearfix">
+                        <span class="desc"><strong>Node ID:</strong> <%= node %></span>
+                            <span class="pull-right">More information</span>
+                    </div>
+                <% }); %>
+            </div>
+        <% }  else { %>
+            <small><em>No nodes to display</em></small>
+        <% } %>
     </section>
+</article>
 <% } %>
