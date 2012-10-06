@@ -64,8 +64,6 @@ define(
                         barGraph(this.graph);
                     } else if (this.graphType === "line") {
                         lineGraph(this.graph);
-                    } else if (this.graphType === "time") {
-                        cubismGraph(this.graph);
                     } else if (this.graphType === "stacked") {
                         stackedGraph(this.graph);
                     } else if (this.graphType === "summary") {
@@ -93,7 +91,8 @@ define(
                             span: "span" + this.sizeval,
                             graphcontainer: "graphcontainer" + this.counter,
                             menu: "menu" + this.counter,
-                            graph: "graph" + this.counter
+                            graph: "graph" + this.counter,
+                            title: this.title
                         };
                         this.graphType = $('input:radio[name=graph]:checked').val();
                         // Compile the template using underscore
@@ -197,9 +196,9 @@ define(
                         {"label": new Date('2010').getFullYear(), "value": 25},
                         {"label": new Date('2012').getFullYear(), "value": 65}
                     ],
-                    title = properties.get('widgetTitle') === 'Default' ? "Line Graph" : properties.get('widgetTitle'),
                     width = $(selection).width(),
-                    lineChart = app.chart.line().title(title).width(width);
+                    lineChart = app.chart.line().width(width);
+                //title = properties.get('widgetTitle') === 'Default' ? "Line Graph" : properties.get('widgetTitle'),
                 d3.select(selection).datum(data).call(lineChart);
             },
             stackedGraph = function (selection) {
