@@ -15,7 +15,7 @@ toppatch_dir = '/opt/TopPatch'
 mysql_dir = toppatch_dir + '/mysql/current'
 mysql_data_dir = mysql_dir + '/data'
 
-nc = NvdCollection("./data/xml/nvdcve-2.0-modified.xml")
+nc = NvdCollection("./data/xml/nvd.xml")
 entries = nc.parse_collection()
 
 db = None

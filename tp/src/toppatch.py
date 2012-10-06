@@ -9,12 +9,11 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tornado.options
-import tornado.websocket
 
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
-from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, LogoutHandler, DeveloperRegistrationHandler
+from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
 from server.api import *
@@ -25,6 +24,12 @@ from tornado.options import define, options
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
 
+class HeaderModule(tornado.web.UIModule):
+    def render(self):
+        return self.render_string(
+            "../templates/header.html"
+        )
+
 class Application(tornado.web.Application):
 
     def __init__(self, debug):
@@ -33,9 +38,11 @@ class Application(tornado.web.Application):
             (r"/?", RootHandler),
             (r"/login/?", LoginHandler),
             (r"/signup/?", SignupHandler),
-            (r"/ws/?", WebsocketHandler),
             (r"/logout/?", LogoutHandler),
+            (r"/ws/?", WebsocketHandler),
+            (r"/test/?", testHandler),
             (r"/developer", DeveloperRegistrationHandler),
+            (r"/submitForm", FormHandler),
 
             #### oAuth 2.0 Handlers
             (r"/login/oauth/authorize/?", AuthorizeHandler),
@@ -44,11 +51,25 @@ class Application(tornado.web.Application):
 
 
             #### API Handlers
+            (r"/api/nodeData/?", NodeHandler),
+            (r"/api/osData/?", OsHandler),
+            (r"/api/networkData/?", NetworkHandler),
+            (r"/api/summaryData/?", SummaryHandler),
+            (r"/api/patchData/?", PatchHandler),
+            (r"/api/graphData/?", GraphHandler),
+            (r"/api/nodes.json/?", TestHandler),
+            (r"/api/patches.json/?", PatchesHandler),
+            (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler)]  # Returns specific product from respected vendor with vulnerabilities.
 
+        template_path = "/opt/TopPatch/tp/templates"
+        static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "wwwstatic" )
+        #ui_modules = { 'Header', HeaderModule }
+
         settings = {
+
             "cookie_secret": base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             "login_url": "/login",
             }
@@ -60,7 +81,7 @@ class Application(tornado.web.Application):
         self.account_manager = AccountManager(self.session)
         self.tokens = TokenManager(self.session)
 
-        tornado.web.Application.__init__(self, handlers, debug=debug, **settings)
+        tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
 
 
@@ -70,7 +91,9 @@ if __name__ == '__main__':
         ssl_options={
             "certfile": os.path.join("data/ssl", "server.crt"),
             "keyfile": os.path.join("data/ssl", "server.key"),
-        })
+            })
     https_server.listen(options.port)
 
     tornado.ioloop.IOLoop.instance().start()
+
+

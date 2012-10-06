@@ -1,0 +1,3 @@
+#!/opt/TopPatch/python/current/bin/python
+from pylint import epylint
+epylint.Run()
