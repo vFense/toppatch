@@ -343,7 +343,6 @@ class TestHandler(BaseHandler):
         session = Session()
         try:
             id = self.get_argument('id')
-            print id
         except:
             id = None
         else:

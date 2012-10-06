@@ -47,7 +47,6 @@ require(
                             access: test.access
                         }
                     });
-                    console.log(test.widgets);
                     window.User = new User.Model();
                 }
 
