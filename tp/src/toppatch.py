@@ -62,7 +62,14 @@ class Application(tornado.web.Application):
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
-            (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler)]  # Returns specific product from respected vendor with vulnerabilities.
+            (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.
+
+            #### File system access whitelist
+            (r"/css/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/css"}),
+            (r"/font/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/font"}),
+            (r"/img/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/img"}),
+            (r"/js/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/js"})
+        ]
 
         template_path = "/opt/TopPatch/tp/templates"
         static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "wwwstatic" )
