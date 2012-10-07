@@ -143,33 +143,35 @@ class DeveloperRegistrationHandler(BaseHandler):
 class FormHandler(BaseHandler):
     @authenticated_request
     def get(self):
-        array = self.request.arguments['array']
-        self.write(array)
+        self.write('Invalid submission')
+
     @authenticated_request
     def post(self):
-        resultjson = {}
-        print 'GETTIN ARGUMENTS **********************************************'
-        print self.get_argument('params')
-        params = self.get_argument('params')
-        resultjson = json.loads(params)
-        print resultjson
-        self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(resultjson, indent=4))
-        """
         resultjson = []
         node = {}
-        node_id = self.get_argument('node')
-        operation = self.get_argument('operation')
         try:
+            node_id = self.get_argument('node')
+        except:
+            node_id = None
+        try:
+            params = self.get_argument('params')
+        except:
+            params = None
+        if node_id:
+            operation = self.get_argument('operation')
             patches = self.request.arguments['patches']
             node['node_id'] = node_id
             node[operation] = patches
             resultjson.append(node)
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson, indent=4))
-        except:
-            self.write('Please provide a selection of patches')
-        """
+        if params:
+            resultjson = json.loads(params)
+            print resultjson
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(resultjson, indent=4))
+
+
 
 
 
