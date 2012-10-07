@@ -1,30 +1,46 @@
-/**
- * Created with PyCharm.
- * User: parallels
- * Date: 10/6/12
- * Time: 2:54 PM
- * To change this template use File | Settings | File Templates.
- */
 define(
     ['jquery', 'backbone', 'text!templates/detail.html'],
     function ($, Backbone, myTemplate) {
         "use strict";
-        var Detail = {};
-        Detail.View = Backbone.View.extend({
-            template: myTemplate,
-            initialize: function () {
+        var Detail = { };
+            Detail.Collection = Backbone.Collection.extend({
+                baseUrl: 'api/nodes.json/',
+                filter: '',
+                id: 1,
+                inputArray: [],
+                url: function () {
+                    if(this.id){
+                        this.filter = '?id=' + this.id
+                    }
+                    return this.baseUrl + this.filter;
+                },
+                initialize: function () {
+                    if(this.checked){
+                        this.inputArray = this.checked;
+                    }
+                }
+            });
+            Detail.View = Backbone.View.extend({
+                initialize: function () {
+                    this.template = myTemplate;
+                    this.collection = new Detail.Collection();
+                    this.collection.bind('reset', this.render, this);
+                    this.collection.fetch();
+                },
+                beforeRender: $.noop,
+                onRender: $.noop,
+                render: function () {
+                    if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-            },
-            events: {
+                    var tmpl = _.template(this.template),
+                        data = this.collection.toJSON()[0];
+                    this.$el.html('');
+                    this.$el.html(tmpl({data: data, checked: this.collection.inputArray}));
 
-            },
-            render: function () {
-
-                var tmpl = _.template(this.template);
-                this.$el.html(tmpl());
-                return this;
-            }
-        });
+                    if (this.onRender !== $.noop) { this.onRender(); }
+                    return this;
+                }
+            });
         return Detail;
     }
 );

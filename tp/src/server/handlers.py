@@ -142,7 +142,20 @@ class DeveloperRegistrationHandler(BaseHandler):
 
 class FormHandler(BaseHandler):
     @authenticated_request
+    def get(self):
+        array = self.request.arguments['array']
+        self.write(array)
+    @authenticated_request
     def post(self):
+        resultjson = {}
+        print 'GETTIN ARGUMENTS **********************************************'
+        print self.get_argument('params')
+        params = self.get_argument('params')
+        resultjson = json.loads(params)
+        print resultjson
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(resultjson, indent=4))
+        """
         resultjson = []
         node = {}
         node_id = self.get_argument('node')
@@ -156,6 +169,7 @@ class FormHandler(BaseHandler):
             self.write(json.dumps(resultjson, indent=4))
         except:
             self.write('Please provide a selection of patches')
+        """
 
 
 
