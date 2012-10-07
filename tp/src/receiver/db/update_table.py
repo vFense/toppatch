@@ -3,7 +3,7 @@
 
 from datetime import datetime
 from socket import gethostbyaddr
-from models.base import Base                                                                                                                     
+from models.base import Base
 from models.windows import *
 from models.node import *
 
@@ -34,9 +34,9 @@ def addCsr(session, client_ip, location):
 
 
 def addOperation(session, node_id, operation, result_id=None,
-        operation_sent=None, operation_received=None):
+        operation_sent=None, operation_received=None, results_received=None):
     add_oper = Operations(node_id, operation, result_id,
-            operation_sent, operation_received
+            operation_sent, operation_received, results_received
             )
     if add_oper:
         session.add(add_oper)
@@ -46,7 +46,7 @@ def addOperation(session, node_id, operation, result_id=None,
 def addSystemInfo(session, data, node_info):
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
-        operation.update({'operation_received' : datetime.now()})
+        operation.update({'results_received' : datetime.now()})
         system_info = SystemInfo(node_info.id, data['os_code'],
             data['os_string'], data['os_version_major'],
             data['os_version_minor'], data['os_version_build'],
@@ -60,7 +60,7 @@ def addSystemInfo(session, data, node_info):
 def addWindowsUpdate(session, data):
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
-        operation.update({'operation_received' : datetime.now()})
+        operation.update({'results_received' : datetime.now()})
         session.commit()
         for update in data['updates']:
             win_update = WindowsUpdate(update['toppatch_id'],
@@ -80,7 +80,7 @@ def addWindowsUpdatePerNode(session, data):
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         node_id = exists.node_id
-        operation.update({'operation_received' : datetime.now()})
+        operation.update({'results_received' : datetime.now()})
         session.commit()
         for addupdate in data['updates']:
             update_exists = nodeUpdateExists(session, node_id, addupdate['toppatch_id'])
@@ -103,7 +103,24 @@ def addWindowsUpdatePerNode(session, data):
                         session.rollback()
                     finally:
                         addWindowsUpdate(session, data)
+            else:
+                addWindowsUpdate(session, data)
 
+def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
+    exists, operation = operationExists(session, oper_id)
+    if exists and results_recv:
+        operation.update({'results_received' : datetime.now()})
+        session.commit()
+    elif exists and oper_recv:
+        operation.update({'operation_received' : datetime.now()})
+        session.commit()
+
+def updateNode(session, node_id):
+    exists, node = nodeExists(session, node_id=node_id)
+    if exists:
+        exists.update({'last_agent_update' : datetime.now(),
+                'last_node_update' : datetime.now()})
+        session.commit()
 #def addOperationReceived(session, data):
 
 #def updateOperationReceived(session, data, operation);

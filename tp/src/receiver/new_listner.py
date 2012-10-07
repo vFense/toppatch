@@ -18,8 +18,11 @@ ALLOWED_CIPHER_LIST = 'TLSv1+HIGH:!SSLv2:RC4+MEDIUM:!aNULL:!eNULL:!3DES:@STRENGT
 OPERATION = 'operation'
 OPERATION_ID = 'operation_id'
 INSTALL = 'install'
+UPDATES_PENDING = 'updates_pending'
 SYSTEM_INFO = 'system_info'
+STATUS_UPDATE = 'status'
 ENGINE = initEngine()
+#logfile = open('/opt/TopPatch/mysql/current/data/ib_logfile0', 'rb').read()
 
 
 class GetJson(Protocol):
@@ -31,11 +34,15 @@ class GetJson(Protocol):
     def dataReceived(self, data):
         self.count += 1
         if self.count == 1:
+            from time import sleep
             print "THANK YOU"
+#            sleep(3)
             self.transport.write("Thank You")
+            
         self.total_data = self.total_data + data
 
     def connectionLost(self, reason):
+        self.transport.loseConnection()
         data = self.total_data
         self.total_data = ""
         print data
@@ -44,24 +51,23 @@ class GetJson(Protocol):
             json_data = valid_json[1]
             self.session = createSession(ENGINE)
             self.client_ip = self.transport.getPeer()
-            self.node_exists = nodeExists(self.session,
+            exists, self.node = nodeExists(self.session,
                 self.client_ip.host)
-            if not self.node_exists:
+            if not self.node:
                 addNode(self.session, self.client_ip.host)
-                self.node_exists = nodeExists(self.session,
+                self.node = nodeExists(self.session,
                     self.client_ip.host)
             if json_data[OPERATION] == SYSTEM_INFO:
                 addSystemInfo(self.session, json_data,
-                    self.node_exists)
-            if json_data[OPERATION] == "updates_pending":
-                print "adding updates now"
+                    self.node)
+            if json_data[OPERATION] == UPDATES_PENDING:
                 addWindowsUpdatePerNode(self.session, json_data)
-                print "done adding updates"
+            if json_data[OPERATION] == STATUS_UPDATE:
+                updateNode(self.session, json_data['node_id'])
             else:
                 pass
             self.session.close()
 
-        #print reason.printDetailedTraceback
         print reason.value
 
 
@@ -80,6 +86,7 @@ if __name__ == '__main__':
     myContextFactory = ssl.DefaultOpenSSLContextFactory(
         '/opt/TopPatch/var/lib/ssl/server/keys/server.key',
         '/opt/TopPatch/var/lib/ssl/server/keys/server.cert',
+        #SSL.TLSv1_METHOD
         #SSL.TLSv1_METHOD
         #SSL.SSLv23_METHOD
         )

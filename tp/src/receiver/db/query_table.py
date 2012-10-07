@@ -9,13 +9,15 @@ from models.node import *
 from models.ssl import *
 
 def nodeExists(session, node_ip=None, node_id=None):
+    node = None
     if not node_id:
         node = \
-            session.query(NodeInfo).filter_by(ip_address=node_ip).first()
+            session.query(NodeInfo).filter_by(ip_address=node_ip)
     else:
         node = \
-            session.query(NodeInfo).filter_by(id=node_id).first()
-    return(node)
+            session.query(NodeInfo).filter_by(id=node_id)
+    exists = node.first()
+    return(node, exists)
 
 def operationExists(session, oper_id):
     oper = \
