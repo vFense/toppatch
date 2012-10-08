@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 from datetime import datetime
 from jsonpickle import encode
-from twisted.internet import reactor, defer
-from sslasync import *
-from db.update_table import *
-from db.query_table import *
-from db.client import *
-from tools.common import *
+from utils.sslasync import *
+from utils.db.update_table import *
+from utils.db.query_table import *
+from utils.db.client import *
+from utils.common import *
 import gevent
 
 INSTALL = 'install'
