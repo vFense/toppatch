@@ -4,11 +4,11 @@ from json import loads, dumps
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 
-from db.client import connect as db_connect
-import tools.ssl as ssl_tools
-from tools.common import verifyJsonIsValid
-from db.query_table import *
-from db.update_table import *
+from utils.db.client import connect as db_connect
+import utils.ssl as ssl_tools
+from utils.common import verifyJsonIsValid
+from utils.db.query_table import *
+from utils.db.update_table import *
 
 
 class CsrReceiver(Protocol):

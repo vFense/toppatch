@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 
 from db.update_table import *
 from db.query_table import *
-from db.client import *
+from db.client import connect as db_connect
 from tools.common import verifyJsonIsValid
 
 
@@ -18,57 +18,61 @@ ALLOWED_CIPHER_LIST = 'TLSv1+HIGH:!SSLv2:RC4+MEDIUM:!aNULL:!eNULL:!3DES:@STRENGT
 OPERATION = 'operation'
 OPERATION_ID = 'operation_id'
 INSTALL = 'install'
-UPDATES_PENDING = 'updates_pending'
 SYSTEM_INFO = 'system_info'
-STATUS_UPDATE = 'status'
-ENGINE = initEngine()
-#logfile = open('/opt/TopPatch/mysql/current/data/ib_logfile0', 'rb').read()
 
 
 class GetJson(Protocol):
-    total_data = ""
-    count = 0
     def connectionMade(self):
         print self.transport.getPeer()
-
     def dataReceived(self, data):
-        self.count += 1
-        if self.count == 1:
-            from time import sleep
-            print "THANK YOU"
-#            sleep(3)
-            self.transport.write("Thank You")
-            
-        self.total_data = self.total_data + data
-
-    def connectionLost(self, reason):
-        self.transport.loseConnection()
-        data = self.total_data
-        self.total_data = ""
+#        foo = encode(data)
+        #bar = decode(data)
+#        loads(foo)
+#        loads(data)
         print data
         valid_json = verifyJsonIsValid(data)
+        print valid_json
         if valid_json[0]:
             json_data = valid_json[1]
-            self.session = createSession(ENGINE)
+            self.session = db_connect()
             self.client_ip = self.transport.getPeer()
-            exists, self.node = nodeExists(self.session,
+            self.node_exists = nodeExists(self.session,
                 self.client_ip.host)
-            if not self.node:
+            if not self.node_exists:
                 addNode(self.session, self.client_ip.host)
-                self.node = nodeExists(self.session,
+                self.node_exists = nodeExists(self.session,
                     self.client_ip.host)
             if json_data[OPERATION] == SYSTEM_INFO:
                 addSystemInfo(self.session, json_data,
-                    self.node)
-            if json_data[OPERATION] == UPDATES_PENDING:
-                addWindowsUpdatePerNode(self.session, json_data)
-            if json_data[OPERATION] == STATUS_UPDATE:
-                updateNode(self.session, json_data['node_id'])
-            else:
-                pass
+                    self.node_exists)
+            self.session.commit()
+            print "session committed"
             self.session.close()
+            print "session closed"
+            self.transport.write(dumps(json_data))
 
-        print reason.value
+    def connectionLost(self, reason):
+         #print reason.printDetailedTraceback
+         print reason.value
+
+    def connectionDone(self, reason):
+         #print dir(reason)
+         print reason.printDetailedTraceback
+
+    def connectionAborted(self, reason):
+         print reason.printDetailedTraceback
+
+    def SSLrror(self, reason):
+         print reason.printDetailedTraceback
+
+    def PeerVerifyError(self, reason):
+         print reason.printDetailedTraceback
+
+    def CertificateError(self, reason):
+         print reason.printDetailedTraceback
+
+
+
 
 
 def verifyCallback(connection, x509, errnum, errdepth, ok):
@@ -87,19 +91,18 @@ if __name__ == '__main__':
         '/opt/TopPatch/var/lib/ssl/server/keys/server.key',
         '/opt/TopPatch/var/lib/ssl/server/keys/server.cert',
         #SSL.TLSv1_METHOD
-        #SSL.TLSv1_METHOD
         #SSL.SSLv23_METHOD
         )
 
     ctx = myContextFactory.getContext()
     ctx.set_cipher_list(ALLOWED_CIPHER_LIST)
     ctx.load_verify_locations("/opt/TopPatch/var/lib/ssl/server/keys/server.cert")
-    #print "Im goint to verify you in the mouth"
+    print "Im goint to verify you in the mouth"
     #ctx.set_verify(
     #    SSL.VERIFY_PEER | SSL.VERIFY_FAIL_IF_NO_PEER_CERT | SSL.VERIFY_CLIENT_ONCE,
     #    verifyCallback
     #    )
-    #print "YOU HAVE BEEN VERIFIED"
+    print "YOU HAVE BEEN VERIFIED"
 
     reactor.listenSSL(9000, factory, myContextFactory)
     reactor.run()
