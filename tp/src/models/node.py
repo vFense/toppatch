@@ -152,11 +152,11 @@ class Results(Base):
                 self.result, self.message
                 )
 
-class SoftwareInstalled(Base):
+class SoftwareAvailable(Base):
     """
     Represents an application that is installed on a node, as oppose to a Product from a Vendor in the database.
     """
-    __tablename__ = "software_installed"
+    __tablename__ = "software_available"
     __visit_name__ = "column"
     __table_args__ = {
         'mysql_engine': 'InnoDB',
@@ -186,6 +186,32 @@ class SoftwareInstalled(Base):
                 self.node_id, self.name, self.vendor,
                 self.description, self.version,
                 self.support_url, self.date_installed
+                )
+
+class SoftwareInstalled(Base):
+    """
+    Represents an application that is installed on a node, as oppose to a Product from a Vendor in the database.
+    """
+    __tablename__ = "software_installed"
+    __visit_name__ = "column"
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True), primary_key=True, autoincrement=True )
+    application_id = Column(INTEGER(unsigned=True),ForeignKey("software_available.id"))
+    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
+    date_installed = Column(DATETIME, nullable=True)
+    def __init__(self, node_id, application_id,
+                date_installed=None):
+        self.node_id = node_id
+        self.application_id = application_id
+        self.date_installed = date_installed
+    def __repr__(self):
+        return "<SoftwareInstalled(%s,%s,%s)>" %\
+                (
+                self.node_id, self.application_id,
+                self.date_installed
                 )
 
 
