@@ -54,26 +54,28 @@ class SystemInfo(Base):
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"), unique=True)
     os_code = Column(VARCHAR(16), nullable=False)
     os_string = Column(VARCHAR(32), nullable=False)
+    bit_type = Column(VARCHAR(4), nullable=False)
     os_version_major = Column(VARCHAR(6), nullable=True)
     os_version_minor = Column(VARCHAR(6), nullable=True)
     os_version_build = Column(VARCHAR(8), nullable=True)
     os_meta = Column(VARCHAR(32), nullable=True)
     def __init__(
-                self, node_id, os_code, os_string,
+                self, node_id, os_code, os_string, bit_type,
                 os_version_major, os_version_minor,
                 os_version_build, os_meta
                 ):
         self.node_id = node_id
         self.os_code = os_code
         self.os_string = os_string
+        self.bit_type = bit_type
         self.os_version_major = os_version_major
         self.os_version_minor = os_version_minor
         self.os_version_build = os_version_build
         self.os_meta = os_meta
     def __repr__(self):
-        return "<SystemInfo(%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<SystemInfo(%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.node_id, self.os_code, self.os_string,
+                self.node_id, self.os_code, self.os_string, self.bit_type
                 self.os_version_major, self.os_version_minor,
                 self.os_version_build, self.os_meta
                 )
