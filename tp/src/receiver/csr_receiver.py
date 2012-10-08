@@ -4,12 +4,14 @@ from json import loads, dumps
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 
-from utils.db.client import connect as db_connect
+from utils.db.client import *
 import utils.ssl as ssl_tools
-from utils.common import verifyJsonIsValid
-from utils.db.query_table import *
 from utils.db.update_table import *
+from utils.db.query_table import *
+from utils.db.client import *
+from utils.common import verifyJsonIsValid
 
+ENGINE = initEngine()
 
 class CsrReceiver(Protocol):
     """
@@ -26,7 +28,7 @@ class CsrReceiver(Protocol):
             data = loads(data)
             if data['operation'] == 'send_csr' \
                     and data['csr'] is not None:
-                self.session = db_connect()
+                self.session = createSession(ENGINE)
                 self.client_ip = self.transport.getPeer()
                 self.csr_exists = csrExists(self.session,
                     self.client_ip.host)
@@ -40,9 +42,9 @@ class CsrReceiver(Protocol):
                                 name=self.client_ip.host)
                         addCsr(self.session, self.client_ip.host,
                             ssl_tools.SSL_CLIENT_CSR_DIR )
-                self.session.close()
                 else:
                     print 'csr for %s %s' % (self.client_ip.host, error)
+                self.session.close()
 
 if __name__ == '__main__':
     f = Factory()
