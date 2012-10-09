@@ -125,38 +125,19 @@ define(['jquery', 'd3'], function ($, d3) {
                 }
                 function newGraph(type) {
                     var tempData = [], position;
-                    console.log(d);
-                    if (d.data.data.length) {
-                        if (type === 'Installed') {
-                            position = 0;
-                        } else if (type === 'Available') {
-                            position = 1;
-                        } else if (type === 'Pending') {
-                            position = 2;
-                        } else if (type === 'Failed') {
-                            position = 3;
-                        }
-                        for (var i = 0; i < d.data.data.length; i++){
-                            var value = d.data.data[i].children[position].graphData.value;
-                            if(value != 0) {
-                                tempData.push(d.data.data[i].children[position].graphData);
-                            }
-                        }
-                        data = previousData.length != 0 ? previousData : data;
+                    $.getJSON("/api/osData/", {type: type}, function(json) {
+                        data = previousData.length != 0 ? json : data;
                         title = previousTitle != '' ? previousTitle : title;
-                        var pieChart = graph.pie().title(d.data.data[0].children[position].name + " in "+ d.data.data[0].os + " by nodes").previousData(data).previousTitle(title).width(width).osData(osData);
-                        if(tempData.length != 0) {
-                            d3.select(that).datum(tempData).call(pieChart);
-                        } else {
-                            //alert('No data to display');
-                            if (previousData.length === 0) { renderLinks(); }
+                        var pieChart = graph.pie().title(type + " Patch Statistics").previousData(data).previousTitle(title).width(width).osData(osData);
+                        if(json[0]['error']) {
+                            previousData.length != 0 ? '' : renderLinks();
                             warning.style('opacity', '1').text('No data to display for ' + type + ' Patches');
                             $(widget + "-title").html('No Data Available');
                             arcs.remove();
-                        } /*else {
+                        } else {
                             d3.select(that).datum(json).call(pieChart);
-                        }*/
-                    }
+                        }
+                    });
                 }
                 function previousGraph() {
                     var tempData, tempTitle;
