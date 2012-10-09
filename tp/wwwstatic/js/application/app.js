@@ -126,7 +126,13 @@ define(
                     { "date": new Date(), "name": "Security Update for Microsoft .NET Framework 4 on XP, Server 2003, Vista, Windows 7, Server 2008, Server 2008 R2 for x64 (KB2604121)", "os": "windows" },
                     { "date": new Date(), "name": "Microsoft Security Essentials - KB2691894", "os": "windows" },
                     { "date": new Date(), "name": "Security Update for Windows 7 for x64-based Systems (KB2731847)", "os": "windows" }]
-            }
+            },
+            locations: [
+                { name: 'Dashboard', href: '#dashboard' },
+                { name: 'Nodes', href: '#nodes' },
+                { name: 'Patches', href: '#patches' },
+                { name: 'Multi-Patcher', href: '#multi' }
+            ]
         });
         return app;
     }

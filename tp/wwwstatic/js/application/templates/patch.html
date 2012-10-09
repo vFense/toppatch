@@ -25,7 +25,7 @@
         <div class="list">
             <% _.each(model.available.nodes, function (node) { %>
             <div class="item clearfix">
-                <span class="desc">Node <%= node %></span>
+                <span class="desc"><strong>Node ID:</strong> <%= node %></span>
                         <span class="pull-right"><a href="#nodes/<%= node %>">More information</a></span>
             </div>
             <% }); %>

@@ -160,14 +160,14 @@ class FormHandler(BaseHandler):
             node[operation] = patches
             resultjson.append(node)
             result = json.dumps(resultjson)
-            AgentOperation(result)
+            #AgentOperation(result)
             print result
             self.set_header('Content-Type', 'application/json')
             self.write(result)
         if params:
             resultjson = json.loads(params)
             result = json.dumps(resultjson)
-            AgentOperation(result)
+            #AgentOperation(result)
             print result
             self.set_header('Content-Type', 'application/json')
             self.write(result)
