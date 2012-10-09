@@ -23,9 +23,9 @@ class NodeInfo(Base):
     last_agent_update = Column(DATETIME, nullable=True)
     last_node_update = Column(DATETIME, nullable=True)
     def __init__(self, ip_address, host_name,
-                 host_status=False, agent_status=False,
-                 last_agent_update=None, last_node_update=None
-    ):
+                host_status=False, agent_status=False,
+                last_agent_update=None, last_node_update=None
+                ):
         self.host_name = host_name
         self.ip_address = ip_address
         self.host_status = host_status
@@ -34,11 +34,11 @@ class NodeInfo(Base):
         self.last_node_update = last_node_update
     def __repr__(self):
         return "<NodeInfo(%s,%s,%s,%s,%s,%s)>" %\
-               (
-                   self.host_name, self.ip_address,
-                   self.host_status, self.agent_status,
-                   self.last_agent_update, self.last_node_update
-                   )
+                (
+                self.host_name, self.ip_address,
+                self.host_status, self.agent_status,
+                self.last_agent_update, self.last_node_update
+                )
 
 class SystemInfo(Base):
     """
@@ -60,10 +60,17 @@ class SystemInfo(Base):
     os_version_build = Column(VARCHAR(8), nullable=True)
     os_meta = Column(VARCHAR(32), nullable=True)
     def __init__(
+<<<<<<< HEAD
             self, node_id, os_code, os_string, bit_type,
             os_version_major, os_version_minor,
             os_version_build, os_meta
     ):
+=======
+                self, node_id, os_code, os_string, bit_type,
+                os_version_major, os_version_minor,
+                os_version_build, os_meta
+                ):
+>>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
         self.node_id = node_id
         self.os_code = os_code
         self.os_string = os_string
@@ -74,11 +81,19 @@ class SystemInfo(Base):
         self.os_meta = os_meta
     def __repr__(self):
         return "<SystemInfo(%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+<<<<<<< HEAD
                (
                    self.node_id, self.os_code, self.os_string, self.bit_type,
                    self.os_version_major, self.os_version_minor,
                    self.os_version_build, self.os_meta
                    )
+=======
+                (
+                self.node_id, self.os_code, self.os_string, self.bit_type,
+                self.os_version_major, self.os_version_minor,
+                self.os_version_build, self.os_meta
+                )
+>>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
 
 
 class Operations(Base):
@@ -96,15 +111,21 @@ class Operations(Base):
         ForeignKey("node_info.id"))
     results_id = Column(INTEGER(unsigned=True),
         ForeignKey("results.id", use_alter=True,
-            name="fk_operations_result_id"))
+        name="fk_operations_result_id"))
     operation_type = Column(VARCHAR(16), nullable=False)
     operation_sent = Column(DATETIME, nullable=True)
     operation_received = Column(DATETIME, nullable=True)
     results_received = Column(DATETIME, nullable=True)
     def __init__(self, node_id, operation_type, results_id=None,
+<<<<<<< HEAD
                  operation_sent=None, operation_received=None,
                  results_received=None
     ):
+=======
+            operation_sent=None, operation_received=None,
+            results_received=None
+            ):
+>>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
         self.node_id = node_id
         self.results_id = results_id
         self.operation_type = operation_type
@@ -113,11 +134,19 @@ class Operations(Base):
         self.results_received = results_received
     def __repr__(self):
         return "<Operations(%s, %s, %s, %s, %s,%s)>" %\
+<<<<<<< HEAD
                (
                    self.node_id, self.results_id, self.operation_type,
                    self.operation_sent,self.operation_received,
                    self.results_received
                    )
+=======
+                (
+                self.node_id, self.results_id, self.operation_type, 
+                self.operation_sent,self.operation_received,
+                self.results_received
+                )
+>>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
 
 class Results(Base):
     """
@@ -133,13 +162,13 @@ class Results(Base):
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     operation_id = Column(INTEGER(unsigned=True),
         ForeignKey("operations.id", use_alter=True,
-            name="fk_result_operations_id"),unique=True)
+        name="fk_result_operations_id"),unique=True)
     patch_id = Column(INTEGER(unsigned=True),
         ForeignKey("windows_update.toppatch_id"))
     result = Column(BOOLEAN)   # True = Pass, False = Failed
     message = Column(VARCHAR(64), nullable=True)
     def __init__(self, node_id, operation_id, patch_id,
-                 result, message):
+                result, message):
         self.node_id = node_id
         self.operation_id = operation_id
         self.patch_id = patch_id
@@ -147,10 +176,10 @@ class Results(Base):
         self.message = message
     def __repr__(self):
         return "<Results(%s, %s, %s, %s, %s)>" %\
-               (
-                   self.node_id ,self.operation_id, self.patch_id,
-                   self.result, self.message
-                   )
+                (
+                self.node_id ,self.operation_id, self.patch_id,
+                self.result, self.message
+                )
 
 class SoftwareAvailable(Base):
     """
@@ -170,8 +199,13 @@ class SoftwareAvailable(Base):
     version = Column(VARCHAR(32), nullable=False)
     vendor = Column(VARCHAR(32), nullable=False)
     def __init__(self, node_id, name, vendor,
+<<<<<<< HEAD
                  description, version,
                  support_url=None):
+=======
+                description, version,
+                support_url=None):
+>>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
         self.node_id = node_id
         self.name = name
         self.vendor = vendor
@@ -180,11 +214,19 @@ class SoftwareAvailable(Base):
         self.support_url = support_url
     def __repr__(self):
         return "<SoftwareInstalled(%s,%s,%s,%s,%s,%s,%s)>" %\
+<<<<<<< HEAD
                (
                    self.node_id, self.name, self.vendor,
                    self.description, self.version,
                    self.support_url
                    )
+=======
+                (
+                self.node_id, self.name, self.vendor,
+                self.description, self.version,
+                self.support_url
+                )
+>>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
 
 class SoftwareInstalled(Base):
     """
@@ -201,16 +243,27 @@ class SoftwareInstalled(Base):
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     date_installed = Column(DATETIME, nullable=True)
     def __init__(self, node_id, application_id,
+<<<<<<< HEAD
                  date_installed=None):
+=======
+                date_installed=None):
+>>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
         self.node_id = node_id
         self.application_id = application_id
         self.date_installed = date_installed
     def __repr__(self):
         return "<SoftwareInstalled(%s,%s,%s)>" %\
+<<<<<<< HEAD
                (
                    self.node_id, self.application_id,
                    self.date_installed
                    )
+=======
+                (
+                self.node_id, self.application_id,
+                self.date_installed
+                )
+>>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
 
 
 class NodeStats(Base):
@@ -230,9 +283,9 @@ class NodeStats(Base):
     patches_pending = Column(INTEGER(unsigned=True))
     patches_failed = Column(INTEGER(unsigned=True))
     def __init__(self, node_id, patches_installed,
-                 patches_available, patches_pending,
-                 patches_failed
-    ):
+                patches_available, patches_pending,
+                patches_failed
+                ):
         self.node_id = node_id
         self.patches_installed = patches_installed
         self.patches_available = patches_available
@@ -240,11 +293,11 @@ class NodeStats(Base):
         self.patches_failed = patches_failed
     def __repr__(self):
         return "<NodeStats(%d,%d,%d,%d,%d)>" %\
-               (
-                   self.node_id, self.patches_installed,
-                   self.patches_available, self.patches_pending,
-                   self.patches_failed
-                   )
+                (
+                self.node_id, self.patches_installed,
+                self.patches_available, self.patches_pending,
+                self.patches_failed
+                )
 
 class NetworkStats(Base):
     """
@@ -262,17 +315,17 @@ class NetworkStats(Base):
     patches_pending = Column(INTEGER(unsigned=True))
     patches_failed = Column(INTEGER(unsigned=True))
     def __init__(self, patches_installed,
-                 patches_available, patches_pending,
-                 patches_failed
-    ):
+                patches_available, patches_pending,
+                patches_failed
+                ):
         self.patches_installed = patches_installed
         self.patches_available = patches_available
         self.patches_pending = patches_pending
         self.patches_failed = patches_failed
     def __repr__(self):
         return "<NetworkStats(%d,%d,%d,%d)>" %\
-               (
-                   self.patches_installed,
-                   self.patches_available, self.patches_pending,
-                   self.patches_failed
-                   )
+                (
+                self.patches_installed,
+                self.patches_available, self.patches_pending,
+                self.patches_failed
+                )
