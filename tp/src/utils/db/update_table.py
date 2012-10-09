@@ -105,6 +105,58 @@ def addWindowsUpdatePerNode(session, data):
             else:
                 addWindowsUpdate(session, data)
 
+def addSoftwareAvailable(session, data):
+    exists, operation = operationExists(session, data['operation_id'])
+    if exists:
+        node_id = exists.node_id
+        operation.update({'results_received' : datetime.now()})
+        session.commit()
+        for software in data['messages']:
+            software_exists = softwareExists(session, data['name'], \
+                    data['version'])
+            if not software_exists:
+                software_update = SoftwareAvailable(node_id,\
+                            software['name'], software['vendor'], \
+                            software['description'], software['version'], \
+                            software['support_url']
+                            )
+                try:
+                    session.add(software_update)
+                    session.commit()
+                except:
+                    session.rollback()
+            else:
+                addSoftwareInstalled(session, data)
+
+def addSoftwareInstalled(session, data):
+    exists, operation = operationExists(session, data['operation_id'])
+    if exists:
+        node_id = exists.node_id
+        operation.update({'results_received' : datetime.now()})
+        session.commit()
+        for software in data['messages']:
+            software_exists = softwareExists(session, data['name'], \
+                    data['version'])
+            if software_exists:
+                node_software_exists = nodeSoftwareExists(session, \
+                    software_exists.application_id)
+                if not node_software_exists:
+                    if 'date_installed' in data:
+                        date_installed = dateParser(addupdate['date_installed'])
+                    else:
+                        date_installed = None
+                    software_update = SoftwareInstalled(node_id,
+                            software_exists.application_id,
+                            date_installed
+                            )
+                    try:
+                        session.add(software_update)
+                        session.commit()
+                    except:
+                        session.rollback()
+            else:
+                addSoftwareAvailable(session, data)
+
 def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
     exists, operation = operationExists(session, oper_id)
     if exists and results_recv:
@@ -120,6 +172,7 @@ def updateNode(session, node_id):
         exists.update({'last_agent_update' : datetime.now(),
                 'last_node_update' : datetime.now()})
         session.commit()
+
 #def addOperationReceived(session, data):
 
 #def updateOperationReceived(session, data, operation);
