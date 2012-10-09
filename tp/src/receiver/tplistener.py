@@ -28,21 +28,16 @@ ENGINE = initEngine()
 
 class GetJson(Protocol):
     total_data = ""
-    count = 0
     def connectionMade(self):
         print self.transport.getPeer()
 
     def dataReceived(self, data):
-        self.count += 1
-        if self.count == 1:
-            self.transport.write("Thank You")
         self.total_data = self.total_data + data
 
     def connectionLost(self, reason):
         self.transport.loseConnection()
         data = self.total_data
         self.total_data = ""
-        print repr(data)
         valid_json = verifyJsonIsValid(data)
         if valid_json[0]:
             json_data = valid_json[1]
