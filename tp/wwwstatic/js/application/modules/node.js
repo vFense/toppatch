@@ -16,6 +16,9 @@ define(
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
                 },
+                events: {
+                    'click .disabled': function (e) { console.log(['click a.disabled', e]); return false; }
+                },
                 beforeRender: $.noop,
                 onRender: $.noop,
                 render: function () {
