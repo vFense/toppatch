@@ -58,7 +58,7 @@ require(
 
         // Load header, render it, and then render the nav buttons
         require(['modules/pageHeader', 'modules/navBar'], function (PageHeader, DashNav) {
-            var pageHeader = app.views.pageHeader = new PageHeader.View();
+            var pageHeader = new PageHeader.View();
             $('body').prepend(pageHeader.render().$el);
             app.views.dashNav = new (DashNav.View.extend({
                 onRender: function () { deferred.resolve(); }
