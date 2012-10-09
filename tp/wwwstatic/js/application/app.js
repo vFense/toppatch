@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'utilities/vent', 'utilities/viewManager', 'utilities/dataGenerator', 'd3charts/loadAll'],
-    function ($, _, Backbone, vent, ViewManager, dataGenerator, charts) {
+    ['jquery', 'underscore', 'backbone', 'utilities/vent', 'utilities/viewManager', 'd3charts/loadAll'],
+    function ($, _, Backbone, vent, ViewManager, charts) {
         "use strict";
 
         var app = window.app = {
