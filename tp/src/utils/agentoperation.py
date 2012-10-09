@@ -13,6 +13,10 @@ UNINSTALL = 'uninstall'
 HIDE = 'hide'
 SHOW = 'show'
 REBOOT = 'reboot'
+UPDATESINSTALLED = 'updates_installed'
+UPDATESPENDING = 'updates_pending'
+SYSTEMINFO = 'system_info'
+SYSTEMAPPLICATIONS = 'system_applications'
 
 class AgentOperation():
     def __init__(self, session, node_list):
@@ -82,15 +86,41 @@ class AgentOperation():
                         oper_type, oper_id
                         )
                     self.threads.append(message)
-                #else:
-                #    raise("Invalid Operation Type %s" % (jsonobject))
-            #else:
-            #    raise("Invalid JsonObject")
-
+                if UPDATESINSTALLED in jsonobject:
+                    oper_type = UPDATESINSTALLED
+                    oper_id = self.create_new_operation(node_id, oper_type)
+                    message = gevent.spawn(self.create_sof_operation, \
+                        node_id, node_ip.ip_address, \
+                        oper_type, oper_id
+                        )
+                    self.threads.append(message)
+                if UPDATESPENDING in jsonobject:
+                    oper_type = UPDATESPENDING
+                    oper_id = self.create_new_operation(node_id, oper_type)
+                    message = gevent.spawn(self.create_sof_operation, \
+                        node_id, node_ip.ip_address, \
+                        oper_type, oper_id
+                        )
+                    self.threads.append(message)
+                if SYSTEMINFO in jsonobject:
+                    oper_type = SYSTEMINFO
+                    oper_id = self.create_new_operation(node_id, oper_type)
+                    message = gevent.spawn(self.create_sof_operation, \
+                        node_id, node_ip.ip_address, \
+                        oper_type, oper_id
+                        )
+                    self.threads.append(message)
+                if SYSTEMAPPLICATIONS in jsonobject:
+                    oper_type = SYSTEMAPPLICATIONS
+                    oper_id = self.create_new_operation(node_id, oper_type)
+                    message = gevent.spawn(self.create_sof_operation, \
+                        node_id, node_ip.ip_address, \
+                        oper_type, oper_id
+                        )
+                    self.threads.append(message)
         gevent.joinall(self.threads)
         for job in self.threads:
             self.results.append(job.value)
-        #print self.results
         
     def create_sof_operation(self, node_id, node_ip, oper_type, \
             oper_id, patch_list=None):
@@ -112,6 +142,8 @@ class AgentOperation():
                         "updates" : patch_list
                      }
         msg = encode(jsonobject) 
+        msg = msg + '<EOF>'
+        print msg
         connect = SslConnect(node_ip, msg)
         if not connect.error:
             updateOperationRow(self.session, oper_id, oper_recv=True)
