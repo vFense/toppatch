@@ -68,7 +68,13 @@ define(
                         "format": [{"rule": "gt", "value": -1, "style": "error", "stop": true}]
                     }
                 ]
-            }
+            },
+            locations: [
+                { name: 'Dashboard', href: '#dashboard' },
+                { name: 'Nodes', href: '#nodes' },
+                { name: 'Patches', href: '#patches' },
+                { name: 'Multi-Patcher', href: '#multi' }
+            ]
         });
 
         return app;

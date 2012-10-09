@@ -79,7 +79,7 @@ define(
             },
             showMulti: function () {
                 var that = this;
-                this.show({hash: '#patches', title: 'Patch Operations', view: 'modules/multi'});
+                this.show({hash: '#multi', title: 'Patch Operations', view: 'modules/multi'});
             },
             defaultAction: function (other) {
                 this.show(
