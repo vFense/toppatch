@@ -45,6 +45,7 @@ def create_cve(entry):
 def run():
 
     load_db = True
+    """
     if load_db:
         for x in range(len(entries)):
 
@@ -135,6 +136,7 @@ def run():
 
                         print vendor
                         session.add(vendor)
+                        """
     session.commit()
 
 print "Initializing TopPatch Database!"

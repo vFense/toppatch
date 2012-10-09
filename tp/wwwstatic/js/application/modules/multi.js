@@ -82,12 +82,9 @@ define(
                 this.controllerView = new controller.View({
                         el: this.$el.find('.controller')
                     });
-
                 this.detailView = new detail.View({
                         el: this.$el.find('.detail')
                     });
-
-                //this.controller.viewManager.showView(this.controllerView);
 
                 if (this.onRender !== $.noop) { this.onRender(); }
                 return this;
