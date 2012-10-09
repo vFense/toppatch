@@ -5,23 +5,53 @@ require(
 
         var User = {},
             userSettings,
-            deferred;
-        User.Model = Backbone.Model.extend({
-            defaults: {
-                name: 'Guest',
-                show: {
-                    brandHeader: true,
-                    dashNav: true,
-                    copyFooter: true
-                },
-                access: [
-                    { name: 'Dashboard', href: '#dashboard', active: false },
-                    { name: 'Nodes', href: '#nodes', active: false },
-                    { name: 'Patches', href: '#patches', active: false }
-                ]
+            deferred, userName;
+        $.ajax({
+            url: '/api/userInfo',
+            dataType: 'json',
+            async: false,
+            success: function (json) {
+                userSettings = json;
+                userName = userSettings['name'];
+                //localStorage.clear();
+                if(localStorage.getItem(userName) === null) {
+                    User.Model = Backbone.Model.extend({
+                        defaults: {
+                            name: userName,
+                            show: {
+                                brandHeader: true,
+                                dashNav: true,
+                                copyFooter: true
+                            },
+                            widgets: {
+                                'graph': ['pie', 'bar', 'summary'],
+                                'spans': [6, 6, 12],
+                                'titles': ['Nodes in Network by OS', 'Nodes in Network by OS', 'Summary Charts']
+                            },
+                            access: [
+                                { name: 'Dashboard', href: '#dashboard', active: false },
+                                { name: 'Nodes', href: '#nodes', active: false },
+                                { name: 'Patches', href: '#patches', active: false }
+                            ]
+                        }
+                    });
+                    window.User = new User.Model();
+                    localStorage.setItem(userName, JSON.stringify(window.User));
+                } else {
+                    var test = JSON.parse(localStorage.getItem(userName));
+                    User.Model = Backbone.Model.extend({
+                        defaults: {
+                            name: test.name,
+                            show: test.show,
+                            widgets: test.widgets,
+                            access: test.access
+                        }
+                    });
+                    window.User = new User.Model();
+                }
+
             }
         });
-        window.User = new User.Model();
 
         deferred = new $.Deferred();
         require(['modules/pageHeader', 'modules/navBar'], function (PageHeader, DashNav) {

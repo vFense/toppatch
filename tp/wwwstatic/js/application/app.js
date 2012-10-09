@@ -5,7 +5,19 @@ define(
 
         var app = window.app = {
             root: '/'
-        };
+        }, overviewInstalled = {}, overviewPending = {}, overviewAvailable = {}, overviewFailed = {};
+
+        $.ajax({
+            url: '/api/networkData',
+            dataType: 'json',
+            async: false,
+            success: function (json) {
+                overviewInstalled = json[0];
+                overviewAvailable = json[1];
+                overviewPending = json[2];
+                overviewFailed = json[3];
+            }
+        });
 
         _.extend(app, {
             $doc: $(document),
@@ -30,47 +42,32 @@ define(
                 line: charts.line
             },
             data: {
-                osData: dataGenerator.tempArray,
-                indNodes: dataGenerator.nodeArray,
-                nodeData: {
-                    "Patched": dataGenerator.counter.patched,
-                    "Unpatched": dataGenerator.counter.unpatched,
-                    "Pending": dataGenerator.counter.pending,
-                    "Failed": dataGenerator.counter.failed,
-                    "Available": dataGenerator.counter.available,
-                    "Nodes": dataGenerator.counter.numNodes
-                },
                 overviewData: [
                     {
                         "key": "Available Patches",
-                        "data": dataGenerator.counter.available,
-                        "format": [{"rule": "gt", "value": 0, "style": "info", "stop": true}]
+                        "link": "available",
+                        "data": overviewAvailable.data,
+                        "format": [{"rule": "gt", "value": -1, "style": "info", "stop": true}]
                     },
                     {
                         "key": "Scheduled Patches",
-                        "data": dataGenerator.counter.pending,
-                        "format": [{"rule": "gt", "value": 0, "style": "warning", "stop": true}]
+                        "link": "pending",
+                        "data": overviewPending.data,
+                        "format": [{"rule": "gt", "value": -1, "style": "warning", "stop": true}]
                     },
                     {
                         "key": "Completed Patches",
-                        "data": dataGenerator.counter.patched,
-                        "format": [{"rule": "gt", "value": 0, "style": "success", "stop": true}]
+                        "link": "installed",
+                        "data": overviewInstalled.data,
+                        "format": [{"rule": "gt", "value": -1, "style": "success", "stop": true}]
                     },
                     {
                         "key": "Failed Patches",
-                        "data": dataGenerator.counter.failed,
-                        "format": [{"rule": "gt", "value": 0, "style": "error", "stop": true}]
+                        "link": "failed",
+                        "data": overviewFailed.data,
+                        "format": [{"rule": "gt", "value": -1, "style": "error", "stop": true}]
                     }
-                ],
-                summaryData: dataGenerator.tempData,
-                patches: [{ "date": new Date(), "name": "Security Update for Microsoft XML Editor 2010 (KB2251489)", "os": "windows" },
-                    { "date": new Date(), "name": "Security Update for Microsoft Visual C++ 2008 Service Pack 1 Redistributable Package (KB2538243)", "os": "windows" },
-                    { "date": new Date(), "name": "Security Update for Microsoft Visual Studio 2010 (KB2542054)", "os": "windows" },
-                    { "date": new Date(), "name": "Security Update for Microsoft Visual Studio 2008 Service Pack 1 (KB2669970)", "os": "windows" },
-                    { "date": new Date(), "name": "Update for Microsoft Tools for Office Runtime Redistributable (KB2525428)", "os": "windows" },
-                    { "date": new Date(), "name": "Security Update for Microsoft .NET Framework 4 on XP, Server 2003, Vista, Windows 7, Server 2008, Server 2008 R2 for x64 (KB2604121)", "os": "windows" },
-                    { "date": new Date(), "name": "Microsoft Security Essentials - KB2691894", "os": "windows" },
-                    { "date": new Date(), "name": "Security Update for Windows 7 for x64-based Systems (KB2731847)", "os": "windows" }]
+                ]
             }
         });
 
