@@ -11,7 +11,7 @@ define(
                 },
                 parse: function (response) {
                     this.recordCount = response.count;
-                    return response.data;
+                    return response.nodes;
                 },
                 initialize: function () {
                     this.offset   = this.offset || 0;
