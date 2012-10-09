@@ -27,6 +27,43 @@ define(
             vent: vent,
             ViewManager: ViewManager,
             views: {},
+            startWs: function () {
+
+                var ws = new WebSocket("wss://localhost:8000/ws");
+                ws.onmessage = function(evt) {
+                    $.ajax({
+                        url: '/api/networkData',
+                        dataType: 'json',
+                        async: false,
+                        success: function (json) {
+                            for(var i = 0; i < json.length; i++) {
+                                if(json[i].key == 'installed') {
+                                    $('.success').children('dd').children().html(json[i].data);
+                                    console.log( $('.success').children('dd').children());
+                                }
+                                if(json[i].key == 'available') {
+                                    $('.info').children('dd').children().html(json[i].data);
+                                    console.log( $('.info').children('dd').children())
+                                }
+                                if(json[i].key == 'pending') {
+                                    $('.warning').children('dd').children().html(json[i].data);
+                                    console.log( $('.warning').children('dd').children());
+                                }
+                                if(json[i].key == 'failed') {
+                                    $('.error').children('dd').children().html(json[i].data);
+                                    console.log( $('.error').children('dd').children());
+                                }
+                            }
+                        }
+                    });
+                };
+                ws.onclose = function(evt) {
+
+                };
+                ws.onopen = function(evt) {
+
+                };
+            },
             parseQuery: function (query) {
                 var params = {};
                 _.each(query.split('&'), function (value) {
@@ -89,7 +126,13 @@ define(
                     { "date": new Date(), "name": "Security Update for Microsoft .NET Framework 4 on XP, Server 2003, Vista, Windows 7, Server 2008, Server 2008 R2 for x64 (KB2604121)", "os": "windows" },
                     { "date": new Date(), "name": "Microsoft Security Essentials - KB2691894", "os": "windows" },
                     { "date": new Date(), "name": "Security Update for Windows 7 for x64-based Systems (KB2731847)", "os": "windows" }]
-            }
+            },
+            locations: [
+                { name: 'Dashboard', href: '#dashboard' },
+                { name: 'Nodes', href: '#nodes' },
+                { name: 'Patches', href: '#patches' },
+                { name: 'Multi-Patcher', href: '#multi' }
+            ]
         });
         return app;
     }

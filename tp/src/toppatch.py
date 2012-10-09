@@ -24,6 +24,7 @@ from tornado.options import define, options
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
 
+
 class HeaderModule(tornado.web.UIModule):
     def render(self):
         return self.render_string(
@@ -94,8 +95,8 @@ if __name__ == '__main__':
     tornado.options.parse_command_line()
     https_server = tornado.httpserver.HTTPServer(Application(options.debug),
         ssl_options={
-            "certfile": os.path.join("data/ssl", "server.crt"),
-            "keyfile": os.path.join("data/ssl", "server.key"),
+            "certfile": os.path.join("/opt/TopPatch/var/lib/ssl/server/keys", "server.cert"),
+            "keyfile": os.path.join("/opt/TopPatch/var/lib/ssl/server/keys", "server.key"),
             })
     https_server.listen(options.port)
 

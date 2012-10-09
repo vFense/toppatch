@@ -12,6 +12,7 @@ from utils.db.update_table import *
 from utils.db.query_table import *
 from utils.db.client import *
 from utils.common import verifyJsonIsValid
+from utils.agentoperation import AgentOperation
 
 
 ALLOWED_CIPHER_LIST = 'TLSv1+HIGH:!SSLv2:RC4+MEDIUM:!aNULL:!eNULL:!3DES:@STRENGTH'
@@ -47,19 +48,34 @@ class GetJson(Protocol):
                 self.client_ip.host)
             if not self.node:
                 addNode(self.session, self.client_ip.host)
-                self.node = nodeExists(self.session,
+                exists, self.node = nodeExists(self.session,
                     self.client_ip.host)
+                AgentOperation(self.session, ['{"node_id" : "1", "operation" : "updates_pending"}'])
+                AgentOperation(self.session, ['{"node_id" : "1", "operation" : "system_info"}'])
+                AgentOperation(self.session, ['{"node_id" : "1", "operation" : "system_applications"}'])
+                AgentOperation(self.session, ['{"node_id" : "1", "operation" : "updates_installed"}'])
             if json_data[OPERATION] == SYSTEM_INFO:
+                print "system_info", json_data
                 addSystemInfo(self.session, json_data,
                     self.node)
             if json_data[OPERATION] == UPDATES_PENDING:
+                print "updates_pending", json_data
+                addWindowsUpdate(self.session, json_data)
                 addWindowsUpdatePerNode(self.session, json_data)
             if json_data[OPERATION] == UPDATES_INSTALLED:
+                print "updates_installed", json_data
+                addWindowsUpdate(self.session, json_data)
                 addWindowsUpdatePerNode(self.session, json_data)
             if json_data[OPERATION] == SOFTWARE_INSTALLED:
+                print "software_installed", json_data
+                addSoftwareAvailable(self.session, json_data)
                 addSoftwareInstalled(self.session, json_data)
             if json_data[OPERATION] == STATUS_UPDATE:
+                print "status_update", json_data
                 updateNode(self.session, json_data['node_id'])
+            if json_data[OPERATION] == INSTALL:
+                print "INSTALLED RESULTS", json_data
+                addResults(self.session, json_data)
             else:
                 pass
             self.session.close()
@@ -94,5 +110,5 @@ if __name__ == '__main__':
     #    )
     #print "YOU HAVE BEEN VERIFIED"
 
-    reactor.listenSSL(9000, factory, myContextFactory)
+    reactor.listenSSL(9001, factory, myContextFactory)
     reactor.run()

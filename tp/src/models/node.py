@@ -73,13 +73,12 @@ class SystemInfo(Base):
         self.meta = meta
         self.bit_type = bit_type
     def __repr__(self):
-        return "<SystemInfo(%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<SystemInfo(%s,%s,%s,%s,%s,%s,%s,%s)>"%\
                 (
                 self.node_id, self.os_code, self.os_string,
                 self.version_major, self.version_minor,
                 self.version_build, self.meta, self.bit_type
                 )
-
 
 class Operations(Base):
     """
@@ -102,9 +101,9 @@ class Operations(Base):
     operation_received = Column(DATETIME, nullable=True)
     results_received = Column(DATETIME, nullable=True)
     def __init__(self, node_id, operation_type, results_id=None,
-            operation_sent=None, operation_received=None,
-            results_received=None
-            ):
+                 operation_sent=None, operation_received=None,
+                 results_received=None
+    ):
         self.node_id = node_id
         self.results_id = results_id
         self.operation_type = operation_type
@@ -113,11 +112,11 @@ class Operations(Base):
         self.results_received = results_received
     def __repr__(self):
         return "<Operations(%s, %s, %s, %s, %s,%s)>" %\
-                (
-                self.node_id, self.results_id, self.operation_type, 
-                self.operation_sent,self.operation_received,
-                self.results_received
-                )
+               (
+                   self.node_id, self.results_id, self.operation_type,
+                   self.operation_sent,self.operation_received,
+                   self.results_received
+               )
 
 class Results(Base):
     """
@@ -203,7 +202,7 @@ class SoftwareInstalled(Base):
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     date_installed = Column(DATETIME, nullable=True)
     def __init__(self, node_id, application_id,
-                date_installed=None):
+                 date_installed=None):
         self.node_id = node_id
         self.application_id = application_id
         self.date_installed = date_installed
