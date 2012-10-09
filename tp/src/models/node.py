@@ -75,7 +75,7 @@ class SystemInfo(Base):
     def __repr__(self):
         return "<SystemInfo(%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.node_id, self.os_code, self.os_string, self.bit_type
+                self.node_id, self.os_code, self.os_string, self.bit_type,
                 self.os_version_major, self.os_version_minor,
                 self.os_version_build, self.os_meta
                 )
