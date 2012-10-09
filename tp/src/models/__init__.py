@@ -1,1 +1,1 @@
-__author__ = 'radioact1ve'
+__author__ = 'parallels'

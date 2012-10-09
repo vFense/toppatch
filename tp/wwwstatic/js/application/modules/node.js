@@ -27,7 +27,11 @@ define(
                 });
             },
             events: {
-
+                'submit form': 'submit'
+            },
+            submit: function (evt) {
+                app.startWs();
+                return true;
             },
             beforeRender: $.noop,
             onRender: $.noop,
