@@ -87,59 +87,71 @@
     }
 
     .list {
-        @listBorderColor: #E5E5E5;
+        // All buttons must be mini!!
+        @listBorder: #E6E6E6;
+        @listHeaderBackground: #F5F5F5;
+        @listFooterBackground: #F5F5F5;
+        @listLegendBackground: #FAFAFA;
+        @listHighlight: @warningBackground;
+        
         HEADER,
         FOOTER,
         .legend {
-            padding: 0 0.5em;
-            line-height: @em*(30px)/@baseFontSize;
-            height: @em*(30px)/@baseFontSize;
-        }
-        
-        HEADER,
-        FOOTER {
-            background-color: rgb(250,250,250);
+            padding: @em*(2px)/@baseFontSize 0.5em;
+            line-height: @em*( @baseLineHeight - 1px )/@baseFontSize;
         }
 
-        HEADER {
-            border-top: @em*(1px)/@baseFontSize solid @listBorderColor;
+        HEADER,
+        .legend {
+            border-top: @em*(1px)/@baseFontSize solid @listBorder;
         }
         
         FOOTER,
         .legend {
-            border-bottom: @em*(1px)/@baseFontSize solid @listBorderColor;
+            border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
+        }
+        
+        HEADER {
+            background-color: @listHeaderBackground;
+        }
+        
+        FOOTER {
+            background-color: @listFooterBackground;
+        }
+        
+        .legend {
+            background-color: @listLegendBackground;
+        }
+        
+        FORM {
+            margin-bottom: 0;
         }
 
         .item {
-            border-bottom: @em*(1px)/@baseFontSize solid @listBorderColor;
-            line-height: @em*(30px)/@baseFontSize;
-            height: @em*(30px)/@baseFontSize;
-            padding: 0 0.5em;
-
+            border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
+            padding: @em*(2px)/@baseFontSize 0.5em;
 
             &:first-child {
                 /* Add top border to first list item */
-                border-top: @em*(1px)/@baseFontSize solid @listBorderColor;
+                border-top: @em*(1px)/@baseFontSize solid @listBorder;
             }
 
             &:hover {
-                background-color: @warningBackground;
+                background-color: @listHighlight;
             }
 
             &.linked {
+                padding: 0 0;
                 A {
                     color: #000;
                     display: block;
                     text-decoration: none;
+                    padding: @em*(2px)/@baseFontSize 0.5em;
 
                     STRONG {
                         color: @linkColor;
                     }
                 }
-            }
-
-            &.linked:active {
-                background-color: #F0F0F0;
             }
 
             .desc {
@@ -151,18 +163,19 @@
             }
         }
 
-        .legend,
-        .item {
-            padding: inherit 0.5em;
-        }
-
         HEADER + .item {
-            /* Remove top border from first list item when list header present */
-            border-top: @em*(1px)/@baseFontSize solid @listBorderColor;
+            border-top: @em*(1px)/@baseFontSize solid @listBorder;
+        }
+        
+        .btn-toolbar,
+        .btn-group {
+            // these classes have a font-size of 0.
+            // EM based sizes wont work.
+            height: 23px
         }
 
         .checkbox.inline {
-            padding-top:0;
+            padding-top: 0;
         }
 
         .done { color: @successText; }
@@ -227,6 +240,11 @@
     > .row + .row-fluid,
     > .row-fluid + .row,
     > .row-fluid + .row-fluid {
+        margin-top: 1em;
+    }
+    
+    // Bandaid Fix
+    > ARTICLE + ARTICLE {
         margin-top: 1em;
     }
 }
