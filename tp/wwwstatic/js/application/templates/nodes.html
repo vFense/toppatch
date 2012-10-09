@@ -26,18 +26,18 @@
         <%
                 _.each(data, function (node) {
         %>
-            <div class="item linked clearfix">
-                <a href="#nodes/<%= node.id %>">
-                    <span class="desc"><strong><%= node.ip %></strong> — <%= node['os/name'] %></span>
-                    <span class="pull-right">
-                        <span class="done"><%= node['patch/done'] %></span> /
-                        <span class="pend"><%= node['patch/pend'] %></span> /
-                        <span class="need"><%= node['patch/need'] %></span> /
-                        <span class="fail"><%= node['patch/fail'] %></span>
-                        &nbsp;<i class="icon-caret-right"></i>&nbsp;
-                    </span>
-                </a>
-            </div>
+                    <div class="item linked clearfix">
+                        <a href="#nodes/<%= node.id %>">
+                            <span class="desc"><strong><%= node.ip %></strong> — <%= node['os/name'] %></span>
+                            <span class="pull-right">
+                                <span class="done"><%= node['patch/done'] %></span> /
+                                <span class="pend"><%= node['patch/pend'] %></span> /
+                                <span class="need"><%= node['patch/need'] %></span> /
+                                <span class="fail"><%= node['patch/fail'] %></span>
+                                &nbsp;<i class="icon-caret-right"></i>&nbsp;
+                            </span>
+                        </a>
+                    </div>
         <%
                 });
             }
