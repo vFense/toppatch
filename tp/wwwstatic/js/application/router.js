@@ -18,6 +18,8 @@ define(
                 'patches': 'showPatches',
                 'patches?:query': 'showPatches',
                 'patches/:id': 'showPatch',
+                
+                'multi': 'showMulti',
 
                 // Default
                 '*other':     'defaultAction'
@@ -74,6 +76,10 @@ define(
                     myView.Collection = myView.Collection.extend({id: id});
                     that.show({hash: '#patches', title: 'Patch Detail', view: new myView.View()});
                 });
+            },
+            showMulti: function () {
+                var that = this;
+                this.show({hash: '#patches', title: 'Patch Operations', view: 'modules/multi'});
             },
             defaultAction: function (other) {
                 this.show(
