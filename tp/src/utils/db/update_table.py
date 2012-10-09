@@ -6,8 +6,8 @@ from socket import gethostbyaddr
 from models.base import Base
 from models.windows import *
 from models.node import *
-
-from query_table import *
+from utils.common import *
+from utils.db.query_table import *
 
 def addNode(session, client_ip):
     try:
@@ -66,13 +66,14 @@ def addWindowsUpdate(session, data):
             win_update = WindowsUpdate(update['toppatch_id'],
                     update['kb'], update['vendor_id'],update['title'],
                     update['description'], update['support_url'],
-                    update['severity'], update['date_published'],
+                    update['severity'], dateParser(update['date_published']),
                     update['file_size']
                     )
             if win_update:
                 try:
                     session.add(win_update)
                     session.commit()
+                    addWindowsUpdatePerNode(session, data)
                 except:
                     session.rollback()
 
@@ -85,24 +86,22 @@ def addWindowsUpdatePerNode(session, data):
         for addupdate in data['updates']:
             update_exists = nodeUpdateExists(session, node_id, addupdate['toppatch_id'])
             if not update_exists:
-                if addupdate['date_installed'] == '':
-                    date_installed = None
-                if addupdate['hidden']  == "true":
-                    hidden = True
+                if 'date_installed' in addupdate:
+                    date_installed = dateParser(addupdate['date_installed'])
                 else:
-                    hidden = False
+                    date_installed = None
+                hidden = returnBool(addupdate['hidden'])
                 node_update = ManagedWindowsUpdate(node_id,
                         addupdate['toppatch_id'],
                         date_installed, hidden
                         )
-                if node_update:
-                    try:
-                        session.add(node_update)
-                        session.commit()
-                    except:
-                        session.rollback()
-                    finally:
-                        addWindowsUpdate(session, data)
+                try:
+                    session.add(node_update)
+                    session.commit()
+                except:
+                    session.rollback()
+                finally:
+                    addWindowsUpdate(session, data)
             else:
                 addWindowsUpdate(session, data)
 
