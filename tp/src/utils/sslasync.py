@@ -26,8 +26,8 @@ class SslConnect():
     def ssl_init(self):
         new_ssl_socket =  socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         new_ssl_wrapper = ssl.SSLSocket(new_ssl_socket,
-            keyfile=self.key, certfile=self.cert, ca_certs=self.ca,
-            cert_reqs=ssl.CERT_REQUIRED)
+                    keyfile=self.key, certfile=self.cert, ca_certs=self.ca,
+                    cert_reqs=ssl.CERT_REQUIRED)
         new_ssl_wrapper.timeout = 60
         return(new_ssl_socket, new_ssl_wrapper)
 
@@ -37,10 +37,10 @@ class SslConnect():
             self.ssl_socket.connect((self.host, self.port))
             connected = True
         except Exception as e:
-            if e.errno == 111 and\
-               self.connection_count < 1 or\
-               re.search(r'operation timed out', e.message) and\
-               self.connection_count < 1:
+            if e.errno == 111 and \
+                    self.connection_count < 1 or \
+                    re.search(r'operation timed out', e.message) and \
+                    self.connection_count < 1:
                 self.connection_count += 1
                 self.ssl, self.ssl_socket = self.ssl_init()
                 self._connect()
@@ -60,8 +60,8 @@ class SslConnect():
         try:
             self.ssl_socket.sendall(self.msg)
         except Exception as e:
-            if e.message == None and e.errno == 32 and\
-               self.write_count < 1:
+            if e.message == None and e.errno == 32 and \
+                    self.write_count < 1:
                 self.write_count += 1
                 self._write()
             else:
@@ -78,3 +78,4 @@ class SslConnect():
     def _close(self):
         ssl_socket.shutdown(socket.SHUT_RDWR)
         ssl_socket.close()
+
