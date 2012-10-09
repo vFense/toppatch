@@ -53,7 +53,10 @@ require(
             }
         });
 
+        // Deferred object resolved when header is fully rendered.
         deferred = new $.Deferred();
+
+        // Load header, render it, and then render the nav buttons
         require(['modules/pageHeader', 'modules/navBar'], function (PageHeader, DashNav) {
             var pageHeader = app.views.pageHeader = new PageHeader.View();
             $('body').prepend(pageHeader.render().$el);
@@ -63,15 +66,19 @@ require(
                 el: $('<ul>').addClass('nav').appendTo(pageHeader.$('#dashboardNav'))
             });
         });
+
+        // Load footer and render it
         require(['modules/pageFooter'], function (PageFooter) {
             var pageFooter = new PageFooter.View();
             $('body').append(pageFooter.render().$el);
         });
 
+        // Listen for event to change the page title
         app.vent.on("domchange:title", function (title) {
             app.$doc.attr('title', app.title + ': ' + title);
         });
 
+        // When the above Deferred object is resolved, start the router
         deferred.done(function () {
             require(['router'], function (Router) {
                 Router.initialize();
