@@ -45,7 +45,6 @@ class AgentOperation():
             if json_valid:
                 node_id = jsonobject['node_id']
                 exists, node_ip = nodeExists(self.session, node_id=node_id)
-                message = None
                 if INSTALL in jsonobject:
                     oper_type = INSTALL
                     patch_list = jsonobject[INSTALL]
@@ -143,10 +142,12 @@ class AgentOperation():
                      }
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'
-        print msg
+        response = None
         connect = SslConnect(node_ip, msg)
-        if not connect.error:
-            updateOperationRow(self.session, oper_id, oper_recv=True)
+        if not connect.error and connect.read_data:
+            response = verifyJsonIsValid(connect.read_data)
+            if response[1]['operation'] == 'received':
+                updateOperationRow(self.session, oper_id, oper_recv=True)
         return(node_id, oper_id, connect.read_data, connect.error)
 
 
