@@ -21,15 +21,9 @@ class SslInfo(Base):
     signed_cert_location = Column(VARCHAR(128),nullable=False)
     cert_expiration = Column(DATETIME, nullable=True)
     def __init__(self, node_id, csr_id,
-<<<<<<< HEAD
                  signed_cert_name, signed_cert_location,
                  cert_expiration
     ):
-=======
-                signed_cert_name, signed_cert_location,
-                cert_expiration
-                ):
->>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
         self.node_id = node_id
         self.csr_id = csr_id
         self.signed_cert_name = signed_cert_name
@@ -37,19 +31,11 @@ class SslInfo(Base):
         self.cert_expiration = cert_expiration
     def __repr__(self):
         return "<SslInfo(%s,%s,%s,%s,%s)>" %\
-<<<<<<< HEAD
                (
                    self.node_id, self.csr_id,
                    self.signed_cert_name, self.signed_cert_location,
                    self.cert_expiration
                    )
-=======
-                (
-                self.node_id, self.csr_id,
-                self.signed_cert_name, self.signed_cert_location,
-                self.cert_expiration
-                )
->>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
 
 class CsrInfo(Base):
     """
@@ -68,15 +54,9 @@ class CsrInfo(Base):
     is_csr_signed = Column(BOOLEAN, nullable=True)
     csr_signed_date = Column(DATETIME, nullable=True)
     def __init__(self, csr_name, ip_address,
-<<<<<<< HEAD
                  csr_location, is_csr_signed,
                  csr_signed_date
     ):
-=======
-                csr_location, is_csr_signed,
-                csr_signed_date
-                ):
->>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
         self.csr_name = csr_name
         self.ip_address = ip_address
         self.csr_location = csr_location
@@ -84,17 +64,8 @@ class CsrInfo(Base):
         self.csr_signed_date = csr_signed_date
     def __repr__(self):
         return "<CsrInfo(%s,%s,%s,%s,%s)>" %\
-<<<<<<< HEAD
                (
                    self.csr_name, self.ip_address,
                    self.csr_location, self.is_csr_signed,
                    self.csr_signed_date
                    )
-=======
-                (
-                self.csr_name, self.ip_address,
-                self.csr_location, self.is_csr_signed,
-                self.csr_signed_date
-                )
-
->>>>>>> 0947fc8cff28bccee545a0ddd3cec844150c35cf
