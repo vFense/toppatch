@@ -4,9 +4,9 @@ define(
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
-                baseUrl: 'api/nodes/',
+                baseUrl: 'api/nodes.json',
                 url: function () {
-                    return this.baseUrl + this.id + '.json';
+                    return this.baseUrl + '?id=' + this.id;
                 }
             }),
             View: Backbone.View.extend({
