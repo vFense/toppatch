@@ -19,6 +19,8 @@ OPERATION = 'operation'
 OPERATION_ID = 'operation_id'
 INSTALL = 'install'
 UPDATES_PENDING = 'updates_pending'
+UPDATES_INSTALLED = 'updates_installed'
+SOFTWARE_INSTALLED = 'system_applications'
 SYSTEM_INFO = 'system_info'
 STATUS_UPDATE = 'status'
 ENGINE = initEngine()
@@ -40,7 +42,7 @@ class GetJson(Protocol):
         self.transport.loseConnection()
         data = self.total_data
         self.total_data = ""
-        print data
+        print repr(data)
         valid_json = verifyJsonIsValid(data)
         if valid_json[0]:
             json_data = valid_json[1]
@@ -57,6 +59,10 @@ class GetJson(Protocol):
                     self.node)
             if json_data[OPERATION] == UPDATES_PENDING:
                 addWindowsUpdatePerNode(self.session, json_data)
+            if json_data[OPERATION] == UPDATES_INSTALLED:
+                addWindowsUpdatePerNode(self.session, json_data)
+            if json_data[OPERATION] == SOFTWARE_INSTALLED:
+                addSoftwareInstalled(self.session, json_data)
             if json_data[OPERATION] == STATUS_UPDATE:
                 updateNode(self.session, json_data['node_id'])
             else:
