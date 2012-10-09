@@ -103,6 +103,7 @@ define(
                         this.graph = "#" + $("#" + this.widget).children().children("div").attr("id");
                         this.counter += 1;
                         this.displayChart();
+                        this.saveState();
                         $(".properties").click(function () { setProperties(this, 'existing'); });
                         $('.remove').click(function () { hideWidget(this); });
                     } else {
@@ -131,8 +132,11 @@ define(
                         this.graphType = $('input:radio[name=graph]:checked').val();
                         this.graph = "#" + $(this.widget + " .graph").attr("id");
                         this.graphData = $('input:radio[name=graphdata]:checked').val();
+                        this.title = properties.get('widgetTitle');
+                        $(this.widget + '-title').html(this.title)
                         $(this.widget).removeClass(this.myClass).addClass("span" + this.sizeval + " widget editable");
                         this.displayChart();
+                        this.saveState();
                     } else {
                         parent = $(this.widget).parent();
                         this.title = $('input:radio[name=param]:checked');
@@ -162,29 +166,46 @@ define(
                     } else if (type === "Failed Patches") {
                         return app.data.nodeData.Failed;
                     }
+                },
+                saveState: function () {
+                    var widgets = window.User.get('widgets'),
+                        userName = window.User.get('name'),
+                        matches = this.graph.match(/\d+$/),
+                        position = matches[0] - 1;
+                    widgets.graph[position] = this.graphType;
+                    widgets.spans[position] = this.sizeval;
+                    widgets.titles[position] = this.title;
+                    window.User.set('widgets', widgets);
+                    localStorage.setItem(userName, JSON.stringify(window.User));
                 }
             }),
             widgetview = new WidgetView({ el: 'body' }),
             barGraph = function (selection) {
-                var data = app.data.osData,
-                    title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
-                    width = $(selection).width(),
-                    barWidth = (width / data.length) - 10,
-                    graphBar = app.chart.bar().title(title).barWidth(barWidth);
-                d3.select(selection).datum(data).call(graphBar);
+                //var data = app.data.osData,
+                var width = $(selection).width(), title;
+                //title = properties.get('widgetTitle') === 'Default' ? null : properties.get('widgetTitle');
+                d3.json("../api/graphData", function(json) {
+                    var barWidth = (width / json.length) - 10,
+                    graphBar = app.chart.bar().barWidth(barWidth);
+                    d3.select(selection).datum(json).call(graphBar);
+                });
             },
             interactiveGraph = function (selection) {
-                var data = app.data.summaryData,
-                    title = properties.get('widgetTitle') === 'Default' ? "Summary Chart" : properties.get('widgetTitle'),
-                    interGraph = app.chart.partition().chartTitle(title);
-                d3.select(selection).datum(data).call(interGraph);
+                //var data = app.data.summaryData,
+                //title = properties.get('widgetTitle') === 'Default' ? "Summary Chart" : properties.get('widgetTitle'),
+                var interGraph = app.chart.partition();
+                d3.json("../api/summaryData", function(json) {
+                    d3.select(selection).datum(json).call(interGraph);
+                });
             },
             pieGraph = function (selection) {
-                var data = app.data.osData,
-                    title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
-                    width = $(selection).width(),
-                    pieChart = app.chart.pie().title(title).width(width);
-                d3.select(selection).datum(data).call(pieChart);
+                var data = app.data.osData;
+                var width = $(selection).width(),
+                    pieChart = app.chart.pie().width(width);
+                //title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle')
+                d3.json("../api/graphData", function(json) {
+                    d3.select(selection).datum(json).call(pieChart);
+                });
             },
             lineGraph = function (selection) {
                 var data = [
@@ -202,11 +223,13 @@ define(
                 d3.select(selection).datum(data).call(lineChart);
             },
             stackedGraph = function (selection) {
-                var data = app.data.osData,
-                    title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
-                    width = $(selection).width(),
-                    stackedChart = app.chart.stackedBar().title(title).width(width);
-                d3.select(selection).datum(data).call(stackedChart);
+                //var data = app.data.osData,
+                //title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
+                var width = $(selection).width(),
+                    stackedChart = app.chart.stackedBar().width(width);
+                d3.json("../api/graphData", function(json) {
+                    d3.select(selection).datum(json).call(stackedChart);
+                });
             },
             setProperties = function (obj, param) {
                 if (param === "existing") {
@@ -249,9 +272,12 @@ define(
                         });
                         this.$el.append(that.overview.render().$el);
 
-                        this.$el.append(tmpl());
+                        var variables = window.User.get('widgets');
+                        this.$el.append(tmpl(variables));
 
                         this.test();
+
+                        app.vent.trigger('domchange:title', 'Dashboard');
 
                         if (this.onRender !== $.noop) { this.onRender(); }
                         return this;
@@ -284,9 +310,37 @@ define(
                             $(".properties").click(function () { setProperties(this, 'existing'); });
                             $('#addwidget').click(function () { setProperties(this, 'new'); });
                             $('.remove').click(function () { hideWidget(this); });
-                            barGraph("#graph2");
-                            interactiveGraph("#graph3");
-                            pieGraph("#graph1");
+                            var widgets = window.User.get('widgets').graph,
+                                settings = window.User.get('widgets');
+                            for(var i = 0; i < widgets.length; i++) {
+                                if($('#widget'+ (i+ 1)).length == 0) {
+                                    var variables = {
+                                             widget: "widget" + (i + 1),
+                                             span: "span" + settings.spans[i],
+                                             graphcontainer: "graphcontainer" + (i + 1),
+                                             menu: "menu" + (i + 1),
+                                             graph: "graph" + (i + 1),
+                                             title: settings.titles[i]
+                                         },
+                                        template = _.template($("#widget_template").html(), variables);
+                                    $("#insert").append(template);
+                                    widgetview.counter++;
+                                    console.log(widgetview.counter);
+                                    $(".properties").click(function () { setProperties(this, 'existing'); });
+                                    $('.remove').click(function () { hideWidget(this); });
+                                }
+                                if(widgets[i]=='pie') {
+                                    pieGraph('#graph' + (i + 1));
+                                } else if(widgets[i] == 'bar') {
+                                    barGraph('#graph' + (i + 1));
+                                } else if(widgets[i] == 'summary') {
+                                    interactiveGraph('#graph' + (i + 1));
+                                } else if(widgets[i] == 'stacked') {
+                                    stackedGraph('#graph' + (i + 1));
+                                } else if(widgets[i] == 'line') {
+                                    lineGraph('#graph' + (i + 1));
+                                }
+                            };
                         }, 200);
                     }
                 })
