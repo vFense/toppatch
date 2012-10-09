@@ -87,34 +87,43 @@
     }
 
     .list {
-        HEADER {
-            border-top: @em*(1px)/@baseFontSize solid #E5E5E5;
-            border-bottom: @em*(1px)/@baseFontSize solid #E5E5E5;
-            padding: 2px 0;
-        }
-
-        FOOTER {
-            border-bottom: @em*(1px)/@baseFontSize solid #E5E5E5;
-            padding: @em*(2px)/@baseFontSize 0;
-        }
-
+        @listBorderColor: #E5E5E5;
+        HEADER,
+        FOOTER,
         .legend {
+            padding: 0 0.5em;
             line-height: @em*(30px)/@baseFontSize;
-            border-bottom: @em*(1px)/@baseFontSize solid #E5E5E5;
+            height: @em*(30px)/@baseFontSize;
+        }
+        
+        HEADER,
+        FOOTER {
+            background-color: rgb(250,250,250);
+        }
+
+        HEADER {
+            border-top: @em*(1px)/@baseFontSize solid @listBorderColor;
+        }
+        
+        FOOTER,
+        .legend {
+            border-bottom: @em*(1px)/@baseFontSize solid @listBorderColor;
         }
 
         .item {
-            height: @em*(30px)/@baseFontSize;
+            border-bottom: @em*(1px)/@baseFontSize solid @listBorderColor;
             line-height: @em*(30px)/@baseFontSize;
-            border-bottom: @em*(1px)/@baseFontSize solid #E5E5E5;
+            height: @em*(30px)/@baseFontSize;
+            padding: 0 0.5em;
+
 
             &:first-child {
                 /* Add top border to first list item */
-                border-top: @em*(1px)/@baseFontSize solid #E5E5E5;
+                border-top: @em*(1px)/@baseFontSize solid @listBorderColor;
             }
 
             &:hover {
-                background-color: #F5F5F5;
+                background-color: @warningBackground;
             }
 
             &.linked {
@@ -142,9 +151,18 @@
             }
         }
 
+        .legend,
+        .item {
+            padding: inherit 0.5em;
+        }
+
         HEADER + .item {
             /* Remove top border from first list item when list header present */
-            border-top: none;
+            border-top: @em*(1px)/@baseFontSize solid @listBorderColor;
+        }
+
+        .checkbox.inline {
+            padding-top:0;
         }
 
         .done { color: @successText; }
@@ -154,7 +172,7 @@
     }
 
     .well {
-        background-color: lighten(@wellBackground, 3%);
+        background-color: #FAFAFA;
 
         DL {
             @dtColumnWidth: 2;
