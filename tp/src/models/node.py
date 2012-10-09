@@ -169,23 +169,21 @@ class SoftwareAvailable(Base):
     support_url = Column(VARCHAR(128), nullable=True)
     version = Column(VARCHAR(32), nullable=False)
     vendor = Column(VARCHAR(32), nullable=False)
-    date_installed = Column(DATETIME, nullable=True)
     def __init__(self, node_id, name, vendor,
                 description, version,
-                support_url=None, date_installed=None):
+                support_url=None):
         self.node_id = node_id
         self.name = name
         self.vendor = vendor
         self.description = description
         self.version = version
         self.support_url = support_url
-        self.date_installed = date_installed
     def __repr__(self):
         return "<SoftwareInstalled(%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.node_id, self.name, self.vendor,
                 self.description, self.version,
-                self.support_url, self.date_installed
+                self.support_url
                 )
 
 class SoftwareInstalled(Base):
