@@ -52,5 +52,5 @@ class CtxFactory(ssl.ClientContextFactory):
 
 if __name__ == '__main__':
     factory = EchoClientFactory()
-    reactor.connectSSL('10.0.0.7', 8002, factory, CtxFactory())
+    reactor.connectSSL('127.0.0.1', 9000, factory, CtxFactory())
     reactor.run()

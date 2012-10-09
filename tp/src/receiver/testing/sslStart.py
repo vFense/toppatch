@@ -14,8 +14,9 @@ class _AgentSender(Protocol):
         self.transport.loseConnection()
 
     def connectionLost(self, reason):
-        SslConnector.results = (self.data, reason.value)
-        reactor.stop()
+        #print self.data, reason.value
+#        reactor.stop()
+        return (self.data, reason.value)
 
 class _AgentFactory(Factory):
     def buildProtocol(self, addr):
@@ -37,19 +38,22 @@ class SslConnector():
         self.node = node
         self.msg = msg
         self.port = 9000
-        self.point = SSL4ClientEndpoint(reactor, self.node, self.port, _CtxFactory(), 5)
+        self.point = SSL4ClientEndpoint(reactor, self.node, self.port, _CtxFactory(), 1)
         self.d = self.point.connect(_AgentFactory())
         self.d.addCallback(self._sendMessage)
         self.d.addErrback(self._returnError)
-        reactor.run()
+        self.results = self.d
+#        reactor.run()
 
     def _sendMessage(self, proto):
         proto.sendMessage(self.msg)
 
     def _returnError(self, failure):
-        SslConnector.results = (None, failure.value)
-        reactor.stop()
+#        reactor.stop()
+        return (None, failure.value)
 
-
-#a = SslConnector('127.0.0.1', '{"operation" : "updates_pending", "operation_id" : "1"}')
-#print a.results
+#i = 100
+#for i in range(i):
+#    a = SslConnector('127.0.0.1', '{"operation_id": "1", "operation": "install", "updates": ["2014", "2012", "2013"]}')
+#    print a.results
+#reactor.run()

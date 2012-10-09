@@ -1,4 +1,6 @@
 import re
+import gevent
+#from gevent import socket, ssl
 import socket
 import ssl
 
@@ -7,8 +9,6 @@ class SslConnect():
         self.host = host
         self.msg = msg
         self.port = 9000
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.settimeout(60)
         self.connection_count = 0
         self.write_count = 0
         self.retry = 1
@@ -19,25 +19,30 @@ class SslConnect():
         self.key = "/opt/TopPatch/var/lib/ssl/server/keys/server.key"
         self.cert = "/opt/TopPatch/var/lib/ssl/server/keys/server.cert"
         self.ca = "/opt/TopPatch/var/lib/ssl/server/keys/server.cert"
-        self.ssl_socket = ssl.wrap_socket(self.socket,
-                keyfile=self.key, certfile=self.cert, ca_certs=self.ca,
-                cert_reqs=ssl.CERT_REQUIRED)
+        self.socket, self.ssl_socket = self.ssl_init()
         self._connect()
 
+    def ssl_init(self):
+        new_socket =  socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        new_wrapper = ssl.wrap_socket(new_socket,
+                keyfile=self.key, certfile=self.cert, ca_certs=self.ca,
+                cert_reqs=ssl.CERT_REQUIRED)
+        return(new_socket, new_wrapper)
 
     def _connect(self):
         self.connection_error = None
         try:
             connect = self.ssl_socket.connect((self.host, self.port))
         except Exception as e:
-            if e.message == None and e.errno == 111 and \
+            if e.errno == 111 and \
                     self.connection_count < 1 or \
                     re.search(r'operation timed out', e.message) and \
                     self.connection_count < 1:
                 self.connection_count += 1
-                self._connect
+                self.socket, self.ssl_socket = self.ssl_init()
+                self._connect()
             else:
-                self.error = e
+                self.connection_error = e
         return self._write()
 
     def _write(self):
