@@ -16,10 +16,10 @@ TYPE_CSR = 1
 TYPE_CERT = 2
 TYPE_PKEY = 3
 EXTENSION = {
-    1 : '.csr',
-    2 : '.cert',
-    3 : '.key'
-}
+            1 : '.csr',
+            2 : '.cert',
+            3 : '.key'
+            }
 
 def generatePrivateKey(type, bits):
     pkey = crypto.PKey()
@@ -43,7 +43,7 @@ def saveKey(location, key, key_type, name=socket.gethostname()):
             print 'The directory %s does not exist' % (location)
         elif e.errno == 13:
             print 'Do not have sufficient permission to write to %s'\
-            % (location)
+                    % (location)
     try:
         file_exists = os.stat(path_to_key)
         if file_exists:
@@ -52,12 +52,12 @@ def saveKey(location, key, key_type, name=socket.gethostname()):
     except OSError as e:
         if e.errno == 2:
             open(path_to_key, 'w').write(\
-                DUMP_KEY(FILE_TYPE_PEM, key)
-            )
+                    DUMP_KEY(FILE_TYPE_PEM, key)
+                    )
             status = True
         elif e.errno == 13:
             print 'Do not have sufficient permission to write to %s'\
-            % (location)
+                    % (location)
     return(path_to_key, status)
 
 def createCertRequest(pkey, (CN, O, OU, C, ST, L), digest="sha512"):
@@ -110,7 +110,7 @@ def createCertificateAuthority(pkey, serial,\
 def createSigningCertificateAuthority(pkey, serial,\
         (CN, O, OU, C, ST, L),
         (notBefore, notAfter),
-                                      digest="sha512"):
+        digest="sha512"):
     ca = crypto.X509()
     ca.set_version(3)
     subj = ca.get_subject()

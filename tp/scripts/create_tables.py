@@ -20,7 +20,7 @@ db.drop(ManagedWindowsUpdate)
 #db.drop(SslInfo)
 Base.metadata.drop_all(db)
 
-
+"""
 db.create(NodeInfo)
 db.create(Operations)
 db.create(Results)
@@ -32,3 +32,4 @@ db.create(ManagedWindowsUpdate)
 #db.create(CsrInfo)
 #db.create(SslInfo)
 Base.metadata.create_all(db)
+"""
