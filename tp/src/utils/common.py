@@ -14,7 +14,7 @@ def verifyJsonIsValid(data):
 def dateParser(unformatted_date):
     if unformatted_date != "":
         month, day, year = re.split(r'-|/', unformatted_date)
-        month, day. year  = int(month), int(day), int(year)
+        month, day, year  = int(month), int(day), int(year)
         formatted_date = date(year, month, day)
     else:
         formatted_date = None
@@ -25,5 +25,5 @@ def returnBool(fake_bool):
     if fake_bool == "true":
         real_bool = True
     elif fake_bool == "false":
-        real_bool = True
+        real_bool = False
     return real_bool

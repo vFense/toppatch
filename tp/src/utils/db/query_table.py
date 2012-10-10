@@ -25,16 +25,27 @@ def operationExists(session, oper_id):
     exists = oper.first()
     return(exists, oper)
 
+def operationExistsUsingNodeId(session, node_id, oper_type):
+    oper = \
+        session.query(Operations).filter_by(node_id=node_id).filter_by(results_received=None).filter_by(operation_type=oper_type)
+    exists = oper.first()
+    return(exists, oper)
+
 def csrExists(session, node):
     csr = \
         session.query(CsrInfo).filter_by(ip_address=node).first()
     return(csr)
     
+def updateExists(session, tp_id):
+    update = \
+        session.query(WindowsUpdate).filter_by(toppatch_id=tp_id).first()
+    return(update)
 
 def nodeUpdateExists(session, node, tp_id):
     update = \
-        session.query(ManagedWindowsUpdate).filter_by(node_id=node).filter_by(toppatch_id=tp_id).first()
-    return(update)
+        session.query(ManagedWindowsUpdate).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
+    exists = update.first()
+    return(exists, update)
 
 def softwareExists(session, sname, sversion):
     software = \

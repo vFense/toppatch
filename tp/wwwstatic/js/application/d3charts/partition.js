@@ -19,11 +19,12 @@ define(['jquery','d3'], function($, d3) {
                 var that = this,
                     matches = that.id.match(/\d+$/),
                     widget = "#widget" + matches[0],
+                    osTitle = false,
                     firstTitle = false,
                     secondTitle = false,
                     thirdTitle = false,
                     fourthTitle = false;
-                $(widget + "-title").html(chartTitle);
+                //$(widget + "-title").html(chartTitle);
                 $(this).html("");
                 width = $(this).width();
                 var x = d3.scale.linear().range([0, width]),
@@ -41,7 +42,7 @@ define(['jquery','d3'], function($, d3) {
                     .enter()
                     .append("svg:text")
                     .filter(function (d, i) {
-                        return i < 4 ? d : null;
+                        return i <= 4 ? d : null;
                     })
                     .attr("x", function (d) {
                         return x(d.y) + 8;
@@ -56,16 +57,21 @@ define(['jquery','d3'], function($, d3) {
                                 return "Network";
                             }
                         } else if(d.depth === 1) {
+                            if(osTitle === false) {
+                                osTitle = true;
+                                return "OS";
+                            }
+                        } else if(d.depth === 2) {
                             if(secondTitle === false) {
                                 secondTitle = true;
                                 return "OS Name";
                             }
-                        } else if(d.depth === 2) {
+                        } else if(d.depth === 3) {
                             if(thirdTitle === false) {
                                 thirdTitle = true;
                                 return "IP Address";
                             }
-                        } else if(d.depth === 3) {
+                        } else if(d.depth === 4) {
                             if(fourthTitle === false) {
                                 fourthTitle = true;
                                 return "Statistics";

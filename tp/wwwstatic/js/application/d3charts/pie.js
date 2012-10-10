@@ -25,7 +25,7 @@ define(['jquery','d3'], function($, d3) {
                 var that = this, link, options,
                     matches = that.id.match(/\d+$/),
                     widget = "#widget" + matches[0];
-                $(widget + "-title").html(title);
+                //$(widget + "-title").html(title);
                 $(this).html("");
                 //alert($(this).attr("id"));
                 var vis = d3.select(this)

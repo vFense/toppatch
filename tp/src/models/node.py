@@ -53,33 +53,32 @@ class SystemInfo(Base):
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"), unique=True)
     os_code = Column(VARCHAR(16), nullable=False)
-    os_string = Column(VARCHAR(32), nullable=False)
-    bit_type = Column(VARCHAR(4), nullable=False)
-    os_version_major = Column(VARCHAR(6), nullable=True)
-    os_version_minor = Column(VARCHAR(6), nullable=True)
-    os_version_build = Column(VARCHAR(8), nullable=True)
-    os_meta = Column(VARCHAR(32), nullable=True)
+    os_string = Column(VARCHAR(64), nullable=False)
+    bit_type = Column(VARCHAR(4), nullable=True)
+    version_major = Column(VARCHAR(6), nullable=True)
+    version_minor = Column(VARCHAR(6), nullable=True)
+    version_build = Column(VARCHAR(8), nullable=True)
+    meta = Column(VARCHAR(32), nullable=True)
     def __init__(
-                self, node_id, os_code, os_string, bit_type,
-                os_version_major, os_version_minor,
-                os_version_build, os_meta
+                self, node_id, os_code, os_string,
+                version_major, version_minor,
+                version_build, meta, bit_type=None
                 ):
         self.node_id = node_id
         self.os_code = os_code
         self.os_string = os_string
+        self.version_major = version_major
+        self.version_minor = version_minor
+        self.version_build = version_build
+        self.meta = meta
         self.bit_type = bit_type
-        self.os_version_major = os_version_major
-        self.os_version_minor = os_version_minor
-        self.os_version_build = os_version_build
-        self.os_meta = os_meta
     def __repr__(self):
-        return "<SystemInfo(%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<SystemInfo(%s,%s,%s,%s,%s,%s,%s,%s)>"%\
                 (
-                self.node_id, self.os_code, self.os_string, self.bit_type,
-                self.os_version_major, self.os_version_minor,
-                self.os_version_build, self.os_meta
+                self.node_id, self.os_code, self.os_string,
+                self.version_major, self.version_minor,
+                self.version_build, self.meta, self.bit_type
                 )
-
 
 class Operations(Base):
     """
@@ -97,14 +96,14 @@ class Operations(Base):
     results_id = Column(INTEGER(unsigned=True),
         ForeignKey("results.id", use_alter=True,
         name="fk_operations_result_id"))
-    operation_type = Column(VARCHAR(16), nullable=False)
+    operation_type = Column(VARCHAR(32), nullable=False)
     operation_sent = Column(DATETIME, nullable=True)
     operation_received = Column(DATETIME, nullable=True)
     results_received = Column(DATETIME, nullable=True)
     def __init__(self, node_id, operation_type, results_id=None,
-            operation_sent=None, operation_received=None,
-            results_received=None
-            ):
+                 operation_sent=None, operation_received=None,
+                 results_received=None
+    ):
         self.node_id = node_id
         self.results_id = results_id
         self.operation_type = operation_type
@@ -113,11 +112,11 @@ class Operations(Base):
         self.results_received = results_received
     def __repr__(self):
         return "<Operations(%s, %s, %s, %s, %s,%s)>" %\
-                (
-                self.node_id, self.results_id, self.operation_type, 
-                self.operation_sent,self.operation_received,
-                self.results_received
-                )
+               (
+                   self.node_id, self.results_id, self.operation_type,
+                   self.operation_sent,self.operation_received,
+                   self.results_received
+               )
 
 class Results(Base):
     """
@@ -136,20 +135,22 @@ class Results(Base):
         name="fk_result_operations_id"),unique=True)
     patch_id = Column(INTEGER(unsigned=True),
         ForeignKey("windows_update.toppatch_id"))
-    result = Column(BOOLEAN)   # True = Pass, False = Failed
-    message = Column(VARCHAR(64), nullable=True)
+    result = Column(VARCHAR(16), nullable=True)
+    reboot = Column(BOOLEAN, nullable=True)
+    error = Column(VARCHAR(64), nullable=True)
     def __init__(self, node_id, operation_id, patch_id,
-                result, message):
+                result=None, reboot=None, error=None):
         self.node_id = node_id
         self.operation_id = operation_id
         self.patch_id = patch_id
         self.result = result
-        self.message = message
+        self.reboot = reboot
+        self.error = error
     def __repr__(self):
-        return "<Results(%s, %s, %s, %s, %s)>" %\
+        return "<Results(%s, %s, %s, %s, %s, %s)>" %\
                 (
                 self.node_id ,self.operation_id, self.patch_id,
-                self.result, self.message
+                self.result, self.reboot, self.error
                 )
 
 class SoftwareAvailable(Base):
@@ -170,19 +171,19 @@ class SoftwareAvailable(Base):
     version = Column(VARCHAR(32), nullable=False)
     vendor = Column(VARCHAR(32), nullable=False)
     def __init__(self, node_id, name, vendor,
-                description, version,
+                version, description=None,
                 support_url=None):
         self.node_id = node_id
         self.name = name
         self.vendor = vendor
-        self.description = description
         self.version = version
+        self.description = description
         self.support_url = support_url
     def __repr__(self):
         return "<SoftwareInstalled(%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.node_id, self.name, self.vendor,
-                self.description, self.version,
+                self.version, self.description,
                 self.support_url
                 )
 
@@ -201,7 +202,7 @@ class SoftwareInstalled(Base):
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     date_installed = Column(DATETIME, nullable=True)
     def __init__(self, node_id, application_id,
-                date_installed=None):
+                 date_installed=None):
         self.node_id = node_id
         self.application_id = application_id
         self.date_installed = date_installed

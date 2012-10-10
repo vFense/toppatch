@@ -24,7 +24,7 @@ define(
                         widget = "#widget" + matches[0],
                         barDemo;
 
-                    $(widget + "-title").html(title);
+                    //$(widget + "-title").html(title);
                     $(this).html("");
 
                     barDemo = d3.select(this).

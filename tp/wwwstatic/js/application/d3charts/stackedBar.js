@@ -27,7 +27,7 @@ define(['jquery','d3'], function($, d3) {
                 var that = this,
                     matches = that.id.match(/\d+$/),
                     widget = "#widget" + matches[0];
-                $(widget + "-title").html(title);
+                //$(widget + "-title").html(title);
                 var x = d3.scale.ordinal().rangeRoundBands([0, width-50]),
                 y = d3.scale.linear().range([0, height]);
                 var y0 = [],
