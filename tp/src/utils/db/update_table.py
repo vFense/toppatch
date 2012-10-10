@@ -41,6 +41,7 @@ def addOperation(session, node_id, operation, result_id=None,
     if add_oper:
         session.add(add_oper)
         session.commit()
+        return add_oper
 
 
 def addSystemInfo(session, data, node_info):
