@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-import os
-import sys
-import select
+from select import select
+from socket import socket, AF_INET, SOCK_DGRAM
 
-from socket import socket, AF_INET, SOCK_DGRAM, SOCK_STREAM
+from pyping import ping
 
 
 
@@ -27,7 +26,7 @@ class UdpPing():
             except Exception as e:
                 raise e.error("Pass a valid hostname or ip")
             udpsocket.sendall('BOO')
-            ready = select.select([udpsocket], [], [], self.timeout) # FD, timeout 1
+            ready = select([udpsocket], [], [], self.timeout) # FD, timeout 1
             if ready[0]:
                 try:
                     udpsocket.recv(1024)
@@ -40,6 +39,24 @@ class UdpPing():
                 self.failed = self.failed + 1
             loopn = loopn + 1
 
+class Ping():
+    def __init__(self, host=None, count=3, timeout=2):
+        self.host = host
+        self.count = count
+        self.timeout = timeout
+        self.ping = ping(self.host, self.count, self.timeout)
+        if self.ping.ret_code == 0:
+            self.alive = True
+        else:
+            self.alive = False
 
+
+#b = ping("192.168.1.6")
+#print b.output
+import sys
+#sys.exit()
+
+a = Ping(host="192.168.1.11")
+print a.alive, a.host, a.ping.output
 #a = UdpPing("10.0.0.10", count=3, timeout=.40, port=1)
 #print a.alive, a.host, a.port, a.passed, a.failed

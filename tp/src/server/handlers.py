@@ -4,11 +4,16 @@ import tornado.websocket
 try: import simplejson as json
 except ImportError: import json
 from models.node import NodeInfo
+<<<<<<< HEAD
 from utils.db.client import *
 from utils.agentoperation import AgentOperation
 from server.decorators import authenticated_request
 
 engine = initEngine()
+=======
+from server.decorators import authenticated_request
+
+>>>>>>> remotes/ld_upstream/Development
 
 def printToSocket(fn):
     def wrapped():
@@ -51,6 +56,10 @@ class LoginHandler(BaseHandler):
     def post(self):
 
          if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
+            @printToSocket
+            def sign():
+                return '{ "user": "%s", "status": "signed in" }' % self.get_argument('name')
+            sign()
             self.set_secure_cookie("user", self.get_argument("name"))
             self.redirect("/")
          else:
@@ -87,10 +96,19 @@ class testHandler(BaseHandler):
         self.render('../data/templates/websocket-test.html')
 
 class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
+<<<<<<< HEAD
     socket = ''
     @authenticated_request
     def open(self):
         print 'new connection'
+=======
+
+    socket = ""
+    @authenticated_request
+    def open(self):
+        print 'new connection'
+        global socket
+>>>>>>> remotes/ld_upstream/Development
         WebsocketHandler.socket = self
 
     def on_message(self, message):
@@ -100,15 +118,26 @@ class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
         print 'connection closed...'
         WebsocketHandler.socket = ""
 
+<<<<<<< HEAD
     @staticmethod
     def sendMessage(message):
         if WebsocketHandler.socket:
             WebsocketHandler.socket.write_message(message)
 
 
+=======
+    def callback(self):
+        self.write_message(globalMessage)
+>>>>>>> remotes/ld_upstream/Development
 
 class LogoutHandler(BaseHandler):
     def get(self):
+        @printToSocket
+        def sign():
+            return '{ "user": "%s", "status": "logged out" }' % self.current_user
+        sign()
+        if WebsocketHandler.socket:
+            WebsocketHandler.socket.close()
         self.clear_all_cookies()
         self.redirect('/login')
         #self.write("Goodbye!" + '<br><a href="/login">Login</a>')
@@ -137,6 +166,7 @@ class DeveloperRegistrationHandler(BaseHandler):
 
 class FormHandler(BaseHandler):
     @authenticated_request
+<<<<<<< HEAD
     def get(self):
         self.write('Invalid submission')
 
@@ -174,6 +204,22 @@ class FormHandler(BaseHandler):
             self.write(json.dumps(resultjson))
 
 
+=======
+    def post(self):
+        resultjson = []
+        node = {}
+        node_id = self.request.arguments['node']
+        operation = self.get_argument('operation')
+        try:
+            patches = self.request.arguments['patches']
+            node['node'] = node_id
+            node[operation] = patches
+            resultjson.append(node)
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(resultjson, indent=4))
+        except:
+            self.write('Please provide a selection of patches')
+>>>>>>> remotes/ld_upstream/Development
 
 
 

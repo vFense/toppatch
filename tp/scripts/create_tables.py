@@ -1,13 +1,26 @@
 #!/usr/bin/env python
+<<<<<<< HEAD
+=======
+from models.account import *
+from models.oauth.token import *
+from models.application import *
+from models.scanner import *
+from models.cve import *
+>>>>>>> remotes/ld_upstream/Development
 from models.base import Base
 from models.windows import *
 from models.node import *
 from models.ssl import *
 from sqlalchemy import create_engine
 
+<<<<<<< HEAD
 db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
 db.echo = True
 
+=======
+db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
+db.echo = True
+>>>>>>> remotes/ld_upstream/Development
 db.drop(NodeInfo)
 db.drop(SystemInfo)
 db.drop(Operations)
@@ -19,7 +32,10 @@ db.drop(ManagedWindowsUpdate)
 db.drop(CsrInfo)
 db.drop(SslInfo)
 Base.metadata.drop_all(db)
+<<<<<<< HEAD
 
+=======
+>>>>>>> remotes/ld_upstream/Development
 db.create(NodeInfo)
 db.create(Operations)
 db.create(Results)

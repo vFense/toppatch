@@ -1,0 +1,9 @@
+raphael-min.js
+Home:       http://raphaeljs.com
+GitHub:     https://github.com/DmitryBaranovskiy/raphael/tags
+Version:    2.1.0
+
+g.raphael.js
+Home:       http://g.raphaeljs.com
+GitHub:     https://github.com/qoelet/g.raphael
+Version:    0.5.0

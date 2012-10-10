@@ -24,7 +24,10 @@ from tornado.options import define, options
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> remotes/ld_upstream/Development
 class HeaderModule(tornado.web.UIModule):
     def render(self):
         return self.render_string(
@@ -56,7 +59,11 @@ class Application(tornado.web.Application):
             (r"/api/summaryData/?", SummaryHandler),
             (r"/api/patchData/?", PatchHandler),
             (r"/api/graphData/?", GraphHandler),
+<<<<<<< HEAD
             (r"/api/nodes.json/?", NodesHandler),
+=======
+            (r"/api/nodes.json/?", TestHandler),
+>>>>>>> remotes/ld_upstream/Development
             (r"/api/patches.json/?", PatchesHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
@@ -67,6 +74,10 @@ class Application(tornado.web.Application):
             (r"/img/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/img"}),
             (r"/js/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/js"})
         ]
+
+        template_path = "/opt/TopPatch/tp/templates"
+        static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "wwwstatic" )
+        #ui_modules = { 'Header', HeaderModule }
 
         template_path = "/opt/TopPatch/tp/templates"
         static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "wwwstatic" )
