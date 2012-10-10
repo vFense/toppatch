@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+from models.account import *
+from models.oauth.token import *
+from models.application import *
+from models.scanner import *
+from models.cve import *
 from models.base import Base
 from models.windows import *
 from models.node import *
