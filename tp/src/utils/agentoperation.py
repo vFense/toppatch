@@ -8,6 +8,7 @@ from utils.db.client import *
 from utils.common import *
 import gevent
 
+OPERATION = 'operation'
 INSTALL = 'install'
 UNINSTALL = 'uninstall'
 HIDE = 'hide'
@@ -17,6 +18,7 @@ UPDATESINSTALLED = 'updates_installed'
 UPDATESPENDING = 'updates_pending'
 SYSTEMINFO = 'system_info'
 SYSTEMAPPLICATIONS = 'system_applications'
+DATA = 'data'
 
 class AgentOperation():
     def __init__(self, session, node_list):
@@ -44,92 +46,39 @@ class AgentOperation():
             json_valid, jsonobject = verifyJsonIsValid(node)
             if json_valid:
                 node_id = jsonobject['node_id']
-                exists, node_ip = nodeExists(self.session, node_id=node_id)
-                if INSTALL in jsonobject:
-                    oper_type = INSTALL
-                    patch_list = jsonobject[INSTALL]
-                    oper_id = self.create_new_operation(node_id, oper_type)
+                exists, node = nodeExists(self.session, node_id=node_id)
+                print exists, node, jsonobject
+                oper_type = jsonobject[OPERATION]
+                print oper_type
+                oper_id = self.create_new_operation(node_id, oper_type)
+                if not DATA in jsonobject:
                     message = gevent.spawn(self.create_sof_operation, node_id, \
-                        node_ip.ip_address, oper_type, oper_id, patch_list
+                        node.ip_address, oper_type, oper_id
                         )
                     self.threads.append(message)
-                if UNINSTALL in jsonobject:
-                    oper_type = UNINSTALL
-                    patch_list = jsonobject[UNINSTALL]
-                    oper_id = self.create_new_operation(node_id, oper_type)
-                    message = gevent.spawn(self.create_sof_operation, node_id, \
-                        node_ip.ip_address, oper_type, oper_id, patch_list
-                        )
-                    self.threads.append(message)
-                if HIDE in jsonobject:
-                    oper_type = HIDE
-                    patch_list = jsonobject[HIDE]
-                    oper_id = self.create_new_operation(node_id, oper_type)
-                    message = gevent.spawn(self.create_sof_operation, node_id, \
-                        node_ip.ip_address, oper_type, oper_id, patch_list
-                        )
-                    self.threads.append(message)
-                if SHOW in jsonobject:
-                    oper_type = SHOW
-                    patch_list = jsonobject[SHOW]
-                    oper_id = self.create_new_operation(node_id, oper_type)
-                    message = gevent.spawn(self.create_sof_operation, node_id, \
-                        node_ip.ip_address, oper_type, oper_id, patch_list
-                        )
-                    self.threads.append(message)
-                if REBOOT in jsonobject:
-                    oper_type = REBOOT
-                    oper_id = self.create_new_operation(node_id, oper_type)
-                    message = gevent.spawn(self.create_sof_operation, \
-                        node_id, node_ip.ip_address, \
-                        oper_type, oper_id
-                        )
-                    self.threads.append(message)
-                if UPDATESINSTALLED in jsonobject:
-                    oper_type = UPDATESINSTALLED
-                    oper_id = self.create_new_operation(node_id, oper_type)
-                    message = gevent.spawn(self.create_sof_operation, \
-                        node_id, node_ip.ip_address, \
-                        oper_type, oper_id
-                        )
-                    self.threads.append(message)
-                if UPDATESPENDING in jsonobject:
-                    oper_type = UPDATESPENDING
-                    oper_id = self.create_new_operation(node_id, oper_type)
-                    message = gevent.spawn(self.create_sof_operation, \
-                        node_id, node_ip.ip_address, \
-                        oper_type, oper_id
-                        )
-                    self.threads.append(message)
-                if SYSTEMINFO in jsonobject:
-                    oper_type = SYSTEMINFO
-                    oper_id = self.create_new_operation(node_id, oper_type)
-                    message = gevent.spawn(self.create_sof_operation, \
-                        node_id, node_ip.ip_address, \
-                        oper_type, oper_id
-                        )
-                    self.threads.append(message)
-                if SYSTEMAPPLICATIONS in jsonobject:
-                    oper_type = SYSTEMAPPLICATIONS
-                    oper_id = self.create_new_operation(node_id, oper_type)
-                    message = gevent.spawn(self.create_sof_operation, \
-                        node_id, node_ip.ip_address, \
-                        oper_type, oper_id
-                        )
-                    self.threads.append(message)
+                elif DATA in jsonobject:
+                    if type(jsonobject[DATA]) == list:
+                        data = jsonobject[DATA]
+                        message = gevent.spawn(self.create_sof_operation, node_id, \
+                                node.ip_address, oper_type, oper_id, data
+                                )
+                        self.threads.append(message)
+                    else:
+                        raise("You must pass an array")
         gevent.joinall(self.threads)
         for job in self.threads:
             self.results.append(job.value)
+        #print self.results
         
     def create_sof_operation(self, node_id, node_ip, oper_type, \
-            oper_id, patch_list=None):
+            oper_id, data_list=None):
         """
         Build a valid Json object and than encode it. Once the 
         encoding is complete, we will than pass this message to
         the SSlConnect class.
         """
         jsonobject = None
-        if patch_list == None:
+        if data_list == None:
             jsonobject = {
                         "operation" : oper_type,
                         "operation_id" : oper_id
@@ -138,14 +87,16 @@ class AgentOperation():
             jsonobject = {
                         "operation" : oper_type,
                         "operation_id" : oper_id,
-                        "updates" : patch_list
+                        "updates" : data_list
                      }
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'
+        print msg
         response = None
         connect = SslConnect(node_ip, msg)
         if not connect.error and connect.read_data:
             response = verifyJsonIsValid(connect.read_data)
+            print response
             if response[1]['operation'] == 'received':
                 updateOperationRow(self.session, oper_id, oper_recv=True)
         return(node_id, oper_id, connect.read_data, connect.error)
@@ -156,10 +107,7 @@ class AgentOperation():
         Add a new operation to the operations table and
         return the autogenerated operation_id
         """
-        addOperation(self.session, node_id, oper_type,
+        oper = addOperation(self.session, node_id, oper_type,
                     operation_sent=datetime.now()
                     )
-        getoperation, operation = operationExists(self.session,
-                    node_id
-                    )
-        return str(getoperation.id)
+        return oper.id

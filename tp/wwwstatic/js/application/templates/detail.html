@@ -1,0 +1,23 @@
+<% if(data['patch/need'].length > 0) { %>
+    <% _.each(data['patch/need'], function (patch, i) { %>
+        <div class="item clearfix">
+            <span class="desc"><strong>Patch ID</strong> - <%= patch %></span>
+            <span class="patches pull-right"> <input type="checkbox" name="patches"
+                <% if(checked.length != 0 ) {
+                    _.each(checked, function(check, j) {
+                        if(check.node_id == data.id) {
+                            _.each(check.install, function(patch_id, k) {
+                                if(patch_id == patch) {
+                                    print('checked');
+                                }
+                            });
+                        }
+                    });
+                } %> value="<%= patch %>"/> </span>
+        </div>
+    <% }); %>
+<% } else { %>
+    <section class="well noPadding">
+        <small><em>No patches available to install</em></small>
+    </section>
+<% } %>

@@ -21,6 +21,7 @@ define(
                 'nodes': 'showNodes',
                 'nodes?:query': 'showNodes',
                 'nodes/:id': 'showNode',
+                'multi': 'showMulti',
 
                 // Default
                 '*other':     'defaultAction'
@@ -49,8 +50,8 @@ define(
             showPatch: function (id) {
                 var that = this;
                 require(['modules/patch'], function (myView) {
-                    var view = new (myView.View.extend({id: id}))()
-                    that.show({hash: '#patches', title: 'Patch Info Page', view: view});
+                    myView.Collection = myView.Collection.extend({id: id});
+                    that.show({hash: '#patches', title: 'Patch Detail', view: new myView.View()});
                 });
             },
             showOverview: function (query) {
@@ -87,6 +88,10 @@ define(
                     that.show({hash: '#nodes', title: 'Nodes', view: view});
                 });
             },
+            showMulti: function () {
+                var that = this;
+                this.show({hash: '#patches', title: 'Patch Operations', view: 'modules/multi'});
+            },
             defaultAction: function (other) {
                 this.show(
                     {
@@ -111,7 +116,6 @@ define(
 
                 app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
                 app.vent.trigger('domchange:title', settings.title);
-
                 if ($.type(settings.view) === 'string') {
                     require([settings.view], function (myView) {
                         var view = new myView.View();
