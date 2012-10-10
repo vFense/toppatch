@@ -57,7 +57,7 @@ class HandOff():
                      "system_applications", "updates_installed"]
         lcollect = []
         for oper in operations:
-            l.collect.append('{"node_id" : "%s", "operation" : "%s"}' \
+            lcollect.append('{"node_id" : "%s", "operation" : "%s"}' \
                     % self.node.id, oper)
         results = AgentOperation(self.session, lcollect)
 
