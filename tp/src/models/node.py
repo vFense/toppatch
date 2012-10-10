@@ -53,7 +53,7 @@ class SystemInfo(Base):
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"), unique=True)
     os_code = Column(VARCHAR(16), nullable=False)
-    os_string = Column(VARCHAR(32), nullable=False)
+    os_string = Column(VARCHAR(64), nullable=False)
     bit_type = Column(VARCHAR(4), nullable=True)
     version_major = Column(VARCHAR(6), nullable=True)
     version_minor = Column(VARCHAR(6), nullable=True)

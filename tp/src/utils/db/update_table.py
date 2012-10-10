@@ -8,7 +8,10 @@ from models.windows import *
 from models.node import *
 from utils.common import *
 from utils.db.query_table import *
+from server.handlers import *
 
+
+#WebsocketHandler.sendMessage(message)
 def addNode(session, client_ip):
     try:
         hostname = gethostbyaddr(client_ip)[0]
@@ -19,6 +22,7 @@ def addNode(session, client_ip):
                 True, True, datetime.now(), datetime.now())
         session.add(add_node)
         session.commit()
+        return add_node
     except Exception as e:
         print e
 
@@ -29,6 +33,7 @@ def addCsr(session, client_ip, location):
         add_csr = CsrInfo(csr_name, client_ip, csr_location, None, None)
         session.add(add_csr)
         session.commit()
+        return add_csr
     except Exception as e:
         print e
 
@@ -41,6 +46,8 @@ def addOperation(session, node_id, operation, result_id=None,
     if add_oper:
         session.add(add_oper)
         session.commit()
+        return add_oper
+        #WebsocketHandler.sendMessage("ITS ME")
 
 
 def addSystemInfo(session, data, node_info):
@@ -55,6 +62,7 @@ def addSystemInfo(session, data, node_info):
         if system_info:
             session.add(system_info)
             session.commit()
+            return system_info
 
 
 def addWindowsUpdate(session, data):
@@ -100,6 +108,7 @@ def addWindowsUpdatePerNode(session, data):
                 try:
                     session.add(node_update)
                     session.commit()
+                    #WebsocketHandler.sendMessage("ITS ME")
                 except:
                     session.rollback()
                 #finally:
@@ -167,6 +176,7 @@ def updateNode(session, node_id):
         exists.update({'last_agent_update' : datetime.now(),
                 'last_node_update' : datetime.now()})
         session.commit()
+        return node
 
 #def addOperationReceived(session, data):
 
@@ -179,14 +189,10 @@ def addResults(session, data):
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         node_id = exists.node_id
-        operation.update({'results_received' : datetime.now()})
-        session.commit()
         for msg in data['messages']:
             update_exists, update_oper = nodeUpdateExists(session, node_id, msg['toppatch_id'])
             if update_exists:
-                print update_oper
                 update_oper.update({'installed' : True, 'date_installed' : datetime.now()})
-                session.commit()
             reboot = returnBool(msg['reboot'])
             error = None
             if "error" in msg:
@@ -198,5 +204,9 @@ def addResults(session, data):
             try:
                 session.add(results)
                 session.commit()
+                operation.update({'results_id' : results.id})
+                session.commit()
+                return results
+                #WebsocketHandler.sendMessage("ITS ME")
             except:
                 session.rollback()

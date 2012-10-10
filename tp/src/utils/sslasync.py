@@ -11,7 +11,7 @@ class SslConnect():
     def __init__(self, host, msg):
         self.host = host
         self.msg = msg
-        self.port = 9003
+        self.port = 9001
         self.connection_count = 0
         self.write_count = 0
         self.retry = 1
@@ -28,7 +28,7 @@ class SslConnect():
         new_ssl_wrapper = ssl.SSLSocket(new_ssl_socket,
                     keyfile=self.key, certfile=self.cert, ca_certs=self.ca,
                     cert_reqs=ssl.CERT_REQUIRED)
-        new_ssl_wrapper.timeout = 60
+        new_ssl_wrapper.timeout = 30
         return(new_ssl_socket, new_ssl_wrapper)
 
     def _connect(self):
