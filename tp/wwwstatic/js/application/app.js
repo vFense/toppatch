@@ -31,6 +31,7 @@ define(
 
                 var ws = new WebSocket("wss://localhost:8000/ws");
                 ws.onmessage = function(evt) {
+                    alert(evt.data);
                     $.ajax({
                         url: '/api/networkData',
                         dataType: 'json',

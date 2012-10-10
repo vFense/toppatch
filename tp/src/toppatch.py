@@ -48,8 +48,6 @@ class Application(tornado.web.Application):
             (r"/login/oauth/authorize/?", AuthorizeHandler),
             (r"/login/oauth/access_token", AccessTokenHandler),
 
-
-
             #### API Handlers
             (r"/api/nodeData/?", NodeHandler),
             (r"/api/osData/?", OsHandler),
@@ -57,7 +55,7 @@ class Application(tornado.web.Application):
             (r"/api/summaryData/?", SummaryHandler),
             (r"/api/patchData/?", PatchHandler),
             (r"/api/graphData/?", GraphHandler),
-            (r"/api/nodes.json/?", TestHandler),
+            (r"/api/nodes.json/?", NodesHandler),
             (r"/api/patches.json/?", PatchesHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors

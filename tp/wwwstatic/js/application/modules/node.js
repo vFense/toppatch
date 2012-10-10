@@ -31,7 +31,8 @@ define(
             },
             submit: function (evt) {
                 app.startWs();
-                return true;
+                console.log('start');
+                return false;
             },
             beforeRender: $.noop,
             onRender: $.noop,

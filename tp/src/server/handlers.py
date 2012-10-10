@@ -144,6 +144,7 @@ class FormHandler(BaseHandler):
     def post(self):
         resultjson = []
         node = {}
+        result = []
         session = createSession(engine)
         try:
             node_id = self.get_argument('node')
@@ -159,18 +160,18 @@ class FormHandler(BaseHandler):
             node['node_id'] = node_id
             node[operation] = patches
             resultjson.append(node)
-            result = json.dumps(resultjson)
-            #AgentOperation(result)
+            result.append(json.dumps(resultjson))
+            AgentOperation(session, result)
             print result
             self.set_header('Content-Type', 'application/json')
-            self.write(result)
+            self.write(json.dumps(resultjson))
         if params:
             resultjson = json.loads(params)
-            result = json.dumps(resultjson)
-            #AgentOperation(result)
+            result.append(json.dumps(resultjson))
+            AgentOperation(session, result)
             print result
             self.set_header('Content-Type', 'application/json')
-            self.write(result)
+            self.write(json.dumps(resultjson))
 
 
 

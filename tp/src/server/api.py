@@ -12,6 +12,7 @@ from server.handlers import BaseHandler
 from models.base import Base
 from models.windows import *
 from models.node import *
+from server.handlers import WebsocketHandler
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -171,6 +172,7 @@ class NetworkHandler(BaseHandler):
             resultjson.append({"key" : "pending", "data" : u.patches_pending})
             resultjson.append({"key" : "failed", "data" : u.patches_failed})
         session.close()
+        WebsocketHandler.sendMessage('hi')
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
@@ -194,15 +196,16 @@ class PatchHandler(BaseHandler):
                 for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False).join(WindowsUpdate).all():
                     for j in session.query(NodeInfo).filter(NodeInfo.id == v.node_id).all():
                         noderesult.append(j.ip_address)
-                resultjson.append({"reference" : {
-                    "toppatch" : u.toppatch_id,
-                    "developer" : u.vendor_id
-                },
-               "date" : str(u.date_pub),
-               "name" : u.title,
-               "description" : u.description,
-               "severity" : u.severity,
-               "node": noderesult})
+                if len(noderesult) != 0:
+                    resultjson.append({"reference" : {
+                        "toppatch" : u.toppatch_id,
+                        "developer" : u.vendor_id
+                    },
+                   "date" : str(u.date_pub),
+                   "name" : u.title,
+                   "description" : u.description,
+                   "severity" : u.severity,
+                   "node": noderesult})
         elif type == 'pending':
             pass
         elif type == 'installed':
@@ -211,15 +214,16 @@ class PatchHandler(BaseHandler):
                 for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).join(WindowsUpdate).all():
                     for j in session.query(NodeInfo).filter(NodeInfo.id == v.node_id).all():
                         noderesult.append(j.ip_address)
-                resultjson.append({"reference" : {
-                    "toppatch" : u.toppatch_id,
-                    "developer" : u.vendor_id
-                },
-               "date" : str(u.date_pub),
-               "name" : u.title,
-               "description" : u.description,
-               "severity" : u.severity,
-               "node": noderesult})
+                if len(noderesult) != 0:
+                    resultjson.append({"reference" : {
+                        "toppatch" : u.toppatch_id,
+                        "developer" : u.vendor_id
+                    },
+                   "date" : str(u.date_pub),
+                   "name" : u.title,
+                   "description" : u.description,
+                   "severity" : u.severity,
+                   "node": noderesult})
         elif type == 'failed':
             pass
         else:
@@ -334,7 +338,7 @@ class OsHandler(BaseHandler):
             resultjson = {'error' : 'no data to display'}
             self.write(json.dumps(resultjson, indent=4))
 
-class TestHandler(BaseHandler):
+class NodesHandler(BaseHandler):
 
     @authenticated_request
     def get(self):
