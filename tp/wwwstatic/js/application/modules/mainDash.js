@@ -199,7 +199,6 @@ define(
                 });
             },
             pieGraph = function (selection) {
-                var data = app.data.osData;
                 var width = $(selection).width(),
                     pieChart = app.chart.pie().width(width);
                 //title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle')
@@ -319,7 +318,6 @@ define(
                                         template = _.template($("#widget_template").html(), variables);
                                     $("#insert").append(template);
                                     widgetview.counter++;
-                                    console.log(widgetview.counter);
                                     $(".properties").click(function () { setProperties(this, 'existing'); });
                                     $('.remove').click(function () { hideWidget(this); });
                                 }

@@ -38,11 +38,11 @@ define(
                 formArray.map(function(node){
                     if(id == node.node_id) {
                         if(event.target.checked) {
-                            node.install.push(event.target.value);
+                            node.data.push(event.target.value);
                         } else {
-                            var index = node.install.indexOf(event.target.value);
-                            node.install.splice(index,1);
-                            if(node.install.length == 0) {
+                            var index = node.data.indexOf(event.target.value);
+                            node.data.splice(index,1);
+                            if(node.data.length == 0) {
                                 index = formArray.indexOf(node);
                                 formArray.splice(index, 1);
                             }
@@ -51,15 +51,17 @@ define(
                     }
                 });
                 if(found == false) {
-                    form = {'node_id': null, 'install': []}
+                    form = {'node_id': null, 'data': [], 'operation': 'install'}
                     form.node_id = id;
-                    form.install.push(event.target.value);
+                    form.data.push(event.target.value);
                     formArray.push(form);
+                    console.log(form);
                 }
                 found = false;
             },
             submit: function () {
                 var params = JSON.stringify(formArray);
+                console.log(params);
                 $.post("/submitForm", { params: params },
                     function(json) {
                         console.log(json);

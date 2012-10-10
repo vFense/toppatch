@@ -5,20 +5,18 @@ define(
 
         var app = window.app = {
             root: '/'
-        }, overviewInstalled = {}, overviewPending = {}, overviewAvailable = {}, overviewFailed = {};
-        //overviewInstalled.data = 1;
-        //overviewPending.data = 1;
-        //overviewAvailable.data = 1;
-        //overviewFailed.data = 1;
+        }, overviewInstalled = {'data': 0}, overviewPending = {'data': 0}, overviewAvailable = {'data': 0}, overviewFailed = {'data': 0};
         $.ajax({
             url: '/api/networkData',
             dataType: 'json',
             async: false,
             success: function (json) {
-                overviewInstalled = json[0];
-                overviewAvailable = json[1];
-                overviewPending = json[2];
-                overviewFailed = json[3];
+                if(json.length != 0) {
+                    overviewInstalled = json[0];
+                    overviewAvailable = json[1];
+                    overviewPending = json[2];
+                    overviewFailed = json[3];
+                }
             }
         });
         _.extend(app, {
@@ -28,25 +26,22 @@ define(
             ViewManager: ViewManager,
             views: {},
             startWs: function () {
-
                 var ws = new WebSocket("wss://localhost:8000/ws");
                 ws.onmessage = function(evt) {
-<<<<<<< HEAD
-                    alert(evt.data);
-=======
->>>>>>> remotes/ld_upstream/Development
+                    console.log(evt.data);
                     $.ajax({
                         url: '/api/networkData',
                         dataType: 'json',
                         async: false,
                         success: function (json) {
+                            console.log(json)
                             for(var i = 0; i < json.length; i++) {
                                 if(json[i].key == 'installed') {
-                                    $('.success').children('dd').children().html(json[i].data);
+                                    $('.success').children('dd').children().html(json[i].data + 1);
                                     console.log( $('.success').children('dd').children());
                                 }
                                 if(json[i].key == 'available') {
-                                    $('.info').children('dd').children().html(json[i].data);
+                                    $('.info').children('dd').children().html(json[i].data - 1);
                                     console.log( $('.info').children('dd').children())
                                 }
                                 if(json[i].key == 'pending') {

@@ -11,11 +11,8 @@ class SslConnect():
     def __init__(self, host, msg):
         self.host = host
         self.msg = msg
-<<<<<<< HEAD
         self.port = 9001
-=======
         self.port = 9003
->>>>>>> remotes/ld_upstream/Development
         self.connection_count = 0
         self.write_count = 0
         self.retry = 1

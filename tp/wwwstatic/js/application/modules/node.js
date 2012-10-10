@@ -30,13 +30,13 @@ define(
                 'submit form': 'submit'
             },
             submit: function (evt) {
+                var form = $(evt.target);
                 app.startWs();
-<<<<<<< HEAD
-                console.log('start');
+                $.post("/submitForm?" + form.serialize(),
+                    function(json) {
+                        console.log(json);
+                });
                 return false;
-=======
-                return true;
->>>>>>> remotes/ld_upstream/Development
             },
             beforeRender: $.noop,
             onRender: $.noop,

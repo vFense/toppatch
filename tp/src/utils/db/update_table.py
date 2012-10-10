@@ -70,11 +70,7 @@ def addWindowsUpdate(session, data):
     if exists:
         operation.update({'results_received' : datetime.now()})
         session.commit()
-<<<<<<< HEAD
-        for update in data['updates']:
-=======
         for update in data['data']:
->>>>>>> remotes/ld_upstream/Development
             update_exists = updateExists(session, update['toppatch_id'])
             if not update_exists:
                 win_update = WindowsUpdate(update['toppatch_id'],
@@ -96,11 +92,7 @@ def addWindowsUpdatePerNode(session, data):
         node_id = exists.node_id
         operation.update({'results_received' : datetime.now()})
         session.commit()
-<<<<<<< HEAD
-        for addupdate in data['updates']:
-=======
         for addupdate in data['data']:
->>>>>>> remotes/ld_upstream/Development
             update_exists, foo = nodeUpdateExists(session, node_id, addupdate['toppatch_id'])
             if not update_exists:
                 if 'date_installed' in addupdate:
@@ -128,11 +120,7 @@ def addSoftwareAvailable(session, data):
         node_id = exists.node_id
         operation.update({'results_received' : datetime.now()})
         session.commit()
-<<<<<<< HEAD
-        for software in data['messages']:
-=======
         for software in data['data']:
->>>>>>> remotes/ld_upstream/Development
             software_exists = softwareExists(session, software['name'], \
                     software['version'])
             if not software_exists:
@@ -152,11 +140,7 @@ def addSoftwareInstalled(session, data):
         node_id = exists.node_id
         operation.update({'results_received' : datetime.now()})
         session.commit()
-<<<<<<< HEAD
-        for software in data['messages']:
-=======
         for software in data['data']:
->>>>>>> remotes/ld_upstream/Development
             software_exists = softwareExists(session, software['name'], \
                     software['version'])
             if software_exists:
@@ -205,11 +189,7 @@ def addResults(session, data):
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         node_id = exists.node_id
-<<<<<<< HEAD
-        for msg in data['messages']:
-=======
         for msg in data['data']:
->>>>>>> remotes/ld_upstream/Development
             update_exists, update_oper = nodeUpdateExists(session, node_id, msg['toppatch_id'])
             if update_exists:
                 update_oper.update({'installed' : True, 'date_installed' : datetime.now()})

@@ -6,7 +6,7 @@
                 <% if(checked.length != 0 ) {
                     _.each(checked, function(check, j) {
                         if(check.node_id == data.id) {
-                            _.each(check.install, function(patch_id, k) {
+                            _.each(check.data, function(patch_id, k) {
                                 if(patch_id == patch) {
                                     print('checked');
                                 }

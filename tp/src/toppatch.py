@@ -21,13 +21,10 @@ from server.account.manager import AccountManager
 from server.oauth.token import TokenManager
 
 from tornado.options import define, options
+
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> remotes/ld_upstream/Development
 class HeaderModule(tornado.web.UIModule):
     def render(self):
         return self.render_string(
@@ -59,11 +56,7 @@ class Application(tornado.web.Application):
             (r"/api/summaryData/?", SummaryHandler),
             (r"/api/patchData/?", PatchHandler),
             (r"/api/graphData/?", GraphHandler),
-<<<<<<< HEAD
             (r"/api/nodes.json/?", NodesHandler),
-=======
-            (r"/api/nodes.json/?", TestHandler),
->>>>>>> remotes/ld_upstream/Development
             (r"/api/patches.json/?", PatchesHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
@@ -104,8 +97,8 @@ if __name__ == '__main__':
     tornado.options.parse_command_line()
     https_server = tornado.httpserver.HTTPServer(Application(options.debug),
         ssl_options={
-            "certfile": os.path.join("/opt/TopPatch/var/lib/ssl/server/keys", "server.cert"),
-            "keyfile": os.path.join("/opt/TopPatch/var/lib/ssl/server/keys", "server.key"),
+            "certfile": os.path.join("/opt/TopPatch/tp/data/ssl/", "server.crt"),
+            "keyfile": os.path.join("/opt/TopPatch/tp/data/ssl/", "server.key"),
             })
     https_server.listen(options.port)
 
