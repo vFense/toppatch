@@ -12,6 +12,8 @@ LOAD_CERT_REQUEST = crypto.load_certificate_request
 CLIENT_CSR_DIR = '/opt/TopPatch/var/lib/ssl/client/csr'
 CLIENT_KEY_DIR = '/opt/TopPatch/var/lib/ssl/client/keys'
 SERVER_KEY_DIR = '/opt/TopPatch/var/lib/ssl/server/keys'
+SERVER_CERT = SERVER_KEY_DIR+'/server.cert'
+SERVER_PKEY = SERVER_KEY_DIR+'/server.key'
 TYPE_CSR = 1
 TYPE_CERT = 2
 TYPE_PKEY = 3
@@ -20,6 +22,18 @@ EXTENSION = {
             2 : '.cert',
             3 : '.key'
             }
+
+def loadPrivateKey(privkey=SERVER_KEY_PKEY):
+    pkey = LOAD_PKEY(FILE_TYPE_PEM, privkey)
+    return pkey
+
+def loadCert(cert=SERVER_CERT):
+    signed_cert = LOAD_CERT(FILE_TYPE_PEM, cert)
+    return signed_cert
+
+def loadCertRequest(csr=None):
+    cert_request = LOAD_CERT_REQUEST(FILE_TYPE_PEM, csr)
+    return cert_request
 
 def generatePrivateKey(type, bits):
     pkey = crypto.PKey()
