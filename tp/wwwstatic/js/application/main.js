@@ -27,12 +27,7 @@ require(
                                 'graph': ['pie', 'bar', 'summary'],
                                 'spans': [6, 6, 12],
                                 'titles': ['Nodes in Network by OS', 'Nodes in Network by OS', 'Summary Charts']
-                            },
-                            access: [
-                                { name: 'Dashboard', href: '#dashboard', active: false },
-                                { name: 'Nodes', href: '#nodes', active: false },
-                                { name: 'Patches', href: '#patches', active: false }
-                            ]
+                            }
                         }
                     });
                     window.User = new User.Model();
