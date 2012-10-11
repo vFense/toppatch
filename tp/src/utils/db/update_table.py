@@ -8,7 +8,6 @@ from models.windows import *
 from models.node import *
 from utils.common import *
 from utils.db.query_table import *
-from server.handlers import *
 
 
 #WebsocketHandler.sendMessage(message)
@@ -26,17 +25,27 @@ def addNode(session, client_ip):
     except Exception as e:
         print e
 
-def addCsr(session, client_ip, location):
-    csr_name = client_ip + '.csr'
-    csr_location = location + '/' + csr_name
+def addCsr(session, client_ip, location, csr_name,
+            signed=False, signed_date=False):
     try:
-        add_csr = CsrInfo(csr_name, client_ip, csr_location, None, None)
+        add_csr = CsrInfo(csr_name, client_ip, location, signed, signed_date)
         session.add(add_csr)
         session.commit()
         return add_csr
     except Exception as e:
         print e
 
+def addCert(session, node_id, cert_id, cert_name,
+            cert_location, cert_expiration):
+    try:
+        add_cert = SslInfo(node_id, cert_id, cert_name,
+                    cert_location, cert_expiration)
+        session.add(add_cert)
+        session.commit()
+        print add_cert
+        return add_cert
+    except Exception as e:
+        print e
 
 def addOperation(session, node_id, operation, result_id=None,
         operation_sent=None, operation_received=None, results_received=None):
@@ -177,13 +186,6 @@ def updateNode(session, node_id):
                 'last_node_update' : datetime.now()})
         session.commit()
         return node
-
-#def addOperationReceived(session, data):
-
-#def updateOperationReceived(session, data, operation);
-
-
-#def addManagedWindowsUpdate(session, data):
 
 def addResults(session, data):
     exists, operation = operationExists(session, data['operation_id'])
