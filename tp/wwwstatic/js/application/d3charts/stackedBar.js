@@ -85,7 +85,7 @@ define(['jquery','d3'], function($, d3) {
                         }
                         if (that == this) {
                             label.transition().duration(350)
-                                .attr("x", x.rangeBand() - x.rangeBand() / 8 + 10)
+                                .attr("x", x.rangeBand() - x.rangeBand() / 6 - 10)
                                 .attr("style",function(d) {
                                     if(x.rangeBand() / 4 > 100) {
                                         return "font-size: 1.2em";
@@ -204,8 +204,22 @@ define(['jquery','d3'], function($, d3) {
                     data(function(d){ return d; }).
                     enter().
                     append("svg:text").
-                    text(function(d) {  return d.label; }).
-                    attr("x", function(d) { return x.rangeBand() - x.rangeBand() / 8 + 10; }).
+                    text(function(d) {
+                        var label = d.label.split(' '), osname = '';
+                        if (label.length > 3) {
+                            for(var k = 0; k < label.length -1; k++) {
+                                if (k == 0) {
+                                    osname += label[k].substring(0, 3) + ' ';
+                                } else {
+                                    osname+= label[k] + ' ';
+                                }
+                            }
+                        } else {
+                            osname = d.label;
+                        }
+                        return osname;
+                    }).
+                    attr("x", function(d) { return x.rangeBand() - x.rangeBand() / 6 - 10; }).
                     //attr("dx", "50").
                     attr("y", function(d) { return -y(d.y0) - y(d.y) / 2; }).
                     //attr("dy", "-40").
@@ -232,7 +246,7 @@ define(['jquery','d3'], function($, d3) {
                     .attr("d", function (d) {
                         var array = new Array();
                         array[0] = { x: x.rangeBand() / 4 + 10, y: -y(d.y0) - y(d.y) / 2 };
-                        array[1] = { x: x.rangeBand() - x.rangeBand() / 8, y: -y(d.y0) - y(d.y) / 2 };
+                        array[1] = { x: x.rangeBand() - x.rangeBand() / 4, y: -y(d.y0) - y(d.y) / 2 };
                         return line(array);
                     });
             });

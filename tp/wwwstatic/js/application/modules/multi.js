@@ -33,7 +33,7 @@ define(
                 'click #submit': 'submit'
             },
             addPatch: function(event) {
-                var id = this.$el.find('.first').children()[1].id,
+                var id = this.$el.find('.first').attr('id'),
                     found = false;
                 formArray.map(function(node){
                     if(id == node.node_id) {
@@ -55,7 +55,6 @@ define(
                     form.node_id = id;
                     form.data.push(event.target.value);
                     formArray.push(form);
-                    console.log(form);
                 }
                 found = false;
             },
@@ -68,9 +67,10 @@ define(
                 });
             },
             changeView: function (event) {
+                var id = $(event.currentTarget).attr('id')
                 this.$el.find('.first').removeClass('first');
-                detail.Collection = detail.Collection.extend({id: event.target.id, checked: formArray});
-                $(event.target).parent().addClass('first');
+                detail.Collection = detail.Collection.extend({id: id, checked: formArray});
+                $(event.currentTarget).addClass('first');
                 this.detailView = new detail.View({
                     el: this.$el.find('.detail')
                 });

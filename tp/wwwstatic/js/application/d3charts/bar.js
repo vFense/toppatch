@@ -54,18 +54,34 @@ define(
                         .attr("dy", "1.2em")
                         .attr("text-anchor", "middle")
                         .attr("style", "font-size: 10")
-                        .text(function (datum) { return datum.value; })
+                        .text(function (datum) {
+                            return datum.value;
+                        })
                         .attr("fill", "white");
 
                     barDemo.selectAll("text.yAxis")
                         .data(data)
                         .enter().append("svg:text")
-                        .attr("x", function (datum, index) { return x(index) + barWidth - barWidth / 4; })
+                        .attr("x", function (datum, index) { return x(index) + barWidth - barWidth / 5; })
                         .attr("y", height + 10)
                         .attr("dx", -barWidth / 2)
                         .attr("text-anchor", "middle")
                         .attr("style", "font-size: 10")
-                        .text(function (datum) { return datum.label; })
+                        .text(function (datum) {
+                            var label = datum.label.split(' '), osname = '';
+                            if (label.length > 3) {
+                                for(var k = 0; k < label.length -1; k++) {
+                                    if (k == 0) {
+                                        osname += label[k].substring(0, 3) + ' ';
+                                    } else {
+                                        osname+= label[k] + ' ';
+                                    }
+                                }
+                            } else {
+                                osname = datum.label;
+                            }
+                            return osname;
+                        })
                         .attr('transform', 'translate(15, 5)')
                         .attr("class", "yAxis");
 

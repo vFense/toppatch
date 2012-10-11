@@ -293,13 +293,26 @@ class GraphHandler(BaseHandler):
         for u in session.query(SystemInfo.os_string, func.count(SystemInfo.os_string)).group_by(SystemInfo.os_string).all():
             nodeResult = []
             for v in session.query(NodeInfo, SystemInfo, NodeStats).filter(SystemInfo.os_string == u[0]).join(SystemInfo).join(NodeStats).all():
-                print v
                 nodeResult.append({"name" : v[0].ip_address,
                                    "os" : v[1].os_string,
                                    "children" : [{"name" : "Patches Installed", "size" : v[2].patches_installed, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_installed}},
                                                 {"name" : "Patches Available", "size" : v[2].patches_available, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_available}},
                                                 {"name" : "Patches Pending", "size" : v[2].patches_pending, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_pending}},
                                                 {"name" : "Patches Failed", "size" : v[2].patches_failed, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_failed}}]})
+            """
+            os = str(u[0]).split()
+            ostring = ''
+            j = 0
+            while j < len(os):
+                if j < 4:
+                    if j == 0 and os[j] == 'Windows':
+                        ostring += os[j][:3]
+                        ostring += ' '
+                    else:
+                        ostring += os[j]
+                        ostring += ' '
+                j += 1
+            """
             osType.append({"label" : u[0], "value" : u[1], "data" : nodeResult})
         resultjson = osType
         session.close()

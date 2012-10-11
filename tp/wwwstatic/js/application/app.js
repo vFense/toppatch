@@ -57,11 +57,15 @@ define(
                     });
                 };
                 ws.onclose = function(evt) {
-
+                    console.log(evt);
+                    console.log('connection closed');
                 };
                 ws.onopen = function(evt) {
-
+                    console.log('connection opened');
                 };
+                ws.onerror = function(evt) {
+                    console.log('Error: ' + evt);
+                }
             },
             parseQuery: function (query) {
                 var params = {};

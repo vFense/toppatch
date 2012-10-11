@@ -171,7 +171,21 @@ define(['jquery','d3'], function($, d3) {
                     .attr("dy", ".35em")
                     .attr("text-anchor", "middle")
                     .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
-                    .text(function (d) { return d.data.label; });
+                    .text(function (d) {
+                        var label = d.data.label.split(' '), osname = '';
+                        if (label.length > 3) {
+                            for(var k = 0; k < label.length -1; k++) {
+                                if (k == 0) {
+                                    osname += label[k].substring(0, 3) + ' ';
+                                } else {
+                                    osname+= label[k] + ' ';
+                                }
+                            }
+                        } else {
+                            osname = d.data.label;
+                        }
+                        return osname;
+                    });
 
                 // Computes the label angle of an arc, converting from radians to degrees.
                 function angle(d) {
