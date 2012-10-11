@@ -9,23 +9,26 @@ class TcpConnect():
     library backed by Gevent.
     """
     def __init__(self, host, msg, secure=True):
-        slef.secure = secure
+        self.secure = secure
         self.host = host
         self.msg = msg
-        self.port = 9003
+        self.port = 9001
         self.connection_count = 0
         self.write_count = 0
         self.retry = 1
         self.timeout = 30
         self.error = None
         self.read_data = None
-        self.tcp, self.tcp_socket = self.socket_init()
+        self.key = "/opt/TopPatch/var/lib/ssl/server/keys/server.key"
+        self.cert = "/opt/TopPatch/var/lib/ssl/server/keys/server.cert"
+        self.ca = "/opt/TopPatch/var/lib/ssl/server/keys/server.cert"
+        self.tcp_socket = self.socket_init()
         self._connect()
 
     def socket_init(self):
         new_socket =  socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        if secure:
-            new_wrapper = ssl.SSLSocket(new_tcp_socket,
+        if self.secure:
+            new_wrapper = ssl.SSLSocket(new_socket,
                     keyfile=self.key, certfile=self.cert, ca_certs=self.ca,
                     cert_reqs=ssl.CERT_REQUIRED)
             new_wrapper.timeout = self.timeout
@@ -45,7 +48,7 @@ class TcpConnect():
                     re.search(r'operation timed out', e.message) and \
                     self.connection_count < 1:
                 self.connection_count += 1
-                self.ssl, self.tcp_socket = self.ssl_init()
+                self.tcp_socket = self.socket_init()
                 self._connect()
             else:
                 return(self._error_handler(e))
