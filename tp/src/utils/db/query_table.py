@@ -33,8 +33,9 @@ def operationExistsUsingNodeId(session, node_id, oper_type):
 
 def csrExists(session, node):
     csr = \
-        session.query(CsrInfo).filter_by(ip_address=node).first()
-    return(csr)
+        session.query(CsrInfo).filter_by(ip_address=node)
+    exists= csr.first()
+    return(exists, csr)
     
 def updateExists(session, tp_id):
     update = \
