@@ -113,6 +113,10 @@
         
         HEADER {
             background-color: @listHeaderBackground;
+            
+            +.item {
+                border-top: none;
+            }
         }
         
         FOOTER {
@@ -128,12 +132,13 @@
         }
 
         .item {
+            border-top: @em*(1px)/@baseFontSize solid @listBorder;
             border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
             padding: @em*(2px)/@baseFontSize 0.5em;
 
-            &:first-child {
+            +.item {
                 /* Add top border to first list item */
-                border-top: @em*(1px)/@baseFontSize solid @listBorder;
+                border-top: none;
             }
 
             &:hover {
@@ -161,10 +166,6 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
-        }
-
-        HEADER + .item {
-            border-top: @em*(1px)/@baseFontSize solid @listBorder;
         }
         
         .btn-toolbar,
@@ -230,6 +231,68 @@
         &.noPadding {
             .list > *:first-child {border-top: none;}
             .list > *:last-child {border-bottom: none;}
+        }
+    }
+}
+
+.multipatch {
+    .list {
+        &.master,
+        &.slave {
+            float: left;
+            width: 50%;
+            height: 512px;
+            border: @em*(1px)/@baseFontSize solid @masterSlaveBorder;
+            -webkit-box-sizing: border-box;
+               -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+            
+            > .item {
+                -webkit-box-sizing: border-box;
+                   -moz-box-sizing: border-box;
+                        box-sizing: border-box;
+                
+                &:first-child {
+                    border-top: none;
+                }
+            }
+        }
+        
+        @masterSlaveBorder: #B0B0B0;
+        @slaveBackground: #f2f3f5;
+        &.master {
+            position:relative;
+            
+            .item {
+                &.first {
+                    border-right: @em*(1px)/@baseFontSize solid @slaveBackground;
+                    background-color: @slaveBackground;
+                    
+                    &:hover {
+                        background-color: @slaveBackground;
+                    }
+                    
+                    &:after {
+                        content: '';
+                        display: block;
+                        position:absolute;
+                        background-color: #000;
+                    }
+                }
+            }
+            
+            .item.first ~ .item {
+                top: @em*(@baseLineHeight + 5px)/@baseFontSize;
+            }
+        }
+        
+        &.slave {
+            background-color: @slaveBackground;
+            border-left: none;
+            
+            .item {
+                margin-left: 0.5em;
+            }
         }
     }
 }
