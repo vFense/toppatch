@@ -1,15 +1,12 @@
-#!/usr/bin/env python
-
-from json import loads, dumps
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 
 from utils.db.client import *
-import utils.ssl as ssl_tools
 from utils.db.update_table import *
 from utils.db.query_table import *
 from utils.db.client import *
 from utils.common import verifyJsonIsValid
+from csrhandler import CsrHandOff
 
 ENGINE = initEngine()
 
@@ -23,31 +20,23 @@ class CsrReceiver(Protocol):
        it then checks if this csr is already in the database.
        If it is not in the database, it than adds it.
     """
+    total_data = ""
+    def connectionMade(self):
+        self.client_peer = self.transport.getPeer()
+        self.client_ip = self.client_peer.host
+        print self.client_peer
+
     def dataReceived(self, data):
-        if verifyJsonIsValid(data):
-            data = loads(data)
-            if data['operation'] == 'send_csr' \
-                    and data['csr'] is not None:
-                self.session = createSession(ENGINE)
-                self.client_ip = self.transport.getPeer()
-                self.csr_exists = csrExists(self.session,
-                    self.client_ip.host)
-                if not self.csr_exists:
-                    verified, error = ssl_tools.verifyValidFormat(data['csr'],
-                        ssl_tools.TYPE_CSR)
-                    if verified:
-                        self.path_to_csr, self.csr_error = \
-                            ssl_tools.saveKey(ssl_tools.CLIENT_CSR_DIR,
-                                data['csr'], ssl_tools.TYPE_CSR,
-                                name=self.client_ip.host)
-                        addCsr(self.session, self.client_ip.host,
-                            ssl_tools.SSL_CLIENT_CSR_DIR )
-                else:
-                    print 'csr for %s %s' % (self.client_ip.host, error)
-                self.session.close()
+        self.total_data = self.total_data + data
+
+    def connectionLost(self, reason):
+        self.transport.loseConnection()
+        data = self.total_data
+        self.total_data = ""
+        CsrHandOff(ENGINE, self.client_ip, data)
 
 if __name__ == '__main__':
     f = Factory()
     f.protocol = CsrReceiver
-    reactor.listenTCP(8000, f)
+    reactor.listenTCP(9000, f)
     reactor.run()
