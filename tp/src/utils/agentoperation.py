@@ -87,7 +87,7 @@ class AgentOperation():
             jsonobject = {
                         "operation" : oper_type,
                         "operation_id" : oper_id,
-                        "updates" : data_list
+                        "data" : data_list
                      }
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'
