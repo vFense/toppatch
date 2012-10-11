@@ -22,9 +22,11 @@ class NodeInfo(Base):
     agent_status = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
     last_agent_update = Column(DATETIME, nullable=True)
     last_node_update = Column(DATETIME, nullable=True)
+    reboot = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
     def __init__(self, ip_address, host_name,
                 host_status=False, agent_status=False,
-                last_agent_update=None, last_node_update=None
+                last_agent_update=None, last_node_update=None,
+                reboot=False
                 ):
         self.host_name = host_name
         self.ip_address = ip_address
@@ -32,12 +34,14 @@ class NodeInfo(Base):
         self.agent_status = agent_status
         self.last_agent_update = last_agent_update
         self.last_node_update = last_node_update
+        self.reboot = reboot
     def __repr__(self):
-        return "<NodeInfo(%s,%s,%s,%s,%s,%s)>" %\
+        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.host_name, self.ip_address,
                 self.host_status, self.agent_status,
-                self.last_agent_update, self.last_node_update
+                self.last_agent_update, self.last_node_update,
+                self.reboot
                 )
 
 class SystemInfo(Base):
