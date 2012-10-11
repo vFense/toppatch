@@ -208,7 +208,7 @@ define(['jquery','d3'], function($, d3) {
                         var label = d.label.split(' '), osname = '';
                         if (label.length > 3) {
                             for(var k = 0; k < label.length -1; k++) {
-                                if (k == 0) {
+                                if (label[k] == 'Windows') {
                                     osname += label[k].substring(0, 3) + ' ';
                                 } else {
                                     osname+= label[k] + ' ';

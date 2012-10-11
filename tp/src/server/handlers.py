@@ -81,7 +81,11 @@ class testHandler(BaseHandler):
         self.render('../data/templates/websocket-test.html')
 
 def SendToSocket(message):
+    print 'in SendToSocket'
+    print LISTENERS
     for socket in LISTENERS:
+        print 'sending to socket'
+        print socket
         socket.write_message(message)
 
 class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
