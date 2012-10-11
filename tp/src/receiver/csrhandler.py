@@ -46,6 +46,6 @@ class CsrHandOff():
             self.session.close()
 
     def sendCert(self, node, cert):
-        msg = encode({"nodeId" : node.id, "pem" : dumpCert(cert)})
+        msg = encode({"node_id" : node.id, "pem" : dumpCert(cert)})
         tcp_results = TcpConnect(self.client_ip, msg, secure=False)
         return tcp_results

@@ -72,7 +72,8 @@ class TcpConnect():
                 self._write()
             else:
                 self.error = self._error_handler(e)
-        return self._read()
+        if self.secure:
+            return self._read()
 
     def _read(self):
         try:
