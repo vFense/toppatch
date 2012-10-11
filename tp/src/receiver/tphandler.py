@@ -1,5 +1,6 @@
 from json import loads, dumps
 from jsonpickle import encode, decode
+from datetime import datetime
 
 from utils.db.update_table import *
 from utils.db.query_table import *
@@ -26,7 +27,7 @@ class HandOff():
         if self.valid_json:
             exists, self.node = nodeExists(self.session,
                 self.ip)
-            if not self.node:
+            if self.node.last_agent_update:
                 self.addNode()
                 self.dataCollector()
                 print self.node
@@ -46,7 +47,7 @@ class HandOff():
         self.session.close()
 
     def addNode(self):
-        addNode(self.session, self.ip)
+        addNode(self.session, self.ip, datetime.now(), datetime.now())
         exists, node = nodeExists(self.session,
             self.ip)
         if exists:

@@ -11,7 +11,7 @@ from utils.db.query_table import *
 
 
 #WebsocketHandler.sendMessage(message)
-def addNode(session, client_ip):
+def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
     try:
         hostname = gethostbyaddr(client_ip)[0]
     except:
