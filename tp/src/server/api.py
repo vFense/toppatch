@@ -373,6 +373,8 @@ class NodesHandler(BaseHandler):
                 for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
                     if v.installed:
                         installed.append(v.toppatch_id)
+                    elif v.pending:
+                        pending.append(v.toppatch_id)
                     else:
                         available.append(v.toppatch_id)
                 resultjson = {'id': u[1].node_id,

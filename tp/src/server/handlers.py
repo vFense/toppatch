@@ -141,12 +141,14 @@ class FormHandler(BaseHandler):
         node = {}
         result = []
         session = createSession(engine)
+        from jsonpickle import encode
         try:
             node_id = self.get_argument('node')
         except:
             node_id = None
         try:
             params = self.get_argument('params')
+            print params
         except:
             params = None
         if node_id:
@@ -155,21 +157,25 @@ class FormHandler(BaseHandler):
             node['node_id'] = node_id
             node['operation'] = operation
             node['data'] = list(patches)
-            from jsonpickle import encode
             resultjson.append(encode(node))
-            print resultjson
             #result = json.dumps(resultjson)
             AgentOperation(session, resultjson)
             print result
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
         if params:
+            print params
+            print type(params)
+            params = re.sub(r'(^\[|\]$)', '', params)
+            print params
+            print type(params)
             resultjson = json.loads(params)
             result.append(json.dumps(resultjson))
             AgentOperation(session, result)
             print result
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
+
 
 
 
