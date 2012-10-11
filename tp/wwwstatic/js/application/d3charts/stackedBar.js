@@ -78,11 +78,12 @@ define(['jquery','d3'], function($, d3) {
                     .attr("height", function(d) { return y(d.y); })
                     .attr("width", x.rangeBand() / 4)
                     .on("click", function(d) {
+                        var parent = $(this).parent();
                         if(barExists) {
                             tempBar.remove();
                             secondSet.remove();
                         }
-                        if (that === this) {
+                        if (that == this) {
                             label.transition().duration(350)
                                 .attr("x", x.rangeBand() - x.rangeBand() / 8 + 10)
                                 .attr("style",function(d) {
@@ -96,117 +97,105 @@ define(['jquery','d3'], function($, d3) {
                             lines.transition().duration(350).attr("opacity", 1);
                             that = false;
                         } else {
-                            var secondData = [];
-                            for(var k = 0; k < data.length; k++) {
-                                if(data[k].label === d.label) {
-                                    for(var j = 0; j < data[k].data.length; j++) {
-                                        secondData.push(data[k].data[j].children[0].graphData);
+                            $.getJSON("/api/osData/", {type: d.label}, function(json) {
+                                var json_array = json.map(function (dat, i) {
+                                    var temp = [];
+                                    if(i === 0) {
+                                        y0.push(dat.value);
+                                    } else {
+                                        y0.push(y0[i] + dat.value);
                                     }
-                                }
-                            }
-                            var secondy0 = [],
-                                y2 = d3.scale.linear().range([0, height]);
-                            secondy0[0] = 0;
-                            var tempArray = secondData.map(function (dat, i) {
-                                var temp = [];
-                                if(i === 0) {
-                                    secondy0.push(dat.value);
-                                } else {
-                                    secondy0.push(secondy0[i] + dat.values);
-                                }
-                                temp.push({ x: x.rangeBand() / 2.5, y: dat.value, y0: secondy0[i], label: dat.label });
-                                return temp;
+                                    temp.push({ x: 0, y: dat.value, y0: y0[i], label: dat.label });
+                                    return temp;
+                                });
+                                var y2 = d3.scale.linear().range([0, height]), tempData = [],
+                                    secondStacked = d3.layout.stack()(json_array);
+                                y2.domain([0, d3.max(secondStacked[secondStacked.length-1], function (d) { return d.y0 + d.y; })]);
+                                tempData.push([d]);
+                                tempBar = svg.selectAll('g.temp')
+                                    .data(tempData)
+                                    .enter()
+                                    .append("svg:g")
+                                    .attr("class", "temp")
+                                    .style("fill", parent.css("fill"))
+                                    .style("stroke", parent.css("fill"));
+                                tempBar.selectAll("rect")
+                                    .data(function (d) { return d; })
+                                    .enter()
+                                    .append("svg:rect")
+                                    .attr("x", (x.rangeBand() / 4))
+                                    .attr("y",-height)
+                                    .attr("height", height)
+                                    .attr("width", 1 );
+
+                                tempBar.selectAll("rect").transition().duration(500)
+                                    .attr("width", (x.rangeBand() / 4) + 10);
+
+                                secondSet = svg.selectAll('g.secondset')
+                                    .data(secondStacked)
+                                    .enter().append("svg:g")
+                                    .attr("class", "secondset")
+                                    .style("fill", function(d, i) { return secondColor(i); })
+                                    .style("stroke", function(d, i) { return secondColor(i); });
+                                secondRect = secondSet.selectAll("rect")
+                                    .data(function(d){ return d;})
+                                    .enter().append("svg:rect")
+                                    .style("opacity", 0)
+                                    .attr("x", function(d) { return (x.rangeBand() / 4) + 10; })
+                                    .attr("y", function(d) { return (-y2(d.y0) - y2(d.y)); })
+                                    .attr("height", function(d) { return y2(d.y); })
+                                    .attr("width", x.rangeBand() / 4);
+
+                                secondRect.transition().delay(350).duration(250)
+                                    .style("opacity", 1);
+
+                                var secondLabel = secondSet.filter(function (d) { return y2(d[0].y) > 25; })
+                                    .selectAll("text")
+                                    .data(function (d) { return d; })
+                                    .enter().append("svg:text")
+                                    .text(function (d) { return d.label })
+                                    .attr("x", function(d) { return x.rangeBand() - x.rangeBand() / 8 + 10; })
+                                    .attr("y", function(d) { return -y2(d.y0) - y2(d.y) / 2; })
+                                    .attr("opacity", 0)
+                                    .attr("style", function(d) {
+                                        if(x.rangeBand() / 4 > 100) {
+                                            return "font-size: 1.2em";
+                                        } else {
+                                            var fontSize = x.rangeBand() / 4 / 65;
+                                            return "font-size: " + fontSize + "em";
+                                        }
+                                    })
+                                    .attr("stroke", "none")
+                                    .attr("fill", "black");
+                                secondLabel.transition().delay(350).duration(500)
+                                    .attr("opacity", 1);
+                                var secondLine = secondSet.filter(function (d) { return y2(d[0].y) > 25; })
+                                    .selectAll("line")
+                                    .data(function(d) { return d; })
+                                    .enter().append("svg:path").transition().delay(350).duration(500)
+                                    .attr("class", "line")
+                                    .attr("fill", "black")
+                                    .attr("stroke", "black")
+                                    .attr("stroke-width", "2")
+                                    .attr("d", function (d) {
+                                        var array = new Array();
+                                        array[0] = { x: (x.rangeBand() / 2) + 20, y: -y2(d.y0) - y2(d.y) / 2 };
+                                        array[1] = { x: x.rangeBand() - x.rangeBand() / 8, y: -y2(d.y0) - y2(d.y) / 2 };
+                                        return line(array);
+                                    });
+                                label.transition().duration(350).
+                                    attr("x", function(d) { return 5; }).
+                                    attr("style", function(d) {
+                                        if(x.rangeBand() / 4 > 100) {
+                                            return "font-size: 1.2em";
+                                        } else {
+                                            var fontSize = x.rangeBand() / 4 / 80;
+                                            return "font-size: " + fontSize + "em";
+                                        }
+                                    });
+                                lines.transition().duration(100).attr("opacity", 0);
+                                barExists = true;
                             });
-                            var secondStacked = d3.layout.stack()(tempArray);
-                            y2.domain([0, d3.max(secondStacked[secondStacked.length-1], function (d) { return d.y0 + d.y; })])
-                            var tempData = new Array();
-                            tempData.push([d]);
-                            //console.log(y0);
-                            //console.log(-y0[y0.length-1]-y0[y0.length-2]);
-                            tempBar = svg.selectAll('g.temp')
-                                .data(tempData)
-                                .enter()
-                                .append("svg:g")
-                                .attr("class", "temp")
-                                .style("fill", $(this).parent().css("fill"))
-                                .style("stroke", $(this).parent().css("fill"));
-                            //console.log(y0[y0.length-1]+y0[y0.length-2]);
-                            tempBar.selectAll("rect")
-                                .data(function (d) { return d; })
-                                .enter()
-                                .append("svg:rect")
-                                .attr("x", (x.rangeBand() / 4))
-                                .attr("y",-height)
-                                .attr("height", height)
-                                .attr("width", 1 );
-
-                            tempBar.selectAll("rect").transition().duration(500)
-                                .attr("width", (x.rangeBand() / 4) + 10);
-
-                            secondSet = svg.selectAll('g.secondset')
-                                .data(secondStacked)
-                                .enter().append("svg:g")
-                                .attr("class", "secondset")
-                                .style("fill", function(d, i) { return secondColor(i); })
-                                .style("stroke", function(d, i) { return secondColor(i); });
-                            secondRect = secondSet.selectAll("rect")
-                                .data(function(d){ return d;})
-                                .enter().append("svg:rect")
-                                .style("opacity", 0)
-                                .attr("x", function(d) { return (x.rangeBand() / 4) + 10; })
-                                .attr("y", function(d) { return (-y2(d.y0) - y2(d.y)); })
-                                .attr("height", function(d) { return y2(d.y); })
-                                .attr("width", x.rangeBand() / 4);
-
-                            secondRect.transition().delay(350).duration(250)
-                                .style("opacity", 1);
-
-                            var secondLabel = secondSet.filter(function (d) { return y2(d[0].y) > 25; })
-                                .selectAll("text")
-                                .data(function (d) { return d; })
-                                .enter().append("svg:text")
-                                .text(function (d) { return d.label })
-                                .attr("x", function(d) { return x.rangeBand() - x.rangeBand() / 8 + 10; })
-                                .attr("y", function(d) { return -y2(d.y0) - y2(d.y) / 2; })
-                                .attr("opacity", 0)
-                                .attr("style", function(d) {
-                                    if(x.rangeBand() / 4 > 100) {
-                                        return "font-size: 1.2em";
-                                    } else {
-                                        var fontSize = x.rangeBand() / 4 / 65;
-                                        return "font-size: " + fontSize + "em";
-                                    }
-                                })
-                                .attr("stroke", "none")
-                                .attr("fill", "black");
-                            secondLabel.transition().delay(350).duration(500)
-                                .attr("opacity", 1);
-                            var secondLine = secondSet.filter(function (d) { return y2(d[0].y) > 25; })
-                                .selectAll("line")
-                                .data(function(d) { return d; })
-                                .enter().append("svg:path").transition().delay(350).duration(500)
-                                .attr("class", "line")
-                                .attr("fill", "black")
-                                .attr("stroke", "black")
-                                .attr("stroke-width", "2")
-                                .attr("d", function (d) {
-                                    var array = new Array();
-                                    array[0] = { x: (x.rangeBand() / 2) + 20, y: -y2(d.y0) - y2(d.y) / 2 };
-                                    array[1] = { x: x.rangeBand() - x.rangeBand() / 8, y: -y2(d.y0) - y2(d.y) / 2 };
-                                    return line(array);
-                                });
-                            label.transition().duration(350).
-                                attr("x", function(d) { return 5; }).
-                                attr("style", function(d) {
-                                    if(x.rangeBand() / 4 > 100) {
-                                        return "font-size: 1.2em";
-                                    } else {
-                                        var fontSize = x.rangeBand() / 4 / 80;
-                                        return "font-size: " + fontSize + "em";
-                                    }
-                                });
-                            lines.transition().duration(100).attr("opacity", 0);
-                            barExists = true;
                             that = this;
                         }
                     });

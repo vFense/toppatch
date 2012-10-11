@@ -7,7 +7,8 @@ define(
                 barWidth = 70,
                 width    = 400,
                 height   = 200,
-                title    = "Default";
+                title    = "Default",
+                color = d3.scale.category20();
                 //format   = d3.format(",.0f");
 
             function chart(selection) {
@@ -40,7 +41,7 @@ define(
                         .attr("y", function (datum) { return height - y(datum.value); })
                         .attr("height", function (datum) { return y(datum.value); })
                         .attr("width", barWidth)
-                        .attr("fill", "#2d578b")
+                        .attr("fill", function (d, i) { return color(i); }) //"#2d578b")
                         .append("svg:title").text(function (d) { return d.label + ": " + d.value; });
 
                     barDemo.selectAll("text")

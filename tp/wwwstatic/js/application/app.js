@@ -37,11 +37,11 @@ define(
                             console.log(json)
                             for(var i = 0; i < json.length; i++) {
                                 if(json[i].key == 'installed') {
-                                    $('.success').children('dd').children().html(json[i].data + 1);
+                                    $('.success').children('dd').children().html(json[i].data);
                                     console.log( $('.success').children('dd').children());
                                 }
                                 if(json[i].key == 'available') {
-                                    $('.info').children('dd').children().html(json[i].data - 1);
+                                    $('.info').children('dd').children().html(json[i].data);
                                     console.log( $('.info').children('dd').children())
                                 }
                                 if(json[i].key == 'pending') {
