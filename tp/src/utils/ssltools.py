@@ -1,6 +1,10 @@
 import os
 import socket
+from datetime import datetime
 from OpenSSL import crypto
+
+from utils.db.update_table import *
+from utils.db.query_table import *
 
 FILE_TYPE_PEM = crypto.FILETYPE_PEM
 DUMP_PKEY = crypto.dump_privatekey
@@ -14,6 +18,7 @@ CLIENT_KEY_DIR = '/opt/TopPatch/var/lib/ssl/client/keys'
 SERVER_KEY_DIR = '/opt/TopPatch/var/lib/ssl/server/keys'
 SERVER_CERT = SERVER_KEY_DIR+'/server.cert'
 SERVER_PKEY = SERVER_KEY_DIR+'/server.key'
+EXPIRATION = (0, 60*60*24*365*10)
 TYPE_CSR = 1
 TYPE_CERT = 2
 TYPE_PKEY = 3
@@ -23,15 +28,23 @@ EXTENSION = {
             3 : '.key'
             }
 
-def loadPrivateKey(privkey=SERVER_KEY_PKEY):
-    pkey = LOAD_PKEY(FILE_TYPE_PEM, privkey)
+def loadPrivateKey(privkey=SERVER_PKEY):
+    pkey = LOAD_PKEY(FILE_TYPE_PEM, open(privkey, 'rb').read())
     return pkey
 
 def loadCert(cert=SERVER_CERT):
-    signed_cert = LOAD_CERT(FILE_TYPE_PEM, cert)
+    signed_cert = LOAD_CERT(FILE_TYPE_PEM, open(cert, 'rb').read())
     return signed_cert
 
-def loadCertRequest(csr=None):
+def dumpPkey(pkey):
+    pem_key = DUMP_PKEY(FILE_TYPE_PEM, pkey)
+    return pem_key
+
+def dumpCert(cert):
+    pem_cert = DUMP_CERT(FILE_TYPE_PEM, cert)
+    return pem_cert
+
+def loadCertRequest(csr):
     cert_request = LOAD_CERT_REQUEST(FILE_TYPE_PEM, csr)
     return cert_request
 
@@ -42,7 +55,8 @@ def generatePrivateKey(type, bits):
 
 def saveKey(location, key, key_type, name=socket.gethostname()):
     extension = EXTENSION[key_type]
-    path_to_key = os.path.join(location, name + extension)
+    name = name + extension
+    path_to_key = os.path.join(location, name)
     status = False
     if type(key) == crypto.PKeyType:
         DUMP_KEY = DUMP_PKEY
@@ -65,6 +79,7 @@ def saveKey(location, key, key_type, name=socket.gethostname()):
             print ' not be overwritten'
     except OSError as e:
         if e.errno == 2:
+            print e
             open(path_to_key, 'w').write(\
                     DUMP_KEY(FILE_TYPE_PEM, key)
                     )
@@ -72,7 +87,7 @@ def saveKey(location, key, key_type, name=socket.gethostname()):
         elif e.errno == 13:
             print 'Do not have sufficient permission to write to %s'\
                     % (location)
-    return(path_to_key, status)
+    return(path_to_key, name, status)
 
 def createCertRequest(pkey, (CN, O, OU, C, ST, L), digest="sha512"):
     csr = crypto.X509Req()
@@ -169,3 +184,30 @@ def verifyValidFormat(data, ssl_type):
             error =  'INVALID PKEY'
             verified = False
     return(verified, error)
+
+
+def storeCsr(session, ip, pem):
+    csr = loadCertRequest(pem)
+    csr_path, csr_name, csr_error = \
+        saveKey(CLIENT_CSR_DIR, csr, TYPE_CSR, name=ip)
+    csr_row = addCsr(session, ip, csr_path, csr_name)
+    return(csr, csr_path, csr_name, csr_row)
+
+def signCert(session, csr):
+    server_cert = loadCert()
+    server_pkey = loadPrivateKey()
+    client_cert = createSignedCertificate(csr,
+        (server_cert, server_pkey), 1, EXPIRATION)
+    return(client_cert)
+
+def storeCert(session, ip, cert):
+    expiration = getExpirefromCert(cert.get_notAfter())
+    csr, csr_oper = csrExists(session, ip)
+    cert_path, cert_name, cert_error = \
+        saveKey(CLIENT_KEY_DIR, cert, TYPE_CERT, name=ip)
+    node = addNode(session, ip)
+    cert_row = addCert(session, node.id, csr.id,
+        cert_name, cert_path, expiration)
+    csr_oper.update({"is_csr_signed" : True, 
+        "csr_signed_date" : datetime.now()})
+    return(node)
