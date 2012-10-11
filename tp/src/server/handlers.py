@@ -150,20 +150,23 @@ class FormHandler(BaseHandler):
             patches = self.request.arguments['patches']
             node['node_id'] = node_id
             node['operation'] = operation
-            node['data'] = patches
-            resultjson.append(node)
-            result = json.dumps(resultjson)
-            #AgentOperation(session, result)
+            node['data'] = list(patches)
+            from jsonpickle import encode
+            resultjson.append(encode(node))
+            print resultjson
+            #result = json.dumps(resultjson)
+            AgentOperation(session, resultjson)
             print result
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
         if params:
             resultjson = json.loads(params)
             result.append(json.dumps(resultjson))
-            #AgentOperation(session, result)
+            AgentOperation(session, result)
             print result
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
+
 
 
 
