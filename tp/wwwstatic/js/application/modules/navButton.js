@@ -13,12 +13,15 @@ define(
                 className: "",
                 template: buttonTemplate,
                 initialize: function () {
-                    this.model.on('change', this.render, this);
+                    this.model.on('change:active', this.setActive, this);
                 },
                 render: function () {
                     var tmpl = _.template(this.template);
                     $(this.el).html(tmpl(this.model.toJSON())).toggleClass('active', this.model.get('active'));
                     return this;
+                },
+                setActive: function () {
+                    $(this.el).toggleClass('active', this.model.get('active'));
                 }
             })
         };
