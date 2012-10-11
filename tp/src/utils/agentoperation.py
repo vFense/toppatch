@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from datetime import datetime
 from jsonpickle import encode
-from utils.sslasync import *
+from utils.tcpasync import *
 from utils.db.update_table import *
 from utils.db.query_table import *
 from utils.db.client import *
@@ -75,7 +75,7 @@ class AgentOperation():
         """
         Build a valid Json object and than encode it. Once the 
         encoding is complete, we will than pass this message to
-        the SSlConnect class.
+        the TcpConnect class.
         """
         jsonobject = None
         if data_list == None:
@@ -93,7 +93,7 @@ class AgentOperation():
         msg = msg + '<EOF>'
         print msg
         response = None
-        connect = SslConnect(node_ip, msg)
+        connect = TcpConnect(node_ip, msg)
         if not connect.error and connect.read_data:
             response = verifyJsonIsValid(connect.read_data)
             print response
