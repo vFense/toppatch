@@ -27,8 +27,7 @@ class HandOff():
         if self.valid_json:
             exists, self.node = nodeExists(self.session,
                 self.ip)
-            if self.node.last_agent_update:
-                self.addNode()
+            if self.node.last_agent_update == None:
                 self.dataCollector()
                 print self.node
             if self.json_object[OPERATION] == SYSTEM_INFO:
@@ -45,13 +44,6 @@ class HandOff():
             else:
                 pass
         self.session.close()
-
-    def addNode(self):
-        addNode(self.session, self.ip, datetime.now(), datetime.now())
-        exists, node = nodeExists(self.session,
-            self.ip)
-        if exists:
-            self.node = node
 
     def dataCollector(self):
         operations = ["updates_pending", "system_info",
