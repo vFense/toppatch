@@ -12,7 +12,7 @@ class TcpConnect():
         self.secure = secure
         self.host = host
         self.msg = msg
-        self.port = 9001
+        self.port = 9003
         self.connection_count = 0
         self.write_count = 0
         self.retry = 1
