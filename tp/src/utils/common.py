@@ -15,7 +15,7 @@ def dateParser(unformatted_date):
     if unformatted_date != "":
         month, day, year = re.split(r'-|/', unformatted_date)
         month, day, year  = int(month), int(day), int(year)
-        formatted_date = date(year, month, day)
+        formatted_date = datetime(year, month, day)
     else:
         formatted_date = None
     return formatted_date
