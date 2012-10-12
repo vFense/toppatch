@@ -17,6 +17,7 @@ class TcpConnect():
         self.msg = msg
         self.port = port
         self.connection_count = 0
+        self.write_connection_count = 0
         self.write_count = 0
         self.retry = 1
         self.timeout = 30
@@ -66,7 +67,7 @@ class TcpConnect():
         return self.error
 
     def _write(self):
-        read_ready, write_ready, error = select.select([], [self.tcp_socket], [self.tcp_socket])
+        read_ready, write_ready, error = select.select([], [self.tcp_socket], [self.tcp_socket], 60)
         if write_ready:
             try:
                 self.tcp_socket.sendall(self.msg)
@@ -80,7 +81,12 @@ class TcpConnect():
             if self.secure:
                 return self._read()
         else:
-            self.error = self._error_handler(error)
+            if self.write_connection_count < 1:
+                self.write_connection_count +=1
+                self.tcp_socket = self.socket_init()
+                self._connect()
+            else:
+                self.error = self._error_handler(error)
 
     def _read(self):
         read_ready, write_ready, error = select.select([self.tcp_socket], [], [self.tcp_socket], 30)
