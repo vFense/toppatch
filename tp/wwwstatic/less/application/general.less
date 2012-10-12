@@ -26,6 +26,21 @@ BODY {
     }
 }
 
+.brand {
+    @brandColor: #001678;
+    color: @brandColor !important;
+    margin-left:0;
+    padding-left:0;
+    text-transform:uppercase;
+    font-weight: 600;
+
+    SMALL {
+        color: @brandColor !important;
+        font-size: 75%;
+        line-height: 1em;
+    }
+}
+
 li {
     [class^="icon-"], [class*=" icon-"] {
         line-height: 1.25em;
