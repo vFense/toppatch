@@ -1,20 +1,21 @@
 import re
 import sys
 import gevent
-#from gevent import ssl, socket
 import ssl
 import socket
+import select
+#from gevent import ssl, socket
 
 class TcpConnect():
     """
     Connect to the remote agent, using the openssl
     library backed by Gevent.
     """
-    def __init__(self, host, msg, secure=True):
+    def __init__(self, host, msg, port=9003, secure=True):
         self.secure = secure
         self.host = host
         self.msg = msg
-        self.port = 9003
+        self.port = port
         self.connection_count = 0
         self.write_count = 0
         self.retry = 1
@@ -36,7 +37,7 @@ class TcpConnect():
             new_wrapper.timeout = self.timeout
             return new_wrapper
         else:
-            new_socket.timeout = self.timeout
+            #new_socket.timeout = self.timeout
             return new_socket
 
     def _connect(self):
@@ -65,23 +66,32 @@ class TcpConnect():
         return self.error
 
     def _write(self):
-        try:
-            self.tcp_socket.sendall(self.msg)
-        except Exception as e:
-            if e.message == None and e.errno == 32 and \
-                    self.write_count < 1:
-                self.write_count += 1
-                self._write()
-            else:
-                self.error = self._error_handler(e)
-        if self.secure:
-            return self._read()
+        read_ready, write_ready, error = select.select([], [self.tcp_socket], [self.tcp_socket])
+        if write_ready:
+            try:
+                self.tcp_socket.sendall(self.msg)
+            except Exception as e:
+                if e.message == None and e.errno == 32 and \
+                        self.write_count < 1:
+                    self.write_count += 1
+                    self._write()
+                else:
+                    self.error = self._error_handler(e)
+            if self.secure:
+                return self._read()
+        else:
+            self.error = self._error_handler(error)
 
     def _read(self):
-        try:
-            self.read_data = self.tcp_socket.recv(1024)
-        except Exception as e:
-            self.error = self._error_handler(e)
+        read_ready, write_ready, error = select.select([self.tcp_socket], [], [self.tcp_socket], 30)
+        if read_ready:
+            print read_ready, error, self.msg
+            try:
+                self.read_data = self.tcp_socket.recv(1024)
+            except Exception as e:
+                self.error = self._error_handler(e)
+        else:
+            self.error = self._error_handler(error)
 
 
     def _close(self):
