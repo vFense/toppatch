@@ -1,4 +1,5 @@
 from json import loads, dumps
+from time import sleep
 from jsonpickle import encode
 from utils.db.update_table import *
 from utils.db.query_table import *
@@ -40,12 +41,13 @@ class CsrHandOff():
                             self.signed_cert)
                         self.results = self.sendCert(self.node, \
                             self.signed_cert)
-                        print self.results
+                        print self.results.error self.results.read_data
                 else:
                     print 'csr for %s %s' % (self.client_ip, self.error)
             self.session.close()
 
     def sendCert(self, node, cert):
+        sleep(3)
         msg = encode({"node_id" : node.id, "pem" : dumpCert(cert)})
         tcp_results = TcpConnect(self.client_ip, msg, secure=False)
         return tcp_results
