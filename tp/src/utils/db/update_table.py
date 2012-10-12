@@ -8,6 +8,7 @@ from models.windows import *
 from models.node import *
 from utils.common import *
 from utils.db.query_table import *
+from utils.tcpasync import TcpConnect
 
 
 #WebsocketHandler.sendMessage(message)
@@ -185,17 +186,87 @@ def updateNode(session, node_id):
         exists.update({'last_agent_update' : datetime.now(),
                 'last_node_update' : datetime.now()})
         session.commit()
+        installed_oper = session.query(ManagedWindowsUpdate).filter_by(installed=True).filter_by(node_id=node_id)
+        installed = installed_oper.first()
+        pending_oper = session.query(ManagedWindowsUpdate).filter_by(pending=True).filter_by(node_id=node_id)
+        pending = pending_oper.first()
+        if installed and pending:
+            pending_oper.update({"pending" : False})
+            session.commit()
         return node
+
+def updateNodeNetworkStats(session, node_id):
+    nstats = session.query(ManagedWindowsUpdate)
+    totalinstalled = nstats.filter_by(installed=True).all()
+    totalnotinstalled = nstats.filter_by(installed=False).all()
+    totalpending = nstats.filter_by(pending=True).all()
+    networkstats = session.query(NetworkStats)
+    networkstatsexists = networkstats.filter_by(id=1).first()
+    if networkstatsexists:
+        networkstats.update({"patches_installed" : len(totalinstalled),
+                             "patches_available" : len(totalnotinstalled),
+                             "patches_pending" : len(totalpending)})
+    else:
+        network_sstats_init = NetworkStats(len(totalinstalled),
+                              len(totalnotinstalled), len(totalpending), 0)
+        session.add(network_sstats_init)
+    nodeupdates = session.query(ManagedWindowsUpdate).filter_by(node_id=node_id)
+    patchesinstalled = nodeupdates.filter_by(installed=True).all()
+    patchesuninstalled = nodeupdates.filter_by(installed=False).all()
+    patchespending = nodeupdates.filter_by(pending=True).all()
+    print node_id
+    print patchesinstalled
+    print patchesuninstalled
+    print patchespending
+    nodestats = session.query(NodeStats).filter_by(node_id=node_id)
+    nodeexists = nodestats.first()
+    if nodeexists:
+        nodestats.update({"patches_installed" : len(patchesinstalled),
+                          "patches_available" : len(patchesuninstalled),
+                          "patches_pending" : len(patchespending)})
+    else:
+        add_node_stats = NodeStats(node_id, len(patchesinstalled), \
+                          len(patchesuninstalled), len(patchespending), 0)
+        session.add(add_node_stats)
+    session.commit()
+    TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
 
 def addResults(session, data):
     exists, operation = operationExists(session, data['operation_id'])
+    node, node_exists = nodeExists(session,data['node_id'])
     if exists:
         node_id = exists.node_id
+        operation = data['operation']
         for msg in data['data']:
+            print msg
+            if 'reboot' in msg:
+                reboot = returnBool(msg['reboot'])
+            else:
+               reboot = False
             update_exists, update_oper = nodeUpdateExists(session, node_id, msg['toppatch_id'])
             if update_exists:
-                update_oper.update({'installed' : True, 'date_installed' : datetime.now()})
-            reboot = returnBool(msg['reboot'])
+                if data['operation'] == "install" and msg['result'] == 'success':
+                    print "patch installed on %s %s" % ( node_id, msg['toppatch_id'] )
+                    update_oper.update({'installed' : True, 
+                                        'date_installed' : datetime.now(),
+                                        'pending' : False})
+                    if reboot:
+                        node.update({'reboot' : True})
+                elif data['operation'] == "install" and msg['result'] == 'failed':
+                    update_oper.update({'installed' : False,
+                                        'date_installed' : datetime.now(),
+                                        'pending' : False})
+                    if reboot:
+                        node.update({'reboot' : True})
+                elif data['operation'] == "uninstall" and msg['result'] == 'success':
+                    print "deleting patch from managed_windows_updates %s" % ( msg['toppatch_id'] )
+                    update_oper.delete()
+                    if reboot:
+                        node.update({'reboot' : True})
+                elif data['operation'] == "uninstall" and msg['result'] == 'failed':
+                    update_oper.update({'installed' : True, 'date_installed' : datetime.now()})
+                    if reboot:
+                        node.update({'reboot' : True})
             error = None
             if "error" in msg:
                 error = msg['error']
@@ -207,16 +278,7 @@ def addResults(session, data):
                 session.add(results)
                 session.commit()
                 operation.update({'results_id' : results.id})
-                ui = len(session.query(ManagedWindowsUpdate).filter_by(node_id=node_id).filter_by(installed=True).all())
-                un = len(session.query(ManagedWindowsUpdate).filter_by(node_id=node_id).filter_by(installed=False).all())
-                ns_oper = session.query(NodeStats).filter_by(node_ID=node_id)
-                ns_oper.update({"patches_installed" : ui, "patches_available" : un})
-                nui = len(session.query(ManagedWindowsUpdate).filter_by(installed=True).all())
-                nun = len(session.query(ManagedWindowsUpdate).filter_by(installed=False).all())
-                nns_oper = session.query(NetworkStats).filter_by(id=1)
-                nns_oper.update({"patches_installed" : nui, "patches_available" : nun})
-                session.commit()
+                updateNodeNetworkStats(session, node_id)
                 return results
-                #WebsocketHandler.sendMessage("ITS ME")
             except:
                 session.rollback()
