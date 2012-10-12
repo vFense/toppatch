@@ -5,8 +5,8 @@
             <dl>
                 <dt>Node IP:</dt><dd><% print(model.get('ip')); %></dd>
                 <dt>Hostname:</dt><dd><% print(model.get('host/name')); %></dd>
-                <dt>Host Status:</dt><dd><% print(model.get('host/status')); %></dd>
-                <dt>Agent Status:</dt><dd><% print(model.get('agent/status')); %></dd>
+                <dt>Host Status:</dt><dd><% if(model.get('host/status') == true && model.get('reboot') == false) { print('Running &nbsp;<i style="color: green;" class="icon-ok"></i>'); } else if(model.get('reboot') == true) { print('Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<button id="reboot" style="color: black;" class="btn btn-mini btn-warning">Reboot</button>'); } else { print('Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>') } %></dd>
+                <dt>Agent Status:</dt><dd><% if(model.get('agent/status') == true) { print('Running &nbsp;<i style="color: green;" class="icon-ok"></i>'); } else { print('Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>') } %></dd>
                 <dt>Operating System:</dt><dd><% print(model.get('os/name')); %></dd>
             </dl>
         </section>

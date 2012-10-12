@@ -62,7 +62,7 @@ define(
                     barDemo.selectAll("text.yAxis")
                         .data(data)
                         .enter().append("svg:text")
-                        .attr("x", function (datum, index) { return x(index) + barWidth - barWidth / 5; })
+                        .attr("x", function (datum, index) { return x(index) + barWidth - barWidth / 6; })
                         .attr("y", height + 10)
                         .attr("dx", -barWidth / 2)
                         .attr("text-anchor", "middle")

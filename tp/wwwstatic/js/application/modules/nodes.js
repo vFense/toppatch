@@ -10,7 +10,7 @@ define(
                     return this.baseUrl + this.query;
                 },
                 parse: function (response) {
-                    this.totalNodes = response.count;
+                    this.recordCount = response.count;
                     return response.nodes;
                 },
                 initialize: function () {
@@ -33,24 +33,22 @@ define(
                 onRender: $.noop,
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
-
                     var template = _.template(this.template),
-                        nodes = this.collection.toJSON(),
+                        data = this.collection.toJSON(),
                         payload = {
                             getCount: +this.collection.getCount,
                             offset: +this.collection.offset,
                             start: +this.collection.offset + 1,
-                            end: +this.collection.offset + nodes.length,
+                            end: +this.collection.offset + data.length,
                             prevEnable: +this.collection.offset > 0,
-                            nextEnable: +this.collection.offset + nodes.length + 1 < +this.collection.totalNodes,
+                            nextEnable: +this.collection.offset + data.length + 1 < +this.collection.recordCount,
                             prevLink: '',
                             nextLink: '',
-                            totalNodes: this.collection.totalNodes,
-                            nodes: nodes
+                            recordCount: this.collection.recordCount,
+                            data: data
                         },
                         that = this,
                         temp;
-
                     temp = payload.offset - payload.getCount;
                     payload.prevLink = '#nodes?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
 

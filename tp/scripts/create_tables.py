@@ -13,7 +13,6 @@ from sqlalchemy import create_engine
 db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
 db.echo = True
 
-
 db.drop(NodeInfo)
 db.drop(SystemInfo)
 db.drop(Operations)
@@ -36,3 +35,4 @@ db.create(ManagedWindowsUpdate)
 db.create(CsrInfo)
 db.create(SslInfo)
 Base.metadata.create_all(db)
+

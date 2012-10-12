@@ -12,15 +12,17 @@ define(
                 // Patch Routes
                 'patchAdmin': 'patchAdmin',
 
-                // Testers
-                'test': 'showTest',
-                'testPatch': 'showPatchTest',
+                // Patches
                 'patches': 'showPatches',
+                'patches?:query': 'showPatches',
                 'patches/:id': 'showPatch',
-                'patches?:type': 'showOverview',
+                //'patches?:type': 'showOverview',
+
+                // Nodes
                 'nodes': 'showNodes',
                 'nodes?:query': 'showNodes',
                 'nodes/:id': 'showNode',
+
                 'multi': 'showMulti',
 
                 // Default
@@ -44,8 +46,19 @@ define(
             showPatchTest: function () {
                 this.show({hash: '#testPatch', title: 'Patch Test Page', view: 'utilities/newDataGen'});
             },
-            showPatches: function () {
-                this.show({hash: '#patches', title: 'Patch Info Page', view: 'modules/patches'});
+            showPatches: function (query) {
+                var that = this;
+                require(['modules/patches'], function (myView) {
+                    if ($.type(query) === 'string') {
+                        var params = app.parseQuery(query);
+                        myView.Collection = myView.Collection.extend({
+                            type: params.type,
+                            getCount: params.count,
+                            offset: params.offset
+                        });
+                    }
+                    that.show({hash: '#patches', title: 'Patches', view: new myView.View()});
+                });
             },
             showPatch: function (id) {
                 var that = this;

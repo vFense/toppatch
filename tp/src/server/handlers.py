@@ -9,6 +9,7 @@ from utils.agentoperation import AgentOperation
 from server.decorators import authenticated_request
 
 engine = initEngine()
+
 LISTENERS = []
 
 
@@ -82,6 +83,7 @@ class testHandler(BaseHandler):
 
 def SendToSocket(message):
     print 'in SendToSocket'
+    global LISTENERS
     print LISTENERS
     for socket in LISTENERS:
         print 'sending to socket'
@@ -158,7 +160,6 @@ class FormHandler(BaseHandler):
             node['operation'] = operation
             node['data'] = list(patches)
             resultjson.append(encode(node))
-            #result = json.dumps(resultjson)
             AgentOperation(session, resultjson)
             print result
             self.set_header('Content-Type', 'application/json')

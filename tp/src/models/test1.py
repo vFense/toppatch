@@ -9,9 +9,9 @@ from sqlalchemy.orm import sessionmaker
 import datetime
 Session = sessionmaker(bind=db)
 session = Session()
-u1 = NodeInfo("192.168.1.1", "test1.com", True, True, datetime.datetime.now(), datetime.datetime.now() )
-u2 = NodeInfo("192.168.1.2", "test2.com", True, True, datetime.datetime.now(), datetime.datetime.now() )
-u3 = NodeInfo("192.168.1.3", "test3.com", True, True, datetime.datetime.now(), datetime.datetime.now() )
+u1 = NodeInfo("192.168.1.1", "test1.com", True, True, datetime.datetime.now(), datetime.datetime.now(), True )
+u2 = NodeInfo("192.168.1.2", "test2.com", True, True, datetime.datetime.now(), datetime.datetime.now(), False )
+u3 = NodeInfo("192.168.1.3", "test3.com", True, True, datetime.datetime.now(), datetime.datetime.now(), False )
 session.add(u1)
 session.add(u2)
 session.add(u3)
