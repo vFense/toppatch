@@ -1,11 +1,3 @@
-<% if(data.nodes.length > 0) { %>
-    <% _.each(data.nodes, function (node, i) { %>
-        <div class="<% if(i == 0) { print('first'); } %> item clearfix">
-            <span class="desc"><strong>Node ID</strong> - <%= node.ip %></span>
-            <span class="id pull-right" id="<%= node.id %>"> > </span>
-        </div>
-    <% }); %>
-<% } %><div class="items">
 <header>&nbsp;</header>
 <div class="items">
     <% if(data.nodes.length > 0) { %>
