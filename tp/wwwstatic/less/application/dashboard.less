@@ -99,22 +99,15 @@
         .legend {
             padding: @em*(2px)/@baseFontSize 0.5em;
             line-height: @em*( @baseLineHeight - 1px )/@baseFontSize;
-        }
-
-        HEADER,
-        .legend {
             border-top: @em*(1px)/@baseFontSize solid @listBorder;
-        }
-        
-        FOOTER,
-        .legend {
             border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
         }
         
         HEADER {
             background-color: @listHeaderBackground;
             
-            + .item {
+            &+ .items,
+            &+ .legend {
                 border-top: none;
             }
         }
@@ -126,45 +119,58 @@
         .legend {
             background-color: @listLegendBackground;
         }
+
+        .items,
+        .legend {
+            &+ FOOTER {
+                border-top: none;
+            }
+        }
         
         FORM {
             margin-bottom: 0;
         }
 
-        .item {
-            border-top: @em*(1px)/@baseFontSize solid @listBorder;
-            border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
-            padding: @em*(2px)/@baseFontSize 0.5em;
+        .items {
+            .item {
+                border-top: @em*(1px)/@baseFontSize solid @listBorder;
+                //border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
+                padding: @em*(2px)/@baseFontSize 0.5em;
 
-            +.item {
-                /* Add top border to first list item */
-                border-top: none;
-            }
+                &:first-child {
+                    /* Add top border to first list item */
+                    border-top: none;
+                }
 
-            &:hover {
-                background-color: @listHighlight;
-            }
+                &:last-child {
+                    border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
+                }
 
-            &.linked {
-                padding: 0 0;
-                A {
-                    color: #000;
-                    display: block;
-                    text-decoration: none;
-                    padding: @em*(2px)/@baseFontSize 0.5em;
+                &:hover {
+                    background-color: @listHighlight;
+                }
 
-                    STRONG {
-                        color: @linkColor;
+                &.linked {
+                    padding: 0 0;
+                    A {
+                        color: #000;
+                        display: block;
+                        text-decoration: none;
+                        padding: @em*(2px)/@baseFontSize 0.5em;
+
+                        STRONG {
+                            color: @linkColor;
+                        }
                     }
                 }
-            }
 
-            .desc {
-                display: inline-block;
-                width: 75%;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                .desc {
+                    display: inline-block;
+                    width: 75%;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
             }
         }
         
