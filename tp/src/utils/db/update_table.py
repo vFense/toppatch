@@ -275,7 +275,8 @@ def addResults(session, data):
             try:
                 session.add(results)
                 session.commit()
-                operation.update({'results_id' : results.id})
+                operation.update({'results_id' : results.id,
+                                  'results_received' : datetime.now()})
                 updateNodeNetworkStats(session, node_id)
                 return results
             except:
