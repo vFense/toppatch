@@ -5,9 +5,17 @@
             <dl>
                 <dt>Node IP:</dt><dd><% print(model.get('ip')); %></dd>
                 <dt>Hostname:</dt><dd><% print(model.get('host/name')); %></dd>
-                <dt>Host Status:</dt><dd><% if(model.get('host/status') == true && model.get('reboot') == false) { print('Running &nbsp;<i style="color: green;" class="icon-ok"></i>'); } else if(model.get('reboot') == true) { print('Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<button id="reboot" style="color: black;" class="btn btn-mini btn-warning">Reboot</button>'); } else { print('Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>') } %></dd>
-                <dt>Agent Status:</dt><dd><% if(model.get('agent/status') == true) { print('Running &nbsp;<i style="color: green;" class="icon-ok"></i>'); } else { print('Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>') } %></dd>
                 <dt>Operating System:</dt><dd><% print(model.get('os/name')); %></dd>
+                <dt>Agent Status:</dt><dd><% if(model.get('agent/status') == true) { print('Running &nbsp;<i style="color: green;" class="icon-ok"></i>'); } else { print('Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>') } %></dd>
+                <dt>Host Status:</dt>
+                <dd><% if(model.get('host/status') == true && model.get('reboot') == false) {
+                        print('Running &nbsp;<i style="color: green;" class="icon-ok"></i>');
+                    } else if(model.get('reboot') == true) {
+                        print('<form id="reboot-form">Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/><input type="hidden" name="operation" value="reboot" /><input type="hidden" name="node" value="' + model.id + '"/></form>');
+                    } else {
+                        print('Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>');
+                    } %>
+                </dd>
             </dl>
         </section>
     </article>
@@ -176,10 +184,12 @@
             });
         }
         $('form').submit(function (e) {
-           var fields = $(this).find('input[name="patches"]:checked');
-            if (!fields.length) {
-                alert('Please select at least one patch');
-                return false;
+            if(!this.id) {
+                var fields = $(this).find('input[name="patches"]:checked');
+                if (!fields.length) {
+                    alert('Please select at least one patch');
+                    return false;
+                }
             }
         });
     </script>

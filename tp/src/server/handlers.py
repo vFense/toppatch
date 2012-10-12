@@ -7,6 +7,7 @@ from models.node import NodeInfo
 from utils.db.client import *
 from utils.agentoperation import AgentOperation
 from server.decorators import authenticated_request
+from jsonpickle import encode
 
 engine = initEngine()
 
@@ -143,7 +144,6 @@ class FormHandler(BaseHandler):
         node = {}
         result = []
         session = createSession(engine)
-        from jsonpickle import encode
         try:
             node_id = self.get_argument('node')
         except:
@@ -155,27 +155,27 @@ class FormHandler(BaseHandler):
             params = None
         if node_id:
             operation = self.get_argument('operation')
-            patches = self.request.arguments['patches']
-            node['node_id'] = node_id
-            node['operation'] = operation
-            node['data'] = list(patches)
-            resultjson.append(encode(node))
-            AgentOperation(session, resultjson)
-            print result
+            if operation == 'install':
+                patches = self.request.arguments['patches']
+                node['node_id'] = node_id
+                node['operation'] = operation
+                node['data'] = list(patches)
+                resultjson.append(encode(node))
+                #AgentOperation(session, resultjson)
+            elif operation == 'reboot':
+                node['operation'] = operation
+                node['node_id'] = node_id
+                resultjson.append(encode(node))
+                #AgentOperation(session, resultjson)
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
         if params:
-            print params
-            print type(params)
             params = re.sub(r'(^\[|\]$)', '', params)
-            print params
-            print type(params)
             resultjson = json.loads(params)
             result.append(json.dumps(resultjson))
-            AgentOperation(session, result)
-            print result
+            #AgentOperation(session, result)
             self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(resultjson))
+            self.write(json.dumps(result))
 
 
 
