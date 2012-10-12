@@ -273,6 +273,10 @@ define(
                     $('#title').val(title).attr("placeholder", title);
                     widgetview.graphSetting();
                 } else if (param === "new") {
+                    if(widgetview.counter > 5) {
+                        console.log('too many widgets');
+                        setTimeout(function(){ $('#widgetProperties').modal('hide'); }, 50);
+                    }
                     properties.set({
                         currentWidget: "new"
                     });
@@ -283,7 +287,7 @@ define(
                 }
             },
             hideWidget = function (obj) {
-                $(obj).parents('.widget').remove();
+                $(obj).parents('.widget').hide();
             },
             exports = {
                 Model: Backbone.Model.extend({}),
