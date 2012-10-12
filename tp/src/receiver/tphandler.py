@@ -11,6 +11,7 @@ from utils.agentoperation import AgentOperation
 OPERATION = 'operation'
 OPERATION_ID = 'operation_id'
 INSTALL = 'install'
+UNINSTALL = 'uninstall'
 UPDATES_PENDING = 'updates_pending'
 UPDATES_INSTALLED = 'updates_installed'
 SOFTWARE_INSTALLED = 'system_applications'
@@ -27,9 +28,16 @@ class HandOff():
         if self.valid_json:
             exists, self.node = nodeExists(self.session,
                 self.ip)
-            if self.node.last_agent_update == None:
+            if not self.node:
+                addNode(self.session, self.ip, agent_timestamp=datetime.now(), node_timestamp=datetime.now())
+                exists, self.node = nodeExists(self.session,
+                    self.ip)
                 self.dataCollector()
                 print self.node
+                #exists.update({"last_agent_update" : datetime.now(),
+                #               "last_node_update" : datetime.now()
+                #              })
+                #self.session.commit()
             if self.json_object[OPERATION] == SYSTEM_INFO:
                 addSystemInfo(self.session, self.json_object, self.node)
             if self.json_object[OPERATION] == UPDATES_PENDING or \
@@ -40,6 +48,8 @@ class HandOff():
             if self.json_object[OPERATION] == STATUS_UPDATE:
                 self.nodeUpdate()
             if self.json_object[OPERATION] == INSTALL:
+                self.updateResults()
+            if self.json_object[OPERATION] == UNINSTALL:
                 self.updateResults()
             else:
                 pass
