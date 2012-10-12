@@ -231,7 +231,7 @@ def updateNodeNetworkStats(session, node_id):
 
 def addResults(session, data):
     exists, operation = operationExists(session, data['operation_id'])
-    node, node_exists = nodeExists(session,data['node_id'])
+    node, node_exists = nodeExists(session,node_id=data['node_id'])
     print node
     if exists:
         node_id = exists.node_id
