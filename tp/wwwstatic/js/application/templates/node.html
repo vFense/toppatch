@@ -31,19 +31,21 @@
                     </div>
                     <input type="hidden" value="<% print(model.id); %>" name="node">
                 </header>
-                <% _.each(model['patch/need'], function (patch, i) { %>
-                <div class="item clearfix">
-                    <span class="desc">
-                        <label class="checkbox inline">
-                            <input type="checkbox" id="<%= patch %>" name="patches" value="<%= patch %>">
-                            Patch ID: <%= patch %>
-                        </label>
-                    </span>
-                    <span class="pull-right">
-                        <a href="#patches/<%= patch %>">More information</a>
-                    </span>
+                <div class="items">
+                    <% _.each(model['patch/need'], function (patch, i) { %>
+                    <div class="item clearfix">
+                        <span class="desc">
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="<%= patch %>" name="patches" value="<%= patch %>">
+                                Patch ID: <%= patch %>
+                            </label>
+                        </span>
+                        <span class="pull-right">
+                            <a href="#patches/<%= patch %>">More information</a>
+                        </span>
+                    </div>
+                    <% }); %>
                 </div>
-                <% }); %>
             </form>
         </section>
     <% }  else { %>

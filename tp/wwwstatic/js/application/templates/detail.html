@@ -1,4 +1,5 @@
 <% if(data['patch/need'].length > 0) { %>
+    <div class="items">
     <% _.each(data['patch/need'], function (patch, i) { %>
         <div class="item clearfix">
             <span class="desc"><strong>Patch ID</strong> - <%= patch %></span>
@@ -16,6 +17,7 @@
                 } %> value="<%= patch %>"/> </span>
         </div>
     <% }); %>
+    </div>
 <% } else { %>
     <section class="well noPadding">
         <small><em>No patches available to install</em></small>

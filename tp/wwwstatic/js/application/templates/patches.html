@@ -10,9 +10,7 @@
                 </a>
             </div>
         </header>
-        <%
-        if (data.length > 0) {
-        %>
+        <% if (data.length > 0) { %>
         <div class="legend">
             <span><strong>Vendor Name</strong> — Patch Name</span>
             <span class="patches pull-right">
@@ -23,9 +21,8 @@
                 <span class="fail">Failed</span>
             </span>
         </div>
-        <%
-        _.each(data, function (patch) {
-        %>
+        <div class="items">
+        <% _.each(data, function (patch) { %>
         <div class="item linked clearfix">
             <a href="#patches/<%= patch.id %>">
                 <span class="desc"><strong><%= patch.vendor.name %></strong> — <%= patch.name %></span>
@@ -38,11 +35,9 @@
                 </span>
             </a>
         </div>
-        <%
-        } // end _.each
-        );// end if
-        }
-        %>
+        <% }); // end _.each %>
+        </div>
+        <% } // end if %>
         <footer class="clearfix">
             <small>Viewing <%= start %> – <%= end %> of <%= recordCount %> Nodes</small>
             <div class="pull-right hidden-print">

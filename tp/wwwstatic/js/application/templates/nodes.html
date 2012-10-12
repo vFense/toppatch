@@ -23,9 +23,8 @@
                     <span class="fail">Failed</span>
                 </span>
             </div>
-        <%
-                _.each(data, function (node) {
-        %>
+            <div class="items">
+                <%  _.each(data, function (node) { %>
                     <div class="item linked clearfix">
                         <a href="#nodes/<%= node.id %>">
                             <span class="desc"><strong><%= node.ip %></strong> — <%= node['os/name'] %></span>
@@ -38,10 +37,9 @@
                             </span>
                         </a>
                     </div>
-        <%
-                });
-            }
-        %>
+                <% }); %>
+            </div>
+            <% } %>
         <footer class="clearfix">
             <small>Viewing <%= start %> – <%= end %> of <%= recordCount %> Nodes</small>
             <div class="pull-right hidden-print">
