@@ -26,9 +26,8 @@ define(
             ViewManager: ViewManager,
             views: {},
             startWs: function () {
-                var ws = new WebSocket("wss://localhost:8000/ws");
+                var ws = new WebSocket("wss://" + window.location.host + "/ws");
                 ws.onmessage = function(evt) {
-                    console.log(evt.data);
                     $.ajax({
                         url: '/api/networkData',
                         dataType: 'json',

@@ -31,7 +31,6 @@ define(
             },
             submit: function (evt) {
                 var form = $(evt.target);
-                app.startWs();
                 $.post("/submitForm?" + form.serialize(),
                     function(json) {
                         console.log(json);

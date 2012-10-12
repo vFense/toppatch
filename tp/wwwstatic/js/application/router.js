@@ -31,6 +31,7 @@ define(
             initialize: function () {
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
+                app.startWs();
                 this.viewTarget = '#dashboard-view';
                 this.viewManager = new app.ViewManager({'selector': this.viewTarget});
             },
