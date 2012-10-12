@@ -114,7 +114,7 @@
         HEADER {
             background-color: @listHeaderBackground;
             
-            +.item {
+            + .item {
                 border-top: none;
             }
         }
@@ -238,20 +238,14 @@
 .multipatch {
     @masterSlaveBorder: #B0B0B0;
     @slaveBackground: #f2f3f5;
+    @selectedColor: #2F7AD8;
     .list {
         &.master,
-        &.slave,
-        &.master .item,
-        &.slave .item {
+        &.slave {
             -webkit-box-sizing: border-box;
                -moz-box-sizing: border-box;
                     box-sizing: border-box;
-        }
-        
-        &.master,
-        &.slave {
-            float: left;
-            width: @gridRowWidth/2;
+
             height: 512px;
             overflow: hidden;
             border: @em*(1px)/@baseFontSize solid @masterSlaveBorder;
@@ -265,33 +259,15 @@
 
         &.master {
             .item {
-                //width: @gridRowWidth/2;
-                //border-right: inherit;
-                
                 &.first {
-                    border-right: @em*(1px)/@baseFontSize solid @slaveBackground;
-                    background-color: @slaveBackground;
-                    
-                    &:hover {
-                        background-color: @slaveBackground;
-                    }
-                }
-                
-                &:hover {
-                    border-right: inherit;
+                    background-color: @selectedColor !important;
+                    color: white;
                 }
             }
         }
         
         &.slave {
-            background-color: @slaveBackground;
-            border-left: none;
             overflow-y: scroll;
-            
-            .item {
-                padding-left: 0.5em;
-                border-left: none;
-            }
         }
     }
 }
