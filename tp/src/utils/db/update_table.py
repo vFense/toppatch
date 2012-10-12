@@ -196,6 +196,21 @@ def updateNode(session, node_id):
         return node
 
 def updateNodeNetworkStats(session, node_id):
+    nodeupdates = session.query(ManagedWindowsUpdate).filter_by(node_id=node_id)
+    patchesinstalled = nodeupdates.filter_by(installed=True).all()
+    patchesuninstalled = nodeupdates.filter_by(installed=False).all()
+    patchespending = nodeupdates.filter_by(pending=True).all()
+    nodestats = session.query(NodeStats).filter_by(node_id=node_id)
+    nodeexists = nodestats.first()
+    if nodeexists:
+        nodestats.update({"patches_installed" : len(patchesinstalled),
+                          "patches_available" : len(patchesuninstalled),
+                          "patches_pending" : len(patchespending)})
+    else:
+        add_node_stats = NodeStats(node_id, len(patchesinstalled), \
+                          len(patchesuninstalled), len(patchespending), 0)
+        session.add(add_node_stats)
+    TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
     nstats = session.query(ManagedWindowsUpdate)
     totalinstalled = nstats.filter_by(installed=True).all()
     totalnotinstalled = nstats.filter_by(installed=False).all()
@@ -210,24 +225,7 @@ def updateNodeNetworkStats(session, node_id):
         network_sstats_init = NetworkStats(len(totalinstalled),
                               len(totalnotinstalled), len(totalpending), 0)
         session.add(network_sstats_init)
-    nodeupdates = session.query(ManagedWindowsUpdate).filter_by(node_id=node_id)
-    patchesinstalled = nodeupdates.filter_by(installed=True).all()
-    patchesuninstalled = nodeupdates.filter_by(installed=False).all()
-    patchespending = nodeupdates.filter_by(pending=True).all()
-    print node_id
-    print patchesinstalled
-    print patchesuninstalled
-    print patchespending
-    nodestats = session.query(NodeStats).filter_by(node_id=node_id)
-    nodeexists = nodestats.first()
-    if nodeexists:
-        nodestats.update({"patches_installed" : len(patchesinstalled),
-                          "patches_available" : len(patchesuninstalled),
-                          "patches_pending" : len(patchespending)})
-    else:
-        add_node_stats = NodeStats(node_id, len(patchesinstalled), \
-                          len(patchesuninstalled), len(patchespending), 0)
-        session.add(add_node_stats)
+
     session.commit()
     TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
 
@@ -236,7 +234,6 @@ def addResults(session, data):
     node, node_exists = nodeExists(session,data['node_id'])
     if exists:
         node_id = exists.node_id
-        operation = data['operation']
         for msg in data['data']:
             print msg
             if 'reboot' in msg:
