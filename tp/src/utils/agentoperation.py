@@ -46,8 +46,8 @@ class AgentOperation():
             json_valid, jsonobject = verifyJsonIsValid(node)
             if json_valid:
                 node_id = jsonobject['node_id']
-                exists, node = nodeExists(self.session, node_id=node_id)
-                print exists, node, jsonobject
+                self.node_exists, node = nodeExists(self.session, node_id=node_id)
+                print self.node_exists, node, jsonobject
                 oper_type = jsonobject[OPERATION]
                 print oper_type
                 oper_id = self.create_new_operation(node_id, oper_type)
@@ -100,6 +100,8 @@ class AgentOperation():
             if response[1]['operation'] == 'received':
                 updateOperationRow(self.session, oper_id, oper_recv=True)
                 updateNodeNetworkStats(self.session, node_id)
+                if oper_type == 'reboot':
+                    updateRebootStatus(self.session, self.node_exists)
                 if 'data' in jsonobject:
                     for patch in jsonobject['data']:
                         patcher = self.session.query(ManagedWindowsUpdate).filter_by(toppatch_id=patch)
