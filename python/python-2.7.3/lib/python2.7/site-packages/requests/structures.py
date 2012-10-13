@@ -8,7 +8,6 @@ Data structures that power Requests.
 
 """
 
-
 class CaseInsensitiveDict(dict):
     """Case-insensitive Dictionary
 
@@ -46,6 +45,7 @@ class CaseInsensitiveDict(dict):
             return self[key]
         else:
             return default
+
 
 class LookupDict(dict):
     """Dictionary lookup object."""

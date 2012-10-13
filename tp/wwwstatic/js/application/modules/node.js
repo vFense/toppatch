@@ -12,29 +12,40 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
-                    this.collection =  new exports.Collection();
+                    this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
                 },
                 events: {
-                    'click .disabled': function (e) { console.log(['click a.disabled', e]); return false; }
+                    'click .disabled': function (e) { console.log(['click a.disabled', e]); return false; },
+                    'submit form': 'submit'
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
-
+        
                     var template = _.template(this.template),
                         data = this.collection.toJSON()[0];
-
+        
                     this.$el.html('');
-
+        
                     this.$el.append(template({model: data}));
-
+        
                     this.$el.find("a.disabled").on("click", false);
-
+        
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
+                },
+                submit: function (evt) {
+                    var form = $(evt.target);
+                    $.post("/submitForm?" + form.serialize(),
+                        function(json) { console.log(json); }
+                    );
+                    return false;
+                },
+                clearFilter: function () {
+                    this.collection.filter = '';
                 }
             })
         };

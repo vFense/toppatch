@@ -21,7 +21,7 @@ define(['jquery', 'd3'], function ($, d3) {
         function chart(selection) {
             selection.each(function (data) {
                 // generate chart here; `d` is the data and `this` is the element
-                var that = this, link,
+                var that = this, link, options,
                     matches = that.id.match(/\d+$/),
                     widget = "#widget" + matches[0];
                 //$(widget + "-title").html(title);
@@ -91,7 +91,21 @@ define(['jquery', 'd3'], function ($, d3) {
                                 return "translate(" + (x / h * labelr) + ',' + (y / h * labelr) +  ") rotate(" + angle(d) + ")";
                             })
                             //.attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")")
-                            .text(d.data.label);
+                            .text(function (d) {
+                                var label = d.data.label.split(' '), osname = '';
+                                if (label.length > 3) {
+                                    for(var k = 0; k < label.length -1; k++) {
+                                        if (label[k] == 'Windows') {
+                                            osname += label[k].substring(0, 3) + ' ';
+                                        } else {
+                                            osname+= label[k] + ' ';
+                                        }
+                                    }
+                                } else {
+                                    osname = d.data.label;
+                                }
+                                return osname;
+                            });
                     })
                     .on("mouseout", function (d, i) {
                         d3.select(this).select("path").transition()
@@ -104,7 +118,21 @@ define(['jquery', 'd3'], function ($, d3) {
                             .style("font-size", "10px")
                             .style("fill", "black")
                             .attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")")
-                            .text(d.data.label);
+                            .text(function (d) {
+                                var label = d.data.label.split(' '), osname = '';
+                                if (label.length > 3) {
+                                    for(var k = 0; k < label.length -1; k++) {
+                                        if (label[k] == 'Windows') {
+                                            osname += label[k].substring(0, 3) + ' ';
+                                        } else {
+                                            osname+= label[k] + ' ';
+                                        }
+                                    }
+                                } else {
+                                    osname = d.data.label;
+                                }
+                                return osname;
+                            });
                     });
                 function linkMouseOver(el) {
                     $(el).css('text-decoration', 'underline');
@@ -170,7 +198,21 @@ define(['jquery', 'd3'], function ($, d3) {
                     .attr("dy", ".35em")
                     .attr("text-anchor", "middle")
                     .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
-                    .text(function (d) { return d.data.label; });
+                    .text(function (d) {
+                        var label = d.data.label.split(' '), osname = '';
+                        if (label.length > 3) {
+                            for(var k = 0; k < label.length -1; k++) {
+                                if (label[k] == 'Windows') {
+                                    osname += label[k].substring(0, 3) + ' ';
+                                } else {
+                                    osname+= label[k] + ' ';
+                                }
+                            }
+                        } else {
+                            osname = d.data.label;
+                        }
+                        return osname;
+                    });
 
                 // Computes the label angle of an arc, converting from radians to degrees.
                 function angle(d) {

@@ -1,7 +1,13 @@
 #!/usr/bin/env python
+from models.account import *
+from models.oauth.token import *
+from models.application import *
+from models.scanner import *
+from models.cve import *
 from models.base import Base
 from models.windows import *
 from models.node import *
+from models.ssl import *
 from sqlalchemy import create_engine
 
 db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
@@ -11,24 +17,22 @@ db.drop(NodeInfo)
 db.drop(SystemInfo)
 db.drop(Operations)
 db.drop(Results)
+db.drop(SoftwareAvailable)
 db.drop(SoftwareInstalled)
-db.drop(NodeStats)
-db.drop(NetworkStats)
 db.drop(WindowsUpdate)
 db.drop(ManagedWindowsUpdate)
-#db.drop(CsrInfo)
-#db.drop(SslInfo)
+db.drop(CsrInfo)
+db.drop(SslInfo)
 Base.metadata.drop_all(db)
-
 
 db.create(NodeInfo)
 db.create(Operations)
 db.create(Results)
+db.create(SoftwareAvailable)
 db.create(SoftwareInstalled)
-db.create(NodeStats)
-db.create(NetworkStats)
 db.create(WindowsUpdate)
 db.create(ManagedWindowsUpdate)
-#db.create(CsrInfo)
-#db.create(SslInfo)
+db.create(CsrInfo)
+db.create(SslInfo)
 Base.metadata.create_all(db)
+
