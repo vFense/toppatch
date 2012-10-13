@@ -63,11 +63,10 @@ class Application(tornado.web.Application):
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.
 
             #### File system access whitelist
-            (r"/css/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/css"}),
-            (r"/font/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/font"}),
-            (r"/img/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/img"}),
-            (r"/js/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/js"}),
-            (r"/(.*?).html", tornado.web.StaticFileHandler, {"path": "wwwstatic"})
+            (r"/css/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/css"}),
+            (r"/font/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/font"}),
+            (r"/img/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/img"}),
+            (r"/js/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/js"})
         ]
 
         template_path = "/opt/TopPatch/tp/templates"
@@ -75,10 +74,9 @@ class Application(tornado.web.Application):
         #ui_modules = { 'Header', HeaderModule }
 
         settings = {
-
             "cookie_secret": base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             "login_url": "/login",
-            }
+        }
 
         self.db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
 

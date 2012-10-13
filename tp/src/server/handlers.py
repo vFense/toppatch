@@ -47,7 +47,7 @@ class LoginHandler(BaseHandler):
     def post(self):
 
          if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
-            @printToSocket
+            #@printToSocket
             def sign():
                 return '{ "user": "%s", "status": "signed in" }' % self.get_argument('name')
             sign()
