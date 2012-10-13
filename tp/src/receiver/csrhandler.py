@@ -1,3 +1,4 @@
+import os
 from json import loads, dumps
 from time import sleep
 from jsonpickle import encode
@@ -42,6 +43,21 @@ class CsrHandOff():
                         self.results = self.sendCert(self.node, \
                             self.signed_cert)
                         print self.results.error, self.results.read_data
+                        if self.results.error:
+                            self.csr_exists, self.csr_oper = \
+                                    csrExists(self.session, self.client_ip)
+                            self.cert_exists, self.cert_oper = \
+                                    certExists(self.session, self.client_ip)
+                            file_deleted = os.remove(self.csr_path)
+                            print file_deleted
+                            self.csr_oper.delete()
+                            self.cert_oper.delete()
+                            self.node, self.node_exists = \
+                                    nodeExists(self.session, node_ip=self.client_ip)
+                            if self.node_exists:
+                                self.node.delete()
+
+
                 else:
                     print 'csr for %s %s' % (self.client_ip, self.error)
             self.session.close()
