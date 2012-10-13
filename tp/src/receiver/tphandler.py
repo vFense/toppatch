@@ -28,16 +28,20 @@ class HandOff():
         if self.valid_json:
             exists, self.node = nodeExists(self.session,
                 self.ip)
-            if not self.node:
-                addNode(self.session, self.ip)
-                exists, self.node = nodeExists(self.session,
-                    self.ip)
-                self.dataCollector()
-                print self.node
+            #if not self.node:
+            #    addNode(self.session, self.ip)
+            #    exists, self.node = nodeExists(self.session,
+            #        self.ip)
+            #    print self.node
                 #exists.update({"last_agent_update" : datetime.now(),
                 #               "last_node_update" : datetime.now()
                 #              })
                 #self.session.commit()
+            if self.node.last_agent_update == None:
+                self.dataCollector()
+                exists.update({"last_agent_update" : datetime.now(),
+                               "last_node_update" : datetime.now()
+                              })
             if self.json_object[OPERATION] == SYSTEM_INFO:
                 addSystemInfo(self.session, self.json_object, self.node)
             if self.json_object[OPERATION] == UPDATES_PENDING or \
