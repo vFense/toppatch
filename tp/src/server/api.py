@@ -520,7 +520,7 @@ class PatchesHandler(BaseHandler):
                         node = nodeFailed
                         if countFailed > 0:
                             count += 1
-                    if count > 0:
+                    if len(node) > 0:
                         data.append({"vendor" : {
                                         "patchID" : '',         #forcing empty string in patchID
                                         "name" : 'Microsoft'    #forcing microsoft on all patch names
@@ -536,7 +536,12 @@ class PatchesHandler(BaseHandler):
                                      "nodes/pend": countPending,
                                      "nodes/fail": countFailed,
                                      "nodes": node})
+
+                    print 'pending'
+                    print countPending
+                    print 'count'
                     print count
+                    print 'type'
                     print type
                 else:
                     data.append({"vendor" : {

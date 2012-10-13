@@ -28,6 +28,8 @@ define(
             startWs: function () {
                 var ws = new WebSocket("wss://" + window.location.host + "/ws");
                 ws.onmessage = function(evt) {
+                    var message = evt.data;
+                    console.log(message);
                     $.ajax({
                         url: '/api/networkData',
                         dataType: 'json',
@@ -37,19 +39,15 @@ define(
                             for(var i = 0; i < json.length; i++) {
                                 if(json[i].key == 'installed') {
                                     $('.success').children('dd').children().html(json[i].data);
-                                    console.log( $('.success').children('dd').children());
                                 }
                                 if(json[i].key == 'available') {
                                     $('.info').children('dd').children().html(json[i].data);
-                                    console.log( $('.info').children('dd').children())
                                 }
                                 if(json[i].key == 'pending') {
                                     $('.warning').children('dd').children().html(json[i].data);
-                                    console.log( $('.warning').children('dd').children());
                                 }
                                 if(json[i].key == 'failed') {
                                     $('.error').children('dd').children().html(json[i].data);
-                                    console.log( $('.error').children('dd').children());
                                 }
                             }
                         }

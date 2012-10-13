@@ -91,8 +91,20 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
+"""
+class HelloWorldProtocol(Protocol):
+    def connectionMade(self, msg):
+        SendToSocket(msg)
 
+class HelloWorldFactory(Factory):
+    protocol = HelloWorldProtocol
 
+class ThreadClass(threading.Thread):
+    def run(self):
+        reactor.listenTCP(8080, HelloWorldFactory())
+        #reactor.run()
+        reactor.run(installSignalHandlers=0)
+"""
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     https_server = tornado.httpserver.HTTPServer(Application(options.debug),
