@@ -19,7 +19,7 @@ def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
         hostname = None
     try:
         add_node = NodeInfo(client_ip, hostname,
-                True, True, datetime.now(), datetime.now())
+                True, True, agent_timestamp, node_timestamp)
         session.add(add_node)
         session.commit()
         return add_node

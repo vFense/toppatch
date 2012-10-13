@@ -29,7 +29,7 @@ class HandOff():
             exists, self.node = nodeExists(self.session,
                 self.ip)
             if not self.node:
-                addNode(self.session, self.ip, agent_timestamp=datetime.now(), node_timestamp=datetime.now())
+                addNode(self.session, self.ip)
                 exists, self.node = nodeExists(self.session,
                     self.ip)
                 self.dataCollector()
