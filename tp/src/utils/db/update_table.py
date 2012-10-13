@@ -228,10 +228,9 @@ def updateNodeNetworkStats(session, node_id):
     session.commit()
 
 def updateRebootStatus(session, node_id, data):
-    node, node_exists = nodeExists(session,node_id)
+    node, node_exists = nodeExists(session, node_id=node_id)
     print node
-    if exists:
-        node_id = exists.node_id
+    if node_exists:
         if data['operation'] == 'reboot':
             node.update({'reboot' : False})
             session.commit()
