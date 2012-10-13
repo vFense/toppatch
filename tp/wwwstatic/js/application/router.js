@@ -6,24 +6,24 @@ define(
         var AppRouter = Backbone.Router.extend({
             routes: {
                 // Dashboard
-                '':           'home',
-                'dashboard':  'home',
+                ''              : 'home',
+                'dashboard'     : 'home',
 
                 // Nodes
-                'nodes': 'showNodes',
-                'nodes?:query': 'showNodes',
-                'nodes/:id': 'showNode',
+                'nodes'         : 'showNodes',
+                'nodes?:query'  : 'showNodes',
+                'nodes/:id'     : 'showNode',
 
                 // Patches
-                'patches': 'showPatches',
+                'patches'       : 'showPatches',
                 'patches?:query': 'showPatches',
-                'patches/:id': 'showPatch',
+                'patches/:id'   : 'showPatch',
                 
                 // MultiPatch Interface
-                'multi': 'showMulti',
+                'multi'         : 'showMulti',
 
                 // Default
-                '*other':     'defaultAction'
+                '*other'        : 'defaultAction'
             },
             initialize: function () {
                 // Create a new ViewManager with #dashboard-view as its target element
