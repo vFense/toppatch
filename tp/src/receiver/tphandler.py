@@ -14,6 +14,7 @@ INSTALL = 'install'
 UNINSTALL = 'uninstall'
 UPDATES_PENDING = 'updates_pending'
 UPDATES_INSTALLED = 'updates_installed'
+REBOOT = 'reboot'
 SOFTWARE_INSTALLED = 'system_applications'
 SYSTEM_INFO = 'system_info'
 STATUS_UPDATE = 'status'
@@ -47,6 +48,8 @@ class HandOff():
                 self.updateResults()
             if self.json_object[OPERATION] == UNINSTALL:
                 self.updateResults()
+            if self.json_object[OPERATION] == REBOOT:
+                updateRebootStatus(self.session, exists)
             else:
                 pass
         self.session.close()
