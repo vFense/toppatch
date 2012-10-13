@@ -19,11 +19,15 @@
             </dl>
         </section>
     </article>
+    <div class="alert alert-success alert-block fade in hide">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        Operation sent&nbsp;
+    </div>
     <article>
         <header><strong>Patches Available</strong></header>
         <% if(model.get('patch/need').length != 0) { %>
         <section class="list">
-            <form action="/submitForm" method="post" class="form-inline">
+            <form action="/submitForm" method="post" class="form-inline" id="available">
                 <header class="clearfix">
                     <label class="checkbox inline">
                         <input type="checkbox" class="toggle-all">Select / Deselect All
@@ -64,7 +68,7 @@
         <header><strong>Patches Done</strong></header>
         <% if(model.get('patch/done').length != 0) { %>
         <section class="list">
-            <form action="/submitForm" method="post" class="form-inline">
+            <form action="/submitForm" method="post" class="form-inline" id="done">
                 <header class="clearfix">
                     <label class="checkbox inline">
                         <input type="checkbox" class="toggle-all">Select / Deselect All
@@ -104,15 +108,10 @@
     <article>
         <header><strong>Patches Pending</strong></header>
         <% if(model.get('patch/pend').length != 0) { %>
-        <section class="list">
+        <section class="list" id="pending">
             <% _.each(model.get('patch/pend'), function (patch, i) { %>
             <div class="item clearfix">
-                    <span class="desc">
-                        <label class="checkbox inline">
-                            <input type="checkbox" id="<%= patch %>" name="patches" value="<%= patch %>">
-                            Patch ID: <%= patch %>
-                        </label>
-                    </span>
+                    <span class="desc">Patch ID: <%= patch %></span>
                     <span class="pull-right">
                         <a href="#patches/<%= patch %>">More information</a>
                     </span>
@@ -120,8 +119,8 @@
             <% }); %>
         </section>
         <% }  else { %>
-        <section class="list">
-            <div class="item">
+        <section class="list" id="pending">
+            <div class="item" id="no-pending">
                 <small><em>No patches to display</em></small>
             </div>
         </section>
@@ -131,7 +130,7 @@
         <header><strong>Patches Failed</strong></header>
         <% if(model.get('patch/fail').length != 0) { %>
         <section class="list">
-            <form action="/submitForm" method="post" class="form-inline">
+            <form action="/submitForm" method="post" class="form-inline" id="failed">
                 <header class="clearfix">
                     <label class="checkbox inline">
                         <input type="checkbox" class="toggle-all">Select / Deselect All
@@ -184,7 +183,7 @@
             });
         }
         $('form').submit(function (e) {
-            if(!this.id) {
+            if(this.id != 'reboot-form') {
                 var fields = $(this).find('input[name="patches"]:checked');
                 if (!fields.length) {
                     alert('Please select at least one patch');

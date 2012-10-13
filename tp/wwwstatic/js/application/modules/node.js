@@ -30,11 +30,36 @@ define(
                 'submit form': 'submit'
             },
             submit: function (evt) {
-                var form = $(evt.target);
+                var form = $(evt.target),
+                    type = form.attr('id'),
+                    controlCheckbox = form,
+                    patches = $(evt.target).find('input[name="patches"]:checked');
+                console.log(form.serialize());
                 $.post("/submitForm?" + form.serialize(),
                     function(json) {
                         console.log(json);
                 });
+                $('.alert').show();
+                patches.each(function () {
+                    var item = $(this).parents('.item'),
+                        span = $(this).parents('span'),
+                        label = $(this).parent();
+                    $(this).remove();
+                    var patch = label.html();
+                    span.html(patch);
+                    label.remove();
+                    if(type == 'available' || type == 'failed') {
+                        item.appendTo('#pending');
+                        if($('#no-pending')) {
+                            $('#no-pending').remove();
+                        }
+                    } else {
+                        item.remove();
+                    }
+                });
+                if(form.find('input:checked').attr('checked')) {
+                    form.find('input:checked').attr('checked', false);
+                }
                 return false;
             },
             beforeRender: $.noop,
