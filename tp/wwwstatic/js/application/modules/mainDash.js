@@ -182,7 +182,8 @@ define(
             widgetview = new WidgetView({ el: 'body' }),
             barGraph = function (selection) {
                 //var data = app.data.osData,
-                var width = $(selection).width(), title;
+                var width = $(selection).width();
+                $(selection).attr('class', 'bar graph');
                 //title = properties.get('widgetTitle') === 'Default' ? null : properties.get('widgetTitle');
                 d3.json("../api/graphData", function(json) {
                     var barWidth = (width / json.length) - 10,
@@ -194,14 +195,15 @@ define(
                 //var data = app.data.summaryData,
                 //title = properties.get('widgetTitle') === 'Default' ? "Summary Chart" : properties.get('widgetTitle'),
                 var interGraph = app.chart.partition();
+                $(selection).attr('class', 'summary graph');
                 d3.json("../api/summaryData", function(json) {
                     d3.select(selection).datum(json).call(interGraph);
                 });
             },
             pieGraph = function (selection) {
-                var data = app.data.osData;
                 var width = $(selection).width(),
                     pieChart = app.chart.pie().width(width);
+                $(selection).attr('class', 'pie graph');
                 //title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle')
                 d3.json("../api/graphData", function(json) {
                     d3.select(selection).datum(json).call(pieChart);
@@ -219,6 +221,7 @@ define(
                     ],
                     width = $(selection).width(),
                     lineChart = app.chart.line().width(width);
+                $(selection).attr('class', 'line graph');
                 //title = properties.get('widgetTitle') === 'Default' ? "Line Graph" : properties.get('widgetTitle'),
                 d3.select(selection).datum(data).call(lineChart);
             },
@@ -227,6 +230,7 @@ define(
                 //title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
                 var width = $(selection).width(),
                     stackedChart = app.chart.stackedBar().width(width);
+                $(selection).attr('class', 'stacked graph');
                 d3.json("../api/graphData", function(json) {
                     d3.select(selection).datum(json).call(stackedChart);
                 });
@@ -234,22 +238,56 @@ define(
             setProperties = function (obj, param) {
                 if (param === "existing") {
                     var widgetName = $(obj).parents('.widget').attr("id"),
-                        title = $("#" + widgetName + "-title").html();
+                        title = $("#" + widgetName + "-title").html(),
+                        span = $("#" + widgetName).attr('class').split(' ')[0].match(/\d+$/)[0],
+                        graphType = $("#" + widgetName).find('.graph').attr('class').split(' ')[0],
+                        graph = $('input:radio[name=graph]'),
+                        size = $('input:radio[name=radio]'),
+                        widgetType = $('input:radio[name=type]');
                     properties.set({
                         widgetName: widgetName,
                         currentWidget: "existing",
                         widgetTitle: title
                     });
-                    $('#title').val('').attr("placeholder", title);
+                    size.each(function () {
+                        if($(this).val() == span) {
+                            $(this).attr('checked', true);
+                        } else {
+                            $(this).attr('checked', false);
+                        }
+                    });
+                    widgetType.each(function () {
+                        if($(this).val() == 'graph') {
+                            $(this).attr('checked', true);
+                        } else {
+                            $(this).attr('checked', false);
+                        }
+                    });
+                    graph.each(function () {
+                       if($(this).val() == graphType) {
+                           $(this).attr('checked', true);
+                       } else {
+                           $(this).attr('checked', false);
+                       }
+                    });
+                    $('#title').val(title).attr("placeholder", title);
+                    widgetview.graphSetting();
                 } else if (param === "new") {
+                    if(widgetview.counter > 5) {
+                        console.log('too many widgets');
+                        setTimeout(function(){ $('#widgetProperties').modal('hide'); }, 50);
+                    }
                     properties.set({
                         currentWidget: "new"
                     });
+                    $("#graphSettings").hide();
+                    $('INPUT:text, SELECT', '#properties-form').val('');
+                    $('INPUT:checkbox, INPUT:radio', '#properties-form').removeAttr('checked').removeAttr('selected');
                     $('#title').val('').attr("placeholder", "Default");
                 }
             },
             hideWidget = function (obj) {
-                $(obj).parents('.widget').remove();
+                $(obj).parents('.widget').hide();
             },
             exports = {
                 Model: Backbone.Model.extend({}),
@@ -325,7 +363,6 @@ define(
                                         template = _.template($("#widget_template").html(), variables);
                                     $("#insert").append(template);
                                     widgetview.counter++;
-                                    console.log(widgetview.counter);
                                     $(".properties").click(function () { setProperties(this, 'existing'); });
                                     $('.remove').click(function () { hideWidget(this); });
                                 }

@@ -16,9 +16,13 @@ define(
                 initialize: function () {
                     this.offset   = this.offset || 0;
                     this.getCount = this.getCount  || 10;
-                    this.query    = '?'
-                        + 'count=' + this.getCount
+                    this.query = this.type ?
+                    '?' + 'type=' + this.type
+                        + '&count=' + this.getCount
+                        + '&offset=' + this.offset :
+                    '?' + '&count=' + this.getCount
                         + '&offset=' + this.offset;
+
                     window.myCollection = this;
                 }
             }),

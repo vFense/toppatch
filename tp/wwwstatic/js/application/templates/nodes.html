@@ -10,11 +10,9 @@
                 </a>
             </div>
         </header>
-        <%
-            if (data.length > 0) {
-        %>
-            <div class="legend">
-                <span><strong>Host Name</strong> — Host OS</span>
+        <% if (data.length > 0) { %>
+        <div class="legend">
+            <span>Status — <strong>Host Name</strong> — Host OS</span>
                 <span class="patches pull-right inlineBlock">
                     Patches
                     <span class="done">Done</span> /
@@ -24,10 +22,20 @@
                 </span>
             </div>
             <div class="items">
-                <%  _.each(data, function (node) { %>
+                <% _.each(data, function (node) { %>
                     <div class="item linked clearfix">
                         <a href="#nodes/<%= node.id %>">
-                            <span class="desc"><strong><%= node.ip %></strong> — <%= node['os/name'] %></span>
+                            <span class="desc">
+                                <% 
+                                    if (node.reboot) {
+                                        print('<i style="color: orange;"class="icon-warning-sign"></i>');
+                                    } else if (node['host/status'] && node['agent/status']) {
+                                        print('<i style="color: green;"class="icon-ok"></i>');
+                                    } else {
+                                        print('<i style="color: red;"class="icon-warning-sign"></i>');
+                                    } 
+                                %> — <strong><%= node.ip %></strong> — <%= node['os/name'] %>
+                            </span>
                             <span class="pull-right">
                                 <span class="done"><%= node['patch/done'] %></span> /
                                 <span class="pend"><%= node['patch/pend'] %></span> /
@@ -39,7 +47,7 @@
                     </div>
                 <% }); %>
             </div>
-            <% } %>
+        <% } %>
         <footer class="clearfix">
             <small>Viewing <%= start %> – <%= end %> of <%= recordCount %> Nodes</small>
             <div class="pull-right hidden-print">

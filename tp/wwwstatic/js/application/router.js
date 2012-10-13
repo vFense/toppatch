@@ -19,6 +19,7 @@ define(
                 'patches?:query': 'showPatches',
                 'patches/:id': 'showPatch',
                 
+                // MultiPatch Interface
                 'multi': 'showMulti',
 
                 // Default
@@ -27,14 +28,12 @@ define(
             initialize: function () {
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
+                app.startWs();
                 this.viewTarget = '#dashboard-view';
                 this.viewManager = new app.ViewManager({'selector': this.viewTarget});
             },
             home: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
-            },
-            patchAdmin: function () {
-                this.show({hash: '#patchAdmin', title: 'Patch Administration', view: 'modules/patchAdmin'});
             },
             showNodes: function (query) {
                 var that = this;
@@ -63,6 +62,7 @@ define(
                     if ($.type(query) === 'string') {
                         var params = app.parseQuery(query);
                         myView.Collection = myView.Collection.extend({
+                            type: params.type,
                             getCount: params.count,
                             offset: params.offset
                         });
@@ -105,7 +105,7 @@ define(
 
                 app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
                 app.vent.trigger('domchange:title', settings.title);
-
+                
                 if ($.type(settings.view) === 'string') {
                     require([settings.view], function (myView) {
                         var view = new myView.View();

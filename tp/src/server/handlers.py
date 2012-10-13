@@ -4,16 +4,15 @@ import tornado.websocket
 try: import simplejson as json
 except ImportError: import json
 from models.node import NodeInfo
+from utils.db.client import *
+from utils.agentoperation import AgentOperation
 from server.decorators import authenticated_request
+from jsonpickle import encode
 
+engine = initEngine()
 
-def printToSocket(fn):
-    def wrapped():
-        if WebsocketHandler.socket:
-            return WebsocketHandler.socket.write_message(fn())
-        else:
-            print fn()
-    return wrapped
+LISTENERS = []
+
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -48,7 +47,7 @@ class LoginHandler(BaseHandler):
     def post(self):
 
          if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
-            @printToSocket
+            #@printToSocket
             def sign():
                 return '{ "user": "%s", "status": "signed in" }' % self.get_argument('name')
             sign()
@@ -87,24 +86,28 @@ class testHandler(BaseHandler):
     def get(self):
         self.render('../data/templates/websocket-test.html')
 
-class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
+def SendToSocket(message):
+    print 'in SendToSocket'
+    global LISTENERS
+    print LISTENERS
+    for socket in LISTENERS:
+        print 'sending to socket'
+        print socket
+        socket.write_message(message)
 
-    socket = ""
+class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
     @authenticated_request
     def open(self):
+        LISTENERS.append(self)
         print 'new connection'
-        global socket
-        WebsocketHandler.socket = self
 
     def on_message(self, message):
         print 'message received %s' % message
 
     def on_close(self):
         print 'connection closed...'
-        WebsocketHandler.socket = ""
+        LISTENERS.remove(self)
 
-    def callback(self):
-        self.write_message(globalMessage)
 
 class LogoutHandler(BaseHandler):
     def get(self):
@@ -142,20 +145,49 @@ class DeveloperRegistrationHandler(BaseHandler):
 
 class FormHandler(BaseHandler):
     @authenticated_request
+    def get(self):
+        self.write('Invalid submission')
+
+    @authenticated_request
     def post(self):
         resultjson = []
         node = {}
-        node_id = self.get_argument('node')
-        operation = self.get_argument('operation')
+        result = []
+        session = createSession(engine)
         try:
-            patches = self.request.arguments['patches']
-            node['node_id'] = node_id
-            node[operation] = patches
-            resultjson.append(node)
-            self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(resultjson, indent=4))
+            node_id = self.get_argument('node')
         except:
-            self.write('Please provide a selection of patches')
+            node_id = None
+        try:
+            params = self.get_argument('params')
+            print params
+        except:
+            params = None
+        if node_id:
+            operation = self.get_argument('operation')
+            if operation == 'install':
+                patches = self.request.arguments['patches']
+                node['node_id'] = node_id
+                node['operation'] = operation
+                node['data'] = list(patches)
+                resultjson.append(encode(node))
+                #AgentOperation(session, resultjson)
+            elif operation == 'reboot':
+                node['operation'] = operation
+                node['node_id'] = node_id
+                resultjson.append(encode(node))
+                #AgentOperation(session, resultjson)
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(resultjson))
+        if params:
+            params = re.sub(r'(^\[|\]$)', '', params)
+            resultjson = json.loads(params)
+            result.append(json.dumps(resultjson))
+            #AgentOperation(session, result)
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(result))
+
+
 
 
 
