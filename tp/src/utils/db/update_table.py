@@ -210,7 +210,6 @@ def updateNodeNetworkStats(session, node_id):
         add_node_stats = NodeStats(node_id, len(patchesinstalled), \
                           len(patchesuninstalled), len(patchespending), 0)
         session.add(add_node_stats)
-    TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
     nstats = session.query(ManagedWindowsUpdate)
     totalinstalled = nstats.filter_by(installed=True).all()
     totalnotinstalled = nstats.filter_by(installed=False).all()
@@ -227,7 +226,6 @@ def updateNodeNetworkStats(session, node_id):
         session.add(network_sstats_init)
 
     session.commit()
-    TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
 
 def addResults(session, data):
     exists, operation = operationExists(session, data['operation_id'])
@@ -279,6 +277,7 @@ def addResults(session, data):
                 operation.update({'results_id' : results.id,
                                   'results_received' : datetime.now()})
                 updateNodeNetworkStats(session, node_id)
+                TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
                 return results
             except:
                 session.rollback()
