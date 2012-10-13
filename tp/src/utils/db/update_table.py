@@ -258,7 +258,8 @@ def addResults(session, data):
                         node.update({'reboot' : reboot})
                 elif data['operation'] == "uninstall" and msg['result'] == 'success':
                     print "deleting patch from managed_windows_updates %s on node_id %s" % ( msg['toppatch_id'], node_id )
-                    update_oper.delete()
+                    update_oper.update({'installed' : False,
+                                        'pending' : False})
                     if reboot:
                         node.update({'reboot' : reboot})
                 elif data['operation'] == "uninstall" and msg['result'] == 'failed':
