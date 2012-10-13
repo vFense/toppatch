@@ -10,7 +10,7 @@ from models.node import *
 from models.ssl import *
 from sqlalchemy import create_engine
 
-db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
 db.echo = True
 
 db.drop(NodeInfo)
@@ -23,6 +23,7 @@ db.drop(WindowsUpdate)
 db.drop(ManagedWindowsUpdate)
 db.drop(CsrInfo)
 db.drop(SslInfo)
+db.drop(User)
 Base.metadata.drop_all(db)
 
 db.create(NodeInfo)
@@ -34,5 +35,6 @@ db.create(WindowsUpdate)
 db.create(ManagedWindowsUpdate)
 db.create(CsrInfo)
 db.create(SslInfo)
+db.create(User)
 Base.metadata.create_all(db)
 

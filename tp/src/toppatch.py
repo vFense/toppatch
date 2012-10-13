@@ -35,7 +35,6 @@ class Application(tornado.web.Application):
 
     def __init__(self, debug):
         handlers = [
-
             (r"/?", RootHandler),
             (r"/login/?", LoginHandler),
             (r"/signup/?", SignupHandler),
@@ -67,7 +66,8 @@ class Application(tornado.web.Application):
             (r"/css/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/css"}),
             (r"/font/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/font"}),
             (r"/img/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/img"}),
-            (r"/js/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/js"})
+            (r"/js/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/js"}),
+            (r"/(.*?).html", tornado.web.StaticFileHandler, {"path": "wwwstatic"})
         ]
 
         template_path = "/opt/TopPatch/tp/templates"
@@ -80,7 +80,7 @@ class Application(tornado.web.Application):
             "login_url": "/login",
             }
 
-        self.db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+        self.db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
 
         Session = sessionmaker(bind=self.db)
         self.session = Session()

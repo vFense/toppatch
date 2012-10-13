@@ -17,7 +17,7 @@ from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
 
-db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
 db.echo = True
 
 class ApiHandler(BaseHandler):
