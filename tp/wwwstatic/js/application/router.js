@@ -22,6 +22,10 @@ define(
                 // MultiPatch Interface
                 'multi'         : 'showMulti',
 
+                // Account Administration Panels
+                'account'       : 'showAccountModal',
+                'account/:tab'  : 'showAccountModal',
+
                 // Default
                 '*other'        : 'defaultAction'
             },
@@ -80,6 +84,9 @@ define(
             showMulti: function () {
                 var that = this;
                 this.show({hash: '#multi', title: 'Patch Operations', view: 'modules/multi'});
+            },
+            showAccountModal: function (tab) {
+                console.log(['account', tab]);
             },
             defaultAction: function (other) {
                 this.show(
