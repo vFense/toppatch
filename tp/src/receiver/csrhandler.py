@@ -41,7 +41,7 @@ class CsrHandOff():
                             self.signed_cert)
                         self.results = self.sendCert(self.node, \
                             self.signed_cert)
-                        print self.results.error self.results.read_data
+                        print self.results.error, self.results.read_data
                 else:
                     print 'csr for %s %s' % (self.client_ip, self.error)
             self.session.close()
