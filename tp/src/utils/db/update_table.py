@@ -247,23 +247,27 @@ def addResults(session, data):
                                         'date_installed' : datetime.now(),
                                         'pending' : False})
                     if reboot:
-                        node.update({'reboot' : reboot})
+                        if node_exists.reboot == False:
+                            node.update({'reboot' : reboot})
                 elif data['operation'] == "install" and msg['result'] == 'failed':
                     update_oper.update({'installed' : False,
                                         'date_installed' : datetime.now(),
                                         'pending' : False})
                     if reboot:
-                        node.update({'reboot' : reboot})
+                        if node_exists.reboot == False:
+                            node.update({'reboot' : reboot})
                 elif data['operation'] == "uninstall" and msg['result'] == 'success':
                     print "deleting patch from managed_windows_updates %s on node_id %s" % ( msg['toppatch_id'], node_id )
                     update_oper.update({'installed' : False,
                                         'pending' : False})
                     if reboot:
-                        node.update({'reboot' : reboot})
+                        if node_exists.reboot == False:
+                            node.update({'reboot' : reboot})
                 elif data['operation'] == "uninstall" and msg['result'] == 'failed':
                     update_oper.update({'installed' : True, 'date_installed' : datetime.now()})
                     if reboot:
-                        node.update({'reboot' : reboot})
+                        if node_exists.reboot == False:
+                            node.update({'reboot' : reboot})
             error = None
             if "error" in msg:
                 error = msg['error']
