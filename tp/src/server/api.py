@@ -445,21 +445,23 @@ class PatchesHandler(BaseHandler):
                 countInstalled = 0
                 countFailed = 0
                 countPending = 0
-                for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id).all():
-                    if v.installed:
+                for v in session.query(ManagedWindowsUpdate, NodeInfo).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id).join(NodeInfo).all():
+                    print 'THIS IS WHAT THE QUERY RETURNS ********************'
+                    print v
+                    if v[0].installed:
                         countInstalled += 1
-                        nodeInstalled.append(v.node_id)
-                    elif v.pending:
+                        nodeInstalled.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                    elif v[0].pending:
                         countPending += 1
-                        nodePending.append(v.node_id)
-                    elif v.attempts > 0:
+                        nodePending.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                    elif v[0].attempts > 0:
                         countFailed += 1
-                        nodeFailed.append(v.node_id)
+                        nodeFailed.append({'id': v[0].node_id, 'ip': v[1].ip_address})
                         countAvailable += 1
-                        nodeAvailable.append(v.node_id)
+                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].ip_address})
                     else:
                         countAvailable += 1
-                        nodeAvailable.append(v.node_id)
+                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].ip_address})
                 resultjson = {
                     "name" : u.title,
                     "type": "Security Patch",             #forcing Patch into type

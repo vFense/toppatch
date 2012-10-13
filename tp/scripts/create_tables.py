@@ -25,6 +25,8 @@ db.drop(CsrInfo)
 db.drop(SslInfo)
 Base.metadata.drop_all(db)
 
+
+
 db.create(NodeInfo)
 db.create(Operations)
 db.create(Results)

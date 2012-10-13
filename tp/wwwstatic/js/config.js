@@ -13,8 +13,6 @@ require.config({
         'modules'   : 'application/modules',
         'templates' : 'application/templates',
         'utilities' : 'application/utilities',
-
-
         // Libraries
         // ---------------------------------------------------------------------
         'jquery'            : 'libs/jquery/jquery-1.8.1',
