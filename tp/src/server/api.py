@@ -520,20 +520,24 @@ class PatchesHandler(BaseHandler):
                 if type:
                     if type == 'available':
                         node = nodeAvailable
-                        if countAvailable > 0:
-                            count += 1
+                        if len(node) > 0:
+                            for j in session.query(func.count(distinct(ManagedWindowsUpdate.toppatch_id))).filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False):
+                                count = j[0]
                     elif type == 'installed':
                         node = nodeInstalled
-                        if countInstalled > 0:
-                            count += 1
+                        if len(node) > 0:
+                            for j in session.query(func.count(distinct(ManagedWindowsUpdate.toppatch_id))).filter(ManagedWindowsUpdate.installed == True):
+                                count = j[0]
                     elif type == 'pending':
                         node = nodePending
-                        if countPending > 0:
-                            count += 1
+                        if len(node) > 0:
+                            for j in session.query(func.count(distinct(ManagedWindowsUpdate.toppatch_id))).filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True):
+                                count = j[0]
                     elif type == 'failed':
                         node = nodeFailed
-                        if countFailed > 0:
-                            count += 1
+                        if len(node) > 0:
+                            for j in session.query(func.count(distinct(ManagedWindowsUpdate.toppatch_id))).filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0):
+                                count = j[0]
                     if len(node) > 0:
                         data.append({"vendor" : {
                                         "patchID" : '',         #forcing empty string in patchID
@@ -550,13 +554,6 @@ class PatchesHandler(BaseHandler):
                                      "nodes/pend": countPending,
                                      "nodes/fail": countFailed,
                                      "nodes": node})
-
-                    print 'pending'
-                    print countPending
-                    print 'count'
-                    print count
-                    print 'type'
-                    print type
                 else:
                     data.append({"vendor" : {
                                         "patchID" : '',         #forcing empty string in patchID
