@@ -105,7 +105,7 @@ class AgentOperation():
                 if 'data' in jsonobject:
                     for patch in jsonobject['data']:
                         if oper_type == 'install':
-                            patcher = self.session.query(ManagedWindowsUpdate).filter_by(toppatch_id=patch)
+                            patcher = self.session.query(ManagedWindowsUpdate).filter_by(toppatch_id=patch).filter_by(node_id=node_id)
                             patcher.update({"pending" : True})
                             self.session.commit()
                             updateNodeNetworkStats(self.session, node_id)
