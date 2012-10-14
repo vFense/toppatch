@@ -12,20 +12,32 @@ define(
                     'click #clear': 'clear'
                 },
                 submit: function (evt) {
-                    var form = $(evt.target);
-                    $.post("/adminForm?" + form.serialize(),
-                        function(json) {
-                            console.log(json);
-                            form.find('.control-group').addClass('success');
-                            form.find('.controls').append("<span class='help-inline'>Password changed!</span>");
-                            form.find('input[type=text]').val('');
-                        }
-                    );
+                    var form = $(evt.target),
+                        password = form.find('input[type=text]'),
+                        controlgroup = form.find('.control-group'),
+                        controls = form.find('.controls'),
+                        helptext = form.find('.help-inline');
+                    if(password.val()) {
+                        $.post("/adminForm?" + form.serialize(),
+                            function(json) {
+                                console.log(json);
+                                controlgroup.removeClass('error').addClass('success');
+                                helptext.remove();
+                                controls.append("<span class='help-inline'>Password changed!</span>");
+                                password.val('');
+                            }
+                        );
+                    } else {
+                        controlgroup.removeClass('success').addClass('error');
+                        helptext.remove();
+                        controls.append("<span class='help-inline'>Password is blank!</span>");
+                    }
                     return false;
                 },
                 clear: function (evt) {
                     var userName = window.User.get('name');
                     localStorage.removeItem(userName);
+                    $('#clear-ok').show();
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
