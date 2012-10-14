@@ -16,13 +16,19 @@
                 </dd>
                 <dt>Host Status:</dt>
                 <dd>
-                    <% if (model.reboot) {
-                        print('<form id="reboot-form">Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/><input type="hidden" name="operation" value="reboot" /><input type="hidden" name="node" value="' + model.id + '"/></form>');
-                    } else if (model['host/status']) {
-                        print('Running &nbsp;<i style="color: green;" class="icon-ok"></i>');
-                    } else {
-                        print('Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>');
                     } %>
+                    <% if (model.reboot) { %>
+                        <form id="reboot-form" class="noMargin">
+                            Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;
+                            <input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/>
+                            <input type="hidden" name="operation" value="reboot" />
+                            <input type="hidden" name="node" value="' + model.id + '"/>
+                        </form>
+                    <% } else if (model['host/status']) { %>
+                        Running &nbsp;<i style="color: green;" class="icon-ok"></i>
+                    <% } else { %>
+                        Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>
+                    <% } %>
                 </dd>
             </dl>
         </section>
