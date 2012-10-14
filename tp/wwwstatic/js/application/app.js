@@ -29,8 +29,7 @@ define(
             startWs: function () {
                 var ws = new WebSocket("wss://" + window.location.host + "/ws");
                 ws.onmessage = function(evt) {
-                    var message = evt.data;
-                    console.log(message);
+                    console.log(['websocket', 'message', evt]);
                     $.ajax({
                         url: '/api/networkData',
                         dataType: 'json',
@@ -55,14 +54,13 @@ define(
                     });
                 };
                 ws.onclose = function(evt) {
-                    console.log(evt);
-                    console.log('connection closed');
+                    console.log(['websocket', 'closed', evt]);
                 };
                 ws.onopen = function(evt) {
-                    console.log('connection opened');
+                    console.log(['websocket', 'opened', evt]);
                 };
                 ws.onerror = function(evt) {
-                    console.log('Error: ' + evt);
+                    console.log(['websocket', 'error', evt]);
                 }
             },
             parseQuery: function (query) {
