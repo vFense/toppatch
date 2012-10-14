@@ -3,9 +3,12 @@ define(
     function ($, _, Backbone, vent, ViewManager, charts) {
         "use strict";
 
-        var app = window.app = {
-            root: '/'
-        }, overviewInstalled = {'data': 0}, overviewPending = {'data': 0}, overviewAvailable = {'data': 0}, overviewFailed = {'data': 0};
+        var app = window.app = { root: '/' },
+            overviewInstalled = {'data': 0},
+            overviewPending = {'data': 0},
+            overviewAvailable = {'data': 0},
+            overviewFailed = {'data': 0};
+
         $.ajax({
             url: '/api/networkData',
             dataType: 'json',
