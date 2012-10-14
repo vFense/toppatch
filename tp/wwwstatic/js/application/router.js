@@ -8,6 +8,7 @@ define(
                 // Dashboard
                 '':           'home',
                 'dashboard':  'home',
+                'admin': 'showAdmin',
 
                 // Patch Routes
                 'patchAdmin': 'patchAdmin',
@@ -38,8 +39,11 @@ define(
             home: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
             },
+            showAdmin: function () {
+                this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
+            },
             patchAdmin: function () {
-                this.show({hash: '#patchAdmin', title: 'Patch Administration', view: 'modules/patchAdmin'});
+                //this.show({hash: '#patchAdmin', title: 'Patch Administration', view: 'modules/patchAdmin'});
             },
             showTest: function () {
                 this.show({hash: '#test', title: 'Test Page', view: 'modules/widget'});

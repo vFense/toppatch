@@ -43,8 +43,9 @@ define(
                 patches.each(function () {
                     var item = $(this).parents('.item'),
                         span = $(this).parents('span'),
-                        label = $(this).parent();
-                    $(this).remove();
+                        label = $(this).parent(),
+                        checkbox = $(this);
+                    checkbox.remove();
                     var patch = label.html();
                     span.html(patch);
                     label.remove();
