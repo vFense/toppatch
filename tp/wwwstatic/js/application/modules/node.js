@@ -24,24 +24,50 @@ define(
                 onRender: $.noop,
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
-        
+
                     var template = _.template(this.template),
                         data = this.collection.toJSON()[0];
-        
+
                     this.$el.html('');
-        
+
                     this.$el.append(template({model: data}));
-        
+
                     this.$el.find("a.disabled").on("click", false);
-        
+
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 },
                 submit: function (evt) {
-                    var form = $(evt.target);
+                    var form = $(evt.target),
+                        type = form.attr('id'),
+                        patches = $(evt.target).find('input[name="patches"]:checked');
+                    console.log(form.serialize());
                     $.post("/submitForm?" + form.serialize(),
-                        function(json) { console.log(json); }
-                    );
+                        function(json) {
+                            console.log(json);
+                        });
+                    $('.alert').show();
+                    patches.each(function () {
+                        var item = $(this).parents('.item'),
+                            span = $(this).parents('span'),
+                            label = $(this).parent(),
+                            checkbox = $(this);
+                        checkbox.remove();
+                        var patch = label.html();
+                        span.html(patch);
+                        label.remove();
+                        if(type == 'available' || type == 'failed') {
+                            item.appendTo('#pending');
+                            if($('#no-pending')) {
+                                $('#no-pending').remove();
+                            }
+                        } else {
+                            item.remove();
+                        }
+                    });
+                    if(form.find('input:checked').attr('checked')) {
+                        form.find('input:checked').attr('checked', false);
+                    }
                     return false;
                 },
                 clearFilter: function () {

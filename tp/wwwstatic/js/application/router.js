@@ -22,9 +22,14 @@ define(
                 // MultiPatch Interface
                 'multi'         : 'showMulti',
 
+                // Admin panel
+                'admin'         : 'showAdmin',
+
+                /*
                 // Account Administration Panels
                 'account'       : 'showAccountModal',
                 'account/:tab'  : 'showAccountModal',
+                */
 
                 // Default
                 '*other'        : 'defaultAction'
@@ -82,13 +87,17 @@ define(
                 });
             },
             showMulti: function () {
-                var that = this;
                 this.show({hash: '#multi', title: 'Patch Operations', view: 'modules/multi'});
             },
+            showAdmin: function () {
+                this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
+            },
+            /*
             showAccountModal: function (tab) {
                 console.log(['account', tab]);
             },
-            defaultAction: function (other) {
+            */
+            defaultAction: function (/* other */) {
                 this.show(
                     {
                         hash: '#404',

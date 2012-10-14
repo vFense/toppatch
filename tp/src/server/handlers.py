@@ -187,6 +187,14 @@ class FormHandler(BaseHandler):
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(result))
 
+class AdminHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        try:
+            password = self.get_argument('password')
+        except:
+            password = None
+        self.write(password)
 
 
 

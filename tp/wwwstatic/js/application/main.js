@@ -13,7 +13,6 @@ require(
             success: function (json) {
                 userSettings = json;
                 userName = userSettings['name'];
-                //localStorage.clear();
                 if(localStorage.getItem(userName) === null) {
                     User.Model = Backbone.Model.extend({
                         defaults: {
@@ -26,7 +25,7 @@ require(
                             widgets: {
                                 'graph': ['pie', 'bar', 'summary'],
                                 'spans': [6, 6, 12],
-                                'titles': ['Nodes in Network by OS', 'Nodes in Network by OS', 'Summary Charts']
+                                'titles': ['Patches by Severity', 'Nodes in Network by OS', 'Summary Charts']
                             }
                         }
                     });
