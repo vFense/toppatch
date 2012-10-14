@@ -53,6 +53,14 @@ H1, H2, H3, H4, H5, H6 { margin:0; }
     line-height: @em*( @pageFooterHeight )/@baseFontSize;
 }
 
+.reader-only {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px; width: 1px;
+    margin: -1px; padding: 0; border: 0;
+}
+
 .ui-sortable-helper {
     opacity: 0.7;
 }
