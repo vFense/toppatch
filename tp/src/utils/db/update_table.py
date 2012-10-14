@@ -292,6 +292,7 @@ def addResults(session, data):
                 operation.update({'results_id' : results.id,
                                   'results_received' : datetime.now()})
                 updateNodeNetworkStats(session, node_id)
+                session.commit()
                 TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
                 return results
             except:
