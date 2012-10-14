@@ -8,18 +8,7 @@ define(
         MultiPatch.View = Backbone.View.extend({
             that: this,
             template: myTemplate,
-            initialize: function () {
-                this.viewTarget = '#multi-patch';
-                this.viewManager = new app.ViewManager({'selector': this.viewTarget});
-
-                this.controller = {
-                    viewManager: new app.ViewManager({'selector': '.controller'})
-                }
-
-                this.detail = {
-                    viewManager: new app.ViewManager({'selector': '.detail'})
-                }
-            },
+            initialize: function () {},
             events: {
                 'click .id': 'changeView',
                 'click input:checkbox': 'addPatch',
