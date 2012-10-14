@@ -35,7 +35,7 @@ define(
                         dataType: 'json',
                         async: false,
                         success: function (json) {
-                            console.log(json)
+                            console.log(json);
                             for(var i = 0; i < json.length; i++) {
                                 if(json[i].key == 'installed') {
                                     $('.success').children('dd').children().html(json[i].data);
