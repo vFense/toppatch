@@ -192,9 +192,11 @@ def updateNode(session, node_id):
         installed = installed_oper.first()
         pending_oper = session.query(ManagedWindowsUpdate).filter_by(pending=True).filter_by(node_id=node_id)
         pending = pending_oper.all()
+        print pending
         for i in pending:
             if installed and pending:
                 i.pending=False
+                print i.pending
         session.commit()
         return node
 
