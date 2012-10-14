@@ -205,7 +205,7 @@ define(
                     pieChart = app.chart.pie().width(width);
                 $(selection).attr('class', 'pie graph');
                 //title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle')
-                d3.json("../api/graphData", function(json) {
+                d3.json("../api/severity.json", function(json) {
                     d3.select(selection).datum(json).call(pieChart);
                 });
             },

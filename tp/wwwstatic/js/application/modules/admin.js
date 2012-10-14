@@ -8,7 +8,8 @@ define(
                     this.template = myTemplate;
                 },
                 events: {
-                    'submit form': 'submit'
+                    'submit form': 'submit',
+                    'click #clear': 'clear'
                 },
                 submit: function (evt) {
                     var form = $(evt.target);
@@ -21,6 +22,10 @@ define(
                         }
                     );
                     return false;
+                },
+                clear: function (evt) {
+                    var userName = window.User.get('name');
+                    localStorage.removeItem(userName);
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,

@@ -32,7 +32,6 @@ define(
             submit: function (evt) {
                 var form = $(evt.target),
                     type = form.attr('id'),
-                    controlCheckbox = form,
                     patches = $(evt.target).find('input[name="patches"]:checked');
                 console.log(form.serialize());
                 $.post("/submitForm?" + form.serialize(),

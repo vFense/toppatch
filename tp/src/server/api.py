@@ -568,6 +568,25 @@ class PatchesHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
 
+class SeverityHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        resultjson = {}
+        result = []
+        Session = sessionmaker(bind=db)
+        session = Session()
+        for u in session.query(WindowsUpdate.severity).distinct().all():
+            count = 0
+            for v in session.query(WindowsUpdate).filter(WindowsUpdate.severity == u.severity).all():
+                count += 1
+                print v
+            print u
+            resultjson = { 'label' : str(u.severity), 'value' : count }
+            result.append(resultjson)
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
 
 class UserHandler(BaseHandler):
 
