@@ -14,6 +14,40 @@ define(
                 'click input:checkbox': 'addPatch',
                 'click #submit': 'submit'
             },
+            beforeRender: $.noop,
+            onRender: $.noop,
+            render: function () {
+                if (this.beforeRender !== $.noop) { this.beforeRender(); }
+
+                this.$el.html(_.template(this.template));
+                this.controllerView = new controller.View({
+                        el: this.$el.find('.controller')
+                    });
+
+                this.detailView = new detail.View({
+                        el: this.$el.find('.detail')
+                    });
+
+                if (this.onRender !== $.noop) { this.onRender(); }
+                return this;
+            },
+            changeView: function (event) {
+                var $target = $(event.currentTarget),
+                    id = $target.attr('id');
+
+                // Prevent action if click on current
+                if($target.hasClass('first')) return false;
+
+                detail.Collection = detail.Collection.extend({id: id, checked: formArray});
+
+                $target.addClass('first')
+                       .siblings()
+                       .removeClass('first');
+
+                this.detailView = new detail.View({
+                    el: this.$el.find('.detail')
+                });
+            },
             addPatch: function(event) {
                 var id = this.$el.find('.first').attr('id'),
                     found = false;
@@ -46,33 +80,7 @@ define(
                 $.post("/submitForm", { params: params },
                     function(json) {
                         console.log(json);
-                });
-            },
-            changeView: function (event) {
-                var id = $(event.currentTarget).attr('id')
-                this.$el.find('.first').removeClass('first');
-                detail.Collection = detail.Collection.extend({id: id, checked: formArray});
-                $(event.currentTarget).addClass('first');
-                this.detailView = new detail.View({
-                    el: this.$el.find('.detail')
-                });
-            },
-            beforeRender: $.noop,
-            onRender: $.noop,
-            render: function () {
-                if (this.beforeRender !== $.noop) { this.beforeRender(); }
-
-                this.$el.html(_.template(this.template));
-                this.controllerView = new controller.View({
-                        el: this.$el.find('.controller')
                     });
-
-                this.detailView = new detail.View({
-                        el: this.$el.find('.detail')
-                    });
-
-                if (this.onRender !== $.noop) { this.onRender(); }
-                return this;
             }
         });
         return MultiPatch;
