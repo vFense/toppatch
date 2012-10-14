@@ -397,7 +397,9 @@ class NodesHandler(BaseHandler):
         else:
             data = []
             count = 0
-            for u in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats):
+            queryCount = self.get_argument('count')
+            queryOffset = self.get_argument('offset')
+            for u in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).limit(queryCount).offset(queryOffset):
                 resultnode = {'ip': u[0].ip_address,
                               'host/status': u[0].host_status,
                               'agent/status': u[0].agent_status,
@@ -479,7 +481,9 @@ class PatchesHandler(BaseHandler):
                     "failed": {'count' :countFailed, 'nodes': nodeFailed}
                 }
         else:
-            for u in session.query(WindowsUpdate).all():
+            queryCount = self.get_argument('count')
+            queryOffset = self.get_argument('offset')
+            for u in session.query(WindowsUpdate).order_by(WindowsUpdate.date_pub).limit(queryCount).offset(queryOffset):
                 node = []
                 nodeAvailable = []
                 nodeInstalled = []
