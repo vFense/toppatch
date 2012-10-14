@@ -184,15 +184,16 @@ def updateNode(session, node_id):
     exists, node = nodeExists(session, node_id=node_id)
     if exists:
         exists.update({'last_agent_update' : datetime.now(),
-                'last_node_update' : datetime.now()})
-        session.commit()
+                'last_node_update' : datetime.now(),
+                'agent_status' : True,
+                'node_status' : True})
         installed_oper = session.query(ManagedWindowsUpdate).filter_by(installed=True).filter_by(node_id=node_id)
         installed = installed_oper.first()
         pending_oper = session.query(ManagedWindowsUpdate).filter_by(pending=True).filter_by(node_id=node_id)
         pending = pending_oper.first()
         if installed and pending:
             pending_oper.update({"pending" : False})
-            session.commit()
+        session.commit()
         return node
 
 def updateNodeNetworkStats(session, node_id):
@@ -232,7 +233,8 @@ def updateRebootStatus(session, node_id, oper_type):
     print node, node_exists, "OKKKOKOKKO"
     if node_exists:
         if oper_type == 'reboot':
-            node.update({'reboot' : False})
+            node.update({'reboot' : False,
+                         'agent_status' : False})
             session.commit()
 
 def addResults(session, data):
