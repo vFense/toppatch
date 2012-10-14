@@ -184,9 +184,10 @@ def updateNode(session, node_id):
     exists, node = nodeExists(session, node_id=node_id)
     if exists:
         exists.update({'last_agent_update' : datetime.now(),
-                'last_node_update' : datetime.now(),
-                'agent_status' : True,
-                'node_status' : True})
+                       'last_node_update' : datetime.now(),
+                       'agent_status' : True,
+                       'host_status' : True
+                       })
         installed_oper = session.query(ManagedWindowsUpdate).filter_by(installed=True).filter_by(node_id=node_id)
         installed = installed_oper.first()
         pending_oper = session.query(ManagedWindowsUpdate).filter_by(pending=True).filter_by(node_id=node_id)
