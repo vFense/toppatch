@@ -397,8 +397,12 @@ class NodesHandler(BaseHandler):
         else:
             data = []
             count = 0
-            queryCount = self.get_argument('count')
-            queryOffset = self.get_argument('offset')
+            try:
+                queryCount = self.get_argument('count')
+                queryOffset = self.get_argument('offset')
+            except:
+                queryCount = 10
+                queryOffset = 0
             for u in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).limit(queryCount).offset(queryOffset):
                 resultnode = {'ip': u[0].ip_address,
                               'host/status': u[0].host_status,
@@ -481,8 +485,12 @@ class PatchesHandler(BaseHandler):
                     "failed": {'count' :countFailed, 'nodes': nodeFailed}
                 }
         else:
-            queryCount = self.get_argument('count')
-            queryOffset = self.get_argument('offset')
+            try:
+                queryCount = self.get_argument('count')
+                queryOffset = self.get_argument('offset')
+            except:
+                queryCount = 10
+                queryOffset = 0
             for u in session.query(WindowsUpdate).order_by(WindowsUpdate.date_pub).limit(queryCount).offset(queryOffset):
                 node = []
                 nodeAvailable = []
