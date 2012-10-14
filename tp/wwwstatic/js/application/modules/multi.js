@@ -1,10 +1,3 @@
-/**
- * Created with PyCharm.
- * User: parallels
- * Date: 10/6/12
- * Time: 12:48 PM
- * To change this template use File | Settings | File Templates.
- */
 define(
     ['jquery', 'backbone', 'app', 'text!templates/multi.html', 'modules/controller', 'modules/detail'],
     function ($, Backbone, app, myTemplate, controller, detail) {
