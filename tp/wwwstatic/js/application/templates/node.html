@@ -8,11 +8,11 @@
                 <dt>Operating System:</dt><dd><% print(model['os/name']); %></dd>
                 <dt>Agent Status:</dt>
                 <dd>
-                    <% if (model['agent/status']) {
-                        print('Running &nbsp;<i style="color: green;" class="icon-ok"></i>');
-                    } else {
-                        print('Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>')
-                    } %>
+                    <% if (model['agent/status']) { %>
+                        Running&nbsp;<i style="color: green;" class="icon-ok"></i>
+                    <% } else { %>
+                        Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i>
+                    <% } %>
                 </dd>
                 <dt>Host Status:</dt>
                 <dd>
