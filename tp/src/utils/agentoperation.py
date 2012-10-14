@@ -100,8 +100,8 @@ class AgentOperation():
             if response[1]['operation'] == 'received':
                 updateOperationRow(self.session, oper_id, oper_recv=True)
                 updateNodeNetworkStats(self.session, node_id)
-                if oper_type == 'reboot':
-                    updateRebootStatus(self.session, node_id, jsonobject)
+                if oper_type == REBOOT:
+                    updateRebootStatus(self.session, node_id, oper_type)
                 if 'data' in jsonobject:
                     for patch in jsonobject['data']:
                         patcher = self.session.query(ManagedWindowsUpdate).filter_by(toppatch_id=patch)
