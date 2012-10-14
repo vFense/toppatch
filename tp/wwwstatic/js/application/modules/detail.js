@@ -18,9 +18,6 @@ define(
                 if(this.checked){
                     this.inputArray = this.checked;
                 }
-
-                //debugging
-                instance.collection++;
             }
         });
         Detail.View = Backbone.View.extend({
@@ -45,7 +42,6 @@ define(
                 return this;
             }
         });
-
 
         return Detail;
     }
