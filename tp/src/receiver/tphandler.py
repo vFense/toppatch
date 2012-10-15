@@ -36,6 +36,8 @@ class HandOff():
                                    "last_node_update" : datetime.now()
                                   })
                     TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
+            else:
+                break
             if self.json_object[OPERATION] == SYSTEM_INFO:
                 addSystemInfo(self.session, self.json_object, self.node)
             if self.json_object[OPERATION] == UPDATES_PENDING or \
@@ -68,13 +70,16 @@ class HandOff():
     def windowsUpdate(self):
         addWindowsUpdate(self.session, self.json_object)
         addWindowsUpdatePerNode(self.session, self.json_object)
+        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def softwareUpdate(self):
         addSoftwareAvailable(self.session, self.json_object)
         addSoftwareInstalled(self.session, self.json_object)
+        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def updateResults(self):
         results = addResults(self.session, self.json_object)
+        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def nodeUpdate(self):
         results = updateNode(self.session, self.node.id)
