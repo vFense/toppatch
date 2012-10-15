@@ -37,7 +37,7 @@ define(
 
                 // Prevent action if click on current
                 if($target.hasClass('first')) return false;
-                
+
                 detail.Collection = detail.Collection.extend({id: id, checked: formArray});
 
                 $target.addClass('first')
