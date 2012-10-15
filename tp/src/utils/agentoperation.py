@@ -89,6 +89,7 @@ class AgentOperation():
                         "operation_id" : oper_id,
                         "data" : data_list
                      }
+        updateNodeNetworkStats(self.session, node_id)
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'
         print msg
