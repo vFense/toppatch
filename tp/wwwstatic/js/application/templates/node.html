@@ -42,15 +42,15 @@
                     <input type="hidden" value="<% print(model.id); %>" name="node">
                 </header>
                 <% _.each(model.get('patch/need'), function (patch, i) { %>
-                <div class="item clearfix">
+                <div class="item clearfix" title="<%= patch.name %>">
                         <span class="desc">
                             <label class="checkbox inline">
-                                <input type="checkbox" id="<%= patch %>" name="patches" value="<%= patch %>">
-                                Patch: <%= patch %>
+                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                                <%= patch.name.slice(0, 90) %>
                             </label>
                         </span>
                         <span class="pull-right">
-                            <a href="#patches/<%= patch %>">More information</a>
+                            <a href="#patches/<%= patch.id %>">More information</a>
                         </span>
                 </div>
                 <% }); %>
@@ -83,15 +83,15 @@
                     <input type="hidden" value="<% print(model.id); %>" name="node">
                 </header>
                 <% _.each(model.get('patch/done'), function (patch, i) { %>
-                <div class="item clearfix">
+                <div class="item clearfix" title="<%= patch.name %>">
                         <span class="desc">
                             <label class="checkbox inline">
-                                <input type="checkbox" id="<%= patch %>" name="patches" value="<%= patch %>">
-                                Patch: <%= patch %>
+                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                                <%= patch.name.slice(0, 90) %>
                             </label>
                         </span>
                         <span class="pull-right">
-                            <a href="#patches/<%= patch %>">More information</a>
+                            <a href="#patches/<%= patch.id %>">More information</a>
                         </span>
                 </div>
                 <% }); %>
@@ -110,10 +110,10 @@
         <% if(model.get('patch/pend').length != 0) { %>
         <section class="list" id="pending">
             <% _.each(model.get('patch/pend'), function (patch, i) { %>
-            <div class="item clearfix">
-                    <span class="desc">Patch: <%= patch %></span>
+            <div class="item clearfix" title="<%= patch.name %>">
+                    <span class="desc"><%= patch.name.slice(0, 90) %></span>
                     <span class="pull-right">
-                        <a href="#patches/<%= patch %>">More information</a>
+                        <a href="#patches/<%= patch.id %>">More information</a>
                     </span>
             </div>
             <% }); %>
@@ -145,15 +145,15 @@
                     <input type="hidden" value="<% print(model.id); %>" name="node">
                 </header>
                 <% _.each(model.get('patch/fail'), function (patch, i) { %>
-                <div class="item clearfix">
+                <div class="item clearfix" title="<%= patch.name %>">
                         <span class="desc">
                             <label class="checkbox inline">
-                                <input type="checkbox" id="<%= patch %>" name="patches" value="<%= patch %>">
-                                Patch: <%= patch %>
+                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                                <%= patch.name.slice(0, 90) %>
                             </label>
                         </span>
                         <span class="pull-right">
-                            <a href="#patches/<%= patch %>">More information</a>
+                            <a href="#patches/<%= patch.id %>">More information</a>
                         </span>
                 </div>
                 <% }); %>

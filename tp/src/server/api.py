@@ -372,14 +372,14 @@ class NodesHandler(BaseHandler):
                 available = []
                 for v in session.query(ManagedWindowsUpdate, WindowsUpdate).join(WindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
                     if v[0].installed:
-                        installed.append(v[1].title)
+                        installed.append({'name': v[1].title, 'id': v[0].toppatch_id})
                     elif v[0].pending:
-                        pending.append(v[1].title)
+                        pending.append({'name': v[1].title, 'id': v[0].toppatch_id})
                     elif v[0].attempts > 0:
-                        failed.append(v[1].title)
-                        available.append(v[1].title)
+                        failed.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
                     else:
-                        available.append(v.toppatch_id)
+                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
                 resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
                               'host/status': u[0].host_status,
