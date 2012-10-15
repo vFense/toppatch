@@ -31,15 +31,17 @@ class AgentOperation():
         remote agent. Through the use of Gevent, we have made this 
         operation much quicker as well as much safer.
         """
+        self.session = session
+        self.results = []
+        self.threads = []
         if type(node_list) == list:
-            self.session = session
             self.node_list = node_list
-            self.results = []
             self.total_nodes = len(self.node_list)
-            self.threads = []
             self._parse_and_pass()
         else:
-            raise("You must pass an array")
+            json_valid, self.node_list = verifyJsonIsValid(node_list)
+            if type(self.node_list) != list:
+                self.node_list = [self.node_list]
 
     def _parse_and_pass(self):
         for node in self.node_list:
