@@ -43,7 +43,11 @@ class AgentOperation():
 
     def _parse_and_pass(self):
         for node in self.node_list:
-            json_valid, jsonobject = verifyJsonIsValid(node)
+            if type(node) != dict
+                json_valid, jsonobject = verifyJsonIsValid(node)
+            else:
+                json_valid = True
+                jsonobject = node
             if json_valid:
                 node_id = jsonobject['node_id']
                 self.node_exists, node = nodeExists(self.session, node_id=node_id)
