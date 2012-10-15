@@ -181,10 +181,20 @@ class AdminHandler(BaseHandler):
     @authenticated_request
     def post(self):
         try:
+            oldpassword = self.get_argument('old-password')
+            newpassword = self.get_argument('new-password')
             password = self.get_argument('password')
         except:
             password = None
-        self.write(password)
+            oldpassword = None
+            newpassword = None
+        username = self.current_user
+        if self.application.account_manager.authenticate_account(str(username), str(oldpassword)):
+            result = { 'username': username, 'newpassword': newpassword, 'oldpassword': oldpassword, 'password': password }
+        else:
+            result = {'error': True, 'description': 'invalid password'}
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result))
 
 
 

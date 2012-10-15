@@ -13,24 +13,51 @@ define(
                 },
                 submit: function (evt) {
                     var form = $(evt.target),
-                        password = form.find('input[type=text]'),
+                        password = form.find('input[name=password]'),
+                        newpassword = form.find('input[name=new-password]'),
+                        oldpassword = form.find('input[name=old-password]'),
+                        passwordcontrols = password.parent(),
+                        newpasswordcontrols = newpassword.parent(),
+                        oldpasswordcontrols = oldpassword.parent(),
                         controlgroup = form.find('.control-group'),
-                        controls = form.find('.controls'),
                         helptext = form.find('.help-inline');
-                    if(password.val()) {
-                        $.post("/adminForm?" + form.serialize(),
-                            function(json) {
-                                console.log(json);
-                                controlgroup.removeClass('error').addClass('success');
-                                helptext.remove();
-                                controls.append("<span class='help-inline'>Password changed!</span>");
-                                password.val('');
-                            }
-                        );
+                    if(password.val() && newpassword.val() && oldpassword.val()) {
+                        if(password.val() === newpassword.val()) {
+                            $.post("/adminForm?" + form.serialize(),
+                                function(json) {
+                                    console.log(json);
+                                    if(json.error) {
+                                        controlgroup.removeClass('success').addClass('error');
+                                        helptext.remove();
+                                        oldpasswordcontrols.append("<span class='help-inline'>Wrong password.</span>");
+                                    } else {
+                                        controlgroup.removeClass('error').addClass('success');
+                                        helptext.remove();
+                                        form.append("<span class='help-inline' style='color: #468847'>Password changed&nbsp;<i style='color: green;' class='icon-ok'></i></span>");
+                                        password.val('');
+                                        newpassword.val('');
+                                        oldpassword.val('');
+                                    }
+                                }
+                            );
+                        } else {
+                            helptext.remove();
+                            controlgroup.removeClass('success').addClass('error');
+                            passwordcontrols.append("<span class='help-inline'>Password does not match.</span>");
+                            newpasswordcontrols.append("<span class='help-inline'>Password does not match.</span>");
+                        }
                     } else {
                         controlgroup.removeClass('success').addClass('error');
                         helptext.remove();
-                        controls.append("<span class='help-inline'>Password is blank!</span>");
+                        if(!password.val()) {
+                            passwordcontrols.append("<span class='help-inline'>Password is blank!</span>");
+                        }
+                        if(!newpassword.val()) {
+                            newpasswordcontrols.append("<span class='help-inline'>Password is blank!</span>");
+                        }
+                        if(!oldpassword.val()) {
+                            oldpasswordcontrols.append("<span class='help-inline'>Password is blank!</span>");
+                        }
                     }
                     return false;
                 },
