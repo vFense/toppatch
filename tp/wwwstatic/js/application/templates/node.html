@@ -46,7 +46,7 @@
                         <span class="desc">
                             <label class="checkbox inline">
                                 <input type="checkbox" id="<%= patch %>" name="patches" value="<%= patch %>">
-                                Patch ID: <%= patch %>
+                                Patch: <%= patch %>
                             </label>
                         </span>
                         <span class="pull-right">
@@ -87,7 +87,7 @@
                         <span class="desc">
                             <label class="checkbox inline">
                                 <input type="checkbox" id="<%= patch %>" name="patches" value="<%= patch %>">
-                                Patch ID: <%= patch %>
+                                Patch: <%= patch %>
                             </label>
                         </span>
                         <span class="pull-right">
@@ -111,7 +111,7 @@
         <section class="list" id="pending">
             <% _.each(model.get('patch/pend'), function (patch, i) { %>
             <div class="item clearfix">
-                    <span class="desc">Patch ID: <%= patch %></span>
+                    <span class="desc">Patch: <%= patch %></span>
                     <span class="pull-right">
                         <a href="#patches/<%= patch %>">More information</a>
                     </span>
@@ -149,7 +149,7 @@
                         <span class="desc">
                             <label class="checkbox inline">
                                 <input type="checkbox" id="<%= patch %>" name="patches" value="<%= patch %>">
-                                Patch ID: <%= patch %>
+                                Patch: <%= patch %>
                             </label>
                         </span>
                         <span class="pull-right">
