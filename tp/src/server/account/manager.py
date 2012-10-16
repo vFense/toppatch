@@ -82,3 +82,13 @@ class AccountManager():
         """ Checks whether an account already exist. Returns True if it does, false otherwise. """
 
         pass
+
+    def change_user_password(self, username, new_password):
+        """
+        Updates the password of an existing user's account.
+
+        """
+        account = self.session.query(User).filter(User.username == username).first()
+        account.hash = Crypto.hash_scrypt(new_password)
+
+        self.session.commit()

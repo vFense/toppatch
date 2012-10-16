@@ -9,7 +9,7 @@
                 <dt>Agent Status:</dt><dd><% if(model.get('agent/status') == true) { print('Running &nbsp;<i style="color: green;" class="icon-ok"></i>'); } else { print('Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>') } %></dd>
                 <dt>Host Status:</dt>
                 <dd><% if(model.get('host/status') == true && model.get('reboot') == false) {
-                        print('Running &nbsp;<i style="color: green;" class="icon-ok"></i>');
+                        print('<form id="reboot-form">Running &nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;<input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/><input type="hidden" name="operation" value="reboot" /><input type="hidden" name="node" value="' + model.id + '"/></form>');
                     } else if(model.get('reboot') == true) {
                         print('<form id="reboot-form">Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/><input type="hidden" name="operation" value="reboot" /><input type="hidden" name="node" value="' + model.id + '"/></form>');
                     } else {

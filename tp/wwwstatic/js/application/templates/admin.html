@@ -1,27 +1,49 @@
-<header><strong>User Settings</strong></header>
-<form method="post" action="#" class="form-inline">
-    <div class="control-group" id="password-control" >
-        <label class="control-label" for="old-password" style="display: inline-block !important;">Old Password:</label>
-        <div class="controls" style="display: inline !important;">
-            <input type="password" id="old-password" name="old-password" placeholder="Old password"/>
-        </div>
-        <br>
+<div class="pull-left">
+    <header><strong>Change Password</strong></header>
+    <form method="post" action="#" class="form-inline" id="password-form">
+        <div class="control-group" id="password-control" >
+            <label class="control-label" for="old-password" style="display: inline-block !important;">Old Password:</label>
+            <div class="controls" style="display: inline !important;">
+                <input type="password" id="old-password" name="old-password" placeholder="Old password"/>
+            </div>
+            <br>
 
-        <label class="control-label" for="new-password" style="display: inline-block !important;">New Password:</label>
-        <div class="controls" style="display: inline !important;">
-            <input type="password" id="new-password" name="new-password" placeholder="password"/>
-        </div>
-        <br>
+            <label class="control-label" for="new-password" style="display: inline-block !important;">New Password:</label>
+            <div class="controls" style="display: inline !important;">
+                <input type="password" id="new-password" name="new-password" placeholder="password"/>
+            </div>
+            <br>
 
-        <label class="control-label" for="password" style="display: inline-block !important;">Retype Password:</label>
-        <div class="controls" style="display: inline !important;">
-            <input type="password" id="password" name="password" placeholder="password"/>
+            <label class="control-label" for="password" style="display: inline-block !important;">Retype Password:</label>
+            <div class="controls" style="display: inline !important;">
+                <input type="password" id="password" name="password" placeholder="password"/>
+            </div>
+            <br>
         </div>
-        <br>
+        <input type="submit" value="Submit" name="submit" class="btn btn-primary btn-mini"/>
+    </form>
+    <div class="item clearfix">
+        <span class="desc"><button id="clear" class="btn btn-mini" style="display: inline !important;">Clear User Settings&nbsp;</button></span>
+        <span class="hide" id="clear-ok" style="color: #468847;">Cleared&nbsp;<i style="color: green;" class="icon-ok"></i></span>
     </div>
-    <input type="submit" value="Submit" name="submit" class="btn btn-primary btn-mini"/>
-</form>
-<div class="item clearfix">
-    <span class="desc"><button id="clear" class="btn btn-mini" style="display: inline !important;">Clear User Settings&nbsp;</button></span>
-    <span class="hide" id="clear-ok" style="color: #468847;">Cleared&nbsp;<i style="color: green;" class="icon-ok"></i></span>
 </div>
+
+<form class="span5 pull-right left" id="csr-form">
+    <header><strong>Approve Nodes</strong></header>
+    <div class="list"><%
+        _.each(data, function (csr, i) {
+            if(!csr.signed) { %>
+                <div class="item clearfix">
+                    <span class="desc">
+                        <label class="checkbox inline">
+                            <input type="checkbox" name="csrlist" id="<%= csr.node_id %>" value="<%= csr.node_id %>"/>
+                            <% print(csr.ip); %>
+                        </label>
+                    </span>
+                </div>
+            <% }
+        }); %>
+    </div>
+    <br>
+    <input type="submit" value="Submit" name="submit" class="btn btn-primary btn-mini">
+</form>

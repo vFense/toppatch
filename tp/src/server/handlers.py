@@ -1,6 +1,7 @@
 
 import tornado.web
 import tornado.websocket
+import re
 try: import simplejson as json
 except ImportError: import json
 from models.node import NodeInfo
@@ -155,7 +156,7 @@ class FormHandler(BaseHandler):
             params = None
         if node_id:
             operation = self.get_argument('operation')
-            if operation == 'install':
+            if operation == 'install' or operation == 'uninstall':
                 patches = self.request.arguments['patches']
                 node['node_id'] = node_id
                 node['operation'] = operation
@@ -190,7 +191,8 @@ class AdminHandler(BaseHandler):
             newpassword = None
         username = self.current_user
         if self.application.account_manager.authenticate_account(str(username), str(oldpassword)):
-            result = { 'username': username, 'newpassword': newpassword, 'oldpassword': oldpassword, 'password': password }
+            self.application.account_manager.change_user_password(str(username), str(password))
+            result = { 'error': False, 'description': 'changed password' }
         else:
             result = {'error': True, 'description': 'invalid password'}
         self.set_header('Content-Type', 'application/json')
