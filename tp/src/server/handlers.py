@@ -171,12 +171,11 @@ class FormHandler(BaseHandler):
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
         if params:
-            params = re.sub(r'(^\[|\]$)', '', params)
             resultjson = json.loads(params)
-            result.append(json.dumps(resultjson))
-            #AgentOperation(session, result)
+            #AgentOperation(session, resultjson)
             self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(result))
+            self.write(json.dumps(resultjson))
+
 
 class AdminHandler(BaseHandler):
     @authenticated_request
