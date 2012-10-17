@@ -6,28 +6,33 @@ define(
         var AppRouter = Backbone.Router.extend({
             routes: {
                 // Dashboard
-                '':           'home',
-                'dashboard':  'home',
-                'admin': 'showAdmin',
-
-                // Patch Routes
-                'patchAdmin': 'patchAdmin',
-
-                // Patches
-                'patches': 'showPatches',
-                'patches?:query': 'showPatches',
-                'patches/:id': 'showPatch',
-                //'patches?:type': 'showOverview',
+                ''              : 'home',
+                'dashboard'     : 'home',
 
                 // Nodes
-                'nodes': 'showNodes',
-                'nodes?:query': 'showNodes',
-                'nodes/:id': 'showNode',
+                'nodes'         : 'showNodes',
+                'nodes?:query'  : 'showNodes',
+                'nodes/:id'     : 'showNode',
 
-                'multi': 'showMulti',
+                // Patches
+                'patches'       : 'showPatches',
+                'patches?:query': 'showPatches',
+                'patches/:id'   : 'showPatch',
+                
+                // MultiPatch Interface
+                'multi'         : 'showMulti',
+
+                // Admin panel
+                'admin'         : 'showAdmin',
+
+                /*
+                // Account Administration Panels
+                'account'       : 'showAccountModal',
+                'account/:tab'  : 'showAccountModal',
+                */
 
                 // Default
-                '*other':     'defaultAction'
+                '*other'        : 'defaultAction'
             },
             initialize: function () {
                 // Create a new ViewManager with #dashboard-view as its target element
@@ -38,52 +43,6 @@ define(
             },
             home: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
-            },
-            showAdmin: function () {
-                this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
-            },
-            patchAdmin: function () {
-                //this.show({hash: '#patchAdmin', title: 'Patch Administration', view: 'modules/patchAdmin'});
-            },
-            showTest: function () {
-                this.show({hash: '#test', title: 'Test Page', view: 'modules/widget'});
-            },
-            showPatchTest: function () {
-                this.show({hash: '#testPatch', title: 'Patch Test Page', view: 'utilities/newDataGen'});
-            },
-            showPatches: function (query) {
-                var that = this;
-                require(['modules/patches'], function (myView) {
-                    if ($.type(query) === 'string') {
-                        var params = app.parseQuery(query);
-                        myView.Collection = myView.Collection.extend({
-                            type: params.type,
-                            getCount: params.count,
-                            offset: params.offset
-                        });
-                    }
-                    that.show({hash: '#patches', title: 'Patches', view: new myView.View()});
-                });
-            },
-            showPatch: function (id) {
-                var that = this;
-                require(['modules/patch'], function (myView) {
-                    myView.Collection = myView.Collection.extend({id: id});
-                    that.show({hash: '#patches', title: 'Patch Detail', view: new myView.View()});
-                });
-            },
-            showOverview: function (query) {
-                var that = this;
-                require(['modules/patchOverview'], function (myView) {
-                    if ($.type(query) === 'string') {
-                        var params = app.parseQuery(query);
-                        myView.Collection = myView.Collection.extend({type: params.type});
-                        var view = new myView.View();
-                        that.show({hash: '#patches', title: 'Patch Info Page', view: view});
-                    } else {
-                        this.defaultAction();
-                    }
-                })
             },
             showNodes: function (query) {
                 var that = this;
@@ -106,11 +65,39 @@ define(
                     that.show({hash: '#nodes', title: 'Nodes', view: view});
                 });
             },
-            showMulti: function () {
+            showPatches: function (query) {
                 var that = this;
+                require(['modules/patches'], function (myView) {
+                    if ($.type(query) === 'string') {
+                        var params = app.parseQuery(query);
+                        myView.Collection = myView.Collection.extend({
+                            type: params.type,
+                            getCount: params.count,
+                            offset: params.offset
+                        });
+                    }
+                    that.show({hash: '#patches', title: 'Patches', view: new myView.View()});
+                });
+            },
+            showPatch: function (id) {
+                var that = this;
+                require(['modules/patch'], function (myView) {
+                    myView.Collection = myView.Collection.extend({id: id});
+                    that.show({hash: '#patches', title: 'Patch Detail', view: new myView.View()});
+                });
+            },
+            showMulti: function () {
                 this.show({hash: '#multi', title: 'Patch Operations', view: 'modules/multi'});
             },
-            defaultAction: function (other) {
+            showAdmin: function () {
+                this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
+            },
+            /*
+            showAccountModal: function (tab) {
+                console.log(['account', tab]);
+            },
+            */
+            defaultAction: function (/* other */) {
                 this.show(
                     {
                         hash: '#404',
@@ -134,6 +121,7 @@ define(
 
                 app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
                 app.vent.trigger('domchange:title', settings.title);
+                
                 if ($.type(settings.view) === 'string') {
                     require([settings.view], function (myView) {
                         var view = new myView.View();
@@ -146,7 +134,7 @@ define(
         });
         return {
             initialize: function () {
-                this.app_router = new AppRouter();
+                app.router = new AppRouter();
                 Backbone.history.start();
             }
         };

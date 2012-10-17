@@ -5,10 +5,9 @@
  * Time: 9:27 AM
  * To change this template use File | Settings | File Templates.
  */
-define(['jquery','d3'], function($, d3) {
-
+define(['jquery', 'd3'], function ($, d3) {
+    "use strict";
     return function () {
-        "use strict";
         var width	= 280,	// Golden Ratio 1000/Phi
             height	= 220,
             r = (width / 3),
@@ -33,7 +32,7 @@ define(['jquery','d3'], function($, d3) {
                     .data([data])                   //associate our data with the document
                     .attr("width", width)           //set the width and height of our visualization (these will be attributes of the <svg> tag
                     .attr("height", height);
-                if(previousData.length != 0) {
+                if (previousData.length !== 0) {
                     renderLinks();
                 }
                 var warning = vis.selectAll('warning')
@@ -64,13 +63,13 @@ define(['jquery','d3'], function($, d3) {
                     .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
                     .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
                     .attr("class", "slice")    //allow us to style things in the slices (like text)
-                    .on("click", function (d, i) {
-                        if(d.data.data) {
+                    .on("click", function (d) {
+                        if (d.data.data) {
                             osData = d;
                             disappear('new', d.data.label);
                         }
                     })
-                    .on("mouseover", function (d, i) {
+                    .on("mouseover", function (d) {
                         //console.log(d3.select(this).select("path").transition().attr("fill", color(i + 2)));
                         d3.select(this).select("path").transition().duration(500)
                             //.attr("fill", color(i + 2))
@@ -145,8 +144,8 @@ define(['jquery','d3'], function($, d3) {
                     arcs.select("text").style('opacity', 0);
                     arcs.select("path").transition().duration(1000).attr("d", arcOut);
                     arcs.select("path").transition().delay(900)
-                        .style("opacity", function(d2, i) {
-                            if(i === 0) {
+                        .style("opacity", function (d2, i) {
+                            if (i === 0) {
                                 string === 'previous' ? previousGraph() : newGraph(type);
                             }
                             return "1";
@@ -187,10 +186,10 @@ define(['jquery','d3'], function($, d3) {
                         .text(function(d){ return d; })
                         .on('mouseover', function () { linkMouseOver(this); })
                         .on('mouseout', function () { linkMouseOut(this); })
-                        .on("click", function (d) { disappear('previous', 'None') });
+                        .on("click", function () { disappear('previous', 'None') });
                 }
                 arcs.append("svg:title")
-                    .text(function (d, i) { return d.data.label + ": " + d.data.value; });
+                    .text(function (d) { return d.data.label + ": " + d.data.value; });
                 arcs.append("svg:path")
                     .attr("fill", function (d, i) { return color(i); }) //set the color for each slice to be chosen from the color function defined above
                     .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function

@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'd3', 'app', 'text!templates/testBody.html', 'modules/overview', 'jquery.ui.sortable' ],
-    function ($, Backbone, d3, app, myTemplate, Overview) {
+    ['jquery', 'underscore', 'backbone', 'd3', 'app', 'text!templates/testBody.html', 'modules/overview', 'jquery.ui.sortable' ],
+    function ($, _, Backbone, d3, app, myTemplate, Overview) {
         "use strict";
         var properties = new (
                 Backbone.Model.extend({
@@ -304,7 +304,7 @@ define(
                             that = this;
 
                         this.$el.html('');
-                        //this.$el.append('<header class="page-header"><h1>DASHBOARD <small>Customize your needs</small></h1></header>');
+
                         this.overview = new Overview.View({
                             el: $('<div>').addClass('row-fluid clearfix movable').attr('id', 'overview')
                         });
@@ -323,11 +323,17 @@ define(
                     test: function () {
                         setTimeout(function () {
                             $(".movable").sortable({
+                                containment: 'body',
+                                appendTo: '#dashboard-view',
+                                helper: 'clone',
                                 connectWith: '.movable',
                                 items: 'dl, .widget',
                                 distance: 20
                             });
                             $("#dashboard-view").sortable({
+                                containment: 'body',
+                                appendTo: '#dashboard-view',
+                                helper: 'clone',
                                 items: '.row, .row-fluid',
                                 handle: '.row-handle',
                                 placeholder: "ui-state-highlight",

@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'modules/navBar', 'text!templates/pageHeader.html'],
-    function ($, Backbone, DashNav, headerTemplate) {
+    ['jquery', 'underscore', 'backbone', 'modules/navBar', 'text!templates/pageHeader.html'],
+    function ($, _, Backbone, DashNav, headerTemplate) {
         "use strict";
         var PageHeader = {};
         PageHeader.View = Backbone.View.extend({

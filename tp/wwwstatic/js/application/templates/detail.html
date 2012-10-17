@@ -3,21 +3,21 @@
         <% _.each(data['patch/need'], function (patch, i) { %>
             <div class="item clearfix">
                 <span class="desc"><strong>Patch ID</strong> - <%= patch.id %></span>
-                            <span class="patches pull-right"> <input type="checkbox" name="patches" value="<%= patch.id %>"
-                                <%  if(checked.length !== 0 ) {
-                                        _.each(checked, function(check, j) {
-                                            if(check.node_id == data.id) {
-                                                _.each(check.data, function(patch_id, k) {
-                                                    if(patch_id == patch.id) {
-                                                        print('checked');
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                %>
-                            />
-                            </span>
+                    <span class="patches pull-right">
+                        <input type="checkbox" name="patches" value="<%= patch.id %>"
+                            <%  if(checked.length !== 0 ) { %>
+                                <% _.each(checked, function(check, j) { %>
+                                    <% if(check.node_id === data.id) { %>
+                                        <% _.each(check.data, function(patch_id, k) { %>
+                                            <% if(patch_id === patch.id) { %>
+                                                    checked
+                                            <% } %>
+                                        <% }); %>
+                                    <% } %>
+                                <% }); %>
+                            <% } %>
+                        />
+                    </span>
             </div>
         <% }); %>
     <% } else { %>

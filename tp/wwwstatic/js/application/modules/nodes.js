@@ -33,6 +33,7 @@ define(
                 onRender: $.noop,
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
+
                     var template = _.template(this.template),
                         data = this.collection.toJSON(),
                         payload = {
@@ -49,6 +50,7 @@ define(
                         },
                         that = this,
                         temp;
+
                     temp = payload.offset - payload.getCount;
                     payload.prevLink = '#nodes?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
 

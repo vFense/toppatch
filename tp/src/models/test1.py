@@ -3,7 +3,7 @@ from models.windows import *
 from models.node import *
 from sqlalchemy import create_engine
 
-db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
 db.echo = True
 from sqlalchemy.orm import sessionmaker
 import datetime

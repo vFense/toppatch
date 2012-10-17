@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/pageFooter.html'],
-    function ($, Backbone, footerTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/pageFooter.html'],
+    function ($, _, Backbone, footerTemplate) {
         "use strict";
         var PageFooter = {};
         PageFooter.View = Backbone.View.extend({

@@ -1,10 +1,10 @@
 define(
-    ['jquery', 'backbone', 'module/someCollection', 'text!templates/aTemplate.html' ],
-    function ($, Backbone, myCollection, myTemplate) {
+    ['jquery', 'backbone', 'module/someModel', 'text!templates/aTemplate.html' ],
+    function ($, Backbone, myModel, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
-                model: myCollection.Model
+                model: myModel.Model
             }),
             View: Backbone.View.extend({
                 initialize: function () {

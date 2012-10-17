@@ -35,7 +35,6 @@ class Application(tornado.web.Application):
 
     def __init__(self, debug):
         handlers = [
-
             (r"/?", RootHandler),
             (r"/login/?", LoginHandler),
             (r"/signup/?", SignupHandler),
@@ -65,27 +64,24 @@ class Application(tornado.web.Application):
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.
-            (r"/css/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/css"}),
-            (r"/font/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/font"}),
-            (r"/img/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/img"}),
-            (r"/js/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/js"})
+
+            #### File system access whitelist
+            (r"/css/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/css"}),
+            (r"/font/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/font"}),
+            (r"/img/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/img"}),
+            (r"/js/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/js"})
         ]
 
         template_path = "/opt/TopPatch/tp/templates"
         static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "wwwstatic" )
         #ui_modules = { 'Header', HeaderModule }
 
-        template_path = "/opt/TopPatch/tp/templates"
-        static_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "wwwstatic" )
-        #ui_modules = { 'Header', HeaderModule }
-
         settings = {
-
             "cookie_secret": base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
             "login_url": "/login",
-            }
+        }
 
-        self.db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+        self.db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
 
         Session = sessionmaker(bind=self.db)
         self.session = Session()
