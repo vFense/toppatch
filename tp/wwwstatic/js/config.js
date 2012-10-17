@@ -13,10 +13,10 @@ require.config({
         'modules'   : 'application/modules',
         'templates' : 'application/templates',
         'utilities' : 'application/utilities',
+        
         // Libraries
         // ---------------------------------------------------------------------
-        'jquery'            : 'libs/jquery/jquery-1.8.1',
-        'jquery.ui'         : 'libs/jquery-ui/jquery-ui.custom.min',
+        'jquery'            : 'libs/jquery/jquery',
         'jquery.bootstrap'  : 'libs/bootstrap/bootstrap.min',
         'underscore'        : 'libs/underscore/underscore',
         'backbone'          : 'libs/backbone/backbone',
@@ -45,10 +45,6 @@ require.config({
     },
 
     shim: {
-        'jquery.ui': {
-            deps: ['jquery'],    // jQuery UI depends on jQuery
-            exports: 'jQuery'
-        },
         'jquery.bootstrap': {
             deps: ['jquery'],    // Bootstrap depends on jQuery
             exports: 'jQuery'
