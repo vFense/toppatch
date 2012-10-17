@@ -37,11 +37,14 @@ require.config({
         'jquery.ui.accordion'   : 'libs/jquery-ui/dev/jquery.ui.accordion',
         'jquery.ui.autocomplete': 'libs/jquery-ui/dev/jquery.ui.autocomplete',
         'jquery.ui.button'      : 'libs/jquery-ui/dev/jquery.ui.button',
-        'jquery.ui.dialog'      : 'libs/jquery-ui/dev/jquery.ui.dialog',
-        'jquery.ui.slider'      : 'libs/jquery-ui/dev/jquery.ui.slider',
-        'jquery.ui.tabs'        : 'libs/jquery-ui/dev/jquery.ui.tabs',
         'jquery.ui.datepicker'  : 'libs/jquery-ui/dev/jquery.ui.datepicker',
+        'jquery.ui.dialog'      : 'libs/jquery-ui/dev/jquery.ui.dialog',
+        'jquery.ui.menu'        : 'libs/jquery-ui/dev/jquery.ui.menu'
         'jquery.ui.progressbar' : 'libs/jquery-ui/dev/jquery.ui.progressbar'
+        'jquery.ui.slider'      : 'libs/jquery-ui/dev/jquery.ui.slider',
+        'jquery.ui.spinner'     : 'libs/jquery-ui/dev/jquery.ui.spinner'
+        'jquery.ui.tabs'        : 'libs/jquery-ui/dev/jquery.ui.tabs',
+        'jquery.ui.tooltip'     : 'libs/jquery-ui/dev/jquery.ui.tooltip'
     },
 
     shim: {
@@ -60,23 +63,31 @@ require.config({
             exports: 'd3'
         },
 
-        // jQuery.ui modules
+        // jQuery.ui modules ----
+        // UI Core
         'jquery.ui.core'        : {exports: 'jQuery'},
         'jquery.ui.widget'      : {exports: 'jQuery'},
         'jquery.ui.mouse'       : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
         'jquery.ui.position'    : {exports: 'jQuery'},
+        
+        // Interactions
         'jquery.ui.draggable'   : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
         'jquery.ui.droppable'   : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse', 'jquery.ui.draggable']},
         'jquery.ui.resizable'   : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
         'jquery.ui.selectable'  : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
         'jquery.ui.sortable'    : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
+        
+        // Widgets
         'jquery.ui.accordion'   : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
-        'jquery.ui.autocomplete': {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.position']},
+        'jquery.ui.autocomplete': {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.position', 'jquery.ui.menu']},
         'jquery.ui.button'      : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
-        'jquery.ui.dialog'      : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.position']},
-        'jquery.ui.slider'      : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
-        'jquery.ui.tabs'        : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
         'jquery.ui.datepicker'  : {exports: 'jQuery', deps: ['jquery.ui.core']},
+        'jquery.ui.dialog'      : {exports: 'jQuery', deps: ['jquery.ui.core.js', 'jquery.ui.widget.js', 'jquery.ui.mouse.js', 'jquery.ui.position.js', 'jquery.ui.draggable.js', 'jquery.ui.resizable.js', 'jquery.ui.button.js']},
+        'jquery.ui.menu'        : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.position']},
+        'jquery.ui.progressbar' : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
+        'jquery.ui.slider'      : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
+        'jquery.ui.spinner'     : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.button']},
+        'jquery.ui.tabs'        : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
         'jquery.ui.progressbar' : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']}
     },
 
