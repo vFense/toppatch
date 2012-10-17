@@ -16,6 +16,7 @@ define(
                 initialize: function () {
                     this.offset   = this.offset || 0;
                     this.getCount = this.getCount  || 10;
+                    this.type = this.type || '';
                     this.query = this.type ?
                     '?' + 'type=' + this.type
                         + '&count=' + this.getCount
@@ -41,6 +42,7 @@ define(
                     var template = _.template(this.template),
                         data = this.collection.toJSON(),
                         payload = {
+                            type: this.collection.type,
                             getCount: +this.collection.getCount,
                             offset: +this.collection.offset,
                             start: +this.collection.offset + 1,
@@ -54,12 +56,13 @@ define(
                         },
                         that = this,
                         temp;
-
                     temp = payload.offset - payload.getCount;
                     payload.prevLink = '#patches?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
+                    payload.prevLink +=  payload.type ? '&type=' + payload.type : '';
 
                     temp = payload.offset + payload.getCount;
                     payload.nextLink = '#patches?count=' + payload.getCount + '&offset=' + temp;
+                    payload.nextLink += payload.type ? '&type=' + payload.type : '';
 
                     this.$el.html('');
 

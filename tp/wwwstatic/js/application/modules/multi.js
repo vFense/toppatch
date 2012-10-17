@@ -21,12 +21,12 @@ define(
 
                 this.$el.html(_.template(this.template));
                 this.controllerView = new controller.View({
-                        el: this.$el.find('.controller')
-                    });
+                    el: this.$el.find('.controller')
+                });
 
                 this.detailView = new detail.View({
-                        el: this.$el.find('.detail')
-                    });
+                    el: this.$el.find('.detail')
+                });
 
                 if (this.onRender !== $.noop) { this.onRender(); }
                 return this;
@@ -41,8 +41,8 @@ define(
                 detail.Collection = detail.Collection.extend({id: id, checked: formArray});
 
                 $target.addClass('first')
-                       .siblings()
-                       .removeClass('first');
+                    .siblings()
+                    .removeClass('first');
 
                 this.detailView = new detail.View({
                     el: this.$el.find('.detail')

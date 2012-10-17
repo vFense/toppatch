@@ -12,6 +12,7 @@ from server.handlers import BaseHandler
 from models.base import Base
 from models.windows import *
 from models.node import *
+from models.ssl import *
 from server.handlers import SendToSocket
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
@@ -370,16 +371,16 @@ class NodesHandler(BaseHandler):
                 failed = []
                 pending = []
                 available = []
-                for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
-                    if v.installed:
-                        installed.append(v.toppatch_id)
-                    elif v.pending:
-                        pending.append(v.toppatch_id)
-                    elif v.attempts > 0:
-                        failed.append(v.toppatch_id)
-                        available.append(v.toppatch_id)
+                for v in session.query(ManagedWindowsUpdate, WindowsUpdate).join(WindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
+                    if v[0].installed:
+                        installed.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                    elif v[0].pending:
+                        pending.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                    elif v[0].attempts > 0:
+                        failed.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
                     else:
-                        available.append(v.toppatch_id)
+                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
                 resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
                               'host/status': u[0].host_status,
@@ -674,6 +675,27 @@ class SeverityHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+class CsrHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        result = []
+        Session = sessionmaker(bind=db)
+        session = Session()
+        try:
+            signed = self.get_argument('signed')
+            is_signed = True if signed == 'true' or signed == 'True' else  False
+        except:
+            signed = None
+            is_signed = None
+        if signed:
+            for u in session.query(SslInfo, CsrInfo, NodeInfo).join(CsrInfo).join(NodeInfo).filter(CsrInfo.is_csr_signed == is_signed).all():
+                result.append({'signed': u[1].is_csr_signed, 'node_id': u[0].node_id, 'ip': u[2].ip_address})
+        else:
+            for u in session.query(SslInfo, CsrInfo, NodeInfo).join(CsrInfo).join(NodeInfo).all():
+                result.append({'signed': u[1].is_csr_signed, 'node_id': u[0].node_id, 'ip': u[2].ip_address})
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
 
 class UserHandler(BaseHandler):
 
