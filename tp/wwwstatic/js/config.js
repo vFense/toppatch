@@ -39,10 +39,10 @@ require.config({
         'jquery.ui.button'      : 'libs/jquery-ui/dev/jquery.ui.button',
         'jquery.ui.datepicker'  : 'libs/jquery-ui/dev/jquery.ui.datepicker',
         'jquery.ui.dialog'      : 'libs/jquery-ui/dev/jquery.ui.dialog',
-        'jquery.ui.menu'        : 'libs/jquery-ui/dev/jquery.ui.menu'
-        'jquery.ui.progressbar' : 'libs/jquery-ui/dev/jquery.ui.progressbar'
+        'jquery.ui.menu'        : 'libs/jquery-ui/dev/jquery.ui.menu',
+        'jquery.ui.progressbar' : 'libs/jquery-ui/dev/jquery.ui.progressbar',
         'jquery.ui.slider'      : 'libs/jquery-ui/dev/jquery.ui.slider',
-        'jquery.ui.spinner'     : 'libs/jquery-ui/dev/jquery.ui.spinner'
+        'jquery.ui.spinner'     : 'libs/jquery-ui/dev/jquery.ui.spinner',
         'jquery.ui.tabs'        : 'libs/jquery-ui/dev/jquery.ui.tabs',
         'jquery.ui.tooltip'     : 'libs/jquery-ui/dev/jquery.ui.tooltip'
     },
