@@ -22,9 +22,14 @@ require.config({
         'backbone'          : 'libs/backbone/backbone',
         'respond'           : 'libs/respond/respond.src',
         'd3'                : 'libs/d3/d3.v2',
+        
+        // Library Plugins
+        // ---------------------------------------------------------------------
         'text'              : 'libs/require/plugins/text',
+        'bootstap-modal'    : 'libs/backbone/plugins/bootstrap-modal',
 
-        // jQuery.ui modules
+        // jQuery.ui Library
+        // ---------------------------------------------------------------------
         'jquery.ui.core'        : 'libs/jquery-ui/dev/jquery.ui.core',
         'jquery.ui.widget'      : 'libs/jquery-ui/dev/jquery.ui.widget',
         'jquery.ui.mouse'       : 'libs/jquery-ui/dev/jquery.ui.mouse',
