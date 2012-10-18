@@ -48,10 +48,6 @@ class LoginHandler(BaseHandler):
     def post(self):
 
          if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
-            #@printToSocket
-            def sign():
-                return '{ "user": "%s", "status": "signed in" }' % self.get_argument('name')
-            sign()
             self.set_secure_cookie("user", self.get_argument("name"))
             self.redirect("/")
          else:
@@ -88,12 +84,7 @@ class testHandler(BaseHandler):
         self.render('../data/templates/websocket-test.html')
 
 def SendToSocket(message):
-    print 'in SendToSocket'
-    global LISTENERS
-    print LISTENERS
     for socket in LISTENERS:
-        print 'sending to socket'
-        print socket
         socket.write_message(message)
 
 class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
@@ -112,12 +103,6 @@ class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
 
 class LogoutHandler(BaseHandler):
     def get(self):
-        @printToSocket
-        def sign():
-            return '{ "user": "%s", "status": "logged out" }' % self.current_user
-        sign()
-        if WebsocketHandler.socket:
-            WebsocketHandler.socket.close()
         self.clear_all_cookies()
         self.redirect('/login')
         #self.write("Goodbye!" + '<br><a href="/login">Login</a>')
