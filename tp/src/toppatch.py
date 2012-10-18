@@ -117,6 +117,8 @@ if __name__ == '__main__':
     https_server.listen(options.port)
 
     socketListener = SocketThread()
+    # Setting this thread to daemon mode. It will exit when there no non-daemon threads (aka main thread) running.
+    # Keep this in mind!
     socketListener.daemon = True
     socketListener.start()
 
