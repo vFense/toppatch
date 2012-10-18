@@ -4,6 +4,7 @@ Main launching point of the Top Patch Server
 import base64
 import uuid
 import os
+import threading
 
 import tornado.httpserver
 import tornado.ioloop
@@ -13,7 +14,7 @@ import tornado.options
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
-from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler, AdminHandler
+from server.handlers import *
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
 from server.api import *
@@ -21,6 +22,9 @@ from server.account.manager import AccountManager
 from server.oauth.token import TokenManager
 
 from tornado.options import define, options
+
+from twisted.internet.protocol import Protocol, Factory
+from twisted.internet import reactor
 
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
@@ -58,8 +62,8 @@ class Application(tornado.web.Application):
             (r"/api/graphData/?", GraphHandler),
             (r"/api/nodes.json/?", NodesHandler),
             (r"/api/patches.json/?", PatchesHandler),
-            (r"/api/severity.json/?", SeverityHandler),
-            (r"/api/csrinfo.json/?", CsrHandler),
+            #(r"/api/severity.json/?", SeverityHandler),
+            #(r"/api/csrinfo.json/?", CsrHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
@@ -90,20 +94,19 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
-"""
-class HelloWorldProtocol(Protocol):
-    def connectionMade(self, msg):
-        SendToSocket(msg)
 
-class HelloWorldFactory(Factory):
-    protocol = HelloWorldProtocol
+class SocketProtocol(Protocol):
+    def connectionMade(self):
+        SendToSocket("foo")
 
-class ThreadClass(threading.Thread):
+class SocketFactory(Factory):
+    protocol = SocketProtocol
+
+class SocketThread(threading.Thread):
     def run(self):
-        reactor.listenTCP(8080, HelloWorldFactory())
-        #reactor.run()
+        reactor.listenTCP(8080, SocketFactory())
         reactor.run(installSignalHandlers=0)
-"""
+
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     https_server = tornado.httpserver.HTTPServer(Application(options.debug),
@@ -112,6 +115,10 @@ if __name__ == '__main__':
             "keyfile": os.path.join("/opt/TopPatch/tp/data/ssl/", "server.key"),
             })
     https_server.listen(options.port)
+
+    socketListener = SocketThread()
+    socketListener.daemon = True
+    socketListener.start()
 
     tornado.ioloop.IOLoop.instance().start()
 

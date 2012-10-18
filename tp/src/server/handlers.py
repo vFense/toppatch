@@ -1,4 +1,3 @@
-
 import tornado.web
 import tornado.websocket
 import re
@@ -47,11 +46,11 @@ class LoginHandler(BaseHandler):
 
     def post(self):
 
-         if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
+        if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
             self.set_secure_cookie("user", self.get_argument("name"))
             self.redirect("/")
-         else:
-             self.write("Invalid username and/or password .")
+        else:
+            self.write("Invalid username and/or password .")
 
 
 
@@ -191,7 +190,3 @@ class AdminHandler(BaseHandler):
             result = {'error': True, 'description': 'invalid password'}
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result))
-
-
-
-
