@@ -35,7 +35,6 @@ define(
                 },
                 setActive: function (hrefTarget) {
                     _.each(this.collection.models, function (model) {
-                        //console.log(model.get('href') === hrefTarget);
                         model.set('active', model.get('href') === hrefTarget);
                     });
                 }

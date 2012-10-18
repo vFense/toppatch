@@ -1,9 +1,9 @@
 define(
-    ['jquery', 'backbone', 'test-json/patchLoader'],
-    function ($, Backbone, patchList) {
+    ['jquery', 'underscore', 'backbone', 'test-json/patchLoader'],
+    function ($, _, Backbone, patchList) {
         "use strict";
 
-        var ipTable = _.shuffle(_.range(2, 254)),
+        var ipTable = _.shuffle(_.range(1, 254)),
             ipAvailable = 0,
             osList = [
                 { name: 'Windows 7', short: "win7" },
@@ -14,7 +14,7 @@ define(
             ],
             node,
             nodes,
-            exports = {}
+            exports = {};
         exports.Model = Backbone.Model.extend({
             defaults: {
                 "patch/need": [],
@@ -30,7 +30,7 @@ define(
 
                 this.set('os', this.get('os') || _.shuffle(osList)[0]);
 
-                var myPatches = patchList[this.get('os').short].patches,
+                var myPatches = _.pluck(patchList[this.get('os').short].patches, "KBID"),
                     pick = Math.ceil(Math.random() * myPatches.length);
 
 
@@ -44,11 +44,11 @@ define(
             // Initialize the collection with a
             // random length array of empty objects
             (function () {
-                var i, q,
+                var i, length,
                     out = [],   // Our array
                     min = 5,    // Minimum length of array
                     max = 15;   // Maximum length of array
-                for (i = 0, q = _.shuffle(_.range(min, max))[0]; i < q; i += 1) {
+                for (i = 0, length = _.shuffle(_.range(min, max))[0]; i < length; i += 1) {
                     out.push({});
                 }
                 return out;
@@ -64,6 +64,9 @@ define(
                 if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                 this.$el.html('See the console log...');
+
+                window.patchCollection = this.collection.toJSON();
+
                 console.log(this.collection.toJSON());
 
                 if (this.onRender !== $.noop) { this.onRender(); }

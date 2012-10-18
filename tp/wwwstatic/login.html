@@ -14,12 +14,12 @@
     <link href='https://fonts.googleapis.com/css?family=Cantarell:700|Open+Sans:400,600' rel='stylesheet'>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/application.css">
-    <script src="js/libs/modernizr/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+    <script src="js/libs/modernizr/modernizr.custom.js"></script>
 </head>
-<body class="container">
+<body>
 <!--[if lt IE 7]<section class="container"><div class="alert alert-error chromeframe" id="ie-warning"><a class="close" data-dismiss="alert">×</a><strong>Top Patch does not support your browser.</strong> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</div></section><![endif]-->
 <!-- main -->
-<section class="" role="main">
+<section class="container" role="main">
     <div class="login container-fluid">
         <div class=" clearfix">
             <form action="/login" method="post">
@@ -28,7 +28,7 @@
                         <img src="/static/img/brand-logo.png" class="logo" alt="TopPatch Logo"/>
                     </a>
                 </div>
-                <h2>Remediation Vault</h2>
+                <div class="brand">R<small>emediation</small>V<small>ault</small></div>
                 <div class="fields">
                     <div class="control-group">
                         <label class="control-label" for="username">Username:</label>
@@ -46,7 +46,7 @@
                 <div class="actions clearfix">
                     <button type="submit" class="button btn btn-primary btn-large pull-right">Sign In</button>
                     <div class="pull-left">
-                        Don't have an account? <a href="/signup">Sign Up</a><br>
+                        Don't have an account? <a href="#">Sign Up</a><br>
                         Forgot your <a href="#">Password</a>?
                     </div>
                 </div>
@@ -63,7 +63,7 @@
     <div class="subtitle">&nbsp;</div>
     <div class="subtitle">To use TopPatch Remediation Vault, enable JavaScript in your browser and try again.</div>
     <hr/>
-    <div class=""><a href="http://www.toppatch.com/"><img src="/static/img/brand-name-tag.png" class="brand" alt="Top Patch brand"/></a></div>
+    <div class=""><a href="http://www.toppatch.com/"><img src="img/brand-name-tag.png" class="brand" alt="Top Patch brand"/></a></div>
 </noscript>
 </body>
 </html>

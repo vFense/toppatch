@@ -10,3 +10,4 @@ var/
 .ssh
 *.pyc
 *.log
+.DS_Store

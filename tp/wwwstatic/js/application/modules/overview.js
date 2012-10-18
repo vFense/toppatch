@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'app', './overviewDetail'],
-    function ($, Backbone, app, Detail) {
+    ['jquery', 'underscore', 'backbone', 'app', './overviewDetail'],
+    function ($, _, Backbone, app, Detail) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({

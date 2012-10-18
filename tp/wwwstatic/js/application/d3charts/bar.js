@@ -7,7 +7,8 @@ define(
                 barWidth = 70,
                 width    = 400,
                 height   = 200,
-                title    = "Default";
+                title    = "Default",
+                color = d3.scale.category20();
                 //format   = d3.format(",.0f");
 
             function chart(selection) {
@@ -40,7 +41,7 @@ define(
                         .attr("y", function (datum) { return height - y(datum.value); })
                         .attr("height", function (datum) { return y(datum.value); })
                         .attr("width", barWidth)
-                        .attr("fill", "#2d578b")
+                        .attr("fill", function (d, i) { return color(i); }) //"#2d578b")
                         .append("svg:title").text(function (d) { return d.label + ": " + d.value; });
 
                     barDemo.selectAll("text")
@@ -53,18 +54,34 @@ define(
                         .attr("dy", "1.2em")
                         .attr("text-anchor", "middle")
                         .attr("style", "font-size: 10")
-                        .text(function (datum) { return datum.value; })
+                        .text(function (datum) {
+                            return datum.value;
+                        })
                         .attr("fill", "white");
 
                     barDemo.selectAll("text.yAxis")
                         .data(data)
                         .enter().append("svg:text")
-                        .attr("x", function (datum, index) { return x(index) + barWidth - barWidth / 4; })
+                        .attr("x", function (datum, index) { return x(index) + barWidth - barWidth / 6; })
                         .attr("y", height + 10)
                         .attr("dx", -barWidth / 2)
                         .attr("text-anchor", "middle")
                         .attr("style", "font-size: 10")
-                        .text(function (datum) { return datum.label; })
+                        .text(function (datum) {
+                            var label = datum.label.split(' '), osname = '';
+                            if (label.length > 3) {
+                                for(var k = 0; k < label.length -1; k++) {
+                                    if (label[k] == 'Windows') {
+                                        osname += label[k].substring(0, 3) + ' ';
+                                    } else {
+                                        osname+= label[k] + ' ';
+                                    }
+                                }
+                            } else {
+                                osname = datum.label;
+                            }
+                            return osname;
+                        })
                         .attr('transform', 'translate(15, 5)')
                         .attr("class", "yAxis");
 

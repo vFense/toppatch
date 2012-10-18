@@ -1,4 +1,4 @@
-define([], function () {
+define(['underscore'], function (_) {
     "use strict";
     var osArray   = ["Windows 7", "Windows 2K8", "Windows XP", "Windows 2K3", "Windows Vista"],
         nodeArray = [],

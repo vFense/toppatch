@@ -2,14 +2,14 @@
     <% if(show.brandHeader) { %>
         <nav class="navbar-inner noBorder noRadius noShadow clearfix" id="primaryNav">
             <span class="brand">
-                <a href="#"><img src="img/brand-name.png" alt="Top Patch"></a> | R<small>emediation</small> V<small>ault</small>
+                <a href="#"><img src="img/brand-name.png" alt="Top Patch"></a> | R<small>emediation</small>V<small>ault</small>
             </span>
             <div class="btn-group pull-right noMargin hidden-print">
                 <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="icon-user"></i>&nbsp;<span><%= name %></span>&nbsp;<i class="icon-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="javascript:;">Account Settings</a></li>
+                    <li><a href="#admin">Account Settings</a></li>
                     <li class="divider"></li>
                     <li><a href="/logout">Logout</a></li>
                 </ul>
@@ -26,7 +26,6 @@
                         <i class="icon-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Account Settings</a></li>
                         <li><a href="#" id="restore">Restore Defaults</a></li>
                         <li><a href="#widgetProperties" data-toggle="modal" id="addwidget">Add Widget</a></li>
                         <li class="divider"></li>
