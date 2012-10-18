@@ -64,7 +64,8 @@ define(['jquery', 'd3'], function ($, d3) {
                     .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
                     .attr("class", "slice")    //allow us to style things in the slices (like text)
                     .on("click", function (d) {
-                        if (d.data.data) {
+                        if (d.data.label) {
+                            window.location.hash = '#patches?type=' + d.data.label;
                             osData = d;
                             disappear('new', d.data.label);
                         }

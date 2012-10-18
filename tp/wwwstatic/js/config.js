@@ -26,7 +26,7 @@ require.config({
         // Library Plugins
         // ---------------------------------------------------------------------
         'text'              : 'libs/require/plugins/text',
-        'bootstap-modal'    : 'libs/backbone/plugins/bootstrap-modal',
+        'bootstrap-modal'   : 'libs/backbone/plugins/bootstrap-modal',
 
         // jQuery.ui Library
         // ---------------------------------------------------------------------
