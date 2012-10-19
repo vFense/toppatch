@@ -183,12 +183,27 @@ class AdminHandler(BaseHandler):
             password = None
             oldpassword = None
             newpassword = None
-        username = self.current_user
-        if self.application.account_manager.authenticate_account(str(username), str(oldpassword)):
-            self.application.account_manager.change_user_password(str(username), str(password))
-            result = { 'error': False, 'description': 'changed password' }
-        else:
-            result = {'error': True, 'description': 'invalid password'}
+        try:
+            operation = self.get_argument('operation')
+        except:
+            operation = None
+        if operation:
+            try:
+                csr_approve = self.request.arguments['approve-csr']
+            except:
+                csr_approve = None
+            try:
+                csr_disapprove = self.request.arguments['disapprove-csr']
+            except:
+                csr_disapprove = None
+            result = { 'error' : False, 'description': operation, 'csr-approve': csr_approve, 'csr_disapprove': csr_disapprove }
+        if password:
+            username = self.current_user
+            if self.application.account_manager.authenticate_account(str(username), str(oldpassword)):
+                self.application.account_manager.change_user_password(str(username), str(password))
+                result = { 'error': False, 'description': 'changed password' }
+            else:
+                result = {'error': True, 'description': 'invalid password'}
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result))
 

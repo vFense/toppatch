@@ -73,6 +73,11 @@ define(
                         }
                     } else {
                         console.log(form.serialize());
+                        $.post("/adminForm?" + form.serialize(),
+                            function(json) {
+                                console.log(json);
+                            }
+                        );
                     }
                     return false;
                 },
