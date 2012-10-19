@@ -76,6 +76,11 @@ define(
                         $.post("/adminForm?" + form.serialize(),
                             function(json) {
                                 console.log(json);
+                                if(!json.error) {
+                                    form.find('input:checked').parents('.item').remove();
+                                } else {
+                                    console.log('Error while processing the CSRs');
+                                }
                             }
                         );
                     }
