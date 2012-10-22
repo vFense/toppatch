@@ -11,7 +11,7 @@ class TcpConnect():
     Connect to the remote agent, using the openssl
     library backed by Gevent.
     """
-    def __init__(self, host, msg, port=9003, secure=True):
+    def __init__(self, host, msg, port=9003, secure=True, timeout=5):
         self.secure = secure
         self.host = host
         self.msg = msg
@@ -20,7 +20,7 @@ class TcpConnect():
         self.write_connection_count = 0
         self.write_count = 0
         self.retry = 1
-        self.timeout = 30
+        self.timeout = timeout
         self.error = None
         self.read_data = None
         self.key = "/opt/TopPatch/var/lib/ssl/server/keys/server.key"
@@ -67,7 +67,7 @@ class TcpConnect():
         return self.error
 
     def _write(self):
-        read_ready, write_ready, error = select.select([], [self.tcp_socket], [self.tcp_socket], 60)
+        read_ready, write_ready, error = select.select([], [self.tcp_socket], [self.tcp_socket], self.timeout)
         if write_ready:
             try:
                 self.tcp_socket.sendall(self.msg)
@@ -89,7 +89,7 @@ class TcpConnect():
                 self.error = self._error_handler(error)
 
     def _read(self):
-        read_ready, write_ready, error = select.select([self.tcp_socket], [], [self.tcp_socket], 30)
+        read_ready, write_ready, error = select.select([self.tcp_socket], [], [self.tcp_socket], self.timeout)
         if read_ready:
             print read_ready, error, self.msg
             try:

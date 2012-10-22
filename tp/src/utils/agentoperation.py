@@ -45,7 +45,7 @@ class AgentOperation():
 
     def _parse_and_pass(self):
         for node in self.node_list:
-            if type(node) != dict
+            if type(node) != dict:
                 json_valid, jsonobject = verifyJsonIsValid(node)
             else:
                 json_valid = True
@@ -72,9 +72,10 @@ class AgentOperation():
                     else:
                         raise("You must pass an array")
         gevent.joinall(self.threads)
+        print "Starting Thread"
         for job in self.threads:
             self.results.append(job.value)
-        #print self.results
+        print self.results
         
     def create_sof_operation(self, node_id, node_ip, oper_type, \
             oper_id, data_list=None):

@@ -37,7 +37,7 @@ class HandOff():
                                   })
                     TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
             else:
-                break
+                pass
             if self.json_object[OPERATION] == SYSTEM_INFO:
                 addSystemInfo(self.session, self.json_object, self.node)
             if self.json_object[OPERATION] == UPDATES_PENDING or \
