@@ -39,7 +39,7 @@ def csrExists(session, node):
 
 def certExists(session, node):
     cert = \
-        session.query(SslInfo).filter_by(ip_address=node)
+        session.query(SslInfo).filter_by(node_id=node)
     exists = cert.first()
     return(exists, cert)
 
