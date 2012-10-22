@@ -1,10 +1,9 @@
 import re
 import sys
 import gevent
-#import ssl
-#import socket
-#import select
-from gevent import ssl, socket, select
+import ssl
+import socket
+import select
 
 class TcpConnect():
     """
@@ -35,10 +34,10 @@ class TcpConnect():
             new_wrapper = ssl.SSLSocket(new_socket,
                     keyfile=self.key, certfile=self.cert, ca_certs=self.ca,
                     cert_reqs=ssl.CERT_REQUIRED)
-            new_wrapper.timeout = self.timeout
+            new_wrapper.settimeout(self.timeout)
             return new_wrapper
         else:
-            #new_socket.timeout = self.timeout
+            new_socket.settimeout(self.timeout)
             return new_socket
 
     def _connect(self):
@@ -47,6 +46,7 @@ class TcpConnect():
             self.tcp_socket.connect((self.host, self.port))
             connected = True
         except Exception as e:
+            print e
             if e.errno == 111 and \
                     self.connection_count < 1 or \
                     re.search(r'operation timed out', e.message) and \
@@ -55,6 +55,7 @@ class TcpConnect():
                 self.tcp_socket = self.socket_init()
                 self._connect()
             else:
+                print e
                 return(self._error_handler(e))
         if connected:
             return self._write()
@@ -87,17 +88,18 @@ class TcpConnect():
                 self._connect()
             else:
                 self.error = self._error_handler(error)
+                print "writing to socket failed", error
 
     def _read(self):
         read_ready, write_ready, error = select.select([self.tcp_socket], [], [self.tcp_socket], self.timeout)
         if read_ready:
-            print read_ready, error, self.msg
             try:
                 self.read_data = self.tcp_socket.recv(1024)
             except Exception as e:
                 self.error = self._error_handler(e)
         else:
             self.error = self._error_handler(error)
+            print "reading from socket failed", error
 
 
     def _close(self):
