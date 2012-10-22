@@ -1,19 +1,19 @@
 
 import tornado.web
 import tornado.websocket
+import re
 try: import simplejson as json
 except ImportError: import json
 from models.node import NodeInfo
+from utils.db.client import *
+from utils.agentoperation import AgentOperation
 from server.decorators import authenticated_request
+from jsonpickle import encode
 
+engine = initEngine()
 
-def printToSocket(fn):
-    def wrapped():
-        if WebsocketHandler.socket:
-            return WebsocketHandler.socket.write_message(fn())
-        else:
-            print fn()
-    return wrapped
+LISTENERS = []
+
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -48,10 +48,6 @@ class LoginHandler(BaseHandler):
     def post(self):
 
          if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
-            @printToSocket
-            def sign():
-                return '{ "user": "%s", "status": "signed in" }' % self.get_argument('name')
-            sign()
             self.set_secure_cookie("user", self.get_argument("name"))
             self.redirect("/")
          else:
@@ -87,33 +83,26 @@ class testHandler(BaseHandler):
     def get(self):
         self.render('../data/templates/websocket-test.html')
 
-class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
+def SendToSocket(message):
+    for socket in LISTENERS:
+        socket.write_message(message)
 
-    socket = ""
+class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
     @authenticated_request
     def open(self):
+        LISTENERS.append(self)
         print 'new connection'
-        global socket
-        WebsocketHandler.socket = self
 
     def on_message(self, message):
         print 'message received %s' % message
 
     def on_close(self):
         print 'connection closed...'
-        WebsocketHandler.socket = ""
+        LISTENERS.remove(self)
 
-    def callback(self):
-        self.write_message(globalMessage)
 
 class LogoutHandler(BaseHandler):
     def get(self):
-        @printToSocket
-        def sign():
-            return '{ "user": "%s", "status": "logged out" }' % self.current_user
-        sign()
-        if WebsocketHandler.socket:
-            WebsocketHandler.socket.close()
         self.clear_all_cookies()
         self.redirect('/login')
         #self.write("Goodbye!" + '<br><a href="/login">Login</a>')
@@ -142,20 +131,82 @@ class DeveloperRegistrationHandler(BaseHandler):
 
 class FormHandler(BaseHandler):
     @authenticated_request
+    def get(self):
+        self.write('Invalid submission')
+
+    @authenticated_request
     def post(self):
         resultjson = []
         node = {}
-        node_id = self.request.arguments['node']
-        operation = self.get_argument('operation')
+        result = []
+        session = createSession(engine)
         try:
-            patches = self.request.arguments['patches']
-            node['node'] = node_id
-            node[operation] = patches
-            resultjson.append(node)
-            self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(resultjson, indent=4))
+            node_id = self.get_argument('node')
         except:
-            self.write('Please provide a selection of patches')
+            node_id = None
+        try:
+            params = self.get_argument('params')
+            print params
+        except:
+            params = None
+        if node_id:
+            operation = self.get_argument('operation')
+            if operation == 'install' or operation == 'uninstall':
+                patches = self.request.arguments['patches']
+                node['node_id'] = node_id
+                node['operation'] = operation
+                node['data'] = list(patches)
+                resultjson.append(encode(node))
+                #AgentOperation(session, resultjson)
+            elif operation == 'reboot':
+                node['operation'] = operation
+                node['node_id'] = node_id
+                resultjson.append(encode(node))
+                #AgentOperation(session, resultjson)
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(resultjson))
+        if params:
+            resultjson = json.loads(params)
+            #AgentOperation(session, resultjson)
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(resultjson))
+
+
+class AdminHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        try:
+            oldpassword = self.get_argument('old-password')
+            newpassword = self.get_argument('new-password')
+            password = self.get_argument('password')
+        except:
+            password = None
+            oldpassword = None
+            newpassword = None
+        try:
+            operation = self.get_argument('operation')
+        except:
+            operation = None
+        if operation:
+            try:
+                csr_approve = self.request.arguments['approve-csr']
+            except:
+                csr_approve = None
+            try:
+                csr_disapprove = self.request.arguments['disapprove-csr']
+            except:
+                csr_disapprove = None
+            result = { 'error' : False, 'description': operation, 'csr-approve': csr_approve, 'csr_disapprove': csr_disapprove }
+        if password:
+            username = self.current_user
+            if self.application.account_manager.authenticate_account(str(username), str(oldpassword)):
+                self.application.account_manager.change_user_password(str(username), str(password))
+                result = { 'error': False, 'description': 'changed password' }
+            else:
+                result = {'error': True, 'description': 'invalid password'}
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result))
+
 
 
 

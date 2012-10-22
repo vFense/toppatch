@@ -1,0 +1,30 @@
+// Widget Styles
+// --------------
+
+.widget {
+    background-color: white;
+
+    HEADER {
+        font-size: @h4FontSize;
+        line-height: 1.25em;
+        border-bottom: @em*(  1px )/@h4FontSize solid #E0E0E0;
+        margin-bottom: @em*( 10px )/@h4FontSize;
+    }
+
+    FOOTER {
+        border-top: @em*(  1px )/@baseFontSize solid #E0E0E0;
+        margin-top: @em*( 10px )/@baseFontSize;
+    }
+
+    &.editable {
+        padding: 0 @em*( 3px )/@baseFontSize;
+        .box-shadow(0 0 @em*( 5px )/@baseFontSize rgba(0, 0, 0, 0.3));
+
+        NAV {
+            background-color: #F8F8F8;
+            border-bottom: @em*( 1px )/@baseFontSize solid #F0F0F0;
+            margin: 0 @em*( -3px )/@baseFontSize;
+            padding: 0 @em*( 3px )/@baseFontSize;
+        }
+    }
+}

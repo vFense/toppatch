@@ -12,11 +12,13 @@ from server.handlers import BaseHandler
 from models.base import Base
 from models.windows import *
 from models.node import *
+from models.ssl import *
+from server.handlers import SendToSocket
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
 
-db = create_engine('mysql://root:topmiamipatch@127.0.0.1/vuls')
+db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
 db.echo = True
 
 class ApiHandler(BaseHandler):
@@ -144,15 +146,16 @@ class NodeHandler(BaseHandler):
                                "agent_status" : u[0].agent_status,
                                "os_code" : u[1].os_code,
                                "os_string" : u[1].os_string,
-                               "os_version_mayor" : u[1].os_version_major,
-                               "os_version_minor" : u[1].os_version_minor,
-                               "os_version_build" : u[1].os_version_build,
-                               "os_meta" : u[1].os_meta,
+                               #"os_version_mayor" : u[1].os_version_major,
+                               #"os_version_minor" : u[1].os_version_minor,
+                               #"os_version_build" : u[1].os_version_build,
+                               #"os_meta" : u[1].os_meta,
                                "installed" : u[2].patches_installed,
                                "available" : u[2].patches_available,
                                "pending" : u[2].patches_pending,
                                "failed" : u[2].patches_failed})
         session.close()
+        SendToSocket('hi')
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
@@ -194,15 +197,16 @@ class PatchHandler(BaseHandler):
                 for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False).join(WindowsUpdate).all():
                     for j in session.query(NodeInfo).filter(NodeInfo.id == v.node_id).all():
                         noderesult.append(j.ip_address)
-                resultjson.append({"reference" : {
-                    "toppatch" : u.toppatch_id,
-                    "developer" : u.vendor_id
-                },
-               "date" : str(u.date_pub),
-               "name" : u.title,
-               "description" : u.description,
-               "severity" : u.severity,
-               "node": noderesult})
+                if len(noderesult) != 0:
+                    resultjson.append({"reference" : {
+                        "toppatch" : u.toppatch_id,
+                        "developer" : u.vendor_id
+                    },
+                   "date" : str(u.date_pub),
+                   "name" : u.title,
+                   "description" : u.description,
+                   "severity" : u.severity,
+                   "node": noderesult})
         elif type == 'pending':
             pass
         elif type == 'installed':
@@ -211,15 +215,16 @@ class PatchHandler(BaseHandler):
                 for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).join(WindowsUpdate).all():
                     for j in session.query(NodeInfo).filter(NodeInfo.id == v.node_id).all():
                         noderesult.append(j.ip_address)
-                resultjson.append({"reference" : {
-                    "toppatch" : u.toppatch_id,
-                    "developer" : u.vendor_id
-                },
-               "date" : str(u.date_pub),
-               "name" : u.title,
-               "description" : u.description,
-               "severity" : u.severity,
-               "node": noderesult})
+                if len(noderesult) != 0:
+                    resultjson.append({"reference" : {
+                        "toppatch" : u.toppatch_id,
+                        "developer" : u.vendor_id
+                    },
+                   "date" : str(u.date_pub),
+                   "name" : u.title,
+                   "description" : u.description,
+                   "severity" : u.severity,
+                   "node": noderesult})
         elif type == 'failed':
             pass
         else:
@@ -264,7 +269,7 @@ class SummaryHandler(BaseHandler):
                 nodeResult = []
                 for w in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).filter(SystemInfo.os_string == v.os_string).distinct().all():
                     print w
-                    nodeResult.append({"name" : w[0].id,
+                    nodeResult.append({"name" : w[0].ip_address,
                                        "children" : [{"name" : "Patches Installed", "size" : w[2].patches_installed},
                                            {"name" : "Patches Available", "size" : w[2].patches_available},
                                            {"name" : "Patches Pending", "size" : w[2].patches_pending},
@@ -289,13 +294,26 @@ class GraphHandler(BaseHandler):
         for u in session.query(SystemInfo.os_string, func.count(SystemInfo.os_string)).group_by(SystemInfo.os_string).all():
             nodeResult = []
             for v in session.query(NodeInfo, SystemInfo, NodeStats).filter(SystemInfo.os_string == u[0]).join(SystemInfo).join(NodeStats).all():
-                print v
                 nodeResult.append({"name" : v[0].ip_address,
                                    "os" : v[1].os_string,
                                    "children" : [{"name" : "Patches Installed", "size" : v[2].patches_installed, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_installed}},
                                                 {"name" : "Patches Available", "size" : v[2].patches_available, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_available}},
                                                 {"name" : "Patches Pending", "size" : v[2].patches_pending, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_pending}},
                                                 {"name" : "Patches Failed", "size" : v[2].patches_failed, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_failed}}]})
+            """
+            os = str(u[0]).split()
+            ostring = ''
+            j = 0
+            while j < len(os):
+                if j < 4:
+                    if j == 0 and os[j] == 'Windows':
+                        ostring += os[j][:3]
+                        ostring += ' '
+                    else:
+                        ostring += os[j]
+                        ostring += ' '
+                j += 1
+            """
             osType.append({"label" : u[0], "value" : u[1], "data" : nodeResult})
         resultjson = osType
         session.close()
@@ -334,7 +352,7 @@ class OsHandler(BaseHandler):
             resultjson = {'error' : 'no data to display'}
             self.write(json.dumps(resultjson, indent=4))
 
-class TestHandler(BaseHandler):
+class NodesHandler(BaseHandler):
 
     @authenticated_request
     def get(self):
@@ -343,7 +361,6 @@ class TestHandler(BaseHandler):
         session = Session()
         try:
             id = self.get_argument('id')
-            print id
         except:
             id = None
         else:
@@ -354,17 +371,23 @@ class TestHandler(BaseHandler):
                 failed = []
                 pending = []
                 available = []
-                for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
-                    if v.installed:
-                        installed.append(v.toppatch_id)
+                for v in session.query(ManagedWindowsUpdate, WindowsUpdate).join(WindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
+                    if v[0].installed:
+                        installed.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                    elif v[0].pending:
+                        pending.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                    elif v[0].attempts > 0:
+                        failed.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
                     else:
-                        available.append(v.toppatch_id)
-                resultjson = {'id': u[1].node_id,
-                              'ip': u[0].ip_address,
+                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
-                              'os/name':u[1].os_string,
                               'host/status': u[0].host_status,
                               'agent/status': u[0].agent_status,
+                              'reboot': u[0].reboot,
+                              'id': u[1].node_id,
+                              'os/name':u[1].os_string,
                               'patch/need': available,
                               'patch/done': installed,
                               'patch/fail': failed,
@@ -375,9 +398,18 @@ class TestHandler(BaseHandler):
         else:
             data = []
             count = 0
-            for u in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats):
-                resultnode = {'id': u[1].node_id,
-                              'ip': u[0].ip_address,
+            try:
+                queryCount = self.get_argument('count')
+                queryOffset = self.get_argument('offset')
+            except:
+                queryCount = 10
+                queryOffset = 0
+            for u in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).limit(queryCount).offset(queryOffset):
+                resultnode = {'ip': u[0].ip_address,
+                              'host/status': u[0].host_status,
+                              'agent/status': u[0].agent_status,
+                              'reboot': u[0].reboot,
+                              'id': u[1].node_id,
                               'os/name':u[1].os_string,
                               'patch/need': u[2].patches_available,
                               'patch/done': u[2].patches_installed,
@@ -398,50 +430,277 @@ class PatchesHandler(BaseHandler):
     @authenticated_request
     def get(self):
         data = []
+        resultjson = {}
         count = 0
         Session = sessionmaker(bind=db)
         session = Session()
-        for u in session.query(WindowsUpdate).all():
-            nodeAvailable = []
-            nodeInstalled = []
-            countAvailable = 0
-            countInstalled = 0
-            countFailed = 0
-            countPending = 0
-            nodePending = []
-            nodeFailed = []
+        try:
+            id = self.get_argument('id')
+        except:
+            id = None
+        try:
+            type = self.get_argument('type')
+        except:
+            type = None
+        if id:
+            for u in session.query(WindowsUpdate).filter(WindowsUpdate.toppatch_id == id).all():
+                nodeAvailable = []
+                nodeInstalled = []
+                nodePending = []
+                nodeFailed = []
+                countAvailable = 0
+                countInstalled = 0
+                countFailed = 0
+                countPending = 0
+                for v in session.query(ManagedWindowsUpdate, NodeInfo).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id).join(NodeInfo).all():
+                    if v[0].installed:
+                        countInstalled += 1
+                        nodeInstalled.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                    elif v[0].pending:
+                        countPending += 1
+                        nodePending.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                    elif v[0].attempts > 0:
+                        countFailed += 1
+                        nodeFailed.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                        countAvailable += 1
+                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                    else:
+                        countAvailable += 1
+                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                resultjson = {
+                    "name" : u.title,
+                    "type": "Security Patch",             #forcing Patch into type
+                    "vendor" : {
+                        "patchID" : '',         #forcing empty string in patchID
+                        "name" : 'Microsoft'    #forcing microsoft on all patch names
+                    },
+                    "id": u.toppatch_id,
+                    "severity" : u.severity,
+                    "description" : u.description,
+                    "date" : str(u.date_pub),
+                    "available": {'count' :countAvailable, 'nodes': nodeAvailable},
+                    "installed": {'count' :countInstalled, 'nodes': nodeInstalled},
+                    "pending": {'count' :countPending, 'nodes': nodePending},
+                    "failed": {'count' :countFailed, 'nodes': nodeFailed}
+                }
+        else:
+            try:
+                queryCount = self.get_argument('count')
+                queryOffset = self.get_argument('offset')
+            except:
+                queryCount = 10
+                queryOffset = 0
+            query_count = session.query(func.count(distinct(ManagedWindowsUpdate.toppatch_id)))
+            query = session.query(ManagedWindowsUpdate)
+            if type:
+                if type == 'available':
+                    count = query_count.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                    for u in query.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
+                        countAvailable = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                        countInstalled = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).first()[0]
+                        countPending = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                        countFailed = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
 
-            for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id).all():
-                if v.installed:
-                    countInstalled += 1
-                    nodeInstalled.append(v.node_id)
-                else:
-                    countAvailable += 1
-                    nodeAvailable.append(v.node_id)
-
-            data.append({"vendor" : {
+                        for v in session.query(WindowsUpdate).filter(WindowsUpdate.toppatch_id == u.toppatch_id).all():
+                            data.append({"vendor" : {
                                 "patchID" : '',         #forcing empty string in patchID
                                 "name" : 'Microsoft'    #forcing microsoft on all patch names
                             },
-                           "type": "Patch",             #forcing Patch into type
-                           "id": u.toppatch_id,
-                           "date" : str(u.date_pub),
-                           "name" : u.title,
-                           "description" : u.description,
-                           "severity" : u.severity,
-                           "nodes/need": countAvailable,
-                           "nodes/done": countInstalled,
-                           "nodes/pend": countPending,
-                           "nodes/fail": countFailed
-            })
-        for u in session.query(func.count(WindowsUpdate.toppatch_id)):
-            count = u
-        resultjson = {"count": count[0], "data": data}
+                             "type": "Security Patch",             #forcing Patch into type
+                             "id": v.toppatch_id,
+                             "date" : str(v.date_pub),
+                             "name" : v.title,
+                             "description" : v.description,
+                             "severity" : v.severity,
+                             "nodes/need": countAvailable,
+                             "nodes/done": countInstalled,
+                             "nodes/pend": countPending,
+                             "nodes/fail": countFailed,
+                             "nodes": []})
+                elif type == 'installed':
+                    count = query_count.filter(ManagedWindowsUpdate.installed == True).first()[0]
+                    for u in query.filter(ManagedWindowsUpdate.installed == True).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
+                        countAvailable = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                        countInstalled = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).first()[0]
+                        countPending = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                        countFailed = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
+
+                        for v in session.query(WindowsUpdate).filter(WindowsUpdate.toppatch_id == u.toppatch_id).all():
+                            data.append({"vendor" : {
+                                "patchID" : '',         #forcing empty string in patchID
+                                "name" : 'Microsoft'    #forcing microsoft on all patch names
+                            },
+                             "type": "Security Patch",             #forcing Patch into type
+                             "id": v.toppatch_id,
+                             "date" : str(v.date_pub),
+                             "name" : v.title,
+                             "description" : v.description,
+                             "severity" : v.severity,
+                             "nodes/need": countAvailable,
+                             "nodes/done": countInstalled,
+                             "nodes/pend": countPending,
+                             "nodes/fail": countFailed,
+                             "nodes": []})
+                elif type == 'pending':
+                    count = query_count.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                    for u in query.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
+                        countAvailable = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                        countInstalled = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).first()[0]
+                        countPending = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                        countFailed = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
+
+                        for v in session.query(WindowsUpdate).filter(WindowsUpdate.toppatch_id == u.toppatch_id).all():
+                            data.append({"vendor" : {
+                                "patchID" : '',         #forcing empty string in patchID
+                                "name" : 'Microsoft'    #forcing microsoft on all patch names
+                            },
+                             "type": "Security Patch",             #forcing Patch into type
+                             "id": v.toppatch_id,
+                             "date" : str(v.date_pub),
+                             "name" : v.title,
+                             "description" : v.description,
+                             "severity" : v.severity,
+                             "nodes/need": countAvailable,
+                             "nodes/done": countInstalled,
+                             "nodes/pend": countPending,
+                             "nodes/fail": countFailed,
+                             "nodes": []})
+                elif type == 'failed':
+                    count = query_count.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
+                    for u in query.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
+                        countAvailable = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                        countInstalled = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).first()[0]
+                        countPending = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                        countFailed = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
+
+                        for v in session.query(WindowsUpdate).filter(WindowsUpdate.toppatch_id == u.toppatch_id).all():
+                            data.append({"vendor" : {
+                                "patchID" : '',         #forcing empty string in patchID
+                                "name" : 'Microsoft'    #forcing microsoft on all patch names
+                            },
+                             "type": "Security Patch",             #forcing Patch into type
+                             "id": v.toppatch_id,
+                             "date" : str(v.date_pub),
+                             "name" : v.title,
+                             "description" : v.description,
+                             "severity" : v.severity,
+                             "nodes/need": countAvailable,
+                             "nodes/done": countInstalled,
+                             "nodes/pend": countPending,
+                             "nodes/fail": countFailed,
+                             "nodes": []})
+                else:
+                    count = session.query(func.count(WindowsUpdate.severity)).filter(WindowsUpdate.severity == type).first()[0]
+                    for u in session.query(WindowsUpdate).filter(WindowsUpdate.severity == type).limit(queryCount).offset(queryOffset).all():
+                        countAvailable = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                        countInstalled = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).first()[0]
+                        countPending = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                        countFailed = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
+                        data.append({"vendor" : {
+                            "patchID" : '',         #forcing empty string in patchID
+                            "name" : 'Microsoft'    #forcing microsoft on all patch names
+                        },
+                        "type": "Security Patch",             #forcing Patch into type
+                        "id": u.toppatch_id,
+                        "date" : str(u.date_pub),
+                        "name" : u.title,
+                        "description" : u.description,
+                        "severity" : u.severity,
+                        "nodes/need": countAvailable,
+                        "nodes/done": countInstalled,
+                        "nodes/pend": countPending,
+                        "nodes/fail": countFailed,
+                        "nodes": []})
+
+            else:
+                for u in session.query(WindowsUpdate).order_by(WindowsUpdate.date_pub).limit(queryCount).offset(queryOffset):
+                    nodeAvailable = []
+                    nodeInstalled = []
+                    nodePending = []
+                    nodeFailed = []
+                    countAvailable = 0
+                    countInstalled = 0
+                    countFailed = 0
+                    countPending = 0
+
+                    for v in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id).all():
+                        if v.installed:
+                            countInstalled += 1
+                            nodeInstalled.append(v.node_id)
+                        elif v.pending:
+                            countPending += 1
+                            nodePending.append(v.node_id)
+                        elif v.attempts > 0:
+                            countFailed += 1
+                            nodeFailed.append(v.node_id)
+                            countAvailable += 1
+                            nodeAvailable.append(v.node_id)
+                        else:
+                            countAvailable += 1
+                            nodeAvailable.append(v.node_id)
+
+                    data.append({"vendor" : {
+                                        "patchID" : '',         #forcing empty string in patchID
+                                        "name" : 'Microsoft'    #forcing microsoft on all patch names
+                                    },
+                                   "type": "Security Patch",             #forcing Patch into type
+                                   "id": u.toppatch_id,
+                                   "date" : str(u.date_pub),
+                                   "name" : u.title,
+                                   "description" : u.description,
+                                   "severity" : u.severity,
+                                   "nodes/need": countAvailable,
+                                   "nodes/done": countInstalled,
+                                   "nodes/pend": countPending,
+                                   "nodes/fail": countFailed})
+                    for u in session.query(func.count(WindowsUpdate.toppatch_id)):
+                        count = u[0]
+            resultjson = {"count": count, "data": data}
         session.close()
         self.session = self.application.session
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
 
+class SeverityHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        resultjson = {}
+        result = []
+        Session = sessionmaker(bind=db)
+        session = Session()
+        for u in session.query(WindowsUpdate.severity).distinct().all():
+            count = 0
+            for v in session.query(WindowsUpdate).filter(WindowsUpdate.severity == u.severity).all():
+                count += 1
+                print v
+            print u
+            resultjson = { 'label' : str(u.severity), 'value' : count }
+            result.append(resultjson)
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class CsrHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        result = []
+        Session = sessionmaker(bind=db)
+        session = Session()
+        try:
+            signed = self.get_argument('signed')
+            is_signed = True if signed == 'true' or signed == 'True' else  False
+        except:
+            signed = None
+            is_signed = None
+        if signed:
+            for u in session.query(SslInfo, CsrInfo, NodeInfo).join(CsrInfo).join(NodeInfo).filter(CsrInfo.is_csr_signed == is_signed).all():
+                result.append({'signed': u[1].is_csr_signed, 'node_id': u[0].node_id, 'ip': u[2].ip_address})
+        else:
+            for u in session.query(SslInfo, CsrInfo, NodeInfo).join(CsrInfo).join(NodeInfo).all():
+                result.append({'signed': u[1].is_csr_signed, 'node_id': u[0].node_id, 'ip': u[2].ip_address})
+        self.session = self.application.session
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
 
 class UserHandler(BaseHandler):
 

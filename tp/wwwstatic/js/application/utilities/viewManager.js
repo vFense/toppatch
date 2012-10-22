@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone'],
-    function ($, Backbone) {
+    ['jquery', 'underscore', 'backbone'],
+    function ($, _, Backbone) {
         "use strict";
 
         // Zombie Prevention Part 1
