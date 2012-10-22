@@ -22,6 +22,7 @@ class CsrHandOff():
         self.error = None
         self.client_ip = ip_address
         self.valid_json, self.json_object = verifyJsonIsValid(data)
+        print data
         if self.valid_json:
             self.data = self.json_object
             print self.data
@@ -61,6 +62,8 @@ class CsrHandOff():
                 else:
                     print 'csr for %s %s' % (self.client_ip, self.error)
             self.session.close()
+        else:
+            print "JSON NOT VALID"
 
     def sendCert(self, node, cert):
         sleep(3)
