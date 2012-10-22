@@ -71,7 +71,7 @@ class AgentOperation():
                         self.threads.append(message)
                     else:
                         raise("You must pass an array")
-        gevent.joinall(self.threads)
+        gevent.joinall(self.threads, 1)
         print "Starting Thread"
         for job in self.threads:
             self.results.append(job.value)
