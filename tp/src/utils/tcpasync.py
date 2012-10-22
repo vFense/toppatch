@@ -1,9 +1,12 @@
 import re
 import sys
 import gevent
+from gevent import monkey
 import ssl
 import socket
 import select
+
+monkey.patch_socket()
 
 class TcpConnect():
     """
