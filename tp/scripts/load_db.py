@@ -141,7 +141,7 @@ print "Initializing TopPatch Database!"
 
 if os.path.exists(mysql_data_dir):
     print "MySQL data directory present. Connecting..."
-    db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
+    db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch')
 
 else:
     print "Creating MySQL data directory."
@@ -154,8 +154,8 @@ else:
     subprocess.call(['./bin/mysqladmin', '-u', 'root', 'password', 'topmiamipatch'], )
 
     db = create_engine('mysql://root:topmiamipatch@127.0.0.1/')
-    db.connect().execute("CREATE DATABASE toppatch_server;")
-    db.connect().execute("USE toppatch_server;")
+    db.connect().execute("CREATE DATABASE toppatch;")
+    db.connect().execute("USE toppatch;")
 
     os.chdir(owd)
 
