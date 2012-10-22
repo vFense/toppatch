@@ -1,10 +1,10 @@
 import re
 import sys
 import gevent
-import ssl
-import socket
-import select
-#from gevent import ssl, socket
+#import ssl
+#import socket
+#import select
+from gevent import ssl, socket, select
 
 class TcpConnect():
     """
