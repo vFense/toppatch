@@ -23,7 +23,8 @@ from server.oauth.token import TokenManager
 
 from tornado.options import define, options
 
-from twisted.internet.protocol import Protocol, Factoryfrom twisted.internet import reactor
+from twisted.internet.protocol import Protocol, Factory
+from twisted.internet import reactor
 
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
