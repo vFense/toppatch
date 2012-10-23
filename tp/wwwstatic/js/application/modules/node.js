@@ -29,7 +29,6 @@ define(
                         data = this.collection.toJSON()[0];
 
                     this.$el.html('');
-
                     this.$el.append(template({model: data}));
 
                     this.$el.find("a.disabled").on("click", false);
