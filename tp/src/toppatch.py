@@ -4,6 +4,7 @@ Main launching point of the Top Patch Server
 import base64
 import uuid
 import os
+import threading
 
 import tornado.httpserver
 import tornado.ioloop
@@ -21,6 +22,8 @@ from server.account.manager import AccountManager
 from server.oauth.token import TokenManager
 
 from tornado.options import define, options
+
+from twisted.internet.protocol import Protocol, Factoryfrom twisted.internet import reactor
 
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
@@ -90,7 +93,6 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
-"""
 class HelloWorldProtocol(Protocol):
     def connectionMade(self, msg):
         SendToSocket(msg)
@@ -103,7 +105,7 @@ class ThreadClass(threading.Thread):
         reactor.listenTCP(8080, HelloWorldFactory())
         #reactor.run()
         reactor.run(installSignalHandlers=0)
-"""
+
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     https_server = tornado.httpserver.HTTPServer(Application(options.debug),
