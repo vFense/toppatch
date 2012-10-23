@@ -157,17 +157,17 @@ class FormHandler(BaseHandler):
                 node['operation'] = operation
                 node['data'] = list(patches)
                 resultjson.append(encode(node))
-                #AgentOperation(session, resultjson)
+                AgentOperation(session, resultjson)
             elif operation == 'reboot':
                 node['operation'] = operation
                 node['node_id'] = node_id
                 resultjson.append(encode(node))
-                #AgentOperation(session, resultjson)
+                AgentOperation(session, resultjson)
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
         if params:
             resultjson = json.loads(params)
-            #AgentOperation(session, resultjson)
+            AgentOperation(session, resultjson)
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
 
