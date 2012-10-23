@@ -115,7 +115,9 @@ if __name__ == '__main__':
             "keyfile": os.path.join("/opt/TopPatch/tp/data/ssl/", "server.key"),
             })
     https_server.listen(options.port)
-
+    socketListener = ThreadClass()
+    socketListener.daemon = True
+    socketListener.start()
     tornado.ioloop.IOLoop.instance().start()
 
 
