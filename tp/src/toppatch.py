@@ -95,8 +95,8 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
 class HelloWorldProtocol(Protocol):
-    def connectionMade(self, msg):
-        SendToSocket(msg)
+    def connectionMade(self):
+        SendToSocket("message")
 
 class HelloWorldFactory(Factory):
     protocol = HelloWorldProtocol
