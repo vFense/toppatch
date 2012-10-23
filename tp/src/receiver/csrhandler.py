@@ -38,8 +38,8 @@ class CsrHandOff():
                             self.csr_row = storeCsr(self.session, \
                                     self.client_ip, self.data['pem'])
                         self.signed_cert = signCert(self.session, self.csr)
-                        self.node = storeCert(self.session, self.client_ip, \
-                            self.signed_cert)
+                        self.node, self.cert_path = storeCert(self.session, \
+                                self.client_ip, self.signed_cert)
                         self.results = self.sendCert(self.node, \
                             self.signed_cert)
                         print self.results.error, self.results.read_data
@@ -48,8 +48,10 @@ class CsrHandOff():
                                     csrExists(self.session, self.client_ip)
                             self.cert_exists, self.cert_oper = \
                                     certExists(self.session, self.node.id)
-                            file_deleted = os.remove(self.csr_path)
-                            print file_deleted
+                            csr_file_deleted = os.remove(self.csr_path)
+                            cert_file_deleted = os.remove(self.cert_path)
+                            print csr_file_deleted
+                            print cert_file_deleted
                             self.cert_oper.delete()
                             self.csr_oper.delete()
                             self.node, self.node_exists = \
