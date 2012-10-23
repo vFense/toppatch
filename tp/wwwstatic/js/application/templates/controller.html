@@ -1,0 +1,10 @@
+<div class="items">
+    <% if(data.nodes.length > 0) { %>
+        <% _.each(data.nodes, function (node, i) { %>
+            <div class="<% if(i === 0) { print('first'); } %> item clearfix id" id="<%= node.id %>">
+                <span class="desc"><strong>Node ID</strong> - <%= node.ip %></span>
+                <span class="pull-right"><i class="icon-caret-right"></i></span>
+            </div>
+        <% }); %>
+    <% } %>
+</div>

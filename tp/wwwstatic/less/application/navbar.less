@@ -1,0 +1,36 @@
+// Navbar Styles
+// -------------------------
+
+BODY > HEADER {
+    .navbar {
+        font-family: "Cantarell", "Arial Black", "Arial Bold", sans-serif;
+        //font-weight: bold;
+        margin-bottom:0;
+
+        .nav {
+            margin-right:0;
+        }
+
+        .brand {
+            IMG {
+                @imageHeight: 18px;
+                height: @em*( @imageHeight )/@navbarBrandFontSize;
+                vertical-align:baseline;
+            //@marginAdjust: 0px;
+            //margin-top: @em*( @marginAdjust )/@navbarBrandFontSize;
+            //margin-bottom: @em*( @marginAdjust )/@navbarBrandFontSize;
+            }
+        }
+    }
+
+    .navbar-inner {
+        padding-left:0;
+        padding-right:0;
+    }
+
+    #primaryNav {
+        background-image: none !important;
+        filter: none !important;
+        background-color: transparent;
+    }
+}

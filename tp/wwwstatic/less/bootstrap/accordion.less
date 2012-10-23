@@ -1,0 +1,34 @@
+//
+// Accordion
+// --------------------------------------------------
+
+
+// Parent container
+.accordion {
+  margin-bottom: @em*( @baseLineHeight )/@baseFontSize;
+}
+
+// Group == heading + body
+.accordion-group {
+  margin-bottom: @em*( 2px )/@baseFontSize;
+  border: @em*( 1px )/@baseFontSize solid #e5e5e5;
+  .border-radius(@em*( 4px )/@baseFontSize);
+}
+.accordion-heading {
+  border-bottom: 0;
+}
+.accordion-heading .accordion-toggle {
+  display: block;
+  padding: @em*( 8px )/@baseFontSize @em*( 15px )/@baseFontSize;
+}
+
+// General toggle styles
+.accordion-toggle {
+  cursor: pointer;
+}
+
+// Inner needs the styles because you can't animate properly with any styles on the element
+.accordion-inner {
+  padding: @em*( 9px )/@baseFontSize @em*( 15px )/@baseFontSize;
+  border-top: @em*( 1px )/@baseFontSize solid #e5e5e5;
+}

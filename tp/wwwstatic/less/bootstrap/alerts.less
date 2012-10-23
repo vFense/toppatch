@@ -1,0 +1,66 @@
+//
+// Alerts
+// --------------------------------------------------
+
+
+// Base styles
+// -------------------------
+
+.alert {
+  padding: @em*( 8px )/@baseFontSize @em*( 35px )/@baseFontSize @em*( 8px )/@baseFontSize @em*( 14px )/@baseFontSize;
+  margin-bottom: @em*( @baseLineHeight )/@baseFontSize;
+  text-shadow: 0 @em*( 1px )/@baseFontSize 0 rgba(255,255,255,.5);
+  background-color: @warningBackground;
+  border: @em*( 1px )/@baseFontSize solid @warningBorder;
+  .border-radius(@em*( 4px )/@baseFontSize);
+  color: @warningText;
+}
+.alert h4 {
+  margin: 0;
+}
+
+// Adjust close link position
+// References .close font size from close.less
+.alert .close {
+  position: relative;
+  top: @em*( -2px )/@closeFontSize;
+  right: @em*( -21px )/@closeFontSize;
+  line-height: @em*( @baseLineHeight )/@closeFontSize;
+}
+
+
+// Alternate styles
+// -------------------------
+
+.alert-success {
+  background-color: @successBackground;
+  border-color: @successBorder;
+  color: @successText;
+}
+.alert-danger,
+.alert-error {
+  background-color: @errorBackground;
+  border-color: @errorBorder;
+  color: @errorText;
+}
+.alert-info {
+  background-color: @infoBackground;
+  border-color: @infoBorder;
+  color: @infoText;
+}
+
+
+// Block alerts
+// -------------------------
+
+.alert-block {
+  padding-top: @em*( 14px )/@baseFontSize;
+  padding-bottom: @em*( 14px )/@baseFontSize;
+}
+.alert-block > p,
+.alert-block > ul {
+  margin-bottom: 0;
+}
+.alert-block p + p {
+  margin-top: @em*( 5px )/@baseFontSize;
+}
