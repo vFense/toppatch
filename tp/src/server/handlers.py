@@ -1,6 +1,7 @@
 
 import tornado.web
 import tornado.websocket
+<<<<<<< HEAD
 import re
 try: import simplejson as json
 except ImportError: import json
@@ -14,6 +15,8 @@ engine = initEngine()
 
 LISTENERS = []
 
+=======
+>>>>>>> sergio_dev/master
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -79,6 +82,7 @@ class SignupHandler(BaseHandler):
         else:
             self.write("Username already exist.")
 
+<<<<<<< HEAD
 class testHandler(BaseHandler):
     def get(self):
         self.render('../data/templates/websocket-test.html')
@@ -92,14 +96,23 @@ class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
     def open(self):
         LISTENERS.append(self)
         print 'new connection'
+=======
+class WebsocketHandler(tornado.websocket.WebSocketHandler):
+    def open(self):
+        print 'new connection'
+        self.write_message("Hello World")
+>>>>>>> sergio_dev/master
 
     def on_message(self, message):
         print 'message received %s' % message
 
     def on_close(self):
         print 'connection closed...'
+<<<<<<< HEAD
         LISTENERS.remove(self)
 
+=======
+>>>>>>> sergio_dev/master
 
 class LogoutHandler(BaseHandler):
     def get(self):

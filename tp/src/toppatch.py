@@ -10,11 +10,16 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import tornado.options
+import tornado.websocket
 
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
+<<<<<<< HEAD
 from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler, AdminHandler
+=======
+from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, LogoutHandler, DeveloperRegistrationHandler
+>>>>>>> sergio_dev/master
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
 from server.api import *
@@ -42,9 +47,13 @@ class Application(tornado.web.Application):
             (r"/?", RootHandler),
             (r"/login/?", LoginHandler),
             (r"/signup/?", SignupHandler),
+            (r"/ws/?", WebsocketHandler),
             (r"/logout/?", LogoutHandler),
+<<<<<<< HEAD
             (r"/ws/?", WebsocketHandler),
             (r"/test/?", testHandler),
+=======
+>>>>>>> sergio_dev/master
             (r"/developer", DeveloperRegistrationHandler),
             (r"/submitForm", FormHandler),
             (r"/adminForm", AdminHandler),
@@ -112,9 +121,15 @@ if __name__ == '__main__':
     tornado.options.parse_command_line()
     https_server = tornado.httpserver.HTTPServer(Application(options.debug),
         ssl_options={
+<<<<<<< HEAD
             "certfile": os.path.join("/opt/TopPatch/tp/data/ssl/", "server.crt"),
             "keyfile": os.path.join("/opt/TopPatch/tp/data/ssl/", "server.key"),
             })
+=======
+            "certfile": os.path.join("data/ssl", "server.crt"),
+            "keyfile": os.path.join("data/ssl", "server.key"),
+        })
+>>>>>>> sergio_dev/master
     https_server.listen(options.port)
 
     tornado.ioloop.IOLoop.instance().start()
