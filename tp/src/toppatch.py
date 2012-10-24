@@ -26,6 +26,11 @@ from tornado.options import define, options
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 
+from apscheduler.scheduler import Scheduler
+
+sched = Scheduler()
+sched.start()
+
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
 
