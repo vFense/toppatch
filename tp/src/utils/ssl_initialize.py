@@ -11,14 +11,17 @@ TYPE_RSA = crypto.TYPE_RSA
 TYPE_DSA = crypto.TYPE_DSA
 SERVER_KEY_DIR = '/opt/TopPatch/var/lib/ssl/server/keys/'
 CLIENT_KEY_DIR = '/opt/TopPatch/var/lib/ssl/client/keys/'
+CLIENT_CSR_DIR = '/opt/TopPatch/var/lib/ssl/client/csr/'
 SERVER_PRIVKEY_NAME  = 'server.key'
 SERVER_PUBKEY_NAME   = 'server.cert'
 CLIENT_PRIVKEY_NAME  = 'client.key'
 CLIENT_PUBKEY_NAME   = 'client.cert'
-#CA_PRIVKEY_NAME  = 'CA.key'
-#CA_PUBKEY_NAME   = 'CA.cert'
-#TOPPATCH_CA = ('TopPatch Certficate Authority', 'TopPatch',
-#               'Remediation Vault', 'US', 'NY', 'NYC')
+CA_PRIVKEY_NAME  = 'CA.key'
+CA_PUBKEY_NAME   = 'CA.cert'
+CA_PKEY = SERVER_KEY_DIR + CA_PRIVKEY_NAME
+CA_CERT = SERVER_KEY_DIR + CA_PUBKEY_NAME
+TOPPATCH_CA = ('TopPatch Certficate Authority', 'TopPatch',
+               'Remediation Vault', 'US', 'NY', 'NYC')
 TOPPATCH_SERVER = ('TopPatch Server', 'TopPatch',
                    'Remediation Vault', 'US', 'NY', 'NYC')
 TOPPATCH_CLIENT = ('TopPatch Client', 'TopPatch',
@@ -29,8 +32,8 @@ SERVER_PRIVKEY = SERVER_KEY_DIR + SERVER_PRIVKEY_NAME
 SERVER_PUBKEY = SERVER_KEY_DIR + SERVER_PUBKEY_NAME
 CLIENT_PRIVKEY = CLIENT_KEY_DIR + CLIENT_PRIVKEY_NAME
 CLIENT_PUBKEY = CLIENT_KEY_DIR + CLIENT_PUBKEY_NAME
-#CA_PRIVKEY = SERVER_KEY_DIR + CA_PRIVKEY_NAME
-#CA_PUBKEY = SERVER_KEY_DIR + CA_PUBKEY_NAME
+CA_PRIVKEY = SERVER_KEY_DIR + CA_PRIVKEY_NAME
+CA_PUBKEY = SERVER_KEY_DIR + CA_PUBKEY_NAME
 
 if not os.path.exists(LOG_DIR):
     logging.warning('directory %s does not exist. Creating the %s directory now' % (LOG_DIR, LOG_DIR))
@@ -68,10 +71,8 @@ file_exists = os.path.exists(SERVER_PRIVKEY)
 keys_written = []
 if not file_exists:
     logger.info('Creating Certificate Authority and Server Keys')
-    #ca_pkey = generatePrivateKey(TYPE_RSA, 4098)
-    #ca_cert = createSigningCertificateAuthority(ca_pkey, 1,
-    #    TOPPATCH_CA, EXPIRATION
-    #)
+    ca_pkey = loadPrivateKey(CA_PKEY)
+    ca_cert = loadCert(CA_CERT)
     server_pkey = generatePrivateKey(TYPE_RSA, 2048)
     server_cert = createSigningCertificateAuthority(server_pkey, 1,
         TOPPATCH_SERVER, EXPIRATION
@@ -79,10 +80,7 @@ if not file_exists:
     client_pkey = generatePrivateKey(TYPE_RSA, 2048)
     client_csr = createCertRequest(client_pkey, TOPPATCH_CLIENT)
     client_cert = createSignedCertificate(client_csr, (server_cert, server_pkey), 1, EXPIRATION, digest="sha512")
-    #keys_written.append(saveKey(SERVER_KEY_DIR, ca_pkey, '.key', name='CA'))
-    #keys_written.append(saveKey(SERVER_KEY_DIR, ca_cert, '.cert', name='CA'))
     keys_written.append(saveKey(SERVER_KEY_DIR, server_pkey, TYPE_PKEY, name='server'))
-    #keys_written.append(saveKey(SERVER_KEY_DIR, server_csr, '.csr', name='server'))
     keys_written.append(saveKey(SERVER_KEY_DIR, server_cert, TYPE_CERT, name='server'))
     keys_written.append(saveKey(CLIENT_KEY_DIR, client_pkey, TYPE_PKEY, name='client'))
     keys_written.append(saveKey(CLIENT_KEY_DIR, client_csr, TYPE_CSR, name='client'))
