@@ -70,15 +70,18 @@ class HandOff():
     def windowsUpdate(self):
         addWindowsUpdate(self.session, self.json_object)
         addWindowsUpdatePerNode(self.session, self.json_object)
+        updateNodeNetworkStats(self.session, self.node.id)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def softwareUpdate(self):
         addSoftwareAvailable(self.session, self.json_object)
         addSoftwareInstalled(self.session, self.json_object)
+        updateNodeNetworkStats(self.session, self.node.id)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def updateResults(self):
         results = addResults(self.session, self.json_object)
+        updateNodeNetworkStats(self.session, self.node.id)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def nodeUpdate(self):
