@@ -137,7 +137,7 @@ class Results(Base):
     operation_id = Column(INTEGER(unsigned=True),
         ForeignKey("operations.id", use_alter=True,
         name="fk_result_operations_id"),unique=True)
-    patch_id = Column(INTEGER(unsigned=True),
+    patch_id = Column(VARCHAR(32),
         ForeignKey("windows_update.toppatch_id"))
     result = Column(VARCHAR(16), nullable=True)
     reboot = Column(BOOLEAN, nullable=True)

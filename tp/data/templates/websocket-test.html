@@ -9,7 +9,7 @@
             min-width: 500px;
         }
     </style>
-    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="{{ static_url('js/libs/jquery/jquery-1.8.0.min.js') }}"></script>
     <script>
         $(document).ready(function () {
 
@@ -23,17 +23,37 @@
                 var uri = $("#uri").val();
 
                 ws = new WebSocket("wss://" + host + ":" + port + uri);
-                $("#main").append("<br>Attempting connection to ws://" + host + ":" + port + uri);
+                $("#main").append("<br>Attempting connection to wss://" + host + ":" + port + uri);
 
-                ws.onmessage = function(evt) { $('#main').append("<br>message received: " + evt.data)};
+                ws.onmessage = function(evt) {
+                    var user = $.parseJSON(evt.data)['user'];
+                    var status = $.parseJSON(evt.data)['status'];
+                    if(user && status) {
+                        $('#main').append("<br>User: " + user + " " + status);
+                    }
+                };
 
-                ws.onclose = function(evt) { $('#main').append("<br>Connection close"); };
+                ws.onclose = function(evt) {
+                    $("#host").css("background", "#ff0000");
+                    $("#port").css("background", "#ff0000");
+                    $("#uri").css("background", "#ff0000");
+                    $('#main').append("<br>Connection close");
+                };
 
                 ws.onopen = function(evt) {
                     $("#host").css("background", "#00ff00");
                     $("#port").css("background", "#00ff00");
                     $("#uri").css("background", "#00ff00");
+                    $('#main').append("<br>Started socket connection.");
                 };
+            });
+            $("#testbutton").click(function() {
+                $.ajax({
+                    url: '/api/nodeData/',
+                    success: function(data) {
+                        console.log(data);
+                    }
+                });
             });
         });
     </script>
@@ -49,6 +69,7 @@
     <label for="uri">uri:</label>
     <input type="text" id="uri" value="/ws" style="background:#ff0000;"/><br />
     <input type="submit" id="open" value="open" />
+    <input type="submit" id="testbutton" value="test" />
 </div>
 </body>
 </html>

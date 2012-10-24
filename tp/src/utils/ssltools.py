@@ -213,4 +213,4 @@ def storeCert(session, ip, cert):
     #csr_oper.update({"is_csr_signed" : True, 
     #    "csr_signed_date" : datetime.now()})
     session.commit()
-    return(node)
+    return(node, cert_path)
