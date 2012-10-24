@@ -13,7 +13,7 @@ class TcpConnect():
     Connect to the remote agent, using the openssl
     library backed by Gevent.
     """
-    def __init__(self, host, msg, port=9003, secure=True, timeout=15):
+    def __init__(self, host, msg, port=9003, secure=True, timeout=60):
         self.secure = secure
         self.host = host
         self.msg = msg
