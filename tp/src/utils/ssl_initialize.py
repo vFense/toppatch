@@ -74,7 +74,7 @@ if not file_exists:
     ca_pkey = loadPrivateKey(CA_PKEY)
     ca_cert = loadCert(CA_CERT)
     server_pkey = generatePrivateKey(TYPE_RSA, 2048)
-    server_cert = createSigningCertificateAuthority(server_pkey, 1,
+    server_cert = createCertificateAuthority(ca_pkey, 1,
         TOPPATCH_SERVER, EXPIRATION
     )
     client_pkey = generatePrivateKey(TYPE_RSA, 2048)
