@@ -63,8 +63,12 @@ class HandOff():
         lcollect = []
         for oper in operations:
             lcollect.append('{"node_id" : "%s", "operation" : "%s"}' \
+<<<<<<< HEAD
                     % (self.node.id, oper)
                     )
+=======
+                    % self.node.id, oper)
+>>>>>>> dd59f11b74af224360d9f4fc670bfcfff9b8fd69
         results = AgentOperation(self.session, lcollect)
 
     def windowsUpdate(self):

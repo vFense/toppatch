@@ -9,5 +9,4 @@
 .ssh
 *.pyc
 *.log
-
-tp/wwwstatic/js/application/boilerplate.js
+.DS_Store

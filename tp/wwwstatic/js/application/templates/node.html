@@ -3,9 +3,9 @@
     <header><strong>Node Details</strong></header>
     <section class="well well-small noMargin clearfix">
         <dl>
-            <dt>Node IP:</dt><dd><% print(model.ip); %></dd>
-            <dt>Hostname:</dt><dd><% print(model['host/name']); %></dd>
-            <dt>Operating System:</dt><dd><% print(model['os/name']); %></dd>
+            <dt>Node IP:</dt><dd><% print(model.ip || '<em>Not listed</em>'); %></dd>
+            <dt>Hostname:</dt><dd><% print(model['host/name'] || '<em>Not listed</em>'); %></dd>
+            <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
             <dt>Agent Status:</dt>
             <dd>
                 <% if (model['agent/status']) { %>
@@ -21,14 +21,14 @@
                     Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;
                     <input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/>
                     <input type="hidden" name="operation" value="reboot" />
-                    <input type="hidden" name="node" value="' + model.id + '"/>
+                    <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
                 <% } else if (model['host/status']) { %>
                 <form id="reboot-form">
                     Running &nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
                     <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>
                     <input type="hidden" name="operation" value="reboot" />
-                    <input type="hidden" name="node" value="' + model.id + '"/>
+                    <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
                 <% } else { %>
                 Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>
