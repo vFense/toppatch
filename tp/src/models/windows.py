@@ -15,9 +15,8 @@ class WindowsUpdate(Base):
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8'
     }
-    toppatch_id = Column(INTEGER(unsigned=True),
-        primary_key=True, autoincrement=False,
-        unique=True
+    toppatch_id = Column(VARCHAR(32),
+        primary_key=True, unique=True, nullable=False
     )
     kb = Column(VARCHAR(32), nullable=False)
     vendor_id = Column(VARCHAR(128), nullable=False)
@@ -63,7 +62,7 @@ class ManagedWindowsUpdate(Base):
         primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
-    toppatch_id = Column(INTEGER(unsigned=True),
+    toppatch_id = Column(VARCHAR(32),
         ForeignKey("windows_update.toppatch_id"))
     hidden = Column(BOOLEAN)
     installed = Column(BOOLEAN)
