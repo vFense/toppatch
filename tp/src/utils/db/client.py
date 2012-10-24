@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 def initEngine():
     db = create_engine(
             'mysql://root:topmiamipatch@127.0.0.1/toppatch_server', 
-            pool_size=0, pool_recycle=60
+            pool_size=0, pool_recycle=3600, pool_reset_on_return='rollback'
             )
     return db
 
