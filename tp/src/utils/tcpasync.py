@@ -64,10 +64,10 @@ class TcpConnect():
             return self._write()
 
     def _error_handler(self, e):
-        if e.strerror:
-            self.error = e.strerror
-        else:
+        if e.message:
             self.error = e.message
+        else:
+            self.error = e.strerror
         return self.error
 
     def _write(self):
