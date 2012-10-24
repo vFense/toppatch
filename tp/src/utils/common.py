@@ -20,6 +20,16 @@ def dateParser(unformatted_date):
         formatted_date = None
     return formatted_date
 
+def dateTimeParser(schedule):
+    pformatted = map(lambda x: int(x),re.split(r'\/|:|\s+', schedule))
+    if len(pformatted) == 6:
+        month, day, year, hour, minute, seconds = pformatted
+        formatted_date = datetime(year, month, day, hour, minute, seconds)
+    elif len(pformatted) == 3:
+        month, day, year = pformatted
+        formatted_date = datetime(year, month, day)
+    return formatted_date
+
 def returnBool(fake_bool):
     real_bool = None
     if fake_bool == "true":
