@@ -14,6 +14,7 @@ import tornado.options
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
+from utils.db.client import *
 from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler, AdminHandler
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
@@ -27,6 +28,12 @@ from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 
 from apscheduler.scheduler import Scheduler
+from apscheduler.jobstores.shelve_store import SQLAlchemyJobStore
+
+
+ENGINE = initEngine()
+scheduler = Scheduler(standalone=True)
+scheduler.add_jobstore(SQLAlchemyJobStore(engine=ENGINE, tablename="job_scheduler")
 
 sched = Scheduler()
 sched.start()

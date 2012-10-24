@@ -70,5 +70,5 @@ class CsrHandOff():
     def sendCert(self, node, cert):
         msg = encode({"node_id" : node.id, "pem" : dumpCert(cert)})
         msg = msg + '<EOF>'
-        tcp_results = TcpConnect(self.client_ip, msg, secure=False, timeout=60)
+        tcp_results = TcpConnect(self.client_ip, msg, secure=False, timeout=3600)
         return tcp_results
