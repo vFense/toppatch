@@ -26,6 +26,9 @@ define(
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 }
+                /*
+                    New code here
+                 */
             })
         };
         return exports;

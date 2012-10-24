@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'module/someModel', 'text!templates/aTemplate.html' ],
-    function ($, Backbone, myModel, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'module/someModel', 'text!templates/aTemplate.html' ],
+    function ($, _, Backbone, myModel, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
@@ -29,6 +29,9 @@ define(
                     return this;
                 },
                 renderModel: function (item) {}
+                /*
+                    New code here
+                 */
             })
         };
         return exports;
