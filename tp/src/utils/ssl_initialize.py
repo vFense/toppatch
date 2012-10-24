@@ -83,7 +83,7 @@ if not file_exists:
     keys_written.append(saveKey(SERVER_KEY_DIR, server_pkey, TYPE_PKEY, name='server'))
     keys_written.append(saveKey(SERVER_KEY_DIR, server_cert, TYPE_CERT, name='server'))
     keys_written.append(saveKey(CLIENT_KEY_DIR, client_pkey, TYPE_PKEY, name='client'))
-    keys_written.append(saveKey(CLIENT_KEY_DIR, client_csr, TYPE_CSR, name='client'))
+    keys_written.append(saveKey(CLIENT_CSR_DIR, client_csr, TYPE_CSR, name='client'))
     keys_written.append(saveKey(CLIENT_KEY_DIR, client_cert, TYPE_CERT, name='client'))
 
 for certs in keys_written:
