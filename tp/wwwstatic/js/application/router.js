@@ -1,7 +1,7 @@
 // Filename: router.js
 define(
-    ['jquery', 'backbone', 'app' ],
-    function ($, Backbone, app) {
+    ['jquery', 'underscore', 'backbone', 'app' ],
+    function ($, _, Backbone, app) {
         "use strict";
         var AppRouter = Backbone.Router.extend({
             routes: {
@@ -18,18 +18,16 @@ define(
                 'patches'       : 'showPatches',
                 'patches?:query': 'showPatches',
                 'patches/:id'   : 'showPatch',
-                
+
                 // MultiPatch Interface
                 'multi'         : 'showMulti',
 
                 // Admin panel
                 'admin'         : 'showAdmin',
 
-                /*
                 // Account Administration Panels
-                'account'       : 'showAccountModal',
-                'account/:tab'  : 'showAccountModal',
-                */
+                'testAdmin'       : 'showAdminModal',
+                'testAdmin/:tab'  : 'showAdminModal',
 
                 // Default
                 '*other'        : 'defaultAction'
@@ -43,7 +41,7 @@ define(
                 });
             },
             initialize: function () {
-                app.startWs();
+                var that = this;
 
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
@@ -52,11 +50,9 @@ define(
                 this.currentRoute = '';
                 this.lastRoute = '';
 
-                // Track the current and previous routes
-                // This supports the routed modals
-                this.bind('beforeRoute', function (route) {
+                Backbone.history.bind('route', function () {
                     this.lastRoute = this.currentRoute;
-                    this.currentRoute = route;
+                    this.currentRoute = Backbone.history.getFragment();
                 }, this);
             },
             home: function () {
@@ -110,11 +106,17 @@ define(
             showAdmin: function () {
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
             },
-            /*
-            showAccountModal: function (tab) {
-                console.log(['account', tab]);
+            showAdminModal: function (tab) {
+                // If we are routed here from a bookmark,
+                // render the dashboard behind the modal.
+                if(this.lastRoute === '') {
+                    this.home();
+                }
+
+                // Render the modal here
+                $.noop();
             },
-            defaultAction: function () {
+            defaultAction: function (/* other */) {
                 this.show(
                     {
                         hash: '#404',
@@ -132,7 +134,7 @@ define(
                 var that = this,
                     settings = $.extend({
                         hash: null,
-                        title: null,
+                        title: '',
                         view: null
                     }, options);
 

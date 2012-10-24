@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'bootstrap-modal', 'text!templates/modals/scaffolding.html' ],
+    ['jquery', 'underscore', 'backbone', 'bootstrap-modal', 'text!templates/modals/admin/scaffolding.html'],
     function ($, _, Backbone, modal, myTemplate) {
         "use strict";
         var exports = {
@@ -7,6 +7,7 @@ define(
                 defaults: {
                     views: {
                         'approveSSL' : true,
+                        'nodeGroups' : false,
                         'userGroups' : false,
                         'users'      : false
                     }
@@ -26,6 +27,8 @@ define(
                     var that = this;
 
                     this.$el.html('');
+
+                    console.log(Backbone.history);
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
