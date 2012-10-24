@@ -68,7 +68,6 @@ class CsrHandOff():
             print "JSON NOT VALID"
 
     def sendCert(self, node, cert):
-        sleep(3)
         msg = encode({"node_id" : node.id, "pem" : dumpCert(cert)})
         msg = msg + '<EOF>'
         tcp_results = TcpConnect(self.client_ip, msg, secure=False)
