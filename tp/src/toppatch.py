@@ -109,8 +109,8 @@ class HelloWorldFactory(Factory):
 class ThreadClass(threading.Thread):
     def run(self):
         reactor.listenTCP(8080, HelloWorldFactory())
-        #reactor.run()
         reactor.run(installSignalHandlers=0)
+
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
