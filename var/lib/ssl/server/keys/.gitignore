@@ -1,3 +1,6 @@
 server.*
+server.cert
+server.key
+server.crt
 client.*
 csr.*
