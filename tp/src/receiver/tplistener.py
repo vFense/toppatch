@@ -25,6 +25,7 @@ class GetJson(Protocol):
     def connectionLost(self, reason):
         self.transport.loseConnection()
         data = self.total_data
+        print data
         self.total_data = ""
         HandOff(ENGINE, data, self.client_ip)
 
