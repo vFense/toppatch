@@ -76,9 +76,10 @@ if not file_exists:
     ca_cert = loadCert(CA_CERT)
     server_pkey = generatePrivateKey(TYPE_RSA, 2048)
     server_csr = createCertRequest(server_pkey, TOPPATCH_SERVER)
-    server_cert = createCertificateAuthority(ca_pkey, 1,
-        TOPPATCH_SERVER, EXPIRATION
-    )
+    server_cert = createSignedCertificate(server_csr, (ca_cert, server_pkey), 1, EXPIRATION, digest="sha512")
+    #server_cert = createCertificateAuthority(ca_pkey, 1,
+    #    TOPPATCH_SERVER, EXPIRATION
+    #)
     client_pkey = generatePrivateKey(TYPE_RSA, 2048)
     client_csr = createCertRequest(client_pkey, TOPPATCH_CLIENT)
     client_cert = createSignedCertificate(client_csr, (server_cert, server_pkey), 1, EXPIRATION, digest="sha512")
