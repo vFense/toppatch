@@ -10,6 +10,7 @@ LOG_FILE = 'server_ssl.log'
 TYPE_RSA = crypto.TYPE_RSA
 TYPE_DSA = crypto.TYPE_DSA
 SERVER_KEY_DIR = '/opt/TopPatch/var/lib/ssl/server/keys/'
+SERVER_CSR_DIR = '/opt/TopPatch/var/lib/ssl/server/csr/'
 CLIENT_KEY_DIR = '/opt/TopPatch/var/lib/ssl/client/keys/'
 CLIENT_CSR_DIR = '/opt/TopPatch/var/lib/ssl/client/csr/'
 SERVER_PRIVKEY_NAME  = 'server.key'
@@ -74,6 +75,7 @@ if not file_exists:
     ca_pkey = loadPrivateKey(CA_PKEY)
     ca_cert = loadCert(CA_CERT)
     server_pkey = generatePrivateKey(TYPE_RSA, 2048)
+    server_csr = createCertRequest(server_pkey, TOPPATCH_SERVER)
     server_cert = createCertificateAuthority(ca_pkey, 1,
         TOPPATCH_SERVER, EXPIRATION
     )
@@ -82,6 +84,7 @@ if not file_exists:
     client_cert = createSignedCertificate(client_csr, (server_cert, server_pkey), 1, EXPIRATION, digest="sha512")
     keys_written.append(saveKey(SERVER_KEY_DIR, server_pkey, TYPE_PKEY, name='server'))
     keys_written.append(saveKey(SERVER_KEY_DIR, server_cert, TYPE_CERT, name='server'))
+    keys_written.append(saveKey(SERVER_CSR_DIR, server_csr, TYPE_CSR, name='server'))
     keys_written.append(saveKey(CLIENT_KEY_DIR, client_pkey, TYPE_PKEY, name='client'))
     keys_written.append(saveKey(CLIENT_CSR_DIR, client_csr, TYPE_CSR, name='client'))
     keys_written.append(saveKey(CLIENT_KEY_DIR, client_cert, TYPE_CERT, name='client'))
