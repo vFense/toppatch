@@ -25,6 +25,7 @@ class GetJson(Protocol):
     def connectionLost(self, reason):
         self.transport.loseConnection()
         data = self.total_data
+        print data
         self.total_data = ""
         HandOff(ENGINE, data, self.client_ip)
 
@@ -51,12 +52,12 @@ if __name__ == '__main__':
     ctx = myContextFactory.getContext()
     ctx.set_cipher_list(ALLOWED_CIPHER_LIST)
     ctx.load_verify_locations("/opt/TopPatch/var/lib/ssl/server/keys/CA.cert")
-    #print "Im goint to verify you in the mouth"
-    #ctx.set_verify(
-    #    SSL.VERIFY_PEER | SSL.VERIFY_FAIL_IF_NO_PEER_CERT | SSL.VERIFY_CLIENT_ONCE,
-    #    verifyCallback
-    #    )
-    #print "YOU HAVE BEEN VERIFIED"
+    print "Im goint to verify you in the mouth"
+    ctx.set_verify(
+        SSL.VERIFY_PEER | SSL.VERIFY_FAIL_IF_NO_PEER_CERT | SSL.VERIFY_CLIENT_ONCE,
+        verifyCallback
+        )
+    print "YOU HAVE BEEN VERIFIED"
 
     reactor.listenSSL(9001, factory, myContextFactory)
     reactor.run()

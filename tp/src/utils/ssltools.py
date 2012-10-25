@@ -189,10 +189,10 @@ def storeCsr(session, ip, pem):
     return(csr, csr_path, csr_name, csr_row)
 
 def signCert(session, csr):
-    server_cert = loadCert()
-    server_pkey = loadPrivateKey()
+    ca_cert = loadCert()
+    ca_pkey = loadPrivateKey()
     client_cert = createSignedCertificate(csr,
-        (server_cert, server_pkey), 1, EXPIRATION)
+        (ca_cert, ca_pkey), 1, EXPIRATION)
     return(client_cert)
 
 def storeCert(session, ip, cert):
