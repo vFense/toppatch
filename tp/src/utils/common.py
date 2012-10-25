@@ -2,6 +2,12 @@ import re
 from json import loads, dumps
 from datetime import datetime
 
+twentyfour_hour = {
+                   '1' : 13, '2' : 14, '3' : 15, '4' : 16,
+                   '5' : 17, '6' : 18, '7' : 19, '8' : 20,
+                   '9' : 21, '10' : 22, '11' : 23, '12' : 0,
+                  }
+
 def verifyJsonIsValid(data):
     verified = True
     json_data = None
@@ -21,10 +27,16 @@ def dateParser(unformatted_date):
     return formatted_date
 
 def dateTimeParser(schedule):
+    am_pm = re.search(r'(AM|PM)', schedule).group()
+    schedule = re.sub(r'\s+AM|\s+PM', '', schedule)
     pformatted = map(lambda x: int(x),re.split(r'\/|:|\s+', schedule))
-    if len(pformatted) == 6:
-        month, day, year, hour, minute, seconds = pformatted
-        formatted_date = datetime(year, month, day, hour, minute, seconds)
+    if len(pformatted) == 5:
+        month, day, year, hour, minute = pformatted
+        if am_pm == 'PM' and str(hour) in twentyfour_hour or \
+                am_pm == 'AM' and str(hour) == '0':
+            hour = twentyfour_hour[str(hour)]
+        formatted_date = datetime(year, month, day,
+                hour, minute)
     elif len(pformatted) == 3:
         month, day, year = pformatted
         formatted_date = datetime(year, month, day)
