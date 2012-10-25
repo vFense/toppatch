@@ -18,6 +18,8 @@ CLIENT_KEY_DIR = '/opt/TopPatch/var/lib/ssl/client/keys'
 SERVER_KEY_DIR = '/opt/TopPatch/var/lib/ssl/server/keys'
 SERVER_CERT = SERVER_KEY_DIR+'/server.cert'
 SERVER_PKEY = SERVER_KEY_DIR+'/server.key'
+CA_CERT = SERVER_KEY_DIR+'/CA.cert'
+CA_PKEY = SERVER_KEY_DIR+'/CA.key'
 EXPIRATION = (0, 60*60*24*365*10)
 TYPE_CSR = 1
 TYPE_CERT = 2
@@ -28,11 +30,11 @@ EXTENSION = {
             3 : '.key'
             }
 
-def loadPrivateKey(privkey=SERVER_PKEY):
+def loadPrivateKey(privkey=CA_PKEY):
     pkey = LOAD_PKEY(FILE_TYPE_PEM, open(privkey, 'rb').read())
     return pkey
 
-def loadCert(cert=SERVER_CERT):
+def loadCert(cert=CA_CERT):
     signed_cert = LOAD_CERT(FILE_TYPE_PEM, open(cert, 'rb').read())
     return signed_cert
 
@@ -103,7 +105,7 @@ def createCertRequest(pkey, (CN, O, OU, C, ST, L), digest="sha512"):
     csr.sign(pkey, digest)
     return csr
 
-def createSignedCertificate(csr, (issuerCert, issuerKey), serial,\
+def createCertificate(cert, (issuerCert, issuerKey), serial,\
         (notBefore, notAfter), digest="sha512"):
     cert = crypto.X509()
     cert.set_version(3)
@@ -116,25 +118,18 @@ def createSignedCertificate(csr, (issuerCert, issuerKey), serial,\
     cert.sign(issuerKey, digest)
     return cert
 
-def createCertificateAuthority(pkey, serial,\
-        (CN, O, OU, C, ST, L),\
+def createSignedCertificate(csr, (issuerCert, issuerKey), serial,\
         (notBefore, notAfter), digest="sha512"):
-    ca = crypto.X509()
-    ca.set_version(3)
-    subj = ca.get_subject()
-    subj.CN=CN
-    subj.O=O
-    subj.OU=OU
-    subj.C=C
-    subj.ST=ST
-    subj.L=L
-    ca.set_serial_number(serial)
-    ca.gmtime_adj_notBefore(notBefore)
-    ca.gmtime_adj_notAfter(notAfter)
-    ca.set_issuer(ca.get_subject())
-    ca.set_pubkey(pkey)
-    ca.sign(pkey, digest)
-    return ca
+    cert = crypto.X509()
+    cert.set_version(3)
+    cert.set_serial_number(serial)
+    cert.gmtime_adj_notBefore(notBefore)
+    cert.gmtime_adj_notAfter(notAfter)
+    cert.set_issuer(issuerCert.get_subject())
+    cert.set_subject(csr.get_subject())
+    cert.set_pubkey(csr.get_pubkey())
+    cert.sign(issuerKey, digest)
+    return cert
 
 def createSigningCertificateAuthority(pkey, serial,\
         (CN, O, OU, C, ST, L),
