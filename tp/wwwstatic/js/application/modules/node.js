@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/node.html' ],
+    ['jquery', 'backbone', 'app', 'text!templates/node.html', 'bootstrap-modal', 'jquery.ui.datepicker' ],
     function ($, Backbone, app, myTemplate) {
         "use strict";
         var exports = {
@@ -11,6 +11,7 @@ define(
             }),
             View: Backbone.View.extend({
                 initialize: function () {
+                    this.$form = []
                     this.template = myTemplate;
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
@@ -18,6 +19,7 @@ define(
                 },
                 events: {
                     'click .disabled': function (e) { console.log(['click a.disabled', e]); return false; },
+                    'click #schedule-btn': 'submit',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
@@ -37,20 +39,34 @@ define(
                     return this;
                 },
                 submit: function (evt) {
-                    var form = $(evt.target),
-                        type = form.attr('id'),
-                        patches = $(evt.target).find('input[name="patches"]:checked');
-                    console.log(form.serialize());
-                    $.post("/submitForm?" + form.serialize(),
+                    var $form = $(evt.target),
+                        schedule = $form.find('input[name="schedule"]:checked'),
+                        item, span, label, checkbox, $scheduleForm, type, patches;
+                    if(schedule.length != 0) {
+                        this.$form = $form;
+                        $('#myModal').modal('show');
+                        return false;
+                    }
+                    if(evt.target.id == 'schedule-btn') {
+                        var time = '';
+                        $form = this.$form;
+                        $scheduleForm = $('#schedule-form');
+                        time = $scheduleForm.find('input').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
+                        $('#myModal').modal('hide');
+                    }
+                    type = $form.attr('id');
+                    patches = $form.find('input[name="patches"]:checked');
+                    $.post("/submitForm?" + $form.serialize() + '&time=' + time,
                         function(json) {
                             console.log(json);
                         });
                     $('.alert').show();
                     patches.each(function () {
-                        var item = $(this).parents('.item'),
-                            span = $(this).parents('span'),
-                            label = $(this).parent(),
-                            checkbox = $(this);
+                        item = $(this).parents('.item');
+                        span = $(this).parents('span');
+                        label = $(this).parent();
+                        checkbox = $(this);
+
                         checkbox.remove();
                         var patch = label.html();
                         span.html(patch);
@@ -64,8 +80,8 @@ define(
                             item.remove();
                         }
                     });
-                    if(form.find('input:checked').attr('checked')) {
-                        form.find('input:checked').attr('checked', false);
+                    if($form.find('input:checked').attr('checked')) {
+                        $form.find('input:checked').attr('checked', false);
                     }
                     return false;
                 },

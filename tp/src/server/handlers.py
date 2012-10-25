@@ -146,9 +146,12 @@ class FormHandler(BaseHandler):
             node_id = None
         try:
             params = self.get_argument('params')
-            print params
         except:
             params = None
+        try:
+            time = self.get_argument('time')
+        except:
+            time = None
         if node_id:
             operation = self.get_argument('operation')
             if operation == 'install' or operation == 'uninstall':
@@ -156,18 +159,21 @@ class FormHandler(BaseHandler):
                 node['node_id'] = node_id
                 node['operation'] = operation
                 node['data'] = list(patches)
+                if time:
+                    node['schedule'] = 'once'
+                    node['time'] = time
                 resultjson.append(encode(node))
-                AgentOperation(session, resultjson)
+                #AgentOperation(session, resultjson)
             elif operation == 'reboot':
                 node['operation'] = operation
                 node['node_id'] = node_id
                 resultjson.append(encode(node))
-                AgentOperation(session, resultjson)
+                #AgentOperation(session, resultjson)
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
         if params:
             resultjson = json.loads(params)
-            AgentOperation(session, resultjson)
+            #AgentOperation(session, resultjson)
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
 
