@@ -41,7 +41,7 @@ define(
                 submit: function (evt) {
                     var $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
-                        item, span, label, checkbox, $scheduleForm, type, patches;
+                        item, span, label, checkbox, $scheduleForm, type, patches, url;
                     if(schedule.length != 0) {
                         this.$form = $form;
                         $('#myModal').modal('show');
@@ -56,7 +56,10 @@ define(
                     }
                     type = $form.attr('id');
                     patches = $form.find('input[name="patches"]:checked');
-                    $.post("/submitForm?" + $form.serialize() + '&time=' + time,
+                    url = '/submitForm?' + $form.serialize();
+                    url += time ? '&time=' + time : '';
+                    console.log(url);
+                    $.post(url,
                         function(json) {
                             console.log(json);
                         });

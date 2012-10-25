@@ -150,8 +150,10 @@ class FormHandler(BaseHandler):
             params = None
         try:
             time = self.get_argument('time')
+            schedule = self.get_argument('schedule')
         except:
             time = None
+            schedule = None
         if node_id:
             operation = self.get_argument('operation')
             if operation == 'install' or operation == 'uninstall':
@@ -160,7 +162,7 @@ class FormHandler(BaseHandler):
                 node['operation'] = operation
                 node['data'] = list(patches)
                 if time:
-                    node['schedule'] = 'once'
+                    node['schedule'] = schedule
                     node['time'] = time
                 resultjson.append(encode(node))
                 #AgentOperation(session, resultjson)
