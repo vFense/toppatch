@@ -50,16 +50,6 @@ require(
         // Deferred object resolved when header is fully rendered.
         deferred = new $.Deferred();
 
-        // Load header, render it, and then render the nav buttons
-        require(['modules/pageHeader', 'modules/navBar'], function (PageHeader, DashNav) {
-            var pageHeader = new PageHeader.View();
-            $('body').prepend(pageHeader.render().$el);
-            app.views.dashNav = new (DashNav.View.extend({
-                onRender: function () { deferred.resolve(); }
-            }))({
-                el: $('<ul>').addClass('nav').appendTo(pageHeader.$('#dashboardNav'))
-            });
-        });
         // Load and render page base page elements
         // Insert nav bar to header.
         require(
