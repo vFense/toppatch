@@ -49,7 +49,7 @@ require(
             }
         });
 
-        // Deferred object resolved when header is fully rendered.
+        // Deferred object resolved after header and footer render.
         deferred = new $.Deferred();
 
         // Load and render page base page elements
@@ -92,4 +92,4 @@ require(
             });
         });
     }
-););
+);
