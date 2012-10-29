@@ -114,8 +114,7 @@ define(
             showAccountModal: function (tab) {
                 console.log(['account', tab]);
             },
-            */
-            defaultAction: function (/* other */) {
+            defaultAction: function () {
                 this.show(
                     {
                         hash: '#404',
