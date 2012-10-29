@@ -21,7 +21,7 @@ require(
                             name: userName,
                             show: {
                                 brandHeader: true,
-                                dashNav: true,
+                                navBar: true,
                                 copyFooter: true
                             },
                             widgets: {
