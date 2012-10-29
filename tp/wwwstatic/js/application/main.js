@@ -69,7 +69,11 @@ require(
 
         // Listen for event to change the page title
         app.vent.on("domchange:title", function (title) {
-            app.$doc.attr('title', app.title + ': ' + title);
+            if (title && title.trim() !== '') {
+                app.$doc.attr('title', app.title + ': ' + title);
+            } else {
+                app.$doc.attr('title', app.title);
+            }
         });
 
         // When the above Deferred object is resolved, start the router
