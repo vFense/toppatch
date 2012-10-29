@@ -12,8 +12,8 @@ require(
             async: false,
             success: function (json) {
                 userSettings = json;
-                userName = userSettings['name'];
                 if(localStorage.getItem(userName) === null) {
+                userName = userSettings.name;
                     User.Model = Backbone.Model.extend({
                         defaults: {
                             name: userName,
