@@ -24,11 +24,7 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var that = this;
-
                     this.$el.html('');
-
-                    console.log(Backbone.history);
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
