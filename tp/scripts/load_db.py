@@ -21,6 +21,8 @@ entries = nc.parse_collection()
 db = None
 session = None
 
+"""
+
 def create_cve(entry):
     cvss = entry.get_cvss()
 
@@ -137,29 +139,33 @@ def run():
                         session.add(vendor)
     session.commit()
 
-print "Initializing TopPatch Database!"
+    """
 
+print "Initializing TopPatch Database!"
+"""
 if os.path.exists(mysql_data_dir):
     print "MySQL data directory present. Connecting..."
     db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
 
 else:
-    print "Creating MySQL data directory."
-    owd = os.getcwd()
-    os.chdir(mysql_dir)
-    print os.getcwd()
+"""
 
-    subprocess.call(['./scripts/mysql_install_db'])
-    subprocess.call(['./support-files/mysql.server', 'start'])
-    subprocess.call(['./bin/mysqladmin', '-u', 'root', 'password', 'topmiamipatch'], )
+print "Creating MySQL data directory."
+owd = os.getcwd()
+os.chdir(mysql_dir)
+print os.getcwd()
 
-    db = create_engine('mysql://root:topmiamipatch@127.0.0.1/')
-    db.connect().execute("CREATE DATABASE toppatch_server;")
-    db.connect().execute("USE toppatch_server;")
+subprocess.call(['./scripts/mysql_install_db'])
+subprocess.call(['./support-files/mysql.server', 'start'])
+subprocess.call(['./bin/mysqladmin', '-u', 'root', 'password', 'topmiamipatch'], )
 
-    os.chdir(owd)
+db = create_engine('mysql://root:topmiamipatch@127.0.0.1/')
+db.connect().execute("CREATE DATABASE toppatch_server;")
+db.connect().execute("USE toppatch_server;")
+
+os.chdir(owd)
 
 Base.metadata.create_all(db)
-Session = sessionmaker(bind=db)
-session = Session()
-run()
+#Session = sessionmaker(bind=db)
+#session = Session()
+#run()

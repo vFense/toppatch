@@ -66,10 +66,10 @@ class Application(tornado.web.Application):
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.
 
             #### File system access whitelist
-            (r"/css/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/css"}),
-            (r"/font/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/font"}),
-            (r"/img/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/img"}),
-            (r"/js/(.*?)", tornado.web.StaticFileHandler, {"path": "../wwwstatic/js"})
+            (r"/css/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/css"}),
+            (r"/font/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/font"}),
+            (r"/img/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/img"}),
+            (r"/js/(.*?)", tornado.web.StaticFileHandler, {"path": "wwwstatic/js"})
         ]
 
         template_path = "/opt/TopPatch/tp/templates"
@@ -104,6 +104,7 @@ class ThreadClass(threading.Thread):
         #reactor.run()
         reactor.run(installSignalHandlers=0)
 """
+
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     https_server = tornado.httpserver.HTTPServer(Application(options.debug),

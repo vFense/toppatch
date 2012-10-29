@@ -29,21 +29,54 @@
 </div>
 
 <form class="span5 pull-right left" id="csr-form">
-    <header><strong>Approve Nodes</strong></header>
-    <div class="list"><%
-        _.each(data, function (csr, i) {
-            if(!csr.signed) { %>
-                <div class="item clearfix">
+    <table class="span5">
+        <tr>
+            <th><header><strong>Approve Nodes</strong></header></th>
+            <th><header><strong>Disapprove Nodes</strong></header></th>
+        </tr>
+        <tr>
+            <td valign="top">
+                <div class="list"><%
+                    _.each(data, function (csr, i) {
+                    if(!csr.signed) { %>
+                    <div class="item clearfix">
                     <span class="desc">
                         <label class="checkbox inline">
-                            <input type="checkbox" name="csrlist" id="<%= csr.node_id %>" value="<%= csr.node_id %>"/>
+                            <input type="checkbox" name="approve-csr" id="<%= csr.node_id %>" value="<%= csr.node_id %>"/>
                             <% print(csr.ip); %>
                         </label>
                     </span>
+                    </div>
+                    <% }
+                    }); %>
                 </div>
-            <% }
-        }); %>
-    </div>
+            </td>
+            <td valign="top">
+                <div class="list"><%
+                    _.each(data, function (csr, i) {
+                    if(csr.signed) { %>
+                    <div class="item clearfix">
+                    <span class="desc">
+                            <% print(csr.ip); %>
+                    </span>
+                        <span class="pull-right">
+                            <label class="checkbox inline">
+                                <input type="checkbox" name="disapprove-csr" id="<%= csr.node_id %>" value="<%= csr.node_id %>"/>
+                            </label>
+                        </span>
+                    </div>
+                    <% }
+                    }); %>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="pagination-right">
+                <br>
+                <input type="hidden" value="csr-form" name="operation">
+                <input type="submit" value="Submit" name="submit" class="btn btn-primary btn-mini">
+            </td>
+        </tr>
+    </table>
     <br>
-    <input type="submit" value="Submit" name="submit" class="btn btn-primary btn-mini">
 </form>

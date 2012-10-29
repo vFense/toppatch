@@ -490,21 +490,17 @@ class PatchesHandler(BaseHandler):
             except:
                 queryCount = 10
                 queryOffset = 0
-            countAvailable = 0
-            countInstalled = 0
-            countFailed = 0
-            countPending = 0
+            query_count = session.query(func.count(distinct(ManagedWindowsUpdate.toppatch_id)))
+            query = session.query(ManagedWindowsUpdate)
             if type:
                 if type == 'available':
-                    for u in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False):
-                            countAvailable = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).all():
-                            countInstalled = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True):
-                            countPending = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0):
-                            countFailed = j[0]
+                    count = query_count.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                    for u in query.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
+                        countAvailable = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                        countInstalled = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).first()[0]
+                        countPending = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                        countFailed = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
+
                         for v in session.query(WindowsUpdate).filter(WindowsUpdate.toppatch_id == u.toppatch_id).all():
                             data.append({"vendor" : {
                                 "patchID" : '',         #forcing empty string in patchID
@@ -521,18 +517,14 @@ class PatchesHandler(BaseHandler):
                              "nodes/pend": countPending,
                              "nodes/fail": countFailed,
                              "nodes": []})
-                    for j in session.query(func.count(distinct(ManagedWindowsUpdate.toppatch_id))).filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False):
-                        count = j[0]
                 elif type == 'installed':
-                    for u in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.installed == True).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False):
-                            countAvailable = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).all():
-                            countInstalled = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True):
-                            countPending = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0):
-                            countFailed = j[0]
+                    count = query_count.filter(ManagedWindowsUpdate.installed == True).first()[0]
+                    for u in query.filter(ManagedWindowsUpdate.installed == True).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
+                        countAvailable = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                        countInstalled = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).first()[0]
+                        countPending = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                        countFailed = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
+
                         for v in session.query(WindowsUpdate).filter(WindowsUpdate.toppatch_id == u.toppatch_id).all():
                             data.append({"vendor" : {
                                 "patchID" : '',         #forcing empty string in patchID
@@ -549,18 +541,14 @@ class PatchesHandler(BaseHandler):
                              "nodes/pend": countPending,
                              "nodes/fail": countFailed,
                              "nodes": []})
-                    for j in session.query(func.count(distinct(ManagedWindowsUpdate.toppatch_id))).filter(ManagedWindowsUpdate.installed == True).all():
-                        count = j[0]
                 elif type == 'pending':
-                    for u in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False):
-                            countAvailable = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).all():
-                            countInstalled = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True):
-                            countPending = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0):
-                            countFailed = j[0]
+                    count = query_count.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                    for u in query.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
+                        countAvailable = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                        countInstalled = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).first()[0]
+                        countPending = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                        countFailed = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
+
                         for v in session.query(WindowsUpdate).filter(WindowsUpdate.toppatch_id == u.toppatch_id).all():
                             data.append({"vendor" : {
                                 "patchID" : '',         #forcing empty string in patchID
@@ -577,18 +565,14 @@ class PatchesHandler(BaseHandler):
                              "nodes/pend": countPending,
                              "nodes/fail": countFailed,
                              "nodes": []})
-                    for j in session.query(func.count(distinct(ManagedWindowsUpdate.toppatch_id))).filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True):
-                        count = j[0]
                 elif type == 'failed':
-                    for u in session.query(ManagedWindowsUpdate).filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False):
-                            countAvailable = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).all():
-                            countInstalled = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True):
-                            countPending = j[0]
-                        for j in session.query(func.count(ManagedWindowsUpdate.toppatch_id)).filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0):
-                            countFailed = j[0]
+                    count = query_count.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
+                    for u in query.filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).group_by(ManagedWindowsUpdate.toppatch_id).limit(queryCount).offset(queryOffset).all():
+                        countAvailable = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                        countInstalled = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).first()[0]
+                        countPending = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                        countFailed = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
+
                         for v in session.query(WindowsUpdate).filter(WindowsUpdate.toppatch_id == u.toppatch_id).all():
                             data.append({"vendor" : {
                                 "patchID" : '',         #forcing empty string in patchID
@@ -605,8 +589,29 @@ class PatchesHandler(BaseHandler):
                              "nodes/pend": countPending,
                              "nodes/fail": countFailed,
                              "nodes": []})
-                    for j in session.query(func.count(distinct(ManagedWindowsUpdate.toppatch_id))).filter(ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0):
-                        count = j[0]
+                else:
+                    count = session.query(func.count(WindowsUpdate.severity)).filter(WindowsUpdate.severity == type).first()[0]
+                    for u in session.query(WindowsUpdate).filter(WindowsUpdate.severity == type).limit(queryCount).offset(queryOffset).all():
+                        countAvailable = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False).first()[0]
+                        countInstalled = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == True).first()[0]
+                        countPending = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == True).first()[0]
+                        countFailed = query_count.filter(ManagedWindowsUpdate.toppatch_id == u.toppatch_id, ManagedWindowsUpdate.installed == False, ManagedWindowsUpdate.pending == False, ManagedWindowsUpdate.attempts > 0).first()[0]
+                        data.append({"vendor" : {
+                            "patchID" : '',         #forcing empty string in patchID
+                            "name" : 'Microsoft'    #forcing microsoft on all patch names
+                        },
+                        "type": "Security Patch",             #forcing Patch into type
+                        "id": u.toppatch_id,
+                        "date" : str(u.date_pub),
+                        "name" : u.title,
+                        "description" : u.description,
+                        "severity" : u.severity,
+                        "nodes/need": countAvailable,
+                        "nodes/done": countInstalled,
+                        "nodes/pend": countPending,
+                        "nodes/fail": countFailed,
+                        "nodes": []})
+
             else:
                 for u in session.query(WindowsUpdate).order_by(WindowsUpdate.date_pub).limit(queryCount).offset(queryOffset):
                     nodeAvailable = []

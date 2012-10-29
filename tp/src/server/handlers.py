@@ -48,10 +48,6 @@ class LoginHandler(BaseHandler):
     def post(self):
 
          if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
-            #@printToSocket
-            def sign():
-                return '{ "user": "%s", "status": "signed in" }' % self.get_argument('name')
-            sign()
             self.set_secure_cookie("user", self.get_argument("name"))
             self.redirect("/")
          else:
@@ -88,12 +84,7 @@ class testHandler(BaseHandler):
         self.render('../data/templates/websocket-test.html')
 
 def SendToSocket(message):
-    print 'in SendToSocket'
-    global LISTENERS
-    print LISTENERS
     for socket in LISTENERS:
-        print 'sending to socket'
-        print socket
         socket.write_message(message)
 
 class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
@@ -112,12 +103,6 @@ class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
 
 class LogoutHandler(BaseHandler):
     def get(self):
-        @printToSocket
-        def sign():
-            return '{ "user": "%s", "status": "logged out" }' % self.current_user
-        sign()
-        if WebsocketHandler.socket:
-            WebsocketHandler.socket.close()
         self.clear_all_cookies()
         self.redirect('/login')
         #self.write("Goodbye!" + '<br><a href="/login">Login</a>')
@@ -161,9 +146,14 @@ class FormHandler(BaseHandler):
             node_id = None
         try:
             params = self.get_argument('params')
-            print params
         except:
             params = None
+        try:
+            time = self.get_argument('time')
+            schedule = self.get_argument('schedule')
+        except:
+            time = None
+            schedule = None
         if node_id:
             operation = self.get_argument('operation')
             if operation == 'install' or operation == 'uninstall':
@@ -171,6 +161,9 @@ class FormHandler(BaseHandler):
                 node['node_id'] = node_id
                 node['operation'] = operation
                 node['data'] = list(patches)
+                if time:
+                    node['schedule'] = schedule
+                    node['time'] = time
                 resultjson.append(encode(node))
                 #AgentOperation(session, resultjson)
             elif operation == 'reboot':
@@ -181,12 +174,11 @@ class FormHandler(BaseHandler):
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
         if params:
-            params = re.sub(r'(^\[|\]$)', '', params)
             resultjson = json.loads(params)
-            result.append(json.dumps(resultjson))
-            #AgentOperation(session, result)
+            #AgentOperation(session, resultjson)
             self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(result))
+            self.write(json.dumps(resultjson))
+
 
 class AdminHandler(BaseHandler):
     @authenticated_request
@@ -199,12 +191,27 @@ class AdminHandler(BaseHandler):
             password = None
             oldpassword = None
             newpassword = None
-        username = self.current_user
-        if self.application.account_manager.authenticate_account(str(username), str(oldpassword)):
-            self.application.account_manager.change_user_password(str(username), str(password))
-            result = { 'error': False, 'description': 'changed password' }
-        else:
-            result = {'error': True, 'description': 'invalid password'}
+        try:
+            operation = self.get_argument('operation')
+        except:
+            operation = None
+        if operation:
+            try:
+                csr_approve = self.request.arguments['approve-csr']
+            except:
+                csr_approve = None
+            try:
+                csr_disapprove = self.request.arguments['disapprove-csr']
+            except:
+                csr_disapprove = None
+            result = { 'error' : False, 'description': operation, 'csr-approve': csr_approve, 'csr_disapprove': csr_disapprove }
+        if password:
+            username = self.current_user
+            if self.application.account_manager.authenticate_account(str(username), str(oldpassword)):
+                self.application.account_manager.change_user_password(str(username), str(password))
+                result = { 'error': False, 'description': 'changed password' }
+            else:
+                result = {'error': True, 'description': 'invalid password'}
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result))
 
