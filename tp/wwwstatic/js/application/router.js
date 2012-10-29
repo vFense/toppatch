@@ -34,6 +34,14 @@ define(
                 // Default
                 '*other'        : 'defaultAction'
             },
+            route: function (route, name, callback) {
+                // Override the route method to trigger generic before and after route events
+                this.constructor.__super__.route.call(this, route, name, function () {
+                    this.trigger.apply(this, ["beforeRoute"].concat(route, name));
+                    callback.apply(this, arguments);
+                    this.trigger.apply(this, ["afterRoute"].concat(route, name));
+                });
+            },
             initialize: function () {
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
