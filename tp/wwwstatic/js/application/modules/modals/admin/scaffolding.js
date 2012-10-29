@@ -24,7 +24,7 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    this.$el.html('');
+                    this.$el.html().empty();
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
