@@ -60,12 +60,29 @@ require(
                 el: $('<ul>').addClass('nav').appendTo(pageHeader.$('#dashboardNav'))
             });
         });
+        // Load and render page base page elements
+        // Insert nav bar to header.
+        require(
+            ['modules/pageHeader', 'modules/pageFooter', 'modules/navBar'],
+            function (PageHeader, PageFooter, NavBar) {
+                var pageHeader = new PageHeader.View(),
+                    pageFooter = new PageFooter.View(),
+                    navBar = new NavBar.View({
+                        el: $('<ul>').addClass('nav')
+                    });
 
-        // Load footer and render it
-        require(['modules/pageFooter'], function (PageFooter) {
-            var pageFooter = new PageFooter.View();
-            $('body').append(pageFooter.render().$el);
-        });
+                // Prepend header to body
+                // Append footer to body
+                $('body').prepend(pageHeader.render().$el)
+                         .append(pageFooter.render().$el);
+
+                // Insert nav bar into header
+                pageHeader.$('#dashboardNav').append(navBar.render().$el);
+
+                // resolve the deferred object
+                deferred.resolve();
+            }
+        );
 
         // Listen for event to change the page title
         app.vent.on("domchange:title", function (title) {
