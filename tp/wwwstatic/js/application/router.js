@@ -49,6 +49,15 @@ define(
                 // All views sent to the ViewManager will render in the target element
                 this.viewTarget = '#dashboard-view';
                 this.viewManager = new app.ViewManager({'selector': this.viewTarget});
+                this.currentRoute = '';
+                this.lastRoute = '';
+
+                // Track the current and previous routes
+                // This supports the routed modals
+                this.bind('beforeRoute', function (route) {
+                    this.lastRoute = this.currentRoute;
+                    this.currentRoute = route;
+                }, this);
             },
             home: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
