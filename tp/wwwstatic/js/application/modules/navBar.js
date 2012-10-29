@@ -11,7 +11,6 @@ define(
                     this.collection =  new exports.Collection(app.locations);
                     this.vent = app.vent;
                     this.vent.bind('navigation:#dashboard-view', this.setActive, this);
-                    this.render();
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
