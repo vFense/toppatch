@@ -19,7 +19,7 @@ define(
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var that = this;
-                    this.$el.html('');
+                    this.$el.empty();
                     _.each(this.collection.models, function (item) {
                         that.renderButton(item);
                     }, this);

@@ -48,7 +48,7 @@ define(
 
                         window.view = this;
 
-                        this.$el.html('');
+                        this.$el.empty();
 
                         this.$el.append(tmpl(this.model.toJSON()));
 

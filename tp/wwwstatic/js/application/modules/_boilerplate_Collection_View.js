@@ -19,7 +19,7 @@ define(
                     var tmpl = _.template(this.template),
                         that = this;
 
-                    this.$el.html('');
+                    this.$el.empty();
 
                     _.each(this.collection.models, function (item) {
                         that.renderModel(item);
