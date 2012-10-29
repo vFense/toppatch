@@ -5,7 +5,9 @@ require(
 
         var User = {},
             userSettings,
-            deferred, userName;
+            userName,
+            deferred;
+
         $.ajax({
             url: '/api/userInfo',
             dataType: 'json',
