@@ -199,36 +199,38 @@
         font-size:12px;
     }
 </style>
-<form class="form-horizontal" id="schedule-form">
-    <label for="datepicker" class="inline">Date:</label>
-    <input type="text" id="datepicker" class="input-medium"/><br>
-    Time:<div class="inline">
-        <select name="hours" id="hours" class="span1">
-            <option>01</option>
-            <option>02</option>
-            <option>03</option>
-            <option>04</option>
-            <option>05</option>
-            <option>06</option>
-            <option>07</option>
-            <option>08</option>
-            <option>09</option>
-            <option>10</option>
-            <option>11</option>
-            <option>12</option>
-        </select>
-        <select name="minutes" class="span1">
-            <option>00</option>
-            <option>15</option>
-            <option>30</option>
-            <option>45</option>
-        </select>
-        <select name="ampm" class="span1">
-            <option>AM</option>
-            <option>PM</option>
-        </select>
-    </div>
-</form>
+<div id="hidden" class="hide">
+    <form class="form-horizontal" id="schedule-form">
+        <label for="datepicker" class="inline">Date:</label>
+        <input type="text" id="datepicker" class="input-medium"/><br>
+        Time:<div class="inline">
+            <select name="hours" id="hours" class="span1">
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+            </select>
+            <select name="minutes" class="span1">
+                <option>00</option>
+                <option>15</option>
+                <option>30</option>
+                <option>45</option>
+            </select>
+            <select name="ampm" class="span1">
+                <option>AM</option>
+                <option>PM</option>
+            </select>
+        </div>
+    </form>
+</div>
 <!--
 <div class="modal" id="myModal" tabindex="-1" role="dialog" data-show="false" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
