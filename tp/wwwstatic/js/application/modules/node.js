@@ -41,18 +41,11 @@ define(
                 submit: function (evt) {
                     var $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
+                        time = '',
                         item, span, label, checkbox, $scheduleForm, type, patches, url;
                     if(schedule.length != 0) {
-                        this.$form = $form;
-                        $('#myModal').modal('show');
-                        return false;
-                    }
-                    if(evt.target.id == 'schedule-btn') {
-                        var time = '';
-                        $form = this.$form;
                         $scheduleForm = $('#schedule-form');
                         time = $scheduleForm.find('input').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
-                        $('#myModal').modal('hide');
                     }
                     type = $form.attr('id');
                     patches = $form.find('input[name="patches"]:checked');
@@ -62,6 +55,8 @@ define(
                     $.post(url,
                         function(json) {
                             console.log(json);
+                            $('#schedule').popover('hide');
+                            $('#datepicker').datepicker('destroy');
                         });
                     $('.alert').show();
                     patches.each(function () {
