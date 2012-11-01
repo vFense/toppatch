@@ -156,14 +156,14 @@ class FormHandler(BaseHandler):
             schedule = None
         if node_id:
             operation = self.get_argument('operation')
+            if time:
+                node['schedule'] = schedule
+                node['time'] = time
             if operation == 'install' or operation == 'uninstall':
                 patches = self.request.arguments['patches']
                 node['node_id'] = node_id
                 node['operation'] = operation
                 node['data'] = list(patches)
-                if time:
-                    node['schedule'] = schedule
-                    node['time'] = time
                 resultjson.append(encode(node))
                 #AgentOperation(session, resultjson)
             elif operation == 'reboot':

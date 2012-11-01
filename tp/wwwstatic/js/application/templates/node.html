@@ -26,7 +26,8 @@
                 <% } else if (model['host/status']) { %>
                 <form id="reboot-form">
                     Running &nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
-                    <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>
+                    <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>&nbsp;
+                    Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
                     <input type="hidden" name="operation" value="reboot" />
                     <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
@@ -52,7 +53,7 @@
                 </label>
                 <div class="pull-right noMargin">
                     <label class="checkbox inline">
-                        <input type="checkbox" name="schedule" value="once" id="schedule"/><small>Schedule this patch</small>&nbsp;
+                        <input type="checkbox" name="schedule" value="once"/><small>Schedule this patch</small>&nbsp;
                     </label>
                     <select type="button" class="btn btn-mini" name="operation">
                         <option value="install">Install</option>
@@ -299,7 +300,7 @@
         html: true,
         content: $('#schedule-form')
     }
-    $('#schedule').popover(options).click(function () {
+    $('input[name=schedule]').popover(options).click(function () {
         if(this.checked) {
             $('#datepicker').datepicker();
         } else {

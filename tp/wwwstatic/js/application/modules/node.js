@@ -55,7 +55,7 @@ define(
                     $.post(url,
                         function(json) {
                             console.log(json);
-                            $('#schedule').popover('hide');
+                            $('input[name=schedule]').popover('hide');
                             $('#datepicker').datepicker('destroy');
                         });
                     $('.alert').show();
