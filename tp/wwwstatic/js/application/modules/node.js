@@ -42,7 +42,7 @@ define(
                         time = '',
                         item, span, label, checkbox, $scheduleForm, type, patches, url;
                     if(schedule.length != 0) {
-                        $scheduleForm = $('#schedule-form');
+                        $scheduleForm = schedule.data('popover').options.content;
                         time = $scheduleForm.find('input').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
                     }
                     type = $form.attr('id');
@@ -53,8 +53,10 @@ define(
                     $.post(url,
                         function(json) {
                             console.log(json);
-                            $('input[name=schedule]').popover('hide');
-                            $('#datepicker').datepicker('destroy');
+                            if(schedule.data('popover')) {
+                                schedule.popover('hide');
+                                schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                            }
                             $('.alert').show();
                         });
                     patches.each(function () {
@@ -68,7 +70,7 @@ define(
                         span.html(patch);
                         label.remove();
                         if(type == 'available' || type == 'failed') {
-                            item.appendTo('#pending');
+                            item.appendTo($('#pending').children());
                             if($('#no-pending')) {
                                 $('#no-pending').remove();
                             }

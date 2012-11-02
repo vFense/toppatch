@@ -200,8 +200,8 @@
 </style>
 <div id="hidden" class="hide">
     <form class="form-horizontal" id="schedule-form">
-        <label for="datepicker" class="inline">Date:</label>
-        <input type="text" id="datepicker" class="input-medium"/><br>
+        <label class="inline">Date:</label>
+        <input type="text" name="datepicker" class="input-medium"/><br>
         Time:<div class="inline">
             <select name="hours" id="hours" class="span1">
                 <option>01</option>
@@ -292,19 +292,20 @@
             }
         }
     });
-    var options = {
-        placement: 'top',
-        title: 'Patch Scheduling',
-        html: true,
-        content: $('#schedule-form')
-    }
-    $('input[name=schedule]').popover(options).click(function () {
-        if(this.checked) {
-            $('#datepicker').datepicker();
-        } else {
-            $('#datepicker').datepicker('destroy');
-        }
+    $('input[name=schedule]').each(function () {
+        $(this).popover({
+            placement: 'top',
+            title: 'Patch Scheduling',
+            html: true,
+            content: $('#schedule-form').clone(),
+            trigger: 'click'
+        });
+    }).click(function () {
+            if(this.checked) {
+                $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
+            } else {
+                $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+            }
     });
-    //$('#myModal').modal('show','false').modal('hide');
 </script>
 <% } %>
