@@ -10,7 +10,7 @@
 .btn {
   display: inline-block;
   .ie7-inline-block();
-  padding: @em*( 4px )/@btnFontSize @em*( 14px )/@btnFontSize;
+  padding: @em*( 4px )/@btnFontSize @em*( 12px )/@btnFontSize;
   margin-bottom: 0; // For input.btn
   font-size: @btnFontSize;
   line-height: @em*( @baseLineHeight )/@btnFontSize;
@@ -20,11 +20,12 @@
   cursor: pointer;
   .buttonBackground(@btnBackground, @btnBackgroundHighlight, @grayDark, 0 @em*( 1px )/@btnFontSize @em*( 1px )/@btnFontSize rgba(255,255,255,.75));
   border: @em*( 1px )/@btnFontSize solid @btnBorder;
-  *border: 0; // Remove the border to prevent IE7's black border on input:focus
+  *border: 0; // Remove the border to prevent IE7’s black border on input:focus
   border-bottom-color: darken(@btnBorder, 10%);
-  .border-radius(@em*( 4px )/@btnFontSize);
+  .border-radius(@em*( @baseBorderRadius )/@btnFontSize);
   .ie7-restore-left-whitespace(); // Give IE7 some love
-  .box-shadow(inset 0 @em*( 1px )/@btnFontSize 0 rgba(255,255,255,.2), 0 @em*( 1px )/@btnFontSize @em*( 2px )/@btnFontSize rgba(0,0,0,.05));
+  @box-shadow: inset 0 @em*( 1px )/@btnFontSize 0 rgba(255,255,255,.2), 0 @em*( 1px )/@btnFontSize @em*( 2px )/@btnFontSize rgba(0,0,0,.05)
+  .box-shadow(@box-shadow);
 
   // Hover state
   &:hover {
@@ -51,7 +52,8 @@
     background-color: darken(@white, 15%) e("\9");
     background-image: none;
     outline: 0;
-    .box-shadow(inset 0 @em*( 2px )@btnFontSize @em*( 4px )@btnFontSize rgba(0,0,0,.15), 0 @em*( 1px )@btnFontSize @em*( 2px )@btnFontSize rgba(0,0,0,.05));
+    @box-shadow: inset 0 @em*( 2px )@btnFontSize @em*( 4px )@btnFontSize rgba(0,0,0,.15), 0 @em*( 1px )@btnFontSize @em*( 2px )@btnFontSize rgba(0,0,0,.05));
+    .box-shadow(@box-shadow);
   }
 
   // Disabled state
@@ -73,33 +75,31 @@
 
 // Large
 .btn-large {
-  padding: @em*( 9px )/@btnLargeFontSize @em*( 14px )/@btnLargeFontSize;
-  font-size: @btnLargeFontSize;
-  line-height: normal;
-  border: @em*( 1px )/@btnLargeFontSize solid @btnBorder; // Recreate border based on btn-large font size
-  .border-radius(@em*( 5px )/@btnLargeFontSize);
+  padding: @em*( @paddingLarge )/@btnLargeFontSize;
+  font-size: @fontSizeLarge;
+  .border-radius(@em*( @borderRadiusLarge )/@btnLargeFontSize);
 }
-.btn-large [class^="icon-"] {
+.btn-large [class^="icon-"],
+.btn-large [class*=" icon-"] {
   margin-top: @em*( 2px )/@btnLargeFontSize;
 }
 
 // Small
 .btn-small {
-  padding: @em*( 3px )/@btnSmallFontSize @em*( 9px )/@btnSmallFontSize;
-  font-size: @em*( @btnSmallFontSize )/@baseFontSize;
-  line-height: @em*( @baseLineHeight - 2px )/@btnSmallFontSize;
-  border: @em*( 1px )/@btnSmallFontSize solid @btnBorder; // Recreate border based on btn-small font size
+  padding: @em*( @paddingSmall )/@fontSizeSmall;
+  font-size: @fontSizeSmall;
+  .border-radius( @em*( @borderRadiusSmall )/@fontSizeSmall);
 }
-.btn-small [class^="icon-"] {
+.btn-small [class^="icon-"],
+.btn-small [class*=" icon-"] {
   margin-top: 0;
 }
 
 // Mini
 .btn-mini {
-  padding: @em*( 2px )/@btnMiniFontSize @em*( 6px )/@btnMiniFontSize;
-  font-size: @em*( @btnMiniFontSize )/@baseFontSize;
-  line-height: @em*( @baseLineHeight - 3px )/@btnMiniFontSize;
-  border: @em*( 1px )/@btnMiniFontSize solid @btnBorder; // Recreate border based on btn-mini font size
+  padding: @em*( @paddingMini )/@fontSizeMini;
+  font-size: @fontSizeMini;
+  .border-radius(@em*( @borderRadiusSmall )/@fontSizeMini);
 }
 
 
@@ -190,7 +190,7 @@ input[type="submit"].btn {
   // IE7 has some default padding on button controls
   *padding-top: @em*( 3px )/@btnFontSize;
   *padding-bottom: @em*( 3px )/@btnFontSize;
-  
+
   &.btn-large {
     *padding-top: @em*( 7px )/@btnLargeFontSize;
     *padding-bottom: @em*( 7px )/@btnLargeFontSize;

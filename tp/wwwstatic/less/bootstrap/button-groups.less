@@ -6,6 +6,8 @@
 // Make the div behave like a button
 .btn-group {
   position: relative;
+  display: inline-block;
+  .ie7-inline-block();
   font-size: 0; // remove as part 1 of font-size inline-block hack
   vertical-align: middle; // match .btn alignment given font-size hack above
   white-space: nowrap; // prevent buttons from wrapping when in tight spaces (e.g., the table on the tests page)
@@ -28,6 +30,27 @@
   font-size: 0; // Hack to remove whitespace that results from using inline-block
   margin-top: @em*( @baseLineHeight / 2 )/@baseFontSize;
   margin-bottom: @em*( @baseLineHeight / 2 )/@baseFontSize;
+  .btn + .btn,
+  .btn-group + .btn {
+    @margin: 5px;
+    margin-left: @em*( @margin )/@btnFontSize;
+    &.btn-large {margin-left: @em*( @margin )/@btnLargeFontSize;}
+    &.btn-small {margin-left: @em*( @margin )/@btnSmallFontSize;}
+    &.btn-mini  {margin-left: @em*( @margin )/@btnMiniFontSize;}
+  }
+  
+  // Need to separate because of font-size hack
+  .btn + .btn-group {
+    @margin-left: 5px;
+    margin-left: @em*( @margin-left )/@btnFontSize;
+    
+    &:before {
+      content: "";
+      display: block;
+      font-size: @margin-left;
+      margin-left: 1em;
+    }
+  }
   
   // EM: Hack to fake margin-top when font-size is 0
   &:before {
@@ -49,30 +72,6 @@
   &.noMargin:after {
     margin: 0;
   }
-  
-  .btn-group {
-    display: inline-block;
-    .ie7-inline-block();
-  }
-  .btn + .btn,
-  .btn-group + .btn {
-    margin-left: @em*( 5px )/@btnFontSize;
-    &.btn-large {margin-left: @em*( 5px )/@btnLargeFontSize;}
-    &.btn-small {margin-left: @em*( 5px )/@btnSmallFontSize;}
-    &.btn-mini  {margin-left: @em*( 5px )/@btnMiniFontSize;}
-  }
-  
-  // Need to separate because of font-size hack
-  .btn + .btn-group {
-    margin-left: @em*( 5px )/@btnFontSize;
-    
-    &:before {
-      content: "";
-      display: block;
-      font-size: 5px;
-      margin-left: 1em;
-    }
-  }
 }
 
 // Float them, remove border radius, then re-add to first and last elements
@@ -81,15 +80,16 @@
   .border-radius(0);
 }
 .btn-group > .btn + .btn {
-  margin-left: @em*( -1px )/@btnFontSize;
+  @margin-left: -1px;
+  margin-left: @em*( @margin-left )/@btnFontSize;
   &.btn-large{
-    margin-left: @em*( -1px )/@btnLargeFontSize;
+    margin-left: @em*( @margin-left )/@btnLargeFontSize;
   }
   &.btn-small{
-    margin-left: @em*( -1px )/@btnSmallFontSize;
+    margin-left: @em*( @margin-left )/@btnSmallFontSize;
   }
   &.btn-mini{
-    margin-left: @em*( -1px )/@btnMiniFontSize;
+    margin-left: @em*( @margin-left )/@btnMiniFontSize;
   }
 }
 .btn-group > .btn,
@@ -151,7 +151,8 @@
 .btn-group > .btn + .dropdown-toggle {
   padding-left: @em*( 8px )/@btnFontSize;
   padding-right: @em*( 8px )/@btnFontSize;
-  .box-shadow(inset @em*( 1px )/@btnFontSize 0 0 rgba(255,255,255,.125), inset 0 @em*( 1px )/@btnFontSize 0 rgba(255,255,255,.2), 0 @em*( 1px )/@btnFontSize @em*( 2px )/@btnFontSize rgba(0,0,0,.05));
+  @box-shadow: inset @em*( 1px )/@btnFontSize 0 0 rgba(255,255,255,.125), inset 0 @em*( 1px )/@btnFontSize 0 rgba(255,255,255,.2), 0 @em*( 1px )/@btnFontSize @em*( 2px )/@btnFontSize rgba(0,0,0,.05);
+  .box-shadow(@box-shadow);
   *padding-top: @em*( 5px )/@btnFontSize;
   *padding-bottom: @em*( 5px )/@btnFontSize;
 }
@@ -178,19 +179,20 @@
   // Remove the gradient and set the same inset shadow as the :active state
   .dropdown-toggle {
     background-image: none;
-    .box-shadow(inset 0 @em*( 2px )/@btnFontSize @em*( 4px )/@btnFontSize rgba(0,0,0,.15), 0 @em*( 1px )/@btnFontSize @em*( 2px )/@btnFontSize rgba(0,0,0,.05));
+    @box-shadow: inset 0 @em*( 2px )/@btnFontSize @em*( 4px )/@btnFontSize rgba(0,0,0,.15), 0 @em*( 1px )/@btnFontSize @em*( 2px )/@btnFontSize rgba(0,0,0,.05);
+    .box-shadow(@box-shadow);
   	&.btn-large{
-      .box-shadow(inset 0 @em*( 2px )/@btnLargeFontSize @em*( 4px )/@btnLargeFontSize rgba(0,0,0,.15), 0 @em*( 1px )/@btnLargeFontSize @em*( 2px )/@btnLargeFontSize rgba(0,0,0,.05));
+      .box-shadow(@box-shadow);
     }
     &.btn-small{
-      .box-shadow(inset 0 @em*( 2px )/@btnSmallFontSize @em*( 4px )/@btnSmallFontSize rgba(0,0,0,.15), 0 @em*( 1px )/@btnSmallFontSize @em*( 2px )/@btnSmallFontSize rgba(0,0,0,.05));
+      .box-shadow(@box-shadow);
     }
     &.btn-mini{
-      .box-shadow(inset 0 @em*( 2px )/@btnMiniFontSize @em*( 4px )/@btnMiniFontSize rgba(0,0,0,.15), 0 @em*( 1px )/@btnMiniFontSize @em*( 2px )/@btnMiniFontSize rgba(0,0,0,.05));
+      .box-shadow(@box-shadow);
     }
   }
 
-  // Keep the hover's background when dropdown is open
+  // Keep the hover’s background when dropdown is open
   .btn.dropdown-toggle {
     background-color: @btnBackgroundHighlight;
   }
@@ -233,8 +235,7 @@
 }
 // Upside down carets for .dropup
 .dropup .btn-large .caret {
-  border-bottom: @em*( 5px )/@btnLargeFontSize solid @black;
-  border-top: 0;
+  border-bottom-width: @em*( 5px )/@btnLargeFontSize;
 }
 
 
