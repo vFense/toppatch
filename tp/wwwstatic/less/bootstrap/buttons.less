@@ -20,7 +20,7 @@
   cursor: pointer;
   .buttonBackground(@btnBackground, @btnBackgroundHighlight, @grayDark, 0 @em*( 1px )/@btnFontSize @em*( 1px )/@btnFontSize rgba(255,255,255,.75));
   border: @em*( 1px )/@btnFontSize solid @btnBorder;
-  *border: 0; // Remove the border to prevent IE7’s black border on input:focus
+  *border: 0; // Remove the border to prevent IE7's black border on input:focus
   border-bottom-color: darken(@btnBorder, 10%);
   .border-radius(@em*( @baseBorderRadius )/@btnFontSize);
   .ie7-restore-left-whitespace(); // Give IE7 some love

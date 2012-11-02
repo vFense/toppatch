@@ -163,7 +163,7 @@ input[type="file"] {
 
 // Make select elements obey height by applying a border
 select {
-  width: @em*( 220px )/@libstFontSize; // default input width + 10px of padding that doesn’t get applied
+  width: @em*( 220px )/@libstFontSize; // default input width + 10px of padding that doesn't get applied
   border: @em*( 1px )/@libstFontSize solid @inputBorder;
   background-color: @inputBackground; // Chrome on Linux and Mobile Safari need background-color
 }
@@ -212,7 +212,7 @@ input[type="checkbox"]:focus {
 // Placeholder
 // -------------------------
 
-// Placeholder text gets special styles because when browsers invalidate entire lines if it doesn’t understand a selector
+// Placeholder text gets special styles because when browsers invalidate entire lines if it doesn't understand a selector
 input,
 textarea {
   .placeholder();
@@ -489,7 +489,7 @@ select:focus:required:invalid {
   }
   .add-on:first-child,
   .btn:first-child {
-    // FYI, `.btn:first-child` accounts for a button group that’s prepended
+    // FYI, `.btn:first-child` accounts for a button group that's prepended
     .border-radius(@em*( @inputBorderRadius )/@libstFontSize 0 0 @em*( @inputBorderRadius )/@libstFontSize);
   }
 }
