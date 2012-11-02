@@ -21,7 +21,8 @@
             top: @em*( 5px )/@baseFontSize;
             bottom: @em*( 5px )/@baseFontSize;
             cursor: move;
-            .box-shadow(inset 0 0 @em*( 5px )/@baseFontSize rgba(0, 0, 0, 0.3), 0 0 @em*( 5px )/@baseFontSize rgba(0, 0, 0, 0.3));
+            @box-shadow: inset 0 0 @em*( 5px )/@baseFontSize rgba(0, 0, 0, 0.3), 0 0 @em*( 5px )/@baseFontSize rgba(0, 0, 0, 0.3);
+            .box-shadow(@box-shadow);
             .border-radius(@em*( 5px )/@baseFontSize);
         }
 
