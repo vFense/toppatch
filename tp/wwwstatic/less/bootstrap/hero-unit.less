@@ -6,6 +6,10 @@
 .hero-unit {
   padding: @em*( 60px )/@baseFontSize;
   margin-bottom: @em*( 30px )/@baseFontSize;
+  font-size: @heroFontSize;
+  font-weight: 200;
+  line-height: @em*( @baseLineHeight * 1.5 )/@heroFontSize;
+  color: @heroUnitLeadColor;
   background-color: @heroUnitBackground;
   .border-radius(@em*( 6px )/@baseFontSize);
   h1 {
@@ -15,11 +19,11 @@
     line-height: 1;
     color: @heroUnitHeadingColor;
     letter-spacing: @em*( -1px )/@heroH1FontSize;
+    
+    // EM: Margin adjust for new font-size
+    margin-top: @em*( @baseLineHeight / 2 )/@heroH1FontSize;
   }
-  p {
-    font-size: @heroPFontSize;
-    font-weight: 200;
-    line-height: @em*( @baseLineHeight * 1.5 )/@heroPFontSize;
-    color: @heroUnitLeadColor;
+  li {
+    line-height: @em*( @baseLineHeight * 1.5 )/@heroFontSize; // Reset since we specify in type.less
   }
 }
