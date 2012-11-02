@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/node.html', 'bootstrap-modal', 'jquery.ui.datepicker' ],
+    ['jquery', 'backbone', 'app', 'text!templates/node.html', 'jquery.ui.datepicker' ],
     function ($, Backbone, app, myTemplate) {
         "use strict";
         var exports = {
@@ -11,7 +11,6 @@ define(
             }),
             View: Backbone.View.extend({
                 initialize: function () {
-                    this.$form = []
                     this.template = myTemplate;
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
@@ -19,7 +18,6 @@ define(
                 },
                 events: {
                     'click .disabled': function (e) { console.log(['click a.disabled', e]); return false; },
-                    'click #schedule-btn': 'submit',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
@@ -57,8 +55,8 @@ define(
                             console.log(json);
                             $('input[name=schedule]').popover('hide');
                             $('#datepicker').datepicker('destroy');
+                            $('.alert').show();
                         });
-                    $('.alert').show();
                     patches.each(function () {
                         item = $(this).parents('.item');
                         span = $(this).parents('span');

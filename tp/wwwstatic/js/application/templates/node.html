@@ -136,18 +136,16 @@
     <section class="list" id="pending">
         <div class="items">
             <% if (model['patch/pend'].length != 0) { %>
-            <% _.each(model['patch/pend'], function (patch, i) { %>
-            <div class="item clearfix" title="<%= patch.name %>">
-                <span class="desc"><%= patch.name %></span>
-                            <span class="pull-right">
-                                <a href="#patches/<%= patch.id %>">More information</a>
-                            </span>
-            </div>
-            <% }); %>
+                <% _.each(model['patch/pend'], function (patch, i) { %>
+                    <div class="item clearfix" title="<%= patch.name %>">
+                        <span class="desc"><%= patch.name %></span>
+                        <span class="pull-right"><a href="#patches/<%= patch.id %>">More information</a></span>
+                    </div>
+                <% }); %>
             <% }  else { %>
-            <div class="item" id="no-pending">
-                <small><em>No patches to display</em></small>
-            </div>
+                <div class="item" id="no-pending">
+                    <small><em>No patches to display</em></small>
+                </div>
             <% } %>
         </div>
     </section>
@@ -173,15 +171,15 @@
             <% _.each(model['patch/fail'], function (patch) { %>
             <div class="items">
                 <div class="item clearfix" title="<%= patch.name %>">
-                                <span class="desc">
-                                    <label class="checkbox inline">
-                                        <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                        <%= patch.name.slice %>
-                                    </label>
-                                </span>
-                                <span class="pull-right">
-                                    <a href="#patches/<%= patch.id %>">More information</a>
-                                </span>
+                    <span class="desc">
+                        <label class="checkbox inline">
+                            <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                            <%= patch.name %>
+                        </label>
+                    </span>
+                    <span class="pull-right">
+                        <a href="#patches/<%= patch.id %>">More information</a>
+                    </span>
                 </div>
             </div>
             <% }); %>
