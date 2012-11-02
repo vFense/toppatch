@@ -24,7 +24,7 @@ define(
                     var template = _.template(this.template),
                         data = this.collection.toJSON()[0];
 
-                    this.$el.html('');
+                    this.$el.empty();
 
                     this.$el.append(template({model: data}));
 

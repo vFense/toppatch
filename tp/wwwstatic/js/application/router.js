@@ -34,12 +34,30 @@ define(
                 // Default
                 '*other'        : 'defaultAction'
             },
+            route: function (route, name, callback) {
+                // Override the route method to trigger generic before and after route events
+                this.constructor.__super__.route.call(this, route, name, function () {
+                    this.trigger.apply(this, ["beforeRoute"].concat(route, name));
+                    callback.apply(this, arguments);
+                    this.trigger.apply(this, ["afterRoute"].concat(route, name));
+                });
+            },
             initialize: function () {
+                app.startWs();
+
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
-                app.startWs();
                 this.viewTarget = '#dashboard-view';
                 this.viewManager = new app.ViewManager({'selector': this.viewTarget});
+                this.currentRoute = '';
+                this.lastRoute = '';
+
+                // Track the current and previous routes
+                // This supports the routed modals
+                this.bind('beforeRoute', function (route) {
+                    this.lastRoute = this.currentRoute;
+                    this.currentRoute = route;
+                }, this);
             },
             home: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
@@ -96,8 +114,7 @@ define(
             showAccountModal: function (tab) {
                 console.log(['account', tab]);
             },
-            */
-            defaultAction: function (/* other */) {
+            defaultAction: function () {
                 this.show(
                     {
                         hash: '#404',

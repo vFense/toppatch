@@ -57,7 +57,7 @@ define(
                     temp = payload.offset + payload.getCount;
                     payload.nextLink = '#nodes?count=' + payload.getCount + '&offset=' + temp;
 
-                    this.$el.html('');
+                    this.$el.empty();
 
                     this.$el.append(template(payload));
 

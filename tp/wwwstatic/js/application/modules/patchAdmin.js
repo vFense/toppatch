@@ -40,7 +40,7 @@ define(
                 var tmpl = _.template(this.template),
                     that = this;
 
-                this.$el.html('');
+                this.$el.empty();
                 this.$el.append(tmpl({
                     show: this.collection.show,
                     filter: this.collection.filter,

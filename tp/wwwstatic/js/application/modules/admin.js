@@ -99,7 +99,7 @@ define(
                     var template = _.template(this.template),
                         that = this,
                         data = this.collection.toJSON();
-                    this.$el.html('');
+                    this.$el.empty();
 
                     this.$el.append(template({data: data}));
 
