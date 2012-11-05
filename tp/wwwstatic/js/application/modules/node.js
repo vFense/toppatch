@@ -40,15 +40,16 @@ define(
                     var $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
                         time = '',
-                        item, span, label, checkbox, $scheduleForm, type, patches, url;
+                        item, span, label, checkbox, $scheduleForm, type, patches, url, date;
                     if(schedule.length != 0) {
                         $scheduleForm = schedule.data('popover').options.content;
                         time = $scheduleForm.find('input').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
+                        date = new Date(time).getTime();
                     }
                     type = $form.attr('id');
                     patches = $form.find('input[name="patches"]:checked');
                     url = '/submitForm?' + $form.serialize();
-                    url += time ? '&time=' + time : '';
+                    url += time ? '&time=' + date : '';
                     console.log(url);
                     $.post(url,
                         function(json) {
