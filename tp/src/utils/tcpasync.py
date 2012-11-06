@@ -27,7 +27,7 @@ class TcpConnect():
         self.read_data = None
         self.key = "/opt/TopPatch/var/lib/ssl/server/keys/server.key"
         self.cert = "/opt/TopPatch/var/lib/ssl/server/keys/server.cert"
-        self.ca = "/opt/TopPatch/var/lib/ssl/server/keys/server.cert"
+        self.ca = "/opt/TopPatch/var/lib/ssl/server/keys/CA.cert"
         self.tcp_socket = self.socket_init()
         self._connect()
 
@@ -64,7 +64,10 @@ class TcpConnect():
             return self._write()
 
     def _error_handler(self, e):
-        if e.message:
+        print dir(e), e
+        if e is None:
+            self.error = "Error Undefined"
+        elif e.message:
             self.error = e.message
         else:
             self.error = e.strerror

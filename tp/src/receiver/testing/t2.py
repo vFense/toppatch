@@ -23,9 +23,9 @@ node_list = '{"node_id" : "1", "operation" : "status"}'
 #    AgentOperation(session,node_list)
 #AgentOperation(session,node_list)
 #TcpConnect("127.0.0.1",csr, secure=False)
-a = TcpConnect("127.0.0.1", csr, secure=False, port=9002)
+#a = TcpConnect("127.0.0.1", csr, secure=False, port=9002)
 #a = TcpConnect("10.0.0.1", csr, secure=False, port=9005)
-#a = TcpConnect("127.0.0.1", node_list, port=9001)
+a = TcpConnect("127.0.0.1", node_list, port=9001)
 print a.read_data
 print a.error
 print a.connection_count
