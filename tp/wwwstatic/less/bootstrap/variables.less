@@ -354,7 +354,9 @@
 
 @legendFontSize: 			@baseFontSize * 1.5;
 @legendSmallFontSize:		@baseLineHeight * .75;
-@libstFontSize: 			@baseFontSize;			// Label, Input, Button, Select, Text Area
+
+// Label, Input, Button, Select, Text Area
+@libstFontSize: 			@baseFontSize;
 
 @preFontSize: 				@baseFontSize - 1;
 
@@ -365,10 +367,16 @@
 @abbrInitialismFontSize:	90%;
 
 @badgeFontSize:				@baseFontSize * .846;
+
 @btnFontSize:				@baseFontSize;
-@btnLargeFontSize:			@baseFontSize + 2px;
-@btnSmallFontSize:			@baseFontSize - 2px;
-@btnMiniFontSize:			@baseFontSize - 3px;
+@btnLargeFontSize:			@fontSizeLarge;
+@btnSmallFontSize:			@fontSizeSmall;
+@btnMiniFontSize:			@fontSizeMini;
+
+@btnGroupFontSize:          @baseFontSize;
+@btnGroupLargeFontSize:     16px;
+@btnGroupSmallFontSize:     12px;
+@btnGroupMiniFontSize:      11px;
 
 @carouselControlFontSize: 	60px;
 @closeFontSize:				20px;
@@ -377,11 +385,15 @@
 @heroH1FontSize:			60px;
 
 @labelFontSize:				@baseFontSize * .846;
-@leadFontSize:				20px;
+@leadFontSize:				@baseFontSize * 1.5;
 
 @navbarBrandFontSize:       20px;
 @navbarSearchQuery:			13px;
 @navHeaderFontSize:			11px;
+
+@paginationLargeFontSize:   @fontSizeLarge;
+@paginationSmallFontSize:   @fontSizeSmall;
+@paginationMiniFontSize:    @fontSizeMini;
 
 @popoverTitleFontSize:		14px; // New
 @progressBarFontSize:		12px;
