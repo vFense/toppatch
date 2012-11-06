@@ -1,0 +1,4 @@
+Rivets.js
+Home:       http://rivetsjs.com
+GitHub:     https://github.com/mikeric/rivets/tags
+Version:    0.3.11

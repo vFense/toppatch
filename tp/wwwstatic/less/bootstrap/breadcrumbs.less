@@ -1,0 +1,24 @@
+//
+// Breadcrumbs
+// --------------------------------------------------
+
+
+.breadcrumb {
+  padding: @em*( 8px )/@baseFontSize @em*( 15px )/@baseFontSize;
+  margin: 0 0 @em*( @baseLineHeight )/@baseFontSize;
+  list-style: none;
+  background-color: #f5f5f5;
+  .border-radius(@em*( 4px )/@baseFontSize);
+  li {
+    display: inline-block;
+    .ie7-inline-block();
+    text-shadow: 0 @em*( 1px )/@baseFontSize 0 @white;
+  }
+  .divider {
+    padding: 0 @em*( 5px )/@baseFontSize;
+    color: #ccc;
+  }
+  .active {
+    color: @grayLight;
+  }
+}
