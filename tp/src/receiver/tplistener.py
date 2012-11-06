@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 
 from utils.db.client import *
 from receiver.tphandler import HandOff
-
+from utils.scheduler.status_checker import *
 
 ALLOWED_CIPHER_LIST = 'TLSv1+HIGH:!SSLv2:RC4+MEDIUM:!aNULL:!eNULL:!3DES:@STRENGTH'
 ENGINE = initEngine()
@@ -52,12 +52,12 @@ if __name__ == '__main__':
     ctx = myContextFactory.getContext()
     ctx.set_cipher_list(ALLOWED_CIPHER_LIST)
     ctx.load_verify_locations("/opt/TopPatch/var/lib/ssl/server/keys/CA.cert")
-    #print "Im goint to verify you in the mouth"
-    #ctx.set_verify(
-    #    SSL.VERIFY_PEER | SSL.VERIFY_FAIL_IF_NO_PEER_CERT | SSL.VERIFY_CLIENT_ONCE,
-    #    verifyCallback
-    #    )
-    #print "YOU HAVE BEEN VERIFIED"
+    print "Im goint to verify you in the mouth"
+    ctx.set_verify(
+        SSL.VERIFY_PEER | SSL.VERIFY_FAIL_IF_NO_PEER_CERT | SSL.VERIFY_CLIENT_ONCE,
+        verifyCallback
+        )
+    print "YOU HAVE BEEN VERIFIED"
 
     reactor.listenSSL(9001, factory, myContextFactory)
     reactor.run()
