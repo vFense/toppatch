@@ -55,8 +55,8 @@ define(
                         function(json) {
                             console.log(json);
                             if(schedule.data('popover')) {
-                                schedule.popover('hide');
                                 schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                                schedule.popover('hide');
                             }
                             $('.alert').show();
                         });
