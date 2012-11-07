@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'backbone', 'text!templates/admin.html', 'jquery.ui.datepicker' ],
+    ['jquery', 'backbone', 'text!templates/admin.html' ],
     function ($, Backbone, myTemplate) {
         "use strict";
         var exports = {
@@ -102,7 +102,7 @@ define(
                     this.$el.html('');
 
                     this.$el.append(template({data: data}));
-                    this.$el.find('#datepicker').datepicker();
+
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 }

@@ -18,53 +18,106 @@
         </dl>
     </section>
 </article>
+<article class="alert alert-success alert-block fade in hide">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    Operation sent&nbsp;
+</article>
 <article>
     <header><strong>Nodes that need this patch</strong></header>
     <section class="list">
-        <div class="items">
-            <% if(model.available && model.available.nodes && model.available.count != 0) { %>
+        <% if(model.available && model.available.nodes && model.available.count != 0) { %>
+        <form action="/submitForm" method="post" class="form-inline" id="available">
+            <header class="clearfix">
+                <label class="checkbox inline">
+                    <input type="checkbox" class="toggle-all">Select / Deselect All
+                </label>
+                <div class="pull-right noMargin">
+                    <label class="checkbox inline">
+                        <input type="checkbox" name="schedule" value="once"/><small>Schedule this patch</small>&nbsp;
+                    </label>
+                    <select type="button" class="btn btn-mini" name="operation">
+                        <option value="install">Install</option>
+                        <option value="hide">Hide</option>
+                    </select>
+                    <input type="submit" class="btn btn-mini btn-primary" value="Submit">
+                </div>
+                <input type="hidden" value="<% print(model.id); %>" name="patches">
+            </header>
+            <div class="items">
                 <% _.each(model.available.nodes, function (node) { %>
                     <div class="item clearfix">
-                        <span class="desc"><strong>Node:</strong> <%= node.ip %></span>
+                        <span class="desc">
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
+                                <%= node.ip %>
+                            </label>
+                        </span>
                         <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
                     </div>
                 <% }); %>
-            <% }  else { %>
-                <div class="item"><small><em>No nodes to display</em></small></div>
-            <% } %>
+            </div>
+        </form>
+        <% }  else { %>
+        <div class="items">
+            <div class="item"><small><em>No nodes to display</em></small></div>
         </div>
+        <% } %>
     </section>
 </article>
 <article>
     <header><strong>Nodes that have this patch</strong></header>
     <section class="list">
-        <div class="items">
-            <% if(model.installed && model.installed.nodes && model.installed.count != 0) { %>
+        <% if(model.installed && model.installed.nodes && model.installed.count != 0) { %>
+        <form action="/submitForm" method="post" class="form-inline" id="done">
+            <header class="clearfix">
+                <label class="checkbox inline">
+                    <input type="checkbox" class="toggle-all">Select / Deselect All
+                </label>
+                <div class="pull-right noMargin">
+                    <select type="button" class="btn btn-mini" name="operation">
+                        <option value="uninstall">Uninstall</option>
+                        <option value="hide">hide</option>
+                    </select>
+                    <input type="submit" class="btn btn-mini btn-primary" value="Submit">
+                </div>
+                <input type="hidden" value="<% print(model.id); %>" name="patches">
+            </header>
+            <div class="items">
                 <% _.each(model.installed.nodes, function (node) { %>
                     <div class="item clearfix">
-                        <span class="desc"><strong>Node:</strong> <%= node.ip %></span>
+                        <span class="desc">
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
+                                <%= node.ip %>
+                            </label>
+                        </span>
                         <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
                     </div>
                 <% }); %>
-            <% }  else { %>
+            </div>
+        </form>
+        <% }  else { %>
+            <div class="items">
                 <div class="item"><small><em>No nodes to display</em></small></div>
-            <% } %>
-        </div>
+            </div>
+        <% } %>
     </section>
 </article>
 <article>
     <header><strong>Nodes installing this patch</strong></header>
-    <section class="list">
+    <section class="list" id="pending">
         <div class="items">
             <% if(model.pending && model.pending.count != 0) { %>
                 <% _.each(model.pending.nodes, function (node) { %>
                     <div class="item clearfix">
-                        <span class="desc"><strong>Node:</strong> <%= node.ip %></span>
+                        <span class="desc"><%= node.ip %></span>
                         <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
                     </div>
                 <% }); %>
             <% }  else { %>
-                <div class="item"><small><em>No nodes to display</em></small></div>
+                    <div class="item" id="no-pending">
+                        <small><em>No nodes to display</em></small>
+                    </div>
             <% } %>
         </div>
     </section>
@@ -72,18 +125,110 @@
 <article>
     <header><strong>Nodes that failed to apply this patch</strong></header>
     <section class="list">
-        <div class="items">
-            <% if(model.failed && model.failed.count != 0) { %>
+        <% if(model.failed && model.failed.count != 0) { %>
+        <form action="/submitForm" method="post" class="form-inline" id="failed">
+            <header class="clearfix">
+                <label class="checkbox inline">
+                    <input type="checkbox" class="toggle-all">Select / Deselect All
+                </label>
+                <div class="pull-right noMargin">
+                    <select type="button" class="btn btn-mini" name="operation">
+                        <option value="install">Reinstall</option>
+                        <option value="hide">hide</option>
+                    </select>
+                    <input type="submit" class="btn btn-mini btn-primary" value="Submit">
+                </div>
+                <input type="hidden" value="<% print(model.id); %>" name="patches">
+            </header>
+            <div class="items">
                 <% $.each(model.failed.nodes, function (i, node) { %>
                 <div class="item clearfix">
-                    <span class="desc"><strong>Node:</strong> <%= node.ip %></span>
+                    <span class="desc">
+                        <label class="checkbox inline">
+                            <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
+                            <%= node.ip %>
+                        </label>
+                    </span>
                     <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
                 </div>
                 <% }); %>
-            <% }  else { %>
+            </div>
+        </form>
+        <% }  else { %>
+            <div class="items">
                 <div class="item"><small><em>No nodes to display</em></small></div>
-            <% } %>
-        </div>
+            </div>
+        <% } %>
     </section>
 </article>
+<style>
+    div.ui-datepicker{
+        font-size:12px;
+    }
+</style>
+<div id="hidden" class="hide">
+    <form class="form-horizontal" id="schedule-form">
+        <label class="inline">Date:</label>
+        <input type="text" name="datepicker" class="input-medium"/><br>
+        Time:<div class="inline">
+        <select name="hours" id="hours" class="span1">
+            <option>01</option>
+            <option>02</option>
+            <option>03</option>
+            <option>04</option>
+            <option>05</option>
+            <option>06</option>
+            <option>07</option>
+            <option>08</option>
+            <option>09</option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+        </select>
+        <select name="minutes" class="span1">
+            <option>00</option>
+            <option>15</option>
+            <option>30</option>
+            <option>45</option>
+        </select>
+        <select name="ampm" class="span1">
+            <option>AM</option>
+            <option>PM</option>
+        </select>
+    </div>
+    </form>
+</div>
+<script>
+    $('.toggle-all').click(function(el){
+        var status = el.target.checked,
+                form = $(el.target).parents('form');
+        $(form).find(":checkbox[name=node]").each( function() {
+            $(this).attr("checked", status);
+        });
+    });
+    $('form').submit(function (e) {
+        if(this.id != 'reboot-form') {
+            var fields = $(this).find('input[name="node"]:checked');
+            if (!fields.length) {
+                alert('Please select at least one node');
+                return false;
+            }
+        }
+    });
+    $('input[name=schedule]').each(function () {
+        $(this).popover({
+            placement: 'top',
+            title: 'Patch Scheduling',
+            html: true,
+            content: $('#schedule-form').clone(),
+            trigger: 'click'
+        });
+    }).click(function () {
+        if(this.checked) {
+            $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
+        } else {
+            $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+        }
+    });
+</script>
 <% } %>

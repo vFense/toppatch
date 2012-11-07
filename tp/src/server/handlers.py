@@ -7,6 +7,7 @@ except ImportError: import json
 from models.node import NodeInfo
 from utils.db.client import *
 from utils.agentoperation import AgentOperation
+from utils.scheduler.addJob import JobScheduler
 from server.decorators import authenticated_request
 from jsonpickle import encode
 
@@ -141,33 +142,56 @@ class FormHandler(BaseHandler):
         result = []
         session = createSession(engine)
         try:
-            node_id = self.get_argument('node')
+            nodes = self.request.arguments['node']
+            print nodes
         except:
-            node_id = None
+            nodes = None
         try:
             params = self.get_argument('params')
-            print params
         except:
             params = None
-        if node_id:
+        try:
+            time = self.get_argument('time')
+            schedule = self.get_argument('schedule')
+        except:
+            time = None
+            schedule = None
+        if nodes:
             operation = self.get_argument('operation')
+            if time:
+                node['schedule'] = schedule
+                node['time'] = time
             if operation == 'install' or operation == 'uninstall':
                 patches = self.request.arguments['patches']
-                node['node_id'] = node_id
-                node['operation'] = operation
-                node['data'] = list(patches)
-                resultjson.append(encode(node))
-                AgentOperation(session, resultjson)
+                for node_id in nodes:
+                    node['node_id'] = node_id
+                    node['operation'] = operation
+                    node['data'] = list(patches)
+                    resultjson.append(encode(node))
+                if time:
+                    JobScheduler(resultjson, 
+                            self.application.scheduler
+                            )
+                else:
+                    operation_runner = AgentOperation(resultjson)
+                    operation_runner.run()
             elif operation == 'reboot':
-                node['operation'] = operation
-                node['node_id'] = node_id
-                resultjson.append(encode(node))
-                AgentOperation(session, resultjson)
+                for node_id in nodes:
+                    node['operation'] = operation
+                    node['node_id'] = node_id
+                    resultjson.append(encode(node))
+                if time:
+                    JobScheduler(resultjson, 
+                            self.application.scheduler
+                            )
+                else:
+                    operation_runner = AgentOperation(resultjson)
+                    operation_runner.run()
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
         if params:
             resultjson = json.loads(params)
-            AgentOperation(session, resultjson)
+            AgentOperation(resultjson)
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
 

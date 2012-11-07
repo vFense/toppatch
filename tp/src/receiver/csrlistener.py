@@ -9,6 +9,13 @@ from utils.common import verifyJsonIsValid
 from csrhandler import CsrHandOff
 
 ENGINE = initEngine()
+c = ENGINE.connect()
+try:
+    c.execute("SELECT * FROM node_info")
+    c.close()
+except exc.DBAPIError, e:
+    c = e.connect()
+    c.execute("SELECT * FROM node_info")
 
 class CsrReceiver(Protocol):
     """

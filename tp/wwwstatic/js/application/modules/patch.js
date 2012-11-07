@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'backbone', 'text!templates/patch.html' ],
+    ['jquery', 'backbone', 'text!templates/patch.html', 'jquery.ui.datepicker' ],
     function ($, Backbone, myTemplate) {
         "use strict";
         var exports = {
@@ -15,6 +15,56 @@ define(
                     this.collection =  new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
+                },
+                events: {
+                    'submit form': 'submit'
+                },
+                submit: function (evt) {
+                    var $form = $(evt.target),
+                        schedule = $form.find('input[name="schedule"]:checked'),
+                        time = '',
+                        item, span, label, checkbox, $scheduleForm, type, nodes, url, date;
+                    if(schedule.length != 0) {
+                        $scheduleForm = schedule.data('popover').options.content;
+                        time = $scheduleForm.find('input').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
+                        date = new Date(time).getTime();
+                    }
+                    type = $form.attr('id');
+                    nodes = $form.find('input[name="node"]:checked');
+                    url = '/submitForm?' + $form.serialize();
+                    url += time ? '&time=' + date : '';
+                    console.log(url);
+                    $.post(url,
+                        function(json) {
+                            console.log(json);
+                            if(schedule.data('popover')) {
+                                schedule.popover('hide');
+                                schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                            }
+                            $('.alert').show();
+                        });
+                    nodes.each(function () {
+                        item = $(this).parents('.item');
+                        span = $(this).parents('span');
+                        label = $(this).parent();
+                        checkbox = $(this);
+                        checkbox.remove();
+                        var patch = label.html();
+                        span.html(patch);
+                        label.remove();
+                        if(type == 'available' || type == 'failed') {
+                            item.appendTo($('#pending').children());
+                            if($('#no-pending')) {
+                                $('#no-pending').remove();
+                            }
+                        } else {
+                            item.remove();
+                        }
+                    });
+                    if($form.find('input:checked').attr('checked')) {
+                        $form.find('input:checked').attr('checked', false);
+                    }
+                    return false;
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
