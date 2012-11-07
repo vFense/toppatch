@@ -65,7 +65,7 @@ class HandOff():
             lcollect.append('{"node_id" : "%s", "operation" : "%s"}' \
                     % (self.node.id, oper)
                     )
-        results = AgentOperation(self.session, lcollect)
+        results = AgentOperation(lcollect)
 
     def windowsUpdate(self):
         addWindowsUpdate(self.session, self.json_object)

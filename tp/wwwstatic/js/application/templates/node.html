@@ -20,6 +20,7 @@
                 <form id="reboot-form" class="noMargin">
                     Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;
                     <input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/>
+                    Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
                     <input type="hidden" name="operation" value="reboot" />
                     <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
