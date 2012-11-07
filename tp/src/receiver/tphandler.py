@@ -66,6 +66,7 @@ class HandOff():
                     % (self.node.id, oper)
                     )
         results = AgentOperation(lcollect)
+        results.run()
 
     def windowsUpdate(self):
         addWindowsUpdate(self.session, self.json_object)
