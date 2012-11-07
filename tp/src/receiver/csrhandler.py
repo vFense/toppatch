@@ -10,12 +10,6 @@ from utils.tcpasync import TcpConnect
 
 class CsrHandOff():
     def __init__(self, ENGINE, ip_address, data):
-        try:
-            c.execute("SELECT * FROM node_info")
-            c.close()
-        except exc.DBAPIError, e:
-            c = e.connect()
-            c.execute("SELECT * FROM node_info")
         self.data = None
         self.csr_path = None
         self.csr_name = None
