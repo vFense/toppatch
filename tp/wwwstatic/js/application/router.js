@@ -110,7 +110,6 @@ define(
             showAdmin: function () {
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
             },
-            /*
             showAccountModal: function (tab) {
                 console.log(['account', tab]);
             },
