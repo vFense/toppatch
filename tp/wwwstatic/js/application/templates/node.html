@@ -26,7 +26,8 @@
                 <% } else if (model['host/status']) { %>
                 <form id="reboot-form">
                     Running &nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
-                    <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>
+                    <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>&nbsp;
+                    Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
                     <input type="hidden" name="operation" value="reboot" />
                     <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
@@ -135,18 +136,16 @@
     <section class="list" id="pending">
         <div class="items">
             <% if (model['patch/pend'].length != 0) { %>
-            <% _.each(model['patch/pend'], function (patch, i) { %>
-            <div class="item clearfix" title="<%= patch.name %>">
-                <span class="desc"><%= patch.name %></span>
-                            <span class="pull-right">
-                                <a href="#patches/<%= patch.id %>">More information</a>
-                            </span>
-            </div>
-            <% }); %>
+                <% _.each(model['patch/pend'], function (patch, i) { %>
+                    <div class="item clearfix" title="<%= patch.name %>">
+                        <span class="desc"><%= patch.name %></span>
+                        <span class="pull-right"><a href="#patches/<%= patch.id %>">More information</a></span>
+                    </div>
+                <% }); %>
             <% }  else { %>
-            <div class="item" id="no-pending">
-                <small><em>No patches to display</em></small>
-            </div>
+                <div class="item" id="no-pending">
+                    <small><em>No patches to display</em></small>
+                </div>
             <% } %>
         </div>
     </section>
@@ -172,15 +171,15 @@
             <% _.each(model['patch/fail'], function (patch) { %>
             <div class="items">
                 <div class="item clearfix" title="<%= patch.name %>">
-                                <span class="desc">
-                                    <label class="checkbox inline">
-                                        <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                        <%= patch.name.slice %>
-                                    </label>
-                                </span>
-                                <span class="pull-right">
-                                    <a href="#patches/<%= patch.id %>">More information</a>
-                                </span>
+                    <span class="desc">
+                        <label class="checkbox inline">
+                            <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                            <%= patch.name %>
+                        </label>
+                    </span>
+                    <span class="pull-right">
+                        <a href="#patches/<%= patch.id %>">More information</a>
+                    </span>
                 </div>
             </div>
             <% }); %>
@@ -199,6 +198,39 @@
         font-size:12px;
     }
 </style>
+<div id="hidden" class="hide">
+    <form class="form-horizontal" id="schedule-form">
+        <label for="datepicker" class="inline">Date:</label>
+        <input type="text" id="datepicker" class="input-medium"/><br>
+        Time:<div class="inline">
+            <select name="hours" id="hours" class="span1">
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+            </select>
+            <select name="minutes" class="span1">
+                <option>00</option>
+                <option>15</option>
+                <option>30</option>
+                <option>45</option>
+            </select>
+            <select name="ampm" class="span1">
+                <option>AM</option>
+                <option>PM</option>
+            </select>
+        </div>
+    </form>
+</div>
+<!--
 <div class="modal" id="myModal" tabindex="-1" role="dialog" data-show="false" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -241,7 +273,8 @@
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
         <button class="btn btn-primary" id="schedule-btn">Submit</button>
     </div>
-</div>
+</div> -->
+
 <script>
     $('.toggle-all').click(function(el){
         var status = el.target.checked,
@@ -259,7 +292,19 @@
             }
         }
     });
-    $('#myModal').modal('show','false').modal('hide');
-    $('#datepicker').datepicker();
+    var options = {
+        placement: 'top',
+        title: 'Patch Scheduling',
+        html: true,
+        content: $('#schedule-form')
+    }
+    $('input[name=schedule]').popover(options).click(function () {
+        if(this.checked) {
+            $('#datepicker').datepicker();
+        } else {
+            $('#datepicker').datepicker('destroy');
+        }
+    });
+    //$('#myModal').modal('show','false').modal('hide');
 </script>
 <% } %>

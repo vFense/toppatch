@@ -141,9 +141,10 @@ class FormHandler(BaseHandler):
         result = []
         session = createSession(engine)
         try:
-            node_id = self.get_argument('node')
+            nodes = self.request.arguments['node']
+            print nodes
         except:
-            node_id = None
+            nodes = None
         try:
             params = self.get_argument('params')
         except:
@@ -154,22 +155,24 @@ class FormHandler(BaseHandler):
         except:
             time = None
             schedule = None
-        if node_id:
+        if nodes:
             operation = self.get_argument('operation')
+            if time:
+                node['schedule'] = schedule
+                node['time'] = time
             if operation == 'install' or operation == 'uninstall':
                 patches = self.request.arguments['patches']
-                node['node_id'] = node_id
-                node['operation'] = operation
-                node['data'] = list(patches)
-                if time:
-                    node['schedule'] = schedule
-                    node['time'] = time
-                resultjson.append(encode(node))
+                for node_id in nodes:
+                    node['node_id'] = node_id
+                    node['operation'] = operation
+                    node['data'] = list(patches)
+                    resultjson.append(encode(node))
                 #AgentOperation(session, resultjson)
             elif operation == 'reboot':
-                node['operation'] = operation
-                node['node_id'] = node_id
-                resultjson.append(encode(node))
+                for node_id in nodes:
+                    node['operation'] = operation
+                    node['node_id'] = node_id
+                    resultjson.append(encode(node))
                 #AgentOperation(session, resultjson)
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
