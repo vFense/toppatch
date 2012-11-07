@@ -40,21 +40,24 @@ define(
                     var $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
                         time = '',
-                        item, span, label, checkbox, $scheduleForm, type, patches, url;
+                        item, span, label, checkbox, $scheduleForm, type, patches, url, date;
                     if(schedule.length != 0) {
-                        $scheduleForm = $('#schedule-form');
+                        $scheduleForm = schedule.data('popover').options.content;
                         time = $scheduleForm.find('input').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
+                        date = new Date(time).getTime();
                     }
                     type = $form.attr('id');
                     patches = $form.find('input[name="patches"]:checked');
                     url = '/submitForm?' + $form.serialize();
-                    url += time ? '&time=' + time : '';
+                    url += time ? '&time=' + date : '';
                     console.log(url);
                     $.post(url,
                         function(json) {
                             console.log(json);
-                            $('input[name=schedule]').popover('hide');
-                            $('#datepicker').datepicker('destroy');
+                            if(schedule.data('popover')) {
+                                schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                                schedule.popover('hide');
+                            }
                             $('.alert').show();
                         });
                     patches.each(function () {
@@ -68,7 +71,7 @@ define(
                         span.html(patch);
                         label.remove();
                         if(type == 'available' || type == 'failed') {
-                            item.appendTo('#pending');
+                            item.appendTo($('#pending').children());
                             if($('#no-pending')) {
                                 $('#no-pending').remove();
                             }
