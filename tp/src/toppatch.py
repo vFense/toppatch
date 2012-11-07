@@ -5,6 +5,9 @@ import base64
 import uuid
 import os
 import threading
+import gevent
+from gevent import monkey
+monkey.patch_all(thread=True)
 
 import tornado.httpserver
 import tornado.ioloop
@@ -27,16 +30,14 @@ from tornado.options import define, options
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 
-#from apscheduler.scheduler import Scheduler
-#from apscheduler.jobstores.shelve_store import SQLAlchemyJobStore
+from apscheduler.scheduler import Scheduler
+from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
 
 
 #ENGINE = initEngine()
 #scheduler = Scheduler(standalone=True)
-#scheduler.add_jobstore(SQLAlchemyJobStore(engine=ENGINE, tablename="job_scheduler")
-
-#sched = Scheduler()
-#sched.start()
+#scheduler.add_jobstore(SQLAlchemyJobStore(engine=ENGINE, tablename="tp_scheduler"), "toppatch")
+#scheduler.start()
 
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
@@ -97,10 +98,12 @@ class Application(tornado.web.Application):
             "login_url": "/login",
         }
 
-        self.db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
-
-        Session = sessionmaker(bind=self.db)
-        self.session = Session()
+        self.db = initEngine()
+        self.scheduler = Scheduler()
+        self.scheduler.add_jobstore(SQLAlchemyJobStore(engine=self.db, tablename="tp_scheduler"), "toppatch")
+        self.scheduler.start()
+        Session = createSession(self.db)
+        self.session = Session
         self.account_manager = AccountManager(self.session)
         self.tokens = TokenManager(self.session)
 

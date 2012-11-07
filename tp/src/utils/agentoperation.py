@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from datetime import datetime
 from jsonpickle import encode
+import logging
 from utils.tcpasync import *
 from utils.db.update_table import *
 from utils.db.query_table import *
@@ -19,9 +20,12 @@ UPDATESPENDING = 'updates_pending'
 SYSTEMINFO = 'system_info'
 SYSTEMAPPLICATIONS = 'system_applications'
 DATA = 'data'
+SCHEDULE = 'schedule'
+TIME = 'time'
 
 class AgentOperation():
-    def __init__(self, session, node_list):
+    def __init__(self, node_list):
+    #def __init__(self, session, node_list):
         """
         This class will take a list and iterate through it.
         Through each iteration, the object in each array will
@@ -31,19 +35,21 @@ class AgentOperation():
         remote agent. Through the use of Gevent, we have made this 
         operation much quicker as well as much safer.
         """
-        self.session = session
-        self.results = []
-        self.threads = []
+        ENGINE = initEngine()
+        self.session = createSession(ENGINE)
+        self.node_list = node_list
+        self.total_nodes = None
         if type(node_list) == list:
             self.node_list = node_list
             self.total_nodes = len(self.node_list)
-            self._parse_and_pass()
         else:
             json_valid, self.node_list = verifyJsonIsValid(node_list)
             if type(self.node_list) != list:
                 self.node_list = [self.node_list]
 
-    def _parse_and_pass(self):
+    def run(self):
+        self.results = []
+        self.threads = []
         for node in self.node_list:
             if type(node) != dict:
                 json_valid, jsonobject = verifyJsonIsValid(node)
@@ -58,14 +64,14 @@ class AgentOperation():
                 print oper_type
                 oper_id = self.create_new_operation(node_id, oper_type)
                 if not DATA in jsonobject:
-                    message = gevent.spawn(self.create_sof_operation, node_id, \
+                    message = gevent.spawn(self.create_sof_operation, node_id, 
                         node.ip_address, oper_type, oper_id
                         )
                     self.threads.append(message)
                 elif DATA in jsonobject:
                     if type(jsonobject[DATA]) == list:
                         data = jsonobject[DATA]
-                        message = gevent.spawn(self.create_sof_operation, node_id, \
+                        message = gevent.spawn(self.create_sof_operation, node_id, 
                                 node.ip_address, oper_type, oper_id, data
                                 )
                         self.threads.append(message)

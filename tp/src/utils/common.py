@@ -54,3 +54,17 @@ def getExpirefromCert(cert):
     asn1_time = re.search(r'([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})', cert).group(1,2,3,4,5,6)
     t = map(lambda x: int(x), asn1_time)
     return datetime(t[0], t[1], t[2], t[3], t[4], t[5])
+
+def returnDatetime(timestamp):
+    stamp_length = len(timestamp)
+    timestamp = int(timestamp)
+    valid_timestamp = False
+    if stamp_length == 13:
+        timestamp = timestamp / 1000
+        valid_timestamp = True
+    elif stamp_length == 10:
+        valid_timestamp = True
+    if valid_timestamp:
+        return (datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'))
+    else:
+        return ("Invalid TimeStamp")

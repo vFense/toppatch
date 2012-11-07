@@ -7,6 +7,7 @@ except ImportError: import json
 from models.node import NodeInfo
 from utils.db.client import *
 from utils.agentoperation import AgentOperation
+from utils.scheduler.addJob import JobScheduler
 from server.decorators import authenticated_request
 from jsonpickle import encode
 
@@ -167,18 +168,30 @@ class FormHandler(BaseHandler):
                     node['operation'] = operation
                     node['data'] = list(patches)
                     resultjson.append(encode(node))
-                #AgentOperation(session, resultjson)
+                if time:
+                    JobScheduler(resultjson, 
+                            self.application.scheduler
+                            )
+                else:
+                    operation_runner = AgentOperation(resultjson)
+                    operation_runner.run()
             elif operation == 'reboot':
                 for node_id in nodes:
                     node['operation'] = operation
                     node['node_id'] = node_id
                     resultjson.append(encode(node))
-                #AgentOperation(session, resultjson)
+                if time:
+                    JobScheduler(resultjson, 
+                            self.application.scheduler
+                            )
+                else:
+                    operation_runner = AgentOperation(resultjson)
+                    operation_runner.run()
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
         if params:
             resultjson = json.loads(params)
-            #AgentOperation(session, resultjson)
+            AgentOperation(resultjson)
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
 
