@@ -9,7 +9,7 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
-                    this.model = exports.Model;
+                    this.model = new exports.Model();
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
