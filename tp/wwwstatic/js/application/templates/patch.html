@@ -39,6 +39,14 @@
                         <option value="install">Install</option>
                         <option value="hide">Hide</option>
                     </select>
+                    <select type="button" class="btn btn-mini" name="throttle">
+                        <option>idle</option>
+                        <option value="below_normal">below normal</option>
+                        <option>normal</option>
+                        <option value="above_normal">above normal</option>
+                        <option>high</option>
+                        <option value="real_time">real time</option>
+                    </select>
                     <input type="submit" class="btn btn-mini btn-primary" value="Submit">
                 </div>
                 <input type="hidden" value="<% print(model.id); %>" name="patches">

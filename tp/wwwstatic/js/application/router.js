@@ -21,6 +21,7 @@ define(
                 
                 // MultiPatch Interface
                 'multi'         : 'showMulti',
+                'schedule'      : 'showSchedule',
 
                 // Admin panel
                 'admin'         : 'showAdmin',
@@ -109,6 +110,9 @@ define(
             },
             showAdmin: function () {
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
+            },
+            showSchedule: function () {
+                this.show({hash: '#schedule', title: 'Schedule Manager', view: 'modules/schedule'});
             },
             showAccountModal: function (tab) {
                 console.log(['account', tab]);

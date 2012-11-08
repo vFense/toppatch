@@ -155,11 +155,17 @@ class FormHandler(BaseHandler):
         except:
             time = None
             schedule = None
+        try:
+            throttle = self.get_argument('throttle')
+        except:
+            throttle = None
         if nodes:
             operation = self.get_argument('operation')
             if time:
                 node['schedule'] = schedule
                 node['time'] = time
+            if throttle:
+                node['cpu_throttle'] = throttle
             if operation == 'install' or operation == 'uninstall':
                 patches = self.request.arguments['patches']
                 for node_id in nodes:
