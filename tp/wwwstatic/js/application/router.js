@@ -25,7 +25,7 @@ define(
                 // Admin panel
                 'admin'         : 'showAdmin',
 
-                // Account Administration Panels
+                // Administration Panels
                 'testAdmin'       : 'showAdminModal',
                 'testAdmin/:tab'  : 'showAdminModal',
 
@@ -114,7 +114,12 @@ define(
                 }
 
                 // Render the modal here
-                $.noop();
+                require(
+                    ['modals/admin/main'],
+                    function (modal) {
+                        var dialogue = new modal.View({}).show();
+                    }
+                );
             },
             defaultAction: function (/* other */) {
                 this.show(
