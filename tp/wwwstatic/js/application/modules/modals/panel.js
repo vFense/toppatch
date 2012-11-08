@@ -2,7 +2,7 @@ define(
     ['jquery', 'underscore', 'backbone', 'text!templates/modals/panel.html'],
     function ($, _, Backbone, myTemplate) {
         "use strict";
-        var exports = {
+        return {
             View: Backbone.View.extend({
                 className: 'modal',
 
@@ -41,9 +41,7 @@ define(
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var tmpl = _.template(this.template),
-                        $el = this.$el,
-                        views = this.options.views,
-                        that = this;
+                        $el = this.$el;
 
                     this.$el.empty();
 
@@ -96,6 +94,5 @@ define(
                 }
             })
         };
-        return exports;
     }
 );
