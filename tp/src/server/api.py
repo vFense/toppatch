@@ -25,20 +25,11 @@ class ApiHandler(BaseHandler):
     @authenticated_request
     def get(self, vendor=None, product=None):
         self.session = self.application.session
-
+        self.session = validateSession(self.session)
         root_json = {}
-
         if vendor and product:
             root_json["vendor"] = vendor
             root_json["product"] = product
-
-
-#            p = self._get_product(vendor, product)
-#            v_list = []
-#            for v in p.versions:
-#                v_list.append(str(v.version) + ":" + str(v.update) + ":" + str(v.edition))
-
-            #root_json["versions"] = v_list
             root_json["versions"] = self._get_cves(vendor, product)
 
         elif vendor:
