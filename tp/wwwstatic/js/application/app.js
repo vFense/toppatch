@@ -28,7 +28,9 @@ define(
             title: $(document).attr('title'),
             vent: vent,
             ViewManager: ViewManager,
-            views: {},
+            views: {
+                modals: {}
+            },
             startWs: function () {
                 var ws = new WebSocket("wss://" + window.location.host + "/ws");
                 ws.onmessage = function(evt) {
