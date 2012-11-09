@@ -50,8 +50,8 @@ define(
                 this.lastRoute = '';
 
                 Backbone.history.bind('route', function () {
-                    this.lastRoute = this.currentRoute;
-                    this.currentRoute = Backbone.history.getFragment();
+                    that.lastRoute = that.currentRoute;
+                    that.currentRoute = Backbone.history.getFragment();
                 }, this);
             },
             home: function () {
