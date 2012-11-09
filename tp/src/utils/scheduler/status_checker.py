@@ -12,7 +12,6 @@ ENGINE = initEngine()
 sched = Scheduler()
 sched.start()
 logging.basicConfig()
-#@sched.interval_schedule(minutes=5)
 @sched.interval_schedule(minutes=2)
 def agent_status():
     session = createSession(ENGINE)
