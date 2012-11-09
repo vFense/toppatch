@@ -11,10 +11,7 @@ from utils.scheduler.addJob import JobScheduler
 from server.decorators import authenticated_request
 from jsonpickle import encode
 
-engine = initEngine()
-
 LISTENERS = []
-
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -140,7 +137,6 @@ class FormHandler(BaseHandler):
         resultjson = []
         node = {}
         result = []
-        session = createSession(engine)
         try:
             nodes = self.request.arguments['node']
             print nodes
@@ -230,7 +226,4 @@ class AdminHandler(BaseHandler):
                 result = {'error': True, 'description': 'invalid password'}
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result))
-
-
-
 
