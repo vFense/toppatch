@@ -1,5 +1,9 @@
-from sqlalchemy import create_engine
+import logging
+from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import sessionmaker
+from apscheduler.scheduler import Scheduler
+from models.node import NodeInfo
+
 
 def initEngine():
     db = create_engine(
@@ -12,3 +16,9 @@ def createSession(engine):
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
+
+def validateSession(session):
+    try:
+        session.query(NodeInfo).first()
+    except Exception as e:
+        session.rollback()
