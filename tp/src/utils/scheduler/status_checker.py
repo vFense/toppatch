@@ -12,10 +12,10 @@ ENGINE = initEngine()
 sched = Scheduler()
 sched.start()
 logging.basicConfig()
-#@sched.interval_schedule(minutes=5)
 @sched.interval_schedule(minutes=2)
 def agent_status():
     session = createSession(ENGINE)
+    session = validateSession(session)
     nodes = session.query(NodeInfo).all()
     for node in nodes:
         if node.last_agent_update:

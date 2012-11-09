@@ -94,25 +94,12 @@ class Application(tornado.web.Application):
         }
 
         self.db = initEngine()
-        self.db_connect = self.db.connect()
+        Session = createSession(self.db)
+        self.session = Session
         self.scheduler = Scheduler()
         self.scheduler.add_jobstore(SQLAlchemyJobStore(engine=self.db, tablename="tp_scheduler"), "toppatch")
         self.scheduler.start()
-        @self.scheduler.interval_schedule(minutes=1)
-        def sessionValidator():
-            try:
-                self.db_connect.execute("SELECT * FROM users")
-                self.db_connect.close()
-                self.db_connect = self.db.connect()
-                print "IM CONNECTED"
-            except exc.DBAPIError, e:
-                if e.connection_invalidated:
-                    print "BOOH CONNECTION INVALIDATED"
-                    self.db_connect = self.db.connect()
-                    self.db_connect.execute("SELECT * FROM users")
-                    print "Now IM CONNECTED"
-        Session = createSession(self.db)
-        self.session = Session
+        self.session = validateSession(self.session)
         self.account_manager = AccountManager(self.session)
         self.tokens = TokenManager(self.session)
 
