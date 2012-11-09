@@ -27,7 +27,6 @@ define(
 
                 // Administration Panels
                 'testAdmin'       : 'showAdminModal',
-                'testAdmin/:tab'  : 'showAdminModal',
 
                 // Default
                 '*other'        : 'defaultAction'
