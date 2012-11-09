@@ -26,9 +26,10 @@ define(
                     this.panel.render();
 
                     var that    = this,
-                        $body   = this.panel.$modalBody,
-                        $header = this.panel.$modalHeader,
-                        $footer = this.panel.$modalFooter;
+                        $body   = this.panel.$body,
+                        $header = this.panel.$header,
+                        $footer = this.panel.$footer;
+
 
                     $body.html('hello world');
 
