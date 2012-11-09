@@ -16,9 +16,29 @@ def createSession(engine):
     Session = sessionmaker(bind=engine)
     session = Session()
     return session
-
+"""
+def validateSession(session):
+    def returnSession(fn):
+        try:
+            fn()
+            print "BAM I WORKED"
+        except Exception as e:
+            session.rollback()
+            print "I had to rollback"
+            fn()
+    return returnSession
+"""
 def validateSession(session):
     try:
         session.query(NodeInfo).first()
     except Exception as e:
-        session.rollback()
+        if e.connection_invalidated:
+            session.rollback()
+    return session
+
+#ENGINE = initEngine()
+#session = createSession(ENGINE)
+
+#@validateSession(session)
+#def foo():
+#    print session.query(NodeInfo).first()
