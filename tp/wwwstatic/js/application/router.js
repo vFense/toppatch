@@ -119,11 +119,6 @@ define(
             showAdmin: function () {
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
             },
-                // If we are routed here from a bookmark,
-                // render the dashboard behind the modal.
-                if(this.lastRoute === '') {
-                    this.home();
-                }
             'modal/admin': function () {
 
                 // Render the modal here
@@ -131,6 +126,10 @@ define(
                     ['modals/admin/main'],
                     function (modal) {
                         var dialogue = new modal.View({}).show();
+                    // If we are routed here from a bookmark,
+                    // render the dashboard behind the modal.
+                    if(that.lastRoute === '') {
+                        that.home();
                     }
                 );
             },
