@@ -163,6 +163,8 @@ define(
                     }
                 );
             },
+
+            // Helper functions
             show: function (options) {
                 var that = this,
                     settings = $.extend({
@@ -182,7 +184,11 @@ define(
                 } else if (settings.view instanceof Backbone.View) {
                     that.viewManager.showView(settings.view);
                 }
-            }
+            },
+
+            // Getters/Setters
+            getCurrentFragment: function () {return this.currentFragment;},
+            getLastFragment: function () {return this.lastFragment;}
         });
         return {
             initialize: function () {
