@@ -54,6 +54,7 @@ define(
                         },
                         hidden: function () {
                             that.trigger('hidden');
+                            that.close();
                         }
                     });
 
