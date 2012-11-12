@@ -98,6 +98,8 @@ define(
                     if (view instanceof Backbone.View) {
                         view.$el = that.$body;
 
+                        view.render();
+
                         that.open();
                     }
                 },
