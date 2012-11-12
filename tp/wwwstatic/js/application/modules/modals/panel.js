@@ -14,6 +14,17 @@ define(
                 keyboard: true,
                 backdrop: true,
 
+                events: {
+                    'click .confirm': 'confirm',
+                    'click [name=confirm]': 'confirm',
+                    'click .close_modal': 'close',
+                    'click [name=close_modal]': 'close',
+                    click: function (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                },
+
                 initialize: function () {},
 
                 beforeRender: $.noop,
