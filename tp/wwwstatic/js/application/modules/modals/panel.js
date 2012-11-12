@@ -122,7 +122,7 @@ define(
                 },
 
                 beforeClose: function () {
-                    this.hide();
+                    if (this.isOpen()) { this.hide(); }
                     if(this.lastURL !== '') {
                         Backbone.history.navigate(this.lastURL, false);
                     } else {
