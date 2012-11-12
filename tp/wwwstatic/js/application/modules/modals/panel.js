@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'text!templates/modals/panel.html'],
-    function ($, _, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app'],
+    function ($, _, Backbone, app) {
         "use strict";
         return {
             View: Backbone.View.extend({
