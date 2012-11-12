@@ -79,6 +79,11 @@ define(
                 },
 
                 setContentView: function (view) {
+                    // Close the last content view if any.
+                    if (this._contentView) {
+                        this._contentView.close();
+                    }
+
                     if (view instanceof Backbone.View) {
                         this._contentView = view;
 
@@ -87,6 +92,7 @@ define(
                         this._contentView.render();
                         this._contentView.delegateEvents();
                     }
+                    
                     return this;
                 },
                 getContentView: function () {
