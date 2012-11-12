@@ -8,7 +8,7 @@ from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
 from utils.agentoperation import AgentOperation
 from utils.common import *
 
-def jobLister(session,vsched):
+def jobLister(session,sched):
     jobs = sched.get_jobs()
     job_listing = []
     for schedule in jobs:
@@ -17,6 +17,7 @@ def jobLister(session,vsched):
             jsonValid, message = verifyJsonIsValid(message)
             message['time'] = returnDatetime(message['time'])
             node_obj, node = nodeExists(session, node_id=message['node_id'])
+            node = session.query(NodeInfo).filter_by(node_id=message['node_id']).first()
             message['node_id'] = node.ip_address
             job_listing.append(message)
     return job_listing
