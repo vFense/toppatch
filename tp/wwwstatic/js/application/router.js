@@ -129,7 +129,7 @@ define(
                     var modal = app.views.modals.admin;
                     require(
                         ['modals/panel', 'modals/admin/main'],
-                        function (panel, view) {
+                        function (panel, content) {
                             if (!modal || !modal instanceof panel.View) {
                                 app.views.modals.admin = modal = new panel.View({});
                             }
