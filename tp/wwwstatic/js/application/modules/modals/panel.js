@@ -11,9 +11,7 @@ define(
                 keyboard: true,
                 backdrop: true,
 
-                initialize: function (options) {
-                    this.render();
-                },
+                initialize: function () {},
 
                 beforeRender: $.noop,
                 onRender: $.noop,
