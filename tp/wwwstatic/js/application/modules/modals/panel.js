@@ -7,16 +7,11 @@ define(
                 className: 'modal',
                 rendered: false,
                 opened: false,
+                animate: false,
+                keyboard: true,
+                backdrop: true,
 
                 initialize: function (options) {
-                    this.options = _.extend({
-                        okText: 'OK',
-                        cancelText: 'Cancel',
-                        allowCancel: true,
-                        escape: true,
-                        animate: false
-                    }, options);
-
                     this.bind('all', function (event) {
                         console.log(event);
                     }, this);
