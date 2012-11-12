@@ -106,10 +106,11 @@ define(
 
                         this.render();
 
-                    $el.modal({
-                        keyboard: this.options.allowCancel,
-                        backdrop: this.options.allowCancel ? true : 'static'
-                    });
+                        // Set bootstrap modal options
+                        this.$el.modal({
+                            keyboard: this.keyboard,
+                            backdrop: this.backdrop
+                        });
                     }
 
                     return this;
