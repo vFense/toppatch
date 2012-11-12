@@ -97,6 +97,7 @@ define(
                     if (!this.rendered) {
                         this.render();
                     }
+                    if (!this.isOpen()) {
 
                     var $el = this.$el;
 
@@ -104,6 +105,7 @@ define(
                         keyboard: this.options.allowCancel,
                         backdrop: this.options.allowCancel ? true : 'static'
                     });
+                    }
 
                     return this;
                 },
