@@ -59,10 +59,11 @@ define(
                         $el.addClass('fade');
                     }
 
+                    // Add references to different parts of the panel
                     _.extend(this, {
-                        '$modalHeader': $el.find('.modal-header'),
-                        '$modalBody'  : $el.find('.modal-body'),
-                        '$modalFooter': $el.find('.modal-footer')
+                        '$header': $el.find('.modal-header'),
+                        '$body'  : $el.find('.modal-body'),
+                        '$footer': $el.find('.modal-footer')
                     });
 
                     if (this.onRender !== $.noop) { this.onRender(); }
