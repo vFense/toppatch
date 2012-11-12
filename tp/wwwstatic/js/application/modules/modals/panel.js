@@ -38,7 +38,7 @@ define(
 
                     this.bind('all', function (event) {
                         console.log(event);
-                    }, this)
+                    }, this);
 
                     this.render();
                 },
