@@ -26,6 +26,8 @@ define(
 
                 initialize: function (options) {
                     this.template = myTemplate;
+                    this.rendered = false;
+                    this.opened = false;
                     this.options = _.extend({
                         okText: 'OK',
                         cancelText: 'Cancel',
