@@ -12,10 +12,6 @@ define(
                 backdrop: true,
 
                 initialize: function (options) {
-                    this.bind('all', function (event) {
-                        console.log(event);
-                    }, this);
-
                     this.render();
                 },
 
