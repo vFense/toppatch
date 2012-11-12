@@ -33,6 +33,8 @@ define(
                 '*other'        : 'defaultAction'
             },
             route: function (route, name, callback) {
+                var modals = app.views.modals;
+
                 // Override the route method
                 this.constructor.__super__.route.call(this, route, name, function () {
                     // before route event
