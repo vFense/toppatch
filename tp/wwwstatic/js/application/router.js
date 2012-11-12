@@ -126,7 +126,7 @@ define(
                 if (true) {
                     // If we are routed here from a bookmark,
                     // render the dashboard behind the modal.
-                    if(that.lastRoute === '') {
+                    if(that.lastFragment === '') {
                         that.home();
                     }
 
