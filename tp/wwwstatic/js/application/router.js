@@ -26,7 +26,8 @@ define(
                 'admin'         : 'showAdmin',
 
                 // Administration Panels
-                'testAdmin'       : 'showAdminModal',
+                'testAdmin'     : 'modal/admin',
+                'testAdmin/sub1': 'modal/admin/sub1',
 
                 // Default
                 '*other'        : 'defaultAction'
