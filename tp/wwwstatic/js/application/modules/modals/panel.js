@@ -111,8 +111,7 @@ define(
                         this.render();
                     }
 
-                    var that = this,
-                        $el = this.$el;
+                    var $el = this.$el;
 
                     $el.modal({
                         keyboard: this.options.allowCancel,
