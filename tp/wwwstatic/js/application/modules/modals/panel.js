@@ -73,6 +73,15 @@ define(
                     return this;
                 },
 
+                openWithView: function (view) {
+                    var that = this;
+                    if (view instanceof Backbone.View) {
+                        view.$el = that.$body;
+
+                        that.open();
+                    }
+                },
+
                 isOpen: function () {
                     return this.opened;
                 },
