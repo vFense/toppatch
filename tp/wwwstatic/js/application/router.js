@@ -40,6 +40,10 @@ define(
                     // before route event
                     this.trigger.apply(this, ["beforeRoute"].concat(route, name));
 
+                    // Track current and previous routes
+                    this.lastFragment = this.currentFragment;
+                    this.currentFragment = Backbone.history.getFragment();
+
                     // close any open modals
                     _.each(app.views.modals, function (modal, name) {
                         if (modal && _.isFunction(modal.isOpen)) {
@@ -61,14 +65,8 @@ define(
                 // All views sent to the ViewManager will render in the target element
                 this.viewTarget = '#dashboard-view';
                 this.viewManager = new app.ViewManager({'selector': this.viewTarget});
-                this.currentRoute = '';
-                this.lastRoute = '';
-
-                // Track current and previous routes
-                this.bind('beforeRoute', function () {
-                    that.lastRoute = that.currentRoute;
-                    that.currentRoute = Backbone.history.getFragment();
-                }, this);
+                this.currentFragment = '';
+                this.lastFragment = '';
             },
             home: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
