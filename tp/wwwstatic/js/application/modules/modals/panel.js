@@ -6,24 +6,6 @@ define(
             View: Backbone.View.extend({
                 className: 'modal',
 
-                events: {
-                    'click .close': function(event) {
-                        event.preventDefault();
-
-                        this.trigger('close');
-                    },
-                    'click .cancel': function(event) {
-                        event.preventDefault();
-
-                        this.trigger('cancel');
-                    },
-                    'click .ok': function(event) {
-                        event.preventDefault();
-
-                        this.trigger('ok');
-                    }
-                },
-
                 initialize: function (options) {
                     this.template = myTemplate;
                     this.rendered = false;
