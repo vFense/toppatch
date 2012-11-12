@@ -120,19 +120,34 @@ define(
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
             },
             'modal/admin': function () {
+                var that = this;
 
-                // Render the modal here
-                require(
-                    ['modals/admin/main'],
-                    function (modal) {
-                        var dialogue = new modal.View({}).show();
+                // Check for proper admin permissions
+                if (true) {
                     // If we are routed here from a bookmark,
                     // render the dashboard behind the modal.
                     if(that.lastRoute === '') {
                         that.home();
                     }
-                );
+
+                    var modal = app.views.modals.admin;
+                    require(
+                        ['modals/panel', 'modals/admin/main'],
+                        function (panel, view) {
+                            if (!modal || !modal instanceof panel.View) {
+                                app.views.modals.admin = modal = new panel.View({
+                                    okText: 'Done'
+                                });
+                            }
+
+                            modal.open();
+                        }
+                    );
+                } else {
+                    that.navigate("dashboard");
+                }
             },
+            'modal/admin/sub1': $.noop,
             defaultAction: function (/* other */) {
                 this.show(
                     {
