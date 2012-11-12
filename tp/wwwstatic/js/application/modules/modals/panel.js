@@ -8,6 +8,8 @@ define(
                 _lastURL: '',
                 _rendered: false,
                 _opened: false,
+
+                // Variables that affect bootstrap-modal functionality
                 animate: false,
                 keyboard: true,
                 backdrop: true,
