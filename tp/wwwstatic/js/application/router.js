@@ -26,6 +26,7 @@ define(
                 'admin'         : 'showAdmin',
 
                 // Administration Panels
+                // Warning, update modals/panel.js open method when changing 'testAdmin'
                 'testAdmin'     : 'modal/admin',
                 'testAdmin/sub1': 'modal/admin/sub1'
 
