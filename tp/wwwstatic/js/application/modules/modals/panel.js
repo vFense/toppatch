@@ -28,7 +28,9 @@ define(
 
                     $el.empty();
 
-                    $el.append('test');
+                    if (this._contentView) {
+                        $el.append(this._contentView.el);
+                    }
 
                     if (this.animate) {
                         $el.addClass('fade');
