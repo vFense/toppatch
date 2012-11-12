@@ -9,7 +9,6 @@ define(
                 opened: false,
 
                 initialize: function (options) {
-                    this.template = myTemplate;
                     this.options = _.extend({
                         okText: 'OK',
                         cancelText: 'Cancel',
@@ -31,12 +30,11 @@ define(
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var that = this,
-                        tmpl = _.template(this.template),
                         $el = this.$el;
 
                     $el.empty();
 
-                    $el.append(tmpl(this.options));
+                    $el.append('test');
 
                     if (this.options.animate) {
                         $el.addClass('fade');
