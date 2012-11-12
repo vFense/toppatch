@@ -27,10 +27,10 @@ define(
 
                 // Administration Panels
                 'testAdmin'     : 'modal/admin',
-                'testAdmin/sub1': 'modal/admin/sub1',
+                'testAdmin/sub1': 'modal/admin/sub1'
 
                 // Default
-                '*other'        : 'defaultAction'
+                // '*other'        : 'defaultAction'
             },
             route: function (route, name, callback) {
                 var modals = app.views.modals;
