@@ -29,7 +29,9 @@ define(
             vent: vent,
             ViewManager: ViewManager,
             views: {
-                modals: {}
+                modals: {
+                    admin: undefined
+                }
             },
             startWs: function () {
                 var ws = new WebSocket("wss://" + window.location.host + "/ws");
