@@ -98,6 +98,9 @@ define(
                     return this;
                 },
 
+                setContentView: $.noop,
+                getContentView: $.noop,
+
                 hide: function () {
                     this.$el.modal('hide');
                     return this;
