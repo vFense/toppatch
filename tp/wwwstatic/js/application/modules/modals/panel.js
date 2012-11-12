@@ -5,9 +5,9 @@ define(
         return {
             View: Backbone.View.extend({
                 className: 'modal',
-                lastURL: '',
-                rendered: false,
-                opened: false,
+                _lastURL: '',
+                _rendered: false,
+                _opened: false,
                 animate: false,
                 keyboard: true,
                 backdrop: true,
