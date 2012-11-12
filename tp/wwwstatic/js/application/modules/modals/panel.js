@@ -103,6 +103,7 @@ define(
 
                 hide: function () {
                     this.$el.modal('hide');
+                    this.opened = false;
                     return this;
                 },
 
