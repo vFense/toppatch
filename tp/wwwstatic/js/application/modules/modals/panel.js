@@ -52,9 +52,9 @@ define(
                         tmpl = _.template(this.template),
                         $el = this.$el;
 
-                    this.$el.empty();
+                    $el.empty();
 
-                    this.$el.append(tmpl(this.options));
+                    $el.append(tmpl(this.options));
 
                     if (this.options.animate) {
                         $el.addClass('fade');
