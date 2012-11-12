@@ -95,9 +95,6 @@ define(
 
                 // Show the modal in browser
                 open: function () {
-                    if (!this.rendered) {
-                        this.render();
-                    }
                     if (!this.isOpen()) {
                         // Save last fragment and go back to it on 'close'
                         var last = app.router.getLastFragment();
@@ -107,7 +104,7 @@ define(
                             this.lastURL = last;
                         }
 
-                    var $el = this.$el;
+                        this.render();
 
                     $el.modal({
                         keyboard: this.options.allowCancel,
