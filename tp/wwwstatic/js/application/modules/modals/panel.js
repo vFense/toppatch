@@ -67,6 +67,25 @@ define(
                         '$footer': $el.find('.modal-footer')
                     });
 
+                    // bind to all bootstrap events
+                    // set value of 'opened' variable
+                    $el.bind({
+                        show: function () {
+                            that.opened = true;
+                            that.trigger('show');
+                        },
+                        shown: function () {
+                            that.trigger('shown');
+                        },
+                        hide: function () {
+                            that.opened = false;
+                            that.trigger('hide');
+                        },
+                        hidden: function () {
+                            that.trigger('hidden');
+                        }
+                    });
+
                     if (this.onRender !== $.noop) { this.onRender(); }
 
                     this.rendered = true;
@@ -100,11 +119,6 @@ define(
                         backdrop: this.options.allowCancel ? true : 'static'
                     });
 
-                    $el.bind('hide', function () { that.trigger('hide'); });
-                    $el.bind('hidden', function () { that.trigger('hidden'); });
-
-                    this.opened = true;
-
                     return this;
                 },
 
@@ -113,7 +127,6 @@ define(
 
                 hide: function () {
                     this.$el.modal('hide');
-                    this.opened = false;
                     return this;
                 },
 
