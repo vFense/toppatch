@@ -42,7 +42,14 @@ define(
                     if (this._contentView) {
                         $el.append(this._contentView.el);
                     } else {
-                        $el.append('<div class="modal-body">\n<div class="row-fluid">\n<div class="span12">No Content...\n</div>\n</div>\n');
+                        $el.append(
+                            '<div class="modal-body">' +
+                            '\t<div class="row-fluid">' +
+                            '\t\t<div class="span10">No Content...</div>' +
+                            '\t\t<div class="btn span2 close_modal">Close</div>' +
+                            '\t</div>' +
+                            '</div>'
+                        );
                     }
 
                     if (this.animate) {
