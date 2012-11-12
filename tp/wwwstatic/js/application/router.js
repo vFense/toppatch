@@ -33,10 +33,14 @@ define(
                 '*other'        : 'defaultAction'
             },
             route: function (route, name, callback) {
-                // Override the route method to trigger generic before and after route events
+                // Override the route method
                 this.constructor.__super__.route.call(this, route, name, function () {
+                    // before route event
                     this.trigger.apply(this, ["beforeRoute"].concat(route, name));
+                    // run callback
                     callback.apply(this, arguments);
+
+                    // after route event
                     this.trigger.apply(this, ["afterRoute"].concat(route, name));
                 });
             },
