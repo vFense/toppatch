@@ -48,7 +48,8 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var tmpl = _.template(this.template),
+                    var that = this,
+                        tmpl = _.template(this.template),
                         $el = this.$el;
 
                     this.$el.empty();
