@@ -45,11 +45,10 @@ define(
                     this.currentFragment = Backbone.history.getFragment();
 
                     // close any open modals
-                    _.each(app.views.modals, function (modal, name) {
-                        if (modal && _.isFunction(modal.isOpen)) {
-                            modal.close();
-                        }
-                    });
+                    // Do not close admin panel if next route is within another admin panel
+                    if (this.currentFragment.indexOf('testAdmin') !== 0 && modals.admin.isOpen()) {
+                        modals.admin.close();
+                    }
 
                     // run callback
                     callback.apply(this, arguments);
