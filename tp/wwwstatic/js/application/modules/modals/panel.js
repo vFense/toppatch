@@ -73,7 +73,7 @@ define(
                     return this;
                 },
 
-                show: function () {
+                open: function () {
                     if (!this.rendered) {
                         this.render();
                     }
