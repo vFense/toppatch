@@ -105,12 +105,12 @@ define(
             showAdmin: function () {
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
             },
-            showAdminModal: function () {
                 // If we are routed here from a bookmark,
                 // render the dashboard behind the modal.
                 if(this.lastRoute === '') {
                     this.home();
                 }
+            'modal/admin': function () {
 
                 // Render the modal here
                 require(
