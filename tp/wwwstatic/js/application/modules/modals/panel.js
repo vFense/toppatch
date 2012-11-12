@@ -66,6 +66,12 @@ define(
                 },
 
                 openWithView: function (view) {
+                    this.setContentView(view);
+
+                    if (!this.isOpen()) {
+                        this.open();
+                    }
+                },
                     if (view instanceof Backbone.View) {
                         view.$el = that.$body;
 
