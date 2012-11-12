@@ -27,7 +27,7 @@ define(
 
                     $el.append('test');
 
-                    if (this.options.animate) {
+                    if (this.animate) {
                         $el.addClass('fade');
                     }
 
