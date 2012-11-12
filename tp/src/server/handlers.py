@@ -7,7 +7,7 @@ except ImportError: import json
 from models.node import NodeInfo
 from utils.db.client import *
 from utils.agentoperation import AgentOperation
-from utils.scheduler.addJob import JobScheduler
+from utils.scheduler.jobManager import JobScheduler
 from server.decorators import authenticated_request
 from jsonpickle import encode
 
