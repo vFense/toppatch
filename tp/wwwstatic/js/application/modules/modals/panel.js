@@ -92,6 +92,7 @@ define(
                     return this.opened;
                 },
 
+                // Show the modal in browser
                 open: function () {
                     if (!this.rendered) {
                         this.render();
