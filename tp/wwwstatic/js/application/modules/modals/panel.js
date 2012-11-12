@@ -15,6 +15,8 @@ define(
 
                 beforeRender: $.noop,
                 onRender: $.noop,
+
+                // Set up the modal DOM, but do not show it in browser
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
