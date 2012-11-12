@@ -134,7 +134,7 @@ define(
                                 app.views.modals.admin = modal = new panel.View({});
                             }
 
-                            modal.open();
+                            modal.openWithView(new content.View());
                         }
                     );
                 } else {
