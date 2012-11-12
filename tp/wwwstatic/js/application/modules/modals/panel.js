@@ -36,6 +36,10 @@ define(
                         animate: false
                     }, options);
 
+                    this.bind('all', function (event) {
+                        console.log(event);
+                    }, this)
+
                     this.render();
                 },
 
