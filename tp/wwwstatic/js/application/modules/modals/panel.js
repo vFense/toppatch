@@ -40,17 +40,17 @@ define(
                     });
 
                     // bind to all bootstrap events
-                    // set value of 'opened' variable
+                    // set value of '_opened' variable
                     $el.bind({
                         show: function () {
-                            that.opened = true;
+                            that._opened = true;
                             that.trigger('show');
                         },
                         shown: function () {
                             that.trigger('shown');
                         },
                         hide: function () {
-                            that.opened = false;
+                            that._opened = false;
                             that.trigger('hide');
                         },
                         hidden: function () {
@@ -61,7 +61,7 @@ define(
 
                     if (this.onRender !== $.noop) { this.onRender(); }
 
-                    this.rendered = true;
+                    this._rendered = true;
 
                     return this;
                 },
@@ -90,7 +90,7 @@ define(
                 },
 
                 isOpen: function () {
-                    return this.opened;
+                    return this._opened;
                 },
 
                 // Show the modal in browser
@@ -99,9 +99,9 @@ define(
                         // Save last fragment and go back to it on 'close'
                         var last = app.router.getLastFragment();
                         if (last === '' || /^testAdmin.*/.test(last)) {
-                            this.lastURL = "dashboard";
+                            this._lastURL = "dashboard";
                         } else {
-                            this.lastURL = last;
+                            this._lastURL = last;
                         }
 
                         this.render();
@@ -123,8 +123,8 @@ define(
 
                 beforeClose: function () {
                     if (this.isOpen()) { this.hide(); }
-                    if(this.lastURL !== '') {
-                        Backbone.history.navigate(this.lastURL, false);
+                    if(this._lastURL !== '') {
+                        Backbone.history.navigate(this._lastURL, false);
                     } else {
                         Backbone.history.navigate("dashboard", true);
                     }
