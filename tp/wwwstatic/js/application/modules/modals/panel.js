@@ -36,13 +36,6 @@ define(
                         $el.addClass('fade');
                     }
 
-                    // Add references to different parts of the panel
-                    _.extend(this, {
-                        '$header': $el.find('.modal-header'),
-                        '$body'  : $el.find('.modal-body'),
-                        '$footer': $el.find('.modal-footer')
-                    });
-
                     // bind to all bootstrap events
                     // set value of '_opened' variable
                     $el.bind({
