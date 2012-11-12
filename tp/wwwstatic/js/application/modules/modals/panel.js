@@ -72,13 +72,20 @@ define(
                         this.open();
                     }
                 },
+
+                setContentView: function (view) {
                     if (view instanceof Backbone.View) {
-                        view.$el = that.$body;
+                        this._contentView = view;
 
-                        view.render();
+                        this.render();
 
-                        that.open();
+                        this._contentView.render();
+                        this._contentView.delegateEvents();
                     }
+                    return this;
+                },
+                getContentView: function () {
+                    return this._contentView;
                 },
 
                 isOpen: function () {
