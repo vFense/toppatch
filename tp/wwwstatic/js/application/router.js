@@ -62,7 +62,8 @@ define(
                 this.currentRoute = '';
                 this.lastRoute = '';
 
-                Backbone.history.bind('route', function () {
+                // Track current and previous routes
+                this.bind('beforeRoute', function () {
                     that.lastRoute = that.currentRoute;
                     that.currentRoute = Backbone.history.getFragment();
                 }, this);
