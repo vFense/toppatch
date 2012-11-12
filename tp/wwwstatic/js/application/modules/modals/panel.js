@@ -85,7 +85,7 @@ define(
                         this._contentView.render();
                         this._contentView.delegateEvents();
                     }
-                    
+
                     return this;
                 },
                 getContentView: function () {
@@ -126,6 +126,7 @@ define(
 
                 beforeClose: function () {
                     if (this.isOpen()) { this.hide(); }
+                    if (this._contentView) { this._contentView.close(); }
                     if(this._lastURL !== '') {
                         Backbone.history.navigate(this._lastURL, false);
                     } else {
