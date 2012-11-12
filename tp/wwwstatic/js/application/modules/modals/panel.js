@@ -73,6 +73,10 @@ define(
                     return this;
                 },
 
+                isOpen: function () {
+                    return this.opened;
+                },
+
                 open: function () {
                     if (!this.rendered) {
                         this.render();
