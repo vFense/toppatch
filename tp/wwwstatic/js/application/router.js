@@ -126,12 +126,6 @@ define(
 
                 // Check for proper admin permissions
                 if (true) {
-                    // If we are routed here from a bookmark,
-                    // render the dashboard behind the modal.
-                    if(that.lastFragment === '') {
-                        that.home();
-                    }
-
                     var modal = app.views.modals.admin;
                     require(
                         ['modals/panel', 'modals/admin/main'],

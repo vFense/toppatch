@@ -111,9 +111,17 @@ define(
 
                 // Show the modal in browser
                 open: function () {
+                    var router = app.router,
+                        last;
                     if (!this.isOpen()) {
+                        // If we are routed here from a bookmark,
+                        // render the dashboard behind the modal.
+                        if (!router.viewManager.get('currentView')) {
+                            router.home();
+                        }
+
                         // Save last fragment and go back to it on 'close'
-                        var last = app.router.getLastFragment();
+                        var last = router.getLastFragment();
                         if (last === '' || /^testAdmin.*/.test(last)) {
                             this._lastURL = "dashboard";
                         } else {
