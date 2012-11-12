@@ -86,9 +86,8 @@ define(
                         backdrop: this.options.allowCancel ? true : 'static'
                     });
 
-                    this.on('cancel', function() {
-                        that.close();
-                    });
+                    $el.bind('hide', function () { that.trigger('hide'); });
+                    $el.bind('hidden', function () { that.trigger('hidden'); });
 
                     return this;
                 },
