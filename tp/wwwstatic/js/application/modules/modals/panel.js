@@ -157,6 +157,8 @@ define(
                     return this;
                 },
 
+                confirm: $.noop,
+
                 beforeClose: function () {
                     if (this.isOpen()) { this.hide(); }
                     if (this._contentView) { this._contentView.close(); }
