@@ -131,9 +131,7 @@ define(
                         ['modals/panel', 'modals/admin/main'],
                         function (panel, view) {
                             if (!modal || !modal instanceof panel.View) {
-                                app.views.modals.admin = modal = new panel.View({
-                                    okText: 'Done'
-                                });
+                                app.views.modals.admin = modal = new panel.View({});
                             }
 
                             modal.open();
