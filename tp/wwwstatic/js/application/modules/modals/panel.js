@@ -136,6 +136,11 @@ define(
                         }
 
                         this.render();
+                        this.delegateEvents();
+
+                        if (this._contentView) {
+                            this._contentView.delegateEvents();
+                        }
 
                         // Set bootstrap modal options
                         this.$el.modal({
