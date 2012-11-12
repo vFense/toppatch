@@ -35,6 +35,8 @@ define(
                         escape: true,
                         animate: false
                     }, options);
+
+                    this.render();
                 },
 
                 beforeRender: $.noop,
