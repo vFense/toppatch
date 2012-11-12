@@ -5,6 +5,7 @@ define(
         return {
             View: Backbone.View.extend({
                 className: 'modal',
+                lastURL: '',
                 rendered: false,
                 opened: false,
                 animate: false,
@@ -98,6 +99,13 @@ define(
                         this.render();
                     }
                     if (!this.isOpen()) {
+                        // Save last fragment and go back to it on 'close'
+                        var last = app.router.getLastFragment();
+                        if (last === '' || /^testAdmin.*/.test(last)) {
+                            this.lastURL = "dashboard";
+                        } else {
+                            this.lastURL = last;
+                        }
 
                     var $el = this.$el;
 
@@ -120,6 +128,11 @@ define(
 
                 beforeClose: function () {
                     this.hide();
+                    if(this.lastURL !== '') {
+                        Backbone.history.navigate(this.lastURL, false);
+                    } else {
+                        Backbone.history.navigate("dashboard", true);
+                    }
                 }
             })
         };
