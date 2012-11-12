@@ -89,6 +89,8 @@ define(
                     $el.bind('hide', function () { that.trigger('hide'); });
                     $el.bind('hidden', function () { that.trigger('hidden'); });
 
+                    this.opened = true;
+
                     return this;
                 },
 
