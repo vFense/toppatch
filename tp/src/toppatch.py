@@ -73,7 +73,7 @@ class Application(tornado.web.Application):
             (r"/api/severity.json/?", SeverityHandler),
             (r"/api/csrinfo.json/?", CsrHandler),
             (r"/api/scheduler/list.json/?", SchedulerListerHandler),
-            (r"/api/scheduler/add.json/?", SchedulerAddHandler),
+            (r"/api/scheduler/add/?", SchedulerAddHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
