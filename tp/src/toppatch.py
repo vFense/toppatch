@@ -72,6 +72,8 @@ class Application(tornado.web.Application):
             (r"/api/patches.json/?", PatchesHandler),
             (r"/api/severity.json/?", SeverityHandler),
             (r"/api/csrinfo.json/?", CsrHandler),
+            (r"/api/scheduler/list.json/?", SchedulerListerHandler),
+            (r"/api/scheduler/add/?", SchedulerAddHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
@@ -105,6 +107,7 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
+
 class HelloWorldProtocol(Protocol):
     def connectionMade(self):
         SendToSocket("message")
@@ -116,6 +119,7 @@ class ThreadClass(threading.Thread):
     def run(self):
         reactor.listenTCP(8080, HelloWorldFactory())
         reactor.run(installSignalHandlers=0)
+
 
 
 if __name__ == '__main__':

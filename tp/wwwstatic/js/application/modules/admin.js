@@ -19,7 +19,8 @@ define(
                 },
                 events: {
                     'submit form': 'submit',
-                    'click #clear': 'clear'
+                    'click #clear': 'clear',
+                    'click #add': 'add'
                 },
                 submit: function (evt) {
                     var form = $(evt.target);
@@ -86,6 +87,58 @@ define(
                     }
                     return false;
                 },
+                add: function (evt) {
+                    var string = '', values, from = 'placeholder', to = 'placeholder';
+                    values = $("#dowselect").val();
+                    from = $('select[name=hours]')[0].value + ':' + $('select[name=minutes]')[0].value + ' ' + $('select[name=ampm]')[0].value;
+                    to = $('select[name=hours]')[1].value + ':' + $('select[name=minutes]')[1].value + ' ' + $('select[name=ampm]')[1].value;
+                    for(var i = 0; i < values.length; i++) {
+                        if(values[i] == 'M') {
+                            string += '<strong>M</strong> ';
+                            i++;
+                        } else {
+                            string += 'M '
+                        }
+                        if(values[i] == 'Tu') {
+                            string += '<strong>Tu</strong> ';
+                            i++;
+                        } else {
+                            string += 'Tu '
+                        }
+                        if(values[i] == 'W') {
+                            string += '<strong>W</strong> ';
+                            i++;
+                        } else {
+                            string += 'W '
+                        }
+                        if(values[i] == 'Th') {
+                            string += '<strong>Th</strong> ';
+                            i++;
+                        } else {
+                            string += 'Th '
+                        }
+                        if(values[i] == 'F') {
+                            string += '<strong>F</strong> ';
+                            i++;
+                        } else {
+                            string += 'F '
+                        }
+                        if(values[i] == 'Sa') {
+                            string += '<strong>Sa</strong> ';
+                            i++;
+                        } else {
+                            string += 'Sa '
+                        }
+                        if(values[i] == 'Su') {
+                            string += '<strong>Su</strong>';
+                            i++;
+                        } else {
+                            string += 'Su '
+                        }
+                    };
+                    $('.items').append('<div class="item">From: ' + from + ' To: ' + to + ' On: '+ string + '</div>');
+                    $("#dow").html(string)
+                },
                 clear: function (evt) {
                     var userName = window.User.get('name');
                     localStorage.removeItem(userName);
@@ -99,7 +152,7 @@ define(
                     var template = _.template(this.template),
                         that = this,
                         data = this.collection.toJSON();
-                    this.$el.html('');
+                    this.$el.empty();
 
                     this.$el.append(template({data: data}));
 

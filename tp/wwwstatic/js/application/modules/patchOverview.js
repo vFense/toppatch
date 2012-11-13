@@ -42,7 +42,7 @@ define(
                 var tmpl = _.template(this.template),
                     that = this;
 
-                this.$el.html('');
+                this.$el.empty();
                 this.$el.append(tmpl({
                     models: this.collection.models,
                     type: this.collection.type

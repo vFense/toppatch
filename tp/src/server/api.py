@@ -15,6 +15,7 @@ from models.node import *
 from models.ssl import *
 from server.handlers import SendToSocket
 from utils.db.client import *
+from utils.scheduler.jobManager import jobLister
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -690,5 +691,95 @@ class UserHandler(BaseHandler):
     def get(self):
         resultjson = {"name" : self.current_user}
         self.session = self.application.session
+        self.session = validateSession(self.session)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
+
+class SchedulerListerHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        self.sched = self.application.scheduler
+        result = jobLister(self.session, self.sched)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class SchedulerAddHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        self.sched = self.application.scheduler
+        try:
+            msg = self.get_argument('operation')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the arguement needed is operation" % (e))
+        result = JobScheduler(self.msg, self.sched)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class OperationHandler(BaseHandler):
+
+    @authenticated_request
+    def post(self):
+        resultjson = []
+        node = {}
+        result = []
+        try:
+            nodes = self.request.arguments['node']
+            print nodes
+        except:
+            nodes = None
+        try:
+            params = self.get_argument('params')
+        except:
+            params = None
+        try:
+            time = self.get_argument('time')
+            schedule = self.get_argument('schedule')
+        except:
+            time = None
+            schedule = None
+        if nodes:
+            operation = self.get_argument('operation')
+            if time:
+                node['schedule'] = schedule
+                node['time'] = time
+            if operation == 'install' or operation == 'uninstall':
+                patches = self.request.arguments['patches']
+                for node_id in nodes:
+                    node['node_id'] = node_id
+                    node['operation'] = operation
+                    node['data'] = list(patches)
+                    resultjson.append(encode(node))
+                if time:
+                    JobScheduler(resultjson, 
+                            self.application.scheduler
+                            )
+                else:
+                    operation_runner = AgentOperation(resultjson)
+                    operation_runner.run()
+            elif operation == 'reboot':
+                for node_id in nodes:
+                    node['operation'] = operation
+                    node['node_id'] = node_id
+                    resultjson.append(encode(node))
+                if time:
+                    JobScheduler(resultjson, 
+                            self.application.scheduler
+                            )
+                else:
+                    operation_runner = AgentOperation(resultjson)
+                    operation_runner.run()
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(resultjson))
+        if params:
+            resultjson = json.loads(params)
+            AgentOperation(resultjson)
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(resultjson))
+
+

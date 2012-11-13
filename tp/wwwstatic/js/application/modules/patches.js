@@ -64,7 +64,7 @@ define(
                     payload.nextLink = '#patches?count=' + payload.getCount + '&offset=' + temp;
                     payload.nextLink += payload.type ? '&type=' + payload.type : '';
 
-                    this.$el.html('');
+                    this.$el.empty();
 
                     this.$el.append(template(payload));
 

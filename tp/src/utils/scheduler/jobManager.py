@@ -7,8 +7,9 @@ from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
 
 from utils.agentoperation import AgentOperation
 from utils.common import *
+from utils.db.query_table import nodeExists
 
-def jobLister(session,vsched):
+def jobLister(session,sched):
     jobs = sched.get_jobs()
     job_listing = []
     for schedule in jobs:
