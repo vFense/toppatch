@@ -15,6 +15,7 @@ from models.node import *
 from models.ssl import *
 from server.handlers import SendToSocket
 from utils.db.client import *
+from utils.scheduler.jobManager import jobLister
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -690,5 +691,17 @@ class UserHandler(BaseHandler):
     def get(self):
         resultjson = {"name" : self.current_user}
         self.session = self.application.session
+        self.session = validateSession(self.session)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
+
+class SchedulerHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        self.sched = self.application.scheduler
+        result = jobLister(self.session, self.sched)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
