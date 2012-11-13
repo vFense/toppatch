@@ -1,3 +1,9 @@
 #!/opt/TopPatch/python/current/bin/python
-from pylint.checkers import similar
-similar.run()
+# EASY-INSTALL-ENTRY-SCRIPT: 'pylint==0.26.0','console_scripts','symilar'
+__requires__ = 'pylint==0.26.0'
+import sys
+from pkg_resources import load_entry_point
+
+sys.exit(
+   load_entry_point('pylint==0.26.0', 'console_scripts', 'symilar')()
+)

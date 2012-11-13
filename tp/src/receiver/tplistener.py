@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 
 from utils.db.client import *
 from receiver.tphandler import HandOff
-
+from utils.scheduler.status_checker import *
 
 ALLOWED_CIPHER_LIST = 'TLSv1+HIGH:!SSLv2:RC4+MEDIUM:!aNULL:!eNULL:!3DES:@STRENGTH'
 ENGINE = initEngine()
@@ -25,6 +25,7 @@ class GetJson(Protocol):
     def connectionLost(self, reason):
         self.transport.loseConnection()
         data = self.total_data
+        print data
         self.total_data = ""
         HandOff(ENGINE, data, self.client_ip)
 
