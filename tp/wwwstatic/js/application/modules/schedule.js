@@ -4,7 +4,7 @@ define(
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
-                baseUrl: 'api/scheduler.json',
+                baseUrl: 'api/scheduler/list.json',
                 url: function () {
                     return this.baseUrl;
                 }
