@@ -177,8 +177,8 @@ class FormHandler(BaseHandler):
                             self.application.scheduler
                             )
                 else:
-                    #operation_runner = AgentOperation(resultjson)
-                    #operation_runner.run()
+                    operation_runner = AgentOperation(resultjson)
+                    operation_runner.run()
                     pass
             elif operation == 'reboot':
                 for node_id in nodes:
@@ -190,15 +190,15 @@ class FormHandler(BaseHandler):
                             self.application.scheduler
                             )
                 else:
-                    #operation_runner = AgentOperation(resultjson)
-                    #operation_runner.run()
+                    operation_runner = AgentOperation(resultjson)
+                    operation_runner.run()
                     pass
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
         if params:
             resultjson = json.loads(params)
-            #operation_runner = AgentOperation(resultjson)
-            #operation_runner.run()
+            operation_runner = AgentOperation(resultjson)
+            operation_runner.run()
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
 
