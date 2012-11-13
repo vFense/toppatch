@@ -107,6 +107,7 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
+
 class HelloWorldProtocol(Protocol):
     def connectionMade(self):
         SendToSocket("message")
@@ -118,6 +119,7 @@ class ThreadClass(threading.Thread):
     def run(self):
         reactor.listenTCP(8080, HelloWorldFactory())
         reactor.run(installSignalHandlers=0)
+
 
 
 if __name__ == '__main__':

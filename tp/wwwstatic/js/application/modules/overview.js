@@ -36,7 +36,7 @@ define(
 
                     var that = this;
 
-                    this.$el.html('');
+                    this.$el.empty();
                     _.each(this.collection.models, function (item) {
                         that.renderDetail(item);
                     }, this);

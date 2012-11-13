@@ -23,16 +23,17 @@ define(
                     var $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
                         time = '',
-                        item, span, label, checkbox, $scheduleForm, type, nodes, url, date;
+                        item, span, label, checkbox, $scheduleForm, type, nodes, url, date, label;
                     if(schedule.length != 0) {
                         $scheduleForm = schedule.data('popover').options.content;
-                        time = $scheduleForm.find('input').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
+                        time = $scheduleForm.find('input[name=datepicker]').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
                         date = new Date(time).getTime();
+                        label = $scheduleForm.find('input[name=label]').val() ? $scheduleForm.find('input[name=label]').val() : 'Default';
                     }
                     type = $form.attr('id');
                     nodes = $form.find('input[name="node"]:checked');
                     url = '/submitForm?' + $form.serialize();
-                    url += time ? '&time=' + date : '';
+                    url += time ? '&time=' + date + '&label=' + label: '';
                     console.log(url);
                     $.post(url,
                         function(json) {
@@ -74,7 +75,7 @@ define(
                     var template = _.template(this.template),
                         data = this.collection.toJSON()[0];
 
-                    this.$el.html('');
+                    this.$el.empty();
 
                     this.$el.append(template({model: data}));
 

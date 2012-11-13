@@ -1,0 +1,22 @@
+<% if(data.length != 0) { %>
+    <article>
+        <section class="list">
+            <div class="items">
+                <div class="legend">
+                    <span><strong>Node ID</strong> — Operation</span>
+                    <span class="patches pull-right">
+                        <span>Time</span> /
+                        <span>Type</span> /
+                        <span>Throttle</span>
+                    </span>
+                </div>
+            <% _.each(data, function (schedule) { %>
+                <div class="item clearfix">
+                    <span class="desc"><strong><%= schedule.node_id %></strong> — <%= schedule.operation %></span>
+                    <span class="pull-right"><%= schedule.time %> / <%= schedule.schedule %> / <%= schedule.cpu_throttle %></span>
+                </div>
+            <% }); %>
+            </div>
+        </section>
+    </article>
+<% } %>
