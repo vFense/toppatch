@@ -106,6 +106,7 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
+        """
 class HelloWorldProtocol(Protocol):
     def connectionMade(self):
         SendToSocket("message")
@@ -117,6 +118,7 @@ class ThreadClass(threading.Thread):
     def run(self):
         reactor.listenTCP(8080, HelloWorldFactory())
         reactor.run(installSignalHandlers=0)
+        """
 
 
 if __name__ == '__main__':
@@ -127,9 +129,9 @@ if __name__ == '__main__':
             "keyfile": os.path.join("/opt/TopPatch/tp/data/ssl/", "server.key"),
             })
     https_server.listen(options.port)
-    socketListener = ThreadClass()
-    socketListener.daemon = True
-    socketListener.start()
+    #socketListener = ThreadClass()
+    #socketListener.daemon = True
+    #socketListener.start()
     tornado.ioloop.IOLoop.instance().start()
 
 

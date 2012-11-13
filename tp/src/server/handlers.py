@@ -149,6 +149,7 @@ class FormHandler(BaseHandler):
         try:
             time = self.get_argument('time')
             schedule = self.get_argument('schedule')
+            label = self.get_argument('label')
         except:
             time = None
             schedule = None
@@ -161,6 +162,7 @@ class FormHandler(BaseHandler):
             if time:
                 node['schedule'] = schedule
                 node['time'] = time
+                node['label'] = label
             if throttle:
                 node['cpu_throttle'] = throttle
             if operation == 'install' or operation == 'uninstall':
@@ -171,29 +173,32 @@ class FormHandler(BaseHandler):
                     node['data'] = list(patches)
                     resultjson.append(encode(node))
                 if time:
-                    JobScheduler(resultjson, 
+                    JobScheduler(resultjson,
                             self.application.scheduler
                             )
                 else:
-                    operation_runner = AgentOperation(resultjson)
-                    operation_runner.run()
+                    #operation_runner = AgentOperation(resultjson)
+                    #operation_runner.run()
+                    pass
             elif operation == 'reboot':
                 for node_id in nodes:
                     node['operation'] = operation
                     node['node_id'] = node_id
                     resultjson.append(encode(node))
                 if time:
-                    JobScheduler(resultjson, 
+                    JobScheduler(resultjson,
                             self.application.scheduler
                             )
                 else:
-                    operation_runner = AgentOperation(resultjson)
-                    operation_runner.run()
+                    #operation_runner = AgentOperation(resultjson)
+                    #operation_runner.run()
+                    pass
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
         if params:
             resultjson = json.loads(params)
-            AgentOperation(resultjson)
+            #operation_runner = AgentOperation(resultjson)
+            #operation_runner.run()
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
 
