@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'text!templates/modals/admin/main.html'],
-    function ($, _, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'modules/tabNavigation', 'text!templates/modals/admin/main.html'],
+    function ($, _, Backbone, app, tabNav, myTemplate) {
         "use strict";
         return {
             View: Backbone.View.extend({
