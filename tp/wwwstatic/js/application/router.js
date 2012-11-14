@@ -28,7 +28,7 @@ define(
                 // Administration Panels
                 // Warning, update modals/panel.js open method when changing 'testAdmin'
                 'testAdmin'     : 'modal/admin',
-                'testAdmin/sub1': 'modal/admin/sub1'
+                'testAdmin/nodes': 'modal/admin/nodes'
 
                 // Default
                 // '*other'        : 'defaultAction'
