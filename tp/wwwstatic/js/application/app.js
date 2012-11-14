@@ -122,6 +122,25 @@ define(
             ]
         });
 
+        // Extend app with user information here
+        // We will want to merge code from application/main.js here.
+        _.extend(app, {
+            user: {
+                permission: 'admin', // Default to admin for now
+                hasPermission: function (need) {
+                    var permission = this.permission;
+                    switch (need) {
+                        case "admin":
+                            return permission === "admin";
+                        case "read_write":
+                            return permission === "admin" || permission === "read_write";
+                        default:
+                            return true;
+                    }
+                }
+            }
+        });
+
         return app;
     }
 );
