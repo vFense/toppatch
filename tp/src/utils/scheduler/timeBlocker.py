@@ -139,6 +139,7 @@ def timeBlockAdder(session, msg):
                 json_msg['end_date'], json_msg['start_time'],
                 json_msg['end_time'], json_msg['days']
                 )
-        return '{message : %s,label : %s}'\
-                    % (message, json_msg["label"])
+        print '{message : %s,label : %s, pass : %s}' % (message, json_msg["label"], block_added)
+        return '{message : %s,label : %s, pass : %s}'\
+                    % (message, json_msg["label"], block_added)
 
