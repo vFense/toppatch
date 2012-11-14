@@ -35,8 +35,10 @@ def addBlock(session, label, enabled, start_date, end_date,
                                 enabled)
         session.add(add_block)
         session.commit()
+        return(True, "Time Block Added", add_block)
     except Exception as e:
         print e
+        return(False, "Time Block Could Not Be Added", e)
 
 def addCsr(session, client_ip, location, csr_name,
             signed=False, signed_date=False):

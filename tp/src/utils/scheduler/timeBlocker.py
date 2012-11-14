@@ -13,22 +13,25 @@ from utils.db.query_table import nodeExists
 from models.scheduler import *
 
 def timeBlockLister(session):
-    blocks = session.query(TimeBlocker).all
+    blocks = session.query(TimeBlocker).all()
     windows = []
-    for block in blocks:
-        days_enabled, days_not_enabled = returnDays(block.days)
-        msg = {
-               'name' : block.name,
-               'enabled' : block.enabled,
-               'start_date' : block.start_date,
-               'end_date' : block.end_date,
-               'start_time' : block.start_time,
-               'duration' : block.duration,
-               'days_enabled' : block.days_enabled,
-               'days_disabled' : block.days_not_enabled
-               }
+    if blocks:
+        for block in blocks:
+            days_enabled, days_not_enabled = returnDays(block.days)
+            msg = {
+                   'name' : block.name,
+                   'enabled' : block.enabled,
+                   'start_date' : block.start_date,
+                   'end_date' : block.end_date,
+                   'start_time' : block.start_time,
+                   'duration' : block.duration,
+                   'days_enabled' : block.days_enabled,
+                   'days_disabled' : block.days_not_enabled
+                   }
         encoded_msg = encode(msg)
         windows.append(encoded_message)
+    else:
+        windows = '{"message" : "There arent any windows"}'
     return windows
 
 def timeBlockAdder(session, msg):
@@ -57,9 +60,13 @@ def timeBlockAdder(session, msg):
                 json_msg['enabled'] = False
         if not 'end_date' in json_msg:
             json_msg['end_date'] = None
-         block_added = addBlock(session, json_msg['label'],
+        block_added, message, block = addBlock(session, json_msg['label'],
                 json_msg['enabled'], json_msg['start_date'],
                 json_msg['end_date'], json_msg['start_time'],
                 json_msg['duration'], json_msg['days']
                 )
+
+        return encode({"message" : message,
+                      "label" : json_msg['label']
+                      })
 
