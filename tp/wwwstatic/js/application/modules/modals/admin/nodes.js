@@ -22,12 +22,14 @@ define(
                 },
                 submit: function (evt) {
                     var form = $(evt.target);
+                    var that = this;
                     console.log(form.serialize());
                     $.post("/adminForm?" + form.serialize(),
                         function(json) {
                             console.log(json);
                             if(!json.error) {
                                 form.find('input:checked').parents('.item').remove();
+                                that.$el.find('.alert').show();
                             } else {
                                 console.log('Error while processing the CSRs');
                             }

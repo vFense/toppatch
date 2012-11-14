@@ -22,6 +22,7 @@ define(
                     }
                     this.highlight(evt);
                     if ($('#dow').data('popover')) { $('#dow').popover('hide'); }
+                    this.$el.find('.alert').show();
                 },
                 highlight: function (evt) {
                     var values = $("#dowselect").val(), string = '';
