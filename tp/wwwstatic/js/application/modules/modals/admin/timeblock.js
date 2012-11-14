@@ -113,15 +113,25 @@ define(
                 },
                 beforeRender: $.noop,
                 onRender: function () {
-                    var that = this;
-                    this.$el.find('#dow').popover({
+                    var that = this,
+                        $el = this.$el,
+
+                        // jquery element cache
+                        $pop = $el.find('#dow'),
+                        $popper = $el.find('#dowselect'),
+                        $slide = $el.find("#slider-range"),
+                        $startDate = $el.find('input[name="startdate"]'),
+                        $endDate = $el.find('input[name="enddate"]');
+
+                    $pop.popover({
                         placement: 'right',
                         title: 'Days of Week',
                         html: true,
-                        content: this.$el.find('#dowselect'),
+                        content: $popper,
                         trigger: 'click'
                     });
-                    this.$el.find("#slider-range" ).slider({
+
+                    $slide.slider({
                         range: true,
                         min: 0,
                         max: 1439,
@@ -141,8 +151,9 @@ define(
                             that.end = endTime;
                         }
                     });
-                    this.$el.find('input[name=startdate]').datepicker();
-                    this.$el.find('input[name=enddate]').datepicker();
+
+                    $startDate.datepicker();
+                    $endDate.datepicker();
                 },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
