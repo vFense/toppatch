@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from models.base import Base
 from sqlalchemy import String, Column, Integer, Text, ForeignKey, schema, types, create_engine
-from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN, CHAR, DATETIME, TEXT, TINYINT, VARCHAR
+from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN, CHAR, DATETIME, TIME, TEXT, TINYINT, VARCHAR
 from sqlalchemy.orm import relationship, backref
 
 
@@ -20,24 +20,24 @@ class TimeBlocker(Base):
     enabled = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     start_date = Column(DATETIME, nullable=False)
     end_date = Column(DATETIME, nullable=True)
-    start_time = Column(INTEGER, nullable=False)
-    duration = Column(INTEGER, nullable=False)
+    start_time = Column(TIME, nullable=False)
+    end_time = Column(TIME, nullable=False)
     days = Column(VARCHAR(7), nullable=False)
     def __init__(self, name, start_date, end_date,
-                start_time, duration,days, 
+                start_time, end_time, days, 
                 enabled=True
                 ):
         self.name = name
-        self.enable = enable
+        self.enabled = enabled
         self.start_date = start_date
         self.end_date = end_date
         self.start_time = start_time
-        self.duration = duration
+        self.end_time = end_time
         self.days = days
     def __repr__(self):
         return "<TimeBlocker(%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.name, self.enable, self.start_date,
+                self.name, self.enabled, self.start_date,
                 self.end_date, self.start_time,
-                self.duration, self.days,
+                self.end_time, self.days,
                 )
