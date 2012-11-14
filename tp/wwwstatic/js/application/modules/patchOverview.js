@@ -42,12 +42,6 @@ define(
                 if (this.onRender !== $.noop) { this.onRender(); }
                 return this;
             },
-            renderModel: function (item) {
-
-            },
-            setFilter: function (e) {
-
-            },
             clearFilter: function () {
                 this.collection.filter = '';
             }
