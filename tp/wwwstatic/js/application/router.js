@@ -120,22 +120,7 @@ define(
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
             },
             'modal/admin': function () {
-                // Check for proper admin permissions
-                if (true) {
-                    var modal = app.views.modals.admin;
-                    require(
-                        ['modals/panel', 'modals/admin/main'],
-                        function (panel, content) {
-                            if (!modal || !modal instanceof panel.View) {
-                                app.views.modals.admin = modal = new panel.View({});
-                            }
-
-                            modal.openWithView(new content.View());
-                        }
-                    );
-                } else {
-                    that.navigate("dashboard");
-                }
+                this.openAdminModalWithView('modals/admin/general');
             },
             'modal/admin/sub1': $.noop,
             defaultAction: function (/* other */) {
@@ -172,6 +157,40 @@ define(
                     });
                 } else if (settings.view instanceof Backbone.View) {
                     that.viewManager.showView(settings.view);
+                }
+            },
+
+            openAdminModalWithView: function (view) {
+                var that = this;
+
+                // Check for proper admin permissions
+                if (app.user.hasPermission('admin')) {
+                    var modal = app.views.modals.admin,
+                        adminView;
+
+                    require(
+                        ['modals/panel', 'modals/admin/main', view],
+                        function (panel, admin, content) {
+                            if (!modal || !modal instanceof panel.View) {
+                                app.views.modals.admin = modal = new panel.View({});
+                            }
+
+                            // Get/Set content view of the modal panel
+                            adminView = modal.getContentView();
+                            if (!adminView || !adminView instanceof admin.View) {
+                                adminView = new admin.View();
+                                modal.setContentView(adminView);
+                            }
+
+                            // Set content view of the admin view
+                            adminView.setContentView(new content.View());
+
+                            // Open the modal panel
+                            modal.open();
+                        }
+                    );
+                } else {
+                    that.navigate("dashboard");
                 }
             },
 
