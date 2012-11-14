@@ -30,9 +30,6 @@ define(
                     }
                 },
 
-
-                beforeRender: $.noop,
-                onRender: $.noop,
                 initialize: function (options) {
                     _.union(
                         this._allowed,
@@ -62,6 +59,12 @@ define(
                             '</div>'
                         );
                     }
+                beforeRender: function () {
+                    this._rendered = false;
+                },
+                onRender: function () {
+                    var $el = this.$el,
+                        that = this;
 
                     if (this.animate) {
                         $el.addClass('fade');
@@ -90,6 +93,7 @@ define(
                     if (this.onRender !== $.noop) { this.onRender(); }
 
                     this._rendered = true;
+                },
 
                     return this;
                 },
