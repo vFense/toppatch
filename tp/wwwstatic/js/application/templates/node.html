@@ -6,6 +6,17 @@
             <dt>Node IP:</dt><dd><% print(model.ip || '<em>Not listed</em>'); %></dd>
             <dt>Hostname:</dt><dd><% print(model['host/name'] || '<em>Not listed</em>'); %></dd>
             <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
+            <dt>Tags applied:</dt>
+            <dd>
+                <% if (model.tags.length != 0) { %>
+                <% _.each(model.tags, function (tag) { %>
+                <% print(tag); %>
+                <% }); %>
+                <% } else { %>
+                <em>No tags applied</em>
+                <% } %>
+                &nbsp;<input type="submit" value="Add Tag" id="tag-button" class="btn btn-primary btn-mini" data-placement="right"/>
+            </dd>
             <dt>Agent Status:</dt>
             <dd>
                 <% if (model['agent/status']) { %>

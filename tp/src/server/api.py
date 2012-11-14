@@ -374,6 +374,7 @@ class NodesHandler(BaseHandler):
                               'agent/status': u[0].agent_status,
                               'reboot': u[0].reboot,
                               'id': u[1].node_id,
+                              'tags': [],
                               'os/name':u[1].os_string,
                               'patch/need': available,
                               'patch/done': installed,
