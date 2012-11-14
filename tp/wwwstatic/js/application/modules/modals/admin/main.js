@@ -42,6 +42,11 @@ define(
                     $footer = $el.find('.modal-footer .content');
 
                     $header.addClass('tabs').html(this.navigation.render().el);
+
+                    if (this._contentView) {
+                        $content.empty().html(this._contentView.el);
+                    }
+
                     if (this.onRender !== $.noop) { this.onRender(); }
 
 
