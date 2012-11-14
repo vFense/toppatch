@@ -6,6 +6,7 @@ from socket import gethostbyaddr
 from models.base import Base
 from models.windows import *
 from models.node import *
+from models.scheduler import *
 from utils.common import *
 from utils.db.query_table import *
 from utils.tcpasync import TcpConnect
@@ -25,6 +26,19 @@ def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
         return add_node
     except Exception as e:
         print e
+
+def addBlock(session, label, enabled, start_date, end_date,
+              start_time, duration, days):
+    try:
+        add_block = TimeBlocker(label, start_date, end_date,
+                                start_time, duration, days,
+                                enabled)
+        session.add(add_block)
+        session.commit()
+        return(True, "Time Block Added", add_block)
+    except Exception as e:
+        print e
+        return(False, "Time Block Could Not Be Added", e)
 
 def addCsr(session, client_ip, location, csr_name,
             signed=False, signed_date=False):
@@ -57,7 +71,6 @@ def addOperation(session, node_id, operation, result_id=None,
         session.add(add_oper)
         session.commit()
         return add_oper
-        #WebsocketHandler.sendMessage("ITS ME")
 
 
 def addSystemInfo(session, data, node_info):
@@ -118,11 +131,8 @@ def addWindowsUpdatePerNode(session, data):
                 try:
                     session.add(node_update)
                     session.commit()
-                    #WebsocketHandler.sendMessage("ITS ME")
                 except:
                     session.rollback()
-                #finally:
-                #    addWindowsUpdate(session, data)
 
 def addSoftwareAvailable(session, data):
     exists, operation = operationExists(session, data['operation_id'])
