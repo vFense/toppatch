@@ -375,6 +375,7 @@ class NodesHandler(BaseHandler):
                               'agent/status': u[0].agent_status,
                               'reboot': u[0].reboot,
                               'id': u[1].node_id,
+                              'tags': [],
                               'os/name':u[1].os_string,
                               'patch/need': available,
                               'patch/done': installed,
@@ -743,7 +744,7 @@ class TimeBlockerAddHandler(BaseHandler):
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
-            self.write("Wrong arguement passed %s, the arguement needed is operation" % (e))
+            self.write("Wrong arguement passed %s, the argument needed is operation" % (e))
         print type(self.msg), self.msg
         result = timeBlockAdder(self.msg, self.sched)
         self.set_header('Content-Type', 'application/json')
