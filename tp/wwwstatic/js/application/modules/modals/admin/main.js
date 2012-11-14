@@ -29,11 +29,17 @@ define(
 
                     var that = this,
                         template = _.template(this.template),
-                        $el = this.$el;
+                        $el = this.$el,
+                        $header,
+                        $content,
+                        $footer;
 
                     $el.empty();
                     $el.html(template({}));
 
+                    $header = $el.find('.modal-header');
+                    $content = $el.find('.modal-body');
+                    $footer = $el.find('.modal-footer .content');
                     if (this.onRender !== $.noop) { this.onRender(); }
 
 
