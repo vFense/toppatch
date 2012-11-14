@@ -19,6 +19,9 @@ define(
                     this.rendered = false;
                 },
                 onRender: function () {
+                    // update the active tab
+                    this.navigation.setActive(app.router.getCurrentFragment());
+
                     this.rendered = true;
                 },
                 render: function () {
