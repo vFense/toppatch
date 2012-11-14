@@ -29,8 +29,7 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var that = this,
-                        template = _.template(this.template),
+                    var template = _.template(this.template),
                         $el = this.$el,
                         $header,
                         $content,

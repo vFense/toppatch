@@ -19,8 +19,8 @@ define(
                 initialize: function () {},
                 render: function () {
                     var tmpl = _.template(this.template),
-                        format = this.model.get('format'),
-                        that = this;
+                        format = this.model.get('format');
+
                     this.$el
                         .html(tmpl(this.model.toJSON()));
 

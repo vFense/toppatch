@@ -77,8 +77,7 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var that = this,
-                        $el = this.$el;
+                    var $el = this.$el;
 
                     $el.empty();
 
