@@ -52,7 +52,26 @@ define(
                     return this;
                 },
 
+                setContentView: function (view) {
+                    // Close the last content view if any.
+                    if (this._contentView) {
+                        this._contentView.close();
+                    }
+
+                    if (view instanceof Backbone.View) {
+                        this._contentView.render();
+                        this._contentView.delegateEvents();
+                    } else {
+                        this._contentView = null;
+                    }
+
+                    this.render();
+
                     return this;
+                },
+
+                getContentView: function () {
+                    return this._contentView;
                 }
             })
         };
