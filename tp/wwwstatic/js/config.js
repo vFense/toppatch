@@ -11,6 +11,7 @@ require.config({
         'router'    : 'application/router',
         'd3charts'  : 'application/d3charts',
         'modules'   : 'application/modules',
+        'modals'    : 'application/modules/modals',
         'templates' : 'application/templates',
         'utilities' : 'application/utilities',
 

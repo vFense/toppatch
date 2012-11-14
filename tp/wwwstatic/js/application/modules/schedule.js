@@ -25,7 +25,7 @@ define(
                         data = this.collection.toJSON();
 
                     this.$el.empty();
-                    console.log(data);
+
                     this.$el.append(template({data: data}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }

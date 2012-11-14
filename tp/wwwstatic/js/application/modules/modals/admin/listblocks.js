@@ -1,36 +1,34 @@
+/**
+ * Created with PyCharm.
+ * User: parallels
+ * Date: 11/13/12
+ * Time: 5:56 PM
+ * To change this template use File | Settings | File Templates.
+ */
 define(
-    ['jquery', 'underscore', 'backbone', 'text!templates/aTemplate.html' ],
+    ['jquery', 'underscore', 'backbone', 'text!templates/modals/admin/listblocks.html'],
     function ($, _, Backbone, myTemplate) {
         "use strict";
-        var exports = {
-            Model: Backbone.Model.extend({
-                defaults: {}
-            }),
+        return {
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
-                    this.model = new exports.Model();
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var tmpl = _.template(this.template),
-                        that = this;
+                    var template = _.template(this.template);
 
                     this.$el.empty();
 
-                    this.$el.append(tmpl(this.model.toJSON()));
+                    this.$el.html(template());
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 }
-                /*
-                    New code here
-                 */
             })
         };
-        return exports;
     }
 );

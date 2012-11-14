@@ -26,7 +26,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     widget = "#widget" + matches[0];
                 //$(widget + "-title").html(title);
                 $(this).html("");
-                //alert($(this).attr("id"));
+
                 var vis = d3.select(this)
                     .append("svg:svg")              //create the SVG element inside the <body>
                     .data([data])                   //associate our data with the document
@@ -103,7 +103,7 @@ define(['jquery', 'd3'], function ($, d3) {
                                         }
                                     }
                                 } else {
-                                    osname = d.data.label;
+                                    osname = d.data.label + ' - ' + Math.floor((d.endAngle - d.startAngle) / (2 * Math.PI)* 100) + '%';
                                 }
                                 return osname;
                             });
@@ -130,7 +130,7 @@ define(['jquery', 'd3'], function ($, d3) {
                                         }
                                     }
                                 } else {
-                                    osname = d.data.label;
+                                    osname = d.data.label + ' - ' + Math.floor((d.endAngle - d.startAngle) / (2 * Math.PI)* 100) + '%';
                                 }
                                 return osname;
                             });
@@ -190,7 +190,7 @@ define(['jquery', 'd3'], function ($, d3) {
                         .on("click", function () { disappear('previous', 'None') });
                 }
                 arcs.append("svg:title")
-                    .text(function (d) { return d.data.label + ": " + d.data.value; });
+                    .text(function (d) { return d.data.label + ": " + d.data.value + ' patches'; });
                 arcs.append("svg:path")
                     .attr("fill", function (d, i) { return color(i); }) //set the color for each slice to be chosen from the color function defined above
                     .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
@@ -210,7 +210,7 @@ define(['jquery', 'd3'], function ($, d3) {
                                 }
                             }
                         } else {
-                            osname = d.data.label;
+                            osname = d.data.label + ' - ' + Math.floor((d.endAngle - d.startAngle) / (2 * Math.PI)* 100) + '%';
                         }
                         return osname;
                     });
