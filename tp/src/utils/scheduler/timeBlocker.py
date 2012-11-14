@@ -114,15 +114,16 @@ def timeBlockAdder(session, msg):
         "days" : "0111110"
         }
     """
+    #print type(msg), msg
     valid, json_msg = verifyJsonIsValid(msg)
     if valid:
         if not 'enabled' in json_msg:
             json_msg['enabled'] = True
-        else:
-            if re.search(r'true', json_msg['enabled'], re.IGNORECASE):
-                json_msg['enabled'] = True
-            elif re.search(r'false', json_msg['enabled'], re.IGNORECASE):
-                json_msg['enabled'] = False
+        #else:
+        #    if re.search(r'true', json_msg['enabled'], re.IGNORECASE):
+        #        json_msg['enabled'] = True
+        #    elif re.search(r'false', json_msg['enabled'], re.IGNORECASE):
+        #        json_msg['enabled'] = False
         if not 'end_date' in json_msg:
             json_msg['end_date'] = None
         else:
@@ -138,7 +139,6 @@ def timeBlockAdder(session, msg):
                 json_msg['end_date'], json_msg['start_time'],
                 json_msg['end_time'], json_msg['days']
                 )
-
         return '{message : %s,label : %s}'\
                     % (message, json_msg["label"])
 
