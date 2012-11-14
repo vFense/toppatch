@@ -56,8 +56,6 @@ define(
                 setContentView: function (view) {
                     // Close the last content view if any.
                     if (this._contentView) {
-                        var popover = this._contentView.$el.find('#dow');
-                        if (popover.data('popover')) { popover.popover('destroy'); }
                         this._contentView.close();
                     }
 
