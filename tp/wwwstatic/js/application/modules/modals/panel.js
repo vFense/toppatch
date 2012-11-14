@@ -120,8 +120,7 @@ define(
 
                 // Show the modal in browser
                 open: function () {
-                    var router = app.router,
-                        last;
+                    var router = app.router;
                     if (!this.isOpen()) {
                         // If we are routed here from a bookmark,
                         // render the dashboard behind the modal.
