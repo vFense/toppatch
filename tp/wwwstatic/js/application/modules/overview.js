@@ -13,17 +13,6 @@ define(
                     this.collection =  new exports.Collection(
                         app.data.overviewData
                     );
-                    /*
-                    this.collection =  new exports.Collection([
-                        {key: 'Available Patches'},
-                        {key: 'Scheduled Patches'},
-                        {key: 'Completed Patches'},
-                        {key: 'Failed Patches'}
-                    ]);
-                    this.collection.fetch({
-                        success: function () { that.render(); }
-                    });
-                    */
                     that.render();
                 },
                 beforeRender: $.noop,
