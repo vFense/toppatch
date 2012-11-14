@@ -67,6 +67,7 @@ def timeBlockLister(session):
                    }
             encoded_msg = encode(msg)
             windows.append(encoded_msg)
+        windows = encode(re.sub(r'\'|\"', '', str(windows)))
     else:
         windows = '{"message" : "There arent any windows"}'
     return windows
