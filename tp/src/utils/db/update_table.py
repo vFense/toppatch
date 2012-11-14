@@ -32,7 +32,7 @@ def addBlock(session, label, enabled, start_date, end_date,
     try:
         add_block = TimeBlocker(label, start_date, end_date,
                                 start_time, duration, days,
-                                enabled))
+                                enabled)
         session.add(add_block)
         session.commit()
     except Exception as e:
