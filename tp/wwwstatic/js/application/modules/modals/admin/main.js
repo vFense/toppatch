@@ -7,6 +7,12 @@ define(
                 className: 'admin-main-view',
                 initialize: function () {
                     this.template = myTemplate;
+                    this.navigation = new tabNav.View({
+                        tabs: [
+                            {text: 'General', href: 'testAdmin'},
+                            {text: 'Nodes', href: 'testAdmin/nodes'}
+                        ]
+                    });
                 },
 
                 beforeRender: $.noop,
