@@ -119,6 +119,9 @@ define(
             showMulti: function () {
                 this.show({hash: '#multi', title: 'Patch Operations', view: 'modules/multi'});
             },
+            showAdmin: function () {
+                this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
+            },
             'modal/admin': function () {
                 this.openAdminModalWithView('modals/admin/general');
             },

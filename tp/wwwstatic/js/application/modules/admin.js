@@ -6,8 +6,6 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
-                    this.collection = new exports.Collection();
-                    this.collection.fetch();
                 },
                 events: {
                     'submit form' :  'submit',
