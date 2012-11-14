@@ -16,6 +16,7 @@ from models.ssl import *
 from server.handlers import SendToSocket
 from utils.db.client import *
 from utils.scheduler.jobManager import jobLister
+from utils.scheduler.timeBlocker import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -707,20 +708,47 @@ class SchedulerListerHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class SchedulerAddHandler(BaseHandler):
+class TimeBlockerListerHandler(BaseHandler):
 
     @authenticated_request
     def get(self):
         self.session = self.application.session
         self.session = validateSession(self.session)
         self.sched = self.application.scheduler
+        result = timeBlockLister(self.session)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class SchedulerAddHandler(BaseHandler):
+
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        self.sched = self.application.scheduler
         try:
-            msg = self.get_argument('operation')
+            self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the arguement needed is operation" % (e))
         result = JobScheduler(self.msg, self.sched)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+class TimeBlockerAddHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        self.sched = self.application.scheduler
+        try:
+            self.msg = self.get_argument('operation')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the arguement needed is operation" % (e))
+        print type(self.msg), self.msg
+        result = timeBlockAdder(self.msg, self.sched)
+        self.set_header('Content-Type', 'application/json')
+        self.write(result, indent=4)
+
 
 class OperationHandler(BaseHandler):
 
