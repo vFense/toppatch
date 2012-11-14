@@ -120,8 +120,6 @@ define(
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
             },
             'modal/admin': function () {
-                var that = this;
-
                 // Check for proper admin permissions
                 if (true) {
                     var modal = app.views.modals.admin;
