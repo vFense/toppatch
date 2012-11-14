@@ -204,14 +204,12 @@ define(
                             adminView = modal.getContentView();
                             if (!adminView || !adminView instanceof admin.View) {
                                 adminView = new admin.View();
-                                modal.setContentView(adminView);
                             }
+
+                            modal.openWithView(adminView);
 
                             // Set content view of the admin view
                             adminView.setContentView(new content.View());
-
-                            // Open the modal panel
-                            modal.open();
                         }
                     );
                 } else {
