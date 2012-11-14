@@ -122,7 +122,9 @@ define(
             'modal/admin': function () {
                 this.openAdminModalWithView('modals/admin/general');
             },
-            'modal/admin/sub1': $.noop,
+            'modal/admin/nodes': function () {
+                this.openAdminModalWithView('modals/admin/nodes');
+            },
             /*
             defaultAction: function (other) {
                 this.show(
