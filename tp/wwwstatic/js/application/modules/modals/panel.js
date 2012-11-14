@@ -36,29 +36,9 @@ define(
                         ['animate', 'keyboard', 'backdrop'] // Bootstrap-Modal options
                     );
 
-                // Set up the modal DOM, but do not show it in browser
-                render: function () {
-                    if (this.beforeRender !== $.noop) { this.beforeRender(); }
-
-                    var that = this,
-                        $el = this.$el;
-
-                    $el.empty();
                     _.extend(this, _.pick(options, this._allowed));
                 },
 
-                    if (this._contentView) {
-                        $el.append(this._contentView.el);
-                    } else {
-                        $el.append(
-                            '<div class="modal-body">' +
-                            '\t<div class="row-fluid">' +
-                            '\t\t<div class="span10">No Content...</div>' +
-                            '\t\t<div class="btn span2 close_modal">Close</div>' +
-                            '\t</div>' +
-                            '</div>'
-                        );
-                    }
                 beforeRender: function () {
                     this._rendered = false;
                 },
@@ -90,10 +70,32 @@ define(
                         }
                     });
 
-                    if (this.onRender !== $.noop) { this.onRender(); }
-
                     this._rendered = true;
                 },
+
+                // Set up the modal DOM, but do not show it in browser
+                render: function () {
+                    if (this.beforeRender !== $.noop) { this.beforeRender(); }
+
+                    var that = this,
+                        $el = this.$el;
+
+                    $el.empty();
+
+                    if (this._contentView) {
+                        $el.append(this._contentView.el);
+                    } else {
+                        $el.append(
+                            '<div class="modal-body">' +
+                            '\t<div class="row-fluid">' +
+                            '\t\t<div class="span10">No Content...</div>' +
+                            '\t\t<div class="btn span2 close_modal">Close</div>' +
+                            '\t</div>' +
+                            '</div>'
+                        );
+                    }
+
+                    if (this.onRender !== $.noop) { this.onRender(); }
 
                     return this;
                 },
@@ -123,6 +125,7 @@ define(
 
                     return this;
                 },
+
                 getContentView: function () {
                     return this._contentView;
                 },
