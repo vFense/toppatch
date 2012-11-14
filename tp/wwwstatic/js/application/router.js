@@ -182,12 +182,13 @@ define(
             },
 
             openAdminModalWithView: function (view) {
-                var that = this;
+                var that = this,
+                    modal,
+                    adminView;
 
                 // Check for proper admin permissions
                 if (app.user.hasPermission('admin')) {
-                    var modal = app.views.modals.admin,
-                        adminView;
+                    modal = app.views.modals.admin;
 
                     require(
                         ['modals/panel', 'modals/admin/main', view],

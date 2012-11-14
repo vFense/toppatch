@@ -21,8 +21,8 @@ define(
                     'submit form': 'submit'
                 },
                 submit: function (evt) {
-                    var form = $(evt.target);
-                    var that = this;
+                    var form = $(evt.target),
+                        that = this;
                     console.log(form.serialize());
                     $.post("/adminForm?" + form.serialize(),
                         function(json) {
