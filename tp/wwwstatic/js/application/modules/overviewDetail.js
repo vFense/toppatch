@@ -2,7 +2,7 @@ define(
     ['jquery', 'underscore', 'backbone', 'text!templates/overviewDetail.html'],
     function ($, _, Backbone, myTemplate) {
         "use strict";
-        var exports = {
+        return {
             Model: Backbone.Model.extend({
                 defaults: {
                     key: 'n/a',
@@ -68,6 +68,5 @@ define(
                 }
             })
         };
-        return exports;
     }
 );

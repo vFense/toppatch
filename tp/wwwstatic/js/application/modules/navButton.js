@@ -2,7 +2,7 @@ define(
     ['jquery', 'underscore', 'backbone', 'text!templates/navButton.html'],
     function ($, _, Backbone, buttonTemplate) {
         "use strict";
-        var navButton = {
+        return {
             Model: Backbone.Model.extend({
                 defaults: {
                     active: false
@@ -25,6 +25,5 @@ define(
                 }
             })
         };
-        return navButton;
     }
 );

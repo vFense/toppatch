@@ -21,7 +21,7 @@ define(
         // Object to manage transitions between views
         // Inspired by: Derick Bailey
         // See: http://bit.ly/odAfKo
-        var ViewManager = function (options) {
+        return function (options) {
             var that = this,
                 allowed = ['selector'],
                 extender,
@@ -55,7 +55,5 @@ define(
                 }
             }());
         };
-
-        return ViewManager;
     }
 );
