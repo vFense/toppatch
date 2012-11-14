@@ -15,13 +15,15 @@ define(
                 backdrop: true,
 
                 events: {
-                    'click .confirm': 'confirm',
-                    'click [name=confirm]': 'confirm',
-                    'click .close_modal': 'close',
-                    'click [name=close_modal]': 'close',
-                    click: function (event) {
+                    'click .confirm': function (event) {
                         event.preventDefault();
                         event.stopPropagation();
+                        this.confirm();
+                    },
+                    'click .close_modal': function (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.close();
                     }
                 },
 
