@@ -177,8 +177,6 @@ define(
                 confirm: $.noop,
 
                 beforeClose: function () {
-                    var popover = this._contentView.$el.find('#dow');
-                    if (popover.data('popover')) { popover.popover('destroy'); }
                     if (this.isOpen()) { this.hide(); }
                     if (this._contentView) { this._contentView.close(); }
                     if (this._lastURL !== '') {

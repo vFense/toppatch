@@ -95,6 +95,13 @@ define(
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
+                },
+
+                beforeClose: function () {
+                    var $popover = this.$el.find('#dow');
+                    if ($popover.data('popover')) {
+                        $popover.popover('destroy');
+                    }
                 }
             })
         };
