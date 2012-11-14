@@ -20,6 +20,7 @@ from utils.scheduler.timeBlocker import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
+from jsonpickle import encode
 
 class ApiHandler(BaseHandler):
     """ Trying to figure out this whole RESTful api thing with json."""
@@ -745,10 +746,9 @@ class TimeBlockerAddHandler(BaseHandler):
             self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is operation" % (e))
-        print type(self.msg), self.msg
-        result = timeBlockAdder(self.msg, self.sched)
+        result = timeBlockAdder(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
-        self.write(result, indent=4)
+        self.write(json.dumps(result, indent=4))
 
 
 class OperationHandler(BaseHandler):
