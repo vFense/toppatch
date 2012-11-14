@@ -76,6 +76,15 @@ define(
 
                 getContentView: function () {
                     return this._contentView;
+                },
+
+                beforeClose: function () {
+                    if (this.navigation) {
+                        this.navigation.close();
+                    }
+                    if (this._contentView) {
+                        this._contentView.close();
+                    }
                 }
             })
         };
