@@ -40,6 +40,8 @@ define(
                     $header = $el.find('.modal-header');
                     $content = $el.find('.modal-body');
                     $footer = $el.find('.modal-footer .content');
+
+                    $header.addClass('tabs').html(this.navigation.render().el);
                     if (this.onRender !== $.noop) { this.onRender(); }
 
 
