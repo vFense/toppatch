@@ -61,8 +61,6 @@ define(
                 });
             },
             initialize: function () {
-                var that = this;
-
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
                 this.viewTarget = '#dashboard-view';
