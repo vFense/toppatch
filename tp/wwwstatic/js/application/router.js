@@ -123,7 +123,8 @@ define(
                 this.openAdminModalWithView('modals/admin/general');
             },
             'modal/admin/sub1': $.noop,
-            defaultAction: function (/* other */) {
+            /*
+            defaultAction: function (other) {
                 this.show(
                     {
                         hash: '#404',
@@ -137,6 +138,7 @@ define(
                     }
                 );
             },
+            */
 
             // Helper functions
             show: function (options) {
