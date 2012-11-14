@@ -37,7 +37,7 @@ def timeBlockAdder(session, msg):
        So if you have a schedule that is Mon through Fri, it will look
        like this... "0111110" Week begins with Sunday.
 
-        {"name" : "9am to 5pm, Mon to Fri",
+        {"label" : "9am to 5pm, Mon to Fri",
         "enabled" : "True", (DEFAULT IS True)
         "start_date" : "11/14/2012",
         "end_date" : "11/14/2013", (OPTIONAL)
@@ -57,7 +57,7 @@ def timeBlockAdder(session, msg):
                 json_msg['enabled'] = False
         if not 'end_date' in json_msg:
             json_msg['end_date'] = None
-         block_added = addBlock(session, json_msg['name'],
+         block_added = addBlock(session, json_msg['label'],
                 json_msg['enabled'], json_msg['start_date'],
                 json_msg['end_date'], json_msg['start_time'],
                 json_msg['duration'], json_msg['days']

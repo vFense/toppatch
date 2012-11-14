@@ -27,9 +27,12 @@ def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
     except Exception as e:
         print e
 
-def addBlock(session **args):
+def addBlock(session, label, enabled, start_date, end_date,
+              start_time, duration, days):
     try:
-        add_block = TimeBlocker(args)
+        add_block = TimeBlocker(label, start_date, end_date,
+                                start_time, duration, days,
+                                enabled))
         session.add(add_block)
         session.commit()
     except Exception as e:
