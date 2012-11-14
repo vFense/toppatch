@@ -462,6 +462,7 @@ class PatchesHandler(BaseHandler):
                     },
                     "id": u.toppatch_id,
                     "severity" : u.severity,
+                    "size" : u.file_size,
                     "description" : u.description,
                     "date" : str(u.date_pub),
                     "available": {'count' :countAvailable, 'nodes': nodeAvailable},
