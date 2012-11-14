@@ -27,7 +27,7 @@
         <span class="hide" id="clear-ok" style="color: #468847;">Cleared&nbsp;<i style="color: green;" class="icon-ok"></i></span>
     </div>
 </div>
-
+<article>
 <form class="span5 pull-right left" id="csr-form">
     <table class="span5">
         <tr>
@@ -80,3 +80,90 @@
     </table>
     <br>
 </form>
+</article>
+<article class="pull-left">
+    <header><strong>Time Blocker</strong></header>
+    <div>
+        <label class="control-label">From:</label>
+        <div class="controls">
+            <select type="button" name="hours" id="hours" class="span2 btn btn-mini">
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+            </select>
+            <select type="button" name="minutes" class="span2 btn btn-mini">
+                <option>00</option>
+                <option>15</option>
+                <option>30</option>
+                <option>45</option>
+            </select>
+            <select name="ampm" class="span2 btn btn-mini">
+                <option>AM</option>
+                <option>PM</option>
+            </select>
+        </div>
+    </div>
+    <div>
+        <label class="control-label">To:</label>
+        <div class="controls">
+            <select name="hours" class="span2 btn btn-mini">
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+            </select>
+            <select name="minutes" class="span2 btn btn-mini">
+                <option>00</option>
+                <option>15</option>
+                <option>30</option>
+                <option>45</option>
+            </select>
+            <select name="ampm" class="span2 btn btn-mini">
+                <option>AM</option>
+                <option>PM</option>
+            </select>
+        </div>
+    </div>
+    <div>
+        <label class="control-label">Repeat:</label>
+        <div class="controls">
+            <button type="button" class="btn btn-mini" id="dow">M Tu W Th F Sa Su</button>
+        </div>
+    </div><br>
+    <button type="button" class="btn btn-primary btn-mini" id="add">Add</button>
+    <br><br>
+    <header><strong>Time Blocker List</strong></header>
+    <section class="list">
+        <div class="items">
+
+        </div>
+    </section>
+</article>
+<div class="hide" id="hidden">
+    <select id="dowselect" multiple>
+        <option value="M">Monday</option>
+        <option value="Tu">Tuesday</option>
+        <option value="W">Wednesday</option>
+        <option value="Th">Thursday</option>
+        <option value="F">Friday</option>
+        <option value="Sa">Saturday</option>
+        <option value="Su">Sunday</option>
+    </select>
+</div>

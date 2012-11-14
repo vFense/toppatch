@@ -21,6 +21,7 @@ define(
 
                 // MultiPatch Interface
                 'multi'         : 'showMulti',
+                'schedule'      : 'showSchedule',
 
                 // Admin panel
                 'admin'         : 'showAdmin',
@@ -116,17 +117,17 @@ define(
             showMulti: function () {
                 this.show({hash: '#multi', title: 'Patch Operations', view: 'modules/multi'});
             },
-            showAdmin: function () {
-                this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
-            },
             'modal/admin': function () {
                 this.openAdminModalWithView('modals/admin/general');
             },
             'modal/admin/nodes': function () {
                 this.openAdminModalWithView('modals/admin/nodes');
             },
+            showSchedule: function () {
+                this.show({hash: '#schedule', title: 'Schedule Manager', view: 'modules/schedule'});
+            },
             /*
-            defaultAction: function (other) {
+            defaultAction: function () {
                 this.show(
                     {
                         hash: '#404',

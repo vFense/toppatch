@@ -60,6 +60,14 @@
                         <option value="install">Install</option>
                         <option value="hide">Hide</option>
                     </select>
+                    <select type="button" class="btn btn-mini" name="throttle">
+                        <option>idle</option>
+                        <option value="below_normal">below normal</option>
+                        <option>normal</option>
+                        <option value="above_normal">above normal</option>
+                        <option>high</option>
+                        <option value="real_time">real time</option>
+                    </select>
                     <input type="submit" class="btn btn-mini btn-primary" value="Submit">
                 </div>
                 <input type="hidden" value="<% print(model.id); %>" name="node">
@@ -201,9 +209,10 @@
 </style>
 <div id="hidden" class="hide">
     <form class="form-horizontal" id="schedule-form">
-        <label class="inline">Date:</label>
-        <input type="text" name="datepicker" class="input-medium"/><br>
-        Time:<div class="inline">
+        <label>Date:</label>
+        <input type="text" name="datepicker" class="input-medium"/>
+        <label>Time:</label>
+        <div class="inline">
             <select name="hours" id="hours" class="span1">
                 <option>01</option>
                 <option>02</option>
@@ -229,6 +238,8 @@
                 <option>PM</option>
             </select>
         </div>
+        <label>Label:</label>
+        <input type="text" name="label" class="input-medium"/>
     </form>
 </div>
 <!--

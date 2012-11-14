@@ -33,9 +33,16 @@ def operationExistsUsingNodeId(session, node_id, oper_type):
 
 def csrExists(session, node):
     csr = \
-        session.query(CsrInfo).filter_by(ip_address=node).first()
-    return(csr)
-    
+        session.query(CsrInfo).filter_by(ip_address=node)
+    exists = csr.first()
+    return(exists, csr)
+
+def certExists(session, node):
+    cert = \
+        session.query(SslInfo).filter_by(node_id=node)
+    exists = cert.first()
+    return(exists, cert)
+
 def updateExists(session, tp_id):
     update = \
         session.query(WindowsUpdate).filter_by(toppatch_id=tp_id).first()

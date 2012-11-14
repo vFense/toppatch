@@ -118,7 +118,8 @@ define(
                 { name: 'Dashboard', href: '#dashboard' },
                 { name: 'Nodes', href: '#nodes' },
                 { name: 'Patches', href: '#patches' },
-                { name: 'Multi-Patcher', href: '#multi' }
+                { name: 'Multi-Patcher', href: '#multi' },
+                { name: 'Schedules', href: '#schedule' }
             ]
         });
 

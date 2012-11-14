@@ -50,7 +50,6 @@ define(
                         },
                         that = this,
                         temp;
-
                     temp = payload.offset - payload.getCount;
                     payload.prevLink = '#nodes?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
 
