@@ -744,7 +744,7 @@ class TimeBlockerAddHandler(BaseHandler):
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
-            self.write("Wrong arguement passed %s, the arguement needed is operation" % (e))
+            self.write("Wrong arguement passed %s, the argument needed is operation" % (e))
         print type(self.msg), self.msg
         result = timeBlockAdder(self.msg, self.sched)
         self.set_header('Content-Type', 'application/json')
