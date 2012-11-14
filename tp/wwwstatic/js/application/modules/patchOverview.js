@@ -6,8 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/patchOverview.html' ],
-    function ($, Backbone, app, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'text!templates/patchOverview.html' ],
+    function ($, _, Backbone, app, myTemplate) {
         "use strict";
         var exports = {};
         exports.Collection = Backbone.Collection.extend({

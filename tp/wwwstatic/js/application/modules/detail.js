@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/detail.html'],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/detail.html'],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var Detail = { };
         Detail.Collection = Backbone.Collection.extend({

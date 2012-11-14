@@ -6,8 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 define(
-    ['jquery', 'backbone', 'text!templates/controller.html'],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/controller.html'],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var Controller = {};
         Controller.Collection = Backbone.Collection.extend({

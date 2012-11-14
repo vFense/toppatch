@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/schedule.html' ],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/schedule.html' ],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
