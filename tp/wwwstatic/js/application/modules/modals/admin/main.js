@@ -59,6 +59,7 @@ define(
                     }
 
                     if (view instanceof Backbone.View) {
+                        this._contentView = view;
                         this._contentView.render();
                         this._contentView.delegateEvents();
                     } else {
