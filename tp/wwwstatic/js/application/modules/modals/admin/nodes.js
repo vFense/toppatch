@@ -27,7 +27,7 @@ define(
                     $.post("/adminForm?" + form.serialize(),
                         function(json) {
                             console.log(json);
-                            if(!json.error) {
+                            if (!json.error) {
                                 form.find('input:checked').parents('.item').remove();
                                 that.$el.find('.alert').show();
                             } else {

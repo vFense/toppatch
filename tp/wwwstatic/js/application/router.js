@@ -166,7 +166,7 @@ define(
                 app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
                 app.vent.trigger('domchange:title', settings.title);
                 var schedule = $(document).find('input[name="schedule"]:checked');
-                if(schedule.data('popover')) {
+                if (schedule.data('popover')) {
                     schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                     schedule.popover('destroy');
                 }
@@ -216,8 +216,8 @@ define(
             },
 
             // Getters/Setters
-            getCurrentFragment: function () {return this.currentFragment;},
-            getLastFragment: function () {return this.lastFragment;}
+            getCurrentFragment: function () { return this.currentFragment; },
+            getLastFragment: function () { return this.lastFragment; }
         });
         return {
             initialize: function () {

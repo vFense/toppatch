@@ -181,7 +181,7 @@ define(
                     if (popover.data('popover')) { popover.popover('destroy'); }
                     if (this.isOpen()) { this.hide(); }
                     if (this._contentView) { this._contentView.close(); }
-                    if(this._lastURL !== '') {
+                    if (this._lastURL !== '') {
                         Backbone.history.navigate(this._lastURL, false);
                     } else {
                         Backbone.history.navigate("dashboard", true);

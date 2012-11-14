@@ -9,13 +9,13 @@ define(
             id: 1,
             inputArray: [],
             url: function () {
-                if(this.id){
-                    this.filter = '?id=' + this.id
+                if (this.id) {
+                    this.filter = '?id=' + this.id;
                 }
                 return this.baseUrl + this.filter;
             },
             initialize: function () {
-                if(this.checked){
+                if (this.checked) {
                     this.inputArray = this.checked;
                 }
             }

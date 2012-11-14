@@ -15,7 +15,7 @@ define(
             }
         });
 
-        exports.View= Backbone.View.extend({
+        exports.View = Backbone.View.extend({
             tagName: "li",
             className: "",
             initialize: function (args) {
@@ -46,7 +46,7 @@ define(
             setIcon: function () {
                 var $icon = this.content.find('i[class^="icon"]');
 
-                if($icon.length === 0) {
+                if ($icon.length === 0) {
                     $icon = $(document.createElement('i')).prependTo(this.content);
                 }
 
@@ -56,7 +56,7 @@ define(
             setText: function () {
                 var $span = this.content.find('span.text');
 
-                if($span.length === 0) {
+                if ($span.length === 0) {
                     $span = $(document.createElement('span')).addClass('text').appendTo(this.content);
                 }
 
