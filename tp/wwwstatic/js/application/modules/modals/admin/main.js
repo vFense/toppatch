@@ -49,6 +49,7 @@ define(
 
                     if (this.onRender !== $.noop) { this.onRender(); }
 
+                    return this;
 
                     return this;
                 }
