@@ -165,11 +165,14 @@ define(
 
                 app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
                 app.vent.trigger('domchange:title', settings.title);
+
+                // The following code block should not be here!
                 var schedule = $(document).find('input[name="schedule"]:checked');
                 if (schedule.data('popover')) {
                     schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                     schedule.popover('destroy');
                 }
+                // End rogue code block
 
                 if ($.type(settings.view) === 'string') {
                     require([settings.view], function (myView) {
