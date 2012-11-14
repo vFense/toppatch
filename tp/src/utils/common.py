@@ -8,6 +8,13 @@ twentyfour_hour = {
                    '9' : 21, '10' : 22, '11' : 23, '12' : 0,
                   }
 
+days_of_the_week = {
+                   '0' : 'Sunday', '1' : 'Monday',
+                   '2' : 'Tuesday', '3' : 'Wednesday',
+                   '4' : 'Thursday', '5' : 'Friday',
+                   '6' : 'Saturday'
+                   }
+
 def verifyJsonIsValid(data):
     verified = True
     json_data = None
@@ -68,3 +75,14 @@ def returnDatetime(timestamp):
         return (datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'))
     else:
         return ("Invalid TimeStamp")
+
+def returnDays(days):
+    if len(days) == 7:
+        days_enabled = []
+        days_not_enabled = []
+        for day in range(len(days)):
+            if days[day] == '1':
+                days_enabled.append(days_of_the_week[day])
+            else:
+                days_not_enabled.append(days_of_the_week[day])
+        return(days_enabled, days_not_enabled)
