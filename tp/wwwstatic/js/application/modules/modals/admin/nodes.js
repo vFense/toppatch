@@ -24,8 +24,9 @@ define(
                     var form = $(evt.target),
                         that = this;
                     console.log(form.serialize());
-                    $.post("/adminForm?" + form.serialize(),
-                        function(json) {
+                    $.post(
+                        "/adminForm?" + form.serialize(),
+                        function (json) {
                             console.log(json);
                             if (!json.error) {
                                 form.find('input:checked').parents('.item').remove();

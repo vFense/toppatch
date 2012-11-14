@@ -16,9 +16,9 @@ define(
                 initialize: function () {
                     this.offset   = this.offset || 0;
                     this.getCount = this.getCount  || 10;
-                    this.query    = '?'
-                        + 'count=' + this.getCount
-                        + '&offset=' + this.offset;
+                    this.query    = '?' +
+                        'count=' + this.getCount +
+                        '&offset=' + this.offset;
                     window.myCollection = this;
                 }
             }),
