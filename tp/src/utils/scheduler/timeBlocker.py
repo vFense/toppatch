@@ -60,6 +60,10 @@ def timeBlockAdder(session, msg):
                 json_msg['enabled'] = False
         if not 'end_date' in json_msg:
             json_msg['end_date'] = None
+        else:
+           json_msg['end_date'] = dateParser(json_msg['end_date']) 
+        if 'start_date' in json_msg:
+           json_msg['start_date'] = dateParser(json_msg['start_date']) 
         block_added, message, block = addBlock(session, json_msg['label'],
                 json_msg['enabled'], json_msg['start_date'],
                 json_msg['end_date'], json_msg['start_time'],
