@@ -14,6 +14,9 @@ define(
                 keyboard: true,
                 backdrop: true,
 
+                // White list of variables that are allowed to be set during init
+                _allowed: [],
+
                 events: {
                     'click .confirm': function (event) {
                         event.preventDefault();
@@ -27,10 +30,14 @@ define(
                     }
                 },
 
-                initialize: function () {},
 
                 beforeRender: $.noop,
                 onRender: $.noop,
+                initialize: function (options) {
+                    _.union(
+                        this._allowed,
+                        ['animate', 'keyboard', 'backdrop'] // Bootstrap-Modal options
+                    );
 
                 // Set up the modal DOM, but do not show it in browser
                 render: function () {
@@ -40,6 +47,8 @@ define(
                         $el = this.$el;
 
                     $el.empty();
+                    _.extend(this, _.pick(options, this._allowed));
+                },
 
                     if (this._contentView) {
                         $el.append(this._contentView.el);
