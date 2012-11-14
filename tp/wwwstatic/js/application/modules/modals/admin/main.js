@@ -15,8 +15,12 @@ define(
                     });
                 },
 
-                beforeRender: $.noop,
-                onRender: $.noop,
+                beforeRender: function () {
+                    this.rendered = false;
+                },
+                onRender: function () {
+                    this.rendered = true;
+                },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
@@ -29,7 +33,6 @@ define(
 
                     if (this.onRender !== $.noop) { this.onRender(); }
 
-                    this.rendered = true;
 
                     return this;
                 }
