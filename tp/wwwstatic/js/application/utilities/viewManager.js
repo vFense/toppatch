@@ -9,7 +9,7 @@ define(
         // See: http://bit.ly/odAfKo
         _.extend(Backbone.View.prototype, {
             close: function () {
-                if (this.beforeClose) {
+                if (this.beforeClose && _.isFunction(this.beforeClose)) {
                     this.beforeClose();
                 }
                 this.remove();
