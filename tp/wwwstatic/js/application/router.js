@@ -29,7 +29,9 @@ define(
                 // Administration Panels
                 // Warning, update modals/panel.js open method when changing 'testAdmin'
                 'testAdmin'     : 'modal/admin',
-                'testAdmin/nodes': 'modal/admin/nodes'
+                'testAdmin/nodes': 'modal/admin/nodes',
+                'testAdmin/timeblock': 'modal/admin/timeblock',
+                'testAdmin/listblocks': 'modal/admin/listblocks'
 
                 // Default
                 // '*other'        : 'defaultAction'
@@ -117,11 +119,20 @@ define(
             showMulti: function () {
                 this.show({hash: '#multi', title: 'Patch Operations', view: 'modules/multi'});
             },
+            showAdmin: function () {
+                this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
+            },
             'modal/admin': function () {
                 this.openAdminModalWithView('modals/admin/general');
             },
             'modal/admin/nodes': function () {
                 this.openAdminModalWithView('modals/admin/nodes');
+            },
+            'modal/admin/timeblock': function () {
+                this.openAdminModalWithView('modals/admin/timeblock');
+            },
+            'modal/admin/listblocks': function () {
+                this.openAdminModalWithView('modals/admin/listblocks');
             },
             showSchedule: function () {
                 this.show({hash: '#schedule', title: 'Schedule Manager', view: 'modules/schedule'});

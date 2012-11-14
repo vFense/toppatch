@@ -10,7 +10,9 @@ define(
                     this.navigation = new tabNav.View({
                         tabs: [
                             {text: 'General', href: 'testAdmin'},
-                            {text: 'Nodes', href: 'testAdmin/nodes'}
+                            {text: 'Approve Nodes', href: 'testAdmin/nodes'},
+                            {text: 'Add Time Block', href: 'testAdmin/timeblock'},
+                            {text: 'See Time Blocks', href: 'testAdmin/listblocks'}
                         ]
                     });
                 },
@@ -55,6 +57,8 @@ define(
                 setContentView: function (view) {
                     // Close the last content view if any.
                     if (this._contentView) {
+                        var popover = this._contentView.$el.find('#dow');
+                        if (popover.data('popover')) { popover.popover('destroy'); }
                         this._contentView.close();
                     }
 
