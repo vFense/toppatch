@@ -219,6 +219,13 @@
     }
 </style>
 <div id="hidden" class="hide">
+    <form id="list-form">
+        <a id="newtag" href="javascript:;"><span>New tag...</span></a>
+        <div class="hide inline input-append">
+            <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
+            <button class="btn">Add</button>
+        </div>
+    </form>
     <form class="form-horizontal" id="schedule-form">
         <label>Date:</label>
         <input type="text" name="datepicker" class="input-medium"/>
@@ -269,27 +276,6 @@
                 return false;
             }
         }
-    });
-    $('#addTag').click(function (){ return false; }).popover({
-        title: 'Tags Available',
-        html: true,
-        trigger: 'click',
-        content: 'hello world'
-    });
-    $('input[name=schedule]').each(function () {
-        $(this).popover({
-            placement: 'top',
-            title: 'Patch Scheduling',
-            html: true,
-            content: $('#schedule-form').clone(),
-            trigger: 'click'
-        });
-    }).click(function () {
-            if(this.checked) {
-                $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
-            } else {
-                $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
-            }
     });
 </script>
 <% } %>

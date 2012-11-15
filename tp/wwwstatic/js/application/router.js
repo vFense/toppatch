@@ -29,6 +29,7 @@ define(
                 // Administration Panels
                 // Warning, update modals/panel.js open method when changing 'testAdmin'
                 'testAdmin'     : 'modal/admin',
+                'testAdmin/managetags': 'modal/admin/managetags',
                 'testAdmin/nodes': 'modal/admin/nodes',
                 'testAdmin/timeblock': 'modal/admin/timeblock',
                 'testAdmin/listblocks': 'modal/admin/listblocks'
@@ -124,6 +125,9 @@ define(
             },
             'modal/admin': function () {
                 this.openAdminModalWithView('modals/admin/general');
+            },
+            'modal/admin/managetags': function () {
+                this.openAdminModalWithView('modals/admin/managetags');
             },
             'modal/admin/nodes': function () {
                 this.openAdminModalWithView('modals/admin/nodes');
