@@ -63,7 +63,7 @@ def timeBlockExistsToday(session, start_date=None, start_time=None):
             if tb:
                 days_blocked, days_not_blocked = returnDays(tb.days)
                 for day in days_blocked:
-                    if week_day[day] == str(datetime.today().weekday()):
+                    if week_day[day] == str(start_date.weekday()):
                         today_is_blocked = True
                         return(today_is_blocked, tb)
         return(today_is_blocked, "No time blocks were found")
