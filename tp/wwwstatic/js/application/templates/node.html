@@ -220,11 +220,21 @@
 </style>
 <div id="hidden" class="hide">
     <form id="list-form">
-        <a id="newtag" href="javascript:;"><span>New tag...</span></a>
-        <div class="hide inline input-append">
-            <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
-            <button class="btn">Add</button>
+        <div class="list">
+            <div class="items">
+                <div class="item clearfix">
+                    <label class="checkbox">Sample Tag<input name="taglist" value="tagname" type="checkbox"/></label>
+                </div>
+                <div class="item clearfix">
+                    <a id="newtag" href="javascript:;"><span>New tag...</span></a>
+                    <div class="hide inline input-append">
+                        <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
+                        <button class="btn" id="createtag">Add</button>
+                    </div>
+                </div>
+            </div>
         </div>
+        <input type="hidden" name="nodeid" value="nodeid"/>
     </form>
     <form class="form-horizontal" id="schedule-form">
         <label>Date:</label>
