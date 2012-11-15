@@ -24,6 +24,25 @@ def tagLister(session):
         list_of_tags.append(tag)
     return list_of_tags
 
+def tagListByNodes(session):
+    list_of_tags = []
+    tags = session.query(TagInfo).all()
+    for tag in tags:
+        list_of_nodes = []
+        nodes = session.query(TagsPerNode).filter_by(tag_id=tag.id).all()
+        for node in nodes:
+            node = session.query(NodeInfo).filter_by(id=node.id).first()
+            list_of_nodes.append(node.ip_address)
+        tag = {
+                "tag_id" : tag.id,
+                "tag_name" : tag.tag,
+                "nodes" : list_of_nodes
+              }
+        list_of_tags.append(tag)
+    return list_of_tags
+
+
+
 def tagAdder(session, msg):
     valid, json_msg = verifyJsonIsValid(msg)
     if valid:
