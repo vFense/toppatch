@@ -94,22 +94,24 @@ class TagStats(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    tag_id = Column(INTEGER(unsigned=True),ForeignKey("tag_info.id"))
     patches_installed = Column(INTEGER(unsigned=True))
     patches_available = Column(INTEGER(unsigned=True))
     patches_pending = Column(INTEGER(unsigned=True))
     patches_failed = Column(INTEGER(unsigned=True))
-    def __init__(self, patches_installed,
+    def __init__(self, tag_id, patches_installed,
                 patches_available, patches_pending,
                 patches_failed
                 ):
+        self.tag_id = tag_id
         self.patches_installed = patches_installed
         self.patches_available = patches_available
         self.patches_pending = patches_pending
         self.patches_failed = patches_failed
     def __repr__(self):
-        return "<TagStats(%d,%d,%d,%d)>" %\
+        return "<TagStats(%d,%d,%d,%d,%d)>" %\
                 (
-                self.patches_installed,
+                self.tag_id, self.patches_installed,
                 self.patches_available, self.patches_pending,
                 self.patches_failed
                 )
