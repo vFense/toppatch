@@ -777,7 +777,7 @@ class TagAddHandler(BaseHandler):
         self.session = self.application.session
         self.session = validateSession(self.session)
         try:
-            self.msg = self.get_argument('operations')
+            self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
         result = tagAdder(self.session, self.msg)
@@ -790,7 +790,7 @@ class TagAddPerNodeHandler(BaseHandler):
         self.session = self.application.session
         self.session = validateSession(self.session)
         try:
-            self.msg = self.get_argument('operations')
+            self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
         result = tagAddPerNode(self.session, self.msg)
