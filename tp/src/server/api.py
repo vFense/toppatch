@@ -750,7 +750,7 @@ class TimeBlockerAddHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class TagListerHandler(BaseHandler):
+class TagListerByTagHandler(BaseHandler):
 
     @authenticated_request
     def get(self):
@@ -760,7 +760,15 @@ class TagListerHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+class TagListerByNodeHandler(BaseHandler):
 
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        result = tagLister(self.session)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
 
 class TagAddHandler(BaseHandler):
     @authenticated_request
