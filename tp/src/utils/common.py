@@ -9,6 +9,13 @@ twentyfour_hour = {
                    '9' : 21, '10' : 22, '11' : 23, '12' : 0,
                   }
 
+twentyfour_hour_reversed = {
+                   '13' : 1, '14' : 2, '15' : 3, '16' : 4,
+                   '17' : 5, '18' : 6, '19' : 7, '20' : 8,
+                   '21' : 9, '22' : 10, '23' : 11
+                  }
+
+
 days_of_the_week = {
                    '0' : 'Sunday', '1' : 'Monday',
                    '2' : 'Tuesday', '3' : 'Wednesday',
@@ -43,7 +50,10 @@ def dateTimeParser(schedule):
         am_pm = re.search(r'(AM|PM)', schedule).group()
         schedule = re.sub(r'\s+AM|\s+PM', '', schedule)
     except Exception as e:
-        am_pm = None
+        if schedule.split(" ")[1].split(":")[0]:
+            new_hour = twentyfour_hour_reversed[schedule.split(" ")[1].split(":")[0]]
+            schedule = re.sub(r'([0-9]+)(:[0-9]+)', str(new_hour)+'\g<2>', schedule)
+            am_pm = "PM"
     pformatted = map(lambda x: int(x),re.split(r'\/|:|\s+', schedule))
     if len(pformatted) == 5 and am_pm:
         month, day, year, hour, minute = pformatted
@@ -86,7 +96,8 @@ def returnDatetime(timestamp):
     elif stamp_length == 10:
         valid_timestamp = True
     if valid_timestamp:
-        return (datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'))
+        parsed_time = datetime.fromtimestamp(timestamp).strftime('%m/%d/%Y %H:%M')
+        return (parsed_time)
     else:
         return ("Invalid TimeStamp")
 
