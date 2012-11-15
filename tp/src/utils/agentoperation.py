@@ -103,6 +103,9 @@ class AgentOperation():
                         "operation_id" : oper_id,
                         "data" : data_list
                      }
+        time_block_exists, time_block, json_out = timeBlockExistsToday(self.session, start_date=datetime.today().date(), start_time=datetime.now().time())
+        if time_block_exists:
+            return json_out
         updateNodeNetworkStats(self.session, node_id)
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'

@@ -65,8 +65,16 @@ def timeBlockExistsToday(session, start_date=None, start_time=None):
                 for day in days_blocked:
                     if week_day[day] == str(start_date.weekday()):
                         today_is_blocked = True
-                        return(today_is_blocked, tb)
-        return(today_is_blocked, "No time blocks were found")
+                        json_out = {
+                                   "pass" : False,
+                                    "message" : "Time Block %s exists for this time frame" % (tb.name)
+                                   }
+                        return(today_is_blocked, tb, json_out)
+        json_out = {
+                    "pass" : True,
+                    "message" : "Time Block does not exists for this time frame %s" % (start_date.date())
+                   }
+        return(today_is_blocked, "No time blocks were found", json_out)
 
 def operationExistsUsingNodeId(session, node_id, oper_type):
     oper = \
