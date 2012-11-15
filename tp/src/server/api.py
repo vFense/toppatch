@@ -371,7 +371,7 @@ class NodesHandler(BaseHandler):
                         available.append({'name': v[1].title, 'id': v[0].toppatch_id})
                     else:
                         available.append({'name': v[1].title, 'id': v[0].toppatch_id})
-                tags = map(lambda x: x[1].tag, session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
+                tags = map(lambda x: x[1].tag, self.session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
                 resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
                               'host/status': u[0].host_status,
