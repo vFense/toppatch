@@ -17,6 +17,7 @@ from server.handlers import SendToSocket
 from utils.db.client import *
 from utils.scheduler.jobManager import jobLister
 from utils.scheduler.timeBlocker import *
+from utils.tagging.tagManager import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -748,6 +749,18 @@ class TimeBlockerAddHandler(BaseHandler):
         result = timeBlockAdder(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+class TagListerHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        result = tagLister(self.session)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
 
 class TagAddHandler(BaseHandler):
     @authenticated_request
