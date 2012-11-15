@@ -15,7 +15,7 @@ define(
                 backdrop: true,
 
                 // Variables that affect the modal itself
-                width: '', // Leave blank for default bootstrap width
+                span: '', // Leave blank for default bootstrap width
 
                 // White list of variables that are allowed to be set during init
                 _allowed: [],
@@ -37,7 +37,7 @@ define(
                     this._allowed = _.union(
                         this._allowed,
                         ['animate', 'keyboard', 'backdrop'], // Bootstrap-Modal options
-                        ['width'] // Modal options
+                        ['span'] // Modal options
                     );
 
                     _.extend(this, _.pick(options, this._allowed));
@@ -98,7 +98,7 @@ define(
                         );
                     }
 
-                    this.setWidth();
+                    this.setSpan();
 
                     if (this.onRender !== $.noop) { this.onRender(); }
 
@@ -182,23 +182,24 @@ define(
 
                 confirm: $.noop,
 
-                // optional: width
-                setWidth: function (width) {
+                // optional: span
+                // Not fully tested for every case
+                setSpan: function (span) {
                     var $el = this.$el,
                         spanNum = /^span[1-9][0-2]{0,1}$/,
                         numeric = /^[1-9][0-2]{0,1}$/;
 
-                    width = (width || this.width).trim();
+                    span = (span || this.span).trim();
 
-                    if (spanNum.test(width)) {
-                        $el.removeClass(this.width)
-                            .addClass(this.width = width);
-                    } else if (numeric.test(width)) {
-                        $el.removeClass(this.width)
-                            .addClass(this.width = 'span' + width);
+                    if (spanNum.test(span)) {
+                        $el.removeClass(this.span)
+                            .addClass(this.span = span);
+                    } else if (numeric.test(span)) {
+                        $el.removeClass(this.span)
+                            .addClass(this.span = 'span' + span);
                     } else {
-                        $el.removeClass(this.width);
-                        this.width = '';
+                        $el.removeClass(this.span);
+                        this.span = '';
                     }
 
                     return this;
