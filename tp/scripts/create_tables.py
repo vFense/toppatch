@@ -26,7 +26,8 @@ db.drop(ManagedWindowsUpdate)
 db.drop(CsrInfo)
 db.drop(SslInfo)
 """
-#Base.metadata.drop_all(db)
+#db.drop(TimeBlocker)
+Base.metadata.drop_all(db)
 
 
 """

@@ -16,7 +16,8 @@ define(
                 },
                 add: function (evt) {
                     var start_time, end_time, start_date, end_date, params, label, days,
-                        values = $("#dow").data('popover').options.content.val();
+                        values = $("#dow").data('popover').options.content.val(),
+                        that = this;
                     this.highlight(evt);
                     start_time = this.start;
                     end_time = this.end;
@@ -36,10 +37,14 @@ define(
                     console.log(values);
                     if (values) {
                         $.post("/api/timeblocker/add", { operation: JSON.stringify(params) },
-                            function(json) {
-                                console.log(json);
-                                if ($('#dow').data('popover')) { $('#dow').popover('hide'); }
-                                this.$el.find('.alert').show();
+                            function(result) {
+                                console.log(result);
+                                if(result.pass) {
+                                    if ($('#dow').data('popover')) { $('#dow').popover('hide'); }
+                                    that.$el.find('.alert').append(result.message).removeClass('alert-error').addClass('alert-success').show();
+                                } else {
+                                    that.$el.find('.alert').append(result.message).removeClass('alert-success').addClass('alert-error').show();
+                                }
                             });
                     }
                 },
@@ -113,15 +118,25 @@ define(
                 },
                 beforeRender: $.noop,
                 onRender: function () {
-                    var that = this;
-                    this.$el.find('#dow').popover({
+                    var that = this,
+                        $el = this.$el,
+
+                        // jquery element cache
+                        $pop = $el.find('#dow'),
+                        $popper = $el.find('#dowselect'),
+                        $slide = $el.find("#slider-range"),
+                        $startDate = $el.find('input[name="startdate"]'),
+                        $endDate = $el.find('input[name="enddate"]');
+
+                    $pop.popover({
                         placement: 'right',
                         title: 'Days of Week',
                         html: true,
-                        content: this.$el.find('#dowselect'),
+                        content: $popper,
                         trigger: 'click'
                     });
-                    this.$el.find("#slider-range" ).slider({
+
+                    $slide.slider({
                         range: true,
                         min: 0,
                         max: 1439,
@@ -141,8 +156,9 @@ define(
                             that.end = endTime;
                         }
                     });
-                    this.$el.find('input[name=startdate]').datepicker();
-                    this.$el.find('input[name=enddate]').datepicker();
+
+                    $startDate.datepicker();
+                    $endDate.datepicker();
                 },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
@@ -155,6 +171,13 @@ define(
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
+                },
+
+                beforeClose: function () {
+                    var $popover = this.$el.find('#dow');
+                    if ($popover.data('popover')) {
+                        $popover.popover('destroy');
+                    }
                 }
             })
         };

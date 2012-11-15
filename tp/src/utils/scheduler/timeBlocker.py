@@ -65,9 +65,9 @@ def timeBlockLister(session):
                    'days_enabled' : days_enabled,
                    'days_disabled' : days_not_enabled
                    }
-            encoded_msg = encode(msg)
-            windows.append(encoded_msg)
-        windows = encode(re.sub(r'\'|\"', '', str(windows)))
+            #encoded_msg = encode(msg)
+            windows.append(msg)
+        #windows = encode(re.sub(r'\'|\"', '', windows))
     else:
         windows = '{"message" : "There arent any windows"}'
     return windows
@@ -140,6 +140,5 @@ def timeBlockAdder(session, msg):
                 json_msg['end_time'], json_msg['days']
                 )
         print '{message : %s,label : %s, pass : %s}' % (message, json_msg["label"], block_added)
-        return '{message : %s,label : %s, pass : %s}'\
-                    % (message, json_msg["label"], block_added)
+        return {"message" : message,"label" : json_msg['label'], "pass" : block_added}
 

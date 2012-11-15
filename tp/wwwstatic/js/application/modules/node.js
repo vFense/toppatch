@@ -84,6 +84,13 @@ define(
                     }
                     return false;
                 },
+                beforeClose: function () {
+                    var schedule = this.$el.find('input[name="schedule"]:checked');
+                    if (schedule.data('popover')) {
+                        schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                        schedule.popover('destroy');
+                    }
+                },
                 clearFilter: function () {
                     this.collection.filter = '';
                 }

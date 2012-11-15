@@ -77,8 +77,7 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var that = this,
-                        $el = this.$el;
+                    var $el = this.$el;
 
                     $el.empty();
 
@@ -87,11 +86,11 @@ define(
                     } else {
                         $el.append(
                             '<div class="modal-body">' +
-                            '\t<div class="row-fluid">' +
-                            '\t\t<div class="span10">No Content...</div>' +
-                            '\t\t<div class="btn span2 close_modal">Close</div>' +
-                            '\t</div>' +
-                            '</div>'
+                                '\t<div class="row-fluid">' +
+                                '\t\t<div class="span10">No Content...</div>' +
+                                '\t\t<div class="btn span2 close_modal">Close</div>' +
+                                '\t</div>' +
+                                '</div>'
                         );
                     }
 
@@ -136,7 +135,8 @@ define(
 
                 // Show the modal in browser
                 open: function () {
-                    var router = app.router;
+                    var router = app.router,
+                        last;
                     if (!this.isOpen()) {
                         // If we are routed here from a bookmark,
                         // render the dashboard behind the modal.
@@ -145,7 +145,7 @@ define(
                         }
 
                         // Save last fragment and go back to it on 'close'
-                        var last = router.getLastFragment();
+                        last = router.getLastFragment();
                         if (last === '' || /^testAdmin.*/.test(last)) {
                             this._lastURL = "dashboard";
                         } else {
@@ -177,11 +177,9 @@ define(
                 confirm: $.noop,
 
                 beforeClose: function () {
-                    var popover = this._contentView.$el.find('#dow');
-                    if (popover.data('popover')) { popover.popover('destroy'); }
                     if (this.isOpen()) { this.hide(); }
                     if (this._contentView) { this._contentView.close(); }
-                    if(this._lastURL !== '') {
+                    if (this._lastURL !== '') {
                         Backbone.history.navigate(this._lastURL, false);
                     } else {
                         Backbone.history.navigate("dashboard", true);

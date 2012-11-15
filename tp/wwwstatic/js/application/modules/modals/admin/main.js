@@ -29,8 +29,7 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var that = this,
-                        template = _.template(this.template),
+                    var template = _.template(this.template),
                         $el = this.$el,
                         $header,
                         $content,
@@ -57,8 +56,6 @@ define(
                 setContentView: function (view) {
                     // Close the last content view if any.
                     if (this._contentView) {
-                        var popover = this._contentView.$el.find('#dow');
-                        if (popover.data('popover')) { popover.popover('destroy'); }
                         this._contentView.close();
                     }
 
@@ -77,6 +74,15 @@ define(
 
                 getContentView: function () {
                     return this._contentView;
+                },
+
+                beforeClose: function () {
+                    if (this.navigation) {
+                        this.navigation.close();
+                    }
+                    if (this._contentView) {
+                        this._contentView.close();
+                    }
                 }
             })
         };

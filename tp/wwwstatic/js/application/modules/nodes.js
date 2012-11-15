@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/nodes.html' ],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/nodes.html' ],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
@@ -16,9 +16,9 @@ define(
                 initialize: function () {
                     this.offset   = this.offset || 0;
                     this.getCount = this.getCount  || 10;
-                    this.query    = '?'
-                        + 'count=' + this.getCount
-                        + '&offset=' + this.offset;
+                    this.query    = '?' +
+                        'count=' + this.getCount +
+                        '&offset=' + this.offset;
                     window.myCollection = this;
                 }
             }),
@@ -48,12 +48,9 @@ define(
                             recordCount: this.collection.recordCount,
                             data: data
                         },
-                        that = this,
-                        temp;
-                    temp = payload.offset - payload.getCount;
-                    payload.prevLink = '#nodes?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
+                        temp = payload.offset - payload.getCount;
 
-                    temp = payload.offset + payload.getCount;
+                    payload.prevLink = '#nodes?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
                     payload.nextLink = '#nodes?count=' + payload.getCount + '&offset=' + temp;
 
                     this.$el.empty();

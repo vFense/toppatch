@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/patch.html', 'jquery.ui.datepicker' ],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/patch.html', 'jquery.ui.datepicker' ],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
@@ -66,6 +66,13 @@ define(
                         $form.find('input:checked').attr('checked', false);
                     }
                     return false;
+                },
+                beforeClose: function () {
+                    var schedule = this.$el.find('input[name="schedule"]:checked');
+                    if (schedule.data('popover')) {
+                        schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                        schedule.popover('destroy');
+                    }
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
