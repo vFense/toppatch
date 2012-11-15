@@ -22,12 +22,22 @@ define(
                     window.myCollection = this;
                 }
             }),
+            TagCollection: Backbone.Collection.extend({
+                baseUrl: '/api/tagging/listByTag.json',
+                url: function () {
+                    return this.baseUrl;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
                     this.collection =  new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
+
+                    this.tagcollection = new exports.TagCollection();
+                    this.tagcollection.bind('reset', this.render, this);
+                    this.tagcollection.fetch();
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
@@ -36,6 +46,7 @@ define(
 
                     var template = _.template(this.template),
                         data = this.collection.toJSON(),
+                        tagdata = this.tagcollection.toJSON(),
                         payload = {
                             getCount: +this.collection.getCount,
                             offset: +this.collection.offset,
@@ -46,7 +57,8 @@ define(
                             prevLink: '',
                             nextLink: '',
                             recordCount: this.collection.recordCount,
-                            data: data
+                            data: data,
+                            tagdata: tagdata
                         },
                         temp = payload.offset - payload.getCount;
 
