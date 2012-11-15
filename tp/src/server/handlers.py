@@ -179,8 +179,8 @@ class FormHandler(BaseHandler):
                 else:
                     operation_runner = AgentOperation(resultjson)
                     operation_runner.run()
-                    result = operation_runner
-                    pass
+                    result = operation_runner.json_out
+                    print result
             elif operation == 'reboot':
                 for node_id in nodes:
                     node['operation'] = operation
@@ -193,8 +193,8 @@ class FormHandler(BaseHandler):
                 else:
                     operation_runner = AgentOperation(resultjson)
                     operation_runner.run()
-                    result = operation_runner
-                    pass
+                    result = operation_runner.json_out
+                    print result
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(result))
             print json.dumps(result)
