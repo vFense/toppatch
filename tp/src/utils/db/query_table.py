@@ -66,6 +66,7 @@ def timeBlockExistsToday(session, start_date=None, start_time=None):
                     if week_day[day] == str(datetime.today().weekday()):
                         today_is_blocked = True
                         return(today_is_blocked, tb)
+        return(today_is_blocked, "No time blocks were found")
 
 def operationExistsUsingNodeId(session, node_id, oper_type):
     oper = \
