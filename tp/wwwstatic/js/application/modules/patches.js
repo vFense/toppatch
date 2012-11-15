@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/patches.html' ],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/patches.html' ],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
@@ -17,12 +17,11 @@ define(
                     this.offset   = this.offset || 0;
                     this.getCount = this.getCount  || 10;
                     this.type = this.type || '';
-                    this.query = this.type ?
-                    '?' + 'type=' + this.type
-                        + '&count=' + this.getCount
-                        + '&offset=' + this.offset :
-                    '?' + '&count=' + this.getCount
-                        + '&offset=' + this.offset;
+
+                    this.query = '?count=' + this.getCount + '&offset=' + this.offset;
+                    if (this.type) {
+                        this.query += '&type=' + this.type;
+                    }
 
                     window.myCollection = this;
                 }

@@ -6,6 +6,8 @@ from socket import gethostbyaddr
 from models.base import Base
 from models.windows import *
 from models.node import *
+from models.tagging import *
+from models.scheduler import *
 from utils.common import *
 from utils.db.query_table import *
 from utils.tcpasync import TcpConnect
@@ -25,6 +27,60 @@ def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
         return add_node
     except Exception as e:
         print e
+
+def addTag(session, tag_name, user_id=None):
+    date_created=datetime.now()
+    try:
+        add_tag = TagInfo(tag_name, date_created, user_id)
+        session.add(add_tag)
+        session.commit()
+        return(True, "Tag %s added" % (tag_name), add_tag)
+    except Exception as e:
+        session.rollback()
+        print e
+        return(False, "Tag %s failed to add" % (tag_name))
+
+def addTagPerNode(session, nodes=[], tag_id=None, tag_name=None,
+                user_id=None):
+    completed = False
+    count = 0
+    if not tag_id and tag_name:
+        tag_object, tag = tagExists(session, tag_name=tag_name)
+    elif tag_id and not tag_name:
+        tag_object, tag = tagExists(session, tag_id=tag_id)
+    if not tag and user_id:
+        tag_added, tag_msg, tag = \
+                addTag(session, tag_name, user_id=user_id)
+    for node in nodes:
+        tag_for_node_exists = \
+            session.query(TagsPerNode).filter_by(node_id=node).filter_by(tag_id=tag.id).first()
+        if not tag_for_node_exists:
+            try:
+                tag_added = TagsPerNode(tag.id, node, datetime.now())
+                session.add(tag_added)
+                session.commit()
+            except Exception as e:
+                session.rollback()
+                count = count + 1
+        else:
+            count = count + 1
+    if count >=1:
+        return(False, "failed to add nodes to tag %s", tag.tag)
+    else:
+        return(True, "Nodes %s were added to tag %s" % (nodes, tag.tag), tag.tag)
+
+def addTimeBlock(session, label, enabled, start_date, end_date,
+              start_time, duration, days):
+    try:
+        add_block = TimeBlocker(label, start_date, end_date,
+                                start_time, duration, days,
+                                enabled)
+        session.add(add_block)
+        session.commit()
+        return(True, "Time Block Added", add_block)
+    except Exception as e:
+        print e
+        return(False, "Time Block Could Not Be Added", e)
 
 def addCsr(session, client_ip, location, csr_name,
             signed=False, signed_date=False):
@@ -57,7 +113,6 @@ def addOperation(session, node_id, operation, result_id=None,
         session.add(add_oper)
         session.commit()
         return add_oper
-        #WebsocketHandler.sendMessage("ITS ME")
 
 
 def addSystemInfo(session, data, node_info):
@@ -118,11 +173,8 @@ def addWindowsUpdatePerNode(session, data):
                 try:
                     session.add(node_update)
                     session.commit()
-                    #WebsocketHandler.sendMessage("ITS ME")
                 except:
                     session.rollback()
-                #finally:
-                #    addWindowsUpdate(session, data)
 
 def addSoftwareAvailable(session, data):
     exists, operation = operationExists(session, data['operation_id'])
@@ -170,6 +222,41 @@ def addSoftwareInstalled(session, data):
                         session.commit()
                     except:
                         session.rollback()
+
+def removeTagsFromNode(session, tag_name, nodes=[]):
+    tags_per_node = \
+            session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagInfo.tag == tag_name).all()
+    if len(tags_per_node) > 0:
+        nodes = map(lambda nodes: nodes[0].node_id, tags_per_node)
+        try:
+            tags_deleted = map(lambda nodes: session.delete(nodes[0]), 
+                    tags_per_node)
+            session.commit()
+            return(True, "Nodes %s were deleted from tag %s" % \
+                    (nodes, tag_name), nodes)
+        except Exception as e:
+            session.rollback()
+            return(False, "Nodes %s were not deleted from tag %s" % \
+                    (nodes, tag_name), nodes)
+    else:
+        return(False, "Tag %s does not exist" % \
+            (tag_name), tag_name)
+
+
+def removeTimeBlock(session, id=None, label=None, start_date=None, start_time=None):
+    tb_object, timeblock = timeBlockExists(session, id, label, start_date, start_time)
+    print tb_object, timeblock
+    if tb_object:
+        object_deleted = False, "Time Block %s has not been deleted"\
+                % (timeblock.name)
+        try:
+            tb_object.delete()
+            object_deleted = True, "Time Block %s has been deleted"\
+                    % (timeblock.name)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+    return object_deleted
 
 def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
     exists, operation = operationExists(session, oper_id)

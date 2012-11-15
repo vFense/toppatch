@@ -4,9 +4,29 @@
 from datetime import datetime
 from socket import getfqdn
 from models.base import Base
+from models.account import *
 from models.windows import *
 from models.node import *
+from models.tagging import *
+from models.scheduler import *
 from models.ssl import *
+
+
+def userExists(session, user_id=None, user_name=None):
+    if user_id:
+        user = session.query(Users).filter_by(id=user_id)
+    elif user_name:
+        user = session.query(Users).filter_by(username=user_name)
+    user_exists = user.first()
+    return(user, user_exists)
+
+def tagExists(session, tag_id=None, tag_name=None):
+    if tag_id:
+        tag = session.query(TagInfo).filter_by(id=tag_id)
+    elif tag_name:
+        tag = session.query(TagInfo).filter_by(tag=tag_name)
+    tag_exists = tag.first()
+    return(tag, tag_exists)
 
 def nodeExists(session, node_ip=None, node_id=None):
     node = None
@@ -24,6 +44,17 @@ def operationExists(session, oper_id):
         session.query(Operations).filter_by(id=oper_id)
     exists = oper.first()
     return(exists, oper)
+
+def timeBlockExists(session, id=None, label=None, start_date=None, start_time=None):
+    if id:
+        tb_object = \
+            session.query(TimeBlocker).filter_by(id=id)
+    elif label and start_date and start_time:
+        print label, start_date, start_time
+        tb_object = \
+            session.query(TimeBlocker).filter_by(name=label).filter_by(start_date=start_date).filter_by(start_time=start_time)
+    tb = tb_object.first()
+    return(tb_object, tb)
 
 def operationExistsUsingNodeId(session, node_id, oper_type):
     oper = \

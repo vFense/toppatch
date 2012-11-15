@@ -34,3 +34,47 @@ BODY > HEADER {
         background-color: transparent;
     }
 }
+
+.modal-header.tabs {
+    border: 0 none;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+
+    ul.nav {
+        margin-bottom: 0;
+        padding-left: @em*( 15px )/@baseFontSize;
+        padding-right: @em*( 15px )/@baseFontSize;
+    }
+
+    // Center tabs
+    // http://stackoverflow.com/a/9422253
+    .nav-tabs > li, .nav-pills > li {
+        float:none;
+        display:inline-block;
+        *display:inline; /* ie7 fix */
+        zoom:1; /* hasLayout ie7 trigger */
+    }
+
+    .nav-tabs, .nav-pills {
+        text-align:center;
+    }
+}
+
+.modal() {
+    .spanX (@index) when (@index > 0) {
+      (~".modal.span@{index}") { .span(@index); }
+      .spanX(@index - 1);
+    }
+    .spanX (0) {}
+
+    .span (@columns) {
+        @width: (@gridColumnWidth * @columns) + (@gridGutterWidth * (@columns - 1));
+        width: @width;
+        margin-left: -(@width/2);
+    }
+
+    .spanX(@gridColumns);
+}
+
+.modal();

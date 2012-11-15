@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/nodes.html' ],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/nodes.html' ],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
@@ -16,10 +16,18 @@ define(
                 initialize: function () {
                     this.offset   = this.offset || 0;
                     this.getCount = this.getCount  || 10;
-                    this.query    = '?'
-                        + 'count=' + this.getCount
-                        + '&offset=' + this.offset;
+                    this.filterby = this.filterby || '';
+                    this.query    = '?' +
+                        'count=' + this.getCount +
+                        '&offset=' + this.offset +
+                        '&filterby=' + this.filterby;
                     window.myCollection = this;
+                }
+            }),
+            TagCollection: Backbone.Collection.extend({
+                baseUrl: '/api/tagging/listByTag.json',
+                url: function () {
+                    return this.baseUrl;
                 }
             }),
             View: Backbone.View.extend({
@@ -27,6 +35,18 @@ define(
                     this.template = myTemplate;
                     this.collection =  new exports.Collection();
                     this.collection.bind('reset', this.render, this);
+                    this.collection.fetch();
+
+                    this.tagcollection = new exports.TagCollection();
+                    this.tagcollection.bind('reset', this.render, this);
+                    this.tagcollection.fetch();
+                },
+                events: {
+                    'change select[name=filter]': 'filterbytag'
+                },
+                filterbytag: function (evt) {
+                    this.collection.filterby = $(evt.target).val() == 'none' ? '' : $(evt.target).val();
+                    this.collection.initialize();
                     this.collection.fetch();
                 },
                 beforeRender: $.noop,
@@ -36,6 +56,7 @@ define(
 
                     var template = _.template(this.template),
                         data = this.collection.toJSON(),
+                        tagdata = this.tagcollection.toJSON(),
                         payload = {
                             getCount: +this.collection.getCount,
                             offset: +this.collection.offset,
@@ -46,14 +67,13 @@ define(
                             prevLink: '',
                             nextLink: '',
                             recordCount: this.collection.recordCount,
-                            data: data
+                            data: data,
+                            tagdata: tagdata,
+                            filter: this.collection.filterby
                         },
-                        that = this,
-                        temp;
-                    temp = payload.offset - payload.getCount;
-                    payload.prevLink = '#nodes?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
+                        temp = payload.offset - payload.getCount;
 
-                    temp = payload.offset + payload.getCount;
+                    payload.prevLink = '#nodes?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
                     payload.nextLink = '#nodes?count=' + payload.getCount + '&offset=' + temp;
 
                     this.$el.empty();

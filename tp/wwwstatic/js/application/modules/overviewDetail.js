@@ -2,7 +2,7 @@ define(
     ['jquery', 'underscore', 'backbone', 'text!templates/overviewDetail.html'],
     function ($, _, Backbone, myTemplate) {
         "use strict";
-        var exports = {
+        return {
             Model: Backbone.Model.extend({
                 defaults: {
                     key: 'n/a',
@@ -19,8 +19,8 @@ define(
                 initialize: function () {},
                 render: function () {
                     var tmpl = _.template(this.template),
-                        format = this.model.get('format'),
-                        that = this;
+                        format = this.model.get('format');
+
                     this.$el
                         .html(tmpl(this.model.toJSON()));
 
@@ -68,6 +68,5 @@ define(
                 }
             })
         };
-        return exports;
     }
 );

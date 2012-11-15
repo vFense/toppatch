@@ -1,10 +1,20 @@
 <article class="row">
     <section class="span12 list">
         <header class="clearfix">
-            <div class="pull-right">
+            <div class="pull-right"><small>Filter By:</small>
+                <select name="filter" class="btn btn-mini">
+                    <option value="none">None</option>
+                    <% if(tagdata.length != 0) { %>
+                        <% _.each(tagdata, function(tag) { %>
+                            <option <% filter == tag.tag_name ? print('selected') : ''; %>><%= tag.tag_name %></option>
+                        <% }); %>
+                    <% } %>
+                </select>
+                <!--
                 <a class="btn btn-mini disabled" href="javascript:;">
                     <i class="icon-cog"></i>&nbsp;Filter
                 </a>
+                -->
                 <a class="btn btn-mini disabled" href="javascript:;">
                     <span>Export</span>&nbsp;<i class="icon-download-alt"></i>
                 </a>

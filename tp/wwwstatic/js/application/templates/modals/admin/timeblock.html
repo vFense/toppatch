@@ -1,0 +1,59 @@
+<style>
+    div.ui-datepicker {
+         font-size:12px;
+    }
+</style>
+<article>
+    <header><strong>Time Blocker</strong></header>
+    <section class="row-fluid">
+        <div class="span12">
+            <label class="control-label">Time Range: 8:00 AM to 5:00 PM</label>
+            <div id="slider-range"></div>
+        </div>
+    </section><br>
+    <section class="row-fluid">
+        <div class="span6">
+            <label class="control-label">Start Date:</label>
+            <div class="controls">
+                <input type="text" name='startdate' placeholder="required"/>
+            </div>
+        </div>
+        <div class="span6">
+            <label class="control-label">End Date:</label>
+            <div class="controls">
+                <input type="text" name="enddate" placeholder="optional"/>
+            </div>
+        </div>
+    </section><br>
+    <section class="row-fluid">
+        <div class="span6">
+            <label class="control-label">Label:</label>
+            <div class="controls">
+                <input type="text" name="label"/>
+            </div>
+        </div>
+        <div class="span6">
+            <label class="control-label">Repeat:</label>
+            <div class="controls">
+                <button type="button" class="btn btn-mini" id="dow">Su M Tu W Th F Sa</button>
+            </div>
+        </div>
+    </section><br>
+    <section class="row-fluid">
+        <button type="button" class="btn btn-primary btn-mini span2 offset6" id="add">Add</button>
+    </section>
+</article><br>
+<article class="alert alert-success alert-block fade in hide">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+</article>
+<div class="hide" id="hidden">
+    <select id="dowselect" multiple>
+        <option value="Su">Sunday</option>
+        <option value="M">Monday</option>
+        <option value="Tu">Tuesday</option>
+        <option value="W">Wednesday</option>
+        <option value="Th">Thursday</option>
+        <option value="F">Friday</option>
+        <option value="Sa">Saturday</option>
+    </select>
+</div>

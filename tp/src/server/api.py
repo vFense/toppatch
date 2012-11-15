@@ -16,9 +16,12 @@ from models.ssl import *
 from server.handlers import SendToSocket
 from utils.db.client import *
 from utils.scheduler.jobManager import jobLister
+from utils.scheduler.timeBlocker import *
+from utils.tagging.tagManager import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
+from jsonpickle import encode
 
 class ApiHandler(BaseHandler):
     """ Trying to figure out this whole RESTful api thing with json."""
@@ -350,8 +353,6 @@ class NodesHandler(BaseHandler):
             id = self.get_argument('id')
         except:
             id = None
-        else:
-            pass
         if id:
             for u in self.session.query(NodeInfo, SystemInfo).filter(SystemInfo.node_id == id).join(SystemInfo):
                 installed = []
@@ -368,12 +369,14 @@ class NodesHandler(BaseHandler):
                         available.append({'name': v[1].title, 'id': v[0].toppatch_id})
                     else:
                         available.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                tags = map(lambda x: x[1].tag, self.session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
                 resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
                               'host/status': u[0].host_status,
                               'agent/status': u[0].agent_status,
                               'reboot': u[0].reboot,
                               'id': u[1].node_id,
+                              'tags': tags,
                               'os/name':u[1].os_string,
                               'patch/need': available,
                               'patch/done': installed,
@@ -388,10 +391,18 @@ class NodesHandler(BaseHandler):
             try:
                 queryCount = self.get_argument('count')
                 queryOffset = self.get_argument('offset')
+                filter = self.get_argument('filterby')
             except:
                 queryCount = 10
                 queryOffset = 0
-            for u in self.session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).limit(queryCount).offset(queryOffset):
+                filter = None
+
+            nodes_query = self.session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats)
+
+            if filter is not None:
+                nodes_query = nodes_query.join(TagsPerNode).join(TagInfo).filter(TagInfo.tag == filter)
+
+            for u in nodes_query.limit(queryCount).offset(queryOffset):
                 resultnode = {'ip': u[0].ip_address,
                               'host/status': u[0].host_status,
                               'agent/status': u[0].agent_status,
@@ -462,6 +473,7 @@ class PatchesHandler(BaseHandler):
                     },
                     "id": u.toppatch_id,
                     "severity" : u.severity,
+                    "size" : u.file_size,
                     "description" : u.description,
                     "date" : str(u.date_pub),
                     "available": {'count' :countAvailable, 'nodes': nodeAvailable},
@@ -706,20 +718,106 @@ class SchedulerListerHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class SchedulerAddHandler(BaseHandler):
+class TimeBlockerListerHandler(BaseHandler):
 
     @authenticated_request
     def get(self):
         self.session = self.application.session
         self.session = validateSession(self.session)
         self.sched = self.application.scheduler
+        result = timeBlockLister(self.session)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class SchedulerAddHandler(BaseHandler):
+
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        self.sched = self.application.scheduler
         try:
-            msg = self.get_argument('operation')
+            self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the arguement needed is operation" % (e))
         result = JobScheduler(self.msg, self.sched)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+class TimeBlockerAddHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            self.msg = self.get_argument('operation')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is operation" % (e))
+        result = timeBlockAdder(self.session, self.msg)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class TagListerByTagHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        result = tagLister(self.session)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class TagListerByNodeHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        result = tagListByNodes(self.session)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class TagAddHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            self.msg = self.get_argument('operation')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
+        result = tagAdder(self.session, self.msg)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class TagAddPerNodeHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            self.msg = self.get_argument('operation')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
+        result = tagAddPerNode(self.session, self.msg)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class TagRemovePerNodeHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            self.msg = self.get_argument('operation')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
+        result = tagRemovePerNode(self.session, self.msg)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
+
 
 class OperationHandler(BaseHandler):
 

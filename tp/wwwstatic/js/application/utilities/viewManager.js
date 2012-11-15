@@ -9,7 +9,7 @@ define(
         // See: http://bit.ly/odAfKo
         _.extend(Backbone.View.prototype, {
             close: function () {
-                if (this.beforeClose) {
+                if (this.beforeClose && _.isFunction(this.beforeClose)) {
                     this.beforeClose();
                 }
                 this.remove();
@@ -21,15 +21,15 @@ define(
         // Object to manage transitions between views
         // Inspired by: Derick Bailey
         // See: http://bit.ly/odAfKo
-        var ViewManager = function (options) {
+        return function (options) {
             var that = this,
                 allowed = ['selector'],
                 extender,
-                final,
+                finish,
                 lastSelect;
             that.selector = 'body';
             that.$selector = undefined;
-            that.set = function (opts) { extender(opts); final(); };
+            that.set = function (opts) { extender(opts); finish(); };
             that.get = function (name) { return that[name]; };
             that.showView = function (view) {
                 if (this.currentView) {
@@ -48,14 +48,12 @@ define(
 
             // Self invoking function for final set up
             // - Set '$selector' based on 'selector'
-            final = (function () {
+            finish = (function () {
                 if ($.type(that.selector) === 'string' && that.selector !== lastSelect) {
                     that.$selector = $(that.selector);
                     lastSelect = that.selector;
                 }
             }());
         };
-
-        return ViewManager;
     }
 );

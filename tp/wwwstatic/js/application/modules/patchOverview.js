@@ -1,13 +1,6 @@
-/**
- * Created with PyCharm.
- * User: parallels
- * Date: 9/30/12
- * Time: 9:54 PM
- * To change this template use File | Settings | File Templates.
- */
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/patchOverview.html' ],
-    function ($, Backbone, app, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'text!templates/patchOverview.html' ],
+    function ($, _, Backbone, app, myTemplate) {
         "use strict";
         var exports = {};
         exports.Collection = Backbone.Collection.extend({
@@ -39,8 +32,7 @@ define(
             render: function () {
                 if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                var tmpl = _.template(this.template),
-                    that = this;
+                var tmpl = _.template(this.template);
 
                 this.$el.empty();
                 this.$el.append(tmpl({
@@ -49,12 +41,6 @@ define(
                 }));
                 if (this.onRender !== $.noop) { this.onRender(); }
                 return this;
-            },
-            renderModel: function (item) {
-
-            },
-            setFilter: function (e) {
-
             },
             clearFilter: function () {
                 this.collection.filter = '';

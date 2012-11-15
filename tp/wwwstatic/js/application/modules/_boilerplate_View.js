@@ -2,7 +2,7 @@ define(
     ['jquery', 'underscore', 'backbone', 'text!templates/aTemplate.html' ],
     function ($, _, Backbone, myTemplate) {
         "use strict";
-        var exports = {
+        return {
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
@@ -27,6 +27,5 @@ define(
                  */
             })
         };
-        return exports;
     }
 );
