@@ -39,7 +39,8 @@ define(
                 // '*other'        : 'defaultAction'
             },
             route: function (route, name, callback) {
-                var modals = app.views.modals;
+                var modals = app.views.modals,
+                    adminRoutePattern = /^admin$|\/\w/; // expect 'admin' or 'admin/foo'
 
                 // Override the route method
                 this.constructor.__super__.route.call(this, route, name, function () {
@@ -52,13 +53,15 @@ define(
 
                     // close any open modals
                     // Do not close admin panel if next route uses admin panel
-                    if (this.currentFragment.indexOf('testAdmin') !== 0) {
+                    if (!adminRoutePattern.test(this.currentFragment)) {
                         if (modals.admin instanceof Backbone.View && modals.admin.isOpen()) {
                             modals.admin.close();
                         }
                     }
 
                     // run callback
+                    // If there is an error here, check the spelling
+                    // of the function in routes
                     callback.apply(this, arguments);
 
                     // after route event
