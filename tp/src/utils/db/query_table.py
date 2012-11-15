@@ -4,10 +4,28 @@
 from datetime import datetime
 from socket import getfqdn
 from models.base import Base
+from models.accounts import *
 from models.windows import *
 from models.node import *
 from models.scheduler import *
 from models.ssl import *
+
+
+def userExists(session, user_id=None, user_name=None):
+    if user_id:
+        user = session.query(Users).filter_by(id=user_id)
+    elif user_name:
+        user = session.query(Users).filter_by(username=user_name)
+    user_exists = user.first()
+    return(user, user_exists)
+
+def tagExists(session, tag_id=None, tag_name=None):
+    if tag_id:
+        tag = session.query(TagInfo).filter_by(id=tag_id)
+    elif tag_name:
+        tag = session.query(TagInfo).filter_by(tag=tag_name)
+    tag_exists = user.first()
+    return(tag, tag_exists)
 
 def nodeExists(session, node_ip=None, node_id=None):
     node = None
