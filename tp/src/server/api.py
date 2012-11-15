@@ -17,6 +17,7 @@ from server.handlers import SendToSocket
 from utils.db.client import *
 from utils.scheduler.jobManager import jobLister
 from utils.scheduler.timeBlocker import *
+from utils.tagging.tagManager import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -370,13 +371,14 @@ class NodesHandler(BaseHandler):
                         available.append({'name': v[1].title, 'id': v[0].toppatch_id})
                     else:
                         available.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                tags = map(lambda x: x[1].tag, self.session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
                 resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
                               'host/status': u[0].host_status,
                               'agent/status': u[0].agent_status,
                               'reboot': u[0].reboot,
                               'id': u[1].node_id,
-                              'tags': [],
+                              'tags': tags,
                               'os/name':u[1].os_string,
                               'patch/need': available,
                               'patch/done': installed,
@@ -741,7 +743,6 @@ class TimeBlockerAddHandler(BaseHandler):
     def post(self):
         self.session = self.application.session
         self.session = validateSession(self.session)
-        self.sched = self.application.scheduler
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
@@ -749,6 +750,54 @@ class TimeBlockerAddHandler(BaseHandler):
         result = timeBlockAdder(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+class TagListerByTagHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        result = tagLister(self.session)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class TagListerByNodeHandler(BaseHandler):
+
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        result = tagListByNodes(self.session)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class TagAddHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            self.msg = self.get_argument('operations')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
+        result = tagAdder(self.session, self.msg)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class TagAddPerNodeHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            self.msg = self.get_argument('operations')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
+        result = tagAddPerNode(self.session, self.msg)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
 
 
 class OperationHandler(BaseHandler):

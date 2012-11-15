@@ -10,7 +10,7 @@ define(
                 }
             }),
             TagCollection: Backbone.Collection.extend({
-                baseUrl: '',
+                baseUrl: 'api/tagging/listByTag.json',
                 url: function () {
                     return this.baseUrl;
                 }
@@ -21,11 +21,11 @@ define(
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
-                    /*
+
                     this.tagcollection = new exports.TagCollection();
                     this.tagcollection.bind('reset', this.render, this);
                     this.tagcollection.fetch();
-                    */
+
                 },
                 events: {
                     'click .disabled': function (e) { console.log(['click a.disabled', e]); return false; },
@@ -62,11 +62,14 @@ define(
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var template = _.template(this.template),
-                        data = this.collection.toJSON()[0];
-                        //tagData = this.tagcollection.toJSON();
+                        data = this.collection.toJSON()[0],
+                        tagData = this.tagcollection.toJSON();
+
+                    console.log(tagData);
+
                     this.$el.html('');
 
-                    this.$el.append(template({model: data}));
+                    this.$el.append(template({model: data, tags: tagData}));
 
                     this.$el.find("a.disabled").on("click", false);
 
@@ -146,10 +149,14 @@ define(
                     nodes = $(evt.currentTarget).parents('form').find('input[name=nodeid]').val();
                     params = {
                         nodes: [nodes],
-                        username: user,
+                        user: user,
                         tag: tag,
                         operation: operation
                     }
+                    $.post("/api/tagging/addTagPerNode", { operation: JSON.stringify(params) },
+                        function(json) {
+                            console.log(json);
+                        });
                     console.log(params);
                     return false;
                 },
@@ -167,6 +174,10 @@ define(
                     if(toAdd) {
                         //add node to tag
                         params.operation = 'add_to_tag';
+                        $.post("/api/tagging/addTagPerNode", { operation: JSON.stringify(params) },
+                            function(json) {
+                                console.log(json);
+                            });
                     } else {
                         //remove node from tag
                         params.operation = 'remove_from_tag';
@@ -175,6 +186,8 @@ define(
                 },
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked');
+                    var popover = this.$el.find('#addTag');
+                    if(popover.data('popover')) { popover.popover('destroy') };
                     if (schedule.data('popover')) {
                         schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                         schedule.popover('destroy');

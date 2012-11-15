@@ -7,6 +7,7 @@ from models.base import Base
 from models.account import *
 from models.windows import *
 from models.node import *
+from models.tagging import *
 from models.scheduler import *
 from models.ssl import *
 
@@ -24,7 +25,7 @@ def tagExists(session, tag_id=None, tag_name=None):
         tag = session.query(TagInfo).filter_by(id=tag_id)
     elif tag_name:
         tag = session.query(TagInfo).filter_by(tag=tag_name)
-    tag_exists = user.first()
+    tag_exists = tag.first()
     return(tag, tag_exists)
 
 def nodeExists(session, node_ip=None, node_id=None):

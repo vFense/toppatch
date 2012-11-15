@@ -222,9 +222,13 @@
     <form id="list-form">
         <div class="list">
             <div class="items">
-                <div class="item clearfix">
-                    <label class="checkbox">Sample Tag<input name="taglist" value="tagname" type="checkbox"/></label>
-                </div>
+               <% if(tags.length != 0) { %>
+                   <% _.each(tags, function (tag) { %>
+                        <div class="item clearfix">
+                            <label class="checkbox"><%= tag.tag_name %><input name="taglist" value="<%= tag.tagname %>" type="checkbox"/></label>
+                        </div>
+                    <% }); %>
+                <% } %>
                 <div class="item clearfix">
                     <a id="newtag" href="javascript:;"><span>New tag...</span></a>
                     <div class="hide inline input-append">
@@ -234,7 +238,7 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" name="nodeid" value="nodeid"/>
+        <input type="hidden" name="nodeid" value="<% print(model.id); %>"/>
     </form>
     <form class="form-horizontal" id="schedule-form">
         <label>Date:</label>
