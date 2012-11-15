@@ -94,11 +94,17 @@ define(
                     $.post(url,
                         function (json) {
                             console.log(json);
-                            if (schedule.data('popover')) {
-                                schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
-                                schedule.popover('hide');
+                            //json.pass = false;
+                            //json.message = 'Operation failed to send';
+                            if (json.pass) {
+                                if (schedule.data('popover')) {
+                                    schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                                    schedule.popover('hide');
+                                }
+                                $('.alert').removeClass('alert-error').addClass('alert-success').append(json.message).show();
+                            } else {
+                                $('.alert').removeClass('alert-success').addClass('alert-error').append(json.message).show();
                             }
-                            $('.alert').show();
                         });
                     patches.each(function () {
                         item = $(this).parents('.item');
@@ -125,9 +131,9 @@ define(
                     return false;
                 },
                 showtags: function (evt) {
-                    var popover = $(evt.target).parent().data('popover'),
-                        showInput, addTag, tagList, close;
-                    if(popover) {
+                    var showInput, addTag, tagList, close,
+                        popover = $(evt.target).parent().data('popover');
+                    if (popover) {
                         showInput = popover.$tip.find('a');
                         close = popover.$tip.find('#close');
                         addTag = showInput.siblings('div').children('button');
