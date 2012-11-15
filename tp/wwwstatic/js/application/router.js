@@ -196,7 +196,7 @@ define(
                         function (panel, admin, content) {
                             if (!modal || !modal instanceof panel.View) {
                                 app.views.modals.admin = modal = new panel.View({
-                                    width: 'span9'
+                                    span: 'span9'
                                 });
                             }
 
