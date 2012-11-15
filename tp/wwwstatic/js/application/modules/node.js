@@ -37,7 +37,7 @@ define(
                 beforeRender: $.noop,
                 onRender: function () {
                     this.$el.find('#addTag').popover({
-                        title: 'Tags Available',
+                        title: 'Tags Available<a href="javascript:;" class="pull-right" id="close"><i class="icon-remove"></i></a>' ,
                         html: true,
                         trigger: 'click',
                         content: $('#list-form')
@@ -127,11 +127,13 @@ define(
                 },
                 showtags: function (evt) {
                     var popover = $(evt.target).parent().data('popover'),
-                        showInput, addTag, tagList;
+                        showInput, addTag, tagList, close;
                     if(popover) {
                         showInput = popover.$tip.find('a');
+                        close = popover.$tip.find('#close');
                         addTag = showInput.siblings('div').children('button');
                         tagList = popover.$tip.find('input[name=taglist]');
+                        close.bind('click', function () { $(evt.target).parent().popover('hide'); })
                         tagList.bind('click', this.toggletag);
                         addTag.bind('click', this.createtag);
                         showInput.show().siblings('div').hide();

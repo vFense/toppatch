@@ -39,6 +39,12 @@ define(
                     this.tagcollection.bind('reset', this.render, this);
                     this.tagcollection.fetch();
                 },
+                events: {
+                    'change input[name=filter]': 'filterbytag'
+                },
+                filterbytag: function (evt) {
+                    console.log(evt);
+                },
                 beforeRender: $.noop,
                 onRender: $.noop,
                 render: function () {
