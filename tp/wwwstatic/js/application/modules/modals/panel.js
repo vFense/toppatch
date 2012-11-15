@@ -31,7 +31,7 @@ define(
                 },
 
                 initialize: function (options) {
-                    _.union(
+                    this._allowed = _.union(
                         this._allowed,
                         ['animate', 'keyboard', 'backdrop'] // Bootstrap-Modal options
                     );
