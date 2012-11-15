@@ -797,6 +797,19 @@ class TagAddPerNodeHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+class TagRemovePerNodeHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            self.msg = self.get_argument('operation')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
+        result = tagRemovePerNode(self.session, self.msg)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
 
 
 
