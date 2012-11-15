@@ -186,6 +186,8 @@ define(
                 },
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked');
+                    var popover = this.$el.find('#addTag');
+                    if(popover.data('popover')) { popover.popover('destroy') };
                     if (schedule.data('popover')) {
                         schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                         schedule.popover('destroy');

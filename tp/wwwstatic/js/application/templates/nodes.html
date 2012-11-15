@@ -3,6 +3,7 @@
         <header class="clearfix">
             <div class="pull-right"><small>Filter By:</small>
                 <select name="filter" class="btn btn-mini">
+                    <option value="none">None</option>
                     <% if(tagdata.length != 0) { %>
                         <% _.each(tagdata, function(tag) { %>
                             <option><%= tag.tag_name %></option>
