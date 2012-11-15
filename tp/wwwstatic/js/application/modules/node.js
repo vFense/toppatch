@@ -27,13 +27,12 @@ define(
                     this.tagcollection.bind('reset', this.render, this);
                     this.tagcollection.fetch();
 
-                    this.$el.on('click #createtag', this.createtag);
-                    this.$el.on('click input[name=taglist]', this.toggletag);
-
                 },
                 events: {
                     'click .disabled': function (e) { return false; },
                     'click #addTag': 'showtags',
+                    'click #createtag': 'createtag',
+                    'click input[name=taglist]': 'toggletag',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,

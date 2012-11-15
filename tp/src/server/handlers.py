@@ -195,10 +195,12 @@ class FormHandler(BaseHandler):
                     pass
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
+
         if params:
             resultjson = json.loads(params)
             operation_runner = AgentOperation(resultjson)
             operation_runner.run()
+
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
 
