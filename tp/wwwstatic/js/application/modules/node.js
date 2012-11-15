@@ -65,8 +65,6 @@ define(
                         data = this.collection.toJSON()[0],
                         tagData = this.tagcollection.toJSON();
 
-                    console.log(tagData);
-
                     this.$el.html('');
 
                     this.$el.append(template({model: data, tags: tagData}));

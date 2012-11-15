@@ -353,8 +353,6 @@ class NodesHandler(BaseHandler):
             id = self.get_argument('id')
         except:
             id = None
-        else:
-            pass
         if id:
             for u in self.session.query(NodeInfo, SystemInfo).filter(SystemInfo.node_id == id).join(SystemInfo):
                 installed = []
@@ -393,10 +391,18 @@ class NodesHandler(BaseHandler):
             try:
                 queryCount = self.get_argument('count')
                 queryOffset = self.get_argument('offset')
+                filter = self.get_argument('filterby')
             except:
                 queryCount = 10
                 queryOffset = 0
-            for u in self.session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).limit(queryCount).offset(queryOffset):
+                filter = None
+
+            nodes_query = self.session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats)
+
+            if filter is not None:
+                nodes_query = nodes_query.join(TagsPerNode).join(TagInfo).filter(TagInfo.tag == filter)
+
+            for u in nodes_query.limit(queryCount).offset(queryOffset):
                 resultnode = {'ip': u[0].ip_address,
                               'host/status': u[0].host_status,
                               'agent/status': u[0].agent_status,

@@ -16,9 +16,11 @@ define(
                 initialize: function () {
                     this.offset   = this.offset || 0;
                     this.getCount = this.getCount  || 10;
+                    this.filterby = this.filterby || '';
                     this.query    = '?' +
                         'count=' + this.getCount +
-                        '&offset=' + this.offset;
+                        '&offset=' + this.offset +
+                        '&filterby=' + this.filterby;
                     window.myCollection = this;
                 }
             }),
@@ -40,10 +42,12 @@ define(
                     this.tagcollection.fetch();
                 },
                 events: {
-                    'change input[name=filter]': 'filterbytag'
+                    'change select[name=filter]': 'filterbytag'
                 },
                 filterbytag: function (evt) {
-                    console.log(evt);
+                    this.collection.filterby = $(evt.target).val() == 'none' ? '' : $(evt.target).val();
+                    this.collection.initialize();
+                    this.collection.fetch();
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
@@ -64,7 +68,8 @@ define(
                             nextLink: '',
                             recordCount: this.collection.recordCount,
                             data: data,
-                            tagdata: tagdata
+                            tagdata: tagdata,
+                            filter: this.collection.filterby
                         },
                         temp = payload.offset - payload.getCount;
 

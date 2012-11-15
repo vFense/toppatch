@@ -6,7 +6,7 @@
                     <option value="none">None</option>
                     <% if(tagdata.length != 0) { %>
                         <% _.each(tagdata, function(tag) { %>
-                            <option><%= tag.tag_name %></option>
+                            <option <% filter == tag.tag_name ? print('selected') : ''; %>><%= tag.tag_name %></option>
                         <% }); %>
                     <% } %>
                 </select>
