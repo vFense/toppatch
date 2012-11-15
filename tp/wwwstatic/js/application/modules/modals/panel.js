@@ -33,7 +33,8 @@ define(
                 initialize: function (options) {
                     this._allowed = _.union(
                         this._allowed,
-                        ['animate', 'keyboard', 'backdrop'] // Bootstrap-Modal options
+                        ['animate', 'keyboard', 'backdrop'], // Bootstrap-Modal options
+                        ['width'] // Modal options
                     );
 
                     _.extend(this, _.pick(options, this._allowed));
