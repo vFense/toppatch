@@ -14,6 +14,9 @@ define(
                 keyboard: true,
                 backdrop: true,
 
+                // Variables that affect the modal itself
+                width: '', // Leave blank for default bootstrap width
+
                 // White list of variables that are allowed to be set during init
                 _allowed: [],
 
