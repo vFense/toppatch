@@ -98,6 +98,8 @@ define(
                         );
                     }
 
+                    this.setWidth();
+
                     if (this.onRender !== $.noop) { this.onRender(); }
 
                     return this;
@@ -179,6 +181,28 @@ define(
                 },
 
                 confirm: $.noop,
+
+                // optional: width
+                setWidth: function (width) {
+                    var $el = this.$el,
+                        spanNum = /^span[1-9][0-2]{0,1}$/,
+                        numeric = /^[1-9][0-2]{0,1}$/;
+
+                    width = (width || this.width).trim();
+
+                    if (spanNum.test(width)) {
+                        $el.removeClass(this.width)
+                            .addClass(this.width = width);
+                    } else if (numeric.test(width)) {
+                        $el.removeClass(this.width)
+                            .addClass(this.width = 'span' + width);
+                    } else {
+                        $el.removeClass(this.width);
+                        this.width = '';
+                    }
+
+                    return this;
+                },
 
                 beforeClose: function () {
                     if (this.isOpen()) { this.hide(); }
