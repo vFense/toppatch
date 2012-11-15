@@ -371,13 +371,14 @@ class NodesHandler(BaseHandler):
                         available.append({'name': v[1].title, 'id': v[0].toppatch_id})
                     else:
                         available.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                tags = map(lambda x: x[1].tag, self.session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
                 resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
                               'host/status': u[0].host_status,
                               'agent/status': u[0].agent_status,
                               'reboot': u[0].reboot,
                               'id': u[1].node_id,
-                              'tags': [],
+                              'tags': tags,
                               'os/name':u[1].os_string,
                               'patch/need': available,
                               'patch/done': installed,
@@ -776,8 +777,7 @@ class TagAddHandler(BaseHandler):
         self.session = self.application.session
         self.session = validateSession(self.session)
         try:
-            self.msg = self.get_argument('operation')
-            print self.msg
+            self.msg = self.get_argument('operations')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
         result = tagAdder(self.session, self.msg)
@@ -790,8 +790,7 @@ class TagAddPerNodeHandler(BaseHandler):
         self.session = self.application.session
         self.session = validateSession(self.session)
         try:
-            self.msg = self.get_argument('operation')
-            print self.msg
+            self.msg = self.get_argument('operations')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
         result = tagAddPerNode(self.session, self.msg)
