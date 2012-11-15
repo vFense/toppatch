@@ -766,7 +766,7 @@ class TagListerByNodeHandler(BaseHandler):
     def get(self):
         self.session = self.application.session
         self.session = validateSession(self.session)
-        result = tagLister(self.session)
+        result = tagListByNodes(self.session)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -776,7 +776,8 @@ class TagAddHandler(BaseHandler):
         self.session = self.application.session
         self.session = validateSession(self.session)
         try:
-            self.msg = self.get_argument('addTag')
+            self.msg = self.get_argument('operation')
+            print self.msg
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
         result = tagAdder(self.session, self.msg)
@@ -789,7 +790,8 @@ class TagAddPerNodeHandler(BaseHandler):
         self.session = self.application.session
         self.session = validateSession(self.session)
         try:
-            self.msg = self.get_argument('addTagPerNode')
+            self.msg = self.get_argument('operation')
+            print self.msg
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
         result = tagAddPerNode(self.session, self.msg)

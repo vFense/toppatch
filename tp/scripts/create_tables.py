@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 from models.base import Base
 from models.account import *
-#from models.oauth.token import *
-#from models.application import *
-#from models.scanner import *
-#from models.cve import *
-#from models.windows import *
+from models.oauth.token import *
+from models.application import *
+from models.scanner import *
+from models.cve import *
+from models.windows import *
 from models.node import *
-#from models.ssl import *
+from models.ssl import *
 from models.scheduler import *
 from models.tagging import *
 from sqlalchemy import create_engine
@@ -27,7 +27,7 @@ db.drop(CsrInfo)
 db.drop(SslInfo)
 """
 #db.drop(TimeBlocker)
-Base.metadata.drop_all(db)
+#Base.metadata.drop_all(db)
 
 
 """
