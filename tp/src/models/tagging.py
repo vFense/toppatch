@@ -16,7 +16,7 @@ class TagInfo(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
-    tag = Column(VARCHAR(1024), nullable=False, unique=True)
+    tag = Column(VARCHAR(64), nullable=False, unique=True)
     date_created = Column(DATETIME, nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'))
     def __init__(self, tag, date_created, user_id):
