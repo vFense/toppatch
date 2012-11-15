@@ -741,7 +741,6 @@ class TimeBlockerAddHandler(BaseHandler):
     def post(self):
         self.session = self.application.session
         self.session = validateSession(self.session)
-        self.sched = self.application.scheduler
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
@@ -749,6 +748,34 @@ class TimeBlockerAddHandler(BaseHandler):
         result = timeBlockAdder(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+class TagAddHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            self.msg = self.get_argument('addTag')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
+        result = tagAdder(self.session, self.msg)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class TagAddPerNodeHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            self.msg = self.get_argument('addTagPerNode')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
+        result = tagAddPerNode(self.session, self.msg)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
 
 
 class OperationHandler(BaseHandler):
