@@ -173,12 +173,13 @@ class FormHandler(BaseHandler):
                     node['data'] = list(patches)
                     resultjson.append(encode(node))
                 if time:
-                    JobScheduler(resultjson,
+                    result = JobScheduler(resultjson,
                             self.application.scheduler
                             )
                 else:
                     operation_runner = AgentOperation(resultjson)
                     operation_runner.run()
+                    result = operation_runner
                     pass
             elif operation == 'reboot':
                 for node_id in nodes:
@@ -186,15 +187,18 @@ class FormHandler(BaseHandler):
                     node['node_id'] = node_id
                     resultjson.append(encode(node))
                 if time:
-                    JobScheduler(resultjson,
+                    result = JobScheduler(resultjson,
                             self.application.scheduler
                             )
                 else:
                     operation_runner = AgentOperation(resultjson)
                     operation_runner.run()
+                    result = operation_runner
                     pass
             self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(resultjson))
+            self.write(json.dumps(result))
+            print json.dumps(result)
+            #self.write(json.dumps(resultjson))
 
         if params:
             resultjson = json.loads(params)
