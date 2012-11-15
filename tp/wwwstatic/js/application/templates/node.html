@@ -10,7 +10,7 @@
             <dd>
                 <% if (model.tags.length != 0) { %>
                     <% _.each(model.tags, function (tag) { %>
-                        <% print(tag); %>
+                        <span class="label label-info"><%= tag %></span>
                     <% }); %>
                 <% } else { %>
                 <em>No tags applied</em>
@@ -226,7 +226,7 @@
                    <% _.each(tags, function (tag) { %>
                         <div class="item clearfix">
                             <label class="checkbox"><%= tag.tag_name %>
-                                <input name="taglist" value="<%= tag.tagname %>" type="checkbox"
+                                <input value="<%= tag.tag_name %>" name="taglist"  type="checkbox"
                                 <% if (model.tags.length != 0) { %>
                                     <% _.each(model.tags, function (nodeTag) { %>
                                         <% if(nodeTag == tag.tag_name) { print('checked="checked"'); } %>
