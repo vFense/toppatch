@@ -52,13 +52,9 @@ def JobScheduler(job, sched, name=None):
         if 'time' in job_object:
             converted_timestamp = returnDatetime(job_object['time'])
             new_timestamp = dateTimeParser(converted_timestamp)
-            time_block_exists, time_block = timeBlockExistsToday(session, start_date=new_timestamp.date(), start_time=new_timestamp.time())
+            time_block_exists, time_block, json_out = timeBlockExistsToday(session, start_date=new_timestamp.date(), start_time=new_timestamp.time())
             if time_block_exists:
-                print " OHH NOOOOS TIME BLOCK EXISTS"
-                return({
-                        "pass" : False,
-                        "message" : "Time Block %s exists for this time frame" % (time_block.name)
-                       })
+                return json_out
         if 'schedule' in job_object:
             schedule = job_object['schedule']
         if 'once' in job_object['schedule']:
