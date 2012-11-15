@@ -77,6 +77,7 @@ define(
                 },
                 submit: function (evt) {
                     var item, span, label, checkbox, $scheduleForm, type, patches, url, date,
+                        that = this,
                         $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
                         time = '';
@@ -94,40 +95,47 @@ define(
                     $.post(url,
                         function (json) {
                             console.log(json);
+                            //json.pass = false;
+                            //json.message = 'Operation failed to send';
                             if (schedule.data('popover')) {
                                 schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                                 schedule.popover('hide');
+                                schedule.attr('checked', false);
                             }
-                            $('.alert').show();
-                        });
-                    patches.each(function () {
-                        item = $(this).parents('.item');
-                        span = $(this).parents('span');
-                        label = $(this).parent();
-                        checkbox = $(this);
+                            if (json.pass) {
+                                $('.alert').removeClass('alert-error').addClass('alert-success').show().find('span').html(json.message);
+                                patches.each(function () {
+                                    item = $(this).parents('.item');
+                                    span = $(this).parents('span');
+                                    label = $(this).parent();
+                                    checkbox = $(this);
 
-                        checkbox.remove();
-                        var patch = label.html();
-                        span.html(patch);
-                        label.remove();
-                        if (type === 'available' || type === 'failed') {
-                            item.appendTo($('#pending').children());
-                            if ($('#no-pending')) {
-                                $('#no-pending').remove();
+                                    checkbox.remove();
+                                    var patch = label.html();
+                                    span.html(patch);
+                                    label.remove();
+                                    if (type === 'available' || type === 'failed') {
+                                        item.appendTo($('#pending').children());
+                                        if ($('#no-pending')) {
+                                            $('#no-pending').remove();
+                                        }
+                                    } else {
+                                        item.remove();
+                                    }
+                                });
+                                if ($form.find('input:checked').attr('checked')) {
+                                    $form.find('input:checked').attr('checked', false);
+                                }
+                            } else {
+                                $('.alert').removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                             }
-                        } else {
-                            item.remove();
-                        }
-                    });
-                    if ($form.find('input:checked').attr('checked')) {
-                        $form.find('input:checked').attr('checked', false);
-                    }
+                        });
                     return false;
                 },
                 showtags: function (evt) {
-                    var popover = $(evt.target).parent().data('popover'),
-                        showInput, addTag, tagList, close;
-                    if(popover) {
+                    var showInput, addTag, tagList, close,
+                        popover = $(evt.target).parent().data('popover');
+                    if (popover) {
                         showInput = popover.$tip.find('a');
                         close = popover.$tip.find('#close');
                         addTag = showInput.siblings('div').children('button');
