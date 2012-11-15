@@ -10,6 +10,7 @@ from models.node import *
 from models.tagging import *
 from models.scheduler import *
 from models.ssl import *
+from utils.common import *
 
 
 def userExists(session, user_id=None, user_name=None):
@@ -49,12 +50,21 @@ def timeBlockExists(session, id=None, label=None, start_date=None, start_time=No
     if id:
         tb_object = \
             session.query(TimeBlocker).filter_by(id=id)
-    elif label and start_date and start_time:
-        print label, start_date, start_time
-        tb_object = \
-            session.query(TimeBlocker).filter_by(name=label).filter_by(start_date=start_date).filter_by(start_time=start_time)
-    tb = tb_object.first()
+        tb = tb_object.first()
     return(tb_object, tb)
+
+def timeBlockExistsToday(session, start_date=None, start_time=None):
+    if start_date and start_time:
+        tb_object = \
+            session.query(TimeBlocker).filter(TimeBlocker.start_time <= start_time).filter(TimeBlocker.end_time >= start_time)
+        tb = tb_object.first()
+        today_is_blocked = False
+        if tb:
+            days_blocked, days_not_blocked = returnDays(tb.days)
+            for day in days_blocked:
+                if week_day[day] == str(datetime.today().weekday()):
+                    today_is_blocked = True
+        return(today_is_blocked, tb)
 
 def operationExistsUsingNodeId(session, node_id, oper_type):
     oper = \

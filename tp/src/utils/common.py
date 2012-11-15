@@ -23,6 +23,17 @@ days_of_the_week = {
                    '6' : 'Saturday'
                    }
 
+week_day = {
+            'Monday' : '0',
+            'Tuesday' : '1',
+            'Wednesday' : '2',
+            'Thursday' : '3',
+            'Friday' : '4',
+            'Saturday' : '5',
+            'Sunday' : '6'
+            }
+
+
 def verifyJsonIsValid(data):
     verified = True
     json_data = None
@@ -44,18 +55,21 @@ def dateParser(unformatted_date):
     return formatted_date
 
 def dateTimeParser(schedule):
+    print schedule
     if type(schedule) == unicode:
         schedule.encode('utf-8')
     try:
         am_pm = re.search(r'(AM|PM)', schedule).group()
         schedule = re.sub(r'\s+AM|\s+PM', '', schedule)
     except Exception as e:
-        am_pm = None
-        if schedule.split(" ")[1].split(":")[0]:
-            new_hour = twentyfour_hour_reversed[schedule.split(" ")[1].split(":")[0]]
+        am_pm = "AM"
+        if int(schedule.split(" ")[1].split(":")[0]) > 12:
+            new_hour = twentyfour_hour_reversed[str(int(schedule.split(" ")[1].split(":")[0]))]
             schedule = re.sub(r'([0-9]+)(:[0-9]+)', str(new_hour)+'\g<2>', schedule)
+            print schedule
             am_pm = "PM"
     pformatted = map(lambda x: int(x),re.split(r'\/|:|\s+', schedule))
+    print pformatted
     if len(pformatted) == 5 and am_pm:
         month, day, year, hour, minute = pformatted
         if am_pm == 'PM' and str(hour) in twentyfour_hour or \
@@ -98,7 +112,6 @@ def returnDatetime(timestamp):
         valid_timestamp = True
     if valid_timestamp:
         parsed_time = datetime.fromtimestamp(timestamp).strftime('%m/%d/%Y %H:%M')
-        parsed_time = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%s')
         return (parsed_time)
     else:
         return ("Invalid TimeStamp")
