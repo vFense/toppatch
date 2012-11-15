@@ -16,7 +16,8 @@ define(
                 },
                 add: function (evt) {
                     var start_time, end_time, start_date, end_date, params, label, days,
-                        values = $("#dow").data('popover').options.content.val();
+                        values = $("#dow").data('popover').options.content.val(),
+                        that = this;
                     this.highlight(evt);
                     start_time = this.start;
                     end_time = this.end;
@@ -36,10 +37,14 @@ define(
                     console.log(values);
                     if (values) {
                         $.post("/api/timeblocker/add", { operation: JSON.stringify(params) },
-                            function(json) {
-                                console.log(json);
-                                if ($('#dow').data('popover')) { $('#dow').popover('hide'); }
-                                this.$el.find('.alert').show();
+                            function(result) {
+                                console.log(result);
+                                if(result.pass) {
+                                    if ($('#dow').data('popover')) { $('#dow').popover('hide'); }
+                                    that.$el.find('.alert').append(result.message).removeClass('alert-error').addClass('alert-success').show();
+                                } else {
+                                    that.$el.find('.alert').append(result.message).removeClass('alert-success').addClass('alert-error').show();
+                                }
                             });
                     }
                 },
