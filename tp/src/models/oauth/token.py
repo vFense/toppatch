@@ -7,7 +7,11 @@ class AccessToken(Base):
     http://tools.ietf.org/html/draft-ietf-oauth-v2-30#section-1.4
     """
     __tablename__ = "access_tokens"
-
+    __visit_name__ = "column"
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
     id = Column(Integer, primary_key=True)
     token = Column(String(255))
     token_type = Column(String(32)) # Bearer or MAC

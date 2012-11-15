@@ -27,7 +27,7 @@ def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
     except Exception as e:
         print e
 
-def addBlock(session, label, enabled, start_date, end_date,
+def addTimeBlock(session, label, enabled, start_date, end_date,
               start_time, duration, days):
     try:
         add_block = TimeBlocker(label, start_date, end_date,
@@ -180,6 +180,21 @@ def addSoftwareInstalled(session, data):
                         session.commit()
                     except:
                         session.rollback()
+
+def removeTimeBlock(session, id=None, label=None, start_date=None, start_time=None):
+    tb_object, timeblock = timeBlockExists(session, id, label, start_date, start_time)
+    print tb_object, timeblock
+    if tb_object:
+        object_deleted = False, "Time Block %s has not been deleted"\
+                % (timeblock.name)
+        try:
+            tb_object.delete()
+            object_deleted = True, "Time Block %s has been deleted"\
+                    % (timeblock.name)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+    return object_deleted
 
 def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
     exists, operation = operationExists(session, oper_id)

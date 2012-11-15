@@ -1,12 +1,12 @@
-
+#!/usr/bin/env python
 from models.base import Base
 
 # Might look like this module is not being used but it is by relationship()!
 # If not included here, sqlalchemy complains about dependency stuff.
 #from models.oauth.token import *
 
-from sqlalchemy import String, Column, Integer
-from sqlalchemy.orm import relationship
+from sqlalchemy import String, Column, Integer, Text, ForeignKey, schema, types
+from sqlalchemy.orm import relationship, backref
 
 class User(Base):
     """ Basic User Account class representing a record from the 'accounts' table.
@@ -15,7 +15,11 @@ class User(Base):
 
     """
     __tablename__ = "users"
-
+    __visit_name__ = "column"
+    __table_args__ = { 
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
     id = Column(Integer, primary_key=True)
     username = Column(String(255))
     hash = Column(String(255))
@@ -33,7 +37,11 @@ class User(Base):
 class Developer(Base):
     """ Class that helps and defines a row in the "developers" table. """
     __tablename__ = "developers"
-
+    __visit_name__ = "column"
+    __table_args__ = { 
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     client_id = Column(String(255))

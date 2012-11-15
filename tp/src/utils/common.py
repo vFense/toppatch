@@ -1,6 +1,7 @@
 import re
 from json import loads, dumps
 from datetime import datetime
+from datetime import time
 
 twentyfour_hour = {
                    '1' : 13, '2' : 14, '3' : 15, '4' : 16,
@@ -26,6 +27,8 @@ def verifyJsonIsValid(data):
 
 def dateParser(unformatted_date):
     if unformatted_date != "":
+        if type(unformatted_date) == unicode:
+            unformatted_date.encode('utf-8')
         month, day, year = re.split(r'-|/', unformatted_date)
         month, day, year  = int(month), int(day), int(year)
         formatted_date = datetime(year, month, day)
@@ -34,10 +37,15 @@ def dateParser(unformatted_date):
     return formatted_date
 
 def dateTimeParser(schedule):
-    am_pm = re.search(r'(AM|PM)', schedule).group()
-    schedule = re.sub(r'\s+AM|\s+PM', '', schedule)
+    if type(schedule) == unicode:
+        schedule.encode('utf-8')
+    try:
+        am_pm = re.search(r'(AM|PM)', schedule).group()
+        schedule = re.sub(r'\s+AM|\s+PM', '', schedule)
+    except Exception as e:
+        am_pm = None
     pformatted = map(lambda x: int(x),re.split(r'\/|:|\s+', schedule))
-    if len(pformatted) == 5:
+    if len(pformatted) == 5 and am_pm:
         month, day, year, hour, minute = pformatted
         if am_pm == 'PM' and str(hour) in twentyfour_hour or \
                 am_pm == 'AM' and str(hour) == '0':
@@ -47,6 +55,12 @@ def dateTimeParser(schedule):
     elif len(pformatted) == 3:
         month, day, year = pformatted
         formatted_date = datetime(year, month, day)
+    elif len(pformatted) == 2 and am_pm:
+        hour, minute = pformatted
+        if am_pm == 'PM' and str(hour) in twentyfour_hour or \
+                am_pm == 'AM' and str(hour) == '0':
+            hour = twentyfour_hour[str(hour)]
+        formatted_date = time(hour, minute)
     return formatted_date
 
 def returnBool(fake_bool):
@@ -82,7 +96,7 @@ def returnDays(days):
         days_not_enabled = []
         for day in range(len(days)):
             if days[day] == '1':
-                days_enabled.append(days_of_the_week[day])
+                days_enabled.append(days_of_the_week[str(day)])
             else:
-                days_not_enabled.append(days_of_the_week[day])
+                days_not_enabled.append(days_of_the_week[str(day)])
         return(days_enabled, days_not_enabled)
