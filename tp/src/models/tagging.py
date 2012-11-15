@@ -22,7 +22,7 @@ class TagInfo(Base):
     def __init__(self, tag, date_created, user_id):
         self.tag = tag
         self.date_created = date_created
-        user_id = user_id
+        self.user_id = user_id
     def __repr__(self):
         return "<TagInfo(%s,%s,%s)>" %\
                 (

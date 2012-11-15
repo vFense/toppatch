@@ -25,13 +25,9 @@ db.drop(WindowsUpdate)
 db.drop(ManagedWindowsUpdate)
 db.drop(CsrInfo)
 db.drop(SslInfo)
-db.drop(TagInfo)
-db.drop(TagsPerNode)
-db.drop(TagsPerUser)
-db.drop(TagStats)
 """
 #db.drop(TimeBlocker)
-#Base.metadata.drop_all(db)
+Base.metadata.drop_all(db)
 
 
 """
@@ -45,9 +41,4 @@ db.create(ManagedWindowsUpdate)
 db.create(CsrInfo)
 db.create(SslInfo)
 """
-#db.create(TagInfo)
-#db.create(TagsPerNode)
-#db.create(TagsPerUser)
-#db.create(TagStats)
-
 Base.metadata.create_all(db)

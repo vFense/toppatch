@@ -6,6 +6,7 @@ from socket import gethostbyaddr
 from models.base import Base
 from models.windows import *
 from models.node import *
+from models.tagging import *
 from models.scheduler import *
 from utils.common import *
 from utils.db.query_table import *
@@ -27,15 +28,46 @@ def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
     except Exception as e:
         print e
 
-def addTag(session, tag_name, date_created, user_id):
+def addTag(session, tag_name, user_id=None):
+    date_created=datetime.now()
     try:
         add_tag = TagInfo(tag_name, date_created, user_id)
         session.add(add_tag)
         session.commit()
-        return(True, "Tag %s added", tag_name)
+        return(True, "Tag %s added" % (tag_name), add_tag)
     except Exception as e:
         session.rollback()
-        return(False, "Tag %s failed to add", tag_name)
+        print e
+        return(False, "Tag %s failed to add" % (tag_name))
+
+def addTagPerNode(session, nodes=[], tag_id=None, tag_name=None,
+                user_id=None):
+    completed = False
+    count = 0
+    if not tag_id and tag_name:
+        tag_object, tag = tagExists(session, tag_name=tag_name)
+    elif tag_id and not tag_name:
+        tag_object, tag = tagExists(session, tag_id=tag_id)
+    if not tag and user_id:
+        tag_added, tag_msg, tag = \
+                addTag(session, tag_name, user_id=user_id)
+    for node in nodes:
+        tag_for_node_exists = \
+            session.query(TagsPerNode).filter_by(node_id=node).filter_by(tag_id=tag.id).first()
+        if not tag_for_node_exists:
+            try:
+                tag_added = TagsPerNode(tag.id, node, datetime.now())
+                session.add(tag_added)
+                session.commit()
+            except Exception as e:
+                session.rollback()
+                count = count + 1
+        else:
+            count = count + 1
+    if count >=1:
+        return(False, "failed to add nodes to tag %s", tag.tag)
+    else:
+        return(True, "Nodes %s were added to tag %s" % (nodes, tag.tag), tag.tag)
 
 def addTimeBlock(session, label, enabled, start_date, end_date,
               start_time, duration, days):
