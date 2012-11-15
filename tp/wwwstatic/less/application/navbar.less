@@ -60,3 +60,21 @@ BODY > HEADER {
         text-align:center;
     }
 }
+
+.modal() {
+    .spanX (@index) when (@index > 0) {
+      (~".modal.span@{index}") { .span(@index); }
+      .spanX(@index - 1);
+    }
+    .spanX (0) {}
+
+    .span (@columns) {
+        @width: (@gridColumnWidth * @columns) + (@gridGutterWidth * (@columns - 1));
+        width: @width;
+        margin-left: -(@width/2);
+    }
+
+    .spanX(@gridColumns);
+}
+
+.modal();

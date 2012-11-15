@@ -14,6 +14,9 @@ define(
                 keyboard: true,
                 backdrop: true,
 
+                // Variables that affect the modal itself
+                width: '', // Leave blank for default bootstrap width
+
                 // White list of variables that are allowed to be set during init
                 _allowed: [],
 
@@ -31,9 +34,10 @@ define(
                 },
 
                 initialize: function (options) {
-                    _.union(
+                    this._allowed = _.union(
                         this._allowed,
-                        ['animate', 'keyboard', 'backdrop'] // Bootstrap-Modal options
+                        ['animate', 'keyboard', 'backdrop'], // Bootstrap-Modal options
+                        ['width'] // Modal options
                     );
 
                     _.extend(this, _.pick(options, this._allowed));
@@ -93,6 +97,8 @@ define(
                                 '</div>'
                         );
                     }
+
+                    this.setWidth();
 
                     if (this.onRender !== $.noop) { this.onRender(); }
 
@@ -175,6 +181,28 @@ define(
                 },
 
                 confirm: $.noop,
+
+                // optional: width
+                setWidth: function (width) {
+                    var $el = this.$el,
+                        spanNum = /^span[1-9][0-2]{0,1}$/,
+                        numeric = /^[1-9][0-2]{0,1}$/;
+
+                    width = (width || this.width).trim();
+
+                    if (spanNum.test(width)) {
+                        $el.removeClass(this.width)
+                            .addClass(this.width = width);
+                    } else if (numeric.test(width)) {
+                        $el.removeClass(this.width)
+                            .addClass(this.width = 'span' + width);
+                    } else {
+                        $el.removeClass(this.width);
+                        this.width = '';
+                    }
+
+                    return this;
+                },
 
                 beforeClose: function () {
                     if (this.isOpen()) { this.hide(); }
