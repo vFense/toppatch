@@ -27,6 +27,16 @@ def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
     except Exception as e:
         print e
 
+def addTag(session, tag_name, date_created, user_id):
+    try:
+        add_tag = TagInfo(tag_name, date_created, user_id)
+        session.add(add_tag)
+        session.commit()
+        return(True, "Tag %s added", tag_name)
+    except Exception as e:
+        session.rollback()
+        return(False, "Tag %s failed to add", tag_name)
+
 def addTimeBlock(session, label, enabled, start_date, end_date,
               start_time, duration, days):
     try:
