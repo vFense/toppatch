@@ -24,15 +24,16 @@ define(
                 'schedule'      : 'showSchedule',
 
                 // Admin panel
-                'admin'         : 'showAdmin',
+                'account'         : 'showAccount',
 
                 // Administration Panels
-                // Warning, update modals/panel.js open method when changing 'testAdmin'
-                'testAdmin'     : 'modal/admin',
-                'testAdmin/managetags': 'modal/admin/managetags',
-                'testAdmin/nodes': 'modal/admin/nodes',
-                'testAdmin/timeblock': 'modal/admin/timeblock',
-                'testAdmin/listblocks': 'modal/admin/listblocks'
+                // Notice, update modals/admin/main.js if adding new admin/route
+                // Warning, update modals/panel.js open method if changing 'admin'
+                // Warning, update route method if chancing 'admin'
+                'admin/managetags': 'modal/admin/managetags',
+                'admin/nodes'     : 'modal/admin/nodes',
+                'admin/timeblock' : 'modal/admin/timeblock',
+                'admin/listblocks': 'modal/admin/listblocks'
 
                 // Default
                 // '*other'        : 'defaultAction'
@@ -120,11 +121,8 @@ define(
             showMulti: function () {
                 this.show({hash: '#multi', title: 'Patch Operations', view: 'modules/multi'});
             },
-            showAdmin: function () {
+            showAccount: function () {
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
-            },
-            'modal/admin': function () {
-                this.openAdminModalWithView('modals/admin/general');
             },
             'modal/admin/managetags': function () {
                 this.openAdminModalWithView('modals/admin/managetags');
