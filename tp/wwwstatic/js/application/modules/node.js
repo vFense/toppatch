@@ -18,6 +18,7 @@ define(
                 },
                 events: {
                     'click .disabled': function (e) { console.log(['click a.disabled', e]); return false; },
+                    'click #addTag': 'showtags',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
@@ -81,6 +82,16 @@ define(
                     });
                     if($form.find('input:checked').attr('checked')) {
                         $form.find('input:checked').attr('checked', false);
+                    }
+                    return false;
+                },
+                showtags: function (evt) {
+                    var popover = $(evt.target).parent().data('popover');
+                    if(popover) {
+                        popover.$tip.find('a').bind('click',function() {
+                            console.log(this);
+                            $(this).hide().siblings('div').show();
+                        });
                     }
                     return false;
                 },
