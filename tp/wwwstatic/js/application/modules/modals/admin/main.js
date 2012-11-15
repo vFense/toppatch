@@ -10,6 +10,7 @@ define(
                     this.navigation = new tabNav.View({
                         tabs: [
                             {text: 'General', href: 'testAdmin'},
+                            {text: 'Manage Tags', href: 'testAdmin/managetags'},
                             {text: 'Approve Nodes', href: 'testAdmin/nodes'},
                             {text: 'Add Time Block', href: 'testAdmin/timeblock'},
                             {text: 'See Time Blocks', href: 'testAdmin/listblocks'}
