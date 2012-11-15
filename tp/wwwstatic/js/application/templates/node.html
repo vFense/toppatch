@@ -15,7 +15,7 @@
                 <% } else { %>
                 <em>No tags applied</em>
                 <% } %>
-                &nbsp;<input type="submit" value="Add Tag" id="tag-button" class="btn btn-primary btn-mini" data-placement="right"/>
+                &nbsp;<a href="#" id="addTag" data-placement="right"><i style="color: green;" class="icon-plus" ></i></a>
             </dd>
             <dt>Agent Status:</dt>
             <dd>
@@ -269,6 +269,12 @@
                 return false;
             }
         }
+    });
+    $('#addTag').click(function (){ return false; }).popover({
+        title: 'Tags Available',
+        html: true,
+        trigger: 'click',
+        content: 'hello world'
     });
     $('input[name=schedule]').each(function () {
         $(this).popover({
