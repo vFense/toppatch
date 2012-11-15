@@ -63,5 +63,10 @@ def JobScheduler(job, sched, name=None):
             schedule = job_object['schedule']
         if 'once' in job_object['schedule']:
             addOnce(new_timestamp, name, job, sched)
+            return({
+                    "pass" : True,
+                    "message" : "Schedule %s has been added to this time frame %s " % (name, converted_timestamp)
+                   })
+
 
 
