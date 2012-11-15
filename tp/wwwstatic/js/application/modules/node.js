@@ -181,6 +181,10 @@ define(
                     } else {
                         //remove node from tag
                         params.operation = 'remove_from_tag';
+                        $.post("/api/tagging/removeTagPerNode", { operation: JSON.stringify(params) },
+                            function(json) {
+                                console.log(json);
+                            });
                     }
                     console.log(params);
                 },
