@@ -9,16 +9,29 @@ define(
                     return this.baseUrl + '?id=' + this.id;
                 }
             }),
+            TagCollection: Backbone.Collection.extend({
+                baseUrl: '',
+                url: function () {
+                    return this.baseUrl;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
+                    /*
+                    this.tagcollection = new exports.TagCollection();
+                    this.tagcollection.bind('reset', this.render, this);
+                    this.tagcollection.fetch();
+                    */
                 },
                 events: {
                     'click .disabled': function (e) { console.log(['click a.disabled', e]); return false; },
                     'click #addTag': 'showtags',
+                    'click #createtag': 'createtag',
+                    'click input[name=taglist]': 'toggletag',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
@@ -50,7 +63,9 @@ define(
 
                     var template = _.template(this.template),
                         data = this.collection.toJSON()[0];
+                        //tagData = this.tagcollection.toJSON();
                     this.$el.html('');
+
                     this.$el.append(template({model: data}));
 
                     this.$el.find("a.disabled").on("click", false);
@@ -108,15 +123,55 @@ define(
                     return false;
                 },
                 showtags: function (evt) {
-                    var popover = $(evt.target).parent().data('popover'), newTag;
+                    var popover = $(evt.target).parent().data('popover'),
+                        showInput, addTag, tagList;
                     if(popover) {
-                        newTag = popover.$tip.find('a');
-                        newTag.show().siblings('div').hide();
-                        newTag.bind('click',function() {
+                        showInput = popover.$tip.find('a');
+                        addTag = showInput.siblings('div').children('button');
+                        tagList = popover.$tip.find('input[name=taglist]');
+                        tagList.bind('click', this.toggletag);
+                        addTag.bind('click', this.createtag);
+                        showInput.show().siblings('div').hide();
+                        showInput.bind('click',function() {
                             $(this).hide().siblings('div').show();
                         });
                     }
                     return false;
+                },
+                createtag: function (evt) {
+                    var params, tag, user, nodes, operation;
+                    operation = 'add_to_tag';
+                    user = window.User.get('name');
+                    tag = $(evt.currentTarget).siblings().val();
+                    nodes = $(evt.currentTarget).parents('form').find('input[name=nodeid]').val();
+                    params = {
+                        nodes: [nodes],
+                        username: user,
+                        tag: tag,
+                        operation: operation
+                    }
+                    console.log(params);
+                    return false;
+                },
+                toggletag: function (evt) {
+                    var toAdd = evt.currentTarget.checked,
+                        params, nodes, tag, user;
+                    user = window.User.get('name');
+                    tag = $(evt.currentTarget).val();
+                    nodes = $(evt.currentTarget).parents('form').find('input[name=nodeid]').val();
+                    params = {
+                        nodes: [nodes],
+                        username: user,
+                        tag: tag
+                    }
+                    if(toAdd) {
+                        //add node to tag
+                        params.operation = 'add_to_tag';
+                    } else {
+                        //remove node from tag
+                        params.operation = 'remove_from_tag';
+                    }
+                    console.log(params);
                 },
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked');

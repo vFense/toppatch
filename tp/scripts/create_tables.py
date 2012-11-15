@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 from models.base import Base
 from models.account import *
-from models.oauth.token import *
-from models.application import *
-from models.scanner import *
-from models.cve import *
-from models.windows import *
+#from models.oauth.token import *
+#from models.application import *
+#from models.scanner import *
+#from models.cve import *
+#from models.windows import *
 from models.node import *
-from models.ssl import *
+#from models.ssl import *
 from models.scheduler import *
 from models.tagging import *
 from sqlalchemy import create_engine
@@ -44,9 +44,10 @@ db.create(WindowsUpdate)
 db.create(ManagedWindowsUpdate)
 db.create(CsrInfo)
 db.create(SslInfo)
-db.create(TagInfo)
-db.create(TagsPerNode)
-db.create(TagsPerUser)
-db.create(TagStats)
 """
-#Base.metadata.create_all(db)
+#db.create(TagInfo)
+#db.create(TagsPerNode)
+#db.create(TagsPerUser)
+#db.create(TagStats)
+
+Base.metadata.create_all(db)
