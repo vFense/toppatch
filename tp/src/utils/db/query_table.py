@@ -57,13 +57,14 @@ def timeBlockExistsToday(session, start_date=None, start_time=None):
     if start_date and start_time:
         tb_object = \
             session.query(TimeBlocker).filter(TimeBlocker.start_time <= start_time).filter(TimeBlocker.end_time >= start_time)
-        tb = tb_object.first()
+        tbs = tb_object.all()
         today_is_blocked = False
-        if tb:
-            days_blocked, days_not_blocked = returnDays(tb.days)
-            for day in days_blocked:
-                if week_day[day] == str(datetime.today().weekday()):
-                    today_is_blocked = True
+        for tb in tbs:
+            if tb:
+                days_blocked, days_not_blocked = returnDays(tb.days)
+                for day in days_blocked:
+                    if week_day[day] == str(datetime.today().weekday()):
+                        today_is_blocked = True
         return(today_is_blocked, tb)
 
 def operationExistsUsingNodeId(session, node_id, oper_type):
