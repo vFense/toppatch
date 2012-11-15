@@ -353,8 +353,6 @@ class NodesHandler(BaseHandler):
             id = self.get_argument('id')
         except:
             id = None
-        else:
-            pass
         if id:
             for u in self.session.query(NodeInfo, SystemInfo).filter(SystemInfo.node_id == id).join(SystemInfo):
                 installed = []
@@ -393,10 +391,18 @@ class NodesHandler(BaseHandler):
             try:
                 queryCount = self.get_argument('count')
                 queryOffset = self.get_argument('offset')
+                filter = self.get_argument('filterby')
             except:
                 queryCount = 10
                 queryOffset = 0
-            for u in self.session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).limit(queryCount).offset(queryOffset):
+                filter = None
+
+            nodes_query = self.session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats)
+
+            if filter is not None:
+                nodes_query = nodes_query.join(TagsPerNode).join(TagInfo).filter(TagInfo.tag == filter)
+
+            for u in nodes_query.limit(queryCount).offset(queryOffset):
                 resultnode = {'ip': u[0].ip_address,
                               'host/status': u[0].host_status,
                               'agent/status': u[0].agent_status,
@@ -777,7 +783,7 @@ class TagAddHandler(BaseHandler):
         self.session = self.application.session
         self.session = validateSession(self.session)
         try:
-            self.msg = self.get_argument('operations')
+            self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
         result = tagAdder(self.session, self.msg)
@@ -790,10 +796,23 @@ class TagAddPerNodeHandler(BaseHandler):
         self.session = self.application.session
         self.session = validateSession(self.session)
         try:
-            self.msg = self.get_argument('operations')
+            self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
         result = tagAddPerNode(self.session, self.msg)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class TagRemovePerNodeHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            self.msg = self.get_argument('operation')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
+        result = tagRemovePerNode(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 

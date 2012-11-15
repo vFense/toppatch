@@ -37,7 +37,7 @@ define(
                 beforeRender: $.noop,
                 onRender: function () {
                     this.$el.find('#addTag').popover({
-                        title: 'Tags Available',
+                        title: 'Tags Available<a href="javascript:;" class="pull-right" id="close"><i class="icon-remove"></i></a>' ,
                         html: true,
                         trigger: 'click',
                         content: $('#list-form')
@@ -64,8 +64,6 @@ define(
                     var template = _.template(this.template),
                         data = this.collection.toJSON()[0],
                         tagData = this.tagcollection.toJSON();
-
-                    console.log(tagData);
 
                     this.$el.html('');
 
@@ -127,11 +125,13 @@ define(
                 },
                 showtags: function (evt) {
                     var popover = $(evt.target).parent().data('popover'),
-                        showInput, addTag, tagList;
+                        showInput, addTag, tagList, close;
                     if(popover) {
                         showInput = popover.$tip.find('a');
+                        close = popover.$tip.find('#close');
                         addTag = showInput.siblings('div').children('button');
                         tagList = popover.$tip.find('input[name=taglist]');
+                        close.bind('click', function () { $(evt.target).parent().popover('hide'); })
                         tagList.bind('click', this.toggletag);
                         addTag.bind('click', this.createtag);
                         showInput.show().siblings('div').hide();
@@ -168,7 +168,7 @@ define(
                     nodes = $(evt.currentTarget).parents('form').find('input[name=nodeid]').val();
                     params = {
                         nodes: [nodes],
-                        username: user,
+                        user: user,
                         tag: tag
                     }
                     if(toAdd) {
@@ -181,6 +181,10 @@ define(
                     } else {
                         //remove node from tag
                         params.operation = 'remove_from_tag';
+                        $.post("/api/tagging/removeTagPerNode", { operation: JSON.stringify(params) },
+                            function(json) {
+                                console.log(json);
+                            });
                     }
                     console.log(params);
                 },

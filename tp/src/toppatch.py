@@ -80,6 +80,7 @@ class Application(tornado.web.Application):
             (r"/api/tagging/listByNode.json/?", TagListerByNodeHandler),
             (r"/api/tagging/addTag?", TagAddHandler),
             (r"/api/tagging/addTagPerNode?", TagAddPerNodeHandler),
+            (r"/api/tagging/removeTagPerNode?", TagRemovePerNodeHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.

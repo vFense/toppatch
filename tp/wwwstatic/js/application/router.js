@@ -86,7 +86,8 @@ define(
                         var params = app.parseQuery(query);
                         myView.Collection = myView.Collection.extend({
                             getCount: params.count,
-                            offset: params.offset
+                            offset: params.offset,
+                            filterby: params.filterby
                         });
                     }
                     that.show({hash: '#nodes', title: 'Nodes', view: new myView.View()});

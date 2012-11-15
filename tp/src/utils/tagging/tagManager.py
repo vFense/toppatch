@@ -68,6 +68,7 @@ def tagAddPerNode(session, msg):
             tag_name = json_msg['tag']
         if 'nodes' in json_msg:
             nodes = json_msg['nodes']
+        print msg
         user = session.query(User).filter_by(username=user_name).first()
         if user:
             tag_out = addTagPerNode(session, nodes, tag_name=tag_name, user_id=user.id)
@@ -76,3 +77,19 @@ def tagAddPerNode(session, msg):
                      "message" : tag_out[1]
                      }
         return tagged
+
+def tagRemovePerNode(session, msg):
+    valid, json_msg = verifyJsonIsValid(msg)
+    if valid:
+        if 'tag' in json_msg:
+            tag_name = json_msg['tag']
+        if 'nodes' in json_msg:
+            nodes = json_msg['nodes']
+        print msg
+        tag_out = removeTagsFromNode(session, tag_name, nodes=nodes)
+        tagged = {
+                 "pass" : tag_out[0],
+                 "message" : tag_out[1]
+                 }
+        return tagged
+ 
