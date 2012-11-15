@@ -22,7 +22,29 @@ define(
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
-                onRender: $.noop,
+                onRender: function () {
+                    this.$el.find('#addTag').popover({
+                        title: 'Tags Available',
+                        html: true,
+                        trigger: 'click',
+                        content: $('#list-form')
+                    });
+                    this.$el.find('input[name=schedule]').each(function () {
+                        $(this).popover({
+                            placement: 'top',
+                            title: 'Patch Scheduling',
+                            html: true,
+                            content: $('#schedule-form').clone(),
+                            trigger: 'click'
+                        });
+                    }).click(function () {
+                            if(this.checked) {
+                                $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
+                            } else {
+                                $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                            }
+                    });
+                },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
@@ -86,10 +108,11 @@ define(
                     return false;
                 },
                 showtags: function (evt) {
-                    var popover = $(evt.target).parent().data('popover');
+                    var popover = $(evt.target).parent().data('popover'), newTag;
                     if(popover) {
-                        popover.$tip.find('a').bind('click',function() {
-                            console.log(this);
+                        newTag = popover.$tip.find('a');
+                        newTag.show().siblings('div').hide();
+                        newTag.bind('click',function() {
                             $(this).hide().siblings('div').show();
                         });
                     }
