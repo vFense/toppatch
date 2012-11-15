@@ -168,7 +168,7 @@ define(
                     nodes = $(evt.currentTarget).parents('form').find('input[name=nodeid]').val();
                     params = {
                         nodes: [nodes],
-                        username: user,
+                        user: user,
                         tag: tag
                     }
                     if(toAdd) {
