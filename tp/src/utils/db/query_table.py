@@ -65,7 +65,7 @@ def timeBlockExistsToday(session, start_date=None, start_time=None):
                 for day in days_blocked:
                     if week_day[day] == str(datetime.today().weekday()):
                         today_is_blocked = True
-        return(today_is_blocked, tb)
+                        return(today_is_blocked, tb)
 
 def operationExistsUsingNodeId(session, node_id, oper_type):
     oper = \
