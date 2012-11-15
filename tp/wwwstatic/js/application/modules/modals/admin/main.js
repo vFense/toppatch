@@ -9,11 +9,10 @@ define(
                     this.template = myTemplate;
                     this.navigation = new tabNav.View({
                         tabs: [
-                            {text: 'General', href: 'testAdmin'},
-                            {text: 'Tagging', href: 'testAdmin/managetags'},
-                            {text: 'Approve Nodes', href: 'testAdmin/nodes'},
-                            {text: 'Time Blocker', href: 'testAdmin/timeblock'},
-                            {text: 'See Time Blocks', href: 'testAdmin/listblocks'}
+                            //{text: 'Tagging', href: 'admin/managetags'},
+                            {text: 'Approve Nodes', href: 'admin/nodes'},
+                            {text: 'Time Blocker', href: 'admin/timeblock'},
+                            {text: 'See Time Blocks', href: 'admin/listblocks'}
                         ]
                     });
                 },

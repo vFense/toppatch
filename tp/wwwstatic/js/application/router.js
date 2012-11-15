@@ -24,21 +24,23 @@ define(
                 'schedule'      : 'showSchedule',
 
                 // Admin panel
-                'admin'         : 'showAdmin',
+                'account'         : 'showAccount',
 
                 // Administration Panels
-                // Warning, update modals/panel.js open method when changing 'testAdmin'
-                'testAdmin'     : 'modal/admin',
-                'testAdmin/managetags': 'modal/admin/managetags',
-                'testAdmin/nodes': 'modal/admin/nodes',
-                'testAdmin/timeblock': 'modal/admin/timeblock',
-                'testAdmin/listblocks': 'modal/admin/listblocks'
+                // Notice, update modals/admin/main.js if adding new admin/route
+                // Warning, update modals/panel.js open method if changing 'admin'
+                // Warning, update route method if chancing 'admin'
+                'admin/managetags': 'modal/admin/managetags',
+                'admin/nodes'     : 'modal/admin/nodes',
+                'admin/timeblock' : 'modal/admin/timeblock',
+                'admin/listblocks': 'modal/admin/listblocks'
 
                 // Default
                 // '*other'        : 'defaultAction'
             },
             route: function (route, name, callback) {
-                var modals = app.views.modals;
+                var modals = app.views.modals,
+                    adminRoutePattern = /^admin$|\/\w/; // expect 'admin' or 'admin/foo'
 
                 // Override the route method
                 this.constructor.__super__.route.call(this, route, name, function () {
@@ -51,13 +53,15 @@ define(
 
                     // close any open modals
                     // Do not close admin panel if next route uses admin panel
-                    if (this.currentFragment.indexOf('testAdmin') !== 0) {
+                    if (!adminRoutePattern.test(this.currentFragment)) {
                         if (modals.admin instanceof Backbone.View && modals.admin.isOpen()) {
                             modals.admin.close();
                         }
                     }
 
                     // run callback
+                    // If there is an error here, check the spelling
+                    // of the function in routes
                     callback.apply(this, arguments);
 
                     // after route event
@@ -121,11 +125,8 @@ define(
             showMulti: function () {
                 this.show({hash: '#multi', title: 'Patch Operations', view: 'modules/multi'});
             },
-            showAdmin: function () {
+            showAccount: function () {
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
-            },
-            'modal/admin': function () {
-                this.openAdminModalWithView('modals/admin/general');
             },
             'modal/admin/managetags': function () {
                 this.openAdminModalWithView('modals/admin/managetags');
@@ -201,7 +202,7 @@ define(
                         function (panel, admin, content) {
                             if (!modal || !modal instanceof panel.View) {
                                 app.views.modals.admin = modal = new panel.View({
-                                    width: 'span9'
+                                    span: 'span9'
                                 });
                             }
 
