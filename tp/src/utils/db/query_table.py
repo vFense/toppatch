@@ -72,7 +72,7 @@ def timeBlockExistsToday(session, start_date=None, start_time=None):
                         return(today_is_blocked, tb, json_out)
         json_out = {
                     "pass" : True,
-                    "message" : "Time Block does not exists for this time frame %s" % (start_date.date())
+                    "message" : "Time Block does not exists for this time frame %s" % (start_date.strftime('%m/%d/%Y'))
                    }
         return(today_is_blocked, "No time blocks were found", json_out)
 
