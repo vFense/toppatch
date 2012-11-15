@@ -8,6 +8,8 @@ from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
 from utils.agentoperation import AgentOperation
 from utils.common import *
 from utils.db.query_table import nodeExists
+from utils.db.client import *
+from models.scheduler import *
 
 def jobLister(session,sched):
     jobs = sched.get_jobs()
@@ -39,6 +41,8 @@ def addRecurrent(timestamp, name, job, sched):
                 )
 
 def JobScheduler(job, sched, name=None):
+        ENGINE = initEngine()
+        session = createSession(ENGINE)
         log = logging.basicConfig()
         converted_timestamp = None
         schedule = None
@@ -47,6 +51,14 @@ def JobScheduler(job, sched, name=None):
             name = job_object['operation']
         if 'time' in job_object:
             converted_timestamp = returnDatetime(job_object['time'])
+            #new_timestamp = dateTimeParser(converted_timestamp)
+            #time_block_exists = \
+            #    session.query(TimeBlocker).filter(TimeBlocker.start_date == new_timestamp.date()).filter(TimeBlocker.start_time <= new_timestamp.time()).filter(TimeBlocker.end_time >= new_timestamp.time()).first()
+            #if time_block_exists:
+            #    return({
+            #            "pass" : False,
+            #            "message" : "Time Block %s exists for this time frame" % (time_block_exists.name)
+            #           })
         if 'schedule' in job_object:
             schedule = job_object['schedule']
         if 'once' in job_object['schedule']:

@@ -50,6 +50,7 @@ def dateTimeParser(schedule):
         am_pm = re.search(r'(AM|PM)', schedule).group()
         schedule = re.sub(r'\s+AM|\s+PM', '', schedule)
     except Exception as e:
+        am_pm = None
         if schedule.split(" ")[1].split(":")[0]:
             new_hour = twentyfour_hour_reversed[schedule.split(" ")[1].split(":")[0]]
             schedule = re.sub(r'([0-9]+)(:[0-9]+)', str(new_hour)+'\g<2>', schedule)
@@ -97,6 +98,7 @@ def returnDatetime(timestamp):
         valid_timestamp = True
     if valid_timestamp:
         parsed_time = datetime.fromtimestamp(timestamp).strftime('%m/%d/%Y %H:%M')
+        parsed_time = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%s')
         return (parsed_time)
     else:
         return ("Invalid TimeStamp")
