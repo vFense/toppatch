@@ -665,14 +665,19 @@ class SeverityHandler(BaseHandler):
         result = []
         self.session = self.application.session
         self.session = validateSession(self.session)
-        for u in self.session.query(WindowsUpdate.severity).distinct().all():
-            count = 0
-            for v in self.session.query(WindowsUpdate).filter(WindowsUpdate.severity == u.severity).all():
-                count += 1
-                print v
-            print u
-            resultjson = { 'label' : str(u.severity), 'value' : count }
-            result.append(resultjson)
+
+        query_tables = [WindowsUpdate, LinuxPackage]
+
+        for table in query_tables:
+            for u in self.session.query(table.severity).distinct().all():
+                count = 0
+                for v in self.session.query(table).filter(table.severity == u.severity).all():
+                    count += 1
+                    print v
+                print u
+                resultjson = { 'label' : str(u.severity), 'value' : count }
+                result.append(resultjson)
+
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
