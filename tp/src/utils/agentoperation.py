@@ -108,7 +108,8 @@ class AgentOperation():
                         "operation_id" : oper_id,
                         "data" : data_list
                      }
-        updateNodeNetworkStats(self.session, node_id)
+        updateNodeStats(self.session, node_id)
+        updateNetworkStats(self.session)
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'
         print msg
@@ -121,7 +122,8 @@ class AgentOperation():
             if response[1]['operation'] == 'received':
                 completed = True
                 updateOperationRow(self.session, oper_id, oper_recv=True)
-                updateNodeNetworkStats(self.session, node_id)
+                updateNodeStats(self.session, node_id)
+                updateNetworkStats(self.session)
                 if oper_type == 'reboot':
                     updateRebootStatus(self.session, node_id, oper_type)
                 if 'data' in jsonobject:
@@ -130,8 +132,9 @@ class AgentOperation():
                             patcher = self.session.query(ManagedWindowsUpdate).filter_by(toppatch_id=patch).filter_by(node_id=node_id)
                             patcher.update({"pending" : True})
                             self.session.commit()
-                            updateNodeNetworkStats(self.session, node_id)
-        self.result ={
+                            updateNodeStats(self.session, node_id)
+                            updateNetworkStats(self.session)
+            self.result ={
                           "node_id" : node_id,
                           "operation_id" : oper_id,
                           "message" : connect.read_data,
