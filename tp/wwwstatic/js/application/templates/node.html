@@ -3,9 +3,20 @@
     <header><strong>Node Details</strong></header>
     <section class="well well-small noMargin clearfix">
         <dl>
-            <dt>Node IP:</dt><dd><% print(model.ip); %></dd>
-            <dt>Hostname:</dt><dd><% print(model['host/name']); %></dd>
-            <dt>Operating System:</dt><dd><% print(model['os/name']); %></dd>
+            <dt>Node IP:</dt><dd><% print(model.ip || '<em>Not listed</em>'); %></dd>
+            <dt>Hostname:</dt><dd><% print(model['host/name'] || '<em>Not listed</em>'); %></dd>
+            <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
+            <dt>Tags applied:</dt>
+            <dd id="taglist">
+                <% if (model.tags.length != 0) { %>
+                    <% _.each(model.tags, function (tag) { %>
+                        <span class="label label-info" id="<%= tag %>"><%= tag %></span>
+                    <% }); %>
+                <% } else { %>
+                <em>No tags applied</em>
+                <% } %>
+                &nbsp;<a href="#" id="addTag" data-placement="bottom"><i style="color: green;" class="icon-plus" ></i></a>
+            </dd>
             <dt>Agent Status:</dt>
             <dd>
                 <% if (model['agent/status']) { %>
@@ -20,15 +31,17 @@
                 <form id="reboot-form" class="noMargin">
                     Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;
                     <input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/>
+                    Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
                     <input type="hidden" name="operation" value="reboot" />
-                    <input type="hidden" name="node" value="' + model.id + '"/>
+                    <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
                 <% } else if (model['host/status']) { %>
                 <form id="reboot-form">
                     Running &nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
-                    <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>
+                    <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>&nbsp;
+                    Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
                     <input type="hidden" name="operation" value="reboot" />
-                    <input type="hidden" name="node" value="' + model.id + '"/>
+                    <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
                 <% } else { %>
                 Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>
@@ -37,9 +50,9 @@
         </dl>
     </section>
 </article>
-<article class="alert alert-success alert-block fade in hide">
+<article class="alert alert-block fade in hide">
     <button type="button" class="close" data-dismiss="alert">×</button>
-    Operation sent&nbsp;
+    <span class="help-inline"></span>
 </article>
 <article>
     <header><strong>Patches Available</strong></header>
@@ -51,9 +64,20 @@
                     <input type="checkbox" class="toggle-all">Select / Deselect All
                 </label>
                 <div class="pull-right noMargin">
+                    <label class="checkbox inline">
+                        <input type="checkbox" name="schedule" value="once"/><small>Schedule this patch</small>&nbsp;
+                    </label>
                     <select type="button" class="btn btn-mini" name="operation">
                         <option value="install">Install</option>
                         <option value="hide">Hide</option>
+                    </select>
+                    <select type="button" class="btn btn-mini" name="throttle">
+                        <option>idle</option>
+                        <option value="below_normal">below normal</option>
+                        <option>normal</option>
+                        <option value="above_normal">above normal</option>
+                        <option>high</option>
+                        <option value="real_time">real time</option>
                     </select>
                     <input type="submit" class="btn btn-mini btn-primary" value="Submit">
                 </div>
@@ -132,18 +156,16 @@
     <section class="list" id="pending">
         <div class="items">
             <% if (model['patch/pend'].length != 0) { %>
-            <% _.each(model['patch/pend'], function (patch, i) { %>
-            <div class="item clearfix" title="<%= patch.name %>">
-                <span class="desc"><%= patch.name %></span>
-                            <span class="pull-right">
-                                <a href="#patches/<%= patch.id %>">More information</a>
-                            </span>
-            </div>
-            <% }); %>
+                <% _.each(model['patch/pend'], function (patch, i) { %>
+                    <div class="item clearfix" title="<%= patch.name %>">
+                        <span class="desc"><%= patch.name %></span>
+                        <span class="pull-right"><a href="#patches/<%= patch.id %>">More information</a></span>
+                    </div>
+                <% }); %>
             <% }  else { %>
-            <div class="item" id="no-pending">
-                <small><em>No patches to display</em></small>
-            </div>
+                <div class="item" id="no-pending">
+                    <small><em>No patches to display</em></small>
+                </div>
             <% } %>
         </div>
     </section>
@@ -169,15 +191,15 @@
             <% _.each(model['patch/fail'], function (patch) { %>
             <div class="items">
                 <div class="item clearfix" title="<%= patch.name %>">
-                                <span class="desc">
-                                    <label class="checkbox inline">
-                                        <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                        <%= patch.name.slice %>
-                                    </label>
-                                </span>
-                                <span class="pull-right">
-                                    <a href="#patches/<%= patch.id %>">More information</a>
-                                </span>
+                    <span class="desc">
+                        <label class="checkbox inline">
+                            <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                            <%= patch.name %>
+                        </label>
+                    </span>
+                    <span class="pull-right">
+                        <a href="#patches/<%= patch.id %>">More information</a>
+                    </span>
                 </div>
             </div>
             <% }); %>
@@ -191,21 +213,82 @@
         <% } %>
     </section>
 </article>
+<style>
+    div.ui-datepicker{
+        font-size:12px;
+    }
+</style>
+<div id="hidden" class="hide">
+    <form id="list-form">
+        <div class="list">
+            <div class="items">
+               <% if(tags.length != 0) { %>
+                   <% _.each(tags, function (tag) { %>
+                        <div class="item clearfix">
+                            <label class="checkbox"><%= tag.tag_name %>
+                                <input value="<%= tag.tag_name %>" name="taglist"  type="checkbox"
+                                <% if (model.tags.length != 0) { %>
+                                    <% _.each(model.tags, function (nodeTag) { %>
+                                        <% if(nodeTag == tag.tag_name) { print('checked="checked"'); } %>
+                                    <% }); %>
+                                <% } %> />
+                            </label>
+                        </div>
+                    <% }); %>
+                <% } %>
+                <div class="item clearfix">
+                    <a id="newtag" href="javascript:;"><span>New tag...</span></a>
+                    <div class="hide inline input-append">
+                        <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
+                        <button class="btn" id="createtag">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="nodeid" value="<% print(model.id); %>"/>
+    </form>
+    <form class="form-horizontal" id="schedule-form">
+        <label>Date:</label>
+        <input type="text" name="datepicker" class="input-medium"/>
+        <label>Time:</label>
+        <div class="inline">
+            <select name="hours" id="hours" class="span1">
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+            </select>
+            <select name="minutes" class="span1">
+                <option>00</option>
+                <option>15</option>
+                <option>30</option>
+                <option>45</option>
+            </select>
+            <select name="ampm" class="span1">
+                <option>AM</option>
+                <option>PM</option>
+            </select>
+        </div>
+        <label>Label:</label>
+        <input type="text" name="label" class="input-medium"/>
+    </form>
+</div>
 <script>
     $('.toggle-all').click(function(el){
         var status = el.target.checked,
                 form = $(el.target).parents('form');
-        $(form).find(":checkbox").each( function() {
+        $(form).find(":checkbox[name=patches]").each( function() {
             $(this).attr("checked", status);
         });
     });
-    function toggleChecked(el) {
-        var status = el.checked,
-                form = $(el).parents('form');
-        $(form).find(":checkbox").each( function() {
-            $(this).attr("checked", status);
-        });
-    }
     $('form').submit(function (e) {
         if(this.id != 'reboot-form') {
             var fields = $(this).find('input[name="patches"]:checked');

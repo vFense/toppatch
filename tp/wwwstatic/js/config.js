@@ -11,9 +11,10 @@ require.config({
         'router'    : 'application/router',
         'd3charts'  : 'application/d3charts',
         'modules'   : 'application/modules',
+        'modals'    : 'application/modules/modals',
         'templates' : 'application/templates',
         'utilities' : 'application/utilities',
-        
+
         // Libraries
         // ---------------------------------------------------------------------
         'jquery'            : 'libs/jquery/jquery',
@@ -22,11 +23,11 @@ require.config({
         'backbone'          : 'libs/backbone/backbone',
         'respond'           : 'libs/respond/respond.src',
         'd3'                : 'libs/d3/d3.v2',
-        
+
         // Library Plugins
         // ---------------------------------------------------------------------
         'text'              : 'libs/require/plugins/text',
-        'bootstap-modal'    : 'libs/backbone/plugins/bootstrap-modal',
+        'bootstrap-modal'   : 'libs/backbone/plugins/bootstrap-modal',
 
         // jQuery.ui Library
         // ---------------------------------------------------------------------
@@ -74,14 +75,14 @@ require.config({
         'jquery.ui.widget'      : {exports: 'jQuery'},
         'jquery.ui.mouse'       : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
         'jquery.ui.position'    : {exports: 'jQuery'},
-        
+
         // Interactions
         'jquery.ui.draggable'   : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
         'jquery.ui.droppable'   : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse', 'jquery.ui.draggable']},
         'jquery.ui.resizable'   : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
         'jquery.ui.selectable'  : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
         'jquery.ui.sortable'    : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
-        
+
         // Widgets
         'jquery.ui.accordion'   : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
         'jquery.ui.autocomplete': {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.position', 'jquery.ui.menu']},
@@ -92,8 +93,7 @@ require.config({
         'jquery.ui.progressbar' : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
         'jquery.ui.slider'      : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
         'jquery.ui.spinner'     : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.button']},
-        'jquery.ui.tabs'        : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
-        'jquery.ui.progressbar' : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']}
+        'jquery.ui.tabs'        : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']}
     },
 
     // Load Respond.js, bootstrap, and our main application file

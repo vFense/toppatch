@@ -303,7 +303,7 @@ define(
                         var tmpl = _.template(this.template),
                             that = this;
 
-                        this.$el.html('');
+                        this.$el.empty();
 
                         this.overview = new Overview.View({
                             el: $('<div>').addClass('row-fluid clearfix movable').attr('id', 'overview')

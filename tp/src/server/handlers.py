@@ -1,3 +1,4 @@
+
 import tornado.web
 import tornado.websocket
 import re
@@ -6,13 +7,11 @@ except ImportError: import json
 from models.node import NodeInfo
 from utils.db.client import *
 from utils.agentoperation import AgentOperation
+from utils.scheduler.jobManager import JobScheduler, jobLister
 from server.decorators import authenticated_request
 from jsonpickle import encode
 
-engine = initEngine()
-
 LISTENERS = []
-
 
 class BaseHandler(tornado.web.RequestHandler):
 
@@ -46,11 +45,11 @@ class LoginHandler(BaseHandler):
 
     def post(self):
 
-        if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
+         if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
             self.set_secure_cookie("user", self.get_argument("name"))
             self.redirect("/")
-        else:
-            self.write("Invalid username and/or password .")
+         else:
+             self.write("Invalid username and/or password .")
 
 
 
@@ -138,35 +137,74 @@ class FormHandler(BaseHandler):
         resultjson = []
         node = {}
         result = []
-        session = createSession(engine)
         try:
-            node_id = self.get_argument('node')
+            nodes = self.request.arguments['node']
+            print nodes
         except:
-            node_id = None
+            nodes = None
         try:
             params = self.get_argument('params')
-            print params
         except:
             params = None
-        if node_id:
+        try:
+            time = self.get_argument('time')
+            schedule = self.get_argument('schedule')
+            label = self.get_argument('label')
+        except:
+            time = None
+            schedule = None
+        try:
+            throttle = self.get_argument('throttle')
+        except:
+            throttle = None
+        if nodes:
             operation = self.get_argument('operation')
+            if time:
+                node['schedule'] = schedule
+                node['time'] = time
+                node['label'] = label
+            if throttle:
+                node['cpu_throttle'] = throttle
             if operation == 'install' or operation == 'uninstall':
                 patches = self.request.arguments['patches']
-                node['node_id'] = node_id
-                node['operation'] = operation
-                node['data'] = list(patches)
-                resultjson.append(encode(node))
-                #AgentOperation(session, resultjson)
+                for node_id in nodes:
+                    node['node_id'] = node_id
+                    node['operation'] = operation
+                    node['data'] = list(patches)
+                    resultjson.append(encode(node))
+                if time:
+                    result = JobScheduler(resultjson,
+                            self.application.scheduler
+                            )
+                else:
+                    operation_runner = AgentOperation(resultjson)
+                    operation_runner.run()
+                    result = operation_runner.json_out
+                    print result
             elif operation == 'reboot':
-                node['operation'] = operation
-                node['node_id'] = node_id
-                resultjson.append(encode(node))
-                #AgentOperation(session, resultjson)
+                for node_id in nodes:
+                    node['operation'] = operation
+                    node['node_id'] = node_id
+                    resultjson.append(encode(node))
+                if time:
+                    result = JobScheduler(resultjson,
+                            self.application.scheduler
+                            )
+                else:
+                    operation_runner = AgentOperation(resultjson)
+                    operation_runner.run()
+                    result = operation_runner.json_out
+                    print result
             self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(resultjson))
+            self.write(json.dumps(result))
+            print json.dumps(result)
+            #self.write(json.dumps(resultjson))
+
         if params:
             resultjson = json.loads(params)
-            #AgentOperation(session, resultjson)
+            operation_runner = AgentOperation(resultjson)
+            operation_runner.run()
+
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
 
@@ -182,11 +220,27 @@ class AdminHandler(BaseHandler):
             password = None
             oldpassword = None
             newpassword = None
-        username = self.current_user
-        if self.application.account_manager.authenticate_account(str(username), str(oldpassword)):
-            self.application.account_manager.change_user_password(str(username), str(password))
-            result = { 'error': False, 'description': 'changed password' }
-        else:
-            result = {'error': True, 'description': 'invalid password'}
+        try:
+            operation = self.get_argument('operation')
+        except:
+            operation = None
+        if operation:
+            try:
+                csr_approve = self.request.arguments['approve-csr']
+            except:
+                csr_approve = None
+            try:
+                csr_disapprove = self.request.arguments['disapprove-csr']
+            except:
+                csr_disapprove = None
+            result = { 'error' : False, 'description': operation, 'csr-approve': csr_approve, 'csr_disapprove': csr_disapprove }
+        if password:
+            username = self.current_user
+            if self.application.account_manager.authenticate_account(str(username), str(oldpassword)):
+                self.application.account_manager.change_user_password(str(username), str(password))
+                result = { 'error': False, 'description': 'changed password' }
+            else:
+                result = {'error': True, 'description': 'invalid password'}
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result))
+

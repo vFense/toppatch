@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/aTemplate.html' ],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/aTemplate.html' ],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var exports = {
             Model: Backbone.Model.extend({
@@ -9,7 +9,7 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
-                    this.model = exports.Model;
+                    this.model = new exports.Model();
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
@@ -19,13 +19,16 @@ define(
                     var tmpl = _.template(this.template),
                         that = this;
 
-                    this.$el.html('');
+                    this.$el.empty();
 
                     this.$el.append(tmpl(this.model.toJSON()));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 }
+                /*
+                    New code here
+                 */
             })
         };
         return exports;

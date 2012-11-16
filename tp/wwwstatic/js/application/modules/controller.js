@@ -6,8 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 define(
-    ['jquery', 'backbone', 'text!templates/controller.html'],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/controller.html'],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var Controller = {};
         Controller.Collection = Backbone.Collection.extend({
@@ -35,7 +35,7 @@ define(
                 var tmpl = _.template(this.template),
                     data = this.collection.toJSON()[0];
 
-                this.$el.html('');
+                this.$el.empty();
                 this.$el.html(tmpl({ data: data}));
 
                 if (this.onRender !== $.noop) { this.onRender(); }

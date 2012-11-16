@@ -11,7 +11,6 @@ define(
                     this.collection =  new exports.Collection(app.locations);
                     this.vent = app.vent;
                     this.vent.bind('navigation:#dashboard-view', this.setActive, this);
-                    this.render();
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
@@ -19,7 +18,7 @@ define(
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var that = this;
-                    this.$el.html('');
+                    this.$el.empty();
                     _.each(this.collection.models, function (item) {
                         that.renderButton(item);
                     }, this);

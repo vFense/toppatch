@@ -3,23 +3,13 @@ define(
     function ($, Backbone, myTemplate) {
         "use strict";
         var exports = {
-            Collection : Backbone.Collection.extend({
-                baseUrl: 'api/csrinfo.json/',
-                filter: '',
-                url: function () {
-                    return this.baseUrl + this.filter;
-                }
-            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
-                    this.collection = new exports.Collection();
-                    this.collection.bind('reset', this.render, this);
-                    this.collection.fetch();
                 },
                 events: {
-                    'submit form': 'submit',
-                    'click #clear': 'clear'
+                    'submit form' :  'submit',
+                    'click #clear' : 'clear'
                 },
                 submit: function (evt) {
                     var form = $(evt.target);
@@ -71,8 +61,6 @@ define(
                                 oldpasswordcontrols.append("<span class='help-inline'>Password is blank!</span>");
                             }
                         }
-                    } else {
-                        console.log(form.serialize());
                     }
                     return false;
                 },
@@ -87,11 +75,11 @@ define(
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var template = _.template(this.template),
-                        that = this,
-                        data = this.collection.toJSON();
-                    this.$el.html('');
+                        that = this;
+                    this.$el.empty();
 
-                    this.$el.append(template({data: data}));
+                    this.$el.append(template());
+
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;

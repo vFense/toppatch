@@ -1,7 +1,9 @@
 #!/opt/TopPatch/python/current/bin/python
+# EASY-INSTALL-ENTRY-SCRIPT: 'pylint==0.26.0','console_scripts','pylint-gui'
+__requires__ = 'pylint==0.26.0'
 import sys
-try:
-    from pylint import gui 
-    gui.Run(sys.argv[1:])
-except ImportError:
-    sys.exit('tkinter is not available')
+from pkg_resources import load_entry_point
+
+sys.exit(
+   load_entry_point('pylint==0.26.0', 'console_scripts', 'pylint-gui')()
+)
