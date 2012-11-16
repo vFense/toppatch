@@ -287,12 +287,12 @@ def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
 
 def updateNode(session, node_id):
     exists, node = nodeExists(session, node_id=node_id)
-    os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
-    if os_code == "windows":
-        os = ManagedWindowsUpdate
-    elif os_code == "linux":
-        os = ManagedLinuxPackage
     if exists:
+        os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
+        if os_code == "windows":
+            os = ManagedWindowsUpdate
+        elif os_code == "linux":
+            os = ManagedLinuxPackage
         exists.update({'last_agent_update' : datetime.now(),
                        'last_node_update' : datetime.now(),
                        'agent_status' : True,
