@@ -4,15 +4,10 @@ Main launching point of the Top Patch Server
 import base64
 import uuid
 import os
-<<<<<<< HEAD
-import threading
-||||||| merged common ancestors
-=======
 import threading
 import gevent
 from gevent import monkey
 monkey.patch_all(thread=True)
->>>>>>> 30d46a7a5631d1cfbc0e0f80c061cb607a2bdb41
 
 import tornado.httpserver
 import tornado.ioloop
@@ -22,14 +17,8 @@ import tornado.options
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
-<<<<<<< HEAD
-from server.handlers import *
-||||||| merged common ancestors
-from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler, AdminHandler
-=======
 from utils.db.client import *
 from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler, AdminHandler
->>>>>>> 30d46a7a5631d1cfbc0e0f80c061cb607a2bdb41
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
 from server.api import *
@@ -38,12 +27,6 @@ from server.oauth.token import TokenManager
 
 from tornado.options import define, options
 
-<<<<<<< HEAD
-from twisted.internet.protocol import Protocol, Factory
-from twisted.internet import reactor
-
-||||||| merged common ancestors
-=======
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 
@@ -51,7 +34,6 @@ from apscheduler.scheduler import Scheduler
 from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
 
 
->>>>>>> 30d46a7a5631d1cfbc0e0f80c061cb607a2bdb41
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
 
@@ -88,13 +70,6 @@ class Application(tornado.web.Application):
             (r"/api/graphData/?", GraphHandler),
             (r"/api/nodes.json/?", NodesHandler),
             (r"/api/patches.json/?", PatchesHandler),
-<<<<<<< HEAD
-            #(r"/api/severity.json/?", SeverityHandler),
-            #(r"/api/csrinfo.json/?", CsrHandler),
-||||||| merged common ancestors
-            (r"/api/severity.json/?", SeverityHandler),
-            (r"/api/csrinfo.json/?", CsrHandler),
-=======
             (r"/api/severity.json/?", SeverityHandler),
             (r"/api/csrinfo.json/?", CsrHandler),
             (r"/api/scheduler/list.json/?", SchedulerListerHandler),
@@ -106,7 +81,6 @@ class Application(tornado.web.Application):
             (r"/api/tagging/addTag?", TagAddHandler),
             (r"/api/tagging/addTagPerNode?", TagAddPerNodeHandler),
             (r"/api/tagging/removeTagPerNode?", TagRemovePerNodeHandler),
->>>>>>> 30d46a7a5631d1cfbc0e0f80c061cb607a2bdb41
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
@@ -140,46 +114,21 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-"""
-class HelloWorldProtocol(Protocol):
-    def connectionMade(self, msg):
-        SendToSocket(msg)
-=======
 
 class HelloWorldProtocol(Protocol):
     def connectionMade(self):
         SendToSocket("message")
->>>>>>> 30d46a7a5631d1cfbc0e0f80c061cb607a2bdb41
 
-class SocketProtocol(Protocol):
-    def connectionMade(self):
-        SendToSocket("foo")
+class HelloWorldFactory(Factory):
+    protocol = HelloWorldProtocol
 
-class SocketFactory(Factory):
-    protocol = SocketProtocol
-
-class SocketThread(threading.Thread):
+class ThreadClass(threading.Thread):
     def run(self):
-<<<<<<< HEAD
-        reactor.listenTCP(8080, SocketFactory())
-||||||| merged common ancestors
         reactor.listenTCP(8080, HelloWorldFactory())
-        #reactor.run()
-=======
-        reactor.listenTCP(8080, HelloWorldFactory())
->>>>>>> 30d46a7a5631d1cfbc0e0f80c061cb607a2bdb41
         reactor.run(installSignalHandlers=0)
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-"""
-=======
 
 
 
->>>>>>> 30d46a7a5631d1cfbc0e0f80c061cb607a2bdb41
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     https_server = tornado.httpserver.HTTPServer(Application(options.debug),
@@ -188,21 +137,9 @@ if __name__ == '__main__':
             "keyfile": os.path.join("/opt/TopPatch/tp/data/ssl/", "server.key"),
             })
     https_server.listen(options.port)
-<<<<<<< HEAD
-
-    socketListener = SocketThread()
-    # Setting this thread to daemon mode. It will exit when there no non-daemon threads (aka main thread) running.
-    # Keep this in mind!
-    socketListener.daemon = True
-    socketListener.start()
-
-||||||| merged common ancestors
-
-=======
     socketListener = ThreadClass()
     socketListener.daemon = True
     socketListener.start()
->>>>>>> 30d46a7a5631d1cfbc0e0f80c061cb607a2bdb41
     tornado.ioloop.IOLoop.instance().start()
 
 
