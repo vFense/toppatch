@@ -24,6 +24,13 @@ define(
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
                 },
+                events: {
+                    'click input[name=timeblock]': 'disableTb'
+                },
+                disableTb: function (event) {
+                    var $checkbox = $(event.target);
+                    console.log($checkbox.val());
+                },
                 beforeRender: $.noop,
                 onRender: $.noop,
                 render: function () {
