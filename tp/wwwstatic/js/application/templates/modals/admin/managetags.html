@@ -16,18 +16,38 @@
                         </div>
                         <div id="<% print(tag.tag_name.replace(' ', '')); %>" class="accordion-body collapse">
                             <div class="accordion-inner">
+                                <div class="pull-left">
                                 <% if (tag.nodes.length != 0) { %>
                                     <% _.each(tag.nodes, function (node) { %>
-                                        <span><%= node %></span>
+                                        <span class="label label-info"><%= node %></span>
                                     <% }); %>
                                 <% } else { %>
                                     <em>No nodes contain this tag</em>
                                 <% } %>
+                                </div>
+                                &nbsp;<a href="javascript:;" name="popover"><i style="color: green;" class="icon-plus"></i></a>
                             </div>
                         </div>
                     </div>
                 <% }); %>
             <% } %>
+        </div>
+    </section>
+    <section id="hide" class="hide">
+        <div class="list" id="nodelist">
+            <div class="items">
+                <% if (nodelist && nodelist.nodes && nodelist.nodes.length != 0) { %>
+                    <% _.each(nodelist.nodes, function (node) { %>
+                        <div class="item clearfix">
+                            <label class="checkbox"><%= node.ip %><input name="nodelist" type="checkbox" value="<%= node.id %>"/></label>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="item clearfix">
+                        <span><small><em>No nodes available</em></small></span>
+                    </div>
+                <% } %>
+            </div>
         </div>
     </section>
 </article>

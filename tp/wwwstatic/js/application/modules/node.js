@@ -102,7 +102,7 @@ define(
                                 schedule.attr('checked', false);
                             }
                             if (json.pass) {
-                                $('.alert').removeClass('alert-error').addClass('alert-success').show().find('span').html(json.message);
+                                $('.alert').removeClass('alert-error').addClass('alert-success').show().find('span').html('Operation sent.');
                                 patches.each(function () {
                                     item = $(this).parents('.item');
                                     span = $(this).parents('span');
@@ -150,7 +150,7 @@ define(
                     return false;
                 },
                 createtag: function (evt) {
-                    var params, tag, user, nodes, operation, list, checkboxlist, itemstring, tagname,
+                    var params, tag, user, nodes, operation, list, checkboxlist, itemstring, tagname, notag,
                         that = this;
                     list = $('#taglist');
                     checkboxlist = $('#list-form').children('.list').children('.items');
@@ -168,6 +168,8 @@ define(
                         function (json) {
                             console.log(json);
                             if (json.pass) {
+                                notag = $('#notag');
+                                if (notag) { notag.remove(); }
                                 list.prepend('<span class="label label-info">' + tag + '</span>&nbsp;');
                                 tagname = tag;
                                 tag = 'value="' + tag + '"';
@@ -183,7 +185,7 @@ define(
                     return false;
                 },
                 toggletag: function (evt) {
-                    var params, nodes, tag, user, list,
+                    var params, nodes, tag, user, list, notag,
                         toAdd = evt.currentTarget.checked;
                     list = $('#taglist');
                     user = window.User.get('name');
@@ -196,6 +198,8 @@ define(
                     };
                     if (toAdd) {
                         //add node to tag
+                        notag = $('#notag');
+                        if (notag) { notag.remove(); }
                         params.operation = 'add_to_tag';
                         $.post("/api/tagging/addTagPerNode", { operation: JSON.stringify(params) },
                             function (json) {
