@@ -134,13 +134,13 @@ class AgentOperation():
                             self.session.commit()
                             updateNodeStats(self.session, node_id)
                             updateNetworkStats(self.session)
-            self.result ={
-                          "node_id" : node_id,
-                          "operation_id" : oper_id,
-                          "message" : connect.read_data,
-                          "error" : connect.error,
-                          "pass" : completed
-                          }
+        self.result ={
+                     "node_id" : node_id,
+                     "operation_id" : oper_id,
+                     "message" : connect.read_data,
+                     "error" : connect.error,
+                     "pass" : completed
+                     }
         return self.result
 
 
