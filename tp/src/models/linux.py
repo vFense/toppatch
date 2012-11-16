@@ -5,11 +5,11 @@ from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN, CHAR, DATETIME, TEXT, TI
 from sqlalchemy.orm import relationship, backref
 
 
-class WindowsUpdate(Base):
+class LinuxPackage(Base):
     """
     Represents an application that is installed on a node, as oppose to a Product from a Vendor in the database.
     """
-    __tablename__ = "windows_update"
+    __tablename__ = "linux_package"
     __visit_name__ = "column"
     __table_args__ = {
         'mysql_engine': 'InnoDB',
@@ -18,21 +18,21 @@ class WindowsUpdate(Base):
     toppatch_id = Column(VARCHAR(32),
         primary_key=True, unique=True, nullable=False
     )
-    kb = Column(VARCHAR(32), nullable=False)
+    version = Column(VARCHAR(32), nullable=True)
     vendor_id = Column(VARCHAR(128), nullable=False)
     name = Column(VARCHAR(1024),nullable=False)
     description = Column(VARCHAR(4098), nullable=True)
     support_url = Column(VARCHAR(128), nullable=True)
-    severity = Column(VARCHAR(16), nullable=False)
+    severity = Column(VARCHAR(16), nullable=True)
     date_pub = Column(DATETIME)
     file_size = Column(INTEGER(unsigned=True), nullable=False)
     def __init__(
-            self, toppatch_id, kb, vendor_id, name,
-            description,support_url, severity, date_pub,
+            self, toppatch_id, version, vendor_id, name,
+            description, support_url, severity, date_pub,
             file_size
     ):
         self.toppatch_id = toppatch_id
-        self.kb = kb
+        self.version = version
         self.vendor_id = vendor_id
         self.name = name
         self.description = description
@@ -41,18 +41,18 @@ class WindowsUpdate(Base):
         self.date_pub = date_pub
         self.file_size = file_size
     def __repr__(self):
-        return "<WindowsUpdate(%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<LinuxPackage(%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                (
-                   self.toppatch_id, self.kb, self.vendor_id,
+                   self.toppatch_id, self.version, self.vendor_id,
                    self.name, self.description, self.support_url,
                    self.severity, self.date_pub, self.file_size
                    )
 
-class ManagedWindowsUpdate(Base):
+class ManagedLinuxPackage(Base):
     """
     Represents an application that is installed on a node, as oppose to a Product from a Vendor in the database.
     """
-    __tablename__ = "managed_windows_update"
+    __tablename__ = "managed_linux_package"
     __visit_name__ = "column"
     __table_args__ = {
         'mysql_engine': 'InnoDB',
@@ -63,7 +63,7 @@ class ManagedWindowsUpdate(Base):
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
     toppatch_id = Column(VARCHAR(32),
-        ForeignKey("windows_update.toppatch_id"))
+        ForeignKey("linux_update.toppatch_id"))
     hidden = Column(BOOLEAN)
     installed = Column(BOOLEAN)
     attempts = Column(INTEGER)
@@ -81,7 +81,7 @@ class ManagedWindowsUpdate(Base):
         self.attempts = attempts
         self.pending = pending
     def __repr__(self):
-        return "<ManagedWindowsUpdate(%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<ManagedLinuxPackage(%s,%s,%s,%s,%s,%s,%s)>" %\
                (
                    self.node_id, self.toppatch_id, self.hidden,
                    self.installed, self.date_installed, self.attempts,

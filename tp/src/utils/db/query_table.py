@@ -6,6 +6,7 @@ from socket import getfqdn
 from models.base import Base
 from models.account import *
 from models.windows import *
+from models.linux import *
 from models.node import *
 from models.tagging import *
 from models.scheduler import *
@@ -94,15 +95,24 @@ def certExists(session, node):
     exists = cert.first()
     return(exists, cert)
 
-def updateExists(session, tp_id):
+def updateExists(session, tp_id, os_code):
+    if os_code == "windows":
+        os = WindowsUpdate
+    elif os_code == "linux":
+        os = LinuxPackage
     update = \
-        session.query(WindowsUpdate).filter_by(toppatch_id=tp_id).first()
+        session.query(os).filter_by(toppatch_id=tp_id).first()
     return(update)
 
-def nodeUpdateExists(session, node, tp_id):
-    update = \
-        session.query(ManagedWindowsUpdate).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
-    exists = update.first()
+def nodeUpdateExists(session, node, tp_id, os=None):
+    if os == "windows"
+        update = \
+            session.query(ManagedWindowsUpdate).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
+        exists = update.first()
+    elif os == "linux"
+        update = \
+            session.query(ManagedLinuxPackage).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
+        exists = update.first()
     return(exists, update)
 
 def softwareExists(session, sname, sversion):

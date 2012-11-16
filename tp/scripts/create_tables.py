@@ -6,6 +6,7 @@ from models.application import *
 from models.scanner import *
 from models.cve import *
 from models.windows import *
+from models.linux import *
 from models.node import *
 from models.ssl import *
 from models.scheduler import *
@@ -27,7 +28,7 @@ db.drop(CsrInfo)
 db.drop(SslInfo)
 """
 #db.drop(TimeBlocker)
-Base.metadata.drop_all(db)
+#Base.metadata.drop_all(db)
 
 
 """

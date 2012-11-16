@@ -5,6 +5,7 @@ from datetime import datetime
 from socket import gethostbyaddr
 from models.base import Base
 from models.windows import *
+from models.linux import *
 from models.node import *
 from models.tagging import *
 from models.scheduler import *
@@ -130,20 +131,30 @@ def addSystemInfo(session, data, node_info):
             return system_info
 
 
-def addWindowsUpdate(session, data):
+def addSoftwareUpdate(session, data):
     exists, operation = operationExists(session, data['operation_id'])
+    node_id = exists.node_id
     if exists:
         operation.update({'results_received' : datetime.now()})
         session.commit()
+        os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
         for update in data['data']:
-            update_exists = updateExists(session, update['toppatch_id'])
+            update_exists = updateExists(session, update['toppatch_id'], os_code)
             if not update_exists:
-                win_update = WindowsUpdate(update['toppatch_id'],
-                        update['kb'], update['vendor_id'],update['title'],
-                        update['description'], update['support_url'],
-                        update['severity'], dateParser(update['date_published']),
-                        update['file_size']
-                        )
+                if os_code == 'windows':
+                    software_update = WindowsUpdate(update['toppatch_id'],
+                            update['kb'], update['vendor_id'],update['name'],
+                            update['description'], update['support_url'],
+                            update['severity'], dateParser(update['date_published']),
+                            update['file_size']
+                           )
+                elif os_code == 'linux':
+                    software_update = LinuxPackage(update['toppatch_id'],
+                            update['version'], update['vendor_id'],update['name'],
+                            update['description'], update['support_url'],
+                            update['severity'], dateParser(update['date_published']),
+                            update['file_size']
+                           )
                 if win_update:
                     try:
                         session.add(win_update)
@@ -151,14 +162,15 @@ def addWindowsUpdate(session, data):
                     except:
                         session.rollback()
 
-def addWindowsUpdatePerNode(session, data):
+def addUpdatePerNode(session, data):
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         node_id = exists.node_id
         operation.update({'results_received' : datetime.now()})
         session.commit()
         for addupdate in data['data']:
-            update_exists, foo = nodeUpdateExists(session, node_id, addupdate['toppatch_id'])
+            os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
+            update_exists, foo = nodeUpdateExists(session, node_id, addupdate['toppatch_id'], os=os_code)
             if not update_exists:
                 if 'date_installed' in addupdate:
                     date_installed = dateParser(addupdate['date_installed'])
@@ -166,10 +178,16 @@ def addWindowsUpdatePerNode(session, data):
                     date_installed = None
                 hidden = returnBool(addupdate['hidden'])
                 installed = returnBool(addupdate['installed'])
-                node_update = ManagedWindowsUpdate(node_id,
-                        addupdate['toppatch_id'],
-                        date_installed, hidden, installed=installed
-                        )
+                if os_code == "windows":
+                    node_update = ManagedWindowsUpdate(node_id,
+                            addupdate['toppatch_id'],
+                            date_installed, hidden, installed=installed
+                            )
+                elif os_code == "linux":
+                    node_update = ManagedLinuxPackage(node_id,
+                            addupdate['toppatch_id'],
+                            date_installed, hidden, installed=installed
+                            )
                 try:
                     session.add(node_update)
                     session.commit()
@@ -269,15 +287,20 @@ def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
 
 def updateNode(session, node_id):
     exists, node = nodeExists(session, node_id=node_id)
+    os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
+    if os_code == "windows":
+        os = ManagedWindowsUpdate
+    elif os_code == "linux":
+        os = ManagedLinuxPackage
     if exists:
         exists.update({'last_agent_update' : datetime.now(),
                        'last_node_update' : datetime.now(),
                        'agent_status' : True,
                        'host_status' : True
                        })
-        installed_oper = session.query(ManagedWindowsUpdate).filter_by(installed=True).filter_by(node_id=node_id)
+        installed_oper = session.query(os).filter_by(installed=True).filter_by(node_id=node_id)
         installed = installed_oper.first()
-        pending_oper = session.query(ManagedWindowsUpdate).filter_by(pending=True).filter_by(node_id=node_id)
+        pending_oper = session.query(os).filter_by(pending=True).filter_by(node_id=node_id)
         pending = pending_oper.all()
         print pending
         for i in pending:
@@ -287,8 +310,13 @@ def updateNode(session, node_id):
         session.commit()
         return node
 
-def updateNodeNetworkStats(session, node_id):
-    nodeupdates = session.query(ManagedWindowsUpdate).filter_by(node_id=node_id)
+def updateNodeStats(session, node_id):
+    os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
+    if os_code == "windows":
+        os = ManagedWindowsUpdate
+    elif os_code == "linux":
+        os = ManagedLinuxPackage
+    nodeupdates = session.query(os).filter_by(node_id=node_id)
     patchesinstalled = nodeupdates.filter_by(installed=True).all()
     patchesuninstalled = nodeupdates.filter_by(installed=False).all()
     patchespending = nodeupdates.filter_by(pending=True).all()
@@ -302,10 +330,20 @@ def updateNodeNetworkStats(session, node_id):
         add_node_stats = NodeStats(node_id, len(patchesinstalled), \
                           len(patchesuninstalled), len(patchespending), 0)
         session.add(add_node_stats)
-    nstats = session.query(ManagedWindowsUpdate)
-    totalinstalled = nstats.filter_by(installed=True).all()
-    totalnotinstalled = nstats.filter_by(installed=False).all()
-    totalpending = nstats.filter_by(pending=True).all()
+        session.commit()
+
+def updateNetworkStats(session):
+    wstats = session.query(ManagedWindowsUpdate)
+    lstats = session.query(ManagedLinuxPackage)
+    wtotalinstalled = wstats.filter_by(installed=True).all()
+    ltotalinstalled = lstats.filter_by(installed=True).all()
+    totalinstalled = wtotalinstalled + ltotalinstalled
+    wtotalnotinstalled = wnstats.filter_by(installed=False).all()
+    ltotalnotinstalled = lnstats.filter_by(installed=False).all()
+    totalnotinstalled = wtotalnotinstalled + ltotalnotinstalled
+    wtotalpending = wnstats.filter_by(pending=True).all()
+    ltotalpending = lnstats.filter_by(pending=True).all()
+    totalpending = ltotalpending + wtotalpending
     networkstats = session.query(NetworkStats)
     networkstatsexists = networkstats.filter_by(id=1).first()
     if networkstatsexists:
@@ -343,7 +381,8 @@ def addResults(session, data):
                 reboot = returnBool(msg['reboot'])
             else:
                reboot = None
-            update_exists, update_oper = nodeUpdateExists(session, node_id, msg['toppatch_id'])
+            os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
+            update_exists, update_oper = nodeUpdateExists(session, node_id, msg['toppatch_id'], os=os_code)
             if update_exists:
                 if data['operation'] == "install" and msg['result'] == 'success':
                     print "patch installed on %s %s" % ( node_id, msg['toppatch_id'] )
@@ -384,7 +423,8 @@ def addResults(session, data):
                 session.commit()
                 operation.update({'results_id' : results.id,
                                   'results_received' : datetime.now()})
-                updateNodeNetworkStats(session, node_id)
+                updateNode(session, node_id)
+                updateNetworkStats(session)
                 session.commit()
                 TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
                 return results
