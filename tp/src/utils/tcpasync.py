@@ -102,6 +102,7 @@ class TcpConnect():
             try:
                 self.read_data = self.tcp_socket.recv(1024)
             except Exception as e:
+                print dir(e), e
                 self.error = self._error_handler(e)
         else:
             self.error = self._error_handler(error)
@@ -109,6 +110,6 @@ class TcpConnect():
 
 
     def _close(self):
-        tcp_socket.shutdown(socket.SHUT_RDWR)
-        tcp_socket.close()
+        self.tcp_socket.shutdown(socket.SHUT_RDWR)
+        self.tcp_socket.close()
 
