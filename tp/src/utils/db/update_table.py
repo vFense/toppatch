@@ -81,6 +81,7 @@ def addTimeBlock(session, label, enabled, start_date, end_date,
         return(True, "Time Block Added", add_block)
     except Exception as e:
         print e
+        session.rollback()
         return(False, "Time Block Could Not Be Added", e)
 
 def addCsr(session, client_ip, location, csr_name,
@@ -91,6 +92,7 @@ def addCsr(session, client_ip, location, csr_name,
         session.commit()
         return add_csr
     except Exception as e:
+        session.rollback()
         print e
 
 def addCert(session, node_id, cert_id, cert_name,
@@ -103,6 +105,7 @@ def addCert(session, node_id, cert_id, cert_name,
         print add_cert
         return add_cert
     except Exception as e:
+        session.rollback()
         print e
 
 def addOperation(session, node_id, operation, result_id=None,
@@ -123,12 +126,17 @@ def addSystemInfo(session, data, node_info):
         system_info = SystemInfo(node_info.id, data['os_code'],
             data['os_string'], data['version_major'],
             data['version_minor'], data['version_build'],
-            data['meta'], 
+            data['meta'], data['bit_type']
             )
         if system_info:
-            session.add(system_info)
-            session.commit()
-            return system_info
+            try:
+                session.add(system_info)
+                session.commit()
+                print "system info was added"
+                return system_info
+            except Exception as e:
+                session.rollback()
+                print "BOOOH system info was not added"
 
 
 def addSoftwareUpdate(session, data):
@@ -138,6 +146,7 @@ def addSoftwareUpdate(session, data):
         operation.update({'results_received' : datetime.now()})
         session.commit()
         os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
+        print data
         for update in data['data']:
             update_exists = updateExists(session, update['toppatch_id'], os_code)
             if not update_exists:
@@ -155,9 +164,9 @@ def addSoftwareUpdate(session, data):
                             update['severity'], dateParser(update['date_published']),
                             update['file_size']
                            )
-                if win_update:
+                if software_update:
                     try:
-                        session.add(win_update)
+                        session.add(software_update)
                         session.commit()
                     except:
                         session.rollback()

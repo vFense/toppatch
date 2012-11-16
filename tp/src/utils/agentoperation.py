@@ -87,7 +87,7 @@ class AgentOperation():
         for job in self.threads:
             self.results.append(job.value)
         print self.results
-        self.session.close
+        self.session.close()
         
     def create_sof_operation(self, node_id, node_ip, oper_type, \
             oper_id, data_list=None):
