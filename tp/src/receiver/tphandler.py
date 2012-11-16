@@ -58,7 +58,7 @@ class HandOff():
         self.session.close()
 
     def dataCollector(self):
-        operations = ["updates_pending", "system_info",
+        operations = ["system_info", "updates_pending", 
                      "system_applications", "updates_installed"]
         lcollect = []
         for oper in operations:
