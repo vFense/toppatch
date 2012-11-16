@@ -20,6 +20,7 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
+                    window.currentView = this;
 
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
@@ -60,9 +61,63 @@ define(
                 },
                 togglePopup: function (event) {
                     var popover = $(event.target).parent(),
-                        $tip = popover.data('popover').$tip;
+                        $tip = popover.data('popover').$tip,
+                        $spans = popover.parent().find('span'),
+                        $checkboxes;
                     popover.popover('toggle');
+                    $checkboxes = $tip.find('input[name=nodelist]');
+                    $checkboxes.unbind();
+                    $checkboxes.each(function () {
+                        var ip = $(this).parent().attr('name'),
+                            that = this;
+                        $spans.each(function () {
+                            if ($(this).attr('name') === ip) {
+                                that.checked = true;
+                            }
+                        });
+                    });
+                    $checkboxes.on('change', popover, window.currentView.toggleNode);
                     $tip.find('a[name=close]').on('click', function (event) { popover.popover('hide'); });
+                },
+                toggleNode: function (event) {
+                    var params, node_ip, node_id, tag, user, nodelist, empty_div, popover,
+                        checked = event.target.checked;
+                    popover = event.data;
+                    nodelist = popover.parent().find('.pull-left');
+
+                    user = window.User.get('name');
+                    tag = popover.attr('value');
+                    node_id = $(event.target).val();
+                    node_ip = $(event.target).parent().attr('name');
+
+                    params = {
+                        nodes: [node_id],
+                        user: user,
+                        tag: tag
+                    };
+                    if (checked) {
+                        //add node to tag
+                        empty_div = nodelist.find('em');
+                        if (empty_div) { empty_div.remove(); }
+                        params.operation = 'add_to_tag';
+                        $.post("/api/tagging/addTagPerNode", { operation: JSON.stringify(params) },
+                            function (json) {
+                                window.console.log(json);
+                                if (json.pass) {
+                                    nodelist.prepend('<span style="margin-right: 6px" class="label label-info" name="' + node_ip + '">' + node_ip + '</span>');
+                                }
+                            });
+                    } else {
+                        //remove node from tag
+                        params.operation = 'remove_from_tag';
+                        $.post("/api/tagging/removeTagPerNode", { operation: JSON.stringify(params) },
+                            function (json) {
+                                window.console.log(json);
+                                if (json.pass) {
+                                    nodelist.find('span:contains("' + node_ip + '")').remove();
+                                }
+                            });
+                    }
                 },
                 deleteTag: function (event) {
                     var $icon = $(event.target),

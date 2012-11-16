@@ -19,13 +19,13 @@
                                 <div class="pull-left">
                                 <% if (tag.nodes.length != 0) { %>
                                     <% _.each(tag.nodes, function (node) { %>
-                                        <span class="label label-info"><%= node %></span>
+                                        <span class="label label-info" name="<%= node %>"><%= node %></span>
                                     <% }); %>
                                 <% } else { %>
-                                    <em>No nodes contain this tag</em>
+                                    <em name="nonode">No nodes contain this tag</em>
                                 <% } %>
                                 </div>
-                                &nbsp;<a href="javascript:;" name="popover"><i style="color: green;" class="icon-plus"></i></a>
+                                &nbsp;<a href="javascript:;" name="popover" value="<%= tag.tag_name %>"><i style="color: green;" class="icon-plus"></i></a>
                             </div>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                 <% if (nodelist && nodelist.nodes && nodelist.nodes.length != 0) { %>
                     <% _.each(nodelist.nodes, function (node) { %>
                         <div class="item clearfix">
-                            <label class="checkbox"><%= node.ip %><input name="nodelist" type="checkbox" value="<%= node.id %>"/></label>
+                            <label name="<%= node.ip %>" class="checkbox"><%= node.ip %><input name="nodelist" type="checkbox" value="<%= node.id %>"/></label>
                         </div>
                     <% }); %>
                 <% } else { %>

@@ -93,7 +93,7 @@ define(
                     url += time ? '&time=' + date + '&label=' + label : '';
                     $.post(url,
                         function (json) {
-                            console.log(json);
+                            window.console.log(json);
                             //json.pass = false;
                             //json.message = 'Operation failed to send';
                             if (schedule.data('popover')) {
@@ -166,7 +166,7 @@ define(
                     };
                     $.post("/api/tagging/addTagPerNode", { operation: JSON.stringify(params) },
                         function (json) {
-                            console.log(json);
+                            window.console.log(json);
                             if (json.pass) {
                                 notag = $('#notag');
                                 if (notag) { notag.remove(); }
@@ -186,7 +186,7 @@ define(
                 },
                 toggletag: function (evt) {
                     var params, nodes, tag, user, list, notag,
-                        toAdd = evt.currentTarget.checked;
+                        checked = evt.currentTarget.checked;
                     list = $('#taglist');
                     user = window.User.get('name');
                     tag = $(evt.currentTarget).val();
@@ -196,14 +196,14 @@ define(
                         user: user,
                         tag: tag
                     };
-                    if (toAdd) {
+                    if (checked) {
                         //add node to tag
                         notag = $('#notag');
                         if (notag) { notag.remove(); }
                         params.operation = 'add_to_tag';
                         $.post("/api/tagging/addTagPerNode", { operation: JSON.stringify(params) },
                             function (json) {
-                                console.log(json);
+                                window.console.log(json);
                                 if (json.pass) {
                                     list.prepend('<span style="margin-right: 6px" class="label label-info" id="' + tag.replace(' ', '') + '">' + tag + '</span>');
                                 }
@@ -213,14 +213,12 @@ define(
                         params.operation = 'remove_from_tag';
                         $.post("/api/tagging/removeTagPerNode", { operation: JSON.stringify(params) },
                             function (json) {
-                                console.log(json);
+                                window.console.log(json);
                                 if (json.pass) {
-                                    //list.html(list.html().replace(/(&nbsp;)*/g, ""));
                                     $('#' + tag.replace(' ', '')).remove();
                                 }
                             });
                     }
-                    console.log(params);
                 },
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked'),
