@@ -1,1 +1,33 @@
-<header><strong>Tag Manager</strong></header>
+<article>
+    <section class="list">
+        <div class="accordion items" id="accordion">
+            <% if (data.length != 0) { %>
+                <% _.each(data, function (tag) { %>
+                    <div class="accordion-group item clearfix">
+                        <div class="accordion-heading">
+                            <span class="desc">
+                                <a class="accordion-toggle" data-parent="#accordion" href="#<% print(tag.tag_name.replace(' ', '')); %>">
+                                    <i class="icon-circle-arrow-down"></i>&nbsp;<%= tag.tag_name %>
+                                </a>
+                            </span>
+                            <span style="margin-top: 6px" class="pull-right">
+                                <a href="javascript:;" name="remove" id="<%= tag.tag_name %>"><i style="color: red;" class="icon-remove"></i></a>
+                            </span>
+                        </div>
+                        <div id="<% print(tag.tag_name.replace(' ', '')); %>" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <% if (tag.nodes.length != 0) { %>
+                                    <% _.each(tag.nodes, function (node) { %>
+                                        <span><%= node %></span>
+                                    <% }); %>
+                                <% } else { %>
+                                    <em>No nodes contain this tag</em>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } %>
+        </div>
+    </section>
+</article>

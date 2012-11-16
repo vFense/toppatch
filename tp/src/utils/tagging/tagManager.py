@@ -31,7 +31,7 @@ def tagListByNodes(session):
         list_of_nodes = []
         nodes = session.query(TagsPerNode).filter_by(tag_id=tag.id).all()
         for node in nodes:
-            node = session.query(NodeInfo).filter_by(id=node.id).first()
+            node = session.query(NodeInfo).filter_by(id=node.node_id).first()
             list_of_nodes.append(node.ip_address)
         tag = {
                 "tag_id" : tag.id,

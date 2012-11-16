@@ -85,13 +85,12 @@ define(
                         $scheduleForm = schedule.data('popover').options.content;
                         time = $scheduleForm.find('input[name=datepicker]').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
                         date = new Date(time).getTime();
-                        label = $scheduleForm.find('input[name=label]').val() ? $scheduleForm.find('input[name=label]').val() : 'Default';
+                        label = $scheduleForm.find('input[name=label]').val() || 'Default';
                     }
                     type = $form.attr('id');
                     patches = $form.find('input[name="patches"]:checked');
                     url = '/submitForm?' + $form.serialize();
                     url += time ? '&time=' + date + '&label=' + label : '';
-                    console.log(url);
                     $.post(url,
                         function (json) {
                             console.log(json);
@@ -169,7 +168,7 @@ define(
                         function (json) {
                             console.log(json);
                             if (json.pass) {
-                                list.prepend('<span class="label label-info">' + tag + '</span>');
+                                list.prepend('<span class="label label-info">' + tag + '</span>&nbsp;');
                                 tagname = tag;
                                 tag = 'value="' + tag + '"';
                                 itemstring = '<div class="item clearfix">' +
@@ -177,11 +176,10 @@ define(
                                                     '<input name="taglist" type="checkbox" checked="checked" ' + tag + '/>' +
                                                 '</label>' +
                                             '</div>';
-                                checkboxlist.prepend(itemstring);
+                                checkboxlist.append(itemstring);
                                 checkboxlist.find('input[name=taglist]').on('click', that.toggletag);
                             }
                         });
-                    console.log(params);
                     return false;
                 },
                 toggletag: function (evt) {
@@ -203,26 +201,27 @@ define(
                             function (json) {
                                 console.log(json);
                                 if (json.pass) {
-                                    list.prepend('<span class="label label-info" id="' + tag + '">' + tag + '</span>');
+                                    list.prepend('<span style="margin-right: 6px" class="label label-info" id="' + tag.replace(' ', '') + '">' + tag + '</span>');
                                 }
                             });
                     } else {
                         //remove node from tag
                         params.operation = 'remove_from_tag';
                         $.post("/api/tagging/removeTagPerNode", { operation: JSON.stringify(params) },
-                            function(json) {
+                            function (json) {
                                 console.log(json);
-                                if(json.pass) {
-                                    $('span:contains("' + tag + '")').remove();
+                                if (json.pass) {
+                                    //list.html(list.html().replace(/(&nbsp;)*/g, ""));
+                                    $('#' + tag.replace(' ', '')).remove();
                                 }
                             });
                     }
                     console.log(params);
                 },
                 beforeClose: function () {
-                    var schedule = this.$el.find('input[name="schedule"]:checked');
-                    var popover = this.$el.find('#addTag');
-                    if(popover.data('popover')) { popover.popover('destroy') };
+                    var schedule = this.$el.find('input[name="schedule"]:checked'),
+                        popover = this.$el.find('#addTag');
+                    if (popover.data('popover')) { popover.popover('destroy'); }
                     if (schedule.data('popover')) {
                         schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                         schedule.popover('destroy');
