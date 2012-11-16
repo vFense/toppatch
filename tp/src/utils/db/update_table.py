@@ -346,11 +346,11 @@ def updateNetworkStats(session):
     wtotalinstalled = wstats.filter_by(installed=True).all()
     ltotalinstalled = lstats.filter_by(installed=True).all()
     totalinstalled = wtotalinstalled + ltotalinstalled
-    wtotalnotinstalled = wnstats.filter_by(installed=False).all()
-    ltotalnotinstalled = lnstats.filter_by(installed=False).all()
+    wtotalnotinstalled = wstats.filter_by(installed=False).all()
+    ltotalnotinstalled = lstats.filter_by(installed=False).all()
     totalnotinstalled = wtotalnotinstalled + ltotalnotinstalled
-    wtotalpending = wnstats.filter_by(pending=True).all()
-    ltotalpending = lnstats.filter_by(pending=True).all()
+    wtotalpending = wstats.filter_by(pending=True).all()
+    ltotalpending = lstats.filter_by(pending=True).all()
     totalpending = ltotalpending + wtotalpending
     networkstats = session.query(NetworkStats)
     networkstatsexists = networkstats.filter_by(id=1).first()
