@@ -42,7 +42,7 @@ class HandOff():
                 addSystemInfo(self.session, self.json_object, self.node)
             if self.json_object[OPERATION] == UPDATES_PENDING or \
                     self.json_object[OPERATION] == UPDATES_INSTALLED:
-                self.windowsUpdate()
+                self.addUpdate()
             if self.json_object[OPERATION] == SOFTWARE_INSTALLED:
                 self.softwareUpdate()
             if self.json_object[OPERATION] == STATUS_UPDATE:
@@ -68,21 +68,24 @@ class HandOff():
         results = AgentOperation(lcollect)
         results.run()
 
-    def windowsUpdate(self):
-        addWindowsUpdate(self.session, self.json_object)
-        addWindowsUpdatePerNode(self.session, self.json_object)
-        updateNodeNetworkStats(self.session, self.node.id)
+    def addUpdate(self):
+        addSoftwareUpdate(self.session, self.json_object)
+        addUpdatePerNode(self.session, self.json_object)
+        updateNodeStats(self.session, self.node.id)
+        updateNetworkStats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def softwareUpdate(self):
         addSoftwareAvailable(self.session, self.json_object)
         addSoftwareInstalled(self.session, self.json_object)
-        updateNodeNetworkStats(self.session, self.node.id)
+        updateNodeStats(self.session, self.node.id)
+        updateNetworkStats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def updateResults(self):
         results = addResults(self.session, self.json_object)
-        updateNodeNetworkStats(self.session, self.node.id)
+        updateNodeStats(self.session, self.node.id)
+        updateNetworkStats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def nodeUpdate(self):
