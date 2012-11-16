@@ -76,8 +76,12 @@ class HandOff():
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def softwareUpdate(self):
-        addSoftwareAvailable(self.session, self.json_object)
-        addSoftwareInstalled(self.session, self.json_object)
+        os_code_exists = session.query(SystemInfo).filter_by(node_id=self.node.id).first()
+        if os_code_exists:
+            os_code = os_code_exists.os_code
+            if os_code == "windows":
+                addSoftwareAvailable(self.session, self.json_object)
+                addSoftwareInstalled(self.session, self.json_object)
         updateNodeStats(self.session, self.node.id)
         updateNetworkStats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)

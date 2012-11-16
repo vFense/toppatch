@@ -287,50 +287,58 @@ def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
 
 def updateNode(session, node_id):
     exists, node = nodeExists(session, node_id=node_id)
-    os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
-    if os_code == "windows":
-        os = ManagedWindowsUpdate
-    elif os_code == "linux":
-        os = ManagedLinuxPackage
     if exists:
-        exists.update({'last_agent_update' : datetime.now(),
-                       'last_node_update' : datetime.now(),
-                       'agent_status' : True,
-                       'host_status' : True
-                       })
-        installed_oper = session.query(os).filter_by(installed=True).filter_by(node_id=node_id)
-        installed = installed_oper.first()
-        pending_oper = session.query(os).filter_by(pending=True).filter_by(node_id=node_id)
-        pending = pending_oper.all()
-        print pending
-        for i in pending:
-            if installed and pending:
-                i.pending=False
-                print i.pending
-        session.commit()
-        return node
+        os_code_exists = session.query(SystemInfo).filter_by(node_id=node_id).first()
+        if os_code_exists:
+            os_code = os_code_exists.os_code
+            if os_code == "windows":
+                os = ManagedWindowsUpdate
+            elif os_code == "linux":
+                os = ManagedLinuxPackage
+            exists.update({'last_agent_update' : datetime.now(),
+                           'last_node_update' : datetime.now(),
+                           'agent_status' : True,
+                           'host_status' : True
+                          })
+            installed_oper = session.query(os).filter_by(installed=True).filter_by(node_id=node_id)
+            installed = installed_oper.first()
+            pending_oper = session.query(os).filter_by(pending=True).filter_by(node_id=node_id)
+            pending = pending_oper.all()
+            print pending
+            for i in pending:
+                if installed and pending:
+                    i.pending=False
+                    print i.pending
+            session.commit()
+        else:
+            print "System Info for %s does not exist yet" % ( node_id )
+    return node
 
 def updateNodeStats(session, node_id):
-    os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
-    if os_code == "windows":
-        os = ManagedWindowsUpdate
-    elif os_code == "linux":
-        os = ManagedLinuxPackage
-    nodeupdates = session.query(os).filter_by(node_id=node_id)
-    patchesinstalled = nodeupdates.filter_by(installed=True).all()
-    patchesuninstalled = nodeupdates.filter_by(installed=False).all()
-    patchespending = nodeupdates.filter_by(pending=True).all()
-    nodestats = session.query(NodeStats).filter_by(node_id=node_id)
-    nodeexists = nodestats.first()
-    if nodeexists:
-        nodestats.update({"patches_installed" : len(patchesinstalled),
-                          "patches_available" : len(patchesuninstalled),
-                          "patches_pending" : len(patchespending)})
-    else:
-        add_node_stats = NodeStats(node_id, len(patchesinstalled), \
+    os_code_exists = session.query(SystemInfo).filter_by(node_id=node_id).first()
+    if os_code_exists:
+        os_code = os_code_exists.os_code
+        if os_code == "windows":
+            os = ManagedWindowsUpdate
+        elif os_code == "linux":
+            os = ManagedLinuxPackage
+        nodeupdates = session.query(os).filter_by(node_id=node_id)
+        patchesinstalled = nodeupdates.filter_by(installed=True).all()
+        patchesuninstalled = nodeupdates.filter_by(installed=False).all()
+        patchespending = nodeupdates.filter_by(pending=True).all()
+        nodestats = session.query(NodeStats).filter_by(node_id=node_id)
+        nodeexists = nodestats.first()
+        if nodeexists:
+            nodestats.update({"patches_installed" : len(patchesinstalled),
+                             "patches_available" : len(patchesuninstalled),
+                             "patches_pending" : len(patchespending)})
+        else:
+            add_node_stats = NodeStats(node_id, len(patchesinstalled), \
                           len(patchesuninstalled), len(patchespending), 0)
-        session.add(add_node_stats)
-        session.commit()
+            session.add(add_node_stats)
+            session.commit()
+    else:
+        print "System Info for node %s does not exist" % ( node_id)
 
 def updateNetworkStats(session):
     wstats = session.query(ManagedWindowsUpdate)
@@ -338,11 +346,11 @@ def updateNetworkStats(session):
     wtotalinstalled = wstats.filter_by(installed=True).all()
     ltotalinstalled = lstats.filter_by(installed=True).all()
     totalinstalled = wtotalinstalled + ltotalinstalled
-    wtotalnotinstalled = wnstats.filter_by(installed=False).all()
-    ltotalnotinstalled = lnstats.filter_by(installed=False).all()
+    wtotalnotinstalled = wstats.filter_by(installed=False).all()
+    ltotalnotinstalled = lstats.filter_by(installed=False).all()
     totalnotinstalled = wtotalnotinstalled + ltotalnotinstalled
-    wtotalpending = wnstats.filter_by(pending=True).all()
-    ltotalpending = lnstats.filter_by(pending=True).all()
+    wtotalpending = wstats.filter_by(pending=True).all()
+    ltotalpending = lstats.filter_by(pending=True).all()
     totalpending = ltotalpending + wtotalpending
     networkstats = session.query(NetworkStats)
     networkstatsexists = networkstats.filter_by(id=1).first()
