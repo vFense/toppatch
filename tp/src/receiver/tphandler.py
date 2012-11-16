@@ -28,7 +28,7 @@ class HandOff():
         self.ip = ip_address
         if self.valid_json:
             exists, self.node = nodeExists(self.session,
-                self.ip)
+                node_ip=self.ip)
             if self.node:
                 if self.node.last_agent_update == None:
                     self.dataCollector()
@@ -55,11 +55,14 @@ class HandOff():
                 updateRebootStatus(self.session, exists)
             else:
                 pass
+        else:
+            print "Json is not valid %s" % ( data )
         self.session.close()
 
     def dataCollector(self):
-        operations = ["updates_pending", "system_info",
-                     "system_applications", "updates_installed"]
+        #operations = ["updates_pending"]
+        operations = ["system_info", "updates_pending", 
+                     "updates_installed", "system_applications"]
         lcollect = []
         for oper in operations:
             lcollect.append('{"node_id" : "%s", "operation" : "%s"}' \
@@ -76,7 +79,7 @@ class HandOff():
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def softwareUpdate(self):
-        os_code_exists = session.query(SystemInfo).filter_by(node_id=self.node.id).first()
+        os_code_exists = self.session.query(SystemInfo).filter_by(node_id=self.node.id).first()
         if os_code_exists:
             os_code = os_code_exists.os_code
             if os_code == "windows":
