@@ -5,11 +5,11 @@ from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN, CHAR, DATETIME, TEXT, TI
 from sqlalchemy.orm import relationship, backref
 
 
-class LinuxPackages(Base):
+class LinuxPackage(Base):
     """
     Represents an application that is installed on a node, as oppose to a Product from a Vendor in the database.
     """
-    __tablename__ = "linux_packages"
+    __tablename__ = "linux_package"
     __visit_name__ = "column"
     __table_args__ = {
         'mysql_engine': 'InnoDB',
@@ -41,18 +41,18 @@ class LinuxPackages(Base):
         self.date_pub = date_pub
         self.file_size = file_size
     def __repr__(self):
-        return "<LinuxPackages(%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<LinuxPackage(%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                (
                    self.toppatch_id, self.version, self.vendor_id,
                    self.name, self.description, self.support_url,
                    self.severity, self.date_pub, self.file_size
                    )
 
-class ManagedLinuxPackages(Base):
+class ManagedLinuxPackage(Base):
     """
     Represents an application that is installed on a node, as oppose to a Product from a Vendor in the database.
     """
-    __tablename__ = "managed_linux_packages"
+    __tablename__ = "managed_linux_package"
     __visit_name__ = "column"
     __table_args__ = {
         'mysql_engine': 'InnoDB',
@@ -81,7 +81,7 @@ class ManagedLinuxPackages(Base):
         self.attempts = attempts
         self.pending = pending
     def __repr__(self):
-        return "<ManagedLinuxPackages(%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<ManagedLinuxPackage(%s,%s,%s,%s,%s,%s,%s)>" %\
                (
                    self.node_id, self.toppatch_id, self.hidden,
                    self.installed, self.date_installed, self.attempts,

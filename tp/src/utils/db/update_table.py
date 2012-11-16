@@ -149,7 +149,7 @@ def addSoftwareUpdate(session, data):
                             update['file_size']
                            )
                 elif os_code == 'linux':
-                    software_update = LinuxPackages(update['toppatch_id'],
+                    software_update = LinuxPackage(update['toppatch_id'],
                             update['version'], update['vendor_id'],update['name'],
                             update['description'], update['support_url'],
                             update['severity'], dateParser(update['date_published']),
@@ -184,7 +184,7 @@ def addUpdatePerNode(session, data):
                             date_installed, hidden, installed=installed
                             )
                 elif os_code == "linux":
-                    node_update = ManagedLinuxPackages(node_id,
+                    node_update = ManagedLinuxPackage(node_id,
                             addupdate['toppatch_id'],
                             date_installed, hidden, installed=installed
                             )
@@ -291,7 +291,7 @@ def updateNode(session, node_id):
     if os_code == "windows":
         os = ManagedWindowsUpdate
     elif os_code == "linux":
-        os = ManagedLinuxPackages
+        os = ManagedLinuxPackage
     if exists:
         exists.update({'last_agent_update' : datetime.now(),
                        'last_node_update' : datetime.now(),
@@ -315,7 +315,7 @@ def updateNodeStats(session, node_id):
     if os_code == "windows":
         os = ManagedWindowsUpdate
     elif os_code == "linux":
-        os = ManagedLinuxPackages
+        os = ManagedLinuxPackage
     nodeupdates = session.query(os).filter_by(node_id=node_id)
     patchesinstalled = nodeupdates.filter_by(installed=True).all()
     patchesuninstalled = nodeupdates.filter_by(installed=False).all()
@@ -334,7 +334,7 @@ def updateNodeStats(session, node_id):
 
 def updateNetworkStats(session):
     wstats = session.query(ManagedWindowsUpdate)
-    lstats = session.query(ManagedLinuxPackages)
+    lstats = session.query(ManagedLinuxPackage)
     wtotalinstalled = wstats.filter_by(installed=True).all()
     ltotalinstalled = lstats.filter_by(installed=True).all()
     totalinstalled = wtotalinstalled + ltotalinstalled

@@ -99,7 +99,7 @@ def updateExists(session, tp_id, os_code):
     if os_code == "windows":
         os = WindowsUpdate
     elif os_code == "linux":
-        os = LinuxPackages
+        os = LinuxPackage
     update = \
         session.query(os).filter_by(toppatch_id=tp_id).first()
     return(update)
@@ -111,7 +111,7 @@ def nodeUpdateExists(session, node, tp_id, os=None):
         exists = update.first()
     elif os == "linux"
         update = \
-            session.query(ManagedLinuxPackages).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
+            session.query(ManagedLinuxPackage).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
         exists = update.first()
     return(exists, update)
 
