@@ -105,11 +105,11 @@ def updateExists(session, tp_id, os_code):
     return(update)
 
 def nodeUpdateExists(session, node, tp_id, os=None):
-    if os == "windows"
+    if os == "windows":
         update = \
             session.query(ManagedWindowsUpdate).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
         exists = update.first()
-    elif os == "linux"
+    elif os == "linux":
         update = \
             session.query(ManagedLinuxPackage).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
         exists = update.first()

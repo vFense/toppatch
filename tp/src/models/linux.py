@@ -63,7 +63,7 @@ class ManagedLinuxPackage(Base):
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
     toppatch_id = Column(VARCHAR(32),
-        ForeignKey("linux_update.toppatch_id"))
+        ForeignKey("linux_package.toppatch_id"))
     hidden = Column(BOOLEAN)
     installed = Column(BOOLEAN)
     attempts = Column(INTEGER)
