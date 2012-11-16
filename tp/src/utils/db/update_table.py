@@ -288,27 +288,31 @@ def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
 def updateNode(session, node_id):
     exists, node = nodeExists(session, node_id=node_id)
     if exists:
-        os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
-        if os_code == "windows":
-            os = ManagedWindowsUpdate
-        elif os_code == "linux":
-            os = ManagedLinuxPackage
-        exists.update({'last_agent_update' : datetime.now(),
-                       'last_node_update' : datetime.now(),
-                       'agent_status' : True,
-                       'host_status' : True
-                       })
-        installed_oper = session.query(os).filter_by(installed=True).filter_by(node_id=node_id)
-        installed = installed_oper.first()
-        pending_oper = session.query(os).filter_by(pending=True).filter_by(node_id=node_id)
-        pending = pending_oper.all()
-        print pending
-        for i in pending:
-            if installed and pending:
-                i.pending=False
-                print i.pending
-        session.commit()
-        return node
+        os_code_exists = session.query(SystemInfo).filter_by(node_id=node_id).first()
+        if os_code_exists:
+            os_code = os_code_exists.os_code
+            if os_code == "windows":
+                os = ManagedWindowsUpdate
+            elif os_code == "linux":
+                os = ManagedLinuxPackage
+            exists.update({'last_agent_update' : datetime.now(),
+                           'last_node_update' : datetime.now(),
+                           'agent_status' : True,
+                           'host_status' : True
+                          })
+            installed_oper = session.query(os).filter_by(installed=True).filter_by(node_id=node_id)
+            installed = installed_oper.first()
+            pending_oper = session.query(os).filter_by(pending=True).filter_by(node_id=node_id)
+            pending = pending_oper.all()
+            print pending
+            for i in pending:
+                if installed and pending:
+                    i.pending=False
+                    print i.pending
+            session.commit()
+        else:
+            print "System Info for %s does not exist yet" % ( node_id )
+    return node
 
 def updateNodeStats(session, node_id):
     os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
