@@ -39,6 +39,8 @@ class AgentOperation():
         self.session = createSession(ENGINE)
         self.node_list = node_list
         self.total_nodes = None
+        self.results = {}
+        self.json_out = {}
         if type(node_list) == list:
             self.node_list = node_list
             self.total_nodes = len(self.node_list)
@@ -63,6 +65,9 @@ class AgentOperation():
                 oper_type = jsonobject[OPERATION]
                 print oper_type
                 oper_id = self.create_new_operation(node_id, oper_type)
+                time_block_exists, time_block, self.json_out = timeBlockExistsToday(self.session, start_date=datetime.today().date(), start_time=datetime.now().time())
+                if time_block_exists:
+                    return self.json_out
                 if not DATA in jsonobject:
                     message = gevent.spawn(self.create_sof_operation, node_id, 
                         node.ip_address, oper_type, oper_id
@@ -109,10 +114,12 @@ class AgentOperation():
         print msg
         response = None
         connect = TcpConnect(node_ip, msg)
+        completed = False
         if not connect.error and connect.read_data:
             response = verifyJsonIsValid(connect.read_data)
             print response
             if response[1]['operation'] == 'received':
+                completed = True
                 updateOperationRow(self.session, oper_id, oper_recv=True)
                 updateNodeNetworkStats(self.session, node_id)
                 if oper_type == 'reboot':
@@ -124,7 +131,14 @@ class AgentOperation():
                             patcher.update({"pending" : True})
                             self.session.commit()
                             updateNodeNetworkStats(self.session, node_id)
-        return(node_id, oper_id, connect.read_data, connect.error)
+        self.result ={
+                          "node_id" : node_id,
+                          "operation_id" : oper_id,
+                          "message" : connect.read_data,
+                          "error" : connect.error,
+                          "pass" : completed
+                          }
+        return self.result
 
 
     def create_new_operation(self, node_id, oper_type):

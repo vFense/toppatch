@@ -8,14 +8,15 @@
             <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
             <dt>Tags applied:</dt>
             <dd>
+                <div id="taglist" class="pull-left">
                 <% if (model.tags.length != 0) { %>
                     <% _.each(model.tags, function (tag) { %>
-                        <span class="label label-info"><%= tag %></span>
+                        <span style="margin-right: 3px" class="label label-info" id="<% print(tag.replace(' ', '')) %>"><%= tag %></span>
                     <% }); %>
                 <% } else { %>
-                <em>No tags applied</em>
+                    <em id="notag">No tags applied</em>
                 <% } %>
-                &nbsp;<a href="#" id="addTag" data-placement="right"><i style="color: green;" class="icon-plus" ></i></a>
+                </div>&nbsp;<a href="#" id="addTag" data-placement="bottom"><i style="color: green;" class="icon-plus" ></i></a>
             </dd>
             <dt>Agent Status:</dt>
             <dd>
@@ -50,9 +51,9 @@
         </dl>
     </section>
 </article>
-<article class="alert alert-success alert-block fade in hide">
+<article class="alert alert-block fade in hide">
     <button type="button" class="close" data-dismiss="alert">×</button>
-    Operation sent&nbsp;
+    <span class="help-inline"></span>
 </article>
 <article>
     <header><strong>Patches Available</strong></header>
@@ -236,13 +237,13 @@
                         </div>
                     <% }); %>
                 <% } %>
-                <div class="item clearfix">
-                    <a id="newtag" href="javascript:;"><span>New tag...</span></a>
-                    <div class="hide inline input-append">
-                        <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
-                        <button class="btn" id="createtag">Add</button>
-                    </div>
-                </div>
+            </div>
+        </div>
+        <div class="item clearfix">
+            <a id="newtag" href="javascript:;"><span>New tag...</span></a>
+            <div class="hide inline input-append">
+                <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
+                <button class="btn" id="createtag">Add</button>
             </div>
         </div>
         <input type="hidden" name="nodeid" value="<% print(model.id); %>"/>

@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/node.html', 'jquery.ui.datepicker' ],
-    function ($, Backbone, app, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'text!templates/node.html', 'jquery.ui.datepicker' ],
+    function ($, _, Backbone, app, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
@@ -17,6 +17,7 @@ define(
             }),
             View: Backbone.View.extend({
                 initialize: function () {
+                    _.bindAll(this, 'createtag');
                     this.template = myTemplate;
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
@@ -28,7 +29,7 @@ define(
 
                 },
                 events: {
-                    'click .disabled': function (e) { console.log(['click a.disabled', e]); return false; },
+                    'click .disabled': function (e) { return false; },
                     'click #addTag': 'showtags',
                     'click #createtag': 'createtag',
                     'click input[name=taglist]': 'toggletag',
@@ -37,7 +38,7 @@ define(
                 beforeRender: $.noop,
                 onRender: function () {
                     this.$el.find('#addTag').popover({
-                        title: 'Tags Available<a href="javascript:;" class="pull-right" id="close"><i class="icon-remove"></i></a>' ,
+                        title: 'Tags Available<a href="javascript:;" class="pull-right" id="close"><i class="icon-remove"></i></a>',
                         html: true,
                         trigger: 'click',
                         content: $('#list-form')
@@ -51,11 +52,11 @@ define(
                             trigger: 'click'
                         });
                     }).click(function () {
-                            if(this.checked) {
-                                $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
-                            } else {
-                                $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
-                            }
+                        if (this.checked) {
+                            $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
+                        } else {
+                            $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                        }
                     });
                 },
                 render: function () {
@@ -75,74 +76,84 @@ define(
                     return this;
                 },
                 submit: function (evt) {
-                    var $form = $(evt.target),
+                    var item, span, label, checkbox, $scheduleForm, type, patches, url, date,
+                        that = this,
+                        $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
-                        time = '',
-                        item, span, label, checkbox, $scheduleForm, type, patches, url, date, label;
-                    if(schedule.length != 0) {
+                        time = '';
+                    if (schedule.length !== 0) {
                         $scheduleForm = schedule.data('popover').options.content;
                         time = $scheduleForm.find('input[name=datepicker]').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
                         date = new Date(time).getTime();
-                        label = $scheduleForm.find('input[name=label]').val() ? $scheduleForm.find('input[name=label]').val() : 'Default';
+                        label = $scheduleForm.find('input[name=label]').val() || 'Default';
                     }
                     type = $form.attr('id');
                     patches = $form.find('input[name="patches"]:checked');
                     url = '/submitForm?' + $form.serialize();
-                    url += time ? '&time=' + date + '&label=' + label: '';
-                    console.log(url);
+                    url += time ? '&time=' + date + '&label=' + label : '';
                     $.post(url,
-                        function(json) {
-                            console.log(json);
-                            if(schedule.data('popover')) {
+                        function (json) {
+                            window.console.log(json);
+                            //json.pass = false;
+                            //json.message = 'Operation failed to send';
+                            if (schedule.data('popover')) {
                                 schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                                 schedule.popover('hide');
+                                schedule.attr('checked', false);
                             }
-                            $('.alert').show();
-                        });
-                    patches.each(function () {
-                        item = $(this).parents('.item');
-                        span = $(this).parents('span');
-                        label = $(this).parent();
-                        checkbox = $(this);
+                            if (json.pass) {
+                                $('.alert').removeClass('alert-error').addClass('alert-success').show().find('span').html('Operation sent.');
+                                patches.each(function () {
+                                    item = $(this).parents('.item');
+                                    span = $(this).parents('span');
+                                    label = $(this).parent();
+                                    checkbox = $(this);
 
-                        checkbox.remove();
-                        var patch = label.html();
-                        span.html(patch);
-                        label.remove();
-                        if(type == 'available' || type == 'failed') {
-                            item.appendTo($('#pending').children());
-                            if($('#no-pending')) {
-                                $('#no-pending').remove();
+                                    checkbox.remove();
+                                    var patch = label.html();
+                                    span.html(patch);
+                                    label.remove();
+                                    if (type === 'available' || type === 'failed') {
+                                        item.appendTo($('#pending').children());
+                                        if ($('#no-pending')) {
+                                            $('#no-pending').remove();
+                                        }
+                                    } else {
+                                        item.remove();
+                                    }
+                                });
+                                if ($form.find('input:checked').attr('checked')) {
+                                    $form.find('input:checked').attr('checked', false);
+                                }
+                            } else {
+                                $('.alert').removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                             }
-                        } else {
-                            item.remove();
-                        }
-                    });
-                    if($form.find('input:checked').attr('checked')) {
-                        $form.find('input:checked').attr('checked', false);
-                    }
+                        });
                     return false;
                 },
                 showtags: function (evt) {
-                    var popover = $(evt.target).parent().data('popover'),
-                        showInput, addTag, tagList, close;
-                    if(popover) {
+                    var showInput, addTag, tagList, close,
+                        popover = $(evt.target).parent().data('popover');
+                    if (popover) {
                         showInput = popover.$tip.find('a');
                         close = popover.$tip.find('#close');
                         addTag = showInput.siblings('div').children('button');
                         tagList = popover.$tip.find('input[name=taglist]');
-                        close.bind('click', function () { $(evt.target).parent().popover('hide'); })
+                        close.bind('click', function () { $(evt.target).parent().popover('hide'); });
                         tagList.bind('click', this.toggletag);
                         addTag.bind('click', this.createtag);
                         showInput.show().siblings('div').hide();
-                        showInput.bind('click',function() {
+                        showInput.bind('click', function () {
                             $(this).hide().siblings('div').show();
                         });
                     }
                     return false;
                 },
                 createtag: function (evt) {
-                    var params, tag, user, nodes, operation;
+                    var params, tag, user, nodes, operation, list, checkboxlist, itemstring, tagname, notag,
+                        that = this;
+                    list = $('#taglist');
+                    checkboxlist = $('#list-form').children('.list').children('.items');
                     operation = 'add_to_tag';
                     user = window.User.get('name');
                     tag = $(evt.currentTarget).siblings().val();
@@ -152,17 +163,31 @@ define(
                         user: user,
                         tag: tag,
                         operation: operation
-                    }
+                    };
                     $.post("/api/tagging/addTagPerNode", { operation: JSON.stringify(params) },
-                        function(json) {
-                            console.log(json);
+                        function (json) {
+                            window.console.log(json);
+                            if (json.pass) {
+                                notag = $('#notag');
+                                if (notag) { notag.remove(); }
+                                list.prepend('<span class="label label-info">' + tag + '</span>&nbsp;');
+                                tagname = tag;
+                                tag = 'value="' + tag + '"';
+                                itemstring = '<div class="item clearfix">' +
+                                                '<label class="checkbox">' + tagname +
+                                                    '<input name="taglist" type="checkbox" checked="checked" ' + tag + '/>' +
+                                                '</label>' +
+                                            '</div>';
+                                checkboxlist.append(itemstring);
+                                checkboxlist.find('input[name=taglist]').on('click', that.toggletag);
+                            }
                         });
-                    console.log(params);
                     return false;
                 },
                 toggletag: function (evt) {
-                    var toAdd = evt.currentTarget.checked,
-                        params, nodes, tag, user;
+                    var params, nodes, tag, user, list, notag,
+                        checked = evt.currentTarget.checked;
+                    list = $('#taglist');
                     user = window.User.get('name');
                     tag = $(evt.currentTarget).val();
                     nodes = $(evt.currentTarget).parents('form').find('input[name=nodeid]').val();
@@ -170,28 +195,35 @@ define(
                         nodes: [nodes],
                         user: user,
                         tag: tag
-                    }
-                    if(toAdd) {
+                    };
+                    if (checked) {
                         //add node to tag
+                        notag = $('#notag');
+                        if (notag) { notag.remove(); }
                         params.operation = 'add_to_tag';
                         $.post("/api/tagging/addTagPerNode", { operation: JSON.stringify(params) },
-                            function(json) {
-                                console.log(json);
+                            function (json) {
+                                window.console.log(json);
+                                if (json.pass) {
+                                    list.prepend('<span style="margin-right: 6px" class="label label-info" id="' + tag.replace(' ', '') + '">' + tag + '</span>');
+                                }
                             });
                     } else {
                         //remove node from tag
                         params.operation = 'remove_from_tag';
                         $.post("/api/tagging/removeTagPerNode", { operation: JSON.stringify(params) },
-                            function(json) {
-                                console.log(json);
+                            function (json) {
+                                window.console.log(json);
+                                if (json.pass) {
+                                    $('#' + tag.replace(' ', '')).remove();
+                                }
                             });
                     }
-                    console.log(params);
                 },
                 beforeClose: function () {
-                    var schedule = this.$el.find('input[name="schedule"]:checked');
-                    var popover = this.$el.find('#addTag');
-                    if(popover.data('popover')) { popover.popover('destroy') };
+                    var schedule = this.$el.find('input[name="schedule"]:checked'),
+                        popover = this.$el.find('#addTag');
+                    if (popover.data('popover')) { popover.popover('destroy'); }
                     if (schedule.data('popover')) {
                         schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                         schedule.popover('destroy');
