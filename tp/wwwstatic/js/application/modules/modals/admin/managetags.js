@@ -86,9 +86,11 @@ define(
                     $tip.find('a[name=close]').on('click', function (event) { popover.popover('hide'); });
                 },
                 toggleNode: function (event) {
-                    var params, node_ip, node_id, tag, user, nodelist, empty_div, popover,
+                    var params, node_ip, node_id, tag, user, nodelist, empty_div, popover, badge, badgeCounter,
                         checked = event.target.checked;
                     popover = event.data;
+                    badge = popover.parents('.accordion-group').find('.badge');
+                    badgeCounter = parseInt(badge.html(), 10);
                     nodelist = popover.parent().find('.pull-left');
 
                     user = window.User.get('name');
@@ -110,7 +112,9 @@ define(
                             function (json) {
                                 window.console.log(json);
                                 if (json.pass) {
+                                    badgeCounter += 1;
                                     nodelist.prepend('<span style="margin-right: 6px" class="label label-info" name="' + node_ip + '">' + node_ip + '</span>');
+                                    badge.html(badgeCounter);
                                 }
                             });
                     } else {
@@ -120,7 +124,9 @@ define(
                             function (json) {
                                 window.console.log(json);
                                 if (json.pass) {
+                                    badgeCounter -= 1;
                                     nodelist.find('span:contains("' + node_ip + '")').remove();
+                                    badge.html(badgeCounter);
                                 }
                             });
                     }
