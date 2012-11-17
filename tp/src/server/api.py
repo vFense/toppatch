@@ -361,14 +361,14 @@ class NodesHandler(BaseHandler):
                 available = []
                 for v in self.session.query(ManagedWindowsUpdate, WindowsUpdate).join(WindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
                     if v[0].installed:
-                        installed.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                        installed.append({'name': v[1].name, 'id': v[0].toppatch_id})
                     elif v[0].pending:
-                        pending.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                        pending.append({'name': v[1].name, 'id': v[0].toppatch_id})
                     elif v[0].attempts > 0:
-                        failed.append({'name': v[1].title, 'id': v[0].toppatch_id})
-                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                        failed.append({'name': v[1].name, 'id': v[0].toppatch_id})
+                        available.append({'name': v[1].name, 'id': v[0].toppatch_id})
                     else:
-                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                        available.append({'name': v[1].name, 'id': v[0].toppatch_id})
                 tags = map(lambda x: x[1].tag, self.session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
                 resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
@@ -467,7 +467,7 @@ class PatchesHandler(BaseHandler):
                         countAvailable += 1
                         nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].ip_address})
                 resultjson = {
-                    "name" : u.title,
+                    "name" : u.name,
                     "type": "Security Patch",             #forcing Patch into type
                     "vendor" : {
                         "patchID" : '',         #forcing empty string in patchID
@@ -509,7 +509,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -533,7 +533,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -557,7 +557,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -581,7 +581,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -603,7 +603,7 @@ class PatchesHandler(BaseHandler):
                         "type": "Security Patch",             #forcing Patch into type
                         "id": u.toppatch_id,
                         "date" : str(u.date_pub),
-                        "name" : u.title,
+                        "name" : u.name,
                         "description" : u.description,
                         "severity" : u.severity,
                         "nodes/need": countAvailable,
@@ -646,7 +646,7 @@ class PatchesHandler(BaseHandler):
                                    "type": "Security Patch",             #forcing Patch into type
                                    "id": u.toppatch_id,
                                    "date" : str(u.date_pub),
-                                   "name" : u.title,
+                                   "name" : u.name,
                                    "description" : u.description,
                                    "severity" : u.severity,
                                    "nodes/need": countAvailable,
