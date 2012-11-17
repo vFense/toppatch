@@ -32,6 +32,7 @@ define(
                     'click .disabled': function (e) { return false; },
                     'click #addTag': 'showtags',
                     'click #createtag': 'createtag',
+                    'click a[name=dependencies]': 'showDependencies',
                     'click input[name=taglist]': 'toggletag',
                     'submit form': 'submit'
                 },
@@ -130,6 +131,22 @@ define(
                             }
                         });
                     return false;
+                },
+                showDependencies: function (event) {
+                    window.console.log(event);
+                    window.console.log(event.target);
+                    window.console.log(event.currentTarget);
+                    var popoverlink = $(event.currentTarget);
+                    if (!popoverlink.data('popover')) {
+                        popoverlink.popover({
+                            title: 'Dependencies',
+                            placement: 'right',
+                            html: true,
+                            content: 'hello world',
+                            trigger: 'click'
+                        });
+                        popoverlink.popover('show');
+                    }
                 },
                 showtags: function (evt) {
                     var showInput, addTag, tagList, close,

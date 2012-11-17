@@ -138,7 +138,7 @@
                                 </span>
                                 <span class="pull-right">
                                     <% //if (model.os_code && model.os_code == 'linux') { %>
-                                        <a href="javascript:;"><small>Dependencies</small>&nbsp;<i style="color: orange;" class="icon-warning-sign"></i></a>&nbsp;
+                                        <a href="javascript:;" name="dependencies"><small>Dependencies</small>&nbsp;<i style="color: orange;" class="icon-warning-sign"></i></a>&nbsp;
                                     <% //} %>
                                     <a href="#patches/<%= patch.id %>">More information</a>
                                 </span>
@@ -225,7 +225,7 @@
 <div id="hidden" class="hide">
     <form id="list-form">
         <div class="list">
-            <div class="items" style="height: 150px; overflow: auto;">
+            <div class="items" style="max-height: 150px; overflow: auto;">
                <% if(tags.length != 0) { %>
                    <% _.each(tags, function (tag) { %>
                         <div class="item clearfix">
