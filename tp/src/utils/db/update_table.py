@@ -224,7 +224,7 @@ def addSoftwareInstalled(session, data):
                         session.rollback()
 
 def removeTag(session, tag_name):
-    tag_exists, tag = tagExists(session, tag_name)
+    tag_exists, tag = tagExists(session, tag_name=tag_name)
     if tag:
         try:
             tag_exists.delete()
@@ -256,7 +256,7 @@ def removeAllNodesFromTag(session, tag_name):
     else:
         return(False, "Tag %s does not exists" % (tag_name), tag_name)
 
-def removeTagsFromNode(session, tag_name, nodes=[]):
+def removeNodesFromTag(session, tag_name, nodes=[]):
     nodes_completed = []
     nodes_failed = []
     for node in nodes:
