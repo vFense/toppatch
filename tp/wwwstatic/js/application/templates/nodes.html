@@ -44,7 +44,7 @@
                                     } else {
                                         print('<i style="color: red;"class="icon-warning-sign"></i>');
                                     } 
-                                %> — <strong><%= node.ip %></strong> — <%= node['os/name'] %>
+                                %> — <strong><% print(node.hostname || node.ip) %></strong> — <%= node['os/name'] %>
                             </span>
                             <span class="pull-right">
                                 <span class="done"><%= node['patch/done'] %></span> /
