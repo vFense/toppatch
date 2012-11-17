@@ -101,7 +101,7 @@ def tagRemove(session, msg):
         print msg
         nodes_removed_from_tag = removeAllTagsFromNode(session, tag_name)
         if nodes_removed_from_tag[0]:
-            tag_out = removeTag(session, tag_name)
+            tag_out = removeTag(session, tag_name=tag_name)
             tagged = {
                      "pass" : tag_out[0],
                      "message" : tag_out[1]
