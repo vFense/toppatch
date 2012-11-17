@@ -234,7 +234,7 @@ def removeTag(session, tag_name):
             session.rollback()
             return(False, "Tag %s does not exists" % (tag_name))
 
-def removeAllTagsFromNode(session, tag_name):
+def removeAllNodesFromTag(session, tag_name):
     tag_oper, tag = tagExists(session, tag_name)
     tags_per_node = \
             session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagInfo.tag == tag_name).all()
