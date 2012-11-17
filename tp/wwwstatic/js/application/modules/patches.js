@@ -33,6 +33,14 @@ define(
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
                 },
+                events: {
+                    'change select[name=filter]': 'filterbytype'
+                },
+                filterbytype: function (evt) {
+                    this.collection.type = $(evt.target).val() === 'none' ? '' : $(evt.target).val();
+                    this.collection.initialize();
+                    this.collection.fetch();
+                },
                 beforeRender: $.noop,
                 onRender: $.noop,
                 render: function () {
