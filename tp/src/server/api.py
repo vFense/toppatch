@@ -416,9 +416,10 @@ class NodesHandler(BaseHandler):
                               'patch/pend': u[2].patches_pending
                                }
                 data.append(resultnode)
-            for u in self.session.query(func.count(SystemInfo.node_id)):
-                count = u
-            resultjson = {"count": count[0], "nodes": data}
+
+            count = nodes_query.count()
+            resultjson = {"count": count, "nodes": data}
+
         self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))

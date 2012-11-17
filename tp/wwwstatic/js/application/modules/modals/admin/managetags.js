@@ -37,6 +37,7 @@ define(
                 stoplink: function (event) {
                     event.preventDefault();
                     var $href = $(event.target),
+                        $icon = $href.find('i'),
                         parent = $href.parents('.accordion-group'),
                         body = parent.find('.accordion-body'),
                         popover = body.find('a[name=popover]'),
@@ -51,6 +52,11 @@ define(
                         trigger: 'manual'
                     });
                     body.collapse('toggle');
+                    if ($icon.hasClass('icon-circle-arrow-down')) {
+                        $icon.attr('class', 'icon-circle-arrow-up');
+                    } else {
+                        $icon.attr('class', 'icon-circle-arrow-down');
+                    }
                     if (popover.data('popover')) {
                         popover.data('popover').tip().css('z-index', 3000);
                         popover.popover('hide');
@@ -120,12 +126,26 @@ define(
                     }
                 },
                 deleteTag: function (event) {
-                    var $icon = $(event.target),
+                    var params, user,
+                        $icon = $(event.target),
                         $item = $icon.parents('.accordion-group'),
                         tag = $icon.parent().attr('id'),
                         popover = $item.find('a[name=popover]');
+
                     if (popover.data('popover')) { popover.popover('destroy'); }
-                    $item.remove();
+                    user = window.User.get('name');
+                    params = {
+                        tag: tag,
+                        user: user
+                    };
+                    window.console.log(params);
+                    $.post("/api/tagging/removeTag", { operation: JSON.stringify(params) },
+                        function (json) {
+                            window.console.log(json);
+                            if (json.pass) {
+                                $item.remove();
+                            }
+                        });
                     window.console.log($(event.target).parent().attr('id'));
                 },
                 beforeRender: $.noop,
