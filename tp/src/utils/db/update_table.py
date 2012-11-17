@@ -282,7 +282,7 @@ def removeTagsFromNode(session, tag_name, nodes=[]):
     elif len(nodes_failed) > 0 and len(node_completed)  == 0:
         return(False, "Nodes %s were not deleted from tag %s" % \
                 (nodes_failed, tag_name), nodes)
-    elif len(nodes_completed) > 0 and len(node_failed)  == 0:
+    elif len(nodes_completed) > 0 and len(nodes_failed)  == 0:
         return(True, "Nodes %s were deleted from tag %s" % \
                 (nodes_completed, tag_name), nodes)
 
