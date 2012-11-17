@@ -23,7 +23,7 @@ STATUS_UPDATE = 'status'
 class HandOff():
     def __init__(self, ENGINE, data, ip_address):
         self.session = createSession(ENGINE)
-        self.session = ValidateSession(self.session)
+        self.session = validateSession(self.session)
         self.data = data
         self.valid_json, self.json_object = verifyJsonIsValid(self.data)
         self.ip = ip_address

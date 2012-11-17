@@ -17,7 +17,7 @@ from utils.tcpasync import TcpConnect
 
 #WebsocketHandler.sendMessage(message)
 def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
-    session = ValidateSession(session)
+    session = validateSession(session)
     try:
         hostname = gethostbyaddr(client_ip)[0]
     except:
@@ -32,7 +32,7 @@ def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
         print e
 
 def addTag(session, tag_name, user_id=None):
-    session = ValidateSession(session)
+    session = validateSession(session)
     date_created=datetime.now()
     try:
         add_tag = TagInfo(tag_name, date_created, user_id)
@@ -46,7 +46,7 @@ def addTag(session, tag_name, user_id=None):
 
 def addTagPerNode(session, nodes=[], tag_id=None, tag_name=None,
                 user_id=None):
-    session = ValidateSession(session)
+    session = validateSession(session)
     completed = False
     count = 0
     if not tag_id and tag_name:
@@ -76,7 +76,7 @@ def addTagPerNode(session, nodes=[], tag_id=None, tag_name=None,
 
 def addTimeBlock(session, label, enabled, start_date, end_date,
               start_time, duration, days):
-    session = ValidateSession(session)
+    session = validateSession(session)
     try:
         add_block = TimeBlocker(label, start_date, end_date,
                                 start_time, duration, days,
@@ -91,7 +91,7 @@ def addTimeBlock(session, label, enabled, start_date, end_date,
 
 def addCsr(session, client_ip, location, csr_name,
             signed=False, signed_date=False):
-    session = ValidateSession(session)
+    session = validateSession(session)
     try:
         add_csr = CsrInfo(csr_name, client_ip, location, signed, signed_date)
         session.add(add_csr)
@@ -103,7 +103,7 @@ def addCsr(session, client_ip, location, csr_name,
 
 def addCert(session, node_id, cert_id, cert_name,
             cert_location, cert_expiration):
-    session = ValidateSession(session)
+    session = validateSession(session)
     try:
         add_cert = SslInfo(node_id, cert_id, cert_name,
                     cert_location, cert_expiration)
@@ -120,7 +120,7 @@ def addOperation(session, node_id, operation, result_id=None,
     add_oper = Operations(node_id, operation, result_id,
             operation_sent, operation_received, results_received
             )
-    session = ValidateSession(session)
+    session = validateSession(session)
     if add_oper:
         session.add(add_oper)
         session.commit()
@@ -128,7 +128,7 @@ def addOperation(session, node_id, operation, result_id=None,
 
 
 def addSystemInfo(session, data, node_info):
-    session = ValidateSession(session)
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         operation.update({'results_received' : datetime.now()})
@@ -149,7 +149,7 @@ def addSystemInfo(session, data, node_info):
 
 
 def addSoftwareUpdate(session, data):
-    session = ValidateSession(session)
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
     node_id = exists.node_id
     if exists:
@@ -182,7 +182,7 @@ def addSoftwareUpdate(session, data):
                         session.rollback()
 
 def addUpdatePerNode(session, data):
-    session = ValidateSession(session)
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         node_id = exists.node_id
@@ -215,7 +215,7 @@ def addUpdatePerNode(session, data):
                     session.rollback()
 
 def addSoftwareAvailable(session, data):
-    session = ValidateSession(session)
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         node_id = exists.node_id
@@ -236,7 +236,7 @@ def addSoftwareAvailable(session, data):
                     session.rollback()
 
 def addSoftwareInstalled(session, data):
-    session = ValidateSession(session)
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         node_id = exists.node_id
@@ -264,7 +264,7 @@ def addSoftwareInstalled(session, data):
                         session.rollback()
 
 def removeTag(session, tag_name):
-    session = ValidateSession(session)
+    session = validateSession(session)
     tag_exists, tag = tagExists(session, tag_name=tag_name)
     if tag:
         try:
@@ -276,7 +276,7 @@ def removeTag(session, tag_name):
             return(False, "Tag %s does not exists" % (tag_name))
 
 def removeAllNodesFromTag(session, tag_name):
-    session = ValidateSession(session)
+    session = validateSession(session)
     tag_oper, tag = tagExists(session, tag_name)
     tags_per_node = \
             session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagInfo.tag == tag_name).all()
@@ -299,7 +299,7 @@ def removeAllNodesFromTag(session, tag_name):
         return(False, "Tag %s does not exists" % (tag_name), tag_name)
 
 def removeNodesFromTag(session, tag_name, nodes=[]):
-    session = ValidateSession(session)
+    session = validateSession(session)
     nodes_completed = []
     nodes_failed = []
     for node in nodes:
@@ -330,7 +330,7 @@ def removeNodesFromTag(session, tag_name, nodes=[]):
                 (nodes_completed, tag_name), nodes)
 
 def removeTimeBlock(session, id=None, label=None, start_date=None, start_time=None):
-    session = ValidateSession(session)
+    session = validateSession(session)
     tb_object, timeblock = timeBlockExists(session, id, label, start_date, start_time)
     print tb_object, timeblock
     if tb_object:
@@ -346,7 +346,7 @@ def removeTimeBlock(session, id=None, label=None, start_date=None, start_time=No
     return object_deleted
 
 def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
-    session = ValidateSession(session)
+    session = validateSession(session)
     exists, operation = operationExists(session, oper_id)
     if exists and results_recv:
         operation.update({'results_received' : datetime.now()})
@@ -356,7 +356,7 @@ def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
         session.commit()
 
 def updateNode(session, node_id):
-    session = ValidateSession(session)
+    session = validateSession(session)
     exists, node = nodeExists(session, node_id=node_id)
     if exists:
         os_code_exists = session.query(SystemInfo).filter_by(node_id=node_id).first()
@@ -386,7 +386,7 @@ def updateNode(session, node_id):
     return node
 
 def updateNodeStats(session, node_id):
-    session = ValidateSession(session)
+    session = validateSession(session)
     os_code_exists = session.query(SystemInfo).filter_by(node_id=node_id).first()
     if os_code_exists:
         os_code = os_code_exists.os_code
@@ -413,7 +413,7 @@ def updateNodeStats(session, node_id):
         print "System Info for node %s does not exist" % ( node_id)
 
 def updateNetworkStats(session):
-    session = ValidateSession(session)
+    session = validateSession(session)
     wstats = session.query(ManagedWindowsUpdate)
     lstats = session.query(ManagedLinuxPackage)
     wtotalinstalled = wstats.filter_by(installed=True).all()
@@ -439,7 +439,7 @@ def updateNetworkStats(session):
     session.commit()
 
 def updateRebootStatus(session, node_id, oper_type):
-    session = ValidateSession(session)
+    session = validateSession(session)
     node, node_exists = nodeExists(session, node_id=node_id)
     print node, node_exists, "OKKKOKOKKO"
     if node_exists:
@@ -449,7 +449,7 @@ def updateRebootStatus(session, node_id, oper_type):
             session.commit()
 
 def addResults(session, data):
-    session = ValidateSession(session)
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
     node, node_exists = nodeExists(session,node_id=data['node_id'])
     print node
