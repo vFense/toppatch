@@ -229,12 +229,10 @@ def removeTag(session, tag_name):
         try:
             tag_exists.delete()
             session.commit()
-            return(True, "Tag %s was deleted" % \
-                    (tag_name)
+            return(True, "Tag %s was deleted" % (tag_name))
         except Exception as e:
             session.rollback()
-            return(False, "Tag %s does not exists" % \
-                    (tag_name)
+            return(False, "Tag %s does not exists" % (tag_name))
 
 def removeTagsFromNode(session, tag_name, nodes=[]):
     nodes_completed = []
