@@ -224,7 +224,7 @@ def addSoftwareInstalled(session, data):
                         session.rollback()
 
 def removeTag(session, tag_name):
-    tag_exists, tag = tagExists(session, tag_name)
+    tag_exists, tag = tagExists(session, tag_name=tag_name)
     if tag:
         try:
             tag_exists.delete()

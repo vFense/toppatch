@@ -86,7 +86,7 @@ def tagRemovePerNode(session, msg):
         if 'nodes' in json_msg:
             nodes = json_msg['nodes']
         print msg
-        tag_out = removeNdoesFromTag(session, tag_name, nodes=nodes)
+        tag_out = removeNodesFromTag(session, tag_name, nodes=nodes)
         tagged = {
                  "pass" : tag_out[0],
                  "message" : tag_out[1]
@@ -101,7 +101,7 @@ def tagRemove(session, msg):
         print msg
         nodes_removed_from_tag = removeAllNodesFromTag(session, tag_name)
         if nodes_removed_from_tag[0]:
-            tag_out = removeTag(session, tag_name=tag_name)
+            tag_out = removeTag(session, tag_name)
             tagged = {
                      "pass" : tag_out[0],
                      "message" : tag_out[1]
