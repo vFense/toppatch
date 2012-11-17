@@ -31,10 +31,10 @@ class HandOff():
                 node_ip=self.ip)
             if self.node:
                 if self.node.last_agent_update == None:
-                    self.dataCollector()
                     exists.update({"last_agent_update" : datetime.now(),
                                    "last_node_update" : datetime.now()
                                   })
+                    self.dataCollector()
                     TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
             else:
                 pass
