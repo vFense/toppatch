@@ -45,7 +45,7 @@ define(
                     'change select[name=filter]': 'filterbytag'
                 },
                 filterbytag: function (evt) {
-                    this.collection.filterby = $(evt.target).val() == 'none' ? '' : $(evt.target).val();
+                    this.collection.filterby = $(evt.target).val() === 'none' ? '' : $(evt.target).val();
                     this.collection.initialize();
                     this.collection.fetch();
                 },

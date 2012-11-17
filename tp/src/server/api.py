@@ -404,6 +404,7 @@ class NodesHandler(BaseHandler):
 
             for u in nodes_query.limit(queryCount).offset(queryOffset):
                 resultnode = {'ip': u[0].ip_address,
+                              'hostname': u[0].host_name,
                               'host/status': u[0].host_status,
                               'agent/status': u[0].agent_status,
                               'reboot': u[0].reboot,
@@ -415,9 +416,10 @@ class NodesHandler(BaseHandler):
                               'patch/pend': u[2].patches_pending
                                }
                 data.append(resultnode)
-            for u in self.session.query(func.count(SystemInfo.node_id)):
-                count = u
-            resultjson = {"count": count[0], "nodes": data}
+
+            count = nodes_query.count()
+            resultjson = {"count": count, "nodes": data}
+
         self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
@@ -816,8 +818,18 @@ class TagRemovePerNodeHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-
-
+class TagRemoveHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            self.msg = self.get_argument('operation')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
+        result = tagRemove(self.session, self.msg)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
 
 class OperationHandler(BaseHandler):
 

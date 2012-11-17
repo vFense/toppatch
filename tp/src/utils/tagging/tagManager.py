@@ -31,7 +31,7 @@ def tagListByNodes(session):
         list_of_nodes = []
         nodes = session.query(TagsPerNode).filter_by(tag_id=tag.id).all()
         for node in nodes:
-            node = session.query(NodeInfo).filter_by(id=node.id).first()
+            node = session.query(NodeInfo).filter_by(id=node.node_id).first()
             list_of_nodes.append(node.ip_address)
         tag = {
                 "tag_id" : tag.id,
@@ -86,10 +86,31 @@ def tagRemovePerNode(session, msg):
         if 'nodes' in json_msg:
             nodes = json_msg['nodes']
         print msg
-        tag_out = removeTagsFromNode(session, tag_name, nodes=nodes)
+        tag_out = removeNodesFromTag(session, tag_name, nodes=nodes)
         tagged = {
                  "pass" : tag_out[0],
                  "message" : tag_out[1]
                  }
         return tagged
+
+def tagRemove(session, msg):
+    valid, json_msg = verifyJsonIsValid(msg)
+    if valid:
+        if 'tag' in json_msg:
+            tag_name = json_msg['tag']
+        print msg
+        nodes_removed_from_tag = removeAllNodesFromTag(session, tag_name)
+        if nodes_removed_from_tag[0]:
+            tag_out = removeTag(session, tag_name)
+            tagged = {
+                     "pass" : tag_out[0],
+                     "message" : tag_out[1]
+                     }
+            return tagged
+        else:
+            tagged = {
+                     "pass" : nodes_removed_from_tag[0],
+                     "message" : nodes_removed_from_tag[1]
+                     }
+            return tagged
  

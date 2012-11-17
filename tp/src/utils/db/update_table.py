@@ -223,13 +223,25 @@ def addSoftwareInstalled(session, data):
                     except:
                         session.rollback()
 
-def removeTagsFromNode(session, tag_name, nodes=[]):
+def removeTag(session, tag_name):
+    tag_exists, tag = tagExists(session, tag_name=tag_name)
+    if tag:
+        try:
+            tag_exists.delete()
+            session.commit()
+            return(True, "Tag %s was deleted" % (tag_name))
+        except Exception as e:
+            session.rollback()
+            return(False, "Tag %s does not exists" % (tag_name))
+
+def removeAllNodesFromTag(session, tag_name):
+    tag_oper, tag = tagExists(session, tag_name)
     tags_per_node = \
             session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagInfo.tag == tag_name).all()
     if len(tags_per_node) > 0:
         nodes = map(lambda nodes: nodes[0].node_id, tags_per_node)
         try:
-            tags_deleted = map(lambda nodes: session.delete(nodes[0]), 
+            tags_deleted = map(lambda nodes: session.delete(nodes[0]),
                     tags_per_node)
             session.commit()
             return(True, "Nodes %s were deleted from tag %s" % \
@@ -238,10 +250,41 @@ def removeTagsFromNode(session, tag_name, nodes=[]):
             session.rollback()
             return(False, "Nodes %s were not deleted from tag %s" % \
                     (nodes, tag_name), nodes)
-    else:
-        return(False, "Tag %s does not exist" % \
+    elif tag:
+        return(True, "No nodes for this tag %s Tag" % \
             (tag_name), tag_name)
+    else:
+        return(False, "Tag %s does not exists" % (tag_name), tag_name)
 
+def removeNodesFromTag(session, tag_name, nodes=[]):
+    nodes_completed = []
+    nodes_failed = []
+    for node in nodes:
+        tags_per_node = \
+            session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagInfo.tag == tag_name).filter(TagsPerNode.node_id == node).all()
+        if len(tags_per_node) > 0:
+            try:
+                tags_deleted = map(lambda nodes: session.delete(nodes[0]), 
+                        tags_per_node)
+                session.commit()
+                nodes_completed.append(node)
+            except Exception as e:
+                session.rollback()
+                nodes_failed.append(node)
+                return(False, "Nodes %s were not deleted from tag %s" % \
+                        (nodes, tag_name), nodes)
+        else:
+            return(False, "Tag %s does not exist" % \
+                (tag_name), tag_name)
+    if len(nodes_failed) > 0 and len(node_completed) >0:
+        return(True, "Nodes %s were deleted from tag %s and nodes % were not deleted" % \
+                (nodes_completed, tag_name, nodes_failed), nodes)
+    elif len(nodes_failed) > 0 and len(node_completed)  == 0:
+        return(False, "Nodes %s were not deleted from tag %s" % \
+                (nodes_failed, tag_name), nodes)
+    elif len(nodes_completed) > 0 and len(nodes_failed)  == 0:
+        return(True, "Nodes %s were deleted from tag %s" % \
+                (nodes_completed, tag_name), nodes)
 
 def removeTimeBlock(session, id=None, label=None, start_date=None, start_time=None):
     tb_object, timeblock = timeBlockExists(session, id, label, start_date, start_time)
