@@ -31,10 +31,10 @@ class HandOff():
                 node_ip=self.ip)
             if self.node:
                 if self.node.last_agent_update == None:
-                    self.dataCollector()
                     exists.update({"last_agent_update" : datetime.now(),
                                    "last_node_update" : datetime.now()
                                   })
+                    self.dataCollector()
                     TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
             else:
                 pass
@@ -60,9 +60,9 @@ class HandOff():
         self.session.close()
 
     def dataCollector(self):
-        #operations = ["updates_pending"]
-        operations = ["system_info", "updates_pending", 
-                     "updates_installed", "system_applications"]
+        #operations = ["updates_installed"]
+        operations = ["system_info", "updates_installed", 
+                     "updates_pending", "system_applications"]
         lcollect = []
         for oper in operations:
             lcollect.append('{"node_id" : "%s", "operation" : "%s"}' \
