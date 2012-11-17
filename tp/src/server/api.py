@@ -663,15 +663,16 @@ class SeverityHandler(BaseHandler):
     def get(self):
         resultjson = {}
         result = []
-        self.session = self.application.session
-        self.session = validateSession(self.session)
+        session = self.application.session
+        session = validateSession(session)
 
         query_tables = [WindowsUpdate, LinuxPackage]
+        print "**********query_tables: " + str(query_tables)
 
         for table in query_tables:
-            for u in self.session.query(table.severity).distinct().all():
+            for u in session.query(table.severity).distinct().all():
                 count = 0
-                for v in self.session.query(table).filter(table.severity == u.severity).all():
+                for v in session.query(table).filter(table.severity == u.severity).all():
                     count += 1
                     print v
                 print u
