@@ -235,6 +235,7 @@ def removeTag(session, tag_name):
             return(False, "Tag %s does not exists" % (tag_name))
 
 def removeAllTagsFromNode(session, tag_name):
+    tag_oper, tag = tagExists(session, tag_name)
     tags_per_node = \
             session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagInfo.tag == tag_name).all()
     if len(tags_per_node) > 0:
@@ -249,9 +250,11 @@ def removeAllTagsFromNode(session, tag_name):
             session.rollback()
             return(False, "Nodes %s were not deleted from tag %s" % \
                     (nodes, tag_name), nodes)
-    else:
-        return(False, "Tag %s does not exist" % \
+    elif tag:
+        return(True, "No nodes for this tag %s Tag" % \
             (tag_name), tag_name)
+    else:
+        return(False, "Tag %s does not exists" % (tag_name), tag_name)
 
 def removeTagsFromNode(session, tag_name, nodes=[]):
     nodes_completed = []
