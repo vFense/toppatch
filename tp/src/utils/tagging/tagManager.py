@@ -92,4 +92,25 @@ def tagRemovePerNode(session, msg):
                  "message" : tag_out[1]
                  }
         return tagged
+
+def tagRemove(session, msg):
+    valid, json_msg = verifyJsonIsValid(msg)
+    if valid:
+        if 'tag' in json_msg:
+            tag_name = json_msg['tag']
+        print msg
+        nodes_removed_from_tag = removeAllTagsFromNode(session, tag_name)
+        if nodes_removed_from_tag[0]:
+            tag_out = removeTag(session, tag_name)
+            tagged = {
+                     "pass" : tag_out[0],
+                     "message" : tag_out[1]
+                     }
+            return tagged
+        else:
+            tagged = {
+                     "pass" : nodes_removed_from_tag[0],
+                     "message" : nodes_removed_from_tag[1]
+                     }
+            return tagged
  

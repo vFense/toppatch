@@ -234,6 +234,25 @@ def removeTag(session, tag_name):
             session.rollback()
             return(False, "Tag %s does not exists" % (tag_name))
 
+def removeAllTagsFromNode(session, tag_name):
+    tags_per_node = \
+            session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagInfo.tag == tag_name).all()
+    if len(tags_per_node) > 0:
+        nodes = map(lambda nodes: nodes[0].node_id, tags_per_node)
+        try:
+            tags_deleted = map(lambda nodes: session.delete(nodes[0]),
+                    tags_per_node)
+            session.commit()
+            return(True, "Nodes %s were deleted from tag %s" % \
+                    (nodes, tag_name), nodes)
+        except Exception as e:
+            session.rollback()
+            return(False, "Nodes %s were not deleted from tag %s" % \
+                    (nodes, tag_name), nodes)
+    else:
+        return(False, "Tag %s does not exist" % \
+            (tag_name), tag_name)
+
 def removeTagsFromNode(session, tag_name, nodes=[]):
     nodes_completed = []
     nodes_failed = []
