@@ -36,6 +36,13 @@ def validateSession(session):
             session.rollback()
     return session
 
+def newValidateSession(session):
+    try:
+        session.query(NodeInfo).first()
+    except Exception as e:
+        if e.connection_invalidated:
+            session.rollback()
+#
 #ENGINE = initEngine()
 #session = createSession(ENGINE)
 
