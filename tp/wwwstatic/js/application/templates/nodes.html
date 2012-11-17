@@ -57,6 +57,12 @@
                     </div>
                 <% }); %>
             </div>
+        <% } else { %>
+            <div class="items">
+                <div class="item clearfix">
+                    <span class="desc"><em>No nodes available.</em></span>
+                </div>
+            </div>
         <% } %>
         <footer class="clearfix">
             <small>Viewing <%= start %> – <%= end %> of <%= recordCount %> Nodes</small>
