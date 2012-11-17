@@ -23,6 +23,9 @@ from sqlalchemy.orm import sessionmaker, class_mapper
 
 from jsonpickle import encode
 
+detail_tables = [WindowsUpdate, LinuxPackage] # Tables that have detailed info on packages/updates.
+managed_tables = [ManagedWindowsUpdate, ManagedLinuxPackage] # Info on installed packages/updates.
+
 class ApiHandler(BaseHandler):
     """ Trying to figure out this whole RESTful api thing with json."""
 
@@ -183,8 +186,7 @@ class PatchHandler(BaseHandler):
             type = None
         else:
             pass
-        self.session = self.application.session
-        self.session = validateSession(self.session)
+        session = validateSession(self.application.session)
         if type == 'available':
             for u in self.session.query(WindowsUpdate).all():
                 noderesult = []
@@ -197,7 +199,7 @@ class PatchHandler(BaseHandler):
                         "developer" : u.vendor_id
                     },
                    "date" : str(u.date_pub),
-                   "name" : u.title,
+                   "name" : u.name,
                    "description" : u.description,
                    "severity" : u.severity,
                    "node": noderesult})
@@ -215,7 +217,7 @@ class PatchHandler(BaseHandler):
                         "developer" : u.vendor_id
                     },
                    "date" : str(u.date_pub),
-                   "name" : u.title,
+                   "name" : u.name,
                    "description" : u.description,
                    "severity" : u.severity,
                    "node": noderesult})
@@ -236,7 +238,7 @@ class PatchHandler(BaseHandler):
                     "toppatch" : u.toppatch_id,
                     "developer" : u.vendor_id},
                 "date" : str(u.date_pub),
-                "name" : u.title,
+                "name" : u.name,
                 "description" : u.description,
                 "severity" : u.severity,
                 "available": nodeAvailable,
@@ -254,14 +256,13 @@ class SummaryHandler(BaseHandler):
         root = {}
         resultjson = []
         osResult = []
-        self.session = self.application.session
-        self.session = validateSession(self.session)
-        for u in self.session.query(SystemInfo.os_code).distinct().all():
+        session = self.application.session
+        session = validateSession(session)
+        for u in session.query(SystemInfo.os_code).distinct().all():
             osTypeResult = []
-            for v in self.session.query(SystemInfo.os_string).filter(SystemInfo.os_code == u.os_code).distinct().all():
+            for v in session.query(SystemInfo.os_string).filter(SystemInfo.os_code == u.os_code).distinct().all():
                 nodeResult = []
-                for w in self.session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).filter(SystemInfo.os_string == v.os_string).distinct().all():
-                    print w
+                for w in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).filter(SystemInfo.os_string == v.os_string).distinct().all():
                     nodeResult.append({"name" : w[0].ip_address,
                                        "children" : [{"name" : "Patches Installed", "size" : w[2].patches_installed},
                                            {"name" : "Patches Available", "size" : w[2].patches_available},
@@ -270,7 +271,7 @@ class SummaryHandler(BaseHandler):
                 osTypeResult.append({"name" : v.os_string, "children" : nodeResult})
             osResult.append({"name" : u.os_code, "children" : osTypeResult})
         root = {"name" : "192.168.1.0", "children" : osResult }
-        self.session.close()
+        session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(root, indent=4))
 
@@ -359,30 +360,32 @@ class NodesHandler(BaseHandler):
                 failed = []
                 pending = []
                 available = []
-                for v in self.session.query(ManagedWindowsUpdate, WindowsUpdate).join(WindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
-                    if v[0].installed:
-                        installed.append({'name': v[1].title, 'id': v[0].toppatch_id})
-                    elif v[0].pending:
-                        pending.append({'name': v[1].title, 'id': v[0].toppatch_id})
-                    elif v[0].attempts > 0:
-                        failed.append({'name': v[1].title, 'id': v[0].toppatch_id})
-                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
-                    else:
-                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
-                tags = map(lambda x: x[1].tag, self.session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
-                resultjson = {'ip': u[0].ip_address,
-                              'host/name': u[0].host_name,
-                              'host/status': u[0].host_status,
-                              'agent/status': u[0].agent_status,
-                              'reboot': u[0].reboot,
-                              'id': u[1].node_id,
-                              'tags': tags,
-                              'os/name':u[1].os_string,
-                              'patch/need': available,
-                              'patch/done': installed,
-                              'patch/fail': failed,
-                              'patch/pend': pending
-                               }
+                for table, m_table in (detail_tables, managed_tables):
+                    for v in self.session.query(m_table, table).join(table).filter(m_table.node_id == u[1].node_id).all():
+                        if v[0].installed:
+                            installed.append({'name': v[1].name, 'id': v[0].toppatch_id})
+                        elif v[0].pending:
+                            pending.append({'name': v[1].name, 'id': v[0].toppatch_id})
+                        elif v[0].attempts > 0:
+                            failed.append({'name': v[1].name, 'id': v[0].toppatch_id})
+                            available.append({'name': v[1].name, 'id': v[0].toppatch_id})
+                        else:
+                            available.append({'name': v[1].name, 'id': v[0].toppatch_id})
+                    tags = map(lambda x: x[1].tag, self.session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
+                    resultjson = {'ip': u[0].ip_address,
+                                  'host/name': u[0].host_name,
+                                  'host/status': u[0].host_status,
+                                  'agent/status': u[0].agent_status,
+                                  'reboot': u[0].reboot,
+                                  'id': u[1].node_id,
+                                  'tags': tags,
+                                  'os/name':u[1].os_string,
+                                  'patch/need': available,
+                                  'patch/done': installed,
+                                  'patch/fail': failed,
+                                  'patch/pend': pending
+                                   }
+
             if len(resultjson) == 0:
                 resultjson = {'error' : 'no data to display'}
         else:
@@ -467,7 +470,7 @@ class PatchesHandler(BaseHandler):
                         countAvailable += 1
                         nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].ip_address})
                 resultjson = {
-                    "name" : u.title,
+                    "name" : u.name,
                     "type": "Security Patch",             #forcing Patch into type
                     "vendor" : {
                         "patchID" : '',         #forcing empty string in patchID
@@ -509,7 +512,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -533,7 +536,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -557,7 +560,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -581,7 +584,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -603,7 +606,7 @@ class PatchesHandler(BaseHandler):
                         "type": "Security Patch",             #forcing Patch into type
                         "id": u.toppatch_id,
                         "date" : str(u.date_pub),
-                        "name" : u.title,
+                        "name" : u.name,
                         "description" : u.description,
                         "severity" : u.severity,
                         "nodes/need": countAvailable,
@@ -646,7 +649,7 @@ class PatchesHandler(BaseHandler):
                                    "type": "Security Patch",             #forcing Patch into type
                                    "id": u.toppatch_id,
                                    "date" : str(u.date_pub),
-                                   "name" : u.title,
+                                   "name" : u.name,
                                    "description" : u.description,
                                    "severity" : u.severity,
                                    "nodes/need": countAvailable,
@@ -668,10 +671,7 @@ class SeverityHandler(BaseHandler):
         session = self.application.session
         session = validateSession(session)
 
-        query_tables = [WindowsUpdate, LinuxPackage]
-        print "**********query_tables: " + str(query_tables)
-
-        for table in query_tables:
+        for table in detail_tables:
             for u in session.query(table.severity).distinct().all():
                 count = 0
                 for v in session.query(table).filter(table.severity == u.severity).all():
