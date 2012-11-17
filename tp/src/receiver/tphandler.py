@@ -60,9 +60,9 @@ class HandOff():
         self.session.close()
 
     def dataCollector(self):
-        #operations = ["updates_pending"]
-        operations = ["system_info", "updates_pending", 
-                     "updates_installed", "system_applications"]
+        #operations = ["updates_installed"]
+        operations = ["system_info", "updates_installed", 
+                     "updates_pending", "system_applications"]
         lcollect = []
         for oper in operations:
             lcollect.append('{"node_id" : "%s", "operation" : "%s"}' \
