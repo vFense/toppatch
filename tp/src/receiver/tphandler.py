@@ -23,6 +23,7 @@ STATUS_UPDATE = 'status'
 class HandOff():
     def __init__(self, ENGINE, data, ip_address):
         self.session = createSession(ENGINE)
+        self.session = ValidateSession(self.session)
         self.data = data
         self.valid_json, self.json_object = verifyJsonIsValid(self.data)
         self.ip = ip_address
@@ -34,6 +35,7 @@ class HandOff():
                     exists.update({"last_agent_update" : datetime.now(),
                                    "last_node_update" : datetime.now()
                                   })
+                    self.session.commit()
                     self.dataCollector()
                     TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
             else:

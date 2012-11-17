@@ -37,6 +37,7 @@ class AgentOperation():
         """
         ENGINE = initEngine()
         self.session = createSession(ENGINE)
+        self.session = validateSession(self.session)
         self.node_list = node_list
         self.total_nodes = None
         self.results = {}
