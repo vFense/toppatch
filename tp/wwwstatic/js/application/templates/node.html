@@ -132,20 +132,22 @@
             <div class="items">
                 <% _.each(model['patch/done'], function (patch) { %>
                 <div class="item clearfix" title="<%= patch.name %>">
-                    <span class="desc">
-                        <label class="checkbox inline">
-                            <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                            <%= patch.name %>
-                        </label>
-                    </span>
-                    <span class="pull-right">
-                        <!--
-                        <%// if (model.os_code && model.os_code == 'linux') { %>
-                            <a href="javascript:;" name="dependencies" value="<%= patch.id %>"><i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<small>Dependencies</small>&nbsp;</a>&nbsp;
-                        <%// } %>
-                        -->
-                        <a href="#patches/<%= patch.id %>">More information</a>
-                    </span>
+                    <div class="row-fluid">
+                        <span class="desc span8">
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                                <%= patch.name %>
+                            </label>
+                        </span>
+                        <span class="span4 alignRight">
+                            <!--
+                            <%// if (model.os_code && model.os_code == 'linux') { %>
+                                <a href="javascript:;" name="dependencies" value="<%= patch.id %>"><i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<small>Dependencies</small>&nbsp;</a>&nbsp;
+                            <%// } %>
+                            -->
+                            <a href="#patches/<%= patch.id %>">More information</a>
+                        </span>
+                    </div>
                 </div>
                 <% }); %>
             </div>
