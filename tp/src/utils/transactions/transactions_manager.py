@@ -10,7 +10,7 @@ def retrieveTransactions(session):
     transaction = []
     for trans in transactions:
         if trans[1][0].operation_received:
-            operation_received = operation_received.strftime("%m/%d/%Y %H:%M")
+            operation_received = trans[1][0].operation_received.strftime("%m/%d/%Y %H:%M")
         if len(trans[1]) == 1:
             transaction.append({
                          "operation" : trans[1][0].operation_type,
