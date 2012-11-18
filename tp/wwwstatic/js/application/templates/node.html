@@ -138,7 +138,7 @@
                                 </span>
                                 <span class="pull-right">
                                     <% if (model.os_code && model.os_code == 'linux') { %>
-                                        <a href="javascript:;" name="dependencies" value="<%= patch.id %>"><small>Dependencies</small>&nbsp;<i style="color: orange;" class="icon-warning-sign"></i></a>&nbsp;
+                                        <a href="javascript:;" name="dependencies" value="<%= patch.id %>"><i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<small>Dependencies</small>&nbsp;</a>&nbsp;
                                     <% } %>
                                     <a href="#patches/<%= patch.id %>">More information</a>
                                 </span>
