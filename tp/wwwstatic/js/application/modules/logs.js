@@ -1,35 +1,45 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'module/someModel', 'text!templates/aTemplate.html' ],
-    function ($, _, Backbone, myModel, myTemplate) {
+    ['jquery', 'underscore', 'backbone'],
+    function ($, _, Backbone) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
-                baseUrl: 'api/patches.json',
-                params: '',
+                baseUrl: 'api/transactions/getTransactions',
+                params: {
+                    // defaults
+                    offset: 0,
+                    count: 20
+                },
                 url: function () {
-                    return this.baseUrl + this.query;
+                    var query = '?' + $.param(this.params).trim(),
+                        url = this.baseUrl;
+
+                    if (query !== '?') { url += query; }
+
+                    return url;
                 },
                 parse: function (response) {
                     this.recordCount = response.count;
                     return response.data;
                 },
                 initialize: function (options) {
-                    this.offset   = this.offset || 0;
-                    this.getCount = this.getCount  || 20;
-                    this.type = this.type || '';
-
-                    this.query = '?count=' + this.getCount + '&offset=' + this.offset;
-                    if (this.type) {
-                        this.query += '&type=' + this.type;
+                    console.log('init constructor');
+                    if (options.params) {
+                        _.extend(this.params, _.pick(options.params, _.keys(this.params)));
                     }
                 }
             }),
             View: Backbone.View.extend({
-                initialize: function () {
-                    this.template = myTemplate;
-                    if (!this.collection) {
+                initialize: function (options) {
+                    console.log('init view');
+                    if (options) {
+                        _.extend(this, _.pick(options, ['collection']));
+                    }
+
+                    if (!this.collection instanceof Backbone.Collection) {
                         this.collection =  new exports.Collection();
                     }
+
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
                 },
@@ -38,10 +48,10 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var tmpl = _.template(this.template),
-                        that = this;
+                    var that = this;
 
                     this.$el.empty();
+                    this.$el.html('hello world');
 
                     _.each(this.collection.models, function (item) {
                         that.renderModel(item);

@@ -136,23 +136,24 @@ define(
             showLogs: function (query) {
                 var that = this,
                     params = '',
+                    collection,
                     view;
+                console.log('showLogs');
                 require(['modules/logs'], function (myView) {
                     if ($.type(query) === 'string') {
                         params = app.parseQuery(query);
                     }
-                    view = new myView.View({
-                        collection: new myView.Collection({
-                            params: {
-                                type: params.type,
-                                count: params.count,
-                                offset: params.offset
-                            }
-                        })
+
+                    collection = new myView.Collection({
+                        type: params.type,
+                        count: params.count,
+                        offset: params.offset
                     });
-                    this.show({hash: '#logs', title: 'Transaction Log', view: view});
+
+                    view = new myView.View({collection: collection});
+
+                    that.show({hash: '#logs', title: 'Transaction Log', view: view});
                 });
-                this.show({hash: '#logs', title: 'Transaction Logs', view: ''});
             },
             showAccount: function () {
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
