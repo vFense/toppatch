@@ -25,6 +25,9 @@ define(
                 // Schedule Interface
                 'schedule'      : 'showSchedule',
 
+                // Log Interface
+                'logs'          : 'showLogs',
+
                 // Account panel
                 'account'       : 'showAccount',
 
@@ -129,6 +132,27 @@ define(
             },
             showSchedule: function () {
                 this.show({hash: '#schedule', title: 'Schedule Manager', view: 'modules/schedule'});
+            },
+            showLogs: function (query) {
+                var that = this,
+                    params = '',
+                    view;
+                require(['modules/logs'], function (myView) {
+                    if ($.type(query) === 'string') {
+                        params = app.parseQuery(query);
+                    }
+                    view = new myView.View({
+                        collection: new myView.Collection({
+                            params: {
+                                type: params.type,
+                                count: params.count,
+                                offset: params.offset
+                            }
+                        })
+                    });
+                    this.show({hash: '#logs', title: 'Transaction Log', view: view});
+                });
+                this.show({hash: '#logs', title: 'Transaction Logs', view: ''});
             },
             showAccount: function () {
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
