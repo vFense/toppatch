@@ -27,6 +27,7 @@ define(
 
                 // Log Interface
                 'logs'          : 'showLogs',
+                'logs?:query'   : 'showLogs',
 
                 // Account panel
                 'account'       : 'showAccount',
@@ -138,7 +139,7 @@ define(
                     params = '',
                     collection,
                     view;
-                console.log('showLogs');
+
                 require(['modules/logs'], function (myView) {
                     if ($.type(query) === 'string') {
                         params = app.parseQuery(query);

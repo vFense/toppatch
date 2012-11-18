@@ -7,7 +7,6 @@
     .row,
     .row-fluid {
         position: relative;
-        min-height: @em*( 60 )/@baseFontSize;
         z-index: 5;
 
         .row-handle {
@@ -136,7 +135,7 @@
         .item {
             border-top: @em*(1px)/@baseFontSize solid @listBorder;
         //border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
-            padding: @em*(2px)/@baseFontSize 0.5em;
+            padding: @em*(2px)/@baseFontSize 0;
 
             &:last-child {
                 border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
@@ -146,6 +145,12 @@
                 background-color: @listHighlight;
             }
 
+            &.row-fluid {
+                [class*="span"] {
+                    min-height: 1em;
+                }
+            }
+
 
             &.linked {
                 padding: 0 0;
@@ -153,7 +158,7 @@
                     color: #000;
                     display: block;
                     text-decoration: none;
-                    padding: @em*(2px)/@baseFontSize 0.5em;
+                    padding: @em*(2px)/@baseFontSize 0;
 
                     STRONG {
                         color: @linkColor;
@@ -162,8 +167,6 @@
             }
 
             .desc {
-                display: inline-block;
-                width: 75%;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -288,6 +291,7 @@
     > .row-fluid + .row,
     > .row-fluid + .row-fluid {
         margin-top: 1em;
+        min-height: @em*( 60 )/@baseFontSize;
     }
     
     // Bandaid Fix
