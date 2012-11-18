@@ -127,6 +127,9 @@ define(
             showMulti: function () {
                 this.show({hash: '#multi', title: 'Patch Operations', view: 'modules/multi'});
             },
+            showSchedule: function () {
+                this.show({hash: '#schedule', title: 'Schedule Manager', view: 'modules/schedule'});
+            },
             showAccount: function () {
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
             },
@@ -141,9 +144,6 @@ define(
             },
             'modal/admin/listblocks': function () {
                 this.openAdminModalWithView('modals/admin/listblocks');
-            },
-            showSchedule: function () {
-                this.show({hash: '#schedule', title: 'Schedule Manager', view: 'modules/schedule'});
             },
             /*
             defaultAction: function () {
