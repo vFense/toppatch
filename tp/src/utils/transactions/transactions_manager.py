@@ -9,6 +9,7 @@ def retrieveTransactions(session):
     transactions = getTransactions(session)
     transaction = []
     for trans in transactions:
+        operation_received = None
         if trans[1][0].operation_received:
             operation_received = trans[1][0].operation_received.strftime("%m/%d/%Y %H:%M")
         if len(trans[1]) == 1:
