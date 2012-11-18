@@ -140,9 +140,11 @@
                             </label>
                         </span>
                         <span class="span4 alignRight">
-                            <% if (model.os_code && model.os_code == 'linux') { %>
+                            <!--
+                            <%// if (model.os_code && model.os_code == 'linux') { %>
                                 <a href="javascript:;" name="dependencies" value="<%= patch.id %>"><i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<small>Dependencies</small>&nbsp;</a>&nbsp;
-                            <% } %>
+                            <%// } %>
+                            -->
                             <a href="#patches/<%= patch.id %>">More information</a>
                         </span>
                     </div>
@@ -231,7 +233,7 @@
     }
 </style>
 <div id="hidden" class="hide">
-    <div id="dependency-list" class="list" style="max-height: 150px; overflow: auto;">
+    <div id="dependency-list" class="list" style="max-height: 150px; overflow-y: auto; overflow-x: hidden; max-width: 300px;">
         <div class="items">
             <div class="item clearfix" name="loading">
                 <span>Loading...</span>
