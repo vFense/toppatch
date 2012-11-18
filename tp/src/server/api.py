@@ -846,3 +846,16 @@ class GetTransactionsHandler(BaseHandler):
         result = retrieveTransactions(self.session, count=queryCount, offset=queryOffset)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+        
+class GetDependenciesHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            pkg_id = self.get_argument('toppatch_id')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
+        result = retrieveDependencies(self.session, pkg_id)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))

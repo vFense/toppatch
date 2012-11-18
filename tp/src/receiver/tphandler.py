@@ -16,6 +16,7 @@ UPDATES_PENDING = 'updates_pending'
 UPDATES_INSTALLED = 'updates_installed'
 REBOOT = 'reboot'
 SOFTWARE_INSTALLED = 'system_applications'
+UNIX_DEPENDENCIES = 'unix_dependencies'
 SYSTEM_INFO = 'system_info'
 STATUS_UPDATE = 'status'
 
@@ -47,6 +48,8 @@ class HandOff():
                 self.addUpdate()
             if self.json_object[OPERATION] == SOFTWARE_INSTALLED:
                 self.softwareUpdate()
+            if self.json_object[OPERATION] == UNIX_DEPENDENCIES:
+                self.addDependency()
             if self.json_object[OPERATION] == STATUS_UPDATE:
                 self.nodeUpdate()
             if self.json_object[OPERATION] == INSTALL:
@@ -95,6 +98,10 @@ class HandOff():
         results = addResults(self.session, self.json_object)
         updateNodeStats(self.session, self.node.id)
         updateNetworkStats(self.session)
+        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
+
+    def updateDependency(self):
+        results = addDependency(self.session, self.json_object)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def nodeUpdate(self):

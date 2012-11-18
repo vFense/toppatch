@@ -19,6 +19,7 @@ UPDATESINSTALLED = 'updates_installed'
 UPDATESPENDING = 'updates_pending'
 SYSTEMINFO = 'system_info'
 SYSTEMAPPLICATIONS = 'system_applications'
+UNIX_DEPENDENCIES = 'unix_dependencies'
 DATA = 'data'
 SCHEDULE = 'schedule'
 TIME = 'time'
@@ -117,6 +118,12 @@ class AgentOperation():
         response = None
         connect = TcpConnect(node_ip, msg)
         completed = False
+        os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
+        os = None
+        if os_code == "linux":
+            os = ManagedWindowsUpdate
+        elif os_code == "windows":
+            os = ManagedLinuxPackage
         if not connect.error and connect.read_data:
             response = verifyJsonIsValid(connect.read_data)
             print response
@@ -130,7 +137,7 @@ class AgentOperation():
                 if 'data' in jsonobject:
                     for patch in jsonobject['data']:
                         if oper_type == 'install':
-                            patcher = self.session.query(ManagedWindowsUpdate).filter_by(toppatch_id=patch).filter_by(node_id=node_id)
+                            patcher = self.session.query(os).filter_by(toppatch_id=patch).filter_by(node_id=node_id)
                             patcher.update({"pending" : True})
                             self.session.commit()
                             updateNodeStats(self.session, node_id)
