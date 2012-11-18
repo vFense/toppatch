@@ -4,9 +4,9 @@ from utils.db.query_table import getTransactions
 from utils.db.client import validateSession
 
 
-def retrieveTransactions(session):
+def retrieveTransactions(session, count=None, offset=None):
     session = validateSession(session)
-    transactions = getTransactions(session)
+    transactions = getTransactions(session, count, offset)
     transaction = []
     for trans in transactions:
         operation_received = None
