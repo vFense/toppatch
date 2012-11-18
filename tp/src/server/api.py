@@ -18,6 +18,7 @@ from utils.db.client import *
 from utils.scheduler.jobManager import jobLister
 from utils.scheduler.timeBlocker import *
 from utils.tagging.tagManager import *
+from utils.transactions.transactions_manager import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -197,7 +198,7 @@ class PatchHandler(BaseHandler):
                         "developer" : u.vendor_id
                     },
                    "date" : str(u.date_pub),
-                   "name" : u.title,
+                   "name" : u.name,
                    "description" : u.description,
                    "severity" : u.severity,
                    "node": noderesult})
@@ -215,7 +216,7 @@ class PatchHandler(BaseHandler):
                         "developer" : u.vendor_id
                     },
                    "date" : str(u.date_pub),
-                   "name" : u.title,
+                   "name" : u.name,
                    "description" : u.description,
                    "severity" : u.severity,
                    "node": noderesult})
@@ -236,7 +237,7 @@ class PatchHandler(BaseHandler):
                     "toppatch" : u.toppatch_id,
                     "developer" : u.vendor_id},
                 "date" : str(u.date_pub),
-                "name" : u.title,
+                "name" : u.name,
                 "description" : u.description,
                 "severity" : u.severity,
                 "available": nodeAvailable,
@@ -361,14 +362,14 @@ class NodesHandler(BaseHandler):
                 available = []
                 for v in self.session.query(ManagedWindowsUpdate, WindowsUpdate).join(WindowsUpdate).filter(ManagedWindowsUpdate.node_id == u[1].node_id).all():
                     if v[0].installed:
-                        installed.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                        installed.append({'name': v[1].name, 'id': v[0].toppatch_id})
                     elif v[0].pending:
-                        pending.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                        pending.append({'name': v[1].name, 'id': v[0].toppatch_id})
                     elif v[0].attempts > 0:
-                        failed.append({'name': v[1].title, 'id': v[0].toppatch_id})
-                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                        failed.append({'name': v[1].name, 'id': v[0].toppatch_id})
+                        available.append({'name': v[1].name, 'id': v[0].toppatch_id})
                     else:
-                        available.append({'name': v[1].title, 'id': v[0].toppatch_id})
+                        available.append({'name': v[1].name, 'id': v[0].toppatch_id})
                 tags = map(lambda x: x[1].tag, self.session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
                 resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
@@ -467,7 +468,7 @@ class PatchesHandler(BaseHandler):
                         countAvailable += 1
                         nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].ip_address})
                 resultjson = {
-                    "name" : u.title,
+                    "name" : u.name,
                     "type": "Security Patch",             #forcing Patch into type
                     "vendor" : {
                         "patchID" : '',         #forcing empty string in patchID
@@ -509,7 +510,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -533,7 +534,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -557,7 +558,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -581,7 +582,7 @@ class PatchesHandler(BaseHandler):
                              "type": "Security Patch",             #forcing Patch into type
                              "id": v.toppatch_id,
                              "date" : str(v.date_pub),
-                             "name" : v.title,
+                             "name" : v.name,
                              "description" : v.description,
                              "severity" : v.severity,
                              "nodes/need": countAvailable,
@@ -603,7 +604,7 @@ class PatchesHandler(BaseHandler):
                         "type": "Security Patch",             #forcing Patch into type
                         "id": u.toppatch_id,
                         "date" : str(u.date_pub),
-                        "name" : u.title,
+                        "name" : u.name,
                         "description" : u.description,
                         "severity" : u.severity,
                         "nodes/need": countAvailable,
@@ -646,7 +647,7 @@ class PatchesHandler(BaseHandler):
                                    "type": "Security Patch",             #forcing Patch into type
                                    "id": u.toppatch_id,
                                    "date" : str(u.date_pub),
-                                   "name" : u.title,
+                                   "name" : u.name,
                                    "description" : u.description,
                                    "severity" : u.severity,
                                    "nodes/need": countAvailable,
@@ -831,65 +832,11 @@ class TagRemoveHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class OperationHandler(BaseHandler):
-
+class GetTransactionsHandler(BaseHandler):
     @authenticated_request
-    def post(self):
-        resultjson = []
-        node = {}
-        result = []
-        try:
-            nodes = self.request.arguments['node']
-            print nodes
-        except:
-            nodes = None
-        try:
-            params = self.get_argument('params')
-        except:
-            params = None
-        try:
-            time = self.get_argument('time')
-            schedule = self.get_argument('schedule')
-        except:
-            time = None
-            schedule = None
-        if nodes:
-            operation = self.get_argument('operation')
-            if time:
-                node['schedule'] = schedule
-                node['time'] = time
-            if operation == 'install' or operation == 'uninstall':
-                patches = self.request.arguments['patches']
-                for node_id in nodes:
-                    node['node_id'] = node_id
-                    node['operation'] = operation
-                    node['data'] = list(patches)
-                    resultjson.append(encode(node))
-                if time:
-                    JobScheduler(resultjson, 
-                            self.application.scheduler
-                            )
-                else:
-                    operation_runner = AgentOperation(resultjson)
-                    operation_runner.run()
-            elif operation == 'reboot':
-                for node_id in nodes:
-                    node['operation'] = operation
-                    node['node_id'] = node_id
-                    resultjson.append(encode(node))
-                if time:
-                    JobScheduler(resultjson, 
-                            self.application.scheduler
-                            )
-                else:
-                    operation_runner = AgentOperation(resultjson)
-                    operation_runner.run()
-            self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(resultjson))
-        if params:
-            resultjson = json.loads(params)
-            AgentOperation(resultjson)
-            self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(resultjson))
-
-
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        result = retrieveTransactions(self.session)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
