@@ -21,10 +21,12 @@ define(
 
                 // MultiPatch Interface
                 'multi'         : 'showMulti',
+
+                // Schedule Interface
                 'schedule'      : 'showSchedule',
 
-                // Admin panel
-                'account'         : 'showAccount',
+                // Account panel
+                'account'       : 'showAccount',
 
                 // Administration Panels
                 // Notice, update modals/admin/main.js if adding new admin/route
@@ -171,12 +173,6 @@ define(
 
                 app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
                 app.vent.trigger('domchange:title', settings.title);
-
-                /*
-                // The following code block should not be here!
-
-                // End rogue code block
-                */
 
                 if ($.type(settings.view) === 'string') {
                     require([settings.view], function (myView) {
