@@ -2,14 +2,20 @@
 
 from utils.db.query_table import getTransactions
 from utils.db.client import validateSession
+from models.node import *
 
 
-def retrieveTransactions(session):
+def retrieveTransactions(session, count=None, offset=None):
     session = validateSession(session)
-    transactions = getTransactions(session)
+    transactions = getTransactions(session, count, offset)
     transaction = []
     for trans in transactions:
         operation_received = None
+        node_info = session.query(NodeInfo).filter(NodeInfo.id == trans[1][0].node_id).first()
+        if node_info.host_name:
+           node = node_info.host_name
+        else:
+           node = node_info.ip_address
         if trans[1][0].operation_received:
             operation_received = trans[1][0].operation_received.strftime("%m/%d/%Y %H:%M")
         if len(trans[1]) == 1:
@@ -17,7 +23,7 @@ def retrieveTransactions(session):
                          "operation" : trans[1][0].operation_type,
                          "operation_sent" : trans[1][0].operation_sent.strftime("%m/%d/%Y %H:%M"),
                          "operations_received" : operation_received,
-                         "node_id" : trans[1][0].node_id,
+                         "node_id" : node,
                          "results_received" : None,
                          "patch_id" : None,
                          "result" : None,
@@ -29,7 +35,7 @@ def retrieveTransactions(session):
                          "operation" : trans[1][0].operation_type,
                          "operation_sent" : trans[1][0].operation_sent.strftime("%m/%d/%Y %H:%M"),
                          "operations_received" : operation_received,
-                         "node_id" : trans[1][0].node_id,
+                         "node_id" : node,
                          "results_received" : trans[1][0].results_received.strftime("%m/%d/%Y %H:%M"),
                          "patch_id" : trans[1][1].patch_id,
                          "result" : trans[1][1].result,

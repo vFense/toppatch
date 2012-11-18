@@ -251,6 +251,7 @@ define(
         return {
             initialize: function () {
                 app.router = new AppRouter();
+                app.startWs();
                 Backbone.history.start();
             }
         };

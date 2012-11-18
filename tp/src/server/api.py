@@ -837,6 +837,12 @@ class GetTransactionsHandler(BaseHandler):
     def get(self):
         self.session = self.application.session
         self.session = validateSession(self.session)
-        result = retrieveTransactions(self.session)
+        try:
+            queryCount = self.get_argument('count')
+            queryOffset = self.get_argument('offset')
+        except:
+            queryCount = 20
+            queryOffset = 0
+        result = retrieveTransactions(self.session, count=queryCount, offset=queryOffset)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
