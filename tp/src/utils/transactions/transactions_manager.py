@@ -2,6 +2,7 @@
 
 from utils.db.query_table import getTransactions
 from utils.db.client import validateSession
+from utils.model import *
 
 
 def retrieveTransactions(session, count=None, offset=None):
