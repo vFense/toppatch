@@ -16,7 +16,7 @@ define(
                 },
                 add: function (evt) {
                     var start_time, end_time, start_date, end_date, params, label, days,
-                        values = $("#dow").data('popover').options.content.val(),
+                        values = $("#dow").data('popover').options.content.val() || false,
                         that = this;
                     this.highlight(evt);
                     start_time = this.start;
@@ -34,18 +34,19 @@ define(
                         end_time: end_time,
                         days: days
                     };
-                    console.log(values);
                     if (values) {
                         $.post("/api/timeblocker/add", { operation: JSON.stringify(params) },
                             function (result) {
-                                console.log(result);
+                                window.console.log(result);
                                 if (result.pass) {
                                     if ($('#dow').data('popover')) { $('#dow').popover('hide'); }
-                                    that.$el.find('.alert').append(result.message).removeClass('alert-error').addClass('alert-success').show();
+                                    that.$el.find('.alert').html(result.message).removeClass('alert-error').addClass('alert-success').show();
                                 } else {
-                                    that.$el.find('.alert').append(result.message).removeClass('alert-success').addClass('alert-error').show();
+                                    that.$el.find('.alert').html(result.message).removeClass('alert-success').addClass('alert-error').show();
                                 }
                             });
+                    } else {
+                        that.$el.find('.alert').html('You must select at least one day of the week.').removeClass('alert-success').addClass('alert-error').show();
                     }
                 },
                 highlight: function (evt) {
