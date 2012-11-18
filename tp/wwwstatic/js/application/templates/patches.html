@@ -21,7 +21,10 @@
         </header>
         <% if (data.length > 0) { %>
         <div class="legend">
+            <!--
             <span><strong>Vendor Name</strong> — Patch Name</span>
+            -->
+            <span><strong>Patch Name</strong></span>
             <span class="patches pull-right">
                 Nodes
                 <span class="done">Done</span> /
@@ -32,10 +35,13 @@
         </div>
         <div class="items">
             <% _.each(data, function (patch) { %>
-                <div class="item linked clearfix">
+                <div class="item linked clearfix" title="<%= patch.name %>">
                     <div class="row-fluid">
                         <a href="#patches/<%= patch.id %>">
+                            <!--
                             <span class="desc span8"><strong><%= patch.vendor.name %></strong> — <%= patch.name %></span>
+                            -->
+                            <span class="desc span8"><strong><%= patch.name %></strong></span>
                             <span class="span4 alignRight">
                                 <span class="done"><%= patch['nodes/done'] %></span> /
                                 <span class="pend"><%= patch['nodes/pend'] %></span> /
