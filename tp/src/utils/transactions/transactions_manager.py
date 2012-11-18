@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import re
 from utils.db.query_table import getTransactions
 from utils.db.client import validateSession
 from models.node import *
@@ -11,6 +12,8 @@ def retrieveTransactions(session, count=None, offset=None):
     transaction = []
     for trans in transactions:
         operation_received = None
+        key_error = None
+        results = None
         node_info = session.query(NodeInfo).filter(NodeInfo.id == trans[1][0].node_id).first()
         if node_info.host_name:
            node = node_info.host_name
@@ -18,6 +21,13 @@ def retrieveTransactions(session, count=None, offset=None):
            node = node_info.ip_address
         if trans[1][0].operation_received:
             operation_received = trans[1][0].operation_received.strftime("%m/%d/%Y %H:%M")
+        if re.search(r'install|uninstall', trans[1][0].operation_type):
+            if not trans[1][0].results_received:
+                key_error = "Results were never received"
+                results = "failed"
+            else:
+                key_error = None
+                results = None
         if len(trans[1]) == 1:
             transaction.append({
                          "operation" : trans[1][0].operation_type,
@@ -26,9 +36,9 @@ def retrieveTransactions(session, count=None, offset=None):
                          "node_id" : node,
                          "results_received" : None,
                          "patch_id" : None,
-                         "result" : None,
+                         "result" : results,
                          "reboot" : None,
-                         "error" : None
+                         "error" : key_error
                          })
         elif len(trans[1]) == 2:
             transaction.append({
