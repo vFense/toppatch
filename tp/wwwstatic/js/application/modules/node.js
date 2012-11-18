@@ -153,8 +153,18 @@ define(
                             node_id: node_id
                         };
                         window.console.log(params);
-                        list.find('div[name=loading]').remove();
-                        list.append('<div class="item clearfix"><span>JSON CONTENT</span></div>');
+
+                        /*
+                        $.post("/api/package/getDependencies", { operation: JSON.stringify(params) },
+                            function (json) {
+                                window.console.log(json);
+                                if (json.pass) {
+                                    list.find('div[name=loading]').remove();
+                                    list.append('<div class="item clearfix"><span>JSON CONTENT</span></div>');
+                                }
+                            });
+                        */
+
                     }
                 },
                 showtags: function (evt) {

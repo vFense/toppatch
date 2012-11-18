@@ -379,6 +379,7 @@ class NodesHandler(BaseHandler):
                               'id': u[1].node_id,
                               'tags': tags,
                               'os/name':u[1].os_string,
+                              'os_code': u[1].os_code,
                               'patch/need': available,
                               'patch/done': installed,
                               'patch/fail': failed,
