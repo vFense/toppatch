@@ -1,4 +1,5 @@
 .idea/
+var/
 .vimrc
 .viminfo
 .bashrc

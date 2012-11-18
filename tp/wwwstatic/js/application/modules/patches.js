@@ -22,8 +22,6 @@ define(
                     if (this.type) {
                         this.query += '&type=' + this.type;
                     }
-
-                    window.myCollection = this;
                 }
             }),
             View: Backbone.View.extend({

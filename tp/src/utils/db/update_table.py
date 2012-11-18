@@ -44,6 +44,22 @@ def addTag(session, tag_name, user_id=None):
         print e
         return(False, "Tag %s failed to add" % (tag_name))
 
+def addDependency(session, data):
+    session = validateSession(session)
+    failed_count = 0
+    for deps in data['data']:
+        pkg_id = deps['toppatch_id']
+        for dep in deps['dependencies']:
+            dep_exists = session.query(LinuxPackageDependency).filter(LinuxPackageDependency.toppatch_id == pkg_id).filter(LinuxPackageDependency.dependency == dep).first()
+            if not dep_exists:
+                try:
+                    dep_add = LinuxPackageDependency(pkg_id, dep)
+                    session.add(dep_add)
+                    session.commit()
+                except Exception as e:
+                    session.rollback()
+                    failed_count += 1
+
 def addTagPerNode(session, nodes=[], tag_id=None, tag_name=None,
                 user_id=None):
     session = validateSession(session)
@@ -132,6 +148,7 @@ def addSystemInfo(session, data, node_info):
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         operation.update({'results_received' : datetime.now()})
+        session.commit()
         system_info = SystemInfo(node_info.id, data['os_code'],
             data['os_string'], data['version_major'],
             data['version_minor'], data['version_build'],
@@ -371,6 +388,7 @@ def updateNode(session, node_id):
                            'agent_status' : True,
                            'host_status' : True
                           })
+            session.commit()
             installed_oper = session.query(os).filter_by(installed=True).filter_by(node_id=node_id)
             installed = installed_oper.first()
             pending_oper = session.query(os).filter_by(pending=True).filter_by(node_id=node_id)
@@ -404,6 +422,7 @@ def updateNodeStats(session, node_id):
             nodestats.update({"patches_installed" : len(patchesinstalled),
                              "patches_available" : len(patchesuninstalled),
                              "patches_pending" : len(patchespending)})
+            session.commit()
         else:
             add_node_stats = NodeStats(node_id, len(patchesinstalled), \
                           len(patchesuninstalled), len(patchespending), 0)
@@ -431,12 +450,12 @@ def updateNetworkStats(session):
         networkstats.update({"patches_installed" : len(totalinstalled),
                              "patches_available" : len(totalnotinstalled),
                              "patches_pending" : len(totalpending)})
+        session.commit()
     else:
         network_sstats_init = NetworkStats(len(totalinstalled),
                               len(totalnotinstalled), len(totalpending), 0)
         session.add(network_sstats_init)
-
-    session.commit()
+        session.commit()
 
 def updateRebootStatus(session, node_id, oper_type):
     session = validateSession(session)
@@ -494,6 +513,7 @@ def addResults(session, data):
                     if reboot:
                         if node_exists.reboot == False:
                             node.update({'reboot' : reboot})
+                session.commit()
             error = None
             if "error" in msg:
                 error = msg['error']

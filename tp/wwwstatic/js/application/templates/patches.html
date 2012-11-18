@@ -33,23 +33,25 @@
         <div class="items">
             <% _.each(data, function (patch) { %>
                 <div class="item linked clearfix">
-                    <a href="#patches/<%= patch.id %>">
-                        <span class="desc"><strong><%= patch.vendor.name %></strong> — <%= patch.name %></span>
-                        <span class="pull-right">
-                            <span class="done"><%= patch['nodes/done'] %></span> /
-                            <span class="pend"><%= patch['nodes/pend'] %></span> /
-                            <span class="need"><%= patch['nodes/need'] %></span> /
-                            <span class="fail"><%= patch['nodes/fail'] %></span>
-                            &nbsp;<i class="icon-caret-right"></i>&nbsp;
-                        </span>
-                    </a>
+                    <div class="row-fluid">
+                        <a href="#patches/<%= patch.id %>">
+                            <span class="desc span8"><strong><%= patch.vendor.name %></strong> — <%= patch.name %></span>
+                            <span class="span4 alignRight">
+                                <span class="done"><%= patch['nodes/done'] %></span> /
+                                <span class="pend"><%= patch['nodes/pend'] %></span> /
+                                <span class="need"><%= patch['nodes/need'] %></span> /
+                                <span class="fail"><%= patch['nodes/fail'] %></span>
+                                &nbsp;<i class="icon-caret-right"></i>
+                            </span>
+                        </a>
+                    </div>
                 </div>
             <% }); // end _.each %>
         </div>
         <% } else { %>
             <div class="items">
                 <div class="item clearfix">
-                    <span class="desc"><em>No nodes available.</em></span>
+                    <span class="desc"><em>No patches.</em></span>
                 </div>
             </div>
         <% } %>

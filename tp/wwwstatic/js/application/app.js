@@ -119,7 +119,8 @@ define(
                 { name: 'Nodes', href: '#nodes' },
                 { name: 'Patches', href: '#patches' },
                 { name: 'Multi-Patcher', href: '#multi' },
-                { name: 'Schedules', href: '#schedule' }
+                { name: 'Schedules', href: '#schedule' },
+                { name: 'Logs', href:'#logs'}
             ]
         });
 

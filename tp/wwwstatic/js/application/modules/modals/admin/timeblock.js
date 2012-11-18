@@ -21,10 +21,11 @@ define(
                     this.highlight(evt);
                     start_time = this.start;
                     end_time = this.end;
-                    start_date = $('input[name=startdate]').val();
-                    end_date = $('input[name=enddate]').val();
+                    start_date = new Date($('input[name=startdate]').val()).getTime();
+                    end_date = $('input[name=enddate]').val() ? new Date($('input[name=enddate]').val()).getTime() : '';
                     label = $('input[name=label]').val();
                     days = this.days;
+                    window.console.log(start_date);
                     params = {
                         label: label,
                         enabled: true,
@@ -35,6 +36,7 @@ define(
                         days: days
                     };
                     if (values) {
+                        window.console.log(params);
                         $.post("/api/timeblocker/add", { operation: JSON.stringify(params) },
                             function (result) {
                                 window.console.log(result);
@@ -56,7 +58,7 @@ define(
                     var values = $("#dowselect").val(), string = '', days = '', i;
                     if (values) {
                         for (i = 0; i < values.length; i += 1) {
-                            if (values[i] == 'Su') {
+                            if (values[i] === 'Su') {
                                 string += '<strong>Su</strong> ';
                                 days += '1';
                                 i += 1;
@@ -64,7 +66,7 @@ define(
                                 string += 'Su ';
                                 days += '0';
                             }
-                            if (values[i] == 'M') {
+                            if (values[i] === 'M') {
                                 string += '<strong>M</strong> ';
                                 days += '1';
                                 i += 1;
@@ -72,7 +74,7 @@ define(
                                 string += 'M ';
                                 days += '0';
                             }
-                            if (values[i] == 'Tu') {
+                            if (values[i] === 'Tu') {
                                 string += '<strong>Tu</strong> ';
                                 days += '1';
                                 i += 1;
@@ -80,7 +82,7 @@ define(
                                 string += 'Tu ';
                                 days += '0';
                             }
-                            if (values[i] == 'W') {
+                            if (values[i] === 'W') {
                                 string += '<strong>W</strong> ';
                                 days += '1';
                                 i += 1;
@@ -88,7 +90,7 @@ define(
                                 string += 'W ';
                                 days += '0';
                             }
-                            if (values[i] == 'Th') {
+                            if (values[i] === 'Th') {
                                 string += '<strong>Th</strong> ';
                                 days += '1';
                                 i += 1;
@@ -96,7 +98,7 @@ define(
                                 string += 'Th ';
                                 days += '0';
                             }
-                            if (values[i] == 'F') {
+                            if (values[i] === 'F') {
                                 string += '<strong>F</strong> ';
                                 days += '1';
                                 i += 1;
@@ -104,7 +106,7 @@ define(
                                 string += 'F ';
                                 days += '0';
                             }
-                            if (values[i] == 'Sa') {
+                            if (values[i] === 'Sa') {
                                 string += '<strong>Sa</strong>';
                                 days += '1';
                                 i += 1;

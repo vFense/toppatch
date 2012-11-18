@@ -6,8 +6,8 @@ define(
         var AppRouter = Backbone.Router.extend({
             routes: {
                 // Dashboard
-                ''              : 'home',
-                'dashboard'     : 'home',
+                ''              : 'showDashboard',
+                'dashboard'     : 'showDashboard',
 
                 // Nodes
                 'nodes'         : 'showNodes',
@@ -21,10 +21,16 @@ define(
 
                 // MultiPatch Interface
                 'multi'         : 'showMulti',
+
+                // Schedule Interface
                 'schedule'      : 'showSchedule',
 
-                // Admin panel
-                'account'         : 'showAccount',
+                // Log Interface
+                'logs'          : 'showLogs',
+                'logs?:query'   : 'showLogs',
+
+                // Account panel
+                'account'       : 'showAccount',
 
                 // Administration Panels
                 // Notice, update modals/admin/main.js if adding new admin/route
@@ -76,7 +82,7 @@ define(
                 this.currentFragment = '';
                 this.lastFragment = '';
             },
-            home: function () {
+            showDashboard: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
             },
             showNodes: function (query) {
@@ -125,6 +131,31 @@ define(
             showMulti: function () {
                 this.show({hash: '#multi', title: 'Patch Operations', view: 'modules/multi'});
             },
+            showSchedule: function () {
+                this.show({hash: '#schedule', title: 'Schedule Manager', view: 'modules/schedule'});
+            },
+            showLogs: function (query) {
+                var that = this,
+                    params = '',
+                    collection,
+                    view;
+
+                require(['modules/logs'], function (myView) {
+                    if ($.type(query) === 'string') {
+                        params = app.parseQuery(query);
+                    }
+
+                    collection = new myView.Collection({
+                        type: params.type,
+                        count: params.count,
+                        offset: params.offset
+                    });
+
+                    view = new myView.View({collection: collection});
+
+                    that.show({hash: '#logs', title: 'Transaction Log', view: view});
+                });
+            },
             showAccount: function () {
                 this.show({hash: '#admin', title: 'Admin Settings', view: 'modules/admin'});
             },
@@ -139,9 +170,6 @@ define(
             },
             'modal/admin/listblocks': function () {
                 this.openAdminModalWithView('modals/admin/listblocks');
-            },
-            showSchedule: function () {
-                this.show({hash: '#schedule', title: 'Schedule Manager', view: 'modules/schedule'});
             },
             /*
             defaultAction: function () {
@@ -171,12 +199,6 @@ define(
 
                 app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
                 app.vent.trigger('domchange:title', settings.title);
-
-                /*
-                // The following code block should not be here!
-
-                // End rogue code block
-                */
 
                 if ($.type(settings.view) === 'string') {
                     require([settings.view], function (myView) {
