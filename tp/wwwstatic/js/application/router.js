@@ -6,8 +6,8 @@ define(
         var AppRouter = Backbone.Router.extend({
             routes: {
                 // Dashboard
-                ''              : 'home',
-                'dashboard'     : 'home',
+                ''              : 'showDashboard',
+                'dashboard'     : 'showDashboard',
 
                 // Nodes
                 'nodes'         : 'showNodes',
@@ -76,7 +76,7 @@ define(
                 this.currentFragment = '';
                 this.lastFragment = '';
             },
-            home: function () {
+            showDashboard: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
             },
             showNodes: function (query) {
