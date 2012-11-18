@@ -134,8 +134,8 @@
     .items {
         .item {
             border-top: @em*(1px)/@baseFontSize solid @listBorder;
-        //border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
-            padding: @em*(2px)/@baseFontSize 0;
+            //border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
+            padding: @em*(2px)/@baseFontSize 0.5em;
 
             &:last-child {
                 border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
@@ -145,12 +145,14 @@
                 background-color: @listHighlight;
             }
 
-            &.row-fluid {
+            &.row-fluid,
+            .row-fluid {
+                padding-left: 0;
+                padding-right: 0;
                 [class*="span"] {
                     min-height: 1em;
                 }
             }
-
 
             &.linked {
                 padding: 0 0;
@@ -158,7 +160,7 @@
                     color: #000;
                     display: block;
                     text-decoration: none;
-                    padding: @em*(2px)/@baseFontSize 0;
+                    padding: @em*(2px)/@baseFontSize 0.5em;
 
                     STRONG {
                         color: @linkColor;
