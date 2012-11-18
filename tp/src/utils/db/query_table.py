@@ -142,10 +142,13 @@ def nodeSoftwareExists(session, sid):
 def getTransactions(session, count=None, offset=0):
     #session.query(Operations, Results).filter(Results.id == Operations.results_id).all()
     all_operations = None
+    total_count = 0
     if count and offset:
         all_operations = session.query(Operations).order_by(Operations.operation_sent.desc()).limit(count).offset(offset)
+        total_count = session.query(Operations).order_by(Operations.operation_sent.desc()).count()
     else:
         all_operations = session.query(Operations).order_by(Operations.operation_sent.desc()).all()
+        total_count = session.query(Operations).order_by(Operations.operation_sent.desc()).count()
     all_results = session.query(Results).all()
     results_db = {}
     all_db = {}
@@ -161,5 +164,4 @@ def getTransactions(session, count=None, offset=0):
         unsorted_list.append((int(key), value))
     sorted_list = sorted(unsorted_list, key=lambda x: x[0])
     sorted_list.reverse()
-    return sorted_list
-    return all_db
+    return(sorted_list, total_count)

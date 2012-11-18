@@ -8,8 +8,9 @@ from models.node import *
 
 def retrieveTransactions(session, count=None, offset=None):
     session = validateSession(session)
-    transactions = getTransactions(session, count, offset)
+    transactions, total_count = getTransactions(session, count, offset)
     transaction = []
+    final_msg = {"count" : total_count, "data" : []}
     for trans in transactions:
         operation_received = None
         key_error = None
@@ -21,13 +22,10 @@ def retrieveTransactions(session, count=None, offset=None):
            node = node_info.ip_address
         if trans[1][0].operation_received:
             operation_received = trans[1][0].operation_received.strftime("%m/%d/%Y %H:%M")
-        if re.search(r'install|uninstall', trans[1][0].operation_type):
-            if not trans[1][0].results_received:
-                key_error = "Results were never received"
-                results = "failed"
-            else:
-                key_error = None
-                results = None
+        #if re.search(r'install|uninstall', trans[1][0].operation_type):
+        #    if not trans[1][0].results_received:
+        #        key_error = "Results were never received"
+        #        results = False
         if len(trans[1]) == 1:
             transaction.append({
                          "operation" : trans[1][0].operation_type,
@@ -36,9 +34,9 @@ def retrieveTransactions(session, count=None, offset=None):
                          "node_id" : node,
                          "results_received" : None,
                          "patch_id" : None,
-                         "result" : results,
+                         "result" : None,
                          "reboot" : None,
-                         "error" : key_error
+                         "error" : None
                          })
         elif len(trans[1]) == 2:
             transaction.append({
@@ -50,7 +48,8 @@ def retrieveTransactions(session, count=None, offset=None):
                          "patch_id" : trans[1][1].patch_id,
                          "result" : trans[1][1].result,
                          "reboot" : trans[1][1].reboot,
-                         "error" : trans[1][1].error
+                         "error" : trans[1][1].error,
                          })
-    return transaction
+    final_msg['data'].append(transaction)
+    return final_msg
 

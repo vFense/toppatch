@@ -44,6 +44,22 @@ def addTag(session, tag_name, user_id=None):
         print e
         return(False, "Tag %s failed to add" % (tag_name))
 
+def addDependency(session, data):
+    session = validateSession(session)
+    failed_count = 0
+    for deps in data['data']:
+        pkg_id = deps['toppatch_id']
+        for dep in deps['dependencies']:
+            dep_exists = session.query(LinuxPackageDependency).filter(LinuxPackageDependency.toppatch_id == pkg_id).filter(LinuxPackageDependency.dependency == dep).first()
+            if not dep_exists:
+                try:
+                    dep_add = LinuxPackageDependency(pkg_id, dep)
+                    session.add(dep_add)
+                    session.commit()
+                except Exception as e:
+                    session.rollback()
+                    failed_count += 1
+
 def addTagPerNode(session, nodes=[], tag_id=None, tag_name=None,
                 user_id=None):
     session = validateSession(session)
