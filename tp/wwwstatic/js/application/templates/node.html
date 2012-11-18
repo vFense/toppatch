@@ -87,15 +87,17 @@
             <div class="items">
                 <% _.each(model['patch/need'], function (patch) { %>
                 <div class="item clearfix" title="<%= patch.name %>">
-                            <span class="desc">
-                                <label class="checkbox inline">
-                                    <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                    <%= patch.name %>
-                                </label>
-                            </span>
-                            <span class="pull-right">
-                                <a href="#patches/<%= patch.id %>">More information</a>
-                            </span>
+                    <div class="row-fluid">
+                        <span class="desc span8">
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                                <%= patch.name %>
+                            </label>
+                        </span>
+                        <span class="span4 alignRight">
+                            <a href="#patches/<%= patch.id %>">More information</a>
+                        </span>
+                    </div>
                 </div>
                 <% }); %>
             </div>
@@ -130,18 +132,22 @@
             <div class="items">
                 <% _.each(model['patch/done'], function (patch) { %>
                 <div class="item clearfix" title="<%= patch.name %>">
-                                <span class="desc">
-                                    <label class="checkbox inline">
-                                        <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                        <%= patch.name %>
-                                    </label>
-                                </span>
-                                <span class="pull-right">
-                                    <% if (model.os_code && model.os_code == 'linux') { %>
-                                        <a href="javascript:;" name="dependencies" value="<%= patch.id %>"><i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<small>Dependencies</small>&nbsp;</a>&nbsp;
-                                    <% } %>
-                                    <a href="#patches/<%= patch.id %>">More information</a>
-                                </span>
+                    <div class="row-fluid">
+                        <span class="desc span8">
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                                <%= patch.name %>
+                            </label>
+                        </span>
+                        <span class="span4 alignRight">
+                            <!--
+                            <%// if (model.os_code && model.os_code == 'linux') { %>
+                                <a href="javascript:;" name="dependencies" value="<%= patch.id %>"><i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<small>Dependencies</small>&nbsp;</a>&nbsp;
+                            <%// } %>
+                            -->
+                            <a href="#patches/<%= patch.id %>">More information</a>
+                        </span>
+                    </div>
                 </div>
                 <% }); %>
             </div>
@@ -162,8 +168,10 @@
             <% if (model['patch/pend'].length != 0) { %>
                 <% _.each(model['patch/pend'], function (patch, i) { %>
                     <div class="item clearfix" title="<%= patch.name %>">
-                        <span class="desc"><%= patch.name %></span>
-                        <span class="pull-right"><a href="#patches/<%= patch.id %>">More information</a></span>
+                        <div class="row-fluid">
+                            <span class="desc span8"><%= patch.name %></span>
+                            <span class="span4 alignRight"><a href="#patches/<%= patch.id %>">More information</a></span>
+                        </div>
                     </div>
                 <% }); %>
             <% }  else { %>
@@ -195,15 +203,17 @@
             <% _.each(model['patch/fail'], function (patch) { %>
             <div class="items">
                 <div class="item clearfix" title="<%= patch.name %>">
-                    <span class="desc">
-                        <label class="checkbox inline">
-                            <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                            <%= patch.name %>
-                        </label>
-                    </span>
-                    <span class="pull-right">
-                        <a href="#patches/<%= patch.id %>">More information</a>
-                    </span>
+                    <div class="row-fluid">
+                        <span class="desc span8">
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                                <%= patch.name %>
+                            </label>
+                        </span>
+                        <span class="span4 alignRight">
+                            <a href="#patches/<%= patch.id %>">More information</a>
+                        </span>
+                    </div>
                 </div>
             </div>
             <% }); %>
@@ -223,7 +233,7 @@
     }
 </style>
 <div id="hidden" class="hide">
-    <div id="dependency-list" class="list" style="max-height: 150px; overflow: auto;">
+    <div id="dependency-list" class="list" style="max-height: 150px; overflow-y: auto; overflow-x: hidden; max-width: 300px;">
         <div class="items">
             <div class="item clearfix" name="loading">
                 <span>Loading...</span>

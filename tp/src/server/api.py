@@ -381,12 +381,12 @@ class NodesHandler(BaseHandler):
                                   'id': u[1].node_id,
                                   'tags': tags,
                                   'os/name':u[1].os_string,
+                                  'os_code': u[1].os_code,
                                   'patch/need': available,
                                   'patch/done': installed,
                                   'patch/fail': failed,
                                   'patch/pend': pending
                                    }
-
             if len(resultjson) == 0:
                 resultjson = {'error' : 'no data to display'}
         else:
@@ -500,7 +500,7 @@ class PatchesHandler(BaseHandler):
                 query = self.session.query(m_table)
                 if type:
                     if type == 'available':
-                        count = self.session.query(func.count(distinct(m_table.toppatch_id))).filter(m_table.installed == False, m_table.pending == False).first()[0]
+                        count += self.session.query(func.count(distinct(m_table.toppatch_id))).filter(m_table.installed == False, m_table.pending == False).first()[0]
                         for u in query.filter(m_table.installed == False, m_table.pending == False).group_by(m_table.toppatch_id).limit(queryCount).offset(queryOffset).all():
                             countAvailable = query_count.filter(m_table.toppatch_id == u.toppatch_id, m_table.installed == False, m_table.pending == False).first()[0]
                             countInstalled = query_count.filter(m_table.toppatch_id == u.toppatch_id, m_table.installed == True).first()[0]
@@ -510,7 +510,7 @@ class PatchesHandler(BaseHandler):
                             for v in self.session.query(d_table).filter(d_table.toppatch_id == u.toppatch_id).all():
                                 data.append({"vendor" : {
                                     "patchID" : '',         #forcing empty string in patchID
-                                    "name" : u.vendor_id
+                                    "name" : v.vendor_id
                                 },
                                  "type": "Security Patch",             #forcing Patch into type
                                  "id": v.toppatch_id,
@@ -524,7 +524,7 @@ class PatchesHandler(BaseHandler):
                                  "nodes/fail": countFailed,
                                  "nodes": []})
                     elif type == 'installed':
-                        count = self.session.query(func.count(distinct(m_table.toppatch_id))).filter(m_table.installed == True).first()[0]
+                        count += self.session.query(func.count(distinct(m_table.toppatch_id))).filter(m_table.installed == True).first()[0]
                         for u in query.filter(m_table.installed == True).group_by(m_table.toppatch_id).limit(queryCount).offset(queryOffset).all():
                             countAvailable = query_count.filter(m_table.toppatch_id == u.toppatch_id, m_table.installed == False, m_table.pending == False).first()[0]
                             countInstalled = query_count.filter(m_table.toppatch_id == u.toppatch_id, m_table.installed == True).first()[0]
@@ -534,7 +534,7 @@ class PatchesHandler(BaseHandler):
                             for v in self.session.query(d_table).filter(d_table.toppatch_id == u.toppatch_id).all():
                                 data.append({"vendor" : {
                                     "patchID" : '',         #forcing empty string in patchID
-                                    "name" : u.vendor_id
+                                    "name" : v.vendor_id
                                 },
                                  "type": "Security Patch",             #forcing Patch into type
                                  "id": v.toppatch_id,
@@ -548,7 +548,7 @@ class PatchesHandler(BaseHandler):
                                  "nodes/fail": countFailed,
                                  "nodes": []})
                     elif type == 'pending':
-                        count = self.session.query(func.count(distinct(m_table.toppatch_id))).filter(m_table.installed == False, m_table.pending == True).first()[0]
+                        count += self.session.query(func.count(distinct(m_table.toppatch_id))).filter(m_table.installed == False, m_table.pending == True).first()[0]
                         for u in query.filter(m_table.installed == False, m_table.pending == True).group_by(m_table.toppatch_id).limit(queryCount).offset(queryOffset).all():
                             countAvailable = query_count.filter(m_table.toppatch_id == u.toppatch_id, m_table.installed == False, m_table.pending == False).first()[0]
                             countInstalled = query_count.filter(m_table.toppatch_id == u.toppatch_id, m_table.installed == True).first()[0]
@@ -558,7 +558,7 @@ class PatchesHandler(BaseHandler):
                             for v in self.session.query(d_table).filter(d_table.toppatch_id == u.toppatch_id).all():
                                 data.append({"vendor" : {
                                     "patchID" : '',         #forcing empty string in patchID
-                                    "name" : u.vendor_id
+                                    "name" : v.vendor_id
                                 },
                                  "type": "Security Patch",             #forcing Patch into type
                                  "id": v.toppatch_id,
@@ -572,7 +572,7 @@ class PatchesHandler(BaseHandler):
                                  "nodes/fail": countFailed,
                                  "nodes": []})
                     elif type == 'failed':
-                        count = self.session.query(func.count(distinct(m_table.toppatch_id))).filter(m_table.installed == False, m_table.pending == False, m_table.attempts > 0).first()[0]
+                        count += self.session.query(func.count(distinct(m_table.toppatch_id))).filter(m_table.installed == False, m_table.pending == False, m_table.attempts > 0).first()[0]
                         for u in query.filter(m_table.installed == False, m_table.pending == False, m_table.attempts > 0).group_by(m_table.toppatch_id).limit(queryCount).offset(queryOffset).all():
                             countAvailable = query_count.filter(m_table.toppatch_id == u.toppatch_id, m_table.installed == False, m_table.pending == False).first()[0]
                             countInstalled = query_count.filter(m_table.toppatch_id == u.toppatch_id, m_table.installed == True).first()[0]
@@ -582,7 +582,7 @@ class PatchesHandler(BaseHandler):
                             for v in self.session.query(d_table).filter(d_table.toppatch_id == u.toppatch_id).all():
                                 data.append({"vendor" : {
                                     "patchID" : '',         #forcing empty string in patchID
-                                    "name" : u.vendor_id
+                                    "name" : v.vendor_id
                                 },
                                  "type": "Security Patch",             #forcing Patch into type
                                  "id": v.toppatch_id,
@@ -596,7 +596,7 @@ class PatchesHandler(BaseHandler):
                                  "nodes/fail": countFailed,
                                  "nodes": []})
                     else:
-                        count = self.session.query(func.count(d_table.severity)).filter(d_table.severity == type).first()[0]
+                        count += self.session.query(func.count(d_table.severity)).filter(d_table.severity == type).first()[0]
                         for u in self.session.query(d_table).filter(d_table.severity == type).limit(queryCount).offset(queryOffset).all():
                             countAvailable = query_count.filter(m_table.toppatch_id == u.toppatch_id, m_table.installed == False, m_table.pending == False).first()[0]
                             countInstalled = query_count.filter(m_table.toppatch_id == u.toppatch_id, m_table.installed == True).first()[0]
