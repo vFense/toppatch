@@ -27,6 +27,7 @@ class CsrHandOff():
             self.data = self.json_object
             print self.data
             self.session = createSession(ENGINE)
+            self.session = validateSession(self.session)
             if "pem" in self.json_object:
                 self.csr_exists, self.csr_oper = csrExists(self.session,
                     self.client_ip)
