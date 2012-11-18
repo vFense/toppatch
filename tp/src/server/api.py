@@ -18,6 +18,7 @@ from utils.db.client import *
 from utils.scheduler.jobManager import jobLister
 from utils.scheduler.timeBlocker import *
 from utils.tagging.tagManager import *
+from utils.transactions.transactions_manager import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -841,64 +842,30 @@ class TagRemoveHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class OperationHandler(BaseHandler):
+class GetTransactionsHandler(BaseHandler):
     @authenticated_request
-    def post(self):
-        resultjson = []
-        node = {}
-        result = []
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
         try:
-            nodes = self.request.arguments['node']
-            print nodes
+            queryCount = self.get_argument('count')
+            queryOffset = self.get_argument('offset')
         except:
-            nodes = None
+            queryCount = 20
+            queryOffset = 0
+        result = retrieveTransactions(self.session, count=queryCount, offset=queryOffset)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+        
+class GetDependenciesHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
         try:
-            params = self.get_argument('params')
-        except:
-            params = None
-        try:
-            time = self.get_argument('time')
-            schedule = self.get_argument('schedule')
-        except:
-            time = None
-            schedule = None
-        if nodes:
-            operation = self.get_argument('operation')
-            if time:
-                node['schedule'] = schedule
-                node['time'] = time
-            if operation == 'install' or operation == 'uninstall':
-                patches = self.request.arguments['patches']
-                for node_id in nodes:
-                    node['node_id'] = node_id
-                    node['operation'] = operation
-                    node['data'] = list(patches)
-                    resultjson.append(encode(node))
-                if time:
-                    JobScheduler(resultjson, 
-                            self.application.scheduler
-                            )
-                else:
-                    operation_runner = AgentOperation(resultjson)
-                    operation_runner.run()
-            elif operation == 'reboot':
-                for node_id in nodes:
-                    node['operation'] = operation
-                    node['node_id'] = node_id
-                    resultjson.append(encode(node))
-                if time:
-                    JobScheduler(resultjson, 
-                            self.application.scheduler
-                            )
-                else:
-                    operation_runner = AgentOperation(resultjson)
-                    operation_runner.run()
-            self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(resultjson))
-        if params:
-            resultjson = json.loads(params)
-            AgentOperation(resultjson)
-            self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(resultjson))
-
-
+            pkg_id = self.get_argument('toppatch_id')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
+        result = retrieveDependencies(self.session, pkg_id)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))

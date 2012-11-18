@@ -82,6 +82,8 @@ class Application(tornado.web.Application):
             (r"/api/tagging/addTagPerNode?", TagAddPerNodeHandler),
             (r"/api/tagging/removeTagPerNode?", TagRemovePerNodeHandler),
             (r"/api/tagging/removeTag?", TagRemoveHandler),
+            (r"/api/transactions/getTransactions?", GetTransactionsHandler),
+            (r"/api/package/getDependecies?", GetDependenciesHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.

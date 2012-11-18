@@ -32,6 +32,7 @@ define(
                     'click .disabled': function (e) { return false; },
                     'click #addTag': 'showtags',
                     'click #createtag': 'createtag',
+                    'click a[name=dependencies]': 'showDependencies',
                     'click input[name=taglist]': 'toggletag',
                     'submit form': 'submit'
                 },
@@ -131,6 +132,31 @@ define(
                         });
                     return false;
                 },
+                showDependencies: function (event) {
+                    var list, node_id, patch_id, params,
+                        popoverlink = $(event.currentTarget);
+
+                    if (!popoverlink.data('popover')) {
+                        popoverlink.popover({
+                            title: 'Dependencies',
+                            placement: 'right',
+                            html: true,
+                            content: $('#dependency-list').clone(),
+                            trigger: 'click'
+                        });
+                        popoverlink.popover('show');
+                        list = popoverlink.data('popover').tip().find('.items');
+                        node_id = $('#reboot-form').find('input[name=node]').val();
+                        patch_id = popoverlink.attr('value');
+                        params = {
+                            patch_id: patch_id,
+                            node_id: node_id
+                        };
+                        window.console.log(params);
+                        list.find('div[name=loading]').remove();
+                        list.append('<div class="item clearfix"><span>JSON CONTENT</span></div>');
+                    }
+                },
                 showtags: function (evt) {
                     var showInput, addTag, tagList, close,
                         popover = $(evt.target).parent().data('popover');
@@ -222,7 +248,9 @@ define(
                 },
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked'),
-                        popover = this.$el.find('#addTag');
+                        popover = this.$el.find('#addTag'),
+                        dependency = this.$el.find('a[name=dependencies]');
+                    if (dependency.data('popover')) { dependency.popover('destroy'); }
                     if (popover.data('popover')) { popover.popover('destroy'); }
                     if (schedule.data('popover')) {
                         schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
