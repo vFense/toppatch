@@ -152,7 +152,6 @@ define(
                                 $item.remove();
                             }
                         });
-                    window.console.log($(event.target).parent().attr('id'));
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,

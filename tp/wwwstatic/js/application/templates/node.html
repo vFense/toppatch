@@ -137,6 +137,9 @@
                                     </label>
                                 </span>
                                 <span class="pull-right">
+                                    <% if (model.os_code && model.os_code == 'linux') { %>
+                                        <a href="javascript:;" name="dependencies" value="<%= patch.id %>"><i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<small>Dependencies</small>&nbsp;</a>&nbsp;
+                                    <% } %>
                                     <a href="#patches/<%= patch.id %>">More information</a>
                                 </span>
                 </div>
@@ -220,9 +223,16 @@
     }
 </style>
 <div id="hidden" class="hide">
+    <div id="dependency-list" class="list" style="max-height: 150px; overflow: auto;">
+        <div class="items">
+            <div class="item clearfix" name="loading">
+                <span>Loading...</span>
+            </div>
+        </div>
+    </div>
     <form id="list-form">
         <div class="list">
-            <div class="items">
+            <div class="items" style="max-height: 150px; overflow: auto;">
                <% if(tags.length != 0) { %>
                    <% _.each(tags, function (tag) { %>
                         <div class="item clearfix">
@@ -239,7 +249,7 @@
                 <% } %>
             </div>
         </div>
-        <div class="item clearfix">
+        <div class="item clearfix" style="margin-top: 10px">
             <a id="newtag" href="javascript:;"><span>New tag...</span></a>
             <div class="hide inline input-append">
                 <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>

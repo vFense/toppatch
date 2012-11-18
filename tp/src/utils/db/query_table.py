@@ -139,9 +139,13 @@ def nodeSoftwareExists(session, sid):
         session.query(SoftwareInstalled).filter_by(id=sid).first()
     return(software)
 
-def getTransactions(session):
+def getTransactions(session, count=None, offset=0):
     #session.query(Operations, Results).filter(Results.id == Operations.results_id).all()
-    all_operations = session.query(Operations).order_by(Operations.operation_sent.desc()).all()
+    all_operations = None
+    if count and offset:
+        all_operations = session.query(Operations).order_by(Operations.operation_sent.desc()).limit(count).offset(offset)
+    else:
+        all_operations = session.query(Operations).order_by(Operations.operation_sent.desc()).all()
     all_results = session.query(Results).all()
     results_db = {}
     all_db = {}
