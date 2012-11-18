@@ -23,15 +23,15 @@ define(
                     return response.data;
                 },
                 initialize: function (options) {
-                    console.log('init constructor');
                     if (options.params) {
                         _.extend(this.params, _.pick(options.params, _.keys(this.params)));
                     }
                 }
             }),
             View: Backbone.View.extend({
+                tagName: 'article',
+                className: 'row-fluid',
                 initialize: function (options) {
-                    console.log('init view');
                     if (options) {
                         _.extend(this, _.pick(options, ['collection']));
                     }
@@ -40,6 +40,7 @@ define(
                         this.collection =  new exports.Collection();
                     }
 
+                    this.collection.bind('fetch', $.noop, this);
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
                 },
@@ -51,7 +52,6 @@ define(
                     var that = this;
 
                     this.$el.empty();
-                    this.$el.html('hello world');
 
                     _.each(this.collection.models, function (item) {
                         that.renderModel(item);

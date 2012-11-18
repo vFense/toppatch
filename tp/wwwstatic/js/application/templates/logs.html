@@ -1,0 +1,28 @@
+<section class="span12 list">
+    <header class="clearfix">
+        <div class="pull-right"><small>Filter By:</small>
+            <a class="btn btn-mini disabled" href="javascript:;">
+                <i class="icon-cog"></i>&nbsp;Filter
+            </a>
+            <a class="btn btn-mini disabled" href="javascript:;">
+                <span>Export</span>&nbsp;<i class="icon-download-alt"></i>
+            </a>
+        </div>
+    </header>
+    <div class="items">
+        <div class="item clearfix">
+            <span class="desc"><em>Loading...</em></span>
+        </div>
+    </div>
+    <footer class="clearfix">
+        <small>Viewing <%= start %> – <%= end %> of <%= recordCount %> Patches</small>
+        <div class="pull-right hidden-print">
+            <a class="btn btn-mini<% if(!prevEnable) { print(' disabled'); } %>" href="<% prevEnable ? print(prevLink) : print('javascript:;') %>">
+                Previous
+            </a>
+            <a class="btn btn-mini<% if(!nextEnable) { print(' disabled'); } %>" href="<% nextEnable ? print(nextLink) : print('javascript:;') %>">
+                Next
+            </a>
+        </div>
+    </footer>
+</section>
