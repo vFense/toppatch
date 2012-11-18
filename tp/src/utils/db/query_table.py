@@ -138,3 +138,24 @@ def nodeSoftwareExists(session, sid):
     software = \
         session.query(SoftwareInstalled).filter_by(id=sid).first()
     return(software)
+
+def getTransactions(session):
+    #session.query(Operations, Results).filter(Results.id == Operations.results_id).all()
+    all_operations = session.query(Operations).order_by(Operations.operation_sent.desc()).all()
+    all_results = session.query(Results).all()
+    results_db = {}
+    all_db = {}
+    for operation in all_operations:
+        all_db[str(operation.id)] = [operation]
+    for results in all_results:
+        results_db[str(results.id)] = [results]
+    for operation in all_operations:
+        if operation.results_id:
+            all_db[str(operation.id)].append(results_db[str(operation.results_id)])
+    unsorted_list = []
+    for key, value in all_db.items():
+        unsorted_list.append((int(key), value))
+    sorted_list = sorted(unsorted_list, key=lambda x: x[0])
+    sorted_list.reverse()
+    return sorted_list
+    return all_db
