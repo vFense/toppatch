@@ -36,7 +36,7 @@
     </section>
     <section id="hide" class="hide">
         <div class="list" id="nodelist">
-            <div class="items">
+            <div class="items" style="max-height: 150px; overflow: auto;">
                 <% if (nodelist && nodelist.nodes && nodelist.nodes.length != 0) { %>
                     <% _.each(nodelist.nodes, function (node) { %>
                         <div class="item clearfix">
