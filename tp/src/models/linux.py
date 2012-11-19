@@ -4,7 +4,6 @@ from sqlalchemy import String, Column, Integer, Text, ForeignKey, schema, types,
 from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN, CHAR, DATETIME, TEXT, TINYINT, VARCHAR
 from sqlalchemy.orm import relationship, backref
 
-
 class LinuxPackage(Base):
     """
     Represents an application that is installed on a node, as oppose to a Product from a Vendor in the database.
