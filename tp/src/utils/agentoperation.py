@@ -67,7 +67,11 @@ class AgentOperation():
                 oper_type = jsonobject[OPERATION]
                 print oper_type
                 oper_id = self.create_new_operation(node_id, oper_type)
-                time_block_exists, time_block, self.json_out = timeBlockExistsToday(self.session, start_date=datetime.today().date(), start_time=datetime.now().time())
+                start_date = returnUtc(datetime.now())
+                time_block_exists, time_block, self.json_out = \
+                        timeBlockExistsToday(self.session, 
+                                start_date=start_date.date(),
+                                start_time=start_date.time())
                 if time_block_exists:
                     return self.json_out
                 if not DATA in jsonobject:

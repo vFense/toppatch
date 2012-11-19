@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 from datetime import datetime
+from datetime import timedelta
+from dateutil.tz import *
 import logging
 import re
 from apscheduler.scheduler import Scheduler
@@ -9,7 +11,7 @@ from jsonpickle import encode
 
 from utils.agentoperation import AgentOperation
 from utils.common import *
-from utils.db.query_table import nodeExists
+from utils.db.query_table import *
 from utils.db.update_table import addTimeBlock, removeTimeBlock
 from models.scheduler import *
 
@@ -119,25 +121,32 @@ def timeBlockAdder(session, msg):
     if valid:
         if not 'enabled' in json_msg:
             json_msg['enabled'] = True
-        #else:
-        #    if re.search(r'true', json_msg['enabled'], re.IGNORECASE):
-        #        json_msg['enabled'] = True
-        #    elif re.search(r'false', json_msg['enabled'], re.IGNORECASE):
-        #        json_msg['enabled'] = False
         if not 'end_date' in json_msg:
-            json_msg['end_date'] = None
+            end_date = None
         else:
-           json_msg['end_date'] = dateParser(json_msg['end_date']) 
+           print json_msg
+           end_date_string = returnDatetime(str(json_msg['end_date'])).split()[0]
+           end_date = dateParser(end_date_string)
         if 'start_date' in json_msg:
-           json_msg['start_date'] = dateParser(json_msg['start_date']) 
+           start_date_string = returnDatetime(str(json_msg['start_date'])).split()[0]
+           start_date = dateParser(start_date_string)
+           print start_date
         if 'start_time' in json_msg:
-           json_msg['start_time'] = dateTimeParser(json_msg['start_time']) 
+           start_time_string = returnDatetime(str(json_msg['start_time']))
+           start_time = dateTimeParser(start_time_string)
+           print start_time
+           utc_start_time = start_time.time()
+           print utc_start_time
         if 'end_time' in json_msg:
-           json_msg['end_time'] = dateTimeParser(json_msg['end_time']) 
+           end_time_string = returnDatetime(str(json_msg['end_time']))
+           end_time = dateTimeParser(end_time_string)
+           print end_time
+           utc_end_time = end_time.time()
+           print utc_end_time
         block_added, message, block = addTimeBlock(session, json_msg['label'],
-                json_msg['enabled'], json_msg['start_date'],
-                json_msg['end_date'], json_msg['start_time'],
-                json_msg['end_time'], json_msg['days']
+                json_msg['enabled'], start_date,
+                end_date, utc_start_time,
+                utc_end_time, json_msg['days']
                 )
         print '{message : %s,label : %s, pass : %s}' % (message, json_msg["label"], block_added)
         return {"message" : message,"label" : json_msg['label'], "pass" : block_added}
