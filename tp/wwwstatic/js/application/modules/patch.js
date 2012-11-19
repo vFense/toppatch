@@ -41,28 +41,33 @@ define(
                             if (schedule.data('popover')) {
                                 schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                                 schedule.popover('hide');
+                                schedule.attr('checked', false);
                             }
-                            $('.alert').show();
-                            nodes.each(function () {
-                                item = $(this).parents('.item');
-                                span = $(this).parents('span');
-                                label = $(this).parent();
-                                checkbox = $(this);
-                                checkbox.remove();
-                                var patch = label.html();
-                                span.html(patch);
-                                label.remove();
-                                if (type === 'available' || type === 'failed') {
-                                    item.appendTo($('#pending').children());
-                                    if ($('#no-pending')) {
-                                        $('#no-pending').remove();
+                            if (json.pass) {
+                                $('.alert').removeClass('alert-error').addClass('alert-success').show().find('span').html('Operation sent.');
+                                nodes.each(function () {
+                                    item = $(this).parents('.item');
+                                    span = $(this).parents('span');
+                                    label = $(this).parent();
+                                    checkbox = $(this);
+                                    checkbox.remove();
+                                    var patch = label.html();
+                                    span.html(patch);
+                                    label.remove();
+                                    if (type === 'available' || type === 'failed') {
+                                        item.appendTo($('#pending').children());
+                                        if ($('#no-pending')) {
+                                            $('#no-pending').remove();
+                                        }
+                                    } else {
+                                        item.remove();
                                     }
-                                } else {
-                                    item.remove();
+                                });
+                                if ($form.find('input:checked').attr('checked')) {
+                                    $form.find('input:checked').attr('checked', false);
                                 }
-                            });
-                            if ($form.find('input:checked').attr('checked')) {
-                                $form.find('input:checked').attr('checked', false);
+                            } else {
+                                $('.alert').removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                             }
                         });
                     return false;
