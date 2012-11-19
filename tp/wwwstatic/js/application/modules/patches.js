@@ -32,7 +32,12 @@ define(
                     this.collection.fetch();
                 },
                 events: {
-                    'change select[name=filter]': 'filterbytype'
+                    'change select[name=filter]': 'filterbytype',
+                    'keyup input[name=search]': 'searchBy'
+                },
+                searchBy: function (event) {
+                    var query = $(event.currentTarget).val();
+                    window.console.log(query);
                 },
                 filterbytype: function (evt) {
                     this.collection.type = $(evt.target).val() === 'none' ? '' : $(evt.target).val();
