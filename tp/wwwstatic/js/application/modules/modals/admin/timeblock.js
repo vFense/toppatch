@@ -15,31 +15,30 @@ define(
                     'click #add' :   'add'
                 },
                 add: function (evt) {
-                    var start_time, end_time, start_date, end_date, params, label, days, startdatestring, enddatestring,
+                    var start_time, end_time, start_date, end_date, params, label, days, offset,
                         values = $("#dow").data('popover').options.content.val() || false,
                         that = this;
                     this.highlight(evt);
                     start_time = this.start;
                     end_time = this.end;
-                    //start_date = new Date($('input[name=startdate]').val()).getTime();
-                    end_date = $('input[name=enddate]').val() ? new Date($('input[name=enddate]').val()).getTime() : '';
+                    start_date = $('input[name=startdate]').val();
+                    end_date = $('input[name=enddate]').val() || '';
                     label = $('input[name=label]').val();
-                    startdatestring = new Date($('input[name=startdate]').val() + ' ' + start_time);
-                    enddatestring = new Date($('input[name=startdate]').val() + ' ' + end_time);
                     days = this.days;
+                    offset = $('#offset').val();
 
                     params = {
                         label: label,
                         enabled: true,
-                        start_date: startdatestring.getTime(),
+                        start_date: start_date,
                         end_date: end_date,
-                        start_time: startdatestring.getTime(),
-                        end_time: enddatestring.getTime(),
-                        days: days
+                        start_time: start_time,
+                        end_time: end_time,
+                        days: days,
+                        offset: offset
                     };
                     if (values) {
                         window.console.log(params);
-
                         $.post("/api/timeblocker/add", { operation: JSON.stringify(params) },
                             function (result) {
                                 window.console.log(result);
