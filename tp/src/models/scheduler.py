@@ -16,6 +16,10 @@ class TimeBlocker(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    rule_id = Column(INTEGER(unsigned=True))
+    source = Column(VARCHAR(128), nullable=False)
+    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
+    tag_id = Column(INTEGER(unsigned=True),ForeignKey("tag_info.id"))
     name = Column(VARCHAR(1024), nullable=False)
     enabled = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     start_date = Column(DATETIME, nullable=False)

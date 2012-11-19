@@ -125,23 +125,24 @@ def timeBlockAdder(session, msg):
             end_date = None
         else:
            print json_msg
-           end_date_string = returnDatetime(str(json_msg['end_date'])).split()[0]
-           end_date = dateParser(end_date_string)
+           #end_date_string = returnDatetime(str(json_msg['end_date'])).split()[0]
+           end_date = dateParser(json_msg['end_date'])
+           print end_date
         if 'start_date' in json_msg:
-           start_date_string = returnDatetime(str(json_msg['start_date'])).split()[0]
-           start_date = dateParser(start_date_string)
+           #start_date_string = returnDatetime(str(json_msg['start_date'])).split()[0]
+           start_date = dateParser(json_msg['start_date'])
            print start_date
         if 'start_time' in json_msg:
-           start_time_string = returnDatetime(str(json_msg['start_time']))
-           start_time = dateTimeParser(start_time_string)
+           #start_time_string = returnDatetime(str(json_msg['start_time']))
+           start_time = dateTimeParser(json_msg['start_time'])
            print start_time
-           utc_start_time = start_time.time()
+           utc_start_time = start_time
            print utc_start_time
         if 'end_time' in json_msg:
-           end_time_string = returnDatetime(str(json_msg['end_time']))
-           end_time = dateTimeParser(end_time_string)
+           #end_time_string = returnDatetime(str(json_msg['end_time']))
+           end_time = dateTimeParser(json_msg['end_time'])
            print end_time
-           utc_end_time = end_time.time()
+           utc_end_time = end_time
            print utc_end_time
         block_added, message, block = addTimeBlock(session, json_msg['label'],
                 json_msg['enabled'], start_date,

@@ -67,7 +67,7 @@ class AgentOperation():
                 oper_type = jsonobject[OPERATION]
                 print oper_type
                 oper_id = self.create_new_operation(node_id, oper_type)
-                start_date = returnUtc(datetime.now())
+                start_date = datetime.now()
                 time_block_exists, time_block, self.json_out = \
                         timeBlockExistsToday(self.session, 
                                 start_date=start_date.date(),

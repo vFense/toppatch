@@ -51,9 +51,9 @@ def JobScheduler(job, sched, name=None):
             name = job_object['operation']
         if 'time' in job_object:
             print job_object['time']
-            converted_timestamp = returnDatetime(job_object['time'])
-            print converted_timestamp
-            utc_timestamp = dateTimeParser(converted_timestamp)
+            #converted_timestamp = returnDatetime(job_object['time'])
+            #print converted_timestamp
+            utc_timestamp = dateTimeParser(job_object['time'])
             print utc_timestamp
             time_block_exists, time_block, json_out = \
                     timeBlockExistsToday(session,
@@ -65,7 +65,7 @@ def JobScheduler(job, sched, name=None):
         if 'schedule' in job_object:
             schedule = job_object['schedule']
         if 'once' in job_object['schedule']:
-            addOnce(utc_timestamp.replace(tzinfo=None), name, job, sched)
+            addOnce(utc_timestamp, name, job, sched)
             return({
                     "pass" : True,
                     "message" : "Schedule %s has been added to this time frame %s " % (name, utc_timestamp)
