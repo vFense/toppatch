@@ -12,8 +12,7 @@ define(
                 },
                 events: {
                     'click #dow' : 'highlight',
-                    'click #add' :   'add',
-                    'click #dowselect': 'changeselect'
+                    'click #add' :   'add'
                 },
                 add: function (evt) {
                     var start_time, end_time, start_date, end_date, params, label, days, startdatestring, enddatestring,
@@ -51,7 +50,7 @@ define(
                                     that.$el.find('.alert').html(result.message).removeClass('alert-success').addClass('alert-error').show();
                                 }
                             });
-                            
+
                     } else {
                         that.$el.find('.alert').html('You must select at least one day of the week.').removeClass('alert-success').addClass('alert-error').show();
                     }
@@ -61,6 +60,7 @@ define(
                         $(evt.target).data('popover').tip().css('z-index', 3000);
                     }
                     var values = $("#dowselect").val(), string = '', days = '', i;
+                    $('#dowselect').unbind().on('change', this.changeselect);
                     if (values) {
                         for (i = 0; i < values.length; i += 1) {
                             if (values[i] === 'Su') {
@@ -172,7 +172,7 @@ define(
                     $endDate.datepicker();
                 },
                 selectMultiple: function (dateText, object) {
-                    window.console.log(object); //object
+                    //window.console.log(object); //object
                     //window.console.log(this);  //html input
                     var date = new Date(dateText),
                         day = date.getDay();
@@ -183,12 +183,17 @@ define(
                         }
                     });
                     object.target = this;
-                    window.console.log(dateText);
                     object.settings.option.view.highlight(object);
-                    //this.highlight(object);
                 },
                 changeselect: function (event) {
-                    window.console.log(event);
+                    var $select = $(event.currentTarget),
+                        date = new Date($('input[name="startdate"]').val()),
+                        day = date.getDay();
+                    $select.find('option').each(function (i, option) {
+                        if (i === day) {
+                            option.selected = true;
+                        }
+                    });
                 },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
