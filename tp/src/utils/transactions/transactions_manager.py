@@ -45,10 +45,10 @@ def retrieveTransactions(session, count=None, offset=None):
                          "operations_received" : operation_received,
                          "node_id" : node,
                          "results_received" : trans[1][0].results_received.strftime("%m/%d/%Y %H:%M"),
-                         "patch_id" : trans[1][1].patch_id,
-                         "result" : trans[1][1].result,
-                         "reboot" : trans[1][1].reboot,
-                         "error" : trans[1][1].error,
+                         "patch_id" : trans[1][1][0].patch_id,
+                         "result" : trans[1][1][0].result,
+                         "reboot" : trans[1][1][0].reboot,
+                         "error" : trans[1][1][0].error,
                          })
     final_msg['data'].append(transaction)
     return final_msg

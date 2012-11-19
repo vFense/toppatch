@@ -87,3 +87,28 @@ class ManagedLinuxPackage(Base):
                    self.installed, self.date_installed, self.attempts,
                    self.pending
                    )
+
+class LinuxPackageDependency(Base):
+    """
+    Represents an application that is installed on a node, as oppose to a Product from a Vendor in the database.
+    """
+    __tablename__ = "linux_package_dependency"
+    __visit_name__ = "column"
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True),
+        primary_key=True, autoincrement=True)
+    toppatch_id = Column(VARCHAR(32),
+        ForeignKey("linux_package.toppatch_id"))
+    dependency = Column(VARCHAR(32),
+        ForeignKey("linux_package.toppatch_id"))
+    def __init__(self, toppatch_id, dependency):
+        self.toppatch_id = toppatch_id
+        self.dependency = dependency
+    def __repr__(self):
+        return "<LinuxPackageDependency(%s,%s)>" %\
+               (
+                self.toppatch_id, self.dependency,
+               )

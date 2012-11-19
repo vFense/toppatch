@@ -63,9 +63,25 @@ def timeBlockExists(session, id=None, label=None, start_date=None, start_time=No
 def timeBlockExistsToday(session, start_date=None, start_time=None):
     session = validateSession(session)
     if start_date and start_time:
-        tb_object = \
-            session.query(TimeBlocker).filter(TimeBlocker.start_time <= start_time).filter(TimeBlocker.end_time >= start_time)
-        tbs = tb_object.all()
+        tbs = \
+            session.query(TimeBlocker).\
+                filter(TimeBlocker.start_time <= start_time).\
+                filter(TimeBlocker.end_time >= start_time).\
+                filter(TimeBlocker.start_date <= start_date).\
+                filter(TimeBlocker.end_date == None).all()
+        if len(tbs) == 0:
+            tbs = \
+                session.query(TimeBlocker).\
+                    filter(TimeBlocker.start_time <= start_time).\
+                    filter(TimeBlocker.end_time >= start_time).\
+                    filter(TimeBlocker.start_date <= start_date).\
+                    filter(TimeBlocker.end_date >= start_date).all()
+        elif len(tbs) == 0:
+            tbs = \
+                session.query(TimeBlocker).\
+                    filter(TimeBlocker.start_time <= start_time).\
+                    filter(TimeBlocker.start_date <= start_date).\
+                    filter(TimeBlocker.end_date >= start_date).all()
         today_is_blocked = False
         for tb in tbs:
             if tb:

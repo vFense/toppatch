@@ -2,9 +2,10 @@ import re
 from json import loads, dumps
 from datetime import datetime
 from datetime import time
+from dateutil.tz import *
 
 twentyfour_hour = {
-                   '1' : 13, '2' : 14, '3' : 15, '4' : 16,
+                   '0' : 0, '1' : 13, '2' : 14, '3' : 15, '4' : 16,
                    '5' : 17, '6' : 18, '7' : 19, '8' : 20,
                    '9' : 21, '10' : 22, '11' : 23, '12' : 0,
                   }
@@ -55,7 +56,6 @@ def dateParser(unformatted_date):
     return formatted_date
 
 def dateTimeParser(schedule):
-    print schedule
     if type(schedule) == unicode:
         schedule.encode('utf-8')
     try:
@@ -63,11 +63,16 @@ def dateTimeParser(schedule):
         schedule = re.sub(r'\s+AM|\s+PM', '', schedule)
     except Exception as e:
         am_pm = "AM"
-        if int(schedule.split(" ")[1].split(":")[0]) > 12:
-            new_hour = twentyfour_hour_reversed[str(int(schedule.split(" ")[1].split(":")[0]))]
-            schedule = re.sub(r'([0-9]+)(:[0-9]+)', str(new_hour)+'\g<2>', schedule)
-            print schedule
-            am_pm = "PM"
+        if len(schedule.split(" ")) == 1:
+            if int(schedule.split(":")[0]) > 12:
+                new_hour = twentyfour_hour_reversed[str(int(schedule.split(":")[0]))]
+                schedule = re.sub(r'([0-9]+)(:[0-9]+)', str(new_hour)+'\g<2>', schedule)
+                am_pm = "PM"
+        elif len(schedule.split(" ")) == 2:
+            if int(schedule.split(" ")[1].split(":")[0]) > 12:
+                new_hour = twentyfour_hour_reversed[str(int(schedule.split(" ")[1].split(":")[0]))]
+                schedule = re.sub(r'([0-9]+)(:[0-9]+)', str(new_hour)+'\g<2>', schedule)
+                am_pm = "PM"
     pformatted = map(lambda x: int(x),re.split(r'\/|:|\s+', schedule))
     print pformatted
     if len(pformatted) == 5 and am_pm:
@@ -76,7 +81,7 @@ def dateTimeParser(schedule):
                 am_pm == 'AM' and str(hour) == '0':
             hour = twentyfour_hour[str(hour)]
         formatted_date = datetime(year, month, day,
-                hour, minute)
+                int(hour), int(minute))
     elif len(pformatted) == 3:
         month, day, year = pformatted
         formatted_date = datetime(year, month, day)
@@ -126,3 +131,9 @@ def returnDays(days):
             else:
                 days_not_enabled.append(days_of_the_week[str(day)])
         return(days_enabled, days_not_enabled)
+
+
+def returnUtc(non_utc_time):
+    utc_time = non_utc_time.replace(tzinfo=tzlocal())\
+                             .astimezone(tzoffset('GMT', 0))
+    return utc_time
