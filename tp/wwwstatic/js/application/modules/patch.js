@@ -35,7 +35,6 @@ define(
                     url = '/submitForm?' + $form.serialize();
                     url += time ? '&time=' + time + '&label=' + label + '&offset=' + offset: '';
                     window.console.log(url);
-                    return false;
                     $.post(url,
                         function (json) {
                             window.console.log(json);
@@ -62,7 +61,7 @@ define(
                                     item.remove();
                                 }
                             });
-                            if($form.find('input:checked').attr('checked')) {
+                            if ($form.find('input:checked').attr('checked')) {
                                 $form.find('input:checked').attr('checked', false);
                             }
                         });
