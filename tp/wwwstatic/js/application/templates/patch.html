@@ -263,20 +263,5 @@
             }
         }
     });
-    $('input[name=schedule]').each(function () {
-        $(this).popover({
-            placement: 'top',
-            title: 'Patch Scheduling',
-            html: true,
-            content: $('#schedule-form').clone(),
-            trigger: 'click'
-        });
-    }).click(function () {
-        if(this.checked) {
-            $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
-        } else {
-            $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
-        }
-    });
 </script>
 <% } %>
