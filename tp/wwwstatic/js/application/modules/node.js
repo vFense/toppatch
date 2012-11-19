@@ -77,7 +77,7 @@ define(
                     return this;
                 },
                 submit: function (evt) {
-                    var item, span, label, checkbox, $scheduleForm, type, patches, url, date,
+                    var item, span, label, checkbox, $scheduleForm, type, patches, url, date, testdate,
                         that = this,
                         $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
@@ -86,12 +86,15 @@ define(
                         $scheduleForm = schedule.data('popover').options.content;
                         time = $scheduleForm.find('input[name=datepicker]').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
                         date = new Date(time).getTime();
+                        //testdate = new Date(time);
                         label = $scheduleForm.find('input[name=label]').val() || 'Default';
                     }
                     type = $form.attr('id');
                     patches = $form.find('input[name="patches"]:checked');
                     url = '/submitForm?' + $form.serialize();
                     url += time ? '&time=' + date + '&label=' + label : '';
+                    //window.console.log(testdate);
+                    //window.console.log(testdate.getTime());
                     $.post(url,
                         function (json) {
                             window.console.log(json);

@@ -12,31 +12,35 @@ define(
                 },
                 events: {
                     'click #dow' : 'highlight',
-                    'click #add' :   'add'
+                    'click #add' :   'add',
+                    'click #dowselect': 'changeselect'
                 },
                 add: function (evt) {
-                    var start_time, end_time, start_date, end_date, params, label, days,
+                    var start_time, end_time, start_date, end_date, params, label, days, startdatestring, enddatestring,
                         values = $("#dow").data('popover').options.content.val() || false,
                         that = this;
                     this.highlight(evt);
                     start_time = this.start;
                     end_time = this.end;
-                    start_date = new Date($('input[name=startdate]').val()).getTime();
+                    //start_date = new Date($('input[name=startdate]').val()).getTime();
                     end_date = $('input[name=enddate]').val() ? new Date($('input[name=enddate]').val()).getTime() : '';
                     label = $('input[name=label]').val();
+                    startdatestring = new Date($('input[name=startdate]').val() + ' ' + start_time);
+                    enddatestring = new Date($('input[name=startdate]').val() + ' ' + end_time);
                     days = this.days;
-                    window.console.log(start_date);
+
                     params = {
                         label: label,
                         enabled: true,
-                        start_date: start_date,
+                        start_date: startdatestring.getTime(),
                         end_date: end_date,
-                        start_time: start_time,
-                        end_time: end_time,
+                        start_time: startdatestring.getTime(),
+                        end_time: enddatestring.getTime(),
                         days: days
                     };
                     if (values) {
                         window.console.log(params);
+
                         $.post("/api/timeblocker/add", { operation: JSON.stringify(params) },
                             function (result) {
                                 window.console.log(result);
@@ -47,6 +51,7 @@ define(
                                     that.$el.find('.alert').html(result.message).removeClass('alert-success').addClass('alert-error').show();
                                 }
                             });
+                            
                     } else {
                         that.$el.find('.alert').html('You must select at least one day of the week.').removeClass('alert-success').addClass('alert-error').show();
                     }
@@ -160,8 +165,30 @@ define(
                         }
                     });
 
-                    $startDate.datepicker();
+                    $startDate.datepicker({
+                        onSelect: this.selectMultiple,
+                        option: { view: this }
+                    });
                     $endDate.datepicker();
+                },
+                selectMultiple: function (dateText, object) {
+                    window.console.log(object); //object
+                    //window.console.log(this);  //html input
+                    var date = new Date(dateText),
+                        day = date.getDay();
+                    $("#dowselect option").each(function (i, option) {
+                        option.selected = false;
+                        if (i === day) {
+                            option.selected = true;
+                        }
+                    });
+                    object.target = this;
+                    window.console.log(dateText);
+                    object.settings.option.view.highlight(object);
+                    //this.highlight(object);
+                },
+                changeselect: function (event) {
+                    window.console.log(event);
                 },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
