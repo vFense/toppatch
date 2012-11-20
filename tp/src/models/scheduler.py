@@ -17,27 +17,26 @@ class TimeBlocker(Base):
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     name = Column(VARCHAR(1024), nullable=False)
-    enabled = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
-    start_date = Column(DATETIME, nullable=False)
-    end_date = Column(DATETIME, nullable=True)
-    start_time = Column(TIME, nullable=False)
-    end_time = Column(TIME, nullable=False)
+    start_date_time = Column(DATETIME, nullable=False)
+    end_date_time = Column(DATETIME, nullable=False)
+    time_block_end = Column(DATETIME, nullable=True)
     days = Column(VARCHAR(7), nullable=False)
-    def __init__(self, name, start_date, end_date,
-                start_time, end_time, days, 
+    span = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
+    enabled = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
+    def __init__(self, name, start_date_time, end_date_time,
+                time_block_end, days, span=False
                 enabled=True
                 ):
         self.name = name
-        self.enabled = enabled
-        self.start_date = start_date
-        self.end_date = end_date
-        self.start_time = start_time
-        self.end_time = end_time
+        self.start_date_time = start_date_time
+        self.end_date_time = end_date_time
+        self.time_block_end = time_block_end
         self.days = days
+        self.span = span
+        self.enabled = enabled
     def __repr__(self):
         return "<TimeBlocker(%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.name, self.enabled, self.start_date,
-                self.end_date, self.start_time,
-                self.end_time, self.days,
+                self.name, self.start_date_time, self_end_date_time,
+                self.time_block_end, self.end_time, self.days, self.enabled
                 )
