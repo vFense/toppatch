@@ -17,13 +17,13 @@ define(
                     this.offset   = this.offset || 0;
                     this.getCount = this.getCount  || 10;
                     this.type = this.type || '';
+                    this.searchQuery = this.searchQuery || '';
+                    this.searchBy = this.searchBy || '';
 
                     this.query = '?count=' + this.getCount + '&offset=' + this.offset;
-                    if (this.type) {
-                        this.query += '&type=' + this.type;
-                    }
-
-                    window.myCollection = this;
+                    this.query += this.type ? '&type=' + this.type : '';
+                    this.query += this.searchQuery ? '&query=' + this.searchQuery : '';
+                    this.query += this.searchBy ? '&searchby=' + this.searchBy : '';
                 }
             }),
             View: Backbone.View.extend({
@@ -34,7 +34,28 @@ define(
                     this.collection.fetch();
                 },
                 events: {
-                    'change select[name=filter]': 'filterbytype'
+                    'change select[name=filter]': 'filterbytype',
+                    'keyup input[name=search]': 'debouncedSearch'
+                },
+                debouncedSearch: _.debounce(function (event) {
+                    window.console.log(['debounced', event]);
+                    this.searchBy(event);
+                }, 300),
+                searchBy: function (event) {
+                    var searchQuery = $(event.currentTarget).val(),
+                        searchBy = this.$el.find('select[name=searchby]').val();
+                    if (searchQuery) {
+                        this.collection.searchQuery = searchQuery;
+                        this.collection.searchBy = searchBy;
+                        this.collection.baseUrl = 'api/package/searchByPatch';
+                    } else {
+                        this.collection.searchQuery = '';
+                        this.collection.searchBy = '';
+                        this.collection.baseUrl = 'api/patches.json';
+                    }
+
+                    this.collection.initialize();
+                    this.collection.fetch();
                 },
                 filterbytype: function (evt) {
                     this.collection.type = $(evt.target).val() === 'none' ? '' : $(evt.target).val();
@@ -42,13 +63,25 @@ define(
                     this.collection.fetch();
                 },
                 beforeRender: $.noop,
-                onRender: $.noop,
+                onRender: function () {
+                    var search = this.$el.find('input[name=search]'),
+                        that = this;
+                    if (this.collection.searchQuery) {
+                        //search.on('blur', );
+                        search.focus(function (event) {
+                            this.value = this.value || '';
+                        }).focus();
+
+                    }
+                },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var template = _.template(this.template),
                         data = this.collection.toJSON(),
                         payload = {
+                            searchQuery: this.collection.searchQuery,
+                            searchBy: this.collection.searchBy,
                             type: this.collection.type,
                             getCount: +this.collection.getCount,
                             offset: +this.collection.offset,
@@ -62,14 +95,20 @@ define(
                             data: data
                         },
                         that = this,
+                        //$el = this.$el.empty().html(template()),
+                        //$items = $el.find('.items'),
                         temp;
                     temp = payload.offset - payload.getCount;
                     payload.prevLink = '#patches?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
                     payload.prevLink +=  payload.type ? '&type=' + payload.type : '';
+                    payload.prevLink += payload.searchQuery ? '&query=' + payload.searchQuery : '';
+                    payload.prevLink += payload.searchBy ? '&searchby=' + payload.searchBy : '';
 
                     temp = payload.offset + payload.getCount;
                     payload.nextLink = '#patches?count=' + payload.getCount + '&offset=' + temp;
                     payload.nextLink += payload.type ? '&type=' + payload.type : '';
+                    payload.nextLink += payload.searchQuery ? '&query=' + payload.searchQuery : '';
+                    payload.nextLink += payload.searchBy ? '&searchby=' + payload.searchBy : '';
 
                     this.$el.empty();
 

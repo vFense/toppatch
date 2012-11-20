@@ -4,17 +4,19 @@
 from datetime import datetime
 from socket import gethostbyaddr
 from models.base import Base
-from models.windows import *
+from models.packages import *
 from models.node import *
 from models.tagging import *
 from models.scheduler import *
 from utils.common import *
+from utils.db.client import *
 from utils.db.query_table import *
 from utils.tcpasync import TcpConnect
 
 
 #WebsocketHandler.sendMessage(message)
 def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
+    session = validateSession(session)
     try:
         hostname = gethostbyaddr(client_ip)[0]
     except:
@@ -29,6 +31,7 @@ def addNode(session, client_ip, agent_timestamp=None, node_timestamp=None):
         print e
 
 def addTag(session, tag_name, user_id=None):
+    session = validateSession(session)
     date_created=datetime.now()
     try:
         add_tag = TagInfo(tag_name, date_created, user_id)
@@ -40,8 +43,25 @@ def addTag(session, tag_name, user_id=None):
         print e
         return(False, "Tag %s failed to add" % (tag_name))
 
+def addDependency(session, data):
+    session = validateSession(session)
+    failed_count = 0
+    for deps in data['data']:
+        pkg_id = deps['toppatch_id']
+        for dep in deps['dependencies']:
+            dep_exists = session.query(LinuxPackageDependency).filter(LinuxPackageDependency.toppatch_id == pkg_id).filter(LinuxPackageDependency.dependency == dep).first()
+            if not dep_exists:
+                try:
+                    dep_add = LinuxPackageDependency(pkg_id, dep)
+                    session.add(dep_add)
+                    session.commit()
+                except Exception as e:
+                    session.rollback()
+                    failed_count += 1
+
 def addTagPerNode(session, nodes=[], tag_id=None, tag_name=None,
                 user_id=None):
+    session = validateSession(session)
     completed = False
     count = 0
     if not tag_id and tag_name:
@@ -69,31 +89,38 @@ def addTagPerNode(session, nodes=[], tag_id=None, tag_name=None,
     else:
         return(True, "Nodes %s were added to tag %s" % (nodes, tag.tag), tag.tag)
 
-def addTimeBlock(session, label, enabled, start_date, end_date,
-              start_time, duration, days):
+def addTimeBlock(session, label, start_date, start_time, end_time,
+                  days, end_date=None, span_end_date_time=None, span=False,
+                  enabled=False):
+    session = validateSession(session)
     try:
-        add_block = TimeBlocker(label, start_date, end_date,
-                                start_time, duration, days,
+        add_block = TimeBlocker(label, start_date, start_time,
+                                end_time, days, end_date,
+                                span_end_date_time, span,
                                 enabled)
         session.add(add_block)
         session.commit()
         return(True, "Time Block Added", add_block)
     except Exception as e:
         print e
+        session.rollback()
         return(False, "Time Block Could Not Be Added", e)
 
 def addCsr(session, client_ip, location, csr_name,
             signed=False, signed_date=False):
+    session = validateSession(session)
     try:
         add_csr = CsrInfo(csr_name, client_ip, location, signed, signed_date)
         session.add(add_csr)
         session.commit()
         return add_csr
     except Exception as e:
+        session.rollback()
         print e
 
 def addCert(session, node_id, cert_id, cert_name,
             cert_location, cert_expiration):
+    session = validateSession(session)
     try:
         add_cert = SslInfo(node_id, cert_id, cert_name,
                     cert_location, cert_expiration)
@@ -102,6 +129,7 @@ def addCert(session, node_id, cert_id, cert_name,
         print add_cert
         return add_cert
     except Exception as e:
+        session.rollback()
         print e
 
 def addOperation(session, node_id, operation, result_id=None,
@@ -109,6 +137,7 @@ def addOperation(session, node_id, operation, result_id=None,
     add_oper = Operations(node_id, operation, result_id,
             operation_sent, operation_received, results_received
             )
+    session = validateSession(session)
     if add_oper:
         session.add(add_oper)
         session.commit()
@@ -116,45 +145,61 @@ def addOperation(session, node_id, operation, result_id=None,
 
 
 def addSystemInfo(session, data, node_info):
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         operation.update({'results_received' : datetime.now()})
+        session.commit()
         system_info = SystemInfo(node_info.id, data['os_code'],
             data['os_string'], data['version_major'],
             data['version_minor'], data['version_build'],
-            data['meta'], 
+            data['meta'], data['bit_type']
             )
         if system_info:
-            session.add(system_info)
-            session.commit()
-            return system_info
+            try:
+                session.add(system_info)
+                session.commit()
+                print "system info was added"
+                return system_info
+            except Exception as e:
+                session.rollback()
+                print "BOOOH system info was not added"
 
 
-def addWindowsUpdate(session, data):
+def addSoftwareUpdate(session, data):
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
+    node_id = exists.node_id
     if exists:
         operation.update({'results_received' : datetime.now()})
         session.commit()
         for update in data['data']:
             update_exists = updateExists(session, update['toppatch_id'])
             if not update_exists:
-                win_update = WindowsUpdate(update['toppatch_id'],
-                        update['kb'], update['vendor_id'],update['title'],
+                if not 'kb' in update:
+                    update['kb'] = None
+                if not 'version' in update:
+                    update['version'] = None
+                software_update = Package(update['toppatch_id'],
+                        update['kb'], update['version'],
+                        update['vendor_id'],update['name'],
                         update['description'], update['support_url'],
                         update['severity'], dateParser(update['date_published']),
                         update['file_size']
                         )
-                if win_update:
+                if software_update:
                     try:
-                        session.add(win_update)
+                        session.add(software_update)
                         session.commit()
                     except:
                         session.rollback()
 
-def addWindowsUpdatePerNode(session, data):
+def addUpdatePerNode(session, data):
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         node_id = exists.node_id
+        node = session.query(SystemInfo).filter(SystemInfo.node_id == node_id).first()
         operation.update({'results_received' : datetime.now()})
         session.commit()
         for addupdate in data['data']:
@@ -166,9 +211,30 @@ def addWindowsUpdatePerNode(session, data):
                     date_installed = None
                 hidden = returnBool(addupdate['hidden'])
                 installed = returnBool(addupdate['installed'])
-                node_update = ManagedWindowsUpdate(node_id,
-                        addupdate['toppatch_id'],
-                        date_installed, hidden, installed=installed
+                if node.os_code == "linux":
+                    node_update = PackagePerNode(node_id,
+                        addupdate['toppatch_id'], date_installed, 
+                        hidden, installed=installed, is_linux=True
+                        )
+                elif node.os_code == "windows":
+                    node_update = PackagePerNode(node_id,
+                        addupdate['toppatch_id'], date_installed, 
+                        hidden, installed=installed, is_windows=True
+                        )
+                elif node.os_code == "mac":
+                    node_update = PackagePerNode(node_id,
+                        addupdate['toppatch_id'], date_installed, 
+                        hidden, installed=installed, is_mac=True
+                        )
+                elif node.os_code == "bsd":
+                    node_update = PackagePerNode(node_id,
+                        addupdate['toppatch_id'], date_installed, 
+                        hidden, installed=installed, is_bsd=True
+                        )
+                elif node.os_code == "unix":
+                    node_update = PackagePerNode(node_id,
+                        addupdate['toppatch_id'], date_installed, 
+                        hidden, installed=installed, is_unix=True
                         )
                 try:
                     session.add(node_update)
@@ -177,6 +243,7 @@ def addWindowsUpdatePerNode(session, data):
                     session.rollback()
 
 def addSoftwareAvailable(session, data):
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         node_id = exists.node_id
@@ -197,6 +264,7 @@ def addSoftwareAvailable(session, data):
                     session.rollback()
 
 def addSoftwareInstalled(session, data):
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         node_id = exists.node_id
@@ -224,6 +292,7 @@ def addSoftwareInstalled(session, data):
                         session.rollback()
 
 def removeTag(session, tag_name):
+    session = validateSession(session)
     tag_exists, tag = tagExists(session, tag_name=tag_name)
     if tag:
         try:
@@ -235,6 +304,7 @@ def removeTag(session, tag_name):
             return(False, "Tag %s does not exists" % (tag_name))
 
 def removeAllNodesFromTag(session, tag_name):
+    session = validateSession(session)
     tag_oper, tag = tagExists(session, tag_name)
     tags_per_node = \
             session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagInfo.tag == tag_name).all()
@@ -257,6 +327,7 @@ def removeAllNodesFromTag(session, tag_name):
         return(False, "Tag %s does not exists" % (tag_name), tag_name)
 
 def removeNodesFromTag(session, tag_name, nodes=[]):
+    session = validateSession(session)
     nodes_completed = []
     nodes_failed = []
     for node in nodes:
@@ -287,6 +358,7 @@ def removeNodesFromTag(session, tag_name, nodes=[]):
                 (nodes_completed, tag_name), nodes)
 
 def removeTimeBlock(session, id=None, label=None, start_date=None, start_time=None):
+    session = validateSession(session)
     tb_object, timeblock = timeBlockExists(session, id, label, start_date, start_time)
     print tb_object, timeblock
     if tb_object:
@@ -302,6 +374,7 @@ def removeTimeBlock(session, id=None, label=None, start_date=None, start_time=No
     return object_deleted
 
 def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
+    session = validateSession(session)
     exists, operation = operationExists(session, oper_id)
     if exists and results_recv:
         operation.update({'results_received' : datetime.now()})
@@ -311,27 +384,31 @@ def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
         session.commit()
 
 def updateNode(session, node_id):
+    session = validateSession(session)
     exists, node = nodeExists(session, node_id=node_id)
     if exists:
         exists.update({'last_agent_update' : datetime.now(),
-                       'last_node_update' : datetime.now(),
-                       'agent_status' : True,
-                       'host_status' : True
-                       })
-        installed_oper = session.query(ManagedWindowsUpdate).filter_by(installed=True).filter_by(node_id=node_id)
+                      'last_node_update' : datetime.now(),
+                      'agent_status' : True,
+                      'host_status' : True
+                      })
+        session.commit()
+        installed_oper = session.query(PackagePerNode).filter_by(installed=True).filter_by(node_id=node_id)
         installed = installed_oper.first()
-        pending_oper = session.query(ManagedWindowsUpdate).filter_by(pending=True).filter_by(node_id=node_id)
+        pending_oper = session.query(PackagePerNode).filter_by(pending=True).filter_by(node_id=node_id)
         pending = pending_oper.all()
-        print pending
         for i in pending:
             if installed and pending:
                 i.pending=False
-                print i.pending
         session.commit()
-        return node
+    else:
+        print "System Info for %s does not exist yet" % ( node_id )
+    return node
 
-def updateNodeNetworkStats(session, node_id):
-    nodeupdates = session.query(ManagedWindowsUpdate).filter_by(node_id=node_id)
+def updateNodeStats(session, node_id):
+    session = validateSession(session)
+    os_code_exists = session.query(SystemInfo).filter_by(node_id=node_id).first()
+    nodeupdates = session.query(PackagePerNode).filter_by(node_id=node_id)
     patchesinstalled = nodeupdates.filter_by(installed=True).all()
     patchesuninstalled = nodeupdates.filter_by(installed=False).all()
     patchespending = nodeupdates.filter_by(pending=True).all()
@@ -339,30 +416,36 @@ def updateNodeNetworkStats(session, node_id):
     nodeexists = nodestats.first()
     if nodeexists:
         nodestats.update({"patches_installed" : len(patchesinstalled),
-                          "patches_available" : len(patchesuninstalled),
-                          "patches_pending" : len(patchespending)})
+                         "patches_available" : len(patchesuninstalled),
+                         "patches_pending" : len(patchespending)})
+        session.commit()
     else:
         add_node_stats = NodeStats(node_id, len(patchesinstalled), \
-                          len(patchesuninstalled), len(patchespending), 0)
+                       len(patchesuninstalled), len(patchespending), 0)
         session.add(add_node_stats)
-    nstats = session.query(ManagedWindowsUpdate)
-    totalinstalled = nstats.filter_by(installed=True).all()
-    totalnotinstalled = nstats.filter_by(installed=False).all()
-    totalpending = nstats.filter_by(pending=True).all()
+        session.commit()
+
+def updateNetworkStats(session):
+    session = validateSession(session)
+    stats = session.query(PackagePerNode)
+    totalinstalled = stats.filter_by(installed=True).all()
+    totalnotinstalled = stats.filter_by(installed=False).all()
+    totalpending = stats.filter_by(pending=True).all()
     networkstats = session.query(NetworkStats)
     networkstatsexists = networkstats.filter_by(id=1).first()
     if networkstatsexists:
         networkstats.update({"patches_installed" : len(totalinstalled),
                              "patches_available" : len(totalnotinstalled),
                              "patches_pending" : len(totalpending)})
+        session.commit()
     else:
         network_sstats_init = NetworkStats(len(totalinstalled),
                               len(totalnotinstalled), len(totalpending), 0)
         session.add(network_sstats_init)
-
-    session.commit()
+        session.commit()
 
 def updateRebootStatus(session, node_id, oper_type):
+    session = validateSession(session)
     node, node_exists = nodeExists(session, node_id=node_id)
     print node, node_exists, "OKKKOKOKKO"
     if node_exists:
@@ -372,6 +455,7 @@ def updateRebootStatus(session, node_id, oper_type):
             session.commit()
 
 def addResults(session, data):
+    session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
     node, node_exists = nodeExists(session,node_id=data['node_id'])
     print node
@@ -386,7 +470,8 @@ def addResults(session, data):
                 reboot = returnBool(msg['reboot'])
             else:
                reboot = None
-            update_exists, update_oper = nodeUpdateExists(session, node_id, msg['toppatch_id'])
+            os_code = session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
+            update_exists, update_oper = nodeUpdateExists(session, node_id, msg['toppatch_id'], os=os_code)
             if update_exists:
                 if data['operation'] == "install" and msg['result'] == 'success':
                     print "patch installed on %s %s" % ( node_id, msg['toppatch_id'] )
@@ -415,6 +500,7 @@ def addResults(session, data):
                     if reboot:
                         if node_exists.reboot == False:
                             node.update({'reboot' : reboot})
+                session.commit()
             error = None
             if "error" in msg:
                 error = msg['error']
@@ -427,7 +513,8 @@ def addResults(session, data):
                 session.commit()
                 operation.update({'results_id' : results.id,
                                   'results_received' : datetime.now()})
-                updateNodeNetworkStats(session, node_id)
+                updateNode(session, node_id)
+                updateNetworkStats(session)
                 session.commit()
                 TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
                 return results

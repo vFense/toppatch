@@ -19,6 +19,7 @@ UPDATESINSTALLED = 'updates_installed'
 UPDATESPENDING = 'updates_pending'
 SYSTEMINFO = 'system_info'
 SYSTEMAPPLICATIONS = 'system_applications'
+UNIX_DEPENDENCIES = 'unix_dependencies'
 DATA = 'data'
 SCHEDULE = 'schedule'
 TIME = 'time'
@@ -37,6 +38,7 @@ class AgentOperation():
         """
         ENGINE = initEngine()
         self.session = createSession(ENGINE)
+        self.session = validateSession(self.session)
         self.node_list = node_list
         self.total_nodes = None
         self.results = {}
@@ -65,7 +67,11 @@ class AgentOperation():
                 oper_type = jsonobject[OPERATION]
                 print oper_type
                 oper_id = self.create_new_operation(node_id, oper_type)
-                time_block_exists, time_block, self.json_out = timeBlockExistsToday(self.session, start_date=datetime.today().date(), start_time=datetime.now().time())
+                start_date = datetime.now()
+                time_block_exists, time_block, self.json_out = \
+                        timeBlockExistsToday(self.session, 
+                                start_date=start_date.date(),
+                                start_time=start_date.time())
                 if time_block_exists:
                     return self.json_out
                 if not DATA in jsonobject:
@@ -87,7 +93,7 @@ class AgentOperation():
         for job in self.threads:
             self.results.append(job.value)
         print self.results
-        self.session.close
+        self.session.close()
         
     def create_sof_operation(self, node_id, node_ip, oper_type, \
             oper_id, data_list=None):
@@ -108,36 +114,43 @@ class AgentOperation():
                         "operation_id" : oper_id,
                         "data" : data_list
                      }
-        updateNodeNetworkStats(self.session, node_id)
+        updateNodeStats(self.session, node_id)
+        updateNetworkStats(self.session)
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'
         print msg
         response = None
         connect = TcpConnect(node_ip, msg)
         completed = False
+        os_code = self.session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
+        os = None
         if not connect.error and connect.read_data:
             response = verifyJsonIsValid(connect.read_data)
             print response
             if response[1]['operation'] == 'received':
                 completed = True
                 updateOperationRow(self.session, oper_id, oper_recv=True)
-                updateNodeNetworkStats(self.session, node_id)
+                updateNodeStats(self.session, node_id)
+                updateNetworkStats(self.session)
                 if oper_type == 'reboot':
                     updateRebootStatus(self.session, node_id, oper_type)
                 if 'data' in jsonobject:
                     for patch in jsonobject['data']:
                         if oper_type == 'install':
-                            patcher = self.session.query(ManagedWindowsUpdate).filter_by(toppatch_id=patch).filter_by(node_id=node_id)
+                            patcher = self.session.query(PackagePerNode).\
+                                filter_by(toppatch_id=patch)\
+                                .filter_by(node_id=node_id)
                             patcher.update({"pending" : True})
                             self.session.commit()
-                            updateNodeNetworkStats(self.session, node_id)
+                            updateNodeStats(self.session, node_id)
+                            updateNetworkStats(self.session)
         self.result ={
-                          "node_id" : node_id,
-                          "operation_id" : oper_id,
-                          "message" : connect.read_data,
-                          "error" : connect.error,
-                          "pass" : completed
-                          }
+                     "node_id" : node_id,
+                     "operation_id" : oper_id,
+                     "message" : connect.read_data,
+                     "error" : connect.error,
+                     "pass" : completed
+                     }
         return self.result
 
 
