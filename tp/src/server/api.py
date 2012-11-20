@@ -826,3 +826,19 @@ class GetDependenciesHandler(BaseHandler):
         result = retrieveDependencies(self.session, pkg_id)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+class SearchPatchHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        try:
+            query = self.get_argument('query')
+            column = self.get_argument('searchby')
+            count = self.get_argument('count')
+            offset = self.get_argument('offset')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
+        result = basicPackageSearch(self.session, query, column, count=count, offset=offset)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
