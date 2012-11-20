@@ -121,26 +121,17 @@ def certExists(session, node):
     exists = cert.first()
     return(exists, cert)
 
-def updateExists(session, tp_id, os_code):
+def updateExists(session, tp_id):
     session = validateSession(session)
-    if os_code == "windows":
-        os = WindowsUpdate
-    elif os_code == "linux":
-        os = LinuxPackage
     update = \
-        session.query(os).filter_by(toppatch_id=tp_id).first()
+        session.query(Package).filter_by(toppatch_id=tp_id).first()
     return(update)
 
-def nodeUpdateExists(session, node, tp_id, os=None):
+def nodeUpdateExists(session, node, tp_id):
     session = validateSession(session)
-    if os == "windows":
-        update = \
-            session.query(ManagedWindowsUpdate).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
-        exists = update.first()
-    elif os == "linux":
-        update = \
-            session.query(ManagedLinuxPackage).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
-        exists = update.first()
+    update = \
+        session.query(PackagePerNode).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
+    exists = update.first()
     return(exists, update)
 
 def softwareExists(session, sname, sversion):
