@@ -420,8 +420,6 @@ def updateNodeStats(session, node_id):
                        len(patchesuninstalled), len(patchespending), 0)
         session.add(add_node_stats)
         session.commit()
-    else:
-        print "System Info for node %s does not exist" % ( node_id)
 
 def updateNetworkStats(session):
     session = validateSession(session)
