@@ -66,7 +66,7 @@ class Application(tornado.web.Application):
             (r"/api/osData/?", OsHandler),
             (r"/api/networkData/?", NetworkHandler),
             (r"/api/summaryData/?", SummaryHandler),
-            (r"/api/patchData/?", PatchHandler),
+            #(r"/api/patchData/?", PatchHandler),
             (r"/api/graphData/?", GraphHandler),
             (r"/api/nodes.json/?", NodesHandler),
             (r"/api/patches.json/?", PatchesHandler),
@@ -82,6 +82,9 @@ class Application(tornado.web.Application):
             (r"/api/tagging/addTagPerNode?", TagAddPerNodeHandler),
             (r"/api/tagging/removeTagPerNode?", TagRemovePerNodeHandler),
             (r"/api/tagging/removeTag?", TagRemoveHandler),
+            (r"/api/transactions/getTransactions?", GetTransactionsHandler),
+            (r"/api/package/getDependecies?", GetDependenciesHandler),
+            (r"/api/package/searchByPatch?", SearchPatchHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.

@@ -67,7 +67,7 @@ define(['jquery', 'd3'], function ($, d3) {
                         if (d.data.label) {
                             window.location.hash = '#patches?type=' + d.data.label;
                             osData = d;
-                            disappear('new', d.data.label);
+                            //disappear('new', d.data.label);
                         }
                     })
                     .on("mouseover", function (d) {
@@ -82,7 +82,7 @@ define(['jquery', 'd3'], function ($, d3) {
                             .style("fill", function () {
                                 return "black";
                             })
-                            .attr("transform", function(d) {
+                            .attr("transform", function (d) {
                                 var c = arc.centroid(d),
                                     x = c[0],
                                     y = c[1],
@@ -158,6 +158,7 @@ define(['jquery', 'd3'], function ($, d3) {
                         data = previousData.length != 0 ? json : data;
                         title = previousTitle != '' ? previousTitle : title;
                         var pieChart = graph.pie().title(type + " Patch Statistics").previousData(data).previousTitle(title).width(width).osData(osData);
+                        console.log(json);
                         if(json[0]['error']) {
                             previousData.length != 0 ? '' : renderLinks();
                             warning.style('opacity', '1').text('No data to display for ' + type + ' Patches');

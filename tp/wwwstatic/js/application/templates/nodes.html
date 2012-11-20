@@ -34,26 +34,28 @@
             <div class="items">
                 <% _.each(data, function (node) { %>
                     <div class="item linked clearfix">
-                        <a href="#nodes/<%= node.id %>">
-                            <span class="desc">
-                                <% 
-                                    if (node.reboot) {
-                                        print('<i style="color: orange;"class="icon-warning-sign"></i>');
-                                    } else if (node['host/status'] && node['agent/status']) {
-                                        print('<i style="color: green;"class="icon-ok"></i>');
-                                    } else {
-                                        print('<i style="color: red;"class="icon-warning-sign"></i>');
-                                    } 
-                                %> — <strong><% print(node.hostname || node.ip) %></strong> — <%= node['os/name'] %>
-                            </span>
-                            <span class="pull-right">
-                                <span class="done"><%= node['patch/done'] %></span> /
-                                <span class="pend"><%= node['patch/pend'] %></span> /
-                                <span class="need"><%= node['patch/need'] %></span> /
-                                <span class="fail"><%= node['patch/fail'] %></span>
-                                &nbsp;<i class="icon-caret-right"></i>&nbsp;
-                            </span>
-                        </a>
+                        <div class="row-fluid">
+                            <a href="#nodes/<%= node.id %>">
+                                <span class="desc span8">
+                                    <%
+                                        if (node.reboot) {
+                                            print('<i style="color: orange;"class="icon-warning-sign"></i>');
+                                        } else if (node['host/status'] && node['agent/status']) {
+                                            print('<i style="color: green;"class="icon-ok"></i>');
+                                        } else {
+                                            print('<i style="color: red;"class="icon-warning-sign"></i>');
+                                        }
+                                    %> — <strong><% print(node.hostname || node.ip) %></strong> — <%= node['os/name'] %>
+                                </span>
+                                <span class="span4 alignRight">
+                                    <span class="done"><%= node['patch/done'] %></span> /
+                                    <span class="pend"><%= node['patch/pend'] %></span> /
+                                    <span class="need"><%= node['patch/need'] %></span> /
+                                    <span class="fail"><%= node['patch/fail'] %></span>
+                                    &nbsp;<i class="icon-caret-right"></i>
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 <% }); %>
             </div>
