@@ -43,6 +43,7 @@ define(
 
                     this.collection.searchQuery = searchquery;
                     this.collection.searchBy = searchby;
+                    this.collection.baseUrl = 'api/package/searchByPatch';
 
                     this.collection.initialize();
                     this.collection.fetch();
