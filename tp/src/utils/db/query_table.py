@@ -4,16 +4,12 @@
 from datetime import datetime
 from socket import getfqdn
 from models.base import Base
-<<<<<<< HEAD
-from models.windows import *
-=======
 from models.account import *
 from models.packages import *
->>>>>>> ld_upstream/Development
 from models.node import *
+from models.tagging import *
+from models.scheduler import *
 from models.ssl import *
-<<<<<<< HEAD
-=======
 from utils.common import *
 from utils.db.client import *
 
@@ -35,7 +31,6 @@ def tagExists(session, tag_id=None, tag_name=None):
         tag = session.query(TagInfo).filter_by(tag=tag_name)
     tag_exists = tag.first()
     return(tag, tag_exists)
->>>>>>> ld_upstream/Development
 
 def nodeExists(session, node_ip=None, node_id=None):
     session = validateSession(session)
@@ -56,8 +51,6 @@ def operationExists(session, oper_id):
     exists = oper.first()
     return(exists, oper)
 
-<<<<<<< HEAD
-=======
 def timeBlockExists(session, id=None, label=None, start_date=None, start_time=None):
     session = validateSession(session)
     if id:
@@ -106,7 +99,6 @@ def timeBlockExistsToday(session, start_date=None, start_time=None):
                    }
         return(today_is_blocked, "No time blocks were found", json_out)
 
->>>>>>> ld_upstream/Development
 def operationExistsUsingNodeId(session, node_id, oper_type):
     session = validateSession(session)
     oper = \
