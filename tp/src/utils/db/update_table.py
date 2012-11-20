@@ -89,12 +89,14 @@ def addTagPerNode(session, nodes=[], tag_id=None, tag_name=None,
     else:
         return(True, "Nodes %s were added to tag %s" % (nodes, tag.tag), tag.tag)
 
-def addTimeBlock(session, label, enabled, start_date, end_date,
-              start_time, duration, days):
+def addTimeBlock(session, label, start_date, start_time, end_time,
+                  days, end_date=None, span_end_date_time=None, span=False,
+                  enabled=False):
     session = validateSession(session)
     try:
-        add_block = TimeBlocker(label, start_date, end_date,
-                                start_time, duration, days,
+        add_block = TimeBlocker(label, start_date, start_time,
+                                end_time, days, end_date,
+                                span_end_date_time, span,
                                 enabled)
         session.add(add_block)
         session.commit()
