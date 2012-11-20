@@ -24,7 +24,7 @@ class TimeBlocker(Base):
     span = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     enabled = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     def __init__(self, name, start_date_time, end_date_time,
-                time_block_end, days, span=False
+                time_block_end, days, span=False,
                 enabled=True
                 ):
         self.name = name
