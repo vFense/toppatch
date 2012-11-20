@@ -25,8 +25,8 @@ class TcpConnect():
         self.timeout = timeout
         self.error = None
         self.read_data = None
-        self.key = "/opt/TopPatch/var/lib/ssl/server/keys/server.key"
-        self.cert = "/opt/TopPatch/var/lib/ssl/server/keys/server.cert"
+        self.key = "/opt/TopPatch/var/lib/ssl/server/keys/CA.key"
+        self.cert = "/opt/TopPatch/var/lib/ssl/server/keys/CA.cert"
         self.ca = "/opt/TopPatch/var/lib/ssl/server/keys/CA.cert"
         self.tcp_socket = self.socket_init()
         self._connect()
