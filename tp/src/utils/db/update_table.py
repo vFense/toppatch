@@ -174,14 +174,13 @@ def addSoftwareUpdate(session, data):
         for update in data['data']:
             update_exists = updateExists(session, update['toppatch_id'])
             if not update_exists:
-                if os_code == 'windows':
-                    software_update = Package(update['toppatch_id'],
-                            update['kb'], update['version'],
-                            update['vendor_id'],update['name'],
-                            update['description'], update['support_url'],
-                            update['severity'], dateParser(update['date_published']),
-                            update['file_size']
-                           )
+                software_update = Package(update['toppatch_id'],
+                        update['kb'], update['version'],
+                        update['vendor_id'],update['name'],
+                        update['description'], update['support_url'],
+                        update['severity'], dateParser(update['date_published']),
+                        update['file_size']
+                        )
                 if software_update:
                     try:
                         session.add(software_update)
