@@ -31,10 +31,10 @@ def basicPackageSearch(session, query, column, count=None, offset=None):
         found_packages = session.query(Package).filter(valid_pkg_columns['description'].like(query)).order_by(Package.toppatch_id.desc()).limit(count).offset(offset)
         total_count = session.query(Package).count()
         for pkg in found_packages:
-            nodes_done = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.installed == True).all()
-            nodes_needed = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.installed == False).all()
-            nodes_pending = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.pending == True).all()
-            nodes_failed = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.attempts >= 1).all()
+            nodes_done = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.installed == True).count()
+            nodes_needed = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.installed == False).count()
+            nodes_pending = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.pending == True).count()
+            nodes_failed = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.attempts >= 1).count()
             data.append({
                 "id" : pkg.toppatch_id,
                 "date" : str(pkg.date_pub),
