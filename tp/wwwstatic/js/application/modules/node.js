@@ -77,21 +77,21 @@ define(
                     return this;
                 },
                 submit: function (evt) {
-                    var item, span, label, checkbox, $scheduleForm, type, patches, url, date,
-                        that = this,
+                    var item, span, label, checkbox, $scheduleForm, type, patches, url, offset,
                         $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
                         time = '';
                     if (schedule.length !== 0) {
                         $scheduleForm = schedule.data('popover').options.content;
                         time = $scheduleForm.find('input[name=datepicker]').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
-                        date = new Date(time).getTime();
                         label = $scheduleForm.find('input[name=label]').val() || 'Default';
+                        offset = $scheduleForm.find('select[name=offset]').val();
                     }
                     type = $form.attr('id');
                     patches = $form.find('input[name="patches"]:checked');
                     url = '/submitForm?' + $form.serialize();
-                    url += time ? '&time=' + date + '&label=' + label : '';
+                    url += time ? '&time=' + time + '&label=' + label + '&offset=' + offset : '';
+
                     $.post(url,
                         function (json) {
                             window.console.log(json);

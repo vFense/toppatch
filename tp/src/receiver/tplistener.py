@@ -42,8 +42,8 @@ if __name__ == '__main__':
     factory.protocol = GetJson
 
     myContextFactory = ssl.DefaultOpenSSLContextFactory(
-        '/opt/TopPatch/var/lib/ssl/server/keys/server.key',
-        '/opt/TopPatch/var/lib/ssl/server/keys/server.cert',
+        '/opt/TopPatch/var/lib/ssl/server/keys/CA.key',
+        '/opt/TopPatch/var/lib/ssl/server/keys/CA.cert',
         #SSL.TLSv1_METHOD
         #SSL.TLSv1_METHOD
         #SSL.SSLv23_METHOD

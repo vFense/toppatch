@@ -5,8 +5,7 @@ from datetime import datetime
 from socket import getfqdn
 from models.base import Base
 from models.account import *
-from models.windows import *
-from models.linux import *
+from models.packages import *
 from models.node import *
 from models.tagging import *
 from models.scheduler import *
@@ -63,9 +62,25 @@ def timeBlockExists(session, id=None, label=None, start_date=None, start_time=No
 def timeBlockExistsToday(session, start_date=None, start_time=None):
     session = validateSession(session)
     if start_date and start_time:
-        tb_object = \
-            session.query(TimeBlocker).filter(TimeBlocker.start_time <= start_time).filter(TimeBlocker.end_time >= start_time)
-        tbs = tb_object.all()
+        tbs = \
+            session.query(TimeBlocker).\
+                filter(TimeBlocker.start_time <= start_time).\
+                filter(TimeBlocker.end_time >= start_time).\
+                filter(TimeBlocker.start_date <= start_date).\
+                filter(TimeBlocker.end_date == None).all()
+        if len(tbs) == 0:
+            tbs = \
+                session.query(TimeBlocker).\
+                    filter(TimeBlocker.start_time <= start_time).\
+                    filter(TimeBlocker.end_time >= start_time).\
+                    filter(TimeBlocker.start_date <= start_date).\
+                    filter(TimeBlocker.end_date >= start_date).all()
+        elif len(tbs) == 0:
+            tbs = \
+                session.query(TimeBlocker).\
+                    filter(TimeBlocker.start_time <= start_time).\
+                    filter(TimeBlocker.start_date <= start_date).\
+                    filter(TimeBlocker.end_date >= start_date).all()
         today_is_blocked = False
         for tb in tbs:
             if tb:
@@ -105,26 +120,17 @@ def certExists(session, node):
     exists = cert.first()
     return(exists, cert)
 
-def updateExists(session, tp_id, os_code):
+def updateExists(session, tp_id):
     session = validateSession(session)
-    if os_code == "windows":
-        os = WindowsUpdate
-    elif os_code == "linux":
-        os = LinuxPackage
     update = \
-        session.query(os).filter_by(toppatch_id=tp_id).first()
+        session.query(Package).filter_by(toppatch_id=tp_id).first()
     return(update)
 
-def nodeUpdateExists(session, node, tp_id, os=None):
+def nodeUpdateExists(session, node, tp_id):
     session = validateSession(session)
-    if os == "windows":
-        update = \
-            session.query(ManagedWindowsUpdate).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
-        exists = update.first()
-    elif os == "linux":
-        update = \
-            session.query(ManagedLinuxPackage).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
-        exists = update.first()
+    update = \
+        session.query(PackagePerNode).filter_by(node_id=node).filter_by(toppatch_id=tp_id)
+    exists = update.first()
     return(exists, update)
 
 def softwareExists(session, sname, sversion):

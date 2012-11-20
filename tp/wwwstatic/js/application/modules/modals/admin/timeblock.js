@@ -15,17 +15,18 @@ define(
                     'click #add' :   'add'
                 },
                 add: function (evt) {
-                    var start_time, end_time, start_date, end_date, params, label, days,
+                    var start_time, end_time, start_date, end_date, params, label, days, offset,
                         values = $("#dow").data('popover').options.content.val() || false,
                         that = this;
                     this.highlight(evt);
                     start_time = this.start;
                     end_time = this.end;
-                    start_date = new Date($('input[name=startdate]').val()).getTime();
-                    end_date = $('input[name=enddate]').val() ? new Date($('input[name=enddate]').val()).getTime() : '';
+                    start_date = $('input[name=startdate]').val();
+                    end_date = $('input[name=enddate]').val() || '';
                     label = $('input[name=label]').val();
                     days = this.days;
-                    window.console.log(start_date);
+                    offset = $('#offset').val();
+
                     params = {
                         label: label,
                         enabled: true,
@@ -33,7 +34,8 @@ define(
                         end_date: end_date,
                         start_time: start_time,
                         end_time: end_time,
-                        days: days
+                        days: days,
+                        offset: offset
                     };
                     if (values) {
                         window.console.log(params);
@@ -47,6 +49,7 @@ define(
                                     that.$el.find('.alert').html(result.message).removeClass('alert-success').addClass('alert-error').show();
                                 }
                             });
+
                     } else {
                         that.$el.find('.alert').html('You must select at least one day of the week.').removeClass('alert-success').addClass('alert-error').show();
                     }
@@ -56,6 +59,7 @@ define(
                         $(evt.target).data('popover').tip().css('z-index', 3000);
                     }
                     var values = $("#dowselect").val(), string = '', days = '', i;
+                    $('#dowselect').unbind().on('change', this.changeselect);
                     if (values) {
                         for (i = 0; i < values.length; i += 1) {
                             if (values[i] === 'Su') {
@@ -160,8 +164,35 @@ define(
                         }
                     });
 
-                    $startDate.datepicker();
+                    $startDate.datepicker({
+                        onSelect: this.selectMultiple,
+                        option: { view: this }
+                    });
                     $endDate.datepicker();
+                },
+                selectMultiple: function (dateText, object) {
+                    //window.console.log(object); //object
+                    //window.console.log(this);  //html input
+                    var date = new Date(dateText),
+                        day = date.getDay();
+                    $("#dowselect option").each(function (i, option) {
+                        option.selected = false;
+                        if (i === day) {
+                            option.selected = true;
+                        }
+                    });
+                    object.target = this;
+                    object.settings.option.view.highlight(object);
+                },
+                changeselect: function (event) {
+                    var $select = $(event.currentTarget),
+                        date = new Date($('input[name="startdate"]').val()),
+                        day = date.getDay();
+                    $select.find('option').each(function (i, option) {
+                        if (i === day) {
+                            option.selected = true;
+                        }
+                    });
                 },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }

@@ -67,7 +67,11 @@ class AgentOperation():
                 oper_type = jsonobject[OPERATION]
                 print oper_type
                 oper_id = self.create_new_operation(node_id, oper_type)
-                time_block_exists, time_block, self.json_out = timeBlockExistsToday(self.session, start_date=datetime.today().date(), start_time=datetime.now().time())
+                start_date = datetime.now()
+                time_block_exists, time_block, self.json_out = \
+                        timeBlockExistsToday(self.session, 
+                                start_date=start_date.date(),
+                                start_time=start_date.time())
                 if time_block_exists:
                     return self.json_out
                 if not DATA in jsonobject:
@@ -120,10 +124,6 @@ class AgentOperation():
         completed = False
         os_code = self.session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
         os = None
-        if os_code == "linux":
-            os = ManagedWindowsUpdate
-        elif os_code == "windows":
-            os = ManagedLinuxPackage
         if not connect.error and connect.read_data:
             response = verifyJsonIsValid(connect.read_data)
             print response
@@ -137,7 +137,9 @@ class AgentOperation():
                 if 'data' in jsonobject:
                     for patch in jsonobject['data']:
                         if oper_type == 'install':
-                            patcher = self.session.query(os).filter_by(toppatch_id=patch).filter_by(node_id=node_id)
+                            patcher = self.session.query(PackagePerNode).\
+                                filter_by(toppatch_id=patch)\
+                                .filter_by(node_id=node_id)
                             patcher.update({"pending" : True})
                             self.session.commit()
                             updateNodeStats(self.session, node_id)
