@@ -174,6 +174,10 @@ def addSoftwareUpdate(session, data):
         for update in data['data']:
             update_exists = updateExists(session, update['toppatch_id'])
             if not update_exists:
+                if not 'kb' update:
+                    update['kb'] = None
+                if not 'version' in update:
+                    update['version'] = None
                 software_update = Package(update['toppatch_id'],
                         update['kb'], update['version'],
                         update['vendor_id'],update['name'],
