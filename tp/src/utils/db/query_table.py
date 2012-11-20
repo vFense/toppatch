@@ -5,8 +5,7 @@ from datetime import datetime
 from socket import getfqdn
 from models.base import Base
 from models.account import *
-from models.windows import *
-from models.linux import *
+from models.packages import *
 from models.node import *
 from models.tagging import *
 from models.scheduler import *

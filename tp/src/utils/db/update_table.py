@@ -4,8 +4,7 @@
 from datetime import datetime
 from socket import gethostbyaddr
 from models.base import Base
-from models.windows import *
-from models.linux import *
+from models.packages import *
 from models.node import *
 from models.tagging import *
 from models.scheduler import *
@@ -423,10 +422,10 @@ def updateNodeStats(session, node_id):
 
 def updateNetworkStats(session):
     session = validateSession(session)
-    stats = session.query(ManagedWindowsUpdate)
+    stats = session.query(PackagePerNode)
     totalinstalled = stats.filter_by(installed=True).all()
-    totalnotinstalled = wstats.filter_by(installed=False).all()
-    totalpending = wstats.filter_by(pending=True).all()
+    totalnotinstalled = stats.filter_by(installed=False).all()
+    totalpending = stats.filter_by(pending=True).all()
     networkstats = session.query(NetworkStats)
     networkstatsexists = networkstats.filter_by(id=1).first()
     if networkstatsexists:
