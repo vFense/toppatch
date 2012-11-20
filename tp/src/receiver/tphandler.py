@@ -37,8 +37,15 @@ class HandOff():
                                    "last_node_update" : datetime.now()
                                   })
                     self.session.commit()
-                    self.dataCollector()
                     TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
+                if not self.session.query(SystemInfo).\
+                            filter(SystemInfo.node_id == self.node.id).first():
+                    self.getData("system_info")
+                elif not self.session.query(PackagePerNode).\
+                            filter(PackagePerNode.node_id == self.node.id).first():
+                    self.getData("updates_installed")
+                    self.getData("updates_pending")
+                    self.getData("system_applications")
             else:
                 pass
             if self.json_object[OPERATION] == SYSTEM_INFO:
@@ -64,15 +71,11 @@ class HandOff():
             print "Json is not valid %s" % ( data )
         self.session.close()
 
-    def dataCollector(self):
-        #operations = ["updates_installed"]
-        operations = ["system_info", "updates_installed", 
-                     "updates_pending", "system_applications"]
+    def getData(self, oper):
         lcollect = []
-        for oper in operations:
-            lcollect.append('{"node_id" : "%s", "operation" : "%s"}' \
-                    % (self.node.id, oper)
-                    )
+        lcollect.append('{"node_id" : "%s", "operation" : "%s"}' \
+                        % (self.node.id, oper)
+                        )
         results = AgentOperation(lcollect)
         results.run()
 
