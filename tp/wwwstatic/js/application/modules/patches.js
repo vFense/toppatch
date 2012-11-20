@@ -35,15 +35,24 @@ define(
                 },
                 events: {
                     'change select[name=filter]': 'filterbytype',
-                    'keyup input[name=search]': 'searchBy'
+                    'keyup input[name=search]': 'debouncedSearch'
                 },
+                debouncedSearch: _.debounce(function (event) {
+                    window.console.log(['debounced', event]);
+                    this.searchBy(event);
+                }, 300),
                 searchBy: function (event) {
-                    var searchquery = $(event.currentTarget).val(),
-                        searchby = this.$el.find('select[name=searchby]').val();
-
-                    this.collection.searchQuery = searchquery;
-                    this.collection.searchBy = searchby;
-                    this.collection.baseUrl = 'api/package/searchByPatch';
+                    var searchQuery = $(event.currentTarget).val(),
+                        searchBy = this.$el.find('select[name=searchby]').val();
+                    if (searchQuery) {
+                        this.collection.searchQuery = searchQuery;
+                        this.collection.searchBy = searchBy;
+                        this.collection.baseUrl = 'api/package/searchByPatch';
+                    } else {
+                        this.collection.searchQuery = '';
+                        this.collection.searchBy = '';
+                        this.collection.baseUrl = 'api/patches.json';
+                    }
 
                     this.collection.initialize();
                     this.collection.fetch();

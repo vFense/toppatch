@@ -39,7 +39,6 @@ define(
                     };
                     if (values) {
                         window.console.log(params);
-                        /*
                         $.post("/api/timeblocker/add", { operation: JSON.stringify(params) },
                             function (result) {
                                 window.console.log(result);
@@ -50,8 +49,6 @@ define(
                                     that.$el.find('.alert').html(result.message).removeClass('alert-success').addClass('alert-error').show();
                                 }
                             });
-                            */
-
                     } else {
                         that.$el.find('.alert').html('You must select at least one day of the week.').removeClass('alert-success').addClass('alert-error').show();
                     }
