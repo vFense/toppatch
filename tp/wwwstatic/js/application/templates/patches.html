@@ -3,14 +3,14 @@
         <header class="row-fluid clearfix">
                 <div class="input-prepend span2">
                     <span class="add-on" style="height: 13px;"><i class="icon-search"></i></span>
-                    <input type="text" name="search" class="input-small" style="height: 13px;"/>
+                    <input type="text" name="search" class="input-small" style="height: 13px;" value="<% print(searchQuery || '') %>"/>
                 </div>
                 <div class="span4 inline">
                     <small>Search By:</small>
                     <select name="searchby" class="btn btn-mini">
-                        <option>Name</option>
-                        <option>KB</option>
-                        <option>Description</option>
+                        <option value="name" <% searchBy == 'name' ? print('selected') : ''; %>>Name</option>
+                        <option value="kb" <% searchBy == 'kb' ? print('selected') : ''; %>>KB</option>
+                        <option value="description" <% searchBy == 'description' ? print('selected') : ''; %>>Description</option>
                     </select>
                 </div>
                 <div class="pull-right"><small>Filter By:</small>
