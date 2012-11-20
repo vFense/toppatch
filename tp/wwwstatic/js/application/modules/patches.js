@@ -40,10 +40,10 @@ define(
                 searchBy: function (event) {
                     var searchquery = $(event.currentTarget).val(),
                         searchby = this.$el.find('select[name=searchby]').val();
+
                     this.collection.searchQuery = searchquery;
                     this.collection.searchBy = searchby;
-                    window.console.log(searchquery);
-                    window.console.log(searchby);
+
                     this.collection.initialize();
                     this.collection.fetch();
                 },
@@ -54,7 +54,8 @@ define(
                 },
                 beforeRender: $.noop,
                 onRender: function () {
-                    var search = this.$el.find('input[name=search]');
+                    var search = this.$el.find('input[name=search]'),
+                        that = this;
                     if (this.collection.searchQuery) {
                         //search.on('blur', );
                         search.focus(function (event) {
@@ -84,14 +85,20 @@ define(
                             data: data
                         },
                         that = this,
+                        //$el = this.$el.empty().html(template()),
+                        //$items = $el.find('.items'),
                         temp;
                     temp = payload.offset - payload.getCount;
                     payload.prevLink = '#patches?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
                     payload.prevLink +=  payload.type ? '&type=' + payload.type : '';
+                    payload.prevLink += payload.searchQuery ? '&query=' + payload.searchQuery : '';
+                    payload.prevLink += payload.searchBy ? '&searchby=' + payload.searchBy : '';
 
                     temp = payload.offset + payload.getCount;
                     payload.nextLink = '#patches?count=' + payload.getCount + '&offset=' + temp;
                     payload.nextLink += payload.type ? '&type=' + payload.type : '';
+                    payload.nextLink += payload.searchQuery ? '&query=' + payload.searchQuery : '';
+                    payload.nextLink += payload.searchBy ? '&searchby=' + payload.searchBy : '';
 
                     this.$el.empty();
 
