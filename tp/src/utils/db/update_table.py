@@ -397,8 +397,8 @@ def updateNode(session, node_id):
             if installed and pending:
                 i.pending=False
         session.commit()
-        else:
-            print "System Info for %s does not exist yet" % ( node_id )
+    else:
+        print "System Info for %s does not exist yet" % ( node_id )
     return node
 
 def updateNodeStats(session, node_id):
