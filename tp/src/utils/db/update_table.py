@@ -197,7 +197,7 @@ def addUpdatePerNode(session, data):
     exists, operation = operationExists(session, data['operation_id'])
     if exists:
         node_id = exists.node_id
-        node_exists, node = nodeExists(session, node_id=node_id)
+        node = session.query(SystemInfo).filter(SystemInfo.node_id == node_id).first()
         operation.update({'results_received' : datetime.now()})
         session.commit()
         for addupdate in data['data']:
