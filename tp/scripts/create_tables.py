@@ -14,5 +14,5 @@ from sqlalchemy import create_engine
 
 db = create_engine('mysql://root:topmiamipatch@127.0.0.1/toppatch_server')
 db.echo = True
-#Base.metadata.drop_all(db)
+Base.metadata.drop_all(db)
 Base.metadata.create_all(db)

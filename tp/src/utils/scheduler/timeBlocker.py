@@ -145,9 +145,8 @@ def timeBlockAdder(session, msg):
            utc_end_time = end_time
            print utc_end_time
         block_added, message, block = addTimeBlock(session, json_msg['label'],
-                json_msg['enabled'], start_date,
-                end_date, utc_start_time,
-                utc_end_time, json_msg['days']
+                start_date, utc_start_time, utc_end_time, json_msg['days'],
+                enabled=json_msg['enabled']
                 )
         print '{message : %s,label : %s, pass : %s}' % (message, json_msg["label"], block_added)
         return {"message" : message,"label" : json_msg['label'], "pass" : block_added}

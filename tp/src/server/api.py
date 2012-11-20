@@ -18,6 +18,7 @@ from utils.db.client import *
 from utils.scheduler.jobManager import jobLister
 from utils.scheduler.timeBlocker import *
 from utils.tagging.tagManager import *
+from utils.search.search import *
 from utils.transactions.transactions_manager import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
