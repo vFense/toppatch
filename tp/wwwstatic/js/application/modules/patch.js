@@ -33,7 +33,7 @@ define(
                     type = $form.attr('id');
                     nodes = $form.find('input[name="node"]:checked');
                     url = '/submitForm?' + $form.serialize();
-                    url += time ? '&time=' + time + '&label=' + label + '&offset=' + offset: '';
+                    url += time ? '&time=' + time + '&label=' + label + '&offset=' + offset : '';
                     window.console.log(url);
                     $.post(url,
                         function (json) {
@@ -80,7 +80,31 @@ define(
                     }
                 },
                 beforeRender: $.noop,
-                onRender: $.noop,
+                onRender: function () {
+                    var close;
+                    $('input[name=schedule]').each(function () {
+                        $(this).popover({
+                            placement: 'top',
+                            title: 'Patch Scheduling<a href="javascript:;" class="pull-right" name="close"><i class="icon-remove"></i></a>',
+                            html: true,
+                            content: $('#schedule-form').clone(),
+                            trigger: 'click'
+                        });
+                    }).click(function () {
+                        var popover = this;
+                        if (popover.checked) {
+                            $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
+                            close = $(this).data('popover').$tip.find('a[name=close]');
+                            close.bind('click', function () {
+                                $(popover).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                                $(popover).popover('hide');
+                                popover.checked = false;
+                            });
+                        } else {
+                            $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                        }
+                    });
+                },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 

@@ -38,6 +38,7 @@ define(
                 },
                 beforeRender: $.noop,
                 onRender: function () {
+                    var close;
                     this.$el.find('#addTag').popover({
                         title: 'Tags Available<a href="javascript:;" class="pull-right" id="close"><i class="icon-remove"></i></a>',
                         html: true,
@@ -47,14 +48,21 @@ define(
                     this.$el.find('input[name=schedule]').each(function () {
                         $(this).popover({
                             placement: 'top',
-                            title: 'Patch Scheduling',
+                            title: 'Patch Scheduling<a href="javascript:;" class="pull-right" name="close"><i class="icon-remove"></i></a>',
                             html: true,
                             content: $('#schedule-form').clone(),
                             trigger: 'click'
                         });
                     }).click(function () {
-                        if (this.checked) {
+                        var popover = this;
+                        if (popover.checked) {
                             $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
+                            close = $(this).data('popover').$tip.find('a[name=close]');
+                            close.bind('click', function () {
+                                $(popover).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                                $(popover).popover('hide');
+                                popover.checked = false;
+                            });
                         } else {
                             $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                         }

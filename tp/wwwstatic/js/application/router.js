@@ -115,7 +115,9 @@ define(
                         myView.Collection = myView.Collection.extend({
                             type: params.type,
                             getCount: params.count,
-                            offset: params.offset
+                            offset: params.offset,
+                            searchQuery: params.query,
+                            searchBy: params.searchby
                         });
                     }
                     that.show({hash: '#patches', title: 'Patches', view: new myView.View()});
