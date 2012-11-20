@@ -29,7 +29,7 @@ def basicPackageSearch(session, query, column, count=None, offset=None):
     total_count = 0
     if column in valid_pkg_columns:
         found_packages = session.query(Package).filter(valid_pkg_columns['description'].like(query)).order_by(Package.toppatch_id.desc()).limit(count).offset(offset)
-        total_count = session.query(Package).count()
+        total_count = session.query(Package).filter(valid_pkg_columns['description'].like(query)).order_by(Package.toppatch_id.desc()).limit(count).offset(offset).count()
         for pkg in found_packages:
             nodes_done = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.installed == True).count()
             nodes_needed = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.installed == False).count()
