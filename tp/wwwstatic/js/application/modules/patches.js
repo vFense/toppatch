@@ -42,18 +42,20 @@ define(
                     this.searchBy(event);
                 }, 300),
                 searchBy: function (event) {
-                    var searchQuery = $(event.currentTarget).val(),
+                    var searchQuery = $(event.currentTarget).val().trim(),
                         searchBy = this.$el.find('select[name=searchby]').val();
-                    if (searchQuery) {
+                    if (searchQuery && searchQuery.length >= 2) {
                         this.collection.searchQuery = searchQuery;
                         this.collection.searchBy = searchBy;
                         this.collection.baseUrl = 'api/package/searchByPatch';
-                    } else {
+                    } else if (!searchQuery) {
                         this.collection.searchQuery = '';
                         this.collection.searchBy = '';
                         this.collection.baseUrl = 'api/patches.json';
+                    } else {
+                        this.collection.searchQuery = searchQuery;
+                        this.collection.searchBy = searchBy;
                     }
-
                     this.collection.initialize();
                     this.collection.fetch();
                 },
