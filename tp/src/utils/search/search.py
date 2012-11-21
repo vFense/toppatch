@@ -50,7 +50,7 @@ def basicPackageSearch(session, query, column, count=20, offset=0, output="json"
                         "vendor" : {"name" : pkg.vendor_id, "patchID" : ""}
                             })
             elif "csv" in output:
-                cvs_out = cvs_out + '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (pkg.name,
+                csv_out = csv_out + '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (pkg.name,
                         pkg.description, pkg.toppatch_id, pkg.severity,
                         str(pkg.date_pub), pkg.vendor_id, nodes_needed,
                         nodes_failed, nodes_pending, nodes_done
@@ -60,7 +60,7 @@ def basicPackageSearch(session, query, column, count=20, offset=0, output="json"
             json_out['data'] = data
             return json_out
         elif 'cvs' in output:
-            return cvs_out
+            return csv_out
 
 
 """def advancePackageSearch(session, query, column, is_installed=None,
