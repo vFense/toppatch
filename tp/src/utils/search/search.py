@@ -21,7 +21,7 @@ is_os = {
         "is_bsd" : PackagePerNode.is_bsd
         }
 
-def basicPackageSearch(session, query, column, count=None, offset=None):
+def basicPackageSearch(session, query, column, count=20, offset=0):
     session = validateSession(session)
     query = re.sub(r'^|$', '%', query)
     data = []
