@@ -841,4 +841,4 @@ class SearchPatchHandler(BaseHandler):
             self.write(json.dumps(result, indent=4))
         elif 'csv' in output:
             self.set_header('Content-Type', 'application/csv')
-            self.write(result))
+            self.write(result)
