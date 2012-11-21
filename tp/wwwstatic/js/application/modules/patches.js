@@ -24,6 +24,7 @@ define(
                     this.query += this.type ? '&type=' + this.type : '';
                     this.query += this.searchQuery ? '&query=' + this.searchQuery : '';
                     this.query += this.searchBy ? '&searchby=' + this.searchBy : '';
+                    this.baseUrl = this.searchQuery ? 'api/package/searchByPatch' : 'api/patches.json';
                 }
             }),
             View: Backbone.View.extend({
