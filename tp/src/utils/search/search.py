@@ -59,7 +59,7 @@ def basicPackageSearch(session, query, column, count=20, offset=0, output="json"
             json_out['count'] = total_count
             json_out['data'] = data
             return json_out
-        elif 'cvs' in output:
+        elif 'csv' in output:
             return csv_out
 
 
