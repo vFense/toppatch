@@ -138,7 +138,7 @@ class Results(Base):
         ForeignKey("operations.id", use_alter=True,
         name="fk_result_operations_id"),unique=True)
     patch_id = Column(VARCHAR(32),
-        ForeignKey("windows_update.toppatch_id"))
+        ForeignKey("package.toppatch_id"))
     result = Column(VARCHAR(16), nullable=True)
     reboot = Column(BOOLEAN, nullable=True)
     error = Column(VARCHAR(64), nullable=True)

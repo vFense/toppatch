@@ -2,8 +2,9 @@
     <% if(data['patch/need'] && data['patch/need'].length > 0) { %>
         <% _.each(data['patch/need'], function (patch, i) { %>
             <div class="item clearfix" title="<%= patch.name %>">
-                <span class="desc"><%= patch.name %></span>
-                    <span class="patches pull-right">
+                <div class="row-fluid">
+                    <span class="desc span11"><%= patch.name %></span>
+                    <span class="patches span1 alignRight">
                         <input type="checkbox" name="patches" value="<%= patch.id %>"
                             <%  if(checked.length !== 0 ) { %>
                                 <% _.each(checked, function(check, j) {  %>
@@ -18,6 +19,7 @@
                             <% } %>
                         />
                     </span>
+                </div>
             </div>
         <% }); %>
     <% } else { %>

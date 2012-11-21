@@ -12,8 +12,10 @@
             <% if(data.length != 0) { %>
                 <% _.each(data, function (schedule) { %>
                     <div class="item clearfix">
-                        <span class="desc"><strong><%= schedule.node_id %></strong> — <%= schedule.operation %> — <%= schedule.label %></span>
-                        <span class="pull-right"><%= schedule.time %> / <%= schedule.schedule %> / <%= schedule.cpu_throttle %></span>
+                        <div class="row-fluid">
+                            <span class="span8"><strong><%= schedule.node_id %></strong> — <%= schedule.operation %> — <%= schedule.label %></span>
+                            <span class="span4 alignRight"><%= schedule.time %> / <%= schedule.schedule %> / <%= schedule.cpu_throttle %></span>
+                        </div>
                     </div>
                 <% }); %>
             <% }  else { %>

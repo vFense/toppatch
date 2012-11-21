@@ -25,8 +25,8 @@ class TcpConnect():
         self.timeout = timeout
         self.error = None
         self.read_data = None
-        self.key = "/opt/TopPatch/var/lib/ssl/server/keys/server.key"
-        self.cert = "/opt/TopPatch/var/lib/ssl/server/keys/server.cert"
+        self.key = "/opt/TopPatch/var/lib/ssl/server/keys/CA.key"
+        self.cert = "/opt/TopPatch/var/lib/ssl/server/keys/CA.cert"
         self.ca = "/opt/TopPatch/var/lib/ssl/server/keys/CA.cert"
         self.tcp_socket = self.socket_init()
         self._connect()
@@ -59,7 +59,7 @@ class TcpConnect():
                 self.tcp_socket = self.socket_init()
                 self._connect()
             else:
-                print e
+                print "I CAN NOT CONNECT TO THE REMOTE AGENT", e
                 return(self._error_handler(e))
         if connected:
             return self._write()
@@ -88,6 +88,8 @@ class TcpConnect():
                     self.error = self._error_handler(e)
             if self.secure:
                 return self._read()
+            else:
+                self._close()
         else:
             if self.write_connection_count < 1:
                 self.write_connection_count +=1
@@ -96,6 +98,7 @@ class TcpConnect():
             else:
                 self.error = self._error_handler(error)
                 print "writing to socket failed", error
+                self._close()
 
     def _read(self):
         read_ready, write_ready, error = select.select([self.tcp_socket], [], [self.tcp_socket], self.timeout)
@@ -103,10 +106,12 @@ class TcpConnect():
             try:
                 self.read_data = self.tcp_socket.recv(1024)
             except Exception as e:
+                print "I CAN NOT READ FROM REMOTE SOCKET", dir(e), e
                 self.error = self._error_handler(e)
         else:
             self.error = self._error_handler(error)
             print "reading from socket failed", error
+        self._close()
 
 
     def _close(self):
