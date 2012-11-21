@@ -393,7 +393,7 @@ class NodesHandler(BaseHandler):
             try:
                 queryCount = self.get_argument('count')
                 queryOffset = self.get_argument('offset')
-                filter = self.get_argument('filterby')
+                filter = self.get_argument('filterby', default=None)
             except:
                 queryCount = 10
                 queryOffset = 0
