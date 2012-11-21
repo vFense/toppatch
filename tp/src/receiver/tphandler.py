@@ -1,5 +1,6 @@
 from json import loads, dumps
 from jsonpickle import encode, decode
+from datetime import datetime
 
 from utils.db.update_table import *
 from utils.db.query_table import *
@@ -10,9 +11,12 @@ from utils.agentoperation import AgentOperation
 OPERATION = 'operation'
 OPERATION_ID = 'operation_id'
 INSTALL = 'install'
+UNINSTALL = 'uninstall'
 UPDATES_PENDING = 'updates_pending'
 UPDATES_INSTALLED = 'updates_installed'
+REBOOT = 'reboot'
 SOFTWARE_INSTALLED = 'system_applications'
+UNIX_DEPENDENCIES = 'unix_dependencies'
 SYSTEM_INFO = 'system_info'
 STATUS_UPDATE = 'status'
 
@@ -20,62 +24,90 @@ STATUS_UPDATE = 'status'
 class HandOff():
     def __init__(self, ENGINE, data, ip_address):
         self.session = createSession(ENGINE)
+        self.session = validateSession(self.session)
         self.data = data
         self.valid_json, self.json_object = verifyJsonIsValid(self.data)
         self.ip = ip_address
         if self.valid_json:
             exists, self.node = nodeExists(self.session,
-                self.ip)
-            if not self.node:
-                self.addNode()
-                self.dataCollector()
-                print self.node
+                node_ip=self.ip)
+            if self.node:
+                if self.node.last_agent_update == None:
+                    exists.update({"last_agent_update" : datetime.now(),
+                                   "last_node_update" : datetime.now()
+                                  })
+                    self.session.commit()
+                    TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
+                    if not self.session.query(SystemInfo).\
+                            filter(SystemInfo.node_id == self.node.id).first():
+                        self.getData("system_info")
+                if self.session.query(SystemInfo).\
+                        filter(SystemInfo.node_id == self.node.id).first():
+                    if not self.session.query(PackagePerNode).\
+                            filter(PackagePerNode.node_id == self.node.id).first():
+                        self.getData("updates_installed")
+                        self.getData("updates_pending")
+                        self.getData("system_applications")
+            else:
+                pass
             if self.json_object[OPERATION] == SYSTEM_INFO:
                 addSystemInfo(self.session, self.json_object, self.node)
             if self.json_object[OPERATION] == UPDATES_PENDING or \
                     self.json_object[OPERATION] == UPDATES_INSTALLED:
-                self.windowsUpdate()
+                self.addUpdate()
             if self.json_object[OPERATION] == SOFTWARE_INSTALLED:
                 self.softwareUpdate()
+            if self.json_object[OPERATION] == UNIX_DEPENDENCIES:
+                self.addDependency()
             if self.json_object[OPERATION] == STATUS_UPDATE:
                 self.nodeUpdate()
             if self.json_object[OPERATION] == INSTALL:
                 self.updateResults()
+            if self.json_object[OPERATION] == UNINSTALL:
+                self.updateResults()
+            if self.json_object[OPERATION] == REBOOT:
+                updateRebootStatus(self.session, exists)
             else:
                 pass
+        else:
+            print "Json is not valid %s" % ( data )
         self.session.close()
 
-    def addNode(self):
-        addNode(self.session, self.ip)
-        exists, node = nodeExists(self.session,
-            self.ip)
-        if exists:
-            self.node = node
-
-    def dataCollector(self):
-        operations = ["updates_pending", "system_info",
-                     "system_applications", "updates_installed"]
+    def getData(self, oper):
         lcollect = []
-        for oper in operations:
-            lcollect.append('{"node_id" : "%s", "operation" : "%s"}' \
-<<<<<<< HEAD
-                    % (self.node.id, oper)
-                    )
-=======
-                    % self.node.id, oper)
->>>>>>> dd59f11b74af224360d9f4fc670bfcfff9b8fd69
-        results = AgentOperation(self.session, lcollect)
+        lcollect.append('{"node_id" : "%s", "operation" : "%s"}' \
+                        % (self.node.id, oper)
+                        )
+        results = AgentOperation(lcollect)
+        results.run()
 
-    def windowsUpdate(self):
-        addWindowsUpdate(self.session, self.json_object)
-        addWindowsUpdatePerNode(self.session, self.json_object)
+    def addUpdate(self):
+        addSoftwareUpdate(self.session, self.json_object)
+        addUpdatePerNode(self.session, self.json_object)
+        updateNodeStats(self.session, self.node.id)
+        updateNetworkStats(self.session)
+        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def softwareUpdate(self):
-        addSoftwareAvailable(self.session, self.json_object)
-        addSoftwareInstalled(self.session, self.json_object)
+        os_code_exists = self.session.query(SystemInfo).filter_by(node_id=self.node.id).first()
+        if os_code_exists:
+            os_code = os_code_exists.os_code
+            if os_code == "windows":
+                addSoftwareAvailable(self.session, self.json_object)
+                addSoftwareInstalled(self.session, self.json_object)
+        updateNodeStats(self.session, self.node.id)
+        updateNetworkStats(self.session)
+        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def updateResults(self):
         results = addResults(self.session, self.json_object)
+        updateNodeStats(self.session, self.node.id)
+        updateNetworkStats(self.session)
+        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
+
+    def updateDependency(self):
+        results = addDependency(self.session, self.json_object)
+        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def nodeUpdate(self):
         results = updateNode(self.session, self.node.id)

@@ -7,7 +7,6 @@
     .row,
     .row-fluid {
         position: relative;
-        min-height: @em*( 60 )/@baseFontSize;
         z-index: 5;
 
         .row-handle {
@@ -86,155 +85,161 @@
             }
         }
     }
+}
 
-    .list {
-        // All buttons must be mini!!
-        @listBorder: #E6E6E6;
-        @listHeaderBackground: #F5F5F5;
-        @listFooterBackground: #F5F5F5;
-        @listLegendBackground: #FAFAFA;
-        @listHighlight: @warningBackground;
-        
-        HEADER,
-        FOOTER,
-        .legend {
-            padding: @em*(2px)/@baseFontSize 0.5em;
-            line-height: @em*( @baseLineHeight - 1px )/@baseFontSize;
-            border-top: @em*(1px)/@baseFontSize solid @listBorder;
-            border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
-        }
-        
-        HEADER {
-            background-color: @listHeaderBackground;
-            
-            &+ .items,
-            &+ .legend {
-                border-top: none;
-            }
-        }
-        
-        FOOTER {
-            background-color: @listFooterBackground;
-        }
-        
-        .legend {
-            background-color: @listLegendBackground;
-        }
+.list {
+    // All buttons must be mini!!
+    @listBorder: #E6E6E6;
+    @listHeaderBackground: #F5F5F5;
+    @listFooterBackground: #F5F5F5;
+    @listLegendBackground: #FAFAFA;
+    @listHighlight: @warningBackground;
 
-        .items,
-        .legend {
-            &+ FOOTER {
-                border-top: none;
-            }
-        }
-        
-        FORM {
-            margin-bottom: 0;
-        }
-
-        .items {
-            .item {
-                border-top: @em*(1px)/@baseFontSize solid @listBorder;
-                //border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
-                padding: @em*(2px)/@baseFontSize 0.5em;
-
-                &:last-child {
-                    border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
-                }
-
-                &:hover {
-                    background-color: @listHighlight;
-                }
-
-
-                &.linked {
-                    padding: 0 0;
-                    A {
-                        color: #000;
-                        display: block;
-                        text-decoration: none;
-                        padding: @em*(2px)/@baseFontSize 0.5em;
-
-                        STRONG {
-                            color: @linkColor;
-                        }
-                    }
-                }
-
-                .desc {
-                    display: inline-block;
-                    width: 75%;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-            }
-        }
-        
-        .btn-toolbar,
-        .btn-group {
-            // these classes have a font-size of 0.
-            // EM based sizes wont work.
-            height: 23px
-        }
-
-        .checkbox.inline {
-            padding-top: 0;
-        }
-
-        .done { color: @successText; }
-        .pend { color: @infoText; }
-        .need { color: @warningText; }
-        .fail { color: @errorText; }
+    HEADER,
+    FOOTER,
+    .legend {
+        padding: @em*(2px)/@baseFontSize 0.5em;
+        line-height: @em*( @baseLineHeight - 1px )/@baseFontSize;
+        border-top: @em*(1px)/@baseFontSize solid @listBorder;
+        border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
     }
 
-    .well {
-        background-color: #FAFAFA;
+    HEADER {
+        background-color: @listHeaderBackground;
 
-        DL {
-            @dtColumnWidth: 2;
-            @ddColumnWidth: @gridColumns - @dtColumnWidth;
-            @dtWidth: (@fluidGridColumnWidth * @dtColumnWidth) + (@fluidGridGutterWidth * (@dtColumnWidth - 1));
-            @ddWidth: (@fluidGridColumnWidth * @ddColumnWidth) + (@fluidGridGutterWidth * (@ddColumnWidth - 1));
+        &+ .items,
+        &+ .legend {
+            border-top: none;
+        }
+    }
 
+    FOOTER {
+        background-color: @listFooterBackground;
+    }
+
+    .legend {
+        background-color: @listLegendBackground;
+    }
+
+    .items,
+    .legend {
+        &+ FOOTER {
+            border-top: none;
+        }
+    }
+
+    FORM {
+        margin-bottom: 0;
+    }
+
+    .items {
+        .item {
+            border-top: @em*(1px)/@baseFontSize solid @listBorder;
+            //border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
+            padding: @em*(2px)/@baseFontSize 0.5em;
+
+            &:last-child {
+                border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
+            }
+
+            &:hover {
+                background-color: @listHighlight;
+            }
+
+            &.row-fluid,
+            .row-fluid {
+                padding-left: 0;
+                padding-right: 0;
+                [class*="span"] {
+                    min-height: 1em;
+                }
+            }
+
+            &.linked {
+                padding: 0 0;
+                A {
+                    color: #000;
+                    display: block;
+                    text-decoration: none;
+                    padding: @em*(2px)/@baseFontSize 0.5em;
+
+                    STRONG {
+                        color: @linkColor;
+                    }
+                }
+            }
+
+            .desc {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    .btn-toolbar,
+    .btn-group {
+    // these classes have a font-size of 0.
+    // EM based sizes wont work.
+        height: 23px
+    }
+
+    .checkbox.inline {
+        padding-top: 0;
+    }
+
+    .done { color: @successText; }
+    .pend { color: @infoText; }
+    .need { color: @warningText; }
+    .fail { color: @errorText; }
+}
+
+.well {
+    background-color: #FAFAFA;
+
+    DL {
+        @dtColumnWidth: 2;
+        @ddColumnWidth: @gridColumns - @dtColumnWidth;
+        @dtWidth: (@fluidGridColumnWidth * @dtColumnWidth) + (@fluidGridGutterWidth * (@dtColumnWidth - 1));
+        @ddWidth: (@fluidGridColumnWidth * @ddColumnWidth) + (@fluidGridGutterWidth * (@ddColumnWidth - 1));
+
+        display: block;
+        margin:0;
+
+        DT {
+            width: @dtWidth;
+            font-weight: normal;
+            color: #575757;
             display: block;
-            margin:0;
-
-            DT {
-                width: @dtWidth;
-                font-weight: normal;
-                color: #575757;
-                display: block;
-                text-align: right;
-                float:left;
-            }
-
-            DD {
-                width: @ddWidth;
-                margin-left: @fluidGridGutterWidth;
-                display: block;
-                text-align: left;
-                float:left;
-            }
+            text-align: right;
+            float:left;
         }
 
-        > SMALL {
+        DD {
+            width: @ddWidth;
+            margin-left: @fluidGridGutterWidth;
             display: block;
-            text-align:center;
-            line-height: 4em;
-            EM {
-                color: #575757;
-            }
+            text-align: left;
+            float:left;
         }
+    }
 
-        > .list .item {
-            padding: 0 1em;
+    > SMALL {
+        display: block;
+        text-align:center;
+        line-height: 4em;
+        EM {
+            color: #575757;
         }
+    }
 
-        &.noPadding {
-            .list > *:first-child {border-top: none;}
-            .list > *:last-child {border-bottom: none;}
-        }
+    > .list .item {
+        padding: 0 1em;
+    }
+
+    &.noPadding {
+        .list > *:first-child {border-top: none;}
+        .list > *:last-child {border-bottom: none;}
     }
 }
 
@@ -289,6 +294,7 @@
     > .row-fluid + .row,
     > .row-fluid + .row-fluid {
         margin-top: 1em;
+        min-height: @em*( 60 )/@baseFontSize;
     }
     
     // Bandaid Fix

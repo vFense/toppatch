@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/detail.html'],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/detail.html'],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var Detail = { };
         Detail.Collection = Backbone.Collection.extend({
@@ -9,13 +9,13 @@ define(
             id: 1,
             inputArray: [],
             url: function () {
-                if(this.id){
-                    this.filter = '?id=' + this.id
+                if (this.id) {
+                    this.filter = '?id=' + this.id;
                 }
                 return this.baseUrl + this.filter;
             },
             initialize: function () {
-                if(this.checked){
+                if (this.checked) {
                     this.inputArray = this.checked;
                 }
             }
@@ -35,7 +35,7 @@ define(
                 var tmpl = _.template(this.template),
                     data = this.collection.toJSON()[0];
 
-                this.$el.html('');
+                this.$el.empty();
                 this.$el.html(tmpl({data: data, checked: this.collection.inputArray}));
 
                 if (this.onRender !== $.noop) { this.onRender(); }

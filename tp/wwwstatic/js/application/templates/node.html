@@ -6,6 +6,18 @@
             <dt>Node IP:</dt><dd><% print(model.ip || '<em>Not listed</em>'); %></dd>
             <dt>Hostname:</dt><dd><% print(model['host/name'] || '<em>Not listed</em>'); %></dd>
             <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
+            <dt>Tags applied:</dt>
+            <dd>
+                <div id="taglist" class="pull-left">
+                <% if (model.tags.length != 0) { %>
+                    <% _.each(model.tags, function (tag) { %>
+                        <span style="margin-right: 3px" class="label label-info" id="<% print(tag.replace(' ', '')) %>"><%= tag %></span>
+                    <% }); %>
+                <% } else { %>
+                    <em id="notag">No tags applied</em>
+                <% } %>
+                </div>&nbsp;<a href="#" id="addTag" data-placement="bottom"><i style="color: green;" class="icon-plus" ></i></a>
+            </dd>
             <dt>Agent Status:</dt>
             <dd>
                 <% if (model['agent/status']) { %>
@@ -20,13 +32,15 @@
                 <form id="reboot-form" class="noMargin">
                     Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;
                     <input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/>
+                    Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
                     <input type="hidden" name="operation" value="reboot" />
                     <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
                 <% } else if (model['host/status']) { %>
                 <form id="reboot-form">
                     Running &nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
-                    <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>
+                    <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>&nbsp;
+                    Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
                     <input type="hidden" name="operation" value="reboot" />
                     <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
@@ -37,9 +51,9 @@
         </dl>
     </section>
 </article>
-<article class="alert alert-success alert-block fade in hide">
+<article class="alert alert-block fade in hide">
     <button type="button" class="close" data-dismiss="alert">×</button>
-    Operation sent&nbsp;
+    <span class="help-inline"></span>
 </article>
 <article>
     <header><strong>Patches Available</strong></header>
@@ -58,6 +72,14 @@
                         <option value="install">Install</option>
                         <option value="hide">Hide</option>
                     </select>
+                    <select type="button" class="btn btn-mini" name="throttle">
+                        <option>idle</option>
+                        <option value="below_normal">below normal</option>
+                        <option>normal</option>
+                        <option value="above_normal">above normal</option>
+                        <option>high</option>
+                        <option value="real_time">real time</option>
+                    </select>
                     <input type="submit" class="btn btn-mini btn-primary" value="Submit">
                 </div>
                 <input type="hidden" value="<% print(model.id); %>" name="node">
@@ -65,15 +87,17 @@
             <div class="items">
                 <% _.each(model['patch/need'], function (patch) { %>
                 <div class="item clearfix" title="<%= patch.name %>">
-                            <span class="desc">
-                                <label class="checkbox inline">
-                                    <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                    <%= patch.name %>
-                                </label>
-                            </span>
-                            <span class="pull-right">
-                                <a href="#patches/<%= patch.id %>">More information</a>
-                            </span>
+                    <div class="row-fluid">
+                        <span class="desc span8">
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                                <%= patch.name %>
+                            </label>
+                        </span>
+                        <span class="span4 alignRight">
+                            <a href="#patches/<%= patch.id %>">More information</a>
+                        </span>
+                    </div>
                 </div>
                 <% }); %>
             </div>
@@ -108,15 +132,20 @@
             <div class="items">
                 <% _.each(model['patch/done'], function (patch) { %>
                 <div class="item clearfix" title="<%= patch.name %>">
-                                <span class="desc">
-                                    <label class="checkbox inline">
-                                        <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                        <%= patch.name %>
-                                    </label>
-                                </span>
-                                <span class="pull-right">
-                                    <a href="#patches/<%= patch.id %>">More information</a>
-                                </span>
+                    <div class="row-fluid">
+                        <span class="desc span8">
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                                <%= patch.name %>
+                            </label>
+                        </span>
+                        <span class="span4 alignRight">
+                            <% if (model.os_code && model.os_code == 'linux') { %>
+                                <a href="javascript:;" name="dependencies" value="<%= patch.id %>"><i style="color: orange;" class="icon-warning-sign"></i>&nbsp;<small>Dependencies</small>&nbsp;</a>&nbsp;
+                            <% } %>
+                            <a href="#patches/<%= patch.id %>">More information</a>
+                        </span>
+                    </div>
                 </div>
                 <% }); %>
             </div>
@@ -135,18 +164,18 @@
     <section class="list" id="pending">
         <div class="items">
             <% if (model['patch/pend'].length != 0) { %>
-            <% _.each(model['patch/pend'], function (patch, i) { %>
-            <div class="item clearfix" title="<%= patch.name %>">
-                <span class="desc"><%= patch.name %></span>
-                            <span class="pull-right">
-                                <a href="#patches/<%= patch.id %>">More information</a>
-                            </span>
-            </div>
-            <% }); %>
+                <% _.each(model['patch/pend'], function (patch, i) { %>
+                    <div class="item clearfix" title="<%= patch.name %>">
+                        <div class="row-fluid">
+                            <span class="desc span8"><%= patch.name %></span>
+                            <span class="span4 alignRight"><a href="#patches/<%= patch.id %>">More information</a></span>
+                        </div>
+                    </div>
+                <% }); %>
             <% }  else { %>
-            <div class="item" id="no-pending">
-                <small><em>No patches to display</em></small>
-            </div>
+                <div class="item" id="no-pending">
+                    <small><em>No patches to display</em></small>
+                </div>
             <% } %>
         </div>
     </section>
@@ -172,15 +201,17 @@
             <% _.each(model['patch/fail'], function (patch) { %>
             <div class="items">
                 <div class="item clearfix" title="<%= patch.name %>">
-                                <span class="desc">
-                                    <label class="checkbox inline">
-                                        <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                        <%= patch.name.slice %>
-                                    </label>
-                                </span>
-                                <span class="pull-right">
-                                    <a href="#patches/<%= patch.id %>">More information</a>
-                                </span>
+                    <div class="row-fluid">
+                        <span class="desc span8">
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                                <%= patch.name %>
+                            </label>
+                        </span>
+                        <span class="span4 alignRight">
+                            <a href="#patches/<%= patch.id %>">More information</a>
+                        </span>
+                    </div>
                 </div>
             </div>
             <% }); %>
@@ -199,48 +230,110 @@
         font-size:12px;
     }
 </style>
-<div class="modal" id="myModal" tabindex="-1" role="dialog" data-show="false" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Patch Scheduling</h3>
-    </div>
-    <div class="modal-body">
-        <form class="form-horizontal" id="schedule-form">
-            <label for="datepicker" class="inline">Date:
-                <input type="text" id="datepicker"/>
-            </label>
-            <div class="inline">Time:
-                <select name="hours" id="hours" class="span1">
-                    <option>01</option>
-                    <option>02</option>
-                    <option>03</option>
-                    <option>04</option>
-                    <option>05</option>
-                    <option>06</option>
-                    <option>07</option>
-                    <option>08</option>
-                    <option>09</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
-                </select>
-                <select name="minutes" class="span1">
-                    <option>00</option>
-                    <option>15</option>
-                    <option>30</option>
-                    <option>45</option>
-                </select>
-                <select name="ampm" class="span1">
-                    <option>AM</option>
-                    <option>PM</option>
-                </select>
+<div id="hidden" class="hide">
+    <div id="dependency-list" class="list" style="max-height: 150px; overflow-y: auto; overflow-x: hidden; max-width: 300px;">
+        <div class="items">
+            <div class="item clearfix" name="loading">
+                <span>Loading...</span>
             </div>
-        </form>
+        </div>
     </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn btn-primary" id="schedule-btn">Submit</button>
-    </div>
+    <form id="list-form">
+        <div class="list">
+            <div class="items" style="max-height: 150px; overflow: auto;">
+               <% if(tags.length != 0) { %>
+                   <% _.each(tags, function (tag) { %>
+                        <div class="item clearfix">
+                            <label class="checkbox"><%= tag.tag_name %>
+                                <input value="<%= tag.tag_name %>" name="taglist"  type="checkbox"
+                                <% if (model.tags.length != 0) { %>
+                                    <% _.each(model.tags, function (nodeTag) { %>
+                                        <% if(nodeTag == tag.tag_name) { print('checked="checked"'); } %>
+                                    <% }); %>
+                                <% } %> />
+                            </label>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </div>
+        </div>
+        <div class="item clearfix" style="margin-top: 10px">
+            <a id="newtag" href="javascript:;"><span>New tag...</span></a>
+            <div class="hide inline input-append">
+                <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
+                <button class="btn" id="createtag">Add</button>
+            </div>
+        </div>
+        <input type="hidden" name="nodeid" value="<% print(model.id); %>"/>
+    </form>
+    <form class="form-horizontal" id="schedule-form">
+        <label>Date:</label>
+        <input type="text" name="datepicker" class="input-medium"/>
+        <label>Time:</label>
+        <div class="inline">
+            <select name="hours" id="hours" class="span1">
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+            </select>
+            <select name="minutes" class="span1">
+                <option>00</option>
+                <option>15</option>
+                <option>30</option>
+                <option>45</option>
+            </select>
+            <select name="ampm" class="span1">
+                <option>AM</option>
+                <option>PM</option>
+            </select>
+        </div>
+        <label class="control-label">Offset:</label>
+        <select name="offset" class="input-medium">
+            <option value="default">None</option>
+            <option value="-12.0">(GMT -12:00) Eniwetok, Kwajalein</option>
+            <option value="-11.0">(GMT -11:00) Midway Island, Samoa</option>
+            <option value="-10.0">(GMT -10:00) Hawaii</option>
+            <option value="-9.0">(GMT -9:00) Alaska</option>
+            <option value="-8.0">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+            <option value="-7.0">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+            <option value="-6.0">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+            <option value="-5.0">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+            <option value="-4.0">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+            <option value="-3.5">(GMT -3:30) Newfoundland</option>
+            <option value="-3.0">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+            <option value="-2.0">(GMT -2:00) Mid-Atlantic</option>
+            <option value="-1.0">(GMT -1:00 hour) Azores, Cape Verde Islands</option>
+            <option value="0.0">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+            <option value="1.0">(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
+            <option value="2.0">(GMT +2:00) Kaliningrad, South Africa</option>
+            <option value="3.0">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+            <option value="3.5">(GMT +3:30) Tehran</option>
+            <option value="4.0">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+            <option value="4.5">(GMT +4:30) Kabul</option>
+            <option value="5.0">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+            <option value="5.5">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+            <option value="5.75">(GMT +5:45) Kathmandu</option>
+            <option value="6.0">(GMT +6:00) Almaty, Dhaka, Colombo</option>
+            <option value="7.0">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+            <option value="8.0">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+            <option value="9.0">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+            <option value="9.5">(GMT +9:30) Adelaide, Darwin</option>
+            <option value="10.0">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+            <option value="11.0">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+            <option value="12.0">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+        </select>
+        <label>Label:</label>
+        <input type="text" name="label" class="input-medium"/>
+    </form>
 </div>
 <script>
     $('.toggle-all').click(function(el){
@@ -259,7 +352,5 @@
             }
         }
     });
-    $('#myModal').modal('show','false').modal('hide');
-    $('#datepicker').datepicker();
 </script>
 <% } %>

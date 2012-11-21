@@ -1,5 +1,9 @@
 #!/opt/TopPatch/python/current/bin/python
-from flake8.run import main
+# EASY-INSTALL-ENTRY-SCRIPT: 'flake8==1.5','console_scripts','flake8'
+__requires__ = 'flake8==1.5'
+import sys
+from pkg_resources import load_entry_point
 
-if __name__ == '__main__':
-    main()
+sys.exit(
+   load_entry_point('flake8==1.5', 'console_scripts', 'flake8')()
+)

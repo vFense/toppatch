@@ -20,7 +20,7 @@ Configurations:
 :pool_connections: The number of active HTTP connection pools to use.
 :encode_uri: If true, URIs will automatically be percent-encoded.
 :trust_env: If true, the surrouding environment will be trusted (environ, netrc).
-:param store_cookies: If false, the received cookies as part of the HTTP response would be ignored.
+:store_cookies: If false, the received cookies as part of the HTTP response would be ignored.
 
 """
 
@@ -32,7 +32,7 @@ defaults = dict()
 
 defaults['base_headers'] = {
     'User-Agent': default_user_agent(),
-    'Accept-Encoding': ', '.join(('identity', 'deflate', 'compress', 'gzip')),
+    'Accept-Encoding': ', '.join(('gzip', 'deflate', 'compress')),
     'Accept': '*/*'
 }
 

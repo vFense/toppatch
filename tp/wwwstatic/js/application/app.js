@@ -28,7 +28,11 @@ define(
             title: $(document).attr('title'),
             vent: vent,
             ViewManager: ViewManager,
-            views: {},
+            views: {
+                modals: {
+                    admin: undefined
+                }
+            },
             startWs: function () {
                 var ws = new WebSocket("wss://" + window.location.host + "/ws");
                 ws.onmessage = function(evt) {
@@ -114,8 +118,29 @@ define(
                 { name: 'Dashboard', href: '#dashboard' },
                 { name: 'Nodes', href: '#nodes' },
                 { name: 'Patches', href: '#patches' },
-                { name: 'Multi-Patcher', href: '#multi' }
+                { name: 'Multi-Patcher', href: '#multi' },
+                { name: 'Schedules', href: '#schedule' },
+                { name: 'Logs', href:'#logs'}
             ]
+        });
+
+        // Extend app with user information here
+        // We will want to merge code from application/main.js here.
+        _.extend(app, {
+            user: {
+                permission: 'admin', // Default to admin for now
+                hasPermission: function (need) {
+                    var permission = this.permission;
+                    switch (need) {
+                        case "admin":
+                            return permission === "admin";
+                        case "read_write":
+                            return permission === "admin" || permission === "read_write";
+                        default:
+                            return true;
+                    }
+                }
+            }
         });
 
         return app;

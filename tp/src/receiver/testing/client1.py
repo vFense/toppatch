@@ -39,9 +39,10 @@ class CtxFactory(ssl.ClientContextFactory):
         ctx = ssl.ClientContextFactory.getContext(self)
         ctx.use_certificate_file('/opt/TopPatch/var/lib/ssl/client/keys/client.cert')
         ctx.use_privatekey_file('/opt/TopPatch/var/lib/ssl/client/keys/client.key')
+        ctx.load_verify_locations("/opt/TopPatch/var/lib/ssl/server/keys/CA.cert")
         return ctx
 
 if __name__ == '__main__':
     factory = EchoClientFactory()
-    reactor.connectSSL('localhost', 9000, factory, CtxFactory())
+    reactor.connectSSL('localhost', 9001, factory, CtxFactory())
     reactor.run()

@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/patches.html' ],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'text!templates/patches.html' ],
+    function ($, _, Backbone, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
@@ -17,14 +17,14 @@ define(
                     this.offset   = this.offset || 0;
                     this.getCount = this.getCount  || 10;
                     this.type = this.type || '';
-                    this.query = this.type ?
-                    '?' + 'type=' + this.type
-                        + '&count=' + this.getCount
-                        + '&offset=' + this.offset :
-                    '?' + '&count=' + this.getCount
-                        + '&offset=' + this.offset;
+                    this.searchQuery = this.searchQuery || '';
+                    this.searchBy = this.searchBy || '';
 
-                    window.myCollection = this;
+                    this.query = '?count=' + this.getCount + '&offset=' + this.offset;
+                    this.query += this.type ? '&type=' + this.type : '';
+                    this.query += this.searchQuery ? '&query=' + this.searchQuery : '';
+                    this.query += this.searchBy ? '&searchby=' + this.searchBy : '';
+                    this.baseUrl = this.searchQuery ? 'api/package/searchByPatch' : 'api/patches.json';
                 }
             }),
             View: Backbone.View.extend({
@@ -34,14 +34,57 @@ define(
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
                 },
+                events: {
+                    'change select[name=filter]': 'filterbytype',
+                    'keyup input[name=search]': 'debouncedSearch'
+                },
+                debouncedSearch: _.debounce(function (event) {
+                    window.console.log(['debounced', event]);
+                    this.searchBy(event);
+                }, 300),
+                searchBy: function (event) {
+                    var searchQuery = $(event.currentTarget).val().trim(),
+                        searchBy = this.$el.find('select[name=searchby]').val();
+                    if (searchQuery && searchQuery.length >= 2) {
+                        this.collection.searchQuery = searchQuery;
+                        this.collection.searchBy = searchBy;
+                        this.collection.baseUrl = 'api/package/searchByPatch';
+                    } else if (!searchQuery) {
+                        this.collection.searchQuery = '';
+                        this.collection.searchBy = '';
+                        this.collection.baseUrl = 'api/patches.json';
+                    } else {
+                        this.collection.searchQuery = searchQuery;
+                        this.collection.searchBy = searchBy;
+                    }
+                    this.collection.initialize();
+                    this.collection.fetch();
+                },
+                filterbytype: function (evt) {
+                    this.collection.type = $(evt.target).val() === 'none' ? '' : $(evt.target).val();
+                    this.collection.initialize();
+                    this.collection.fetch();
+                },
                 beforeRender: $.noop,
-                onRender: $.noop,
+                onRender: function () {
+                    var search = this.$el.find('input[name=search]'),
+                        that = this;
+                    if (this.collection.searchQuery) {
+                        //search.on('blur', );
+                        search.focus(function (event) {
+                            this.value = this.value || '';
+                        }).focus();
+
+                    }
+                },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var template = _.template(this.template),
                         data = this.collection.toJSON(),
                         payload = {
+                            searchQuery: this.collection.searchQuery,
+                            searchBy: this.collection.searchBy,
                             type: this.collection.type,
                             getCount: +this.collection.getCount,
                             offset: +this.collection.offset,
@@ -55,16 +98,22 @@ define(
                             data: data
                         },
                         that = this,
+                        //$el = this.$el.empty().html(template()),
+                        //$items = $el.find('.items'),
                         temp;
                     temp = payload.offset - payload.getCount;
                     payload.prevLink = '#patches?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
                     payload.prevLink +=  payload.type ? '&type=' + payload.type : '';
+                    payload.prevLink += payload.searchQuery ? '&query=' + payload.searchQuery : '';
+                    payload.prevLink += payload.searchBy ? '&searchby=' + payload.searchBy : '';
 
                     temp = payload.offset + payload.getCount;
                     payload.nextLink = '#patches?count=' + payload.getCount + '&offset=' + temp;
                     payload.nextLink += payload.type ? '&type=' + payload.type : '';
+                    payload.nextLink += payload.searchQuery ? '&query=' + payload.searchQuery : '';
+                    payload.nextLink += payload.searchBy ? '&searchby=' + payload.searchBy : '';
 
-                    this.$el.html('');
+                    this.$el.empty();
 
                     this.$el.append(template(payload));
 

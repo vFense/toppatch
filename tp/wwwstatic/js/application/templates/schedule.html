@@ -1,0 +1,28 @@
+<article>
+    <section class="list">
+        <div class="items">
+            <div class="legend">
+                <span><strong>Node ID</strong> — Operation — Label</span>
+                <span class="patches pull-right">
+                    <span>Time</span> /
+                    <span>Type</span> /
+                    <span>Throttle</span>
+                </span>
+            </div>
+            <% if(data.length != 0) { %>
+                <% _.each(data, function (schedule) { %>
+                    <div class="item clearfix">
+                        <div class="row-fluid">
+                            <span class="span8"><strong><%= schedule.node_id %></strong> — <%= schedule.operation %> — <%= schedule.label %></span>
+                            <span class="span4 alignRight"><%= schedule.time %> / <%= schedule.schedule %> / <%= schedule.cpu_throttle %></span>
+                        </div>
+                    </div>
+                <% }); %>
+            <% }  else { %>
+                <div class="item clearfix">
+                    <em>No scheduled patches.</em>
+                </div>
+            <% } %>
+        </div>
+    </section>
+</article>

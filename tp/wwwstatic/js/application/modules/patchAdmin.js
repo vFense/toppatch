@@ -11,9 +11,7 @@ define(
                 this.url = function () {
                     return this.show + this.filter;
                 };
-                this.comparator = function (model) {
-
-                }
+                this.comparator = function (model) {};
                 window.myCollection = this;
             }
         });
@@ -40,7 +38,7 @@ define(
                 var tmpl = _.template(this.template),
                     that = this;
 
-                this.$el.html('');
+                this.$el.empty();
                 this.$el.append(tmpl({
                     show: this.collection.show,
                     filter: this.collection.filter,
@@ -51,9 +49,7 @@ define(
                 if (this.onRender !== $.noop) { this.onRender(); }
                 return this;
             },
-            renderModel: function (item) {
-
-            },
+            renderModel: function (item) {},
             setOrder: function (e) {
                 var that = this;
                 e.stopImmediatePropagation();
