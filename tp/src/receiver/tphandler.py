@@ -38,17 +38,20 @@ class HandOff():
                                   })
                     self.session.commit()
                     TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
-                    if not self.session.query(SystemInfo).\
+                if not self.session.query(SystemInfo).\
                             filter(SystemInfo.node_id == self.node.id).first():
-                        self.getData("system_info")
+                    print "Getting SystemInfo for %s" % (self.node.id)
+                    self.getData("system_info")
                 if self.session.query(SystemInfo).\
                         filter(SystemInfo.node_id == self.node.id).first():
                     if not self.session.query(PackagePerNode).\
                             filter(PackagePerNode.node_id == self.node.id).first():
+                        print "Getting udpates for %s" % (self.node.id)
                         self.getData("updates_installed")
                         self.getData("updates_pending")
                         self.getData("system_applications")
             else:
+                print "Json is invalid"
                 pass
             if self.json_object[OPERATION] == SYSTEM_INFO:
                 addSystemInfo(self.session, self.json_object, self.node)

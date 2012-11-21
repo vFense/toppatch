@@ -122,8 +122,6 @@ class AgentOperation():
         response = None
         connect = TcpConnect(node_ip, msg)
         completed = False
-        os_code = self.session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
-        os = None
         if not connect.error and connect.read_data:
             response = verifyJsonIsValid(connect.read_data)
             print response
