@@ -19,8 +19,9 @@ define(
                     this.filterby = this.filterby || '';
                     this.query    = '?' +
                         'count=' + this.getCount +
-                        '&offset=' + this.offset +
-                        '&filterby=' + this.filterby;
+                        '&offset=' + this.offset;
+                    this.query += this.filterby ? '&filterby=' + this.filterby : '';
+                    this.baseUrl = this.filterby ? '/api/tagging/listByTag.json' : '/api/nodes.json';
                     window.myCollection = this;
                 }
             }),
@@ -71,10 +72,14 @@ define(
                             tagdata: tagdata,
                             filter: this.collection.filterby
                         },
-                        temp = payload.offset - payload.getCount;
-
+                        temp;
+                    temp = payload.offset - payload.getCount;
                     payload.prevLink = '#nodes?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
+                    payload.prevLink += payload.filter ? '&filterby=' + payload.filter : '';
+
+                    temp = payload.offset + payload.getCount;
                     payload.nextLink = '#nodes?count=' + payload.getCount + '&offset=' + temp;
+                    payload.nextLink += payload.filter ? '&filterby=' + payload.filter : '';
 
                     this.$el.empty();
 
