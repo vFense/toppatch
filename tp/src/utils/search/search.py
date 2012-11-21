@@ -58,7 +58,7 @@ def basicPackageSearch(session, query, column, count=20, offset=0, output="json"
         if 'json' in output:
             json_out['count'] = total_count
             json_out['data'] = data
-            return final_out
+            return json_out
         elif 'cvs' in output:
             return cvs_out
 
