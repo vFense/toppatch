@@ -25,8 +25,8 @@ SCHEDULE = 'schedule'
 TIME = 'time'
 
 class AgentOperation():
-    def __init__(self, node_list):
-    #def __init__(self, session, node_list):
+    def __init__(self, system_list):
+    #def __init__(self, session, system_list):
         """
         This class will take a list and iterate through it.
         Through each iteration, the object in each array will
@@ -39,22 +39,22 @@ class AgentOperation():
         ENGINE = initEngine()
         self.session = createSession(ENGINE)
         self.session = validateSession(self.session)
-        self.node_list = node_list
+        self.system_list = system_list
         self.total_nodes = None
         self.results = {}
         self.json_out = {}
-        if type(node_list) == list:
-            self.node_list = node_list
-            self.total_nodes = len(self.node_list)
+        if type(system_list) == list:
+            self.system_list = system_list
+            self.total_nodes = len(self.system_list)
         else:
-            json_valid, self.node_list = verifyJsonIsValid(node_list)
-            if type(self.node_list) != list:
-                self.node_list = [self.node_list]
+            json_valid, self.system_list = verifyJsonIsValid(system_list)
+            if type(self.system_list) != list:
+                self.system_list = [self.system_list]
 
     def run(self):
         self.results = []
         self.threads = []
-        for node in self.node_list:
+        for node in self.system_list:
             if type(node) != dict:
                 json_valid, jsonobject = verifyJsonIsValid(node)
             else:

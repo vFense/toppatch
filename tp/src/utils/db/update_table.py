@@ -444,6 +444,27 @@ def updateNetworkStats(session):
         session.add(network_sstats_init)
         session.commit()
 
+def updateTagStats(session, tag_id):
+    session = validateSession(session)
+    os_code_exists = session.query(SystemInfo).filter_by(node_id=node_id).first()
+    nodeupdates = session.query(PackagePerNode).filter_by(node_id=node_id)
+    patchesinstalled = nodeupdates.filter_by(installed=True).all()
+    patchesuninstalled = nodeupdates.filter_by(installed=False).all()
+    patchespending = nodeupdates.filter_by(pending=True).all()
+    nodestats = session.query(NodeStats).filter_by(node_id=node_id)
+    nodeexists = nodestats.first()
+    if nodeexists:
+        nodestats.update({"patches_installed" : len(patchesinstalled),
+                         "patches_available" : len(patchesuninstalled),
+                         "patches_pending" : len(patchespending)})
+        session.commit()
+    else:
+        add_node_stats = NodeStats(node_id, len(patchesinstalled), \
+                       len(patchesuninstalled), len(patchespending), 0)
+        session.add(add_node_stats)
+        session.commit()
+
+
 def updateRebootStatus(session, node_id, oper_type):
     session = validateSession(session)
     node, node_exists = nodeExists(session, node_id=node_id)
