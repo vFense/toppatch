@@ -30,6 +30,7 @@ class TcpConnect():
         self.ca = "/opt/TopPatch/var/lib/ssl/server/keys/CA.cert"
         self.tcp_socket = self.socket_init()
         self._connect()
+        self._close()
 
     def socket_init(self):
         new_socket =  socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -114,6 +115,6 @@ class TcpConnect():
 
 
     def _close(self):
-        self.tcp_socket.shutdown(socket.SHUT_RDWR)
+        #tself.tcp_socket.shutdown(socket.SHUT_RDWR)
         self.tcp_socket.close()
 

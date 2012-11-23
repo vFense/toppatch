@@ -393,7 +393,7 @@ class NodesHandler(BaseHandler):
             try:
                 queryCount = self.get_argument('count')
                 queryOffset = self.get_argument('offset')
-                filter = self.get_argument('filterby')
+                filter = self.get_argument('filterby', default=None)
             except:
                 queryCount = 10
                 queryOffset = 0
@@ -823,6 +823,7 @@ class SearchPatchHandler(BaseHandler):
     def get(self):
         self.session = self.application.session
         self.session = validateSession(self.session)
+        output = 'json'
         try:
             query = self.get_argument('query')
             column = self.get_argument('searchby')
@@ -830,6 +831,14 @@ class SearchPatchHandler(BaseHandler):
             offset = self.get_argument('offset')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
-        result = basicPackageSearch(self.session, query, column, count=count, offset=offset)
-        self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(result, indent=4))
+        try:
+            output = self.get_argument('output')
+        except Exception as e:
+            pass
+        result = basicPackageSearch(self.session, query, column, count=count, offset=offset, output=output)
+        if 'json' in output:
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(result, indent=4))
+        elif 'csv' in output:
+            self.set_header('Content-Type', 'application/csv')
+            self.write(result)
