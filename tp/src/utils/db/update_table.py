@@ -291,17 +291,21 @@ def addSoftwareInstalled(session, data):
                     except:
                         session.rollback()
 
-def removeTag(session, tag_name):
+def removeTag(session, tagname):
     session = validateSession(session)
-    tag_exists, tag = tagExists(session, tag_name=tag_name)
+    tag_exists, tag = tagExists(session, tag_name=tagname)
+    tag_stats = session.query(TagStats).\
+                    filter(TagStats.tag_id == tag.id)
     if tag:
         try:
+            tag_stats.delete()
+            session.commit()
             tag_exists.delete()
             session.commit()
-            return(True, "Tag %s was deleted" % (tag_name))
+            return(True, "Tag %s was deleted" % (tagname), tag.id)
         except Exception as e:
             session.rollback()
-            return(False, "Tag %s does not exists" % (tag_name))
+            return(False, "Tag %s does not exists" % (tagname))
 
 def removeAllNodesFromTag(session, tag_name):
     session = validateSession(session)
