@@ -50,7 +50,11 @@ class AgentOperation():
             json_valid, self.system_list = verifyJsonIsValid(system_list)
             if type(self.system_list) != list:
                 self.system_list = [self.system_list]
-        if 'tag_id' in self.system_list[0]:
+        if type(self.system_list[0]) == dict:
+            verify_obj = self.system_list[0]
+        else:
+            is_verified, verify_obj = verifyJsonIsValid(self.system_list[0])
+        if 'tag_id' in verify_obj:
             system_list = self.convertTagOpToNodeOp(self.system_list)
             if len(system_list) > 0:
                 self.system_list = system_list
