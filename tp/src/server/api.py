@@ -14,12 +14,12 @@ from models.packages import *
 from models.node import *
 from models.ssl import *
 from server.handlers import SendToSocket
-from utils.db.client import *
-from utils.scheduler.jobManager import jobLister
-from utils.scheduler.timeBlocker import *
-from utils.tagging.tagManager import *
-from utils.search.search import *
-from utils.transactions.transactions_manager import *
+from db.client import *
+from scheduler.jobManager import jobLister
+from scheduler.timeBlocker import *
+from tagging.tagManager import *
+from search.search import *
+from transactions.transactions_manager import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -823,6 +823,7 @@ class SearchPatchHandler(BaseHandler):
     def get(self):
         self.session = self.application.session
         self.session = validateSession(self.session)
+        output = 'json'
         try:
             query = self.get_argument('query')
             column = self.get_argument('searchby')
@@ -830,6 +831,32 @@ class SearchPatchHandler(BaseHandler):
             offset = self.get_argument('offset')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
-        result = basicPackageSearch(self.session, query, column, count=count, offset=offset)
+        try:
+            output = self.get_argument('output')
+        except Exception as e:
+            pass
+        result = basicPackageSearch(self.session, query, column, count=count, offset=offset, output=output)
+        if 'json' in output:
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(result, indent=4))
+        elif 'csv' in output:
+            self.set_header('Content-Type', 'application/csv')
+            self.write(result)
+
+class GetTagStatsHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        tag_id = None
+        tag_name = None
+        try:
+            tag_id = self.get_argument('tagid')
+            tag_name = self.get_argument('tagname')
+        except Exception as e:
+            pass
+        result = getTagStats(self.session, tagid=tag_id, tagname=tag_name)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+

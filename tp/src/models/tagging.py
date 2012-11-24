@@ -99,20 +99,28 @@ class TagStats(Base):
     patches_available = Column(INTEGER(unsigned=True))
     patches_pending = Column(INTEGER(unsigned=True))
     patches_failed = Column(INTEGER(unsigned=True))
+    reboots_pending = Column(INTEGER(unsigned=True))
+    agents_down = Column(INTEGER(unsigned=True))
+    agents_up = Column(INTEGER(unsigned=True))
     def __init__(self, tag_id, patches_installed,
                 patches_available, patches_pending,
-                patches_failed
+                patches_failed, reboots_pending,
+                agents_down, agents_up
                 ):
         self.tag_id = tag_id
         self.patches_installed = patches_installed
         self.patches_available = patches_available
         self.patches_pending = patches_pending
         self.patches_failed = patches_failed
+        self.reboots_pending = reboots_pending
+        self.agents_down = agents_down
+        self.agents_up = agents_up
     def __repr__(self):
-        return "<TagStats(%d,%d,%d,%d,%d)>" %\
+        return "<TagStats(%d,%d,%d,%d,%d,%d,%d,%d)>" %\
                 (
                 self.tag_id, self.patches_installed,
                 self.patches_available, self.patches_pending,
-                self.patches_failed
+                self.patches_failed, self.reboots_pending,
+                self.agents_down, self.agents_up
                 )
 

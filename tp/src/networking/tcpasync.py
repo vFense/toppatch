@@ -115,6 +115,6 @@ class TcpConnect():
 
 
     def _close(self):
-        self.tcp_socket.shutdown(socket.SHUT_RDWR)
+        #tself.tcp_socket.shutdown(socket.SHUT_RDWR)
         self.tcp_socket.close()
 

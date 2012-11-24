@@ -2,11 +2,12 @@
 from datetime import datetime
 from jsonpickle import encode
 import logging
-from utils.tcpasync import *
-from utils.db.update_table import *
-from utils.db.query_table import *
-from utils.db.client import *
+from networking.tcpasync import *
+from db.update_table import *
+from db.query_table import *
+from db.client import *
 from utils.common import *
+from models.tagging import *
 import gevent
 
 OPERATION = 'operation'
@@ -25,8 +26,7 @@ SCHEDULE = 'schedule'
 TIME = 'time'
 
 class AgentOperation():
-    def __init__(self, node_list):
-    #def __init__(self, session, node_list):
+    def __init__(self, system_list):
         """
         This class will take a list and iterate through it.
         Through each iteration, the object in each array will
@@ -39,22 +39,31 @@ class AgentOperation():
         ENGINE = initEngine()
         self.session = createSession(ENGINE)
         self.session = validateSession(self.session)
-        self.node_list = node_list
+        self.system_list = system_list
         self.total_nodes = None
         self.results = {}
         self.json_out = {}
-        if type(node_list) == list:
-            self.node_list = node_list
-            self.total_nodes = len(self.node_list)
+        if type(system_list) == list:
+            self.system_list = system_list
+            self.total_nodes = len(self.system_list)
         else:
-            json_valid, self.node_list = verifyJsonIsValid(node_list)
-            if type(self.node_list) != list:
-                self.node_list = [self.node_list]
+            json_valid, self.system_list = verifyJsonIsValid(system_list)
+            if type(self.system_list) != list:
+                self.system_list = [self.system_list]
+        if type(self.system_list[0]) == dict:
+            verify_obj = self.system_list[0]
+        else:
+            is_verified, verify_obj = verifyJsonIsValid(self.system_list[0])
+        if 'tag_id' in verify_obj:
+            system_list = self.convertTagOpToNodeOp(self.system_list)
+            if len(system_list) > 0:
+                self.system_list = system_list
+            
 
     def run(self):
         self.results = []
         self.threads = []
-        for node in self.node_list:
+        for node in self.system_list:
             if type(node) != dict:
                 json_valid, jsonobject = verifyJsonIsValid(node)
             else:
@@ -116,14 +125,13 @@ class AgentOperation():
                      }
         updateNodeStats(self.session, node_id)
         updateNetworkStats(self.session)
+        updateTagStats(self.session)
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'
         print msg
         response = None
         connect = TcpConnect(node_ip, msg)
         completed = False
-        os_code = self.session.query(SystemInfo).filter_by(node_id=node_id).first().os_code
-        os = None
         if not connect.error and connect.read_data:
             response = verifyJsonIsValid(connect.read_data)
             print response
@@ -132,6 +140,7 @@ class AgentOperation():
                 updateOperationRow(self.session, oper_id, oper_recv=True)
                 updateNodeStats(self.session, node_id)
                 updateNetworkStats(self.session)
+                updateTagStats(self.session)
                 if oper_type == 'reboot':
                     updateRebootStatus(self.session, node_id, oper_type)
                 if 'data' in jsonobject:
@@ -144,6 +153,7 @@ class AgentOperation():
                             self.session.commit()
                             updateNodeStats(self.session, node_id)
                             updateNetworkStats(self.session)
+                            updateTagStats(self.session)
         self.result ={
                      "node_id" : node_id,
                      "operation_id" : oper_id,
@@ -163,3 +173,28 @@ class AgentOperation():
                     operation_sent=datetime.now()
                     )
         return oper.id
+
+    def convertTagOpToNodeOp(self, tag_op_list):
+        node_op_list = []
+        for oper in tag_op_list:
+            if type(oper) != dict:
+                is_valid, oper = verifyJsonIsValid(oper)
+            else:
+                is_valid = True
+                oper = oper
+            if is_valid:
+                tag_id = oper['tag_id']
+                self.nodes = self.session.query(TagsPerNode).\
+                        filter(TagsPerNode.tag_id == tag_id).all()
+                if len(self.nodes) > 0:
+                    for node in self.nodes:
+                        node_dict = {}
+                        for key, value in oper.items():
+                            if 'tag_id' in key:
+                                node_dict['node_id'] = str(node.node_id)
+                            else:
+                                node_dict[key] = value
+                        node_op_list.append(node_dict)
+        return(node_op_list)
+
+
