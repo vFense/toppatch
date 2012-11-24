@@ -60,6 +60,7 @@ def getTagStats(session, tagid=None, tagname=None):
                     "agents_up" : int(tags[0].agents_up),
                     "patches_completed" : int(tags[0].patches_installed),
                     "patches_available" : int(tags[0].patches_available),
+                    "patches_failed" : int(tags[0].patches_failed),
                     "patches_pending" : int(tags[0].patches_pending)
                 }
         list_of_tags.append(tag)
