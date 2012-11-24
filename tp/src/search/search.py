@@ -3,7 +3,7 @@ import re
 from models.packages import *
 from models.node import *
 from utils.common import *
-from utils.db.client import validateSession
+from db.client import validateSession
 
 
 valid_pkg_columns = {

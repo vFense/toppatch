@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from utils.db.query_table import *
-from utils.db.update_table import *
+from db.query_table import *
+from db.update_table import *
 from utils.common import *
 
 from models.account import *
@@ -41,7 +41,28 @@ def tagListByNodes(session):
         list_of_tags.append(tag)
     return list_of_tags
 
-
+def tagStats(session, tagid=None, tagname=None):
+    list_of_tags = []
+    tags = session.query(TagStats).all()
+    if tagid:
+        tag_info = session.query(TagInfo).filter(TagInfo.id == tagid).first()
+    elif tagname:
+        tag_info = session.query(TagInfo).filter(TagInfo.tag == tagname).first()
+    else:
+        tag_info = session.query(TagInfo).all()
+    for tag in tags:
+        user = session.query(User).filter_by(id=tag.user_id).first()
+        date_created = '%d/%d/%d' % (tag.date_created.month, \
+                        tag.date_created.day, tag.date_created.year
+                        )
+        tag = {
+                "tag_id" : tag.id,
+                "tag_name" : tag.tag,
+                "created_by" : user.username,
+                "date_created" : date_created
+              }
+        list_of_tags.append(tag)
+    return list_of_tags
 
 def tagAdder(session, msg):
     valid, json_msg = verifyJsonIsValid(msg)

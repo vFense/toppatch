@@ -1,8 +1,8 @@
 
 from time import sleep
-from utils.db.query_tables import *
-from utils.db.update_tables import *
-from utils.db.client import validateSession
+from db.query_tables import *
+from db.update_tables import *
+from db.client import validateSession
 
 
 def retrieveDependencies(session, msg):

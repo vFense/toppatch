@@ -14,12 +14,12 @@ from models.packages import *
 from models.node import *
 from models.ssl import *
 from server.handlers import SendToSocket
-from utils.db.client import *
-from utils.scheduler.jobManager import jobLister
-from utils.scheduler.timeBlocker import *
-from utils.tagging.tagManager import *
-from utils.search.search import *
-from utils.transactions.transactions_manager import *
+from db.client import *
+from scheduler.jobManager import jobLister
+from scheduler.timeBlocker import *
+from tagging.tagManager import *
+from search.search import *
+from transactions.transactions_manager import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 

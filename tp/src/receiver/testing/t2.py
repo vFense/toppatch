@@ -1,10 +1,10 @@
-from utils.db.update_table import *
-from utils.db.query_table import *
-from utils.db.client import *
+from db.update_table import *
+from db.query_table import *
+from db.client import *
 from utils.common import *
-from utils.agentoperation import *
+from networking.agentoperation import *
 #from sslconnect import SslConnect
-from utils.tcpasync import TcpConnect
+from networking.tcpasync import TcpConnect
 from jsonpickle import encode
 
 

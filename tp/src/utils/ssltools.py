@@ -3,8 +3,8 @@ import socket
 from datetime import datetime
 from OpenSSL import crypto
 
-from utils.db.update_table import *
-from utils.db.query_table import *
+from db.update_table import *
+from db.query_table import *
 
 FILE_TYPE_PEM = crypto.FILETYPE_PEM
 DUMP_PKEY = crypto.dump_privatekey

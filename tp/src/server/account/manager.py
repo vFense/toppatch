@@ -2,7 +2,7 @@ from models.account import User, Developer
 from server.oauth import token
 
 from utils.security import Crypto
-from utils.db.client import validateSession
+from db.client import validateSession
 
 class AccountManager():
     """ AccountManager is a "helper" object to... manage anything and everything with user/developer accounts.

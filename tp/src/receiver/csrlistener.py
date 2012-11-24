@@ -1,10 +1,10 @@
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 
-from utils.db.client import *
-from utils.db.update_table import *
-from utils.db.query_table import *
-from utils.db.client import *
+from db.client import *
+from db.update_table import *
+from db.query_table import *
+from db.client import *
 from utils.common import verifyJsonIsValid
 from csrhandler import CsrHandOff
 

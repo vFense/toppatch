@@ -2,11 +2,11 @@ from json import loads, dumps
 from jsonpickle import encode, decode
 from datetime import datetime
 
-from utils.db.update_table import *
-from utils.db.query_table import *
-from utils.db.client import *
+from db.update_table import *
+from db.query_table import *
+from db.client import *
 from utils.common import verifyJsonIsValid
-from utils.agentoperation import AgentOperation
+from networking.agentoperation import AgentOperation
 
 OPERATION = 'operation'
 OPERATION_ID = 'operation_id'

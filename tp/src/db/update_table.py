@@ -9,9 +9,9 @@ from models.node import *
 from models.tagging import *
 from models.scheduler import *
 from utils.common import *
-from utils.db.client import *
-from utils.db.query_table import *
-from utils.tcpasync import TcpConnect
+from db.client import *
+from db.query_table import *
+from networking.tcpasync import TcpConnect
 
 
 #WebsocketHandler.sendMessage(message)

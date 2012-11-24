@@ -11,7 +11,7 @@ from models.tagging import *
 from models.scheduler import *
 from models.ssl import *
 from utils.common import *
-from utils.db.client import *
+from db.client import *
 
 
 def userExists(session, user_id=None, user_name=None):

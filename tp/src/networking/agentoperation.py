@@ -2,10 +2,10 @@
 from datetime import datetime
 from jsonpickle import encode
 import logging
-from utils.tcpasync import *
-from utils.db.update_table import *
-from utils.db.query_table import *
-from utils.db.client import *
+from networking.tcpasync import *
+from db.update_table import *
+from db.query_table import *
+from db.client import *
 from utils.common import *
 from models.tagging import *
 import gevent
