@@ -31,6 +31,7 @@ define(
                 initialize: function () {
                     this.template = myTemplate;
                     this.collection =  new exports.Collection();
+                    this.collection.view = this;
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
                 },
@@ -58,25 +59,68 @@ define(
                         this.collection.searchBy = searchBy;
                     }
                     this.collection.initialize();
-                    this.collection.fetch();
+                    this.updateList();
+                    //this.collection.fetch();
                 },
                 filterbytype: function (evt) {
                     this.collection.type = $(evt.target).val() === 'none' ? '' : $(evt.target).val();
                     this.collection.initialize();
                     this.collection.fetch();
                 },
-                beforeRender: $.noop,
-                onRender: function () {
-                    var search = this.$el.find('input[name=search]'),
-                        that = this;
-                    if (this.collection.searchQuery) {
-                        //search.on('blur', );
-                        search.focus(function (event) {
-                            this.value = this.value || '';
-                        }).focus();
-
+                updateList: function () {
+                    var that = this;
+                    this.collection.unbind();
+                    this.collection.fetch({
+                        success: that.renderList
+                    });
+                },
+                renderList: function (collection, response) {
+                    var items,
+                        view = collection.view,
+                        $el = view.$el,
+                        $list = $el.find('.items'),
+                        $footer = $el.find('footer');
+                    $list.empty();
+                    $footer.empty();
+                    items = collection.toJSON();
+                    if (items.length !== 0) {
+                        _.each(items, function (patch, i) {
+                            $list.append(view.renderModel(patch));
+                        });
+                    } else {
+                        $list.append(view.renderModel(null));
+                    }
+                    window.console.log(collection);
+                },
+                renderModel: function (item) {
+                    var $item, $div, $link, $desc, $pend,
+                        $spanRight, $done, $need, $fail, $icon,
+                        newElement = function (element) {
+                            return $(document.createElement(element));
+                        };
+                    if (item) {
+                        $item       = newElement('div').addClass('item linked clearfix');
+                        $div        = newElement('div').addClass('row-fluid');
+                        $link       = newElement('a').attr('href', '#patches/' + item.id);
+                        $desc       = newElement('span').addClass('desc span8').html('<strong>' + item.vendor.name + '</strong> — ' + item.name);
+                        $spanRight  = newElement('span').addClass('span4 alignRight').html('&nbsp;');
+                        $done       = newElement('span').addClass('done');
+                        $pend = newElement('span').addClass('pend');
+                        $need = newElement('span').addClass('need');
+                        $fail = newElement('span').addClass('fail');
+                        $icon = newElement('i').addClass('icon-caret-right');
+                        $spanRight.prepend($done, $pend, $need, $fail).append($icon);
+                        $link.append($desc, $spanRight);
+                        $div.append($link);
+                        return $item.append($div);
+                    } else {
+                        $item = newElement('div').addClass('item clearfix');
+                        $desc = newElement('span').addClass('desc').html('<em>No patches.</em>');
+                        return $item.append($desc);
                     }
                 },
+                beforeRender: $.noop,
+                onRender: $.noop,
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
@@ -97,10 +141,8 @@ define(
                             recordCount: this.collection.recordCount,
                             data: data
                         },
-                        that = this,
-                        //$el = this.$el.empty().html(template()),
-                        //$items = $el.find('.items'),
                         temp;
+
                     temp = payload.offset - payload.getCount;
                     payload.prevLink = '#patches?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
                     payload.prevLink +=  payload.type ? '&type=' + payload.type : '';

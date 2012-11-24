@@ -73,6 +73,7 @@ define(
                             filter: this.collection.filterby
                         },
                         temp;
+
                     temp = payload.offset - payload.getCount;
                     payload.prevLink = '#nodes?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
                     payload.prevLink += payload.filter ? '&filterby=' + payload.filter : '';
