@@ -86,6 +86,7 @@ class HandOff():
         addUpdatePerNode(self.session, self.json_object)
         updateNodeStats(self.session, self.node.id)
         updateNetworkStats(self.session)
+        updateTagStats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def softwareUpdate(self):
@@ -97,12 +98,14 @@ class HandOff():
                 addSoftwareInstalled(self.session, self.json_object)
         updateNodeStats(self.session, self.node.id)
         updateNetworkStats(self.session)
+        updateTagStats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def updateResults(self):
         results = addResults(self.session, self.json_object)
         updateNodeStats(self.session, self.node.id)
         updateNetworkStats(self.session)
+        updateTagStats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def updateDependency(self):
