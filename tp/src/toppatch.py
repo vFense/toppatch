@@ -82,6 +82,7 @@ class Application(tornado.web.Application):
             (r"/api/tagging/addTagPerNode?", TagAddPerNodeHandler),
             (r"/api/tagging/removeTagPerNode?", TagRemovePerNodeHandler),
             (r"/api/tagging/removeTag?", TagRemoveHandler),
+            (r"/api/tagging/tagStats?", GetTagStatsHandler),
             (r"/api/transactions/getTransactions?", GetTransactionsHandler),
             (r"/api/package/getDependecies?", GetDependenciesHandler),
             (r"/api/package/searchByPatch?", SearchPatchHandler),

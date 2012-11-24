@@ -41,26 +41,27 @@ def tagListByNodes(session):
         list_of_tags.append(tag)
     return list_of_tags
 
-def tagStats(session, tagid=None, tagname=None):
+def getTagStats(session, tagid=None, tagname=None):
     list_of_tags = []
-    tags = session.query(TagStats).all()
+    tag_stats = []
     if tagid:
-        tag_info = session.query(TagInfo).filter(TagInfo.id == tagid).first()
+        tag_stats = session.query(TagStats, TagInfo).filter(TagInfo.id == tagid).all()
     elif tagname:
-        tag_info = session.query(TagInfo).filter(TagInfo.tag == tagname).first()
+        tag_stats = session.query(TagStats, TagInfo).join(TagInfo).filter(TagInfo.tag == tagname).all()
     else:
-        tag_info = session.query(TagInfo).all()
-    for tag in tags:
-        user = session.query(User).filter_by(id=tag.user_id).first()
-        date_created = '%d/%d/%d' % (tag.date_created.month, \
-                        tag.date_created.day, tag.date_created.year
-                        )
-        tag = {
-                "tag_id" : tag.id,
-                "tag_name" : tag.tag,
-                "created_by" : user.username,
-                "date_created" : date_created
-              }
+        tag_stats = session.query(TagStats, TagInfo).join(TagInfo).all()
+    if len(tag_stats) > 0:
+        for tags in tag_stats:
+            tag = {
+                    "tag_id" : int(tags[0].tag_id),
+                    "tag_name" : tags[1].tag,
+                    "reboots_pending" : int(tags[0].reboots_pending),
+                    "agents_down" : int(tags[0].agents_down),
+                    "agents_up" : int(tags[0].agents_up),
+                    "patches_completed" : int(tags[0].patches_installed),
+                    "patches_available" : int(tags[0].patches_available),
+                    "patches_pending" : int(tags[0].patches_pending)
+                }
         list_of_tags.append(tag)
     return list_of_tags
 

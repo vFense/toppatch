@@ -842,3 +842,21 @@ class SearchPatchHandler(BaseHandler):
         elif 'csv' in output:
             self.set_header('Content-Type', 'application/csv')
             self.write(result)
+
+class GetTagStatsHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        tag_id = None
+        tag_name = None
+        try:
+            tag_id = self.get_argument('tagid')
+            tag_name = self.get_argument('tagname')
+        except Exception as e:
+            pass
+        result = getTagStats(self.session, tagid=tag_id, tagname=tag_name)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
