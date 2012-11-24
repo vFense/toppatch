@@ -125,6 +125,7 @@ class AgentOperation():
                      }
         updateNodeStats(self.session, node_id)
         updateNetworkStats(self.session)
+        updateTagStats(self.session)
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'
         print msg
@@ -139,6 +140,7 @@ class AgentOperation():
                 updateOperationRow(self.session, oper_id, oper_recv=True)
                 updateNodeStats(self.session, node_id)
                 updateNetworkStats(self.session)
+                updateTagStats(self.session)
                 if oper_type == 'reboot':
                     updateRebootStatus(self.session, node_id, oper_type)
                 if 'data' in jsonobject:
@@ -151,6 +153,7 @@ class AgentOperation():
                             self.session.commit()
                             updateNodeStats(self.session, node_id)
                             updateNetworkStats(self.session)
+                            updateTagStats(self.session)
         self.result ={
                      "node_id" : node_id,
                      "operation_id" : oper_id,
