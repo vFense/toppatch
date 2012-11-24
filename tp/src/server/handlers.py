@@ -5,9 +5,9 @@ import re
 try: import simplejson as json
 except ImportError: import json
 from models.node import NodeInfo
-from utils.db.client import *
-from utils.agentoperation import AgentOperation
-from utils.scheduler.jobManager import JobScheduler, jobLister
+from db.client import *
+from networking.agentoperation import AgentOperation
+from scheduler.jobManager import JobScheduler, jobLister
 from server.decorators import authenticated_request
 from jsonpickle import encode
 

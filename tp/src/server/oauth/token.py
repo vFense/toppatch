@@ -1,6 +1,6 @@
 from hashlib import sha512
 from uuid import uuid4
-from utils.db.client import validateSession
+from db.client import validateSession
 
 class TokenManager():
 

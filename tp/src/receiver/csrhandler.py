@@ -1,12 +1,12 @@
 from json import loads, dumps
 from time import sleep
 from jsonpickle import encode
-from utils.db.update_table import *
-from utils.db.query_table import *
-from utils.db.client import *
+from db.update_table import *
+from db.query_table import *
+from db.client import *
 from utils.common import verifyJsonIsValid
 from utils.ssltools import *
-from utils.tcpasync import TcpConnect
+from networking.tcpasync import TcpConnect
 
 class CsrHandOff():
     def __init__(self, ENGINE, ip_address, data):

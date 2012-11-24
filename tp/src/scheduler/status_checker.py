@@ -2,9 +2,9 @@
 
 from datetime import datetime
 import logging
-from utils.db.client import *
-from utils.db.query_table import *
-from utils.db.update_table import *
+from db.client import *
+from db.query_table import *
+from db.update_table import *
 
 from apscheduler.scheduler import Scheduler
 

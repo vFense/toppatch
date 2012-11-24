@@ -17,7 +17,7 @@ import tornado.options
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
-from utils.db.client import *
+from db.client import *
 from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler, AdminHandler
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import re
-from utils.db.query_table import getTransactions
-from utils.db.client import validateSession
+from db.query_table import getTransactions
+from db.client import validateSession
 from models.node import *
 
 
