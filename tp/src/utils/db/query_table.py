@@ -26,9 +26,10 @@ def userExists(session, user_id=None, user_name=None):
 def tagExists(session, tag_id=None, tag_name=None):
     session = validateSession(session)
     if tag_id:
-        tag = session.query(TagInfo).filter_by(id=tag_id)
+        tag = session.query(TagInfo).filter(TagInfo.id == tag_id)
     elif tag_name:
-        tag = session.query(TagInfo).filter_by(tag=tag_name)
+        print tag_name, "thats my name"
+        tag = session.query(TagInfo).filter(TagInfo.tag == tag_name)
     tag_exists = tag.first()
     return(tag, tag_exists)
 
