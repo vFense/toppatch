@@ -38,7 +38,7 @@ print a.results
 #Or you can do this with a tag_id instead of a node_id.....
 """
 tag_list = '{"tag_id" : "9", "operation" : "system_info", "operation_id" : "22"}'
-a = AgentOperation(node_list)
+a = AgentOperation(tag_list)
 a.run()
 print a.results
 """
