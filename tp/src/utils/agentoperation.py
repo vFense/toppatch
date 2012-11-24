@@ -7,6 +7,7 @@ from utils.db.update_table import *
 from utils.db.query_table import *
 from utils.db.client import *
 from utils.common import *
+from models.tagging import *
 import gevent
 
 OPERATION = 'operation'
@@ -26,7 +27,6 @@ TIME = 'time'
 
 class AgentOperation():
     def __init__(self, system_list):
-    #def __init__(self, session, system_list):
         """
         This class will take a list and iterate through it.
         Through each iteration, the object in each array will
@@ -50,6 +50,11 @@ class AgentOperation():
             json_valid, self.system_list = verifyJsonIsValid(system_list)
             if type(self.system_list) != list:
                 self.system_list = [self.system_list]
+        if 'tag_id' in self.system_list[0]:
+            system_list = self.convertTagOpToNodeOp(self.system_list)
+            if len(system_list) > 0:
+                self.system_list = system_list
+            
 
     def run(self):
         self.results = []
@@ -161,3 +166,28 @@ class AgentOperation():
                     operation_sent=datetime.now()
                     )
         return oper.id
+
+    def convertTagOpToNodeOp(self, tag_op_list):
+        node_op_list = []
+        for oper in tag_op_list:
+            if type(oper) != dict:
+                is_valid, oper = verifyJsonIsValid(oper)
+            else:
+                is_valid = True
+                oper = oper
+            if is_valid:
+                tag_id = oper['tag_id']
+                self.nodes = self.session.query(TagsPerNode).\
+                        filter(TagsPerNode.tag_id == tag_id).all()
+                if len(self.nodes) > 0:
+                    for node in self.nodes:
+                        node_dict = {}
+                        for key, value in oper.items():
+                            if 'tag_id' in key:
+                                node_dict['node_id'] = str(node.node_id)
+                            else:
+                                node_dict[key] = value
+                        node_op_list.append(node_dict)
+        return(node_op_list)
+
+
