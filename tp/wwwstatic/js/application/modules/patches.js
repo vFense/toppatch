@@ -58,12 +58,15 @@ define(
                         this.collection.searchQuery = searchQuery;
                         this.collection.searchBy = searchBy;
                     }
+                    this.collection.offset = 0;
                     this.collection.initialize();
                     this.updateList();
-                    //this.collection.fetch();
                 },
                 filterbytype: function (evt) {
                     this.collection.type = $(evt.target).val() === 'none' ? '' : $(evt.target).val();
+                    this.collection.searchBy = '';
+                    this.collection.searchQuery = '';
+                    this.collection.offset = 0;
                     this.collection.initialize();
                     this.collection.fetch();
                 },
@@ -75,11 +78,20 @@ define(
                     });
                 },
                 renderList: function (collection, response) {
-                    var items,
+                    var items, prevLink, nextLink, temp, $small, $prevEle, $nextEle, $div,
+                        getCount = +collection.getCount,
+                        offset = +collection.offset,
+                        start = +collection.offset + 1,
+                        end = +collection.offset + collection.length,
+                        prevEnable = +collection.offset > 0,
+                        nextEnable = +collection.offset + collection.length + 1 < +collection.recordCount,
                         view = collection.view,
                         $el = view.$el,
                         $list = $el.find('.items'),
-                        $footer = $el.find('footer');
+                        $footer = $el.find('footer'),
+                        newElement = function (element) {
+                            return $(document.createElement(element));
+                        };
                     $list.empty();
                     $footer.empty();
                     items = collection.toJSON();
@@ -90,7 +102,35 @@ define(
                     } else {
                         $list.append(view.renderModel(null));
                     }
-                    window.console.log(collection);
+                    //render new footer
+                    temp = offset - getCount;
+                    prevLink = '#patches?count=' + getCount + '&offset=' + (temp < 0 ? 0 : temp);
+                    prevLink += collection.searchQuery ? '&query=' + collection.searchQuery : '';
+                    prevLink += collection.searchBy ? '&searchby=' + collection.searchBy : '';
+
+                    temp = offset + getCount;
+                    nextLink = '#patches?count=' + getCount + '&offset=' + temp;
+                    nextLink += collection.searchQuery ? '&query=' + collection.searchQuery : '';
+                    nextLink += collection.searchBy ? '&searchby=' + collection.searchBy : '';
+
+                    $small = newElement('small').html('Viewing ' + start + ' – ' + end + ' of ' + collection.recordCount + ' Patches');
+                    $div = newElement('div').addClass('pull-right hidden-print');
+                    $prevEle = newElement('a').addClass('btn btn-mini').html('Previous');
+                    $nextEle = newElement('a').addClass('btn btn-mini').html('Next');
+                    if (!prevEnable) {
+                        $prevEle.addClass('disabled').attr('href', 'javascript:;');
+                    } else {
+                        $prevEle.attr('href', prevLink);
+                    }
+                    if (!nextEnable) {
+                        $nextEle.addClass('disabled').attr('href', 'javascript:;');
+                    } else {
+                        $nextEle.attr('href', nextLink);
+                    }
+                    $div.append($prevEle, $nextEle);
+                    $footer.append($small, $div);
+                    $footer.find("a.disabled").on("click", false);
+                    view.collection.bind('reset', view.render, view);
                 },
                 renderModel: function (item) {
                     var $item, $div, $link, $desc, $pend,
