@@ -120,7 +120,7 @@ class TagStats(Base):
                 (
                 self.tag_id, self.patches_installed,
                 self.patches_available, self.patches_pending,
-                self.patches_failed, reboots_pending,
-                agents_down, agents_up
+                self.patches_failed, self.reboots_pending,
+                self.agents_down, self.agents_up
                 )
 

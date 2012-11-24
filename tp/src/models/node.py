@@ -239,7 +239,7 @@ class NodeStats(Base):
     agents_up = Column(INTEGER(unsigned=True))
     def __init__(self, node_id, patches_installed,
                 patches_available, patches_pending,
-                self.patches_failed, reboots_pending,
+                patches_failed, reboots_pending,
                 agents_down, agents_up
                 ):
         self.node_id = node_id
@@ -255,8 +255,8 @@ class NodeStats(Base):
                 (
                 self.node_id, self.patches_installed,
                 self.patches_available, self.patches_pending,
-                self.patches_failed, reboots_pending,
-                agents_down, agents_up
+                self.patches_failed, self.reboots_pending,
+                self.agents_down, self.agents_up
                 )
 
 class NetworkStats(Base):
@@ -294,6 +294,6 @@ class NetworkStats(Base):
                 (
                 self.patches_installed,
                 self.patches_available, self.patches_pending,
-                self.patches_failed, reboots_pending,
-                agents_down, agents_up
+                self.patches_failed, self.reboots_pending,
+                self.agents_down, self.agents_up
                 )
