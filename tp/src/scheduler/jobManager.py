@@ -24,6 +24,32 @@ def jobLister(session,sched):
             job_listing.append(message)
     return job_listing
 
+def removeJob(sched, jobname):
+    jobs = sched.get_jobs()
+    count = 0
+    for schedule in jobs:
+        if jobname in schedule.name:
+            try:
+                sched.unschedule_job(schedule)
+                count = count + 1
+                return({"schedule_name" : jobname,
+                        "job_deleted" : True
+                         "message" : "Job with name %s was removed"\
+                                     % (jobname)
+                        })
+            except:
+                count = count + 1
+                return({"schedule_name" : jobname,
+                        "job_deleted" : False,
+                         "message" : "Job with name %s could not be removed"\
+                                     % (jobname)
+                        })
+    if count == 0:
+        return({"schedule_name" : jobname,
+                "job_deleted" : False,
+                "message" : "Job with name %s does not exist" % (jobname)
+               })
+
 def callAgentOperation(job):
     operation_runner = AgentOperation(job)
     operation_runner.run()
@@ -48,11 +74,9 @@ def JobScheduler(job, sched, name=None):
         schedule = None
         json_valid, job_object = verifyJsonIsValid(job[0])
         if not name:
-            name = job_object['operation']
+            name = job_object['operation'] + " " + job_object['time']
         if 'time' in job_object:
             print job_object['time']
-            #converted_timestamp = returnDatetime(job_object['time'])
-            #print converted_timestamp
             utc_timestamp = dateTimeParser(job_object['time'])
             print utc_timestamp
             time_block_exists, time_block, json_out = \

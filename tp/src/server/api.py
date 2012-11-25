@@ -701,8 +701,24 @@ class SchedulerAddHandler(BaseHandler):
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
-            self.write("Wrong arguement passed %s, the arguement needed is operation" % (e))
+            self.write("Wrong argument passed %s, the arguement needed is operation" % (e))
         result = JobScheduler(self.msg, self.sched)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class SchedulerRemoveHandler(BaseHandler):
+
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        self.sched = self.application.scheduler
+        jobname = None
+        try:
+            jobname = self.get_argument('jobname')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is jobname" % (e))
+        result = removeJob(self.sched, jobname)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
