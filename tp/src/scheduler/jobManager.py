@@ -33,7 +33,7 @@ def removeJob(sched, jobname):
                 sched.unschedule_job(schedule)
                 count = count + 1
                 return({"schedule_name" : jobname,
-                        "job_deleted" : True
+                        "job_deleted" : True,
                          "message" : "Job with name %s was removed"\
                                      % (jobname)
                         })
