@@ -19,6 +19,7 @@ from scheduler.jobManager import jobLister
 from scheduler.timeBlocker import *
 from tagging.tagManager import *
 from search.search import *
+from node.nodeManager import *
 from transactions.transactions_manager import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
@@ -856,6 +857,22 @@ class GetTagStatsHandler(BaseHandler):
         except Exception as e:
             pass
         result = getTagStats(self.session, tagid=tag_id, tagname=tag_name)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class ModifyDisplayNameHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        nodeid = None
+        displayname = None
+        try:
+            nodeid = self.get_argument('nodeid')
+            displayname = self.get_argument('displayname')
+        except Exception as e:
+            pass
+        result = getTagStats(self.session, nodeid, displayname)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 

@@ -86,6 +86,7 @@ class Application(tornado.web.Application):
             (r"/api/transactions/getTransactions?", GetTransactionsHandler),
             (r"/api/package/getDependecies?", GetDependenciesHandler),
             (r"/api/package/searchByPatch?", SearchPatchHandler),
+            (r"/api/node/modifyDisplayName?", ModifyDisplayNameHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
