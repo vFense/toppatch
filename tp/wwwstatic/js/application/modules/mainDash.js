@@ -123,6 +123,7 @@ define(
                 render: function () {
                     this.current = properties.get("currentWidget");
                     this.type = $('input:radio[name=type]:checked').val();
+                    window.console.log(this.type);
                     this.title = this.$el.find('#title').val() === "" ? "Default" : this.$el.find('#title').val();
                     properties.set({ widgetTitle: this.title });
                     if (this.current === "new") {
@@ -173,13 +174,9 @@ define(
                         $("#insert").append(this.template);
                         this.counter += 1;
                         */
-                        this.title = 'Tag Stats';
                         this.widget = "#" + this.widget;
-                        $(this.widget + '-title').html(this.title);
-                        this.template = _.template($("#tags_template").html());
-                        $(this.graph).html(this.template);
                         this.counter += 1;
-                        this.saveState();
+                        this.getTags();
                     }
                 },
                 renderExisting: function () {
@@ -197,11 +194,6 @@ define(
                         this.displayChart();
                         this.saveState();
                     } else {
-                        parent = $(this.widget).parent();
-                        this.title = 'Tag Stats';
-                        this.graphType = 'tag';
-                        this.sizeval = '6';
-                        $(this.widget + '-title').html(this.title);
                         this.getTags();
                         //text widget block
                         /*
@@ -224,9 +216,17 @@ define(
                     }
                 },
                 getTags: function () {
-                    this.template = _.template($("#tags_template").html());
-                    $(this.graph).html(this.template);
-                    this.saveState();
+                    var that = this;
+                    this.title = 'Tag Stats';
+                    this.sizeval = 4;
+                    this.graphType = 'tag';
+                    $(this.widget + '-title').html(this.title);
+                    $.getJSON('api/tagging/tagStats', function (data) {
+                        //window.console.log(data);
+                        that.template = _.template($("#tags_template").html(), {data: data});
+                        $(that.graph).html(that.template);
+                        that.saveState();
+                    });
                 },
                 getOverviewData: function () {
                     var type = $(this.title).val();
@@ -245,13 +245,9 @@ define(
                         userName = window.User.get('name'),
                         matches = this.graph.match(/\d+$/),
                         position = matches[0] - 1;
-                    window.console.log(this.graph);
-                    window.console.log(matches);
-                    window.console.log(position);
                     widgets.graph[position] = this.graphType;
                     widgets.spans[position] = this.sizeval;
                     widgets.titles[position] = this.title;
-                    window.console.log(widgets);
                     window.User.set('widgets', widgets);
                     localStorage.setItem(userName, JSON.stringify(window.User));
                 }
@@ -388,6 +384,7 @@ define(
                                     $("#insert").append(template);
                                     widgetview.counter += 1;
                                 }
+
                                 if (widgets[i] === 'pie') {
                                     pieGraph('#graph' + (i + 1));
                                 } else if (widgets[i] === 'bar') {
@@ -399,6 +396,7 @@ define(
                                 } else if (widgets[i] === 'line') {
                                     lineGraph('#graph' + (i + 1));
                                 } else if (widgets[i] === 'tag') {
+                                    widgetview.graph = '#graph' + (i + 1);
                                     widgetview.getTags();
                                 }
                             }
