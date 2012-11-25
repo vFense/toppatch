@@ -15,13 +15,14 @@ def jobLister(session,sched):
     jobs = sched.get_jobs()
     job_listing = []
     for schedule in jobs:
-        messages = schedule.args[0]
+        messages = schedule.args
         for message in messages:
-            jsonValid, message = verifyJsonIsValid(message)
-            message['time'] = returnDatetime(message['time'])
-            node_obj, node = nodeExists(session, node_id=message['node_id'])
-            message['node_id'] = node.ip_address
-            job_listing.append(message)
+            if type(message) == str:
+                jsonValid, message = verifyJsonIsValid(message)
+                if jsonValid:
+                    node_obj, node = nodeExists(session, node_id=message['node_id'])
+                    message['node_id'] = node.ip_address
+                    job_listing.append(message)
     return job_listing
 
 def removeJob(sched, jobname):
@@ -73,12 +74,13 @@ def JobScheduler(job, sched, name=None):
         converted_timestamp = None
         schedule = None
         json_valid, job_object = verifyJsonIsValid(job[0])
-        if not name:
+        if 'Default' in  job_object['label']:
             name = job_object['operation'] + " " + job_object['time']
+            job_object['label'] = job_object['operation'] + " " + job_object['time']
+        else:
+            name = job_object['label']
         if 'time' in job_object:
-            print job_object['time']
             utc_timestamp = dateTimeParser(job_object['time'])
-            print utc_timestamp
             time_block_exists, time_block, json_out = \
                     timeBlockExistsToday(session,
                         start_date=utc_timestamp.date(),
@@ -86,10 +88,12 @@ def JobScheduler(job, sched, name=None):
             print time_block_exists, time_block, json_out
             if time_block_exists:
                 return json_out
+        encoded_job_object = dumps(job_object)
+        print encoded_job_object
         if 'schedule' in job_object:
             schedule = job_object['schedule']
         if 'once' in job_object['schedule']:
-            addOnce(utc_timestamp, name, job, sched)
+            addOnce(utc_timestamp, name, encoded_job_object, sched)
             return({
                     "pass" : True,
                     "message" : "Schedule %s has been added to this time frame %s " % (name, utc_timestamp)
