@@ -12,7 +12,8 @@ define(
                             {text: 'Approve Nodes', href: 'admin/nodes'},
                             {text: 'Tagging', href: 'admin/managetags'},
                             {text: 'Time Blocker', href: 'admin/timeblock'},
-                            {text: 'See Time Blocks', href: 'admin/listblocks'}
+                            {text: 'See Time Blocks', href: 'admin/listblocks'},
+                            {text: 'Syslog Settings', href: 'admin/syslog'}
                         ]
                     });
                 },

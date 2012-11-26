@@ -11,7 +11,7 @@ from models.tagging import *
 from models.scheduler import *
 from models.ssl import *
 from utils.common import *
-from utils.db.client import *
+from db.client import *
 
 
 def userExists(session, user_id=None, user_name=None):
@@ -26,9 +26,10 @@ def userExists(session, user_id=None, user_name=None):
 def tagExists(session, tag_id=None, tag_name=None):
     session = validateSession(session)
     if tag_id:
-        tag = session.query(TagInfo).filter_by(id=tag_id)
+        tag = session.query(TagInfo).filter(TagInfo.id == tag_id)
     elif tag_name:
-        tag = session.query(TagInfo).filter_by(tag=tag_name)
+        print tag_name, "thats my name"
+        tag = session.query(TagInfo).filter(TagInfo.tag == tag_name)
     tag_exists = tag.first()
     return(tag, tag_exists)
 

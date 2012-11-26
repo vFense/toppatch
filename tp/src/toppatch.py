@@ -17,7 +17,7 @@ import tornado.options
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
-from utils.db.client import *
+from db.client import *
 from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler, AdminHandler
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
@@ -82,6 +82,7 @@ class Application(tornado.web.Application):
             (r"/api/tagging/addTagPerNode?", TagAddPerNodeHandler),
             (r"/api/tagging/removeTagPerNode?", TagRemovePerNodeHandler),
             (r"/api/tagging/removeTag?", TagRemoveHandler),
+            (r"/api/tagging/tagStats?", GetTagStatsHandler),
             (r"/api/transactions/getTransactions?", GetTransactionsHandler),
             (r"/api/package/getDependecies?", GetDependenciesHandler),
             (r"/api/package/searchByPatch?", SearchPatchHandler),

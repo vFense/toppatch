@@ -5,10 +5,10 @@ import logging
 from apscheduler.scheduler import Scheduler
 from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
 
-from utils.agentoperation import AgentOperation
+from networking.agentoperation import AgentOperation
 from utils.common import *
-from utils.db.query_table import *
-from utils.db.client import *
+from db.query_table import *
+from db.client import *
 from models.scheduler import *
 
 def jobLister(session,sched):

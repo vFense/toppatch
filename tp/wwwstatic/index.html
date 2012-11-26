@@ -59,5 +59,47 @@
         </dd>
     </dl>
 </script>
+<script type="text/template" id="tags_template">
+    <article>
+        <section class="list">
+            <div class="legend">
+                <span><small>Tag Name — </small></span>
+                <span class="patches pull-right">
+                    <span class="done"><small>D</small></span> /
+                    <span class="pend"><small>P</small></span> /
+                    <span class="need"><small>A</small></span> /
+                    <span class="fail"><small>F</small></span>
+                </span>
+            </div>
+            <div class="items">
+                <% if (data.length !== 0) { %>
+                    <% _.each(data, function (tag) { %>
+                        <div class="item">
+                            <a href="#nodes?filterby=<%= tag.tag_name %>">
+                                <span><%= tag.tag_name %></span>
+                                <span class="pull-right">
+                                    <% if (tag.reboots_pending > 0) { %>
+                                        <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;
+                                    <% } %>
+                                    <% if (tag.agents_down > 0) { %>
+                                        <i style="color: red;" class="icon-warning-sign"></i>&nbsp;
+                                    <% } %>
+                                    <% tag.patches_completed > 0 ? print('<span class="done">' + tag.patches_completed + '</span>') : print('<span>' + tag.patches_completed + '</span>');%> /
+                                    <% tag.patches_pending > 0 ? print('<span class="pend">' + tag.patches_pending + '</span>') : print('<span>' + tag.patches_pending + '</span>');%> /
+                                    <% tag.patches_available > 0 ? print('<span class="need">' + tag.patches_available + '</span>') : print('<span>' + tag.patches_available + '</span>');%> /
+                                    <% tag.patches_failed > 0 ? print('<span class="fail">' + tag.patches_failed + '</span>') : print('<span>' + tag.patches_failed + '</span>');%>
+                                </span>
+                            </a>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="item">
+                        <em>No tags available.</em>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+    </article>
+</script>
 </body>
 </html>

@@ -5,9 +5,9 @@ from twisted.internet.protocol import Factory, Protocol
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from utils.db.client import *
+from db.client import *
 from receiver.tphandler import HandOff
-from utils.scheduler.status_checker import *
+from scheduler.status_checker import *
 
 ALLOWED_CIPHER_LIST = 'TLSv1+HIGH:!SSLv2:RC4+MEDIUM:!aNULL:!eNULL:!3DES:@STRENGTH'
 ENGINE = initEngine()
