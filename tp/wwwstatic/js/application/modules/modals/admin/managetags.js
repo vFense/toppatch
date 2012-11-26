@@ -46,7 +46,7 @@ define(
                     popover.on('click', this.togglePopup);
                     popover.popover({
                         placement: 'right',
-                        title: 'Add Nodes <a href="javascript:;" class="pull-right" name="close"><i class="icon-remove"></i></a>',
+                        title: 'Add Nodes <button class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
                         html: true,
                         content: nodelist.clone(),
                         trigger: 'manual'

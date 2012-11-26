@@ -85,7 +85,7 @@ define(
                     $('input[name=schedule]').each(function () {
                         $(this).popover({
                             placement: 'top',
-                            title: 'Patch Scheduling<a href="javascript:;" class="pull-right" name="close"><i class="icon-remove"></i></a>',
+                            title: 'Patch Scheduling<button class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
                             html: true,
                             content: $('#schedule-form').clone(),
                             trigger: 'click'

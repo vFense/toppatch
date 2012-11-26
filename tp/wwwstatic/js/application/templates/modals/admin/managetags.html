@@ -12,7 +12,7 @@
                             </span>
                             <span style="margin-top: 6px" class="span2 alignRight">
                                 <span class="badge badge-inverse"><%= tag.nodes.length %></span>&nbsp;
-                                <a href="javascript:;" name="remove" id="<%= tag.tag_name %>"><i style="color: red;" class="icon-remove"></i></a>
+                                <button class="btn btn-link" name="remove" id="<%= tag.tag_name %>"><i style="color: red;" class="icon-remove"></i></button>
                             </span>
                         </div>
                         <div id="<% print(tag.tag_name.replace(' ', '')); %>" class="accordion-body collapse">
@@ -26,7 +26,7 @@
                                     <em name="nonode">No nodes contain this tag</em>
                                 <% } %>
                                 </div>
-                                &nbsp;<a href="javascript:;" name="popover" value="<%= tag.tag_name %>"><i style="color: green;" class="icon-plus"></i></a>
+                                &nbsp;<button class="btn btn-link" name="popover" value="<%= tag.tag_name %>"><i style="color: green;" class="icon-plus"></i></button>
                             </div>
                         </div>
                     </div>
