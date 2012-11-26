@@ -457,18 +457,18 @@ class PatchesHandler(BaseHandler):
                 for v in self.session.query(PackagePerNode, NodeInfo).filter(PackagePerNode.toppatch_id == u.toppatch_id).join(NodeInfo).all():
                     if v[0].installed:
                         countInstalled += 1
-                        nodeInstalled.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                        nodeInstalled.append({'id': v[0].node_id, 'ip': v[1].host_name})
                     elif v[0].pending:
                         countPending += 1
-                        nodePending.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                        nodePending.append({'id': v[0].node_id, 'ip': v[1].host_name})
                     elif v[0].attempts > 0:
                         countFailed += 1
-                        nodeFailed.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                        nodeFailed.append({'id': v[0].node_id, 'ip': v[1].host_names})
                         countAvailable += 1
-                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].host_name})
                     else:
                         countAvailable += 1
-                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].host_name})
                 resultjson = {
                     "name" : u.name,
                     "type": "Security Patch",             #forcing Patch into type
