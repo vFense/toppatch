@@ -9,7 +9,6 @@ from models.node import *
 def retrieveTransactions(session, count=None, offset=None):
     session = validateSession(session)
     transactions, total_count = getTransactions(session, count, offset)
-    transaction = []
     final_msg = {"count" : total_count, "data" : []}
     for trans in transactions:
         operation_received = None
@@ -27,7 +26,7 @@ def retrieveTransactions(session, count=None, offset=None):
         #        key_error = "Results were never received"
         #        results = False
         if len(trans[1]) == 1:
-            transaction.append({
+            final_msg['data'].append({
                          "operation" : trans[1][0].operation_type,
                          "operation_sent" : trans[1][0].operation_sent.strftime("%m/%d/%Y %H:%M"),
                          "operations_received" : operation_received,
@@ -39,7 +38,7 @@ def retrieveTransactions(session, count=None, offset=None):
                          "error" : None
                          })
         elif len(trans[1]) == 2:
-            transaction.append({
+            final_msg['data'].append({
                          "operation" : trans[1][0].operation_type,
                          "operation_sent" : trans[1][0].operation_sent.strftime("%m/%d/%Y %H:%M"),
                          "operations_received" : operation_received,
@@ -50,6 +49,5 @@ def retrieveTransactions(session, count=None, offset=None):
                          "reboot" : trans[1][1][0].reboot,
                          "error" : trans[1][1][0].error,
                          })
-    final_msg['data'].append(transaction)
     return final_msg
 

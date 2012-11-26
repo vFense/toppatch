@@ -19,7 +19,7 @@ define(
                 },
                 parse: function (response) {
                     this.recordCount = response.count;
-                    return response.data[0] || response;
+                    return response.data || response;
                 },
                 initialize: function (options) {
                     if (options.params) {
