@@ -35,7 +35,7 @@ define(
                 // Administration Panels
                 // Notice, update modals/admin/main.js if adding new admin/route
                 // Warning, update modals/panel.js open method if changing 'admin'
-                // Warning, update route method if chancing 'admin'
+                // Warning, update route method if changing 'admin'
                 'admin/managetags': 'modal/admin/managetags',
                 'admin/nodes'     : 'modal/admin/nodes',
                 'admin/timeblock' : 'modal/admin/timeblock',
