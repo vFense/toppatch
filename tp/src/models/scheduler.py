@@ -42,6 +42,6 @@ class TimeBlocker(Base):
         return "<TimeBlocker(%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.name, self.start_date, self.start_time,
-                self_end_date, self.end_time, self.span_end_date_time,
+                self.end_date, self.end_time, self.span_end_date_time,
                 self.span, self.days, self.enabled
                 )
