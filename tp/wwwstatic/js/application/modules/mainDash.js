@@ -176,6 +176,8 @@ define(
                         */
                         this.widget = "#" + this.widget;
                         this.counter += 1;
+                        this.sizeval = $('input:radio[name=radio]:checked').val();
+                        this.graph = '#insert';
                         this.getTags();
                     }
                 },
@@ -194,6 +196,7 @@ define(
                         this.displayChart();
                         this.saveState();
                     } else {
+                        this.sizeval = $('input:radio[name=radio]:checked').val();
                         this.getTags();
                         //text widget block
                         /*
@@ -218,13 +221,15 @@ define(
                 getTags: function () {
                     var that = this;
                     this.title = 'Tag Stats';
-                    this.sizeval = 4;
                     this.graphType = 'tag';
+                    this.myClass = $(this.widget).attr("class");
                     $(this.widget + '-title').html(this.title);
+                    $(this.widget).removeClass(this.myClass).addClass("span" + this.sizeval + " widget editable");
                     $.getJSON('api/tagging/tagStats', function (data) {
-                        //window.console.log(data);
                         that.template = _.template($("#tags_template").html(), {data: data});
-                        $(that.graph).html(that.template);
+                        if (that.graph !== '#insert') { $(that.graph).empty(); }
+                        window.console.log($(that.graph));
+                        $(that.graph).append(that.template);
                         that.saveState();
                     });
                 },
@@ -331,7 +336,6 @@ define(
 
                         variables = window.User.get('widgets');
                         this.$el.append(tmpl(variables));
-
                         this.test();
 
                         app.vent.trigger('domchange:title', 'Dashboard');
@@ -397,6 +401,7 @@ define(
                                     lineGraph('#graph' + (i + 1));
                                 } else if (widgets[i] === 'tag') {
                                     widgetview.graph = '#graph' + (i + 1);
+                                    widgetview.sizeval = settings.spans[i];
                                     widgetview.getTags();
                                 }
                             }

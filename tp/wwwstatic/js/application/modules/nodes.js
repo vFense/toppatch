@@ -22,6 +22,9 @@ define(
                         '&offset=' + this.offset;
                     this.query += this.filterby ? '&filterby=' + this.filterby : '';
                     this.baseUrl = this.filterby ? '/api/tagging/listByTag.json' : '/api/nodes.json';
+                    window.console.log(this.query);
+                    window.console.log(this.filterby);
+                    window.console.log(this.baseUrl);
                     window.myCollection = this;
                 }
             }),
