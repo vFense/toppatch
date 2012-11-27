@@ -17,7 +17,7 @@ import tornado.options
 from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
-from utils.db.client import *
+from db.client import *
 from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler, AdminHandler
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
@@ -74,6 +74,7 @@ class Application(tornado.web.Application):
             (r"/api/csrinfo.json/?", CsrHandler),
             (r"/api/scheduler/list.json/?", SchedulerListerHandler),
             (r"/api/scheduler/add?", SchedulerAddHandler),
+            (r"/api/scheduler/remove?", SchedulerRemoveHandler),
             (r"/api/timeblocker/list.json/?", TimeBlockerListerHandler),
             (r"/api/timeblocker/add?", TimeBlockerAddHandler),
             (r"/api/tagging/listByTag.json/?", TagListerByTagHandler),
@@ -82,9 +83,11 @@ class Application(tornado.web.Application):
             (r"/api/tagging/addTagPerNode?", TagAddPerNodeHandler),
             (r"/api/tagging/removeTagPerNode?", TagRemovePerNodeHandler),
             (r"/api/tagging/removeTag?", TagRemoveHandler),
+            (r"/api/tagging/tagStats?", GetTagStatsHandler),
             (r"/api/transactions/getTransactions?", GetTransactionsHandler),
             (r"/api/package/getDependecies?", GetDependenciesHandler),
             (r"/api/package/searchByPatch?", SearchPatchHandler),
+            (r"/api/node/modifyDisplayName?", ModifyDisplayNameHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.

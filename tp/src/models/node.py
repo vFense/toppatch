@@ -16,6 +16,7 @@ class NodeInfo(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    display_name = Column(VARCHAR(32), nullable=True, unique=True)
     host_name = Column(VARCHAR(32), nullable=True, unique=True)
     ip_address = Column(VARCHAR(16), nullable=False, unique=True)
     host_status = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
@@ -23,11 +24,12 @@ class NodeInfo(Base):
     last_agent_update = Column(DATETIME, nullable=True)
     last_node_update = Column(DATETIME, nullable=True)
     reboot = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
-    def __init__(self, ip_address, host_name,
+    def __init__(self, ip_address, host_name, display_name=None,
                 host_status=False, agent_status=False,
                 last_agent_update=None, last_node_update=None,
                 reboot=False
                 ):
+        self.display_name = display_name
         self.host_name = host_name
         self.ip_address = ip_address
         self.host_status = host_status
@@ -36,9 +38,9 @@ class NodeInfo(Base):
         self.last_node_update = last_node_update
         self.reboot = reboot
     def __repr__(self):
-        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.host_name, self.ip_address,
+                self.host_name, self.ip_address, self.display_name,
                 self.host_status, self.agent_status,
                 self.last_agent_update, self.last_node_update,
                 self.reboot
@@ -82,6 +84,32 @@ class SystemInfo(Base):
                 self.node_id, self.os_code, self.os_string,
                 self.version_major, self.version_minor,
                 self.version_build, self.meta, self.bit_type
+                )
+
+class NetworkInterface(Base):
+    """
+    Represents one row from the hosts table.
+    """
+    __tablename__ = "network_interface"
+    __visit_name__ = "column"
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    node_id = Column(INTEGER(unsigned=True),
+        ForeignKey("node_info.id"))
+    mac_address = Column(VARCHAR(12), nullable=True, unique=True)
+    ip_address = Column(VARCHAR(16), nullable=False, unique=True)
+    interface = Column(VARCHAR(32), nullable=True, unique=False)
+    def __init__(self, mac_address, ip_address, interface):
+        self.mac_address = mac_address
+        self.ip_address = ip_address
+        self.interface = interface
+    def __repr__(self):
+        return "<NodeInfo(%s,%s,%s)>" %\
+                (
+                self.mac_address, self.ip_address, self.interface
                 )
 
 class Operations(Base):
@@ -234,21 +262,29 @@ class NodeStats(Base):
     patches_available = Column(INTEGER(unsigned=True))
     patches_pending = Column(INTEGER(unsigned=True))
     patches_failed = Column(INTEGER(unsigned=True))
+    reboots_pending = Column(INTEGER(unsigned=True))
+    agents_down = Column(INTEGER(unsigned=True))
+    agents_up = Column(INTEGER(unsigned=True))
     def __init__(self, node_id, patches_installed,
                 patches_available, patches_pending,
-                patches_failed
+                patches_failed, reboots_pending,
+                agents_down, agents_up
                 ):
         self.node_id = node_id
         self.patches_installed = patches_installed
         self.patches_available = patches_available
         self.patches_pending = patches_pending
         self.patches_failed = patches_failed
+        self.reboots_pending = reboots_pending
+        self.agents_down = agents_down
+        self.agents_up = agents_up
     def __repr__(self):
-        return "<NodeStats(%d,%d,%d,%d,%d)>" %\
+        return "<NodeStats(%d,%d,%d,%d,%d,%d,%d,%d)>" %\
                 (
                 self.node_id, self.patches_installed,
                 self.patches_available, self.patches_pending,
-                self.patches_failed
+                self.patches_failed, self.reboots_pending,
+                self.agents_down, self.agents_up
                 )
 
 class NetworkStats(Base):
@@ -266,18 +302,26 @@ class NetworkStats(Base):
     patches_available = Column(INTEGER(unsigned=True))
     patches_pending = Column(INTEGER(unsigned=True))
     patches_failed = Column(INTEGER(unsigned=True))
+    reboots_pending = Column(INTEGER(unsigned=True))                                                                                                  
+    agents_down = Column(INTEGER(unsigned=True))
+    agents_up = Column(INTEGER(unsigned=True))
     def __init__(self, patches_installed,
                 patches_available, patches_pending,
-                patches_failed
+                patches_failed,reboots_pending,
+                agents_down, agents_up
                 ):
         self.patches_installed = patches_installed
         self.patches_available = patches_available
         self.patches_pending = patches_pending
         self.patches_failed = patches_failed
+        self.reboots_pending = reboots_pending
+        self.agents_down = agents_down
+        self.agents_up = agents_up
     def __repr__(self):
-        return "<NetworkStats(%d,%d,%d,%d)>" %\
+        return "<NetworkStats(%d,%d,%d,%d,%d,%d,%d)>" %\
                 (
                 self.patches_installed,
                 self.patches_available, self.patches_pending,
-                self.patches_failed
+                self.patches_failed, self.reboots_pending,
+                self.agents_down, self.agents_up
                 )

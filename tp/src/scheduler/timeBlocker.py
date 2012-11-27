@@ -9,10 +9,10 @@ from apscheduler.scheduler import Scheduler
 from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
 from jsonpickle import encode
 
-from utils.agentoperation import AgentOperation
+from networking.agentoperation import AgentOperation
 from utils.common import *
-from utils.db.query_table import *
-from utils.db.update_table import addTimeBlock, removeTimeBlock
+from db.query_table import *
+from db.update_table import addTimeBlock, removeTimeBlock
 from models.scheduler import *
 
 def timeBlockLister(session):

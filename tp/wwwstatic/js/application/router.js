@@ -35,11 +35,12 @@ define(
                 // Administration Panels
                 // Notice, update modals/admin/main.js if adding new admin/route
                 // Warning, update modals/panel.js open method if changing 'admin'
-                // Warning, update route method if chancing 'admin'
+                // Warning, update route method if changing 'admin'
                 'admin/managetags': 'modal/admin/managetags',
                 'admin/nodes'     : 'modal/admin/nodes',
                 'admin/timeblock' : 'modal/admin/timeblock',
-                'admin/listblocks': 'modal/admin/listblocks'
+                'admin/listblocks': 'modal/admin/listblocks',
+                'admin/syslog'    : 'modal/admin/syslog'
 
                 // Default
                 // '*other'        : 'defaultAction'
@@ -172,6 +173,9 @@ define(
             },
             'modal/admin/listblocks': function () {
                 this.openAdminModalWithView('modals/admin/listblocks');
+            },
+            'modal/admin/syslog': function () {
+                this.openAdminModalWithView('modals/admin/syslog');
             },
             /*
             defaultAction: function () {

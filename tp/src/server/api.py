@@ -14,12 +14,13 @@ from models.packages import *
 from models.node import *
 from models.ssl import *
 from server.handlers import SendToSocket
-from utils.db.client import *
-from utils.scheduler.jobManager import jobLister
-from utils.scheduler.timeBlocker import *
-from utils.tagging.tagManager import *
-from utils.search.search import *
-from utils.transactions.transactions_manager import *
+from db.client import *
+from scheduler.jobManager import jobLister
+from scheduler.timeBlocker import *
+from tagging.tagManager import *
+from search.search import *
+from node.nodeManager import *
+from transactions.transactions_manager import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -456,18 +457,18 @@ class PatchesHandler(BaseHandler):
                 for v in self.session.query(PackagePerNode, NodeInfo).filter(PackagePerNode.toppatch_id == u.toppatch_id).join(NodeInfo).all():
                     if v[0].installed:
                         countInstalled += 1
-                        nodeInstalled.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                        nodeInstalled.append({'id': v[0].node_id, 'ip': v[1].host_name})
                     elif v[0].pending:
                         countPending += 1
-                        nodePending.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                        nodePending.append({'id': v[0].node_id, 'ip': v[1].host_name})
                     elif v[0].attempts > 0:
                         countFailed += 1
-                        nodeFailed.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                        nodeFailed.append({'id': v[0].node_id, 'ip': v[1].host_name})
                         countAvailable += 1
-                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].host_name})
                     else:
                         countAvailable += 1
-                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].ip_address})
+                        nodeAvailable.append({'id': v[0].node_id, 'ip': v[1].host_name})
                 resultjson = {
                     "name" : u.name,
                     "type": "Security Patch",             #forcing Patch into type
@@ -700,8 +701,24 @@ class SchedulerAddHandler(BaseHandler):
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
-            self.write("Wrong arguement passed %s, the arguement needed is operation" % (e))
+            self.write("Wrong argument passed %s, the arguement needed is operation" % (e))
         result = JobScheduler(self.msg, self.sched)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+class SchedulerRemoveHandler(BaseHandler):
+
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        self.sched = self.application.scheduler
+        jobname = None
+        try:
+            jobname = self.get_argument('jobname')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is jobname" % (e))
+        result = removeJob(self.sched, jobname)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -823,6 +840,7 @@ class SearchPatchHandler(BaseHandler):
     def get(self):
         self.session = self.application.session
         self.session = validateSession(self.session)
+        output = 'json'
         try:
             query = self.get_argument('query')
             column = self.get_argument('searchby')
@@ -830,6 +848,48 @@ class SearchPatchHandler(BaseHandler):
             offset = self.get_argument('offset')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
-        result = basicPackageSearch(self.session, query, column, count=count, offset=offset)
+        try:
+            output = self.get_argument('output')
+        except Exception as e:
+            pass
+        result = basicPackageSearch(self.session, query, column, count=count, offset=offset, output=output)
+        if 'json' in output:
+            self.set_header('Content-Type', 'application/json')
+            self.write(json.dumps(result, indent=4))
+        elif 'csv' in output:
+            self.set_header('Content-Type', 'application/csv')
+            self.write(result)
+
+class GetTagStatsHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        tag_id = None
+        tag_name = None
+        try:
+            tag_id = self.get_argument('tagid')
+            tag_name = self.get_argument('tagname')
+        except Exception as e:
+            pass
+        result = getTagStats(self.session, tagid=tag_id, tagname=tag_name)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+class ModifyDisplayNameHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validateSession(self.session)
+        nodeid = None
+        displayname = None
+        try:
+            nodeid = self.get_argument('nodeid')
+            displayname = self.get_argument('displayname')
+        except Exception as e:
+            pass
+        result = getTagStats(self.session, nodeid, displayname)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
