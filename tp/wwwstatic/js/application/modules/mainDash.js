@@ -174,29 +174,43 @@ define(
                         $("#insert").append(this.template);
                         this.counter += 1;
                         */
-                        this.widget = "#" + this.widget;
-                        this.counter += 1;
                         this.sizeval = $('input:radio[name=radio]:checked').val();
-                        this.graph = '#insert';
+                        variables = {
+                            widget: this.widget,
+                            span: "span" + this.sizeval,
+                            graphcontainer: "graphcontainer" + this.counter,
+                            menu: "menu" + this.counter,
+                            graph: "graph" + this.counter,
+                            title: this.title
+                        };
+                        this.graph = "#graph" + this.counter;
+                        this.widget = "#" + this.widget;
+                        this.template = _.template($("#widget_template").html(), variables);
+                        $("#insert").append(this.template);
+                        this.counter += 1;
                         this.getTags();
                     }
                 },
                 renderExisting: function () {
                     var variables, index, parent;
                     this.widget = "#" + properties.get("widgetName");
+                    this.graph = "#" + $(this.widget + " .graph").attr("id");
+                    this.title = properties.get('widgetTitle');
                     if (this.type === "graph") {
                         this.myClass = $(this.widget).attr("class");
                         this.sizeval = $('input:radio[name=radio]:checked').val();
                         this.graphType = $('input:radio[name=graph]:checked').val();
-                        this.graph = "#" + $(this.widget + " .graph").attr("id");
                         this.graphData = $('input:radio[name=graphdata]:checked').val();
-                        this.title = properties.get('widgetTitle');
                         $(this.widget + '-title').html(this.title);
                         $(this.widget).removeClass(this.myClass).addClass("span" + this.sizeval + " widget editable");
                         this.displayChart();
                         this.saveState();
                     } else {
                         this.sizeval = $('input:radio[name=radio]:checked').val();
+                        this.graphType = 'tag';
+                        this.myClass = $(this.widget).attr("class");
+                        $(this.widget + '-title').html(this.title);
+                        $(this.widget).removeClass(this.myClass).addClass("span" + this.sizeval + " widget editable");
                         this.getTags();
                         //text widget block
                         /*
@@ -219,18 +233,18 @@ define(
                     }
                 },
                 getTags: function () {
-                    var that = this;
-                    this.title = 'Tag Stats';
-                    this.graphType = 'tag';
-                    this.myClass = $(this.widget).attr("class");
-                    $(this.widget + '-title').html(this.title);
-                    $(this.widget).removeClass(this.myClass).addClass("span" + this.sizeval + " widget editable");
-                    $.getJSON('api/tagging/tagStats', function (data) {
-                        that.template = _.template($("#tags_template").html(), {data: data});
-                        if (that.graph !== '#insert') { $(that.graph).empty(); }
-                        window.console.log($(that.graph));
-                        $(that.graph).append(that.template);
-                        that.saveState();
+                    var that = this, tag_template;
+                    $.ajax({
+                        url: 'api/tagging/tagStats',
+                        dataType: 'json',
+                        async: false,
+                        success: function (data) {
+                            $(that.graph).empty();
+                            window.console.log($(that.graph));
+                            tag_template = _.template($('#tags_template').html(), {data: data});
+                            $(that.graph).html(tag_template);
+                            that.saveState();
+                        }
                     });
                 },
                 getOverviewData: function () {
@@ -402,6 +416,9 @@ define(
                                 } else if (widgets[i] === 'tag') {
                                     widgetview.graph = '#graph' + (i + 1);
                                     widgetview.sizeval = settings.spans[i];
+                                    widgetview.title = settings.titles[i];
+                                    widgetview.graphType = widgets[i];
+                                    window.console.log(widgetview.graph);
                                     widgetview.getTags();
                                 }
                             }
