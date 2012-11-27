@@ -72,6 +72,16 @@
   &.noMargin:after {
     margin: 0;
   }
+
+  // EM: give left margin back to dropdown/up
+  .btn       + .btn,
+  .btn       + .btn-group,
+  .btn-group + .btn,
+  .btn-group + .btn-group {
+    .dropdown-menu {
+      margin-left: @em*( 5px )/@btnGroupFontSize;
+    }
+  }
 }
 
 // Float them, remove border radius, then re-add to first and last elements
