@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'app', 'text!templates/multi.html', 'modules/controller', 'modules/detail'],
-    function ($, Backbone, app, myTemplate, controller, detail) {
+    ['jquery', 'underscore', 'backbone', 'app', 'text!templates/multi.html', 'modules/controller', 'modules/detail'],
+    function ($, _, Backbone, app, myTemplate, controller, detail) {
         "use strict";
         var MultiPatch = {},
             form = {'node_id': null, 'install': []},
