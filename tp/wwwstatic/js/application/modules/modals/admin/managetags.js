@@ -32,7 +32,7 @@ define(
                 },
                 events: {
                     'click a.accordion-toggle': 'stoplink',
-                    'click a[name=remove]': 'deleteTag'
+                    'click button[name=remove]': 'deleteTag'
                 },
                 stoplink: function (event) {
                     event.preventDefault();
@@ -46,7 +46,7 @@ define(
                     popover.on('click', this.togglePopup);
                     popover.popover({
                         placement: 'right',
-                        title: 'Add Nodes <button class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
+                        title: 'Add Nodes <button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
                         html: true,
                         content: nodelist.clone(),
                         trigger: 'manual'
@@ -132,6 +132,7 @@ define(
                     }
                 },
                 deleteTag: function (event) {
+                    event.preventDefault();
                     var params, user,
                         $icon = $(event.target),
                         $item = $icon.parents('.accordion-group'),

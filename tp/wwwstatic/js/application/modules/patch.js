@@ -85,7 +85,7 @@ define(
                     $('input[name=schedule]').each(function () {
                         $(this).popover({
                             placement: 'top',
-                            title: 'Patch Scheduling<button class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
+                            title: 'Patch Scheduling<button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
                             html: true,
                             content: $('#schedule-form').clone(),
                             trigger: 'click'
@@ -94,7 +94,7 @@ define(
                         var popover = this;
                         if (popover.checked) {
                             $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
-                            close = $(this).data('popover').$tip.find('a[name=close]');
+                            close = $(this).data('popover').$tip.find('button[name=close]');
                             close.bind('click', function () {
                                 $(popover).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                                 $(popover).popover('hide');

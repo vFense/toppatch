@@ -29,10 +29,10 @@ define(
 
                 },
                 events: {
-                    'click .disabled': function (e) { return false; },
+                    'click .disabled': function (e) { e.preventDefault(); },
                     'click #addTag': 'showtags',
                     'click #createtag': 'createtag',
-                    'click a[name=dependencies]': 'showDependencies',
+                    'click button[name=dependencies]': 'showDependencies',
                     'click input[name=taglist]': 'toggletag',
                     'submit form': 'submit'
                 },
@@ -40,7 +40,7 @@ define(
                 onRender: function () {
                     var close;
                     this.$el.find('#addTag').popover({
-                        title: 'Tags Available<button class="btn btn-link pull-right" id="close"><i class="icon-remove"></i></button>',
+                        title: 'Tags Available<button type="button" class="btn btn-link pull-right" id="close"><i class="icon-remove"></i></button>',
                         html: true,
                         trigger: 'click',
                         content: $('#list-form')
@@ -48,7 +48,7 @@ define(
                     this.$el.find('input[name=schedule]').each(function () {
                         $(this).popover({
                             placement: 'top',
-                            title: 'Patch Scheduling<button class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
+                            title: 'Patch Scheduling<button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
                             html: true,
                             content: $('#schedule-form').clone(),
                             trigger: 'click'
@@ -141,6 +141,7 @@ define(
                     return false;
                 },
                 showDependencies: function (event) {
+                    event.preventDefault();
                     var list, node_id, patch_id, params,
                         popoverlink = $(event.currentTarget);
 
