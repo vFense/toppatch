@@ -36,19 +36,17 @@ define(
                     id = $target.attr('id');
 
                 // Prevent action if click on current
-                if ($target.hasClass('first')) {
-                    return false;
+                if (!$target.hasClass('first')) {
+                    detail.Collection = detail.Collection.extend({id: id, checked: formArray});
+
+                    $target.addClass('first')
+                        .siblings()
+                        .removeClass('first');
+
+                    this.detailView = new detail.View({
+                        el: this.$el.find('.detail')
+                    });
                 }
-
-                detail.Collection = detail.Collection.extend({id: id, checked: formArray});
-
-                $target.addClass('first')
-                    .siblings()
-                    .removeClass('first');
-
-                this.detailView = new detail.View({
-                    el: this.$el.find('.detail')
-                });
             },
             addPatch: function (event) {
                 var id = this.$el.find('.first').attr('id'),
