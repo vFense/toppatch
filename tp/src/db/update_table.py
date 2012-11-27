@@ -387,9 +387,19 @@ def updateOperationRow(session, oper_id, results_recv=None, oper_recv=None):
         operation.update({'operation_received' : datetime.now()})
         session.commit()
 
-def updateNode(session, node_id):
+
+def updateNode(session, node_id, ipaddress):
     session = validateSession(session)
     exists, node = nodeExists(session, node_id=node_id)
+    error = None
+    if not node.ip_address == ipaddress:
+        try:
+            node.ip_address = ipaddress
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            error = e.message
+            print error
     if exists:
         exists.update({'last_agent_update' : datetime.now(),
                       'last_node_update' : datetime.now(),
