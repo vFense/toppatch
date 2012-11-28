@@ -57,8 +57,9 @@ define(
                         var popover = this;
                         if (popover.checked) {
                             $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
-                            close = $(this).data('popover').$tip.find('a[name=close]');
-                            close.bind('click', function () {
+                            close = $(this).data('popover').$tip.find('button[name=close]');
+                            close.bind('click', function (event) {
+                                event.preventDefault();
                                 $(popover).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                                 $(popover).popover('hide');
                                 popover.checked = false;

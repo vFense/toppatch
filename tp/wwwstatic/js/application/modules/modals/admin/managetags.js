@@ -40,7 +40,7 @@ define(
                         $icon = $href.find('i'),
                         parent = $href.parents('.accordion-group'),
                         body = parent.find('.accordion-body'),
-                        popover = body.find('a[name=popover]'),
+                        popover = body.find('button[name=popover]'),
                         nodelist = $('#nodelist');
                     popover.unbind();
                     popover.on('click', this.togglePopup);
@@ -83,7 +83,10 @@ define(
                         });
                     });
                     $checkboxes.on('change', popover, window.currentView.toggleNode);
-                    $tip.find('a[name=close]').on('click', function (event) { popover.popover('hide'); });
+                    $tip.find('button[name=close]').on('click', function (event) {
+                        event.preventDefault();
+                        popover.popover('hide');
+                    });
                 },
                 toggleNode: function (event) {
                     var params, node_ip, node_id, tag, user, nodelist, empty_div, popover, badge, badgeCounter,
