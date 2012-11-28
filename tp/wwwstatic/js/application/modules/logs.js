@@ -58,6 +58,7 @@ define(
                         this.updateList('reset');
                     }, this);
                 },
+
                 beforeRender: function () {
                     this._rendered = false;
                 },
@@ -81,6 +82,7 @@ define(
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 },
+
                 renderModel: function (item) {
                     var newElement = function (element) {
                             return $(document.createElement(element));
@@ -98,18 +100,6 @@ define(
                     $desc.html(item.get('node_id'));
                     $date.html(item.get('operation_sent'));
 
-                    /*
-                     $date.html(
-                        $.datepicker.formatDate(
-                            'mm-dd-yy',
-                            $.datepicker.parseDate(
-                                'mm/dd/yy',
-                                item.get('operation_sent')
-                            )
-                        )
-                    );
-                    */
-
                     if (_.isBoolean(result) && !result) {
                         $div.addClass('fail');
                         $error.append(
@@ -125,6 +115,7 @@ define(
                         $div.append($operation, $desc, $error, $date)
                     );
                 },
+
                 updateList: function (event) {
                     var that = this,
                         $el = this.$el,
