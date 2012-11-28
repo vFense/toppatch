@@ -5,11 +5,6 @@ define(
         var exports = {
             Collection: Backbone.Collection.extend({
                 baseUrl: 'api/transactions/getTransactions',
-                params: {
-                    // defaults
-                    offset: 0,
-                    count: 20
-                },
                 url: function () {
                     var query = '?' + $.param(this.params).trim(),
                         url = this.baseUrl;
@@ -22,6 +17,12 @@ define(
                     return response.data || response;
                 },
                 initialize: function (options) {
+                    // Set default parameters
+                    this.params = {
+                        offset: 0,
+                        count: 20
+                    };
+
                     // Accept only the params defined above
                     // If params = {a: 1, b: 2} and options.params = {a: 0, c: 3}
                     // then final params is {a: 0, b: 2}. {c: 3} is disregarded.
