@@ -149,7 +149,7 @@ define(
                     }
 
                     collection = new myView.Collection({
-                        parameters: params
+                        params: params
                     });
 
                     view = new myView.View({collection: collection});
