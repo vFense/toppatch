@@ -204,7 +204,8 @@ define(
                         $items = $el.find('.items'),
                         $footer = $el.find('footer'),
                         $item = this._baseItem,
-                        models = this.collection.models;
+                        col = this.collection,
+                        models = col.models;
 
                     if (event === 'reset') {
                         $items.empty();
