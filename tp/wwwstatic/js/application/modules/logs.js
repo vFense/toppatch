@@ -32,6 +32,8 @@ define(
                 },
 
                 initialize: function (options) {
+                    var that = this;
+
                     // Set default parameters
                     this.params = {
                         // Paging
@@ -50,6 +52,13 @@ define(
                                 _.keys(this.params)
                             )
                         );
+
+                        // Ensure numeric values are actually numbers
+                        _.each(this.params, function (value, key) {
+                            if ($.isNumeric(value) && $.type(value) === 'string') {
+                                that.params[key] = parseInt(value, 10);
+                            }
+                        });
                     }
                 }
             }),
