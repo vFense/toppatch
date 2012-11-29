@@ -233,7 +233,18 @@ define(
                         this.togglePagerButtons(true);
                     }
 
+                    if (models.length > 0) {
+                        (function () {
+                            var start = 1 + col.getParameter('offset'),
+                                end = start + models.length - 1,
+                                total = col.getRecordCount(),
+                                out = ['Showing', start, '-', end, 'of', total, 'records.'].join(' ');
 
+                            $footer.find('.pull-left').text(out);
+                        }());
+                    } else {
+                        $footer.find('.pull-left').html('&nbsp;');
+                    }
 
                     return this;
                 },
