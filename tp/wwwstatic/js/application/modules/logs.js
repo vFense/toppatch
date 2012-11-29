@@ -112,6 +112,16 @@ define(
                     }, this);
                 },
 
+                events: {
+                    'click .disabled': 'stopEvent',
+                    'click #list-pagePrev': 'pagePrev',
+                    'click #list-pageNext': 'pageNext'
+                },
+
+                stopEvent: function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
                 },
 
                 beforeRender: function () {
@@ -198,6 +208,39 @@ define(
                             )
                         );
                     }
+
+                    this.togglePagerButtons(true);
+
+                    return this;
+                },
+
+                togglePagerButtons: function (forcedOff) {
+                    var $el = this.$el;
+
+                    // Issues with readability. Double negatives get confusing.
+                    // Way to improve? Perhaps full if/else statements (WETWET)?
+                    $el.find('#list-pageNext').toggleClass('disabled', forcedOff || !this.collection.hasNext());
+                    $el.find('#list-pagePrev').toggleClass('disabled', forcedOff || !this.collection.hasPrev());
+
+                    return this;
+                },
+
+                pageNext: function () {
+                    this.collection.getNextSet();
+
+                    return this.updateURL();
+                },
+                pagePrev: function () {
+                    this.collection.getPrevSet();
+
+                    return this.updateURL();
+                },
+
+                updateURL: function () {
+                    // Update the URL, but do not cause a route event
+                    app.router.navigate('logs' + this.collection.query());
+
+                    return this;
                 }
             })
         };
