@@ -38,12 +38,12 @@ define(
                         count: 20
                     };
 
-                    // Accept only the params defined above
-                    // If params = {a: 1, b: 2} and options.params = {a: 0, c: 3}
-                    // then final params is {a: 0, b: 2}. {c: 3} is disregarded.
                     if (options.params) {
                         _.extend(
                             this.params,
+                            // Accept only the params defined in this.params
+                            // If this.params = {a: 1, b: 2} and options.params = {a: 0, c: 3}
+                            // then final this.params is {a: 0, b: 2}. {c: 3} is ignored.
                             _.pick(
                                 options.params,
                                 _.keys(this.params)
