@@ -12,6 +12,15 @@ define(
                     if (query !== '?') { url += query; }
                     return url;
                 },
+
+                fetch: function () {
+                    // Add fetch event
+                    this.trigger('fetch');
+
+                    // Call original fetch method
+                    return this.constructor.__super__.fetch.apply(this, arguments);
+                },
+
                 query: function () {
                     return '?' + $.param(this.params).trim();
                 },
