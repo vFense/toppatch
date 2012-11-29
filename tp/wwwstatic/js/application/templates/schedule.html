@@ -6,7 +6,8 @@
                 <span class="patches pull-right">
                     <span>Time</span> /
                     <span>Type</span> /
-                    <span>Throttle</span>
+                    <span>Throttle</span> /
+                    <span>Remove</span>
                 </span>
             </div>
             <% if(data.length != 0) { %>
@@ -14,7 +15,7 @@
                     <div class="item clearfix">
                         <div class="row-fluid">
                             <span class="span8"><strong><%= schedule.node_id %></strong> — <%= schedule.operation %> — <%= schedule.label %></span>
-                            <span class="span4 alignRight"><%= schedule.time %> / <%= schedule.schedule %> / <%= schedule.cpu_throttle %></span>
+                            <span class="span4 alignRight"><%= schedule.time %> / <%= schedule.schedule %> / <%= schedule.cpu_throttle || 'N/A' %> / <button type="button" class="btn btn-link" name="remove" value="<%= schedule.label %>"><i style="color: red;" class="icon-remove"></i></button></span>
                         </div>
                     </div>
                 <% }); %>

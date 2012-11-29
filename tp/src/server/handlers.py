@@ -42,7 +42,7 @@ class LoginHandler(BaseHandler):
             print redirect
             if redirect is not None:
                 if redirect != '/':
-                    self.redirect("/" + redirect)
+                    self.redirect(redirect)
                 else:
                     self.redirect(redirect)
             else:
@@ -105,6 +105,9 @@ class LogoutHandler(BaseHandler):
         #self.write("Goodbye!" + '<br><a href="/login">Login</a>')
 
 class DeveloperRegistrationHandler(BaseHandler):
+
+
+    @authenticated_request
     def get(self):
         self.write('<html>'
                    '<body>'
