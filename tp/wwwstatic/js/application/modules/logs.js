@@ -27,9 +27,10 @@ define(
                 },
 
                 parse: function (response) {
-                    this.recordCount = response.count;
+                    this.recordCount = parseInt(response.count, 10);
                     return response.data || response;
                 },
+
                 initialize: function (options) {
                     // Set default parameters
                     this.params = {
