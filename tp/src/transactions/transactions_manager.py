@@ -50,6 +50,6 @@ def retrieveTransactions(session, count=None, offset=None):
                          "reboot" : trans[1][1][0].reboot,
                          "error" : trans[1][1][0].error,
                          })
-    final_msg['data'].append(transaction)
+    final_msg['data'] = transaction
     return final_msg
 

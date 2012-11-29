@@ -113,4 +113,4 @@ class HandOff():
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
     def nodeUpdate(self):
-        results = updateNode(self.session, self.node.id)
+        results = updateNode(self.session, self.node.id, self.ip)
