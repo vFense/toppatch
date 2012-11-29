@@ -34,6 +34,7 @@ define(
                 initialize: function (options) {
                     // Set default parameters
                     this.params = {
+                        // Paging
                         offset: 0,
                         count: 20
                     };
