@@ -269,6 +269,11 @@ define(
                                 ].join(' ')
                             )
                         );
+
+                        // Set footer content
+                        $footer.find('.pull-left').html('&nbsp;');
+
+                        this.togglePagerButtons(true);
                     }
 
                     return this;
