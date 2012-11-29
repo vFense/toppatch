@@ -22,8 +22,7 @@ define(
                 removeSchedule: function (event) {
                     var $removeButton = $(event.currentTarget),
                         jobname = $removeButton.val(),
-                        $item = $removeButton.parents('item');
-                    window.console.log(jobname);
+                        $item = $removeButton.parents('.item');
                     $.post('api/scheduler/remove', {jobname: jobname}, function (json) {
                         window.console.log(json);
                         if (json.pass) {
