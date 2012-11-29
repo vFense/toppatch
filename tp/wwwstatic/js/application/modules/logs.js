@@ -18,12 +18,23 @@ define(
                     return '?' + $.param(this.params).trim();
                 },
 
-                fetch: function () {
+                fetch: function (options) {
+                    var that = this;
+
+                    options = options || {};
+
                     // Add fetch event
                     this.trigger('fetch');
 
+                    // Trigger error event unless other function is provided
+                    if (!options || !options.error || _.isFunction(options.error)) {
+                        options.error = function (collection, xhr, options) {
+                            that.trigger('error', collection, xhr, options);
+                        };
+                    }
+
                     // Call original fetch method
-                    return this.constructor.__super__.fetch.apply(this, arguments);
+                    return this.constructor.__super__.fetch.apply(this, options);
                 },
 
                 parse: function (response) {
@@ -120,11 +131,15 @@ define(
                     }
 
                     this.collection.bind('reset', function () {
-                        this.updateList('reset');
+                        this.updateList({name: 'reset'});
                     }, this);
 
                     this.collection.bind('fetch', function () {
-                        this.updateList('fetch');
+                        this.updateList({name: 'fetch'});
+                    }, this);
+
+                    this.collection.bind('error', function (collection, xhr, options) {
+                        this.updateList({name: 'error', response: xhr});
                     }, this);
                 },
 
@@ -206,23 +221,36 @@ define(
                         col = this.collection,
                         models = col.models;
 
-                    if (event === 'reset') {
+                    if (event.name === 'reset') {
                         $items.empty();
 
-                        if (models.length !== 0) {
+                        if (models.length > 0) {
                             _.each(models, function (model) {
                                 $items.append(that.renderModel(model));
                             });
+
+                            // Set footer content
+                            (function () {
+                                var start = 1 + col.getParameter('offset'),
+                                    end = start + models.length - 1,
+                                    total = col.getRecordCount(),
+                                    out = ['Showing', start, '-', end, 'of', total, 'records.'].join(' ');
+
+                                $footer.find('.pull-left').text(out);
+                            }());
                         } else {
                             $items.html(
                                 _.clone($item).empty().html(
                                     'No data available'
                                 )
                             );
+
+                            // Set footer content
+                            $footer.find('.pull-left').html('&nbsp;');
                         }
 
                         this.togglePagerButtons();
-                    } else if (event === 'fetch') {
+                    } else if (event.name === 'fetch') {
                         $items.empty().html(
                             _.clone($item).html(
                                 'Loading...'
@@ -230,19 +258,18 @@ define(
                         );
 
                         this.togglePagerButtons(true);
-                    }
-
-                    if (models.length > 0) {
-                        (function () {
-                            var start = 1 + col.getParameter('offset'),
-                                end = start + models.length - 1,
-                                total = col.getRecordCount(),
-                                out = ['Showing', start, '-', end, 'of', total, 'records.'].join(' ');
-
-                            $footer.find('.pull-left').text(out);
-                        }());
-                    } else {
-                        $footer.find('.pull-left').html('&nbsp;');
+                    } else if (event.name === 'error') {
+                        $items.empty().html(
+                            _.clone($item).html(
+                                [
+                                    'Error',
+                                    event.response.status,
+                                    '-',
+                                    event.response.statusText
+                                ].join(' ')
+                            )
+                        );
+                        console.log(arguments);
                     }
 
                     return this;
