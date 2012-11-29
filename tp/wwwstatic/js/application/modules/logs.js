@@ -261,12 +261,12 @@ define(
                 },
 
                 pageNext: function () {
-                    this.collection.getNextSet();
+                    this.collection.fetchNextSet();
 
                     return this.updateURL();
                 },
                 pagePrev: function () {
-                    this.collection.getPrevSet();
+                    this.collection.fetchPrevSet();
 
                     return this.updateURL();
                 },
