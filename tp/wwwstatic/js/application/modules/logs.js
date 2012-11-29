@@ -6,12 +6,16 @@ define(
             Collection: Backbone.Collection.extend({
                 baseUrl: 'api/transactions/getTransactions',
                 url: function () {
-                    var query = '?' + $.param(this.params).trim(),
+                    var query = this.query(),
                         url = this.baseUrl;
 
                     if (query !== '?') { url += query; }
                     return url;
                 },
+                query: function () {
+                    return '?' + $.param(this.params).trim();
+                },
+
                 parse: function (response) {
                     this.recordCount = response.count;
                     return response.data || response;
