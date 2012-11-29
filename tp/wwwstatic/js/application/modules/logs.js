@@ -201,15 +201,19 @@ define(
                                 )
                             );
                         }
+
+                        this.togglePagerButtons();
                     } else if (event === 'fetch') {
                         $items.empty().html(
                             _.clone($item).html(
                                 'Loading...'
                             )
                         );
+
+                        this.togglePagerButtons(true);
                     }
 
-                    this.togglePagerButtons(true);
+
 
                     return this;
                 },
