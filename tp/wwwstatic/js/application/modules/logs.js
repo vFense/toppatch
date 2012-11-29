@@ -83,7 +83,7 @@ define(
                     if (this.hasPrev()) {
                         this.params.offset = Math.max(
                             this.params.offset - this.params.count,
-                            0
+                            0 // Prevent going into negative offsets
                         );
 
                         this.fetch();
