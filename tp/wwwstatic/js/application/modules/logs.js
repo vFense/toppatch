@@ -53,10 +53,10 @@ define(
                             )
                         );
 
-                        // Ensure numeric values are actually numbers
-                        _.each(this.params, function (value, key) {
-                            if ($.isNumeric(value) && $.type(value) === 'string') {
-                                that.params[key] = parseInt(value, 10);
+                        // Convert numeric params into numbers
+                        _.each(this.params, function (param, key) {
+                            if ($.isNumeric(param) && $.type(param) === 'string') {
+                                that.params[key] = parseInt(param, 10);
                             }
                         });
                     }
