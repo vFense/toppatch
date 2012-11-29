@@ -106,6 +106,12 @@ define(
                     this.collection.bind('reset', function () {
                         this.updateList('reset');
                     }, this);
+
+                    this.collection.bind('fetch', function () {
+                        this.updateList('fetch');
+                    }, this);
+                },
+
                 },
 
                 beforeRender: function () {
