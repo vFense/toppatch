@@ -61,11 +61,10 @@ define(
                         });
                     }
                 },
-                
+
                 getParameter: function (name) {
                     var out;
 
-                    console.log([this.params, name, this.params[name]]);
                     if (!name) {
                         out = this.params;
                     } else {
@@ -74,7 +73,7 @@ define(
 
                     return out;
                 },
-                
+
                 getRecordCount: function () {
                     return this.recordCount;
                 },
