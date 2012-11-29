@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'text!templates/list.html', 'jquery.ui.datepicker'],
-    function ($, _, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'text!templates/list.html', 'jquery.ui.datepicker'],
+    function ($, _, Backbone, app, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
