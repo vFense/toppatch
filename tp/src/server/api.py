@@ -15,7 +15,7 @@ from models.node import *
 from models.ssl import *
 from server.handlers import SendToSocket
 from db.client import *
-from scheduler.jobManager import jobLister
+from scheduler.jobManager import jobLister, removeJob
 from scheduler.timeBlocker import *
 from tagging.tagManager import *
 from search.search import *
