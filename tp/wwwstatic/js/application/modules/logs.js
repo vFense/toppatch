@@ -269,7 +269,6 @@ define(
                                 ].join(' ')
                             )
                         );
-                        console.log(arguments);
                     }
 
                     return this;
