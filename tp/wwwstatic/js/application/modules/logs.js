@@ -60,6 +60,30 @@ define(
                             }
                         });
                     }
+                },
+
+                getPrevSet: function () {
+                    if (this.hasPrev()) {
+                        this.params.offset = Math.max(
+                            this.params.offset - this.params.count,
+                            0
+                        );
+
+                        this.fetch();
+                    }
+                },
+                getNextSet: function () {
+                    if (this.hasNext()) {
+                        this.params.offset += this.params.count;
+
+                        this.fetch();
+                    }
+                },
+                hasPrev: function () {
+                    return this.params.offset > 0;
+                },
+                hasNext: function () {
+                    return this.params.offset + this.params.count < (this.recordCount || 0);
                 }
             }),
             View: Backbone.View.extend({
