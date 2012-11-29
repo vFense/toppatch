@@ -149,9 +149,7 @@ define(
                     }
 
                     collection = new myView.Collection({
-                        type: params.type,
-                        count: params.count,
-                        offset: params.offset
+                        params: params
                     });
 
                     view = new myView.View({collection: collection});
