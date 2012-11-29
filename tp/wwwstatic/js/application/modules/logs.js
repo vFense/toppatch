@@ -131,7 +131,6 @@ define(
                         this._baseItem = _.clone($items.find('.item')).empty();
                     }
 
-                    this.updateList('fetch');
                     this.collection.fetch();
 
                     if (this.onRender !== $.noop) { this.onRender(); }
