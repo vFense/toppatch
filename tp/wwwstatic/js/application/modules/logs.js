@@ -74,6 +74,10 @@ define(
 
                     return out;
                 },
+                
+                getRecordCount: function () {
+                    return this.recordCount;
+                },
 
                 getPrevSet: function () {
                     if (this.hasPrev()) {
