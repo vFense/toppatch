@@ -32,7 +32,7 @@ define(
                 },
                 events: {
                     'click a.accordion-toggle': 'stoplink',
-                    'click a[name=remove]': 'deleteTag'
+                    'click button[name=remove]': 'deleteTag'
                 },
                 stoplink: function (event) {
                     event.preventDefault();
@@ -40,13 +40,13 @@ define(
                         $icon = $href.find('i'),
                         parent = $href.parents('.accordion-group'),
                         body = parent.find('.accordion-body'),
-                        popover = body.find('a[name=popover]'),
+                        popover = body.find('button[name=popover]'),
                         nodelist = $('#nodelist');
                     popover.unbind();
                     popover.on('click', this.togglePopup);
                     popover.popover({
                         placement: 'right',
-                        title: 'Add Nodes <a href="javascript:;" class="pull-right" name="close"><i class="icon-remove"></i></a>',
+                        title: 'Add Nodes <button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
                         html: true,
                         content: nodelist.clone(),
                         trigger: 'manual'
@@ -83,7 +83,10 @@ define(
                         });
                     });
                     $checkboxes.on('change', popover, window.currentView.toggleNode);
-                    $tip.find('a[name=close]').on('click', function (event) { popover.popover('hide'); });
+                    $tip.find('button[name=close]').on('click', function (event) {
+                        event.preventDefault();
+                        popover.popover('hide');
+                    });
                 },
                 toggleNode: function (event) {
                     var params, node_ip, node_id, tag, user, nodelist, empty_div, popover, badge, badgeCounter,
@@ -132,6 +135,7 @@ define(
                     }
                 },
                 deleteTag: function (event) {
+                    event.preventDefault();
                     var params, user,
                         $icon = $(event.target),
                         $item = $icon.parents('.accordion-group'),

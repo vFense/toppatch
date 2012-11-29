@@ -262,7 +262,7 @@ class NodeStats(Base):
     patches_available = Column(INTEGER(unsigned=True))
     patches_pending = Column(INTEGER(unsigned=True))
     patches_failed = Column(INTEGER(unsigned=True))
-    reboots_pending = Column(INTEGER(unsigned=True))                                                                                                  
+    reboots_pending = Column(INTEGER(unsigned=True))
     agents_down = Column(INTEGER(unsigned=True))
     agents_up = Column(INTEGER(unsigned=True))
     def __init__(self, node_id, patches_installed,
