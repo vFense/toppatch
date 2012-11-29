@@ -5,6 +5,7 @@ define(
         var exports = {
             Collection: Backbone.Collection.extend({
                 baseUrl: 'api/transactions/getTransactions',
+                params: {},
                 url: function () {
                     var query = this.query(),
                         url = this.baseUrl;
