@@ -200,7 +200,9 @@ define(
                 updateList: function (event) {
                     var that = this,
                         $el = this.$el,
+                        $header = $el.find('header'),
                         $items = $el.find('.items'),
+                        $footer = $el.find('footer'),
                         $item = this._baseItem,
                         models = this.collection.models;
 
