@@ -173,9 +173,9 @@ define(
                         $item       = newElement('div').addClass('item'),
                         $div        = newElement('div').addClass('row-fluid'),
                         $operation  = newElement('small').addClass('span2'),
-                        $desc       = newElement('span').addClass('desc span3'),
-                        $error      = newElement('small').addClass('span2').html('&nbsp;'),
-                        $date       = newElement('span').addClass('float-right offset3 span2 alignRight');
+                        $desc       = newElement('small').addClass('desc span3'),
+                        $error      = newElement('small').addClass('span5').html('&nbsp;'),
+                        $date       = newElement('small').addClass('span2 alignRight');
 
                     $operation.append(item.get('operation').toUpperCase());
                     $desc.html(item.get('node_id'));
