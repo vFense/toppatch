@@ -79,7 +79,7 @@ define(
                     return this.recordCount;
                 },
 
-                getPrevSet: function () {
+                fetchPrevSet: function () {
                     if (this.hasPrev()) {
                         this.params.offset = Math.max(
                             this.params.offset - this.params.count,
@@ -89,7 +89,7 @@ define(
                         this.fetch();
                     }
                 },
-                getNextSet: function () {
+                fetchNextSet: function () {
                     if (this.hasNext()) {
                         this.params.offset += this.params.count;
 
