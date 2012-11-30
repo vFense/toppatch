@@ -38,19 +38,22 @@ class HandOff():
                                   })
                     self.session.commit()
                     TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
-                    if not self.session.query(SystemInfo).\
-                            filter(SystemInfo.node_id == self.node.id).first():
-                        self.getData("system_info")
-                if not self.session.query(SystemInfo).\
-                        filter(SystemInfo.node_id == self.node.id).first():
-                    self.getData("system_info")
-                if self.session.query(SystemInfo).\
-                        filter(SystemInfo.node_id == self.node.id).first():
-                    if not self.session.query(PackagePerNode).\
-                            filter(PackagePerNode.node_id == self.node.id).first():
-                        self.getData("updates_installed")
-                        self.getData("updates_pending")
-                        self.getData("system_applications")
+             #"""       if not self.session.query(SystemInfo).\
+             #               filter(SystemInfo.node_id == self.node.id).first():
+             #           self.getData("system_info")
+             #   if not self.session.query(SystemInfo).\
+             #           filter(SystemInfo.node_id == self.node.id).first():
+             #       print "calling system_info to the agent"
+             #       self.getData("system_info")
+             #   if self.session.query(SystemInfo).\
+             #           filter(SystemInfo.node_id == self.node.id).first():
+             #       if not self.session.query(PackagePerNode).\
+             #               filter(PackagePerNode.node_id == self.node.id).first():
+             #           print "calling get updates to the agent"
+             #           self.getData("updates_installed")
+             #           self.getData("updates_pending")
+             #           self.getData("system_applications")
+             #"""
             else:
                 pass
             if self.json_object[OPERATION] == SYSTEM_INFO:

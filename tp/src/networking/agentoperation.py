@@ -24,6 +24,10 @@ UNIX_DEPENDENCIES = 'unix_dependencies'
 DATA = 'data'
 SCHEDULE = 'schedule'
 TIME = 'time'
+ALLOWED_OPERATIONS = [SYSTEMINFO, UPDATESINSTALLED,
+                      UPDATESPENDING, SYSTEMAPPLICATIONS,
+                      UNIX_DEPENDENCIES]
+SCHEDULED_OPERATIONS = [INSTALL, UNINSTALL, HIDE, SHOW, REBOOT]
 
 class AgentOperation():
     def __init__(self, system_list):
@@ -81,7 +85,8 @@ class AgentOperation():
                         timeBlockExistsToday(self.session, 
                                 start_date=start_date.date(),
                                 start_time=start_date.time())
-                if time_block_exists:
+                if oper_type in SCHEDULED_OPERATIONS and time_block_exists:
+                    print "THIS IS A SCHEDULED OPERATION"
                     return self.json_out
                 if not DATA in jsonobject:
                     message = gevent.spawn(self.create_sof_operation, node_id, 

@@ -147,10 +147,12 @@ def addOperation(session, node_id, operation, result_id=None,
 def addSystemInfo(session, data, node_info):
     session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
-    if exists:
-        operation.update({'results_received' : datetime.now()})
-        session.commit()
-        system_info = SystemInfo(node_info.id, data['os_code'],
+    node_id = node_info.id
+    if node_id:
+        if exists:
+            operation.update({'results_received' : datetime.now()})
+            session.commit()
+        system_info = SystemInfo(node_id, data['os_code'],
             data['os_string'], data['version_major'],
             data['version_minor'], data['version_build'],
             data['meta'], data['bit_type']
@@ -169,10 +171,11 @@ def addSystemInfo(session, data, node_info):
 def addSoftwareUpdate(session, data):
     session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
-    node_id = exists.node_id
-    if exists:
-        operation.update({'results_received' : datetime.now()})
-        session.commit()
+    node_id = data['node_id']
+    if node_id:
+        if exists:
+            operation.update({'results_received' : datetime.now()})
+            session.commit()
         for update in data['data']:
             update_exists = updateExists(session, update['toppatch_id'])
             if not update_exists:
@@ -197,11 +200,12 @@ def addSoftwareUpdate(session, data):
 def addUpdatePerNode(session, data):
     session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
-    if exists:
-        node_id = exists.node_id
+    node_id = data['node_id']
+    if node_id:
         node = session.query(SystemInfo).filter(SystemInfo.node_id == node_id).first()
-        operation.update({'results_received' : datetime.now()})
-        session.commit()
+        if exists:
+            operation.update({'results_received' : datetime.now()})
+            session.commit()
         for addupdate in data['data']:
             update_exists, foo = nodeUpdateExists(session, node_id, addupdate['toppatch_id'])
             if not update_exists:
@@ -245,10 +249,11 @@ def addUpdatePerNode(session, data):
 def addSoftwareAvailable(session, data):
     session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
-    if exists:
-        node_id = exists.node_id
-        operation.update({'results_received' : datetime.now()})
-        session.commit()
+    node_id = data['node_id']
+    if node_id:
+        if exists:
+            operation.update({'results_received' : datetime.now()})
+            session.commit()
         for software in data['data']:
             software_exists = softwareExists(session, software['name'], \
                     software['version'])
@@ -266,10 +271,11 @@ def addSoftwareAvailable(session, data):
 def addSoftwareInstalled(session, data):
     session = validateSession(session)
     exists, operation = operationExists(session, data['operation_id'])
-    if exists:
-        node_id = exists.node_id
-        operation.update({'results_received' : datetime.now()})
-        session.commit()
+    node_id = data['node_id']
+    if node_id:
+        if exists:
+            operation.update({'results_received' : datetime.now()})
+            session.commit()
         for software in data['data']:
             software_exists = softwareExists(session, software['name'], \
                     software['version'])
@@ -550,8 +556,8 @@ def addResults(session, data):
     exists, operation = operationExists(session, data['operation_id'])
     node, node_exists = nodeExists(session,node_id=data['node_id'])
     print node
-    if exists:
-        node_id = exists.node_id
+    if node_exists:
+        node_id = data['node_id']
         if data['operation'] == 'reboot':
             node.update({'reboot' : False})
             session.commit()
@@ -602,7 +608,8 @@ def addResults(session, data):
             try:
                 session.add(results)
                 session.commit()
-                operation.update({'results_id' : results.id,
+                if exists:
+                    operation.update({'results_id' : results.id,
                                   'results_received' : datetime.now()})
                 updateNode(session, node_id)
                 updateNetworkStats(session)
