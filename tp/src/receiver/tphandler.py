@@ -41,6 +41,9 @@ class HandOff():
                     if not self.session.query(SystemInfo).\
                             filter(SystemInfo.node_id == self.node.id).first():
                         self.getData("system_info")
+                if not self.session.query(SystemInfo).\
+                        filter(SystemInfo.node_id == self.node.id).first():
+                    self.getData("system_info")
                 if self.session.query(SystemInfo).\
                         filter(SystemInfo.node_id == self.node.id).first():
                     if not self.session.query(PackagePerNode).\
