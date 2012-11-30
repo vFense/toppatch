@@ -17,7 +17,7 @@ define(
     ) {
         "use strict";
 
-        var app = window.app = { root: '/' },
+        var app = {},
             overviewInstalled = {'data': 0},
             overviewPending = {'data': 0},
             overviewAvailable = {'data': 0},
@@ -37,7 +37,9 @@ define(
             }
         });
 
+        // Vars and Functions
         _.extend(app, {
+            root: '/',
             $doc: $(document),
             title: $(document).attr('title'),
             vent: vent,
@@ -47,6 +49,9 @@ define(
                     admin: undefined
                 }
             },
+        });
+        // WebSockets
+        _.extend(app, {
             startWs: function () {
                 var ws = new WebSocket("wss://" + window.location.host + "/ws");
                 ws.onmessage = function(evt) {
