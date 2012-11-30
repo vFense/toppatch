@@ -18,23 +18,22 @@ define(
                     return '?' + $.param(this.params).trim();
                 },
 
-                fetch: function (options) {
+                verboseFetch: function (callBacks) {
                     var that = this;
 
-                    options = options || {};
+                    callBacks = callBacks || {};
 
                     // Add fetch event
                     this.trigger('fetch');
 
                     // Trigger error event unless other function is provided
-                    if (!options || !options.error || _.isFunction(options.error)) {
-                        options.error = function (collection, xhr, options) {
+                    if (!callBacks || !callBacks.error || _.isFunction(callBacks.error)) {
+                        callBacks.error = function (collection, xhr, options) {
                             that.trigger('error', collection, xhr, options);
                         };
                     }
 
-                    // Call original fetch method
-                    return this.constructor.__super__.fetch.apply(this, options);
+                    return this.fetch(callBacks);
                 },
 
                 parse: function (response) {
@@ -96,14 +95,14 @@ define(
                             0 // Prevent going into negative offsets
                         );
 
-                        this.fetch();
+                        this.verboseFetch();
                     }
                 },
                 fetchNextSet: function () {
                     if (this.hasNext()) {
                         this.params.offset += this.params.count;
 
-                        this.fetch();
+                        this.verboseFetch();
                     }
                 },
                 hasPrev: function () {
@@ -172,7 +171,7 @@ define(
                         this._baseItem = _.clone($items.find('.item')).empty();
                     }
 
-                    this.collection.fetch();
+                    this.collection.verboseFetch();
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
