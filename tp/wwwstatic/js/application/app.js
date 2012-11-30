@@ -5,6 +5,7 @@ define(
         'backbone',
         'utilities/vent',
         'utilities/viewManager',
+        'utilities/subClasser',
         'd3charts/loadAll'
     ],
     function (
@@ -13,6 +14,7 @@ define(
         Backbone,
         vent,
         ViewManager,
+        subClasser,
         charts
     ) {
         "use strict";
@@ -57,6 +59,7 @@ define(
                 });
                 return params;
             },
+            __subClass: subClasser
         });
 
         // WebSockets
