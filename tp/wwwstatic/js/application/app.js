@@ -1,6 +1,20 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'utilities/vent', 'utilities/viewManager', 'd3charts/loadAll'],
-    function ($, _, Backbone, vent, ViewManager, charts) {
+    [
+        'jquery',
+        'underscore',
+        'backbone',
+        'utilities/vent',
+        'utilities/viewManager',
+        'd3charts/loadAll'
+    ],
+    function (
+        $,
+        _,
+        Backbone,
+        vent,
+        ViewManager,
+        charts
+    ) {
         "use strict";
 
         var app = window.app = { root: '/' },
