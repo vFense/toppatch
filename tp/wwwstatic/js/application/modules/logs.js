@@ -19,9 +19,12 @@ define(
                 },
                 parse: function (response) {
                     this.recordCount = response.count;
-                    return response.data[0] || response;
+                    return response.data || response;
                 },
                 initialize: function (options) {
+                    // Accept only the params defined above
+                    // If params = {a: 1, b: 2} and options.params = {a: 0, c: 3}
+                    // then final params is {a: 0, b: 2}. {c: 3} is disregarded.
                     if (options.params) {
                         _.extend(
                             this.params,

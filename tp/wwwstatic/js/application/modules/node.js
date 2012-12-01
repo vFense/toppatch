@@ -29,10 +29,10 @@ define(
 
                 },
                 events: {
-                    'click .disabled': function (e) { return false; },
+                    'click .disabled': function (e) { e.preventDefault(); },
                     'click #addTag': 'showtags',
                     'click #createtag': 'createtag',
-                    'click a[name=dependencies]': 'showDependencies',
+                    'click button[name=dependencies]': 'showDependencies',
                     'click input[name=taglist]': 'toggletag',
                     'submit form': 'submit'
                 },
@@ -40,7 +40,7 @@ define(
                 onRender: function () {
                     var close;
                     this.$el.find('#addTag').popover({
-                        title: 'Tags Available<a href="javascript:;" class="pull-right" id="close"><i class="icon-remove"></i></a>',
+                        title: 'Tags Available<button type="button" class="btn btn-link pull-right" id="close"><i class="icon-remove"></i></button>',
                         html: true,
                         trigger: 'click',
                         content: $('#list-form')
@@ -48,7 +48,7 @@ define(
                     this.$el.find('input[name=schedule]').each(function () {
                         $(this).popover({
                             placement: 'top',
-                            title: 'Patch Scheduling<a href="javascript:;" class="pull-right" name="close"><i class="icon-remove"></i></a>',
+                            title: 'Patch Scheduling<button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
                             html: true,
                             content: $('#schedule-form').clone(),
                             trigger: 'click'
@@ -57,8 +57,9 @@ define(
                         var popover = this;
                         if (popover.checked) {
                             $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
-                            close = $(this).data('popover').$tip.find('a[name=close]');
-                            close.bind('click', function () {
+                            close = $(this).data('popover').$tip.find('button[name=close]');
+                            close.bind('click', function (event) {
+                                event.preventDefault();
                                 $(popover).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                                 $(popover).popover('hide');
                                 popover.checked = false;
@@ -141,6 +142,7 @@ define(
                     return false;
                 },
                 showDependencies: function (event) {
+                    event.preventDefault();
                     var list, node_id, patch_id, params,
                         popoverlink = $(event.currentTarget);
 

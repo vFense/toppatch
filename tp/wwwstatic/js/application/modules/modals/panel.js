@@ -147,7 +147,7 @@ define(
                         // If we are routed here from a bookmark,
                         // render the dashboard behind the modal.
                         if (!router.viewManager.get('currentView')) {
-                            router.home();
+                            router.showDashboard();
                         }
 
                         // Save last fragment and go back to it on 'close'

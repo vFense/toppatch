@@ -34,20 +34,20 @@ def removeJob(sched, jobname):
                 sched.unschedule_job(schedule)
                 count = count + 1
                 return({"schedule_name" : jobname,
-                        "job_deleted" : True,
+                        "pass" : True,
                          "message" : "Job with name %s was removed"\
                                      % (jobname)
                         })
             except:
                 count = count + 1
                 return({"schedule_name" : jobname,
-                        "job_deleted" : False,
+                        "pass" : False,
                          "message" : "Job with name %s could not be removed"\
                                      % (jobname)
                         })
     if count == 0:
         return({"schedule_name" : jobname,
-                "job_deleted" : False,
+                "pass" : False,
                 "message" : "Job with name %s does not exist" % (jobname)
                })
 
