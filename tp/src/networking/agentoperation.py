@@ -40,9 +40,9 @@ class AgentOperation():
         remote agent. Through the use of Gevent, we have made this 
         operation much quicker as well as much safer.
         """
-        ENGINE = initEngine()
-        self.session = createSession(ENGINE)
-        self.session = validateSession(self.session)
+        ENGINE = init_engine()
+        self.session = create_session(ENGINE)
+        self.session = validate_session(self.session)
         self.system_list = system_list
         self.total_nodes = None
         self.results = {}
@@ -51,15 +51,15 @@ class AgentOperation():
             self.system_list = system_list
             self.total_nodes = len(self.system_list)
         else:
-            json_valid, self.system_list = verifyJsonIsValid(system_list)
+            json_valid, self.system_list = verify_json_is_valid(system_list)
             if type(self.system_list) != list:
                 self.system_list = [self.system_list]
         if type(self.system_list[0]) == dict:
             verify_obj = self.system_list[0]
         else:
-            is_verified, verify_obj = verifyJsonIsValid(self.system_list[0])
+            is_verified, verify_obj = verify_json_is_valid(self.system_list[0])
         if 'tag_id' in verify_obj:
-            system_list = self.convertTagOpToNodeOp(self.system_list)
+            system_list = self.convert_tag_op_to_node_op(self.system_list)
             if len(system_list) > 0:
                 self.system_list = system_list
             
@@ -69,20 +69,20 @@ class AgentOperation():
         self.threads = []
         for node in self.system_list:
             if type(node) != dict:
-                json_valid, jsonobject = verifyJsonIsValid(node)
+                json_valid, jsonobject = verify_json_is_valid(node)
             else:
                 json_valid = True
                 jsonobject = node
             if json_valid:
                 node_id = jsonobject['node_id']
-                self.node_exists, node = nodeExists(self.session, node_id=node_id)
-                print self.node_exists, node, jsonobject
+                node = node_exists(self.session, node_id=node_id)
+                print node, jsonobject
                 oper_type = jsonobject[OPERATION]
                 print oper_type
                 oper_id = self.create_new_operation(node_id, oper_type)
                 start_date = datetime.now()
                 time_block_exists, time_block, self.json_out = \
-                        timeBlockExistsToday(self.session, 
+                        time_block_exists_today(self.session, 
                                 start_date=start_date.date(),
                                 start_time=start_date.time())
                 if oper_type in SCHEDULED_OPERATIONS and time_block_exists:
@@ -128,9 +128,9 @@ class AgentOperation():
                         "operation_id" : oper_id,
                         "data" : data_list
                      }
-        updateNodeStats(self.session, node_id)
-        updateNetworkStats(self.session)
-        updateTagStats(self.session)
+        update_node_stats(self.session, node_id)
+        update_network_stats(self.session)
+        update_tag_stats(self.session)
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'
         print msg
@@ -138,16 +138,16 @@ class AgentOperation():
         connect = TcpConnect(node_ip, msg)
         completed = False
         if not connect.error and connect.read_data:
-            response = verifyJsonIsValid(connect.read_data)
+            response = verify_json_is_valid(connect.read_data)
             print response
             if response[1]['operation'] == 'received':
                 completed = True
-                updateOperationRow(self.session, oper_id, oper_recv=True)
-                updateNodeStats(self.session, node_id)
-                updateNetworkStats(self.session)
-                updateTagStats(self.session)
+                update_operation_row(self.session, oper_id, oper_recv=True)
+                update_node_stats(self.session, node_id)
+                update_network_stats(self.session)
+                update_tag_stats(self.session)
                 if oper_type == 'reboot':
-                    updateRebootStatus(self.session, node_id, oper_type)
+                    update_reboot_status(self.session, node_id, oper_type)
                 if 'data' in jsonobject:
                     for patch in jsonobject['data']:
                         if oper_type == 'install':
@@ -156,9 +156,9 @@ class AgentOperation():
                                 .filter_by(node_id=node_id)
                             patcher.update({"pending" : True})
                             self.session.commit()
-                            updateNodeStats(self.session, node_id)
-                            updateNetworkStats(self.session)
-                            updateTagStats(self.session)
+                            update_node_stats(self.session, node_id)
+                            update_network_stats(self.session)
+                            update_tag_stats(self.session)
         self.result ={
                      "node_id" : node_id,
                      "operation_id" : oper_id,
@@ -174,16 +174,17 @@ class AgentOperation():
         Add a new operation to the operations table and
         return the autogenerated operation_id
         """
-        oper = addOperation(self.session, node_id, oper_type,
+        oper = add_operation(self.session, node_id, oper_type,
                     operation_sent=datetime.now()
                     )
         return oper.id
 
-    def convertTagOpToNodeOp(self, tag_op_list):
+
+    def convert_tag_op_to_node_op(self, tag_op_list):
         node_op_list = []
         for oper in tag_op_list:
             if type(oper) != dict:
-                is_valid, oper = verifyJsonIsValid(oper)
+                is_valid, oper = verify_json_is_valid(oper)
             else:
                 is_valid = True
                 oper = oper

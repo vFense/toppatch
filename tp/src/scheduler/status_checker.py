@@ -8,26 +8,25 @@ from db.update_table import *
 
 from apscheduler.scheduler import Scheduler
 
-ENGINE = initEngine()
+ENGINE = init_engine()
 sched = Scheduler()
 sched.start()
 logging.basicConfig()
 @sched.interval_schedule(minutes=2)
 def agent_status():
-    session = createSession(ENGINE)
-    session = validateSession(session)
+    session = create_session(ENGINE)
+    session = validate_session(session)
     nodes = session.query(NodeInfo).all()
     for node in nodes:
         if node.last_agent_update:
             #timediff = node.last_agent_update - datetime.now()
             timediff = datetime.now() - node.last_agent_update
-            minute_diff = timediff.seconds / 60
-            if minute_diff > 8:
+            if timediff.seconds > 480:
                 node.agent_status = False
-                print "AGENT IS DOWN, %d minutes since last update" % (minute_diff)
+                print "AGENT IS DOWN, %d seconds since last update" % (minute_diff)
             else:
                 node.agent_status = True
-                print "AGENT IS UP, %d minutes since last update" % (minute_diff)
+                print "AGENT IS UP, %d seconds since last update" % (minute_diff)
         else:
             print "Status has not been updated yet"
     session.commit()

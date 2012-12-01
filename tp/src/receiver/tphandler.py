@@ -5,7 +5,7 @@ from datetime import datetime
 from db.update_table import *
 from db.query_table import *
 from db.client import *
-from utils.common import verifyJsonIsValid
+from utils.common import verify_json_is_valid
 from networking.agentoperation import AgentOperation
 
 OPERATION = 'operation'
@@ -23,63 +23,46 @@ STATUS_UPDATE = 'status'
 
 class HandOff():
     def __init__(self, ENGINE, data, ip_address):
-        self.session = createSession(ENGINE)
-        self.session = validateSession(self.session)
+        self.session = create_session(ENGINE)
+        self.session = validate_session(self.session)
         self.data = data
-        self.valid_json, self.json_object = verifyJsonIsValid(self.data)
+        self.valid_json, self.json_object = verify_json_is_valid(self.data)
         self.ip = ip_address
         if self.valid_json:
-            exists, self.node = nodeExists(self.session,
+            self.node = node_exists(self.session,
                 node_ip=self.ip)
             if self.node:
                 if self.node.last_agent_update == None:
-                    exists.update({"last_agent_update" : datetime.now(),
-                                   "last_node_update" : datetime.now()
-                                  })
+                    self.node.last_agent_update = datetime.now()
+                    self.node.last_node_update = datetime.now()
                     self.session.commit()
                     TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
-             #"""       if not self.session.query(SystemInfo).\
-             #               filter(SystemInfo.node_id == self.node.id).first():
-             #           self.getData("system_info")
-             #   if not self.session.query(SystemInfo).\
-             #           filter(SystemInfo.node_id == self.node.id).first():
-             #       print "calling system_info to the agent"
-             #       self.getData("system_info")
-             #   if self.session.query(SystemInfo).\
-             #           filter(SystemInfo.node_id == self.node.id).first():
-             #       if not self.session.query(PackagePerNode).\
-             #               filter(PackagePerNode.node_id == self.node.id).first():
-             #           print "calling get updates to the agent"
-             #           self.getData("updates_installed")
-             #           self.getData("updates_pending")
-             #           self.getData("system_applications")
-             #"""
             else:
                 pass
             if self.json_object[OPERATION] == SYSTEM_INFO:
-                addSystemInfo(self.session, self.json_object, self.node)
+                add_system_info(self.session, self.json_object, self.node)
             if self.json_object[OPERATION] == UPDATES_PENDING or \
                     self.json_object[OPERATION] == UPDATES_INSTALLED:
-                self.addUpdate()
+                self.add_update()
             if self.json_object[OPERATION] == SOFTWARE_INSTALLED:
-                self.softwareUpdate()
+                self.software_update()
             if self.json_object[OPERATION] == UNIX_DEPENDENCIES:
-                self.addDependency()
+                self.add_dependency()
             if self.json_object[OPERATION] == STATUS_UPDATE:
-                self.nodeUpdate()
+                self.node_update()
             if self.json_object[OPERATION] == INSTALL:
-                self.updateResults()
+                self.update_results()
             if self.json_object[OPERATION] == UNINSTALL:
-                self.updateResults()
+                self.update_results()
             if self.json_object[OPERATION] == REBOOT:
-                updateRebootStatus(self.session, exists)
+                update_reboot_status(self.session, exists)
             else:
                 pass
         else:
             print "Json is not valid %s" % ( data )
         self.session.close()
 
-    def getData(self, oper):
+    def get_data(self, oper):
         lcollect = []
         lcollect.append('{"node_id" : "%s", "operation" : "%s"}' \
                         % (self.node.id, oper)
@@ -87,36 +70,44 @@ class HandOff():
         results = AgentOperation(lcollect)
         results.run()
 
-    def addUpdate(self):
-        addSoftwareUpdate(self.session, self.json_object)
-        addUpdatePerNode(self.session, self.json_object)
-        updateNodeStats(self.session, self.node.id)
-        updateNetworkStats(self.session)
-        updateTagStats(self.session)
+
+    def add_update(self):
+        add_software_update(self.session, self.json_object)
+        add_update_per_node(self.session, self.json_object)
+        update_node_stats(self.session, self.node.id)
+        update_network_stats(self.session)
+        update_tag_stats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
-    def softwareUpdate(self):
-        os_code_exists = self.session.query(SystemInfo).filter_by(node_id=self.node.id).first()
+
+    def software_update(self):
+        os_code_exists = self.session.query(SystemInfo).\
+                filter_by(node_id=self.node.id).first()
         if os_code_exists:
             os_code = os_code_exists.os_code
             if os_code == "windows":
-                addSoftwareAvailable(self.session, self.json_object)
-                addSoftwareInstalled(self.session, self.json_object)
-        updateNodeStats(self.session, self.node.id)
-        updateNetworkStats(self.session)
-        updateTagStats(self.session)
+                add_software_available(self.session, self.json_object)
+                add_software_installed(self.session, self.json_object)
+        update_node_stats(self.session, self.node.id)
+        update_network_stats(self.session)
+        update_tag_stats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
-    def updateResults(self):
-        results = addResults(self.session, self.json_object)
-        updateNodeStats(self.session, self.node.id)
-        updateNetworkStats(self.session)
-        updateTagStats(self.session)
+
+    def update_results(self):
+        results = add_results(self.session, self.json_object)
+        update_node_stats(self.session, self.node.id)
+        update_network_stats(self.session)
+        update_tag_stats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
-    def updateDependency(self):
-        results = addDependency(self.session, self.json_object)
+
+    def update_dependency(self):
+        results = add_dependency(self.session, self.json_object)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
-    def nodeUpdate(self):
-        results = updateNode(self.session, self.node.id, self.ip)
+
+    def node_update(self):
+        results = update_node(self.session, self.node.id, self.ip)
+
+

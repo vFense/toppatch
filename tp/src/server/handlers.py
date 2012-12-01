@@ -7,7 +7,7 @@ except ImportError: import json
 from models.node import NodeInfo
 from db.client import *
 from networking.agentoperation import AgentOperation
-from scheduler.jobManager import JobScheduler, jobLister
+from scheduler.jobManager import job_scheduler, job_lister
 from server.decorators import authenticated_request
 from jsonpickle import encode
 
@@ -175,7 +175,7 @@ class FormHandler(BaseHandler):
                     node['data'] = list(patches)
                     resultjson.append(encode(node))
                 if time:
-                    result = JobScheduler(resultjson,
+                    result = job_scheduler(resultjson,
                             self.application.scheduler
                             )
                 else:
@@ -189,7 +189,7 @@ class FormHandler(BaseHandler):
                     node['node_id'] = node_id
                     resultjson.append(encode(node))
                 if time:
-                    result = JobScheduler(resultjson,
+                    result = job_scheduler(resultjson,
                             self.application.scheduler
                             )
                 else:

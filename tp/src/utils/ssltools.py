@@ -30,32 +30,38 @@ EXTENSION = {
             3 : '.key'
             }
 
-def loadPrivateKey(privkey=CA_PKEY):
+def load_private_key(privkey=CA_PKEY):
     pkey = LOAD_PKEY(FILE_TYPE_PEM, open(privkey, 'rb').read())
     return pkey
 
-def loadCert(cert=CA_CERT):
+
+def load_cert(cert=CA_CERT):
     signed_cert = LOAD_CERT(FILE_TYPE_PEM, open(cert, 'rb').read())
     return signed_cert
 
-def dumpPkey(pkey):
+
+def dump_pkey(pkey):
     pem_key = DUMP_PKEY(FILE_TYPE_PEM, pkey)
     return pem_key
 
-def dumpCert(cert):
+
+def dump_cert(cert):
     pem_cert = DUMP_CERT(FILE_TYPE_PEM, cert)
     return pem_cert
 
-def loadCertRequest(csr):
+
+def load_cert_request(csr):
     cert_request = LOAD_CERT_REQUEST(FILE_TYPE_PEM, csr)
     return cert_request
 
-def generatePrivateKey(type, bits):
+
+def generate_private_key(type, bits):
     pkey = crypto.PKey()
     pkey.generate_key(type, bits)
     return pkey
 
-def saveKey(location, key, key_type, name=socket.gethostname()):
+
+def save_key(location, key, key_type, name=socket.gethostname()):
     extension = EXTENSION[key_type]
     name = name + extension
     path_to_key = os.path.join(location, name)
@@ -91,7 +97,8 @@ def saveKey(location, key, key_type, name=socket.gethostname()):
                     % (location)
     return(path_to_key, name, status)
 
-def createCertRequest(pkey, (CN, O, OU, C, ST, L), digest="sha512"):
+
+def create_cert_request(pkey, (CN, O, OU, C, ST, L), digest="sha512"):
     csr = crypto.X509Req()
     csr.set_version(3)
     subj = csr.get_subject()
@@ -105,7 +112,8 @@ def createCertRequest(pkey, (CN, O, OU, C, ST, L), digest="sha512"):
     csr.sign(pkey, digest)
     return csr
 
-def createCertificate(cert, (issuerCert, issuerKey), serial,\
+
+def create_certificate(cert, (issuerCert, issuerKey), serial,\
         (notBefore, notAfter), digest="sha512"):
     cert = crypto.X509()
     cert.set_version(3)
@@ -118,7 +126,8 @@ def createCertificate(cert, (issuerCert, issuerKey), serial,\
     cert.sign(issuerKey, digest)
     return cert
 
-def createSignedCertificate(csr, (issuerCert, issuerKey), serial,\
+
+def create_signed_certificate(csr, (issuerCert, issuerKey), serial,\
         (notBefore, notAfter), digest="sha512"):
     cert = crypto.X509()
     cert.set_version(3)
@@ -131,7 +140,8 @@ def createSignedCertificate(csr, (issuerCert, issuerKey), serial,\
     cert.sign(issuerKey, digest)
     return cert
 
-def createSigningCertificateAuthority(pkey, serial,\
+
+def create_signing_certificate_authority(pkey, serial,\
         (CN, O, OU, C, ST, L),
         (notBefore, notAfter),
         digest="sha512"):
@@ -157,7 +167,8 @@ def createSigningCertificateAuthority(pkey, serial,\
     ca.sign(pkey, digest)
     return ca
 
-def verifyValidFormat(data, ssl_type):
+
+def verify_valid_format(data, ssl_type):
     verified = True
     error = None
     if ssl_type == TYPE_CSR:
@@ -181,31 +192,33 @@ def verifyValidFormat(data, ssl_type):
     return(verified, error)
 
 
-def storeCsr(session, ip, pem):
-    csr = loadCertRequest(pem)
+def store_csr(session, ip, pem):
+    csr = load_cert_request(pem)
     csr_path, csr_name, csr_error = \
-        saveKey(CLIENT_CSR_DIR, csr, TYPE_CSR, name=ip)
-    csr_row = addCsr(session, ip, csr_path, csr_name)
+        save_key(CLIENT_CSR_DIR, csr, TYPE_CSR, name=ip)
+    csr_row = add_csr(session, ip, csr_path, csr_name)
     return(csr, csr_path, csr_name, csr_row)
 
-def signCert(session, csr):
-    ca_cert = loadCert()
-    ca_pkey = loadPrivateKey()
-    client_cert = createSignedCertificate(csr,
+
+def sign_cert(session, csr):
+    ca_cert = load_cert()
+    ca_pkey = load_private_key()
+    client_cert = create_signed_certificate(csr,
         (ca_cert, ca_pkey), 1, EXPIRATION)
     return(client_cert)
 
-def storeCert(session, ip, cert):
-    expiration = getExpirefromCert(cert.get_notAfter())
-    csr, csr_oper = csrExists(session, ip)
+
+def store_cert(session, ip, cert):
+    expiration = get_expire_from_cert(cert.get_notAfter())
+    csr = csr_exists(session, ip)
     cert_path, cert_name, cert_error = \
         saveKey(CLIENT_KEY_DIR, cert, TYPE_CERT, name=ip)
-    node = addNode(session, ip)
-    cert_row = addCert(session, node.id, csr.id,
+    node = add_node(session, ip)
+    cert_row = add_cert(session, node.id, csr.id,
         cert_name, cert_path, expiration)
     csr.is_csr_signed = True
     csr.csr_signed_date = datetime.now()
-    #csr_oper.update({"is_csr_signed" : True, 
-    #    "csr_signed_date" : datetime.now()})
     session.commit()
     return(node, cert_path)
+
+
