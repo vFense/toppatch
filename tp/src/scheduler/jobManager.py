@@ -12,6 +12,12 @@ from db.client import *
 from models.scheduler import *
 
 def job_lister(session,sched):
+    """
+        Return a list of schedules in json 
+        arguments below...
+        session == sqlalchemy session)
+        sched == Python Advance Schedule Object
+    """
     jobs = sched.get_jobs()
     job_listing = []
     for schedule in jobs:
@@ -26,6 +32,12 @@ def job_lister(session,sched):
     return job_listing
 
 def remove_job(sched, jobname):
+    """
+        remove the scheduled job in RV
+        arguments below..
+        sched == Python Advance Schedule Object
+        jobname == the name of the scheduled job
+    """
     jobs = sched.get_jobs()
     count = 0
     for schedule in jobs:
@@ -68,36 +80,43 @@ def add_recurrent(timestamp, name, job, sched):
                 )
 
 def job_scheduler(job, sched, name=None):
-        ENGINE = init_engine()
-        session = create_session(ENGINE)
-        log = logging.basicConfig()
-        converted_timestamp = None
-        schedule = None
-        json_valid, job_object = verify_json_is_valid(job[0])
-        if 'Default' in  job_object['label']:
-            name = job_object['operation'] + " " + job_object['time']
-            job_object['label'] = job_object['operation'] + " " + job_object['time']
-        else:
-            name = job_object['label']
-        if 'time' in job_object:
-            utc_timestamp = date_time_parser(job_object['time'])
-            time_block_exists, time_block, json_out = \
-                    time_block_exists_today(session,
-                        start_date=utc_timestamp.date(),
-                        start_time=utc_timestamp.time())
-            print time_block_exists, time_block, json_out
-            if time_block_exists:
-                return json_out
-        encoded_job_object = dumps(job_object)
-        print encoded_job_object
-        if 'schedule' in job_object:
-            schedule = job_object['schedule']
-        if 'once' in job_object['schedule']:
-            add_once(utc_timestamp, name, encoded_job_object, sched)
-            return({
-                    "pass" : True,
-                    "message" : "Schedule %s has been added to this time frame %s " % (name, utc_timestamp)
-                   })
+    """
+        job_scheduler handles the adding of scheduled jobs
+        arguments below...
+        job == this contains the operation and related information that the 
+        schedule will perform. This also contains the start date and time.
+        name == The name of the scheduled job
+    """
+    ENGINE = init_engine()
+    session = create_session(ENGINE)
+    log = logging.basicConfig()
+    converted_timestamp = None
+    schedule = None
+    json_valid, job_object = verify_json_is_valid(job[0])
+    if 'Default' in  job_object['label']:
+        name = job_object['operation'] + " " + job_object['time']
+        job_object['label'] = job_object['operation'] + " " + job_object['time']
+    else:
+        name = job_object['label']
+    if 'time' in job_object:
+        utc_timestamp = date_time_parser(job_object['time'])
+        time_block_exists, time_block, json_out = \
+                time_block_exists_today(session,
+                    start_date=utc_timestamp.date(),
+                    start_time=utc_timestamp.time())
+        print time_block_exists, time_block, json_out
+        if time_block_exists:
+            return json_out
+    encoded_job_object = dumps(job_object)
+    print encoded_job_object
+    if 'schedule' in job_object:
+        schedule = job_object['schedule']
+    if 'once' in job_object['schedule']:
+        add_once(utc_timestamp, name, encoded_job_object, sched)
+        return({
+                "pass" : True,
+                "message" : "Schedule %s has been added to this time frame %s " % (name, utc_timestamp)
+               })
 
 
 

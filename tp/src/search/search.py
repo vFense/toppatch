@@ -21,7 +21,18 @@ is_os = {
         "is_bsd" : PackagePerNode.is_bsd
         }
 
-def basic_package_search(session, query, column, count=20, offset=0, output="json"):
+def basic_package_search(session, query, column, count=0, offset=0, output="json"):
+    """
+        This search function, gives you the ability to search by column.
+        Search by column ( description|name|kb|severity )
+        query == ssh
+        column == description
+        session == SqlAlchemy session object
+        count == How many results do you want in return ( default == all )
+        offset == if you want to return only a certain amount of results
+        based on a count and an offset
+        output == json|csv
+    """
     session = validate_session(session)
     query = re.sub(r'^|$', '%', query)
     data = []
