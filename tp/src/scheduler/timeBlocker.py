@@ -114,7 +114,7 @@ def time_block_adder(session, msg):
         "days" : "0111110"
         }
     """
-    valid, json_msg = verifyJsonIsValid(msg)
+    valid, json_msg = verify_json_is_valid(msg)
     if valid:
         if not 'enabled' in json_msg:
             json_msg['enabled'] = True
