@@ -35,10 +35,16 @@ class AgentOperation():
         This class will take a list and iterate through it.
         Through each iteration, the object in each array will
         be verified that it was sent as a valid Json object.
-        Once each object hsa been verified, it will then update
+        Once each object has been verified, it will then update
         the operations table and make a secure socket call to the
         remote agent. Through the use of Gevent, we have made this 
         operation much quicker as well as much safer.
+
+        This is the Class that is used for the sending of operations
+        to the agents.
+        You initialize the class than you run it
+        agentoper = AgentOperation(json_msg)
+        agentoper.run()
         """
         ENGINE = init_engine()
         self.session = create_session(ENGINE)
