@@ -8,6 +8,9 @@ from models.account import *
 
 
 def tag_lister(session):
+    """
+        return a list of tags in json
+    """
     list_of_tags = []
     tags = session.query(TagInfo).all()
     for tag in tags:
@@ -26,6 +29,10 @@ def tag_lister(session):
 
 
 def tag_list_by_nodes(session):
+    """
+        return a list of tags and the nodes associated with 
+        the tag name in json
+    """
     list_of_tags = []
     tags = session.query(TagInfo).all()
     for tag in tags:
@@ -44,6 +51,9 @@ def tag_list_by_nodes(session):
 
 
 def get_tag_stats(session, tagid=None, tagname=None):
+    """
+        return a list of tag_statistics in json
+    """
     list_of_tags = []
     tag_stats = []
     if tagid:
@@ -72,6 +82,9 @@ def get_tag_stats(session, tagid=None, tagname=None):
 
 
 def tag_adder(session, msg):
+    """
+        add a new tag to RV
+    """
     valid, json_msg = verify_json_is_valid(msg)
     if valid:
         if 'user' in json_msg:
@@ -89,7 +102,11 @@ def tag_adder(session, msg):
         return tagged
 
 
-def tagAddPerNode(session, msg):
+def tag_add_per_node(session, msg):
+    """
+        Add a node to an existing tag or 
+        add a node to a new tag
+    """
     valid, json_msg = verify_json_is_valid(msg)
     if valid:
         if 'user' in json_msg:
@@ -111,7 +128,10 @@ def tagAddPerNode(session, msg):
         return tagged
 
 
-def tagRemovePerNode(session, msg):
+def tag_remove_per_node(session, msg):
+    """
+        Remove a node from an existing tag.
+    """
     valid, json_msg = verify_json_is_valid(msg)
     if valid:
         if 'tag' in json_msg:
@@ -129,6 +149,9 @@ def tagRemovePerNode(session, msg):
 
 
 def tag_remove(session, msg):
+    """
+        Remove a tag from RV
+    """
     valid, json_msg = verify_json_is_valid(msg)
     if valid:
         if 'tag' in json_msg:
