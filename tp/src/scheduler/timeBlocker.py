@@ -16,6 +16,11 @@ from db.update_table import add_time_block, remove_time_block
 from models.scheduler import *
 
 def time_block_lister(session):
+    """
+        return a list of timeblocks
+        arguments below..
+        session = SQLAlchemy Session Object
+    """
     blocks = session.query(TimeBlocker).all()
     windows = []
     if blocks:
