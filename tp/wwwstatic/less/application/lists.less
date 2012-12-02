@@ -55,6 +55,7 @@
 
     &.row-fluid,
     .row-fluid {
+        .box-sizing(border-box);
         [class*="span"] {
             min-height: 1em;
         }
@@ -117,9 +118,7 @@
     .list {
         &.master,
         &.slave {
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
+            .box-sizing(border-box);
 
             height: 480px;
         //overflow: hidden;
