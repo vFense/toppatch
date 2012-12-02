@@ -161,7 +161,7 @@ define(
                         cellCount = 0,
                         $item = newElement('div').addClass('item'),
                         $row  = newElement('div').addClass('row-fluid'),
-                        $cell = newElement('small').addClass('cell');
+                        $cell = newElement('div').addClass('cell');
 
                     _.each(item.attributes, function (value, key) {
                         if (_.isNumber(value) || _.isString(value)) {

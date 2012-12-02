@@ -15,10 +15,10 @@ define(
 
                         $item       = newElement('div').addClass('item'),
                         $row        = newElement('div').addClass('row-fluid'),
-                        $operation  = newElement('small').addClass('span2'),
-                        $node       = newElement('small').addClass('span4'),
-                        $error      = newElement('small').addClass('span4').html('&nbsp;'),
-                        $date       = newElement('small').addClass('span2 alignRight');
+                        $operation  = newElement('div').addClass('span2'),
+                        $node       = newElement('div').addClass('span4'),
+                        $error      = newElement('div').addClass('span4').html('&nbsp;'),
+                        $date       = newElement('div').addClass('span2 alignRight');
 
                     $operation.append(item.get('operation').toUpperCase());
                     $node.html(item.get('node_id'));
