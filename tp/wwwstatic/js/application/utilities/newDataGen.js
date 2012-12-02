@@ -65,8 +65,6 @@ define(
 
                 this.$el.html('See the console log...');
 
-                window.patchCollection = this.collection.toJSON();
-
                 console.log(this.collection.toJSON());
 
                 if (this.onRender !== $.noop) { this.onRender(); }

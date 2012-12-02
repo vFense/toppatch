@@ -1,9 +1,25 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'utilities/vent', 'utilities/viewManager', 'd3charts/loadAll'],
-    function ($, _, Backbone, vent, ViewManager, charts) {
+    [
+        'jquery',
+        'underscore',
+        'backbone',
+        'utilities/vent',
+        'utilities/viewManager',
+        'utilities/subClasser',
+        'd3charts/loadAll'
+    ],
+    function (
+        $,
+        _,
+        Backbone,
+        vent,
+        ViewManager,
+        subClasser,
+        charts
+    ) {
         "use strict";
 
-        var app = window.app = { root: '/' },
+        var app = {},
             overviewInstalled = {'data': 0},
             overviewPending = {'data': 0},
             overviewAvailable = {'data': 0},
@@ -23,7 +39,9 @@ define(
             }
         });
 
+        // Vars and Functions
         _.extend(app, {
+            root: '/',
             $doc: $(document),
             title: $(document).attr('title'),
             vent: vent,
@@ -33,6 +51,19 @@ define(
                     admin: undefined
                 }
             },
+            parseQuery: function (query) {
+                var params = {};
+                _.each(query.split('&'), function (value) {
+                    var param = value.split('=');
+                    params[param[0]] = param[1];
+                });
+                return params;
+            },
+            __subClass: subClasser
+        });
+
+        // WebSockets
+        _.extend(app, {
             startWs: function () {
                 var ws = new WebSocket("wss://" + window.location.host + "/ws");
                 ws.onmessage = function(evt) {
@@ -69,14 +100,6 @@ define(
                 ws.onerror = function(evt) {
                     console.log(['websocket', 'error', evt]);
                 }
-            },
-            parseQuery: function (query) {
-                var params = {};
-                _.each(query.split('&'), function (value) {
-                    var param = value.split('=');
-                    params[param[0]] = param[1];
-                });
-                return params;
             },
             chart: {
                 partition: charts.partition,

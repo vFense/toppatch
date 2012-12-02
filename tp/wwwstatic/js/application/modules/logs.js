@@ -1,202 +1,30 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'app', 'text!templates/list.html', 'jquery.ui.datepicker'],
-    function ($, _, Backbone, app, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'modules/lists/pageable', 'text!templates/list.html'],
+    function ($, _, Backbone, app, Pager, myTemplate) {
         "use strict";
-        var exports = {
-            Collection: Backbone.Collection.extend({
-                baseUrl: 'api/transactions/getTransactions',
-                params: {},
-                url: function () {
-                    var query = this.query(),
-                        url = this.baseUrl;
-
-                    if (query !== '?') { url += query; }
-                    return url;
-                },
-
-                query: function () {
-                    return '?' + $.param(this.params).trim();
-                },
-
-                fetch: function (options) {
-                    var that = this;
-
-                    options = options || {};
-
-                    // Add fetch event
-                    this.trigger('fetch');
-
-                    // Trigger error event unless other function is provided
-                    if (!options || !options.error || _.isFunction(options.error)) {
-                        options.error = function (collection, xhr, options) {
-                            that.trigger('error', collection, xhr, options);
-                        };
-                    }
-
-                    // Call original fetch method
-                    return this.constructor.__super__.fetch.apply(this, options);
-                },
-
-                parse: function (response) {
-                    this.recordCount = parseInt(response.count, 10);
-                    return response.data || response;
-                },
-
-                initialize: function (options) {
-                    var that = this;
-
-                    // Set default parameters
-                    this.params = {
-                        // Paging
-                        offset: 0,
-                        count: 20
-                    };
-
-                    if (options.params) {
-                        _.extend(
-                            this.params,
-                            // Accept only the params defined in this.params
-                            // If this.params = {a: 1, b: 2} and options.params = {a: 0, c: 3}
-                            // then final this.params is {a: 0, b: 2}. {c: 3} is ignored.
-                            _.pick(
-                                options.params,
-                                _.keys(this.params)
-                            )
-                        );
-
-                        // Convert numeric params into numbers
-                        _.each(this.params, function (param, key) {
-                            if ($.isNumeric(param) && $.type(param) === 'string') {
-                                that.params[key] = parseInt(param, 10);
-                            }
-                        });
-                    }
-                },
-
-                getParameter: function (name) {
-                    var out;
-
-                    if (!name) {
-                        out = this.params;
-                    } else {
-                        out = this.params[name];
-                    }
-
-                    return out;
-                },
-
-                getRecordCount: function () {
-                    return this.recordCount;
-                },
-
-                fetchPrevSet: function () {
-                    if (this.hasPrev()) {
-                        this.params.offset = Math.max(
-                            this.params.offset - this.params.count,
-                            0 // Prevent going into negative offsets
-                        );
-
-                        this.fetch();
-                    }
-                },
-                fetchNextSet: function () {
-                    if (this.hasNext()) {
-                        this.params.offset += this.params.count;
-
-                        this.fetch();
-                    }
-                },
-                hasPrev: function () {
-                    return this.params.offset > 0;
-                },
-                hasNext: function () {
-                    return this.params.offset + this.params.count < (this.recordCount || 0);
-                }
+        return {
+            Collection: Pager.Collection.extend({
+                baseUrl: 'api/transactions/getTransactions'
             }),
-            View: Backbone.View.extend({
-                tagName: 'article',
-                className: 'row-fluid',
-
-                _rendered: false,
-
-                initialize: function (options) {
-                    if (options) {
-                        _.extend(this, _.pick(options, ['collection']));
-                    }
-
-                    this._template = _.template(myTemplate);
-
-                    if (!this.collection instanceof Backbone.Collection) {
-                        this.collection =  new exports.Collection();
-                    }
-
-                    this.collection.bind('reset', function () {
-                        this.updateList({name: 'reset'});
-                    }, this);
-
-                    this.collection.bind('fetch', function () {
-                        this.updateList({name: 'fetch'});
-                    }, this);
-
-                    this.collection.bind('error', function (collection, xhr, options) {
-                        this.updateList({name: 'error', response: xhr});
-                    }, this);
-                },
-
-                events: {
-                    'click .disabled': 'stopEvent',
-                    'click #list-pagePrev': 'pagePrev',
-                    'click #list-pageNext': 'pageNext'
-                },
-
-                stopEvent: function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    event.stopImmediatePropagation();
-                },
-
-                beforeRender: function () {
-                    this._rendered = false;
-                },
-                onRender: function () {
-                    this._rendered = true;
-                },
-                render: function () {
-                    if (this.beforeRender !== $.noop) { this.beforeRender(); }
-
-                    var that = this,
-                        $el = this.$el.empty().html(this._template()),
-                        $items = $el.find('.items');
-
-                    if (!this._baseItem) {
-                        this._baseItem = _.clone($items.find('.item')).empty();
-                    }
-
-                    this.collection.fetch();
-
-                    if (this.onRender !== $.noop) { this.onRender(); }
-                    return this;
-                },
-
+            View: Pager.View.extend({
                 renderModel: function (item) {
                     var newElement = function (element) {
                             return $(document.createElement(element));
                         },
                         result = item.get('result'),
 
-                        $item       = newElement('div').addClass('item'),
-                        $div        = newElement('div').addClass('row-fluid'),
-                        $operation  = newElement('small').addClass('span2'),
-                        $desc       = newElement('small').addClass('desc span3'),
-                        $error      = newElement('small').addClass('span5').html('&nbsp;'),
-                        $date       = newElement('small').addClass('span2 alignRight');
+                        $item       = newElement('div').addClass('item row-fluid'),
+                        $operation  = newElement('div').addClass('span2'),
+                        $node       = newElement('div').addClass('span4'),
+                        $error      = newElement('div').addClass('span4').html('&nbsp;'),
+                        $date       = newElement('div').addClass('span2 alignRight');
 
                     $operation.append(item.get('operation').toUpperCase());
-                    $desc.html(item.get('node_id'));
+                    $node.html(item.get('node_id'));
                     $date.html(item.get('operation_sent'));
 
                     if (_.isBoolean(result) && !result) {
-                        $div.addClass('fail');
+                        $item.addClass('fail');
                         $error.append(
                             newElement('a')
                                 .attr('rel', 'tooltip')
@@ -206,110 +34,9 @@ define(
                         );
                     }
 
-                    return $item.append(
-                        $div.append($operation, $desc, $error, $date)
-                    );
-                },
-
-                updateList: function (event) {
-                    var that = this,
-                        $el = this.$el,
-                        $header = $el.find('header'),
-                        $items = $el.find('.items'),
-                        $footer = $el.find('footer'),
-                        $item = this._baseItem,
-                        col = this.collection,
-                        models = col.models;
-
-                    if (event.name === 'reset') {
-                        $items.empty();
-
-                        if (models.length > 0) {
-                            _.each(models, function (model) {
-                                $items.append(that.renderModel(model));
-                            });
-
-                            // Set footer content
-                            (function () {
-                                var start = 1 + col.getParameter('offset'),
-                                    end = start + models.length - 1,
-                                    total = col.getRecordCount(),
-                                    out = ['Showing', start, '-', end, 'of', total, 'records.'].join(' ');
-
-                                $footer.find('.pull-left').text(out);
-                            }());
-                        } else {
-                            $items.html(
-                                _.clone($item).empty().html(
-                                    'No data available'
-                                )
-                            );
-
-                            // Set footer content
-                            $footer.find('.pull-left').html('&nbsp;');
-                        }
-
-                        this.togglePagerButtons();
-                    } else if (event.name === 'fetch') {
-                        $items.empty().html(
-                            _.clone($item).html(
-                                'Loading...'
-                            )
-                        );
-
-                        this.togglePagerButtons(true);
-                    } else if (event.name === 'error') {
-                        $items.empty().html(
-                            _.clone($item).html(
-                                [
-                                    'Error',
-                                    event.response.status,
-                                    '-',
-                                    event.response.statusText
-                                ].join(' ')
-                            )
-                        );
-
-                        // Set footer content
-                        $footer.find('.pull-left').html('&nbsp;');
-
-                        this.togglePagerButtons(true);
-                    }
-
-                    return this;
-                },
-
-                togglePagerButtons: function (forcedOff) {
-                    var $el = this.$el;
-
-                    // Issues with readability. Double negatives get confusing.
-                    // Way to improve? Perhaps full if/else statements (WETWET)?
-                    $el.find('#list-pageNext').toggleClass('disabled', forcedOff || !this.collection.hasNext());
-                    $el.find('#list-pagePrev').toggleClass('disabled', forcedOff || !this.collection.hasPrev());
-
-                    return this;
-                },
-
-                pageNext: function () {
-                    this.collection.fetchNextSet();
-
-                    return this.updateURL();
-                },
-                pagePrev: function () {
-                    this.collection.fetchPrevSet();
-
-                    return this.updateURL();
-                },
-
-                updateURL: function () {
-                    // Update the URL, but do not cause a route event
-                    app.router.navigate('logs' + this.collection.query());
-
-                    return this;
+                    return $item.append($operation, $node, $error, $date);
                 }
             })
         };
-        return exports;
-
     }
 );
