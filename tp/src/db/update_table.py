@@ -32,7 +32,9 @@ def add_node(session, client_ip, agent_timestamp=None, node_timestamp=None):
 
 
 def add_tag(session, tag_name, user_id=None):
-    """Add a tag to the database"""
+    """
+        Add a tag to the database
+    """
     session = validate_session(session)
     date_created=datetime.now()
     try:
@@ -47,8 +49,10 @@ def add_tag(session, tag_name, user_id=None):
 
 
 def add_dependency(session, data):
-    """Add a dependency to the corresponding toppatch_id
-       into the database"""
+    """
+        Add a dependency to the corresponding toppatch_id
+        into the database
+    """
     session = validate_session(session)
     failed_count = 0
     for deps in data['data']:
@@ -69,6 +73,16 @@ def add_dependency(session, data):
 
 def add_tag_per_node(session, nodes=[], tag_id=None, tag_name=None,
                 user_id=None):
+    """
+        Add a list of nodes to an existing tag
+        into the database
+        arguments....
+        session == SQLAlchemy Session
+        nodes = list of nodes
+        tag_id = id of tag
+        or
+        tag_name = name of tag
+    """
     session = validate_session(session)
     completed = False
     count = 0
@@ -103,6 +117,20 @@ def add_tag_per_node(session, nodes=[], tag_id=None, tag_name=None,
 def add_time_block(session, label, start_date, start_time, end_time,
                   days, end_date=None, span_end_date_time=None, span=False,
                   enabled=False):
+    """
+        Add a new timeblock to RV.
+        arguments below..
+        session == SQLAlchemy Session
+        label == The name of the timeblock that you added
+        start_date == "12/1/2012"
+        start_time == "09:00 PM"
+        end_time == "11:00 PM"
+        days == (days of the week in binary. Example Mon through Fri 0111110)
+        end_date == Optional ("12/1/2012")
+        span_end_date_time == Optional ("12/3/2012" 03:00 AM)
+        span == False
+        enabled == False
+    """
     session = validate_session(session)
     try:
         add_block = TimeBlocker(label, start_date, start_time,
@@ -120,6 +148,14 @@ def add_time_block(session, label, start_date, start_time, end_time,
 
 def add_csr(session, client_ip, location, csr_name,
             signed=False, signed_date=False):
+    """
+        Add a new Certificate Signed Request into RV
+        arguments below..
+        session == SQLAlchemy Session
+        client_ip == "192.168.0.1"
+        location == The directory location 
+        ("/opt/TopPatch/var/lib/ssl/client/csr/192.168.0.1.csr")
+    """
     session = validate_session(session)
     try:
         add_csr = CsrInfo(csr_name, client_ip, location, signed, signed_date)
@@ -133,6 +169,15 @@ def add_csr(session, client_ip, location, csr_name,
 
 def add_cert(session, node_id, cert_id, cert_name,
             cert_location, cert_expiration):
+    """
+        Add a new Signed Certificate into RV
+        arguments below..
+        session == SQLAlchemy Session
+        node_id == 1 This is the id of the node that this cert belongs too.
+        cert_id == 1 This is the id corresponding csr_id
+        cert_location == The directory location 
+        ("/opt/TopPatch/var/lib/ssl/client/keys/192.168.0.1.cert")
+    """
     session = validate_session(session)
     try:
         add_cert = SslInfo(node_id, cert_id, cert_name,
@@ -147,6 +192,14 @@ def add_cert(session, node_id, cert_id, cert_name,
 
 def add_operation(session, node_id, operation, result_id=None,
         operation_sent=None, operation_received=None, results_received=None):
+    """
+        Add a new Operation into RV
+        arguments below..
+        session == SQLAlchemy Session
+        node_id == 1 The id of the node that this operation belongs too.
+        operation == reboot|install|uninstall (The operation type)
+    """
+    session = validate_session(session)
     add_oper = Operations(node_id, operation, result_id,
             operation_sent, operation_received, results_received
             )
@@ -158,6 +211,14 @@ def add_operation(session, node_id, operation, result_id=None,
 
 
 def add_system_info(session, data, node_info):
+    """
+        Add the system information of an existing node
+        arguments below..
+        session == SQLAlchemy Session
+        data == this is the message that was sent by the agent and
+        received by rvlistener.
+        node_id == 1 The id of the node that this information belongs too.
+    """
     session = validate_session(session)
     operation = operation_exists(session, data['operation_id'])
     node_id = node_info.id
@@ -181,7 +242,14 @@ def add_system_info(session, data, node_info):
                 print "BOOOH system info was not added"
 
 
-def add_app_update(session, data):
+def add_software_update(session, data):
+    """
+        Add software to the RV database, if the software does not exist.
+        arguments below..
+        session == SQLAlchemy Session
+        data == this is the message that was sent by the agent and
+        received by rvlistener.
+    """
     session = validate_session(session)
     operation = operation_exists(session, data['operation_id'])
     node_id = data['node_id']
@@ -210,7 +278,14 @@ def add_app_update(session, data):
                     except:
                         session.rollback()
 
-def add_update_per_node(session, data):
+def add_software_per_node(session, data):
+    """
+        Create a new entry in the packages_per_node table
+        arguments below..
+        session == SQLAlchemy Session
+        data == this is the message that was sent by the agent and
+        received by rvlistener.
+    """
     session = validate_session(session)
     operation = operation_exists(session, data['operation_id'])
     node_id = data['node_id']
@@ -223,13 +298,13 @@ def add_update_per_node(session, data):
         for addupdate in data['data']:
             update_exists = node_update_exists(session, node_id,
                     addupdate['toppatch_id'])
+            if 'date_installed' in addupdate:
+                date_installed = date_parser(addupdate['date_installed'])
+            else:
+                date_installed = None
+            hidden = return_bool(addupdate['hidden'])
+            installed = return_bool(addupdate['installed'])
             if not update_exists:
-                if 'date_installed' in addupdate:
-                    date_installed = date_parser(addupdate['date_installed'])
-                else:
-                    date_installed = None
-                hidden = return_bool(addupdate['hidden'])
-                installed = return_bool(addupdate['installed'])
                 if node.os_code == "linux":
                     node_update = PackagePerNode(node_id,
                         addupdate['toppatch_id'], date_installed, 
@@ -260,9 +335,26 @@ def add_update_per_node(session, data):
                     session.commit()
                 except:
                     session.rollback()
+            else:
+                try:
+                    update_exists.installed = installed
+                    update_exists.hidden = hidden
+                    update_exists.date_installed = date_installed
+                    session.commit()
+                except:
+                    session.rollback()
 
 
 def add_software_available(session, data):
+    """
+        Create a new entry in the software_available table
+        This table is as of right now, strictly for Windows 3rd
+        party applications
+        arguments below..
+        session == SQLAlchemy Session
+        data == this is the message that was sent by the agent and
+        received by rvlistener.
+    """
     session = validate_session(session)
     operation = operation_exists(session, data['operation_id'])
     node_id = data['node_id']
@@ -286,6 +378,17 @@ def add_software_available(session, data):
 
 
 def add_software_installed(session, data):
+    """
+        Create a new entry in the software_installed table
+        This table is a foreignKey to an existing row in 
+        software_available for a node.
+        This table is as of right now, strictly for Windows 3rd
+        party applications
+        arguments below..
+        session == SQLAlchemy Session
+        data == this is the message that was sent by the agent and
+        received by rvlistener.
+    """
     session = validate_session(session)
     operation = operation_exists(session, data['operation_id'])
     node_id = data['node_id']
@@ -311,6 +414,12 @@ def add_software_installed(session, data):
 
 
 def remove_tag(session, tagname):
+    """
+        Remove a tag from the database
+        arguments below..
+        session == SQLAlchemy Session
+        tagname == name of the tag you want to remove
+    """
     session = validate_session(session)
     tag = tag_exists(session, tag_name=tagname)
     tagid= tag.id
@@ -329,6 +438,12 @@ def remove_tag(session, tagname):
 
 
 def remove_all_nodes_from_tag(session, tag_name):
+    """
+        Remove all nodes from a tag in the database
+        arguments below..
+        session == SQLAlchemy Session
+        tag_name == name of the tag you want to remove
+    """
     session = validate_session(session)
     tag = tag_exists(session, tag_name)
     if not tag:
@@ -355,6 +470,13 @@ def remove_all_nodes_from_tag(session, tag_name):
 
 
 def remove_nodes_from_tag(session, tag_name, nodes=[]):
+    """
+        Remove a node from a tag in the database
+        arguments below..
+        session == SQLAlchemy Session
+        tag_name == name of the tag you want to remove
+        nodes == list of nodes to be removed
+    """
     session = validate_session(session)
     nodes_completed = []
     nodes_failed = []
@@ -387,6 +509,13 @@ def remove_nodes_from_tag(session, tag_name, nodes=[]):
 
 
 def remove_time_block(session, id=None, label=None,
+    """
+        Remove a timeblock from the database
+        arguments below..
+        session == SQLAlchemy Session
+        id == the id of the timeblock
+        label == the name of the timeblock
+    """
             start_date=None, start_time=None):
     session = validate_session(session)
     timeblock = time_block_exists(session, id,
@@ -407,6 +536,12 @@ def remove_time_block(session, id=None, label=None,
 
 def update_operation_row(session, oper_id, results_recv=None,
             oper_recv=None):
+    """
+        update an existing operation in the RV database
+        arguments below..
+        session == SQLAlchemy Session
+        oper_id == the id of the operation
+    """
     session = validate_session(session)
     operation = operation_exists(session, oper_id)
     if operation and results_recv:
@@ -418,6 +553,13 @@ def update_operation_row(session, oper_id, results_recv=None,
 
 
 def update_node(session, node_id, ipaddress):
+    """
+        update an existing node in the RV database
+        arguments below..
+        session == SQLAlchemy Session
+        node_id == the id of the node
+        ipaddress == The ipaddress of the node
+    """
     session = validate_session(session)
     node = node_exists(session, node_id=node_id)
     error = None
@@ -451,6 +593,12 @@ def update_node(session, node_id, ipaddress):
 
 
 def update_node_stats(session, node_id):
+    """
+        update the stats of the node in the node_stats table in RV
+        arguments below..
+        session == SQLAlchemy Session
+        node_id == the id of the node
+    """
     session = validate_session(session)
     rebootspending = session.query(NodeInfo).\
             filter(NodeInfo.reboot == True).\
@@ -484,6 +632,11 @@ def update_node_stats(session, node_id):
 
 
 def update_network_stats(session):
+    """
+        update the global stats in network_stats table in RV
+        arguments below..
+        session == SQLAlchemy Session
+    """
     session = validate_session(session)
     rebootspending = session.query(NodeInfo).\
             filter(NodeInfo.reboot == True).count()
@@ -514,6 +667,11 @@ def update_network_stats(session):
 
 
 def update_tag_stats(session):
+    """
+        update the global tag stats in tag_stats table in RV
+        arguments below..
+        session == SQLAlchemy Session
+    """
     session = validate_session(session)
     tags = session.query(TagInfo).all()
     if len(tags) > 0:
@@ -569,9 +727,15 @@ def update_tag_stats(session):
 
 
 def update_reboot_status(session, node_id, oper_type):
+    """
+        update the reboot status on a node in the node_info table in RV
+        arguments below..
+        session == SQLAlchemy Session
+        node_id == The node_id of the node
+        oper_type == "reboot"
+    """
     session = validate_session(session)
     node = node_exists(session, node_id=node_id)
-    print node, "OKKKOKOKKO"
     if node:
         if oper_type == 'reboot':
             node.reboot = False,
@@ -580,6 +744,12 @@ def update_reboot_status(session, node_id, oper_type):
 
 
 def add_results(session, data):
+    """
+        Add a new entry in the results table in RV
+        arguments below..
+        session == SQLAlchemy Session
+        data == the json message received from the agent
+    """
     session = validate_session(session)
     operation = operation_exists(session, data['operation_id'])
     node = node_exists(session,node_id=data['node_id'])

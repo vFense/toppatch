@@ -7,6 +7,9 @@ from models.node import *
 
 
 def retrieve_transactions(session, count=None, offset=None):
+    """
+        Return a list of historical transactions of the RV system in json
+    """
     session = validate_session(session)
     transactions, total_count = get_transactions(session, count, offset)
     final_msg = {"count" : total_count, "data" : []}
