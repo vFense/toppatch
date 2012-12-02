@@ -17,14 +17,14 @@ define(
                             0 // Prevent going into negative offsets
                         );
 
-                        this.fetch();
+                        this.verboseFetch();
                     }
                 },
                 fetchNextSet: function () {
                     if (this.hasNext()) {
                         this.params.offset += this.params.count;
 
-                        this.fetch();
+                        this.verboseFetch();
                     }
                 },
                 hasPrev: function () {

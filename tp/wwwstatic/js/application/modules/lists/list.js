@@ -146,7 +146,7 @@ define(
                         this._baseItem = _.clone($items.find('.item')).empty();
                     }
 
-                    this.collection.fetch();
+                    this.collection.verboseFetch();
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
