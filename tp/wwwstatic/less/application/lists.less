@@ -53,6 +53,13 @@
         margin-bottom: 0;
     }
 
+    &.row-fluid,
+    .row-fluid {
+        [class*="span"] {
+            min-height: 1em;
+        }
+    }
+
     .items {
         .item {
             border-top: @em*(1px)/@listFontSize solid @listBorder;
@@ -64,15 +71,6 @@
 
             &:hover {
                 background-color: @listHighlight;
-            }
-
-            &.row-fluid,
-            .row-fluid {
-                padding-left: 0;
-                padding-right: 0;
-                [class*="span"] {
-                    min-height: 1em;
-                }
             }
 
             &.linked {
