@@ -509,6 +509,7 @@ def remove_nodes_from_tag(session, tag_name, nodes=[]):
 
 
 def remove_time_block(session, id=None, label=None,
+            start_date=None, start_time=None):
     """
         Remove a timeblock from the database
         arguments below..
@@ -516,7 +517,6 @@ def remove_time_block(session, id=None, label=None,
         id == the id of the timeblock
         label == the name of the timeblock
     """
-            start_date=None, start_time=None):
     session = validate_session(session)
     timeblock = time_block_exists(session, id,
             label, start_date, start_time)
