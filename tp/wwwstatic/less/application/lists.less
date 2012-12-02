@@ -1,5 +1,6 @@
 .list {
     // All buttons must be mini!!
+    @listFontSize: 12px;
     @listBorder: #E6E6E6;
     @listHeaderBackground: #F5F5F5;
     @listFooterBackground: #F5F5F5;
@@ -7,8 +8,7 @@
     @listHighlight: @warningBackground;
 
     HEADER,
-    FOOTER,
-    .legend {
+    FOOTER {
         padding: @em*(2px)/@baseFontSize 0.5em;
         line-height: @em*( @baseLineHeight - 1px )/@baseFontSize;
         border-top: @em*(1px)/@baseFontSize solid @listBorder;
@@ -28,8 +28,18 @@
         background-color: @listFooterBackground;
     }
 
+    .legend,
+    .items,
+    .item {
+        font-size: @listFontSize;
+    }
+
     .legend {
         background-color: @listLegendBackground;
+        padding: @em*(2px)/@listFontSize 0.5em;
+        line-height: @em*( @baseLineHeight - 1px )/@listFontSize;
+        border-top: @em*(1px)/@listFontSize solid @listBorder;
+        border-bottom: @em*(1px)/@listFontSize solid @listBorder;
     }
 
     .items,
@@ -45,12 +55,11 @@
 
     .items {
         .item {
-            border-top: @em*(1px)/@baseFontSize solid @listBorder;
-        //border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
-            padding: @em*(2px)/@baseFontSize 0.5em;
+            border-top: @em*(1px)/@listFontSize solid @listBorder;
+            padding: @em*(2px)/@listFontSize 0.5em;
 
             &:last-child {
-                border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
+                border-bottom: @em*(1px)/@listFontSize solid @listBorder;
             }
 
             &:hover {
@@ -72,7 +81,7 @@
                     color: #000;
                     display: block;
                     text-decoration: none;
-                    padding: @em*(2px)/@baseFontSize 0.5em;
+                    padding: @em*(2px)/@listFontSize 0.5em;
 
                     STRONG {
                         color: @linkColor;
