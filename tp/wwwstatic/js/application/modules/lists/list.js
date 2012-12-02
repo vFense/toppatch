@@ -39,7 +39,7 @@ define(
                 },
 
                 parse: function (response) {
-                    this.recordCount = parseInt(response.count, 10);
+                    this.recordCount = parseInt(response.count, 10) || 0;
                     return response.data || response;
                 },
 

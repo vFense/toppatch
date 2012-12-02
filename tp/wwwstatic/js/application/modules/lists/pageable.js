@@ -31,7 +31,7 @@ define(
                     return this.params.offset > 0;
                 },
                 hasNext: function () {
-                    return this.params.offset + this.params.count < (this.recordCount || 0);
+                    return (this.params.offset + this.params.count) < this.recordCount;
                 }
             }),
             View: app.__subClass(list.View).extend({
