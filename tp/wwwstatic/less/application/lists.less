@@ -66,6 +66,10 @@
             border-top: @em*(1px)/@listFontSize solid @listBorder;
             padding: @em*(2px)/@listFontSize 0.5em;
 
+            &:first-child {
+                border-top: none !important;
+            }
+
             &:last-child {
                 border-bottom: @em*(1px)/@listFontSize solid @listBorder;
             }
@@ -123,14 +127,6 @@
             height: 480px;
         //overflow: hidden;
             border: @em*(1px)/@baseFontSize solid @masterSlaveBorder;
-
-            .items {
-                .item {
-                    &:first-child {
-                        border-top: none !important;
-                    }
-                }
-            }
         }
 
         &.master {
