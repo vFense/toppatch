@@ -212,7 +212,7 @@ def store_cert(session, ip, cert):
     expiration = get_expire_from_cert(cert.get_notAfter())
     csr = csr_exists(session, ip)
     cert_path, cert_name, cert_error = \
-        saveKey(CLIENT_KEY_DIR, cert, TYPE_CERT, name=ip)
+        save_key(CLIENT_KEY_DIR, cert, TYPE_CERT, name=ip)
     node = add_node(session, ip)
     cert_row = add_cert(session, node.id, csr.id,
         cert_name, cert_path, expiration)
