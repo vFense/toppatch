@@ -14,18 +14,18 @@ define(
                         result = item.get('result'),
 
                         $item       = newElement('div').addClass('item'),
-                        $div        = newElement('div').addClass('row-fluid'),
+                        $row        = newElement('div').addClass('row-fluid'),
                         $operation  = newElement('small').addClass('span2'),
-                        $desc       = newElement('small').addClass('desc span3'),
-                        $error      = newElement('small').addClass('span5').html('&nbsp;'),
+                        $node       = newElement('small').addClass('span4'),
+                        $error      = newElement('small').addClass('span4').html('&nbsp;'),
                         $date       = newElement('small').addClass('span2 alignRight');
 
                     $operation.append(item.get('operation').toUpperCase());
-                    $desc.html(item.get('node_id'));
+                    $node.html(item.get('node_id'));
                     $date.html(item.get('operation_sent'));
 
                     if (_.isBoolean(result) && !result) {
-                        $div.addClass('fail');
+                        $row.addClass('fail');
                         $error.append(
                             newElement('a')
                                 .attr('rel', 'tooltip')
@@ -36,7 +36,7 @@ define(
                     }
 
                     return $item.append(
-                        $div.append($operation, $desc, $error, $date)
+                        $row.append($operation, $node, $error, $date)
                     );
                 }
             })
