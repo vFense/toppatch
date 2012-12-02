@@ -259,7 +259,7 @@ def add_software_update(session, data):
             operation.results_received = datetime.now()
             session.commit()
         for update in data['data']:
-            update_exists = updateExists(session, update['toppatch_id'])
+            update_exists = package_exists(session, update['toppatch_id'])
             if not update_exists:
                 if not 'kb' in update:
                     update['kb'] = None
@@ -297,7 +297,7 @@ def add_software_per_node(session, data):
             operation.results_received = datetime.now()
             session.commit()
         for addupdate in data['data']:
-            update_exists = node_update_exists(session, node_id,
+            update_exists = node_package_exists(session, node_id,
                     addupdate['toppatch_id'])
             if 'date_installed' in addupdate:
                 date_installed = date_parser(addupdate['date_installed'])
