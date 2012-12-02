@@ -172,6 +172,8 @@ define(
                         });
                     }
 
+                    this._isOpen = true;
+
                     return this;
                 },
 
