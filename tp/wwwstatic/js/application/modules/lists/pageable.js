@@ -2,7 +2,7 @@ define(
     ['jquery', 'underscore', 'backbone', 'app', 'modules/lists/list', 'text!templates/lists/pageable.html'],
     function ($, _, Backbone, app, list, myTemplate) {
         "use strict";
-        var exports = {
+        return {
             Collection: app.__subClass(list.Collection).extend({
                 baseUrl: '',
                 _defaultParams: {
@@ -112,6 +112,5 @@ define(
                 }
             })
         };
-        return exports;
     }
 );
