@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="actions clearfix">
-                    <input type="hidden" name="next" value="{{next}}"/>
+                    <input type="hidden" name="next" value=""/>
                     <button type="submit" class="button btn btn-primary btn-large pull-right">Sign In</button>
                     <div class="pull-left">
                         Don't have an account? <a href="#">Sign Up</a><br>
@@ -67,5 +67,10 @@
     <hr/>
     <div class=""><a href="http://www.toppatch.com/"><img src="img/brand-name-tag.png" class="brand" alt="Top Patch brand"/></a></div>
 </noscript>
+<script type="text/javascript">
+    var hash = window.document.location.hash;
+    var nextInput = document.getElementsByName('next');
+    nextInput[0].value = hash;
+</script>
 </body>
 </html>
