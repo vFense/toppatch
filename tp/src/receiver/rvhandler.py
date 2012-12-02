@@ -22,6 +22,13 @@ STATUS_UPDATE = 'status'
 
 
 class HandOff():
+    """
+        Anytime an agent communicates with the RV Application,
+        it must come through rvlistener. Once rvlistener receives
+        all the data from the agent, rvlistener will than pass the msg
+        to rvhandler. RVhandler than acts as the traffic coordinator
+        for the received message.
+    """
     def __init__(self, ENGINE, data, ip_address):
         self.session = create_session(ENGINE)
         self.session = validate_session(self.session)
@@ -73,7 +80,7 @@ class HandOff():
 
     def add_update(self):
         add_software_update(self.session, self.json_object)
-        add_update_per_node(self.session, self.json_object)
+        add_software_per_node(self.session, self.json_object)
         update_node_stats(self.session, self.node.id)
         update_network_stats(self.session)
         update_tag_stats(self.session)
