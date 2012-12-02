@@ -13,8 +13,7 @@ define(
                         },
                         result = item.get('result'),
 
-                        $item       = newElement('div').addClass('item'),
-                        $row        = newElement('div').addClass('row-fluid'),
+                        $item       = newElement('div').addClass('item row-fluid'),
                         $operation  = newElement('div').addClass('span2'),
                         $node       = newElement('div').addClass('span4'),
                         $error      = newElement('div').addClass('span4').html('&nbsp;'),
@@ -25,7 +24,7 @@ define(
                     $date.html(item.get('operation_sent'));
 
                     if (_.isBoolean(result) && !result) {
-                        $row.addClass('fail');
+                        $item.addClass('fail');
                         $error.append(
                             newElement('a')
                                 .attr('rel', 'tooltip')
@@ -35,9 +34,7 @@ define(
                         );
                     }
 
-                    return $item.append(
-                        $row.append($operation, $node, $error, $date)
-                    );
+                    return $item.append($operation, $node, $error, $date);
                 }
             })
         };
