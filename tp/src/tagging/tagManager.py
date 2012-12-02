@@ -156,7 +156,7 @@ def tag_remove(session, msg):
     if valid:
         if 'tag' in json_msg:
             tag = json_msg['tag']
-        print msg
+        print json_msg
         nodes_removed_from_tag = remove_all_nodes_from_tag(session, tag)
         print nodes_removed_from_tag
         tag_out = remove_tag(session, tag)

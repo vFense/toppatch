@@ -86,13 +86,14 @@ def add_tag_per_node(session, nodes=[], tag_id=None, tag_name=None,
     session = validate_session(session)
     completed = False
     count = 0
+    tag = None
     if not tag_id and tag_name:
-        tag_object, tag = tagExists(session, tag_name=tag_name)
+        tag = tag_exists(session, tag_name=tag_name)
     elif tag_id and not tag_name:
-        tag_object, tag = tagExists(session, tag_id=tag_id)
+        tag = tag_exists(session, tag_id=tag_id)
     if not tag and user_id:
         tag_added, tag_msg, tag = \
-                addTag(session, tag_name, user_id=user_id)
+                add_tag(session, tag_name, user_id=user_id)
     for node in nodes:
         tag_for_node_exists = \
             session.query(TagsPerNode).\
@@ -437,7 +438,7 @@ def remove_tag(session, tagname):
             return(False, "Tag %s does not exists" % (tagname))
 
 
-def remove_all_nodes_from_tag(session, tag_name):
+def remove_all_nodes_from_tag(session, tagname):
     """
         Remove all nodes from a tag in the database
         arguments below..
@@ -445,13 +446,15 @@ def remove_all_nodes_from_tag(session, tag_name):
         tag_name == name of the tag you want to remove
     """
     session = validate_session(session)
-    tag = tag_exists(session, tag_name)
+    tag = tag_exists(session, tag_name=tagname)
+    print "IM IN REMOVE ALL NODES FROM TAG", tag
     if not tag:
-        return(False, "Tag %s does not exists" % (tag_name), tag_name)
+        print "WHY AM I HERE", tag
+        return(False, "Tag %s does not exists" % (tagname), tagname)
     tags_per_node = \
             session.query(TagsPerNode, TagInfo).\
                     join(TagInfo).\
-                    filter(TagInfo.tag == tag_name).all()
+                    filter(TagInfo.tag == tagname).all()
     if len(tags_per_node) > 0:
         nodes = map(lambda nodes: nodes[0].node_id, tags_per_node)
         try:
@@ -459,14 +462,14 @@ def remove_all_nodes_from_tag(session, tag_name):
                     tags_per_node)
             session.commit()
             return(True, "Nodes %s were deleted from tag %s" % \
-                    (nodes, tag_name), nodes)
+                    (nodes, tagname), nodes)
         except Exception as e:
             session.rollback()
             return(False, "Nodes %s were not deleted from tag %s" % \
-                    (nodes, tag_name), nodes)
+                    (nodes, tagname), nodes)
     else:
         return(True, "No nodes for this tag %s Tag" % \
-            (tag_name), tag_name)
+            (tagname), tagname)
 
 
 def remove_nodes_from_tag(session, tag_name, nodes=[]):
