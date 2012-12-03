@@ -30,7 +30,7 @@ define(
             dataType: 'json',
             async: false,
             success: function (json) {
-                if(json.length != 0) {
+                if (json.length !== 0) {
                     overviewInstalled = json[0];
                     overviewAvailable = json[1];
                     overviewPending = json[2];
@@ -66,15 +66,15 @@ define(
         _.extend(app, {
             startWs: function () {
                 var ws = new WebSocket("wss://" + window.location.host + "/ws");
-                ws.onmessage = function(evt) {
-                    console.log(['websocket', 'message', evt]);
+                ws.onmessage = function (evt) {
+                    window.console.log(['websocket', 'message', evt]);
                     $.ajax({
                         url: '/api/networkData',
                         dataType: 'json',
                         async: false,
                         success: function (json) {
-                            console.log(json);
-                            for(var i = 0; i < json.length; i++) {
+                            window.console.log(json);
+                            for (var i = 0; i < json.length; i++) {
                                 if(json[i].key == 'installed') {
                                     $('.success').children('dd').children().html(json[i].data);
                                 }
@@ -92,13 +92,13 @@ define(
                     });
                 };
                 ws.onclose = function(evt) {
-                    console.log(['websocket', 'closed', evt]);
+                    window.console.log(['websocket', 'closed', evt]);
                 };
                 ws.onopen = function(evt) {
-                    console.log(['websocket', 'opened', evt]);
+                    window.console.log(['websocket', 'opened', evt]);
                 };
                 ws.onerror = function(evt) {
-                    console.log(['websocket', 'error', evt]);
+                    window.console.log(['websocket', 'error', evt]);
                 }
             },
             chart: {
@@ -108,6 +108,50 @@ define(
                 stackedBar: charts.stackedBar,
                 generateTable: charts.generateTable,
                 line: charts.line
+            },
+            getUserSettings: function () {
+                var userSettings, userName,
+                    User = {};
+                $.ajax({
+                    url: '/api/userInfo',
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+                        userSettings = json;
+                        userName = userSettings.name;
+                        if (localStorage.getItem(userName) === null) {
+                            User.Model = Backbone.Model.extend({
+                                defaults: {
+                                    name: userName,
+                                    show: {
+                                        brandHeader: true,
+                                        dashNav: true,
+                                        copyFooter: true
+                                    },
+                                    widgets: {
+                                        'graph': ['pie', 'bar', 'summary'],
+                                        'spans': [6, 6, 12],
+                                        'titles': ['Patches by Severity', 'Nodes in Network by OS', 'Summary Charts']
+                                    }
+                                }
+                            });
+                            window.User = new User.Model();
+                            localStorage.setItem(userName, JSON.stringify(window.User));
+                        } else {
+                            var test = JSON.parse(localStorage.getItem(userName));
+                            User.Model = Backbone.Model.extend({
+                                defaults: {
+                                    name: test.name,
+                                    show: test.show,
+                                    widgets: test.widgets,
+                                    access: test.access
+                                }
+                            });
+                            window.User = new User.Model();
+                        }
+
+                    }
+                });
             },
             data: {
                 overviewData: [

@@ -449,12 +449,8 @@ BODY > HEADER #primaryNav {
 .list FOOTER {
   background-color: #f5f5f5;
 }
-.list .legend,
-.list .items,
-.list .item {
-  font-size: 12px;
-}
 .list .legend {
+  font-size: 12px;
   background-color: #fafafa;
   padding: 0.16666666666666666em 0.5em;
   line-height: 1.5833333333333333em;
@@ -479,6 +475,7 @@ BODY > HEADER #primaryNav {
   min-height: 1em;
 }
 .list .items .item {
+  font-size: 12px;
   border-top: 0.08333333333333333em solid #e6e6e6;
   padding: 0.16666666666666666em 0.5em;
 }
@@ -508,11 +505,11 @@ BODY > HEADER #primaryNav {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.list .items .item .btn {
-  line-height: 1em;
-}
-.list .items .item .btn-mini {
-  line-height: 1.3333333333333333em;
+.list .items .item .btn-link {
+  border: 0;
+  border: none;
+  line-height: 1.2857142857142858em;
+  height: 1.2857142857142858em;
 }
 .list .items .item input[type="text"],
 .list .items .item input[type="password"] {
@@ -539,6 +536,106 @@ BODY > HEADER #primaryNav {
   -webkit-box-shadow: inset 0 0.08333333333333333em 0.08333333333333333em rgba(0, 0, 0, 0.075), 0 0 0.6666666666666666em rgba(82, 168, 236, 0.6);
   -moz-box-shadow: inset 0 0.08333333333333333em 0.08333333333333333em rgba(0, 0, 0, 0.075), 0 0 0.6666666666666666em rgba(82, 168, 236, 0.6);
   box-shadow: inset 0 0.08333333333333333em 0.08333333333333333em rgba(0, 0, 0, 0.075), 0 0 0.6666666666666666em rgba(82, 168, 236, 0.6);
+}
+.list HEADER input[type="text"],
+.list FOOTER input[type="text"],
+.list HEADER input[type="password"],
+.list FOOTER input[type="password"] {
+  margin: 0;
+  height: 1.5em;
+  padding: 0 0.42857142857142855em;
+  font-size: 14px;
+  line-height: 1em;
+  background-color: #ffffff;
+  border: 0.07142857142857142em solid #cccccc;
+  -webkit-box-shadow: inset 0 0.07142857142857142em 0.07142857142857142em rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 0.07142857142857142em 0.07142857142857142em rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 0.07142857142857142em 0.07142857142857142em rgba(0, 0, 0, 0.075);
+  -webkit-transition: border linear .2s, box-shadow linear .2s;
+  -moz-transition: border linear .2s, box-shadow linear .2s;
+  -o-transition: border linear .2s, box-shadow linear .2s;
+  transition: border linear .2s, box-shadow linear .2s;
+}
+.list HEADER input[type="text"]:focus,
+.list FOOTER input[type="text"]:focus,
+.list HEADER input[type="password"]:focus,
+.list FOOTER input[type="password"]:focus {
+  -webkit-box-shadow: inset 0 0.07142857142857142em 0.07142857142857142em rgba(0, 0, 0, 0.075), 0 0 0.5714285714285714em rgba(82, 168, 236, 0.6);
+  -moz-box-shadow: inset 0 0.07142857142857142em 0.07142857142857142em rgba(0, 0, 0, 0.075), 0 0 0.5714285714285714em rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 0.07142857142857142em 0.07142857142857142em rgba(0, 0, 0, 0.075), 0 0 0.5714285714285714em rgba(82, 168, 236, 0.6);
+}
+.list HEADER .input-prepend,
+.list FOOTER .input-prepend {
+  margin-bottom: 0;
+}
+.list HEADER .add-on,
+.list FOOTER .add-on {
+  height: 1.5em;
+  min-width: 1.1428571428571428em;
+  padding: 0 0.35714285714285715em;
+  font-size: 14px;
+  line-height: 1.4285714285714286em;
+  text-shadow: 0 0.07142857142857142em 0 #ffffff;
+  border: 0.07142857142857142em solid #cccccc;
+}
+.list HEADER .input-prepend .add-on,
+.list FOOTER .input-prepend .add-on,
+.list HEADER .input-prepend .btn,
+.list FOOTER .input-prepend .btn {
+  margin-right: -0.07142857142857142em;
+}
+.list HEADER .input-prepend .add-on:first-child,
+.list FOOTER .input-prepend .add-on:first-child,
+.list HEADER .input-prepend .btn:first-child,
+.list FOOTER .input-prepend .btn:first-child {
+  -webkit-border-radius: 0.2857142857142857em 0 0 0.2857142857142857em;
+  -moz-border-radius: 0.2857142857142857em 0 0 0.2857142857142857em;
+  border-radius: 0.2857142857142857em 0 0 0.2857142857142857em;
+}
+.list HEADER .input-append input,
+.list FOOTER .input-append input,
+.list HEADER .input-append select,
+.list FOOTER .input-append select,
+.list HEADER .input-append .uneditable-input,
+.list FOOTER .input-append .uneditable-input {
+  -webkit-border-top-left-radius: 0.2857142857142857em 0 0 0.2857142857142857em;
+  -moz-border-radius-topleft: 0.2857142857142857em 0 0 0.2857142857142857em;
+  border-top-left-radius: 0.2857142857142857em 0 0 0.2857142857142857em;
+  -webkit-border-bottom-left-radius: 0.2857142857142857em 0 0 0.2857142857142857em;
+  -moz-border-radius-bottomleft: 0.2857142857142857em 0 0 0.2857142857142857em;
+  border-bottom-left-radius: 0.2857142857142857em 0 0 0.2857142857142857em;
+}
+.list HEADER .input-append .add-on,
+.list FOOTER .input-append .add-on,
+.list HEADER .input-append .btn,
+.list FOOTER .input-append .btn {
+  margin-left: -0.07142857142857142em;
+}
+.list HEADER .input-append .add-on:last-child,
+.list FOOTER .input-append .add-on:last-child,
+.list HEADER .input-append .btn:last-child,
+.list FOOTER .input-append .btn:last-child {
+  -webkit-border-radius: 0 0.2857142857142857em 0.2857142857142857em 0;
+  -moz-border-radius: 0 0.2857142857142857em 0.2857142857142857em 0;
+  border-radius: 0 0.2857142857142857em 0.2857142857142857em 0;
+}
+.list HEADER .input-prepend.input-append .add-on:first-child,
+.list FOOTER .input-prepend.input-append .add-on:first-child,
+.list HEADER .input-prepend.input-append .btn:first-child,
+.list FOOTER .input-prepend.input-append .btn:first-child {
+  margin-right: -0.07142857142857142em;
+  -webkit-border-radius: 0.2857142857142857em 0 0 0.2857142857142857em;
+  -moz-border-radius: 0.2857142857142857em 0 0 0.2857142857142857em;
+  border-radius: 0.2857142857142857em 0 0 0.2857142857142857em;
+}
+.list HEADER .input-prepend.input-append .add-on:last-child,
+.list FOOTER .input-prepend.input-append .add-on:last-child,
+.list HEADER .input-prepend.input-append .btn:last-child,
+.list FOOTER .input-prepend.input-append .btn:last-child {
+  margin-left: -0.07142857142857142em;
+  -webkit-border-radius: 0 0.2857142857142857em 0.2857142857142857em 0;
+  -moz-border-radius: 0 0.2857142857142857em 0.2857142857142857em 0;
+  border-radius: 0 0.2857142857142857em 0.2857142857142857em 0;
 }
 .list .checkbox.inline {
   padding-top: 0;
