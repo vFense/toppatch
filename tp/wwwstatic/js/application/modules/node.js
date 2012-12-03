@@ -170,7 +170,6 @@ define(
                             node_id: node_id
                         };
                         window.console.log(params);
-
                         /*
                         $.post("/api/package/getDependencies", { operation: JSON.stringify(params) },
                             function (json) {
@@ -181,7 +180,6 @@ define(
                                 }
                             });
                         */
-
                     }
                 },
                 showEditDisplay: function (event) {
@@ -191,13 +189,20 @@ define(
                     return false;
                 },
                 submitDisplayName: function (event) {
-                    var displayName = $(event.currentTarget).siblings('input'),
+                    var $displayName = $(event.currentTarget).siblings('input'),
                         node_id = event.data.view.collection.id,
-                        popover = event.data.popover;
-                    if (displayName.val()) {
-                        $.post('api/node/modifyDisplayName', { nodeid: node_id, displayname: displayName.val() }, function (json) {
+                        popover = event.data.popover,
+                        $displayNameDiv = $('#editDisplay').parent(),
+                        $em;
+                    if ($displayName.val()) {
+                        $.post('api/node/modifyDisplayName', { nodeid: node_id, displayname: $displayName.val() }, function (json) {
                             window.console.log(json);
-                            popover.hide();
+                            if (json.pass) {
+                                $em = $displayNameDiv.find('em');
+                                if ($em) { $em.remove(); }
+                                $displayNameDiv.prepend($displayName.val());
+                                popover.hide();
+                            }
                         });
                     }
                 },
