@@ -37,7 +37,9 @@ define(
                 },
                 displayEdit: function (event) {
                     var $editButton = $('#userEdit'),
-                        $doneButton = $('#doneEdit');
+                        $doneButton = $('#doneEdit'),
+                        $alert = this.$el.find('div.alert');
+                    $alert.hide();
                     $editButton.toggle();
                     $doneButton.toggle();
                     $('div[name=edit]').toggle();
@@ -62,11 +64,16 @@ define(
                 },
                 deleteUser: function (event) {
                     var $deleteButton = $(event.currentTarget),
-                        $userRow = $deleteButton.parents('.item');
+                        $userRow = $deleteButton.parents('.item'),
+                        $alert = this.$el.find('div.alert'),
+                        that = this;
                     $.post('api/users/delete', {userid: $deleteButton.val()}, function (json) {
                         window.console.log(json);
                         if (json.pass) {
                             $userRow.remove();
+                            $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html(json.message);
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                         }
                     });
                 },

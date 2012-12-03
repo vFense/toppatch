@@ -176,8 +176,12 @@ define(
                     return this;
                 },
                 beforeClose: function (event) {
-                    var popover = this.$el.find('a[name=popover]');
-                    if (popover.data('popover')) { popover.popover('destroy'); }
+                    var popover = this.$el.find('button[name=popover]');
+                    popover.each(function (i, pop) {
+                        if ($(pop).data('popover')) {
+                            $(pop).popover('destroy');
+                        }
+                    });
                 }
             })
         };
