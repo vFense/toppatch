@@ -508,6 +508,12 @@ BODY > HEADER #primaryNav {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.list .items .item .btn {
+  line-height: 1em;
+}
+.list .items .item .btn-mini {
+  line-height: 1.2727272727272727em;
+}
 .list .checkbox.inline {
   padding-top: 0;
 }
