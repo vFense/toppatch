@@ -58,14 +58,12 @@ define(
                     // set value of '_opened' variable
                     $el.bind({
                         show: function () {
-                            that._opened = true;
                             that.trigger('show');
                         },
                         shown: function () {
                             that.trigger('shown');
                         },
                         hide: function () {
-                            that._opened = false;
                             that.trigger('hide');
                         },
                         hidden: function () {
@@ -172,7 +170,7 @@ define(
                         });
                     }
 
-                    this._isOpen = true;
+                    this._opened = true;
 
                     return this;
                 },
