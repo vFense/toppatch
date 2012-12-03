@@ -893,13 +893,13 @@ class ModifyDisplayNameHandler(BaseHandler):
             if node:
                 try:
                     node.display_name = displayname
-                    session.commit()
+                    self.session.commit()
                     result = {"pass" : True,
                               "message" : "Display name change to %s" %\
                                             (displayname)
                             }
                 except Exception as e:
-                    session.rollback()
+                    self.session.rollback()
                     print e.message
                     result = {"pass" : False,
                               "message" : "Display name was not changed to %s"%\
