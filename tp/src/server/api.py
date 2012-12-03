@@ -141,6 +141,7 @@ class NodeHandler(BaseHandler):
             print u
             resultjson.append({"id" : u[0].id,
                                "host_name" : u[0].host_name,
+                               "display_name" : u[0].display_name,
                                "ip_address" : u[0].ip_address,
                                "host_status" : u[0].host_status,
                                "agent_status" : u[0].agent_status,
@@ -374,6 +375,7 @@ class NodesHandler(BaseHandler):
                 tags = map(lambda x: x[1].tag, self.session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
                 resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
+                              'display/name': u[0].display_name,
                               'host/status': u[0].host_status,
                               'agent/status': u[0].agent_status,
                               'reboot': u[0].reboot,
@@ -408,6 +410,7 @@ class NodesHandler(BaseHandler):
             for u in nodes_query.limit(queryCount).offset(queryOffset):
                 resultnode = {'ip': u[0].ip_address,
                               'hostname': u[0].host_name,
+                              'displayname': u[0].display_name,
                               'host/status': u[0].host_status,
                               'agent/status': u[0].agent_status,
                               'reboot': u[0].reboot,
