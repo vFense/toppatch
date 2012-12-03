@@ -240,7 +240,6 @@ define(
                         async: false,
                         success: function (data) {
                             $(that.graph).empty();
-                            window.console.log($(that.graph));
                             tag_template = _.template($('#tags_template').html(), {data: data});
                             $(that.graph).html(tag_template);
                             that.saveState();
@@ -418,7 +417,6 @@ define(
                                     widgetview.sizeval = settings.spans[i];
                                     widgetview.title = settings.titles[i];
                                     widgetview.graphType = widgets[i];
-                                    window.console.log(widgetview.graph);
                                     widgetview.getTags();
                                 }
                             }

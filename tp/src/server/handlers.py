@@ -7,7 +7,7 @@ except ImportError: import json
 from models.node import NodeInfo
 from db.client import *
 from networking.agentoperation import AgentOperation
-from scheduler.jobManager import JobScheduler, jobLister
+from scheduler.jobManager import job_scheduler, job_lister
 from server.decorators import authenticated_request
 from jsonpickle import encode
 
@@ -24,30 +24,21 @@ class RootHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         name = tornado.escape.xhtml_escape(self.current_user)
-        #self.write("Hello, " + name + '<br><a href="/logout">Logout</a>')
         self.render('../wwwstatic/index.html')
 
 
 class LoginHandler(BaseHandler):
     def get(self):
         self.render('../wwwstatic/login.html')
-        """
-        self.write('<html>'
-                    '<body>'
-                        '<form action="/login" method="post">'
-                        'Name: <input type="text" name="name">'
-                        'Password: <input type="password" name="password">'
-                        '<input type="submit" value="Sign in">'
-                        '</form>'
-                        '<a href="/signup">Create Account</a>'
-                    '</body></html>')
-        """
 
     def post(self):
-
          if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
             self.set_secure_cookie("user", self.get_argument("name"))
-            self.redirect("/")
+            redirect = self.get_argument("next", None)
+            if redirect is not None:
+                self.redirect("/" + redirect)
+            else:
+                self.redirect("/")
          else:
              self.write("Invalid username and/or password .")
 
@@ -67,15 +58,24 @@ class SignupHandler(BaseHandler):
 
 
     def post(self):
-
-        user = self.application.account_manager.user_account(str(self.get_argument("name")), str(self.get_argument("password")))
+        username = self.get_argument("name", None)
+        password = self.get_argument("password", None)
+        user = self.application.account_manager.user_account(str(username), str(password))
 
         if user is not None:
             self.application.account_manager.save_account(user)
-            self.set_secure_cookie("user", self.get_argument("name"))
-            self.redirect("/")
+            self.set_secure_cookie("user", username)
+            result = {"pass" : True,
+                      "message" : "User %s has been created." %\
+                                  (username)
+            }
         else:
-            self.write("Username already exist.")
+            result = {"pass" : False,
+                      "message" : "User %s can't be created." %\
+                                  (username)
+            }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
 
 class testHandler(BaseHandler):
     def get(self):
@@ -106,6 +106,9 @@ class LogoutHandler(BaseHandler):
         #self.write("Goodbye!" + '<br><a href="/login">Login</a>')
 
 class DeveloperRegistrationHandler(BaseHandler):
+
+
+    @authenticated_request
     def get(self):
         self.write('<html>'
                    '<body>'
@@ -173,7 +176,7 @@ class FormHandler(BaseHandler):
                     node['data'] = list(patches)
                     resultjson.append(encode(node))
                 if time:
-                    result = JobScheduler(resultjson,
+                    result = job_scheduler(resultjson,
                             self.application.scheduler
                             )
                 else:
@@ -187,7 +190,7 @@ class FormHandler(BaseHandler):
                     node['node_id'] = node_id
                     resultjson.append(encode(node))
                 if time:
-                    result = JobScheduler(resultjson,
+                    result = job_scheduler(resultjson,
                             self.application.scheduler
                             )
                 else:

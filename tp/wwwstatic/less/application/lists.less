@@ -1,0 +1,178 @@
+.list {
+    // All buttons must be mini!!
+    @listFontSize: 12px;
+    @listBorder: #E6E6E6;
+    @listHeaderBackground: #F5F5F5;
+    @listFooterBackground: #F5F5F5;
+    @listLegendBackground: #FAFAFA;
+    @listHighlight: @warningBackground;
+
+    HEADER,
+    FOOTER {
+        padding: @em*(2px)/@baseFontSize 0.5em;
+        line-height: @em*( @baseLineHeight - 1px )/@baseFontSize;
+        border-top: @em*(1px)/@baseFontSize solid @listBorder;
+        border-bottom: @em*(1px)/@baseFontSize solid @listBorder;
+    }
+
+    HEADER {
+        background-color: @listHeaderBackground;
+
+        &+ .items,
+        &+ .legend {
+            border-top: none;
+        }
+    }
+
+    FOOTER {
+        background-color: @listFooterBackground;
+    }
+
+    .legend,
+    .items,
+    .item {
+        font-size: @listFontSize;
+    }
+
+    .legend {
+        background-color: @listLegendBackground;
+        padding: @em*(2px)/@listFontSize 0.5em;
+        line-height: @em*( @baseLineHeight - 1px )/@listFontSize;
+        border-top: @em*(1px)/@listFontSize solid @listBorder;
+        border-bottom: @em*(1px)/@listFontSize solid @listBorder;
+    }
+
+    .items,
+    .legend {
+        &+ FOOTER {
+            border-top: none;
+        }
+    }
+
+    FORM {
+        margin-bottom: 0;
+    }
+
+    &.row-fluid,
+    .row-fluid {
+        .box-sizing(border-box);
+        [class*="span"] {
+            min-height: 1em;
+        }
+    }
+
+    .items {
+        .item {
+            border-top: @em*(1px)/@listFontSize solid @listBorder;
+            padding: @em*(2px)/@listFontSize 0.5em;
+
+            &:first-child {
+                border-top: none !important;
+            }
+
+            &:last-child {
+                border-bottom: @em*(1px)/@listFontSize solid @listBorder;
+            }
+
+            &:hover {
+                background-color: @listHighlight;
+            }
+
+            &.linked {
+                padding: 0 0;
+                A {
+                    color: #000;
+                    display: block;
+                    text-decoration: none;
+                    padding: @em*(2px)/@listFontSize 0.5em;
+
+                    STRONG {
+                        color: @linkColor;
+                    }
+                }
+            }
+
+            .desc {
+                .text-overflow();
+            }
+
+            .btn {
+                line-height: @em*( 14px )/@btnFontSize;
+            }
+
+            .btn-mini {
+                line-height: @em*( 14px )/@btnMiniFontSize;
+            }
+
+            // Changing input fontsize,
+            // Need to redo all em based rules from bootstrap
+            input {
+                &[type="text"],
+                &[type="password"] {
+                    @inputSize: 12px;
+                    margin: 0;
+
+                    height: @em*( 18px )/@inputSize;
+                    padding: 0 @em*( 6px )/@inputSize;
+                    font-size: @inputSize;
+                    line-height: @em*( 14px )/@inputSize;
+                    .border-radius(@em*( @inputBorderRadius )/@inputSize);
+
+                    background-color: @inputBackground;
+                    border: @em*( 1px )/@inputSize solid @inputBorder;
+                    .box-shadow(inset 0 @em*( 1px )/@inputSize @em*( 1px )/@inputSize rgba(0,0,0,.075));
+                    .transition(~"border linear .2s, box-shadow linear .2s");
+
+                    // Focus state
+                    &:focus {
+                        @boxShadow: inset 0 @em*( 1px )/@inputSize @em*( 1px )/@inputSize rgba(0,0,0,.075), 0 0 @em*( 8px )/@inputSize rgba(82,168,236,.6);
+                        .box-shadow(@boxShadow);
+                    }
+                }
+            }
+        }
+    }
+
+    .checkbox.inline {
+        padding-top: 0;
+    }
+
+    .done { color: @successText; }
+    .pend { color: @infoText; }
+    .need { color: @warningText; }
+    .fail { color: @errorText; }
+}
+
+.multipatch {
+    @masterSlaveBorder: #B0B0B0;
+    @slaveBackground: #f2f3f5;
+    @selectedColor: #2F7AD8;
+    .list {
+        &.master,
+        &.slave {
+            .box-sizing(border-box);
+
+            height: 480px;
+            //overflow: hidden;
+            border: @em*(1px)/@baseFontSize solid @masterSlaveBorder;
+        }
+
+        &.master {
+            overflow-y: scroll; // Bandage
+            .items {
+                .item {
+                    cursor: pointer !important;
+
+                    &.first {
+                        background-color: @selectedColor !important;
+                        color: white !important;
+                    }
+                }
+            }
+        }
+
+        &.slave {
+            overflow-y: scroll;
+        }
+    }
+}

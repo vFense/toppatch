@@ -6,11 +6,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from db.client import *
-from receiver.tphandler import HandOff
+from receiver.rvhandler import HandOff
 from scheduler.status_checker import *
 
 ALLOWED_CIPHER_LIST = 'TLSv1+HIGH:!SSLv2:RC4+MEDIUM:!aNULL:!eNULL:!3DES:@STRENGTH'
-ENGINE = initEngine()
+ENGINE = init_engine()
 
 class GetJson(Protocol):
     total_data = ""

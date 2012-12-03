@@ -89,6 +89,7 @@
   padding: @em*( @paddingSmall )/@btnSmallFontSize;
   font-size: @btnSmallFontSize;
   .border-radius( @em*( @borderRadiusSmall )/@btnSmallFontSize);
+  border: @em*( 1px )/@btnSmallFontSize solid @btnBorder; // Recreate border based on btn-small font size
 }
 .btn-small [class^="icon-"],
 .btn-small [class*=" icon-"] {
@@ -100,6 +101,7 @@
   padding: @em*( @paddingMini )/@btnMiniFontSize;
   font-size: @btnMiniFontSize;
   .border-radius(@em*( @borderRadiusSmall )/@btnMiniFontSize);
+  border: @em*( 1px )/@btnMiniFontSize solid @btnBorder; // Recreate border based on btn-mini font size
 }
 
 

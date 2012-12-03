@@ -5,10 +5,10 @@ from db.client import *
 from db.update_table import *
 from db.query_table import *
 from db.client import *
-from utils.common import verifyJsonIsValid
+from utils.common import verify_json_is_valid
 from csrhandler import CsrHandOff
 
-ENGINE = initEngine()
+ENGINE = init_engine()
 c = ENGINE.connect()
 try:
     c.execute("SELECT * FROM node_info")

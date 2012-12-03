@@ -49,8 +49,6 @@ define(
 
                     var tmpl = _.template(this.template);
 
-                    window.view = this;
-
                     this.$el.empty();
 
                     this.$el.append(tmpl(this.model.toJSON()));

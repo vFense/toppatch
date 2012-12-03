@@ -2,7 +2,7 @@ from models.account import User, Developer
 from server.oauth import token
 
 from utils.security import Crypto
-from db.client import validateSession
+from db.client import validate_session
 
 class AccountManager():
     """ AccountManager is a "helper" object to... manage anything and everything with user/developer accounts.
@@ -27,7 +27,7 @@ class AccountManager():
         """ Create a new account. Returns None if account is not created successfully."""
 
         # Have to check first if the account with the same username exist.
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         account = self.session.query(User).filter(User.username == username).first()
         if account is None:
             hash = Crypto.hash_scrypt(password)
@@ -38,7 +38,7 @@ class AccountManager():
             return None
 
         # Have to check first if the account with the same username exist.
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         account = self.session.query(Developer).filter(Developer.name == name).first()
         if account is None:
 
@@ -52,13 +52,13 @@ class AccountManager():
 
 
     def save_account(self, account):
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         self.session.add(account)
         self.session.commit()
         self.session.close()
 
     def get_account(self, username):
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         return self.session.query(User).filter(User.username == username).first()
 
     def authenticate_account(self, username, password):
@@ -66,7 +66,7 @@ class AccountManager():
         Returns True if it is, False otherwise.
         """
 
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         account = self.session.query(User).filter(User.username == username).first()
         # Check if account/username exist. False if it doesn't.
         if account is None:
@@ -93,7 +93,7 @@ class AccountManager():
         Updates the password of an existing user's account.
 
         """
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         account = self.session.query(User).filter(User.username == username).first()
         account.hash = Crypto.hash_scrypt(new_password)
 

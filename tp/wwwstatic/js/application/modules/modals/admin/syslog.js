@@ -11,7 +11,7 @@ define(
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
-                baseUrl: 'api/timeblocker/list.json/',
+                baseUrl: '',
                 filter: '',
                 url: function () {
                     return this.baseUrl + this.filter;

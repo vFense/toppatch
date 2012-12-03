@@ -10,8 +10,8 @@ monkey.patch_socket()
 
 class TcpConnect():
     """
-    Connect to the remote agent, using the openssl
-    library backed by Gevent.
+    Connect to the remote agent, using a secured or a nonsecured
+    tcp connection. We are using the socket library backed by Gevent.
     """
     def __init__(self, host, msg, port=9003, secure=True, timeout=60):
         self.secure = secure
@@ -115,6 +115,6 @@ class TcpConnect():
 
 
     def _close(self):
-        #tself.tcp_socket.shutdown(socket.SHUT_RDWR)
+        #self.tcp_socket.shutdown(socket.SHUT_RDWR)
         self.tcp_socket.close()
 
