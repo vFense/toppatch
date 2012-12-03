@@ -72,6 +72,32 @@ ui-state-highlight {
     visibility: visible !important;
 }
 
+// Set :invalid state to look like :valid state
+input:focus:required:invalid,
+textarea:focus:required:invalid,
+select:focus:required:invalid {
+    color: @gray;
+    border-color: @inputBorder;
+    &:focus {
+        border-color: rgba(82,168,236,.8);
+        @box-shadow: inset 0 @em*( 1px )/@libstFontSize @em*( 1px )/@libstFontSize rgba(0,0,0,.075), 0 0 @em*( 8px )/@libstFontSize rgba(82,168,236,.6);
+        .box-shadow(@box-shadow)
+    }
+}
+
+// Use .invalid to show :invalid state
+input:required.invalid,
+textarea:required.invalid,
+select:required.invalid {
+    color: #b94a48;
+    border-color: #ee5f5b;
+    &:focus {
+        border-color: darken(#ee5f5b, 10%);
+        @shadow: 0 0 @em( 6px )/@libstFontSize lighten(#ee5f5b, 20%);
+        .box-shadow(@shadow);
+    }
+}
+
 /* Sergio's Styles: To be sorted */
 
 /*.window {
