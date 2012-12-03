@@ -11,7 +11,7 @@ define(
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
-                baseUrl: '',
+                baseUrl: 'api/users/list',
                 filter: '',
                 url: function () {
                     return this.baseUrl + this.filter;
@@ -20,17 +20,18 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
-                    //this.collection = new exports.Collection();
-                    //this.collection.bind('reset', this.render, this);
-                    //this.collection.fetch();
+                    this.collection = new exports.Collection();
+                    this.collection.bind('reset', this.render, this);
+                    this.collection.fetch();
                 },
                 events: {
                     'click #userEdit': 'displayEdit',
                     'click #doneEdit': 'displayEdit',
                     'click #addUser': 'displayAddUser',
                     'click #cancelNewUser': 'displayAddUser',
-                    'click button[name=deleteUser]': 'confirmDelete',
+                    'click button[name=confirmDelete]': 'confirmDelete',
                     'click button[name=cancelDelete]': 'confirmDelete',
+                    'click button[name=deleteUser]': 'deleteUser',
                     'submit form': 'submit'
                 },
                 displayEdit: function (event) {
@@ -48,7 +49,7 @@ define(
                 },
                 confirmDelete: function (event) {
                     var $deleteButton, $divConfirm;
-                    if ($(event.currentTarget).attr('name') === 'deleteUser') {
+                    if ($(event.currentTarget).attr('name') === 'confirmDelete') {
                         $deleteButton = $(event.currentTarget);
                         $divConfirm = $deleteButton.siblings('div');
                     } else {
@@ -57,6 +58,10 @@ define(
                     }
                     $deleteButton.toggle();
                     $divConfirm.toggle();
+                },
+                deleteUser: function (event) {
+                    var $deleteButton = $(event.currentTarget);
+                    window.console.log($deleteButton.val());
                 },
                 submit: function (event) {
                     var $form = $(event.target);
@@ -68,12 +73,12 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var template = _.template(this.template);
-                    //data = this.collection.toJSON();
+                    var template = _.template(this.template),
+                        data = this.collection.toJSON();
 
                     this.$el.empty();
-
-                    this.$el.html(template());
+                    
+                    this.$el.html(template({data: data}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;

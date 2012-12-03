@@ -43,30 +43,26 @@
             </div>
         </header>
         <div class="items">
-            <div class="item row-fluid">
-                <div class="span9">Administrator</div>
-                <div name="edit" class="span3 alignRight hide">
-                    <button name="deleteUser" class="btn btn-mini btn-link">
-                        <i class="icon-remove" style="color:red;"></i>
-                    </button>
-                    <div name="confirmDelete" class="hide">
-                        <button class="btn btn-mini btn-danger">Delete</button>
-                        <button name="cancelDelete" class="btn btn-mini">Cancel</button>
+            <% if (data.length !== 0) { %>
+                <% _.each(data, function (user) { %>
+                    <div class="item row-fluid">
+                        <div class="span9"><%= user.username %></div>
+                        <div name="edit" class="span3 alignRight hide">
+                            <button name="confirmDelete" class="btn btn-mini btn-link">
+                                <i class="icon-remove" style="color:red;"></i>
+                            </button>
+                            <div name="confirmDelete" class="hide">
+                                <button name="deleteUser" class="btn btn-mini btn-danger" value="<%= user.id %>">Delete</button>
+                                <button name="cancelDelete" class="btn btn-mini">Cancel</button>
+                            </div>
+                        </div>
                     </div>
+                <% }); %>
+            <% } else { %>
+                <div class="item row-fluid">
+                    <div class="span9"><em>No users available.</em></div>
                 </div>
-            </div>
-            <div class="item row-fluid">
-                <div class="span9">User 1</div>
-                <div name="edit" class="span3 alignRight hide">
-                    <button name="deleteUser" class="btn btn-mini btn-link">
-                        <i class="icon-remove" style="color:red;"></i>
-                    </button>
-                    <div name="confirmDelete" class="hide">
-                        <button class="btn btn-mini btn-danger">Delete</button>
-                        <button name="cancelDelete" class="btn btn-mini">Cancel</button>
-                    </div>
-                </div>
-            </div>
+            <% } %>
             <div name="edit" class="row-fluid hide">
                 <div class="span9">
                     <button id="addUser" class="btn btn-mini">Add new user...</button>

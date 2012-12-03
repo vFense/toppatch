@@ -189,18 +189,19 @@ define(
                     return false;
                 },
                 submitDisplayName: function (event) {
-                    var $displayName = $(event.currentTarget).siblings('input'),
+                    var $em, $span,
+                        $displayName = $(event.currentTarget).siblings('input'),
                         node_id = event.data.view.collection.id,
                         popover = event.data.popover,
-                        $displayNameDiv = $('#editDisplay').parent(),
-                        $em;
+                        $displayNameDiv = $('#editDisplay').parent();
                     if ($displayName.val()) {
                         $.post('api/node/modifyDisplayName', { nodeid: node_id, displayname: $displayName.val() }, function (json) {
                             window.console.log(json);
                             if (json.pass) {
                                 $em = $displayNameDiv.find('em');
+                                $span = $displayNameDiv.find('span');
                                 if ($em) { $em.remove(); }
-                                $displayNameDiv.prepend($displayName.val());
+                                if ($span) { $span.html($displayName.val()); }
                                 popover.hide();
                             }
                         });
