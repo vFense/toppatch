@@ -945,9 +945,11 @@ class DeleteUserHandler(BaseHandler):
                             "either pass userid or username"
                          }
         if userid:
-            user = self.session.query(User).User.id == userid).first()
+            user = self.session.query(User).\
+                    filter(User.id == userid).first()
         elif username:
-            user = self.session.query(User).User.username == username).first()
+            user = self.session.query(User).\
+                    filter(User.username == username).first()
         if user:
             try:
                 if user.id != 1:
