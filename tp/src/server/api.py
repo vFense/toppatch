@@ -911,4 +911,19 @@ class ModifyDisplayNameHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+class ListUserHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        userlist = self.session.query(User).all()
+        result = []
+        if userlist:
+            for user in userlist:
+                result.append({"username" : user.username,
+                               "id" : user.id
+                              })
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
 
