@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'backbone', 'text!templates/admin.html' ],
-    function ($, Backbone, myTemplate) {
+    ['jquery', 'backbone', 'app', 'text!templates/admin.html' ],
+    function ($, Backbone, app, myTemplate) {
         "use strict";
         var exports = {
             View: Backbone.View.extend({
@@ -13,7 +13,7 @@ define(
                 },
                 submit: function (evt) {
                     var form = $(evt.target);
-                    if(form.attr('id') == 'password-form') {
+                    if (form.attr('id') === 'password-form') {
                         var password = form.find('input[name=password]'),
                             newpassword = form.find('input[name=new-password]'),
                             oldpassword = form.find('input[name=old-password]'),
@@ -23,12 +23,12 @@ define(
                             controlgroup = form.find('.control-group'),
                             helptext = form.find('.help-inline');
 
-                        if(password.val() && newpassword.val() && oldpassword.val()) {
-                            if(password.val() === newpassword.val()) {
+                        if (password.val() && newpassword.val() && oldpassword.val()) {
+                            if (password.val() === newpassword.val()) {
                                 $.post("/adminForm?" + form.serialize(),
-                                    function(json) {
-                                        console.log(json);
-                                        if(json.error) {
+                                    function (json) {
+                                        window.console.log(json);
+                                        if (json.error) {
                                             controlgroup.removeClass('success').addClass('error');
                                             helptext.remove();
                                             oldpasswordcontrols.append("<span class='help-inline'>Wrong password.</span>");
@@ -40,8 +40,7 @@ define(
                                             newpassword.val('');
                                             oldpassword.val('');
                                         }
-                                    }
-                                );
+                                    });
                             } else {
                                 helptext.remove();
                                 controlgroup.removeClass('success').addClass('error');
@@ -51,13 +50,13 @@ define(
                         } else {
                             controlgroup.removeClass('success').addClass('error');
                             helptext.remove();
-                            if(!password.val()) {
+                            if (!password.val()) {
                                 passwordcontrols.append("<span class='help-inline'>Password is blank!</span>");
                             }
-                            if(!newpassword.val()) {
+                            if (!newpassword.val()) {
                                 newpasswordcontrols.append("<span class='help-inline'>Password is blank!</span>");
                             }
-                            if(!oldpassword.val()) {
+                            if (!oldpassword.val()) {
                                 oldpasswordcontrols.append("<span class='help-inline'>Password is blank!</span>");
                             }
                         }
@@ -67,6 +66,7 @@ define(
                 clear: function (evt) {
                     var userName = window.User.get('name');
                     localStorage.removeItem(userName);
+                    app.getUserSettings();
                     $('#clear-ok').show();
                 },
                 beforeRender: $.noop,
@@ -76,6 +76,7 @@ define(
 
                     var template = _.template(this.template),
                         that = this;
+
                     this.$el.empty();
 
                     this.$el.append(template());
