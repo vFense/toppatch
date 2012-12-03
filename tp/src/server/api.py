@@ -19,6 +19,7 @@ from scheduler.jobManager import job_lister, remove_job
 from scheduler.timeBlocker import *
 from tagging.tagManager import *
 from search.search import *
+from packages.pkgManager import *
 from node.nodeManager import *
 from transactions.transactions_manager import *
 from sqlalchemy import distinct, func
@@ -878,6 +879,22 @@ class GetTagStatsHandler(BaseHandler):
         result = get_tag_stats(self.session, tagid=tag_id, tagname=tag_name)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+class GetTagsPerTpIdHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        tpid = None
+        try:
+            tpid = self.get_argument('tpid')
+        except Exception as e:
+            pass
+        result = list_tags_per_tpid(self.session, tpid)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
 
 class ModifyDisplayNameHandler(BaseHandler):
     @authenticated_request
