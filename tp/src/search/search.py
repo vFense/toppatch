@@ -3,7 +3,7 @@ import re
 from models.packages import *
 from models.node import *
 from utils.common import *
-from db.client import validateSession
+from db.client import validate_session
 
 
 valid_pkg_columns = {
@@ -21,21 +21,45 @@ is_os = {
         "is_bsd" : PackagePerNode.is_bsd
         }
 
-def basicPackageSearch(session, query, column, count=20, offset=0, output="json"):
-    session = validateSession(session)
+def basic_package_search(session, query, column, count=0, offset=0, output="json"):
+    """
+        This search function, gives you the ability to search by column.
+        Search by column ( description|name|kb|severity )
+        query == ssh
+        column == description
+        session == SqlAlchemy session object
+        count == How many results do you want in return ( default == all )
+        offset == if you want to return only a certain amount of results
+        based on a count and an offset
+        output == json|csv
+    """
+    session = validate_session(session)
     query = re.sub(r'^|$', '%', query)
     data = []
     csv_out = ""
     json_out = {}
     total_count = 0
     if column in valid_pkg_columns:
-        found_packages = session.query(Package).filter(valid_pkg_columns[column].like(query)).order_by(Package.toppatch_id.desc()).limit(count).offset(offset)
-        total_count = session.query(Package).filter(valid_pkg_columns[column].like(query)).order_by(Package.toppatch_id.desc()).count()
+        found_packages = session.query(Package).\
+                filter(valid_pkg_columns[column].like(query)).\
+                order_by(Package.toppatch_id.desc()).limit(count).\
+                offset(offset)
+        total_count = session.query(Package).\
+                filter(valid_pkg_columns[column].like(query)).\
+                order_by(Package.toppatch_id.desc()).count()
         for pkg in found_packages:
-            nodes_done = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.installed == True).count()
-            nodes_needed = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.installed == False).count()
-            nodes_pending = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.pending == True).count()
-            nodes_failed = session.query(PackagePerNode).filter(PackagePerNode.toppatch_id == pkg.toppatch_id).filter(PackagePerNode.attempts >= 1).count()
+            nodes_done = session.query(PackagePerNode).\
+                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.installed == True).count()
+            nodes_needed = session.query(PackagePerNode).\
+                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.installed == False).count()
+            nodes_pending = session.query(PackagePerNode).\
+                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.pending == True).count()
+            nodes_failed = session.query(PackagePerNode).\
+                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.attempts >= 1).count()
             if "json" in output:
                 data.append({
                         "id" : pkg.toppatch_id,
@@ -67,7 +91,7 @@ def basicPackageSearch(session, query, column, count=20, offset=0, output="json"
                             is_available=None, is_installed=None,
                             is_linux=False, is_windows=False, is_bsd=False,
                             is_unix=False, is_mac=False, all=False):
-    session = validateSession
+    session = validate_session
     query = re.sub(r'^|$', '%', query)
     all_packages []
     if all:

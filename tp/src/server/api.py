@@ -15,7 +15,7 @@ from models.node import *
 from models.ssl import *
 from server.handlers import SendToSocket
 from db.client import *
-from scheduler.jobManager import jobLister, removeJob
+from scheduler.jobManager import job_lister, remove_job
 from scheduler.timeBlocker import *
 from tagging.tagManager import *
 from search.search import *
@@ -33,7 +33,7 @@ class ApiHandler(BaseHandler):
     @authenticated_request
     def get(self, vendor=None, product=None):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         root_json = {}
         if vendor and product:
             root_json["vendor"] = vendor
@@ -64,7 +64,7 @@ class ApiHandler(BaseHandler):
 
     def _get_vendor(self, name=None):
         """ Returns all vendors (list) if name is None otherwise the vendor 'name'."""
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         if name:
             return self.session.query(Vendor).filter(Vendor.name == name).first()
         else:
@@ -72,14 +72,14 @@ class ApiHandler(BaseHandler):
 
     def _get_product(self, vendor, product):
         """ Returns specified 'product' from 'vendor'."""
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
 
         return self.session.query(Product).join(Vendor).filter(Vendor.name == vendor).filter(Product.name == product).\
         filter(Vendor.id == Product.vendor_id).first()
 
     def _get_products(self, vendor):
         """ Returns all products from 'vendor'. """
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
 
         return self.session.query(Product).join(Vendor).filter(Vendor.name == vendor).\
         filter(Vendor.id == Product.vendor_id).all()
@@ -136,7 +136,7 @@ class NodeHandler(BaseHandler):
     def get(self):
         resultjson = []
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         for u in self.session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo, NodeStats):
             print u
             resultjson.append({"id" : u[0].id,
@@ -166,7 +166,7 @@ class NetworkHandler(BaseHandler):
     def get(self):
         resultjson = []
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         for u in self.session.query(NetworkStats).all():
             resultjson.append({"key" : "installed", "data" : u.patches_installed})
             resultjson.append({"key" : "available", "data" : u.patches_available})
@@ -187,7 +187,7 @@ class NetworkHandler(BaseHandler):
 #            type = None
 #        else:
 #            pass
-#        session = validateSession(self.application.session)
+#        session = validate_session(self.application.session)
 #        if type == 'available':
 #            for u in self.session.query(WindowsUpdate).all():
 #                noderesult = []
@@ -256,7 +256,7 @@ class SummaryHandler(BaseHandler):
     def get(self):
         osResult = []
         session = self.application.session
-        session = validateSession(session)
+        session = validate_session(session)
         for u in session.query(SystemInfo.os_code).distinct().all():
             osTypeResult = []
             for v in session.query(SystemInfo.os_string).filter(SystemInfo.os_code == u.os_code).distinct().all():
@@ -283,7 +283,7 @@ class GraphHandler(BaseHandler):
         resultjson = []
         osType = []
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         for u in self.session.query(SystemInfo.os_string, func.count(SystemInfo.os_string)).group_by(SystemInfo.os_string).all():
             nodeResult = []
             for v in self.session.query(NodeInfo, SystemInfo, NodeStats).filter(SystemInfo.os_string == u[0]).join(SystemInfo).join(NodeStats).all():
@@ -324,7 +324,7 @@ class OsHandler(BaseHandler):
         failed = 0
         type = self.get_argument('type')
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         for u in self.session.query(NodeInfo, SystemInfo, NodeStats).filter(SystemInfo.os_string == type).join(SystemInfo).join(NodeStats).all():
             installed += u[2].patches_installed
             available += u[2].patches_available
@@ -349,7 +349,7 @@ class NodesHandler(BaseHandler):
     def get(self):
         resultjson = []
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         try:
             id = self.get_argument('id')
         except:
@@ -435,7 +435,7 @@ class PatchesHandler(BaseHandler):
         resultjson = {}
         count = 0
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         try:
             id = self.get_argument('id')
         except:
@@ -625,7 +625,7 @@ class SeverityHandler(BaseHandler):
     def get(self):
         result = []
         session = self.application.session
-        session = validateSession(session)
+        session = validate_session(session)
 
         for u in session.query(Package.severity).distinct().all():
             count = 0
@@ -643,7 +643,7 @@ class CsrHandler(BaseHandler):
     def get(self):
         result = []
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         try:
             signed = self.get_argument('signed')
             is_signed = True if signed == 'true' or signed == 'True' else  False
@@ -665,7 +665,7 @@ class UserHandler(BaseHandler):
     def get(self):
         resultjson = {"name" : self.current_user}
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
 
@@ -674,9 +674,9 @@ class SchedulerListerHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         self.sched = self.application.scheduler
-        result = jobLister(self.session, self.sched)
+        result = job_lister(self.session, self.sched)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -685,9 +685,9 @@ class TimeBlockerListerHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         self.sched = self.application.scheduler
-        result = timeBlockLister(self.session)
+        result = time_block_lister(self.session)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -696,13 +696,13 @@ class SchedulerAddHandler(BaseHandler):
     @authenticated_request
     def post(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         self.sched = self.application.scheduler
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong argument passed %s, the arguement needed is operation" % (e))
-        result = JobScheduler(self.msg, self.sched)
+        result = job_scheduler(self.msg, self.sched)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -711,14 +711,14 @@ class SchedulerRemoveHandler(BaseHandler):
     @authenticated_request
     def post(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         self.sched = self.application.scheduler
         jobname = None
         try:
             jobname = self.get_argument('jobname')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is jobname" % (e))
-        result = removeJob(self.sched, jobname)
+        result = remove_job(self.sched, jobname)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -726,12 +726,12 @@ class TimeBlockerAddHandler(BaseHandler):
     @authenticated_request
     def post(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is operation" % (e))
-        result = timeBlockAdder(self.session, self.msg)
+        result = time_block_adder(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -740,8 +740,8 @@ class TagListerByTagHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
-        result = tagLister(self.session)
+        self.session = validate_session(self.session)
+        result = tag_lister(self.session)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -750,8 +750,8 @@ class TagListerByNodeHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
-        result = tagListByNodes(self.session)
+        self.session = validate_session(self.session)
+        result = tag_list_by_nodes(self.session)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -759,12 +759,12 @@ class TagAddHandler(BaseHandler):
     @authenticated_request
     def post(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
-        result = tagAdder(self.session, self.msg)
+        result = tag_adder(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -772,12 +772,12 @@ class TagAddPerNodeHandler(BaseHandler):
     @authenticated_request
     def post(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
-        result = tagAddPerNode(self.session, self.msg)
+        result = tag_add_per_node(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -785,12 +785,12 @@ class TagRemovePerNodeHandler(BaseHandler):
     @authenticated_request
     def post(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
-        result = tagRemovePerNode(self.session, self.msg)
+        result = tag_remove_per_node(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -798,12 +798,12 @@ class TagRemoveHandler(BaseHandler):
     @authenticated_request
     def post(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
-        result = tagRemove(self.session, self.msg)
+        result = tag_remove(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -811,14 +811,14 @@ class GetTransactionsHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         try:
             queryCount = self.get_argument('count')
             queryOffset = self.get_argument('offset')
         except:
             queryCount = 20
             queryOffset = 0
-        result = retrieveTransactions(self.session, count=queryCount, offset=queryOffset)
+        result = retrieve_transactions(self.session, count=queryCount, offset=queryOffset)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
         
@@ -826,12 +826,12 @@ class GetDependenciesHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         try:
             pkg_id = self.get_argument('toppatch_id')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
-        result = retrieveDependencies(self.session, pkg_id)
+        result = retrieve_dependencies(self.session, pkg_id)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -839,7 +839,7 @@ class SearchPatchHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         output = 'json'
         try:
             query = self.get_argument('query')
@@ -852,7 +852,7 @@ class SearchPatchHandler(BaseHandler):
             output = self.get_argument('output')
         except Exception as e:
             pass
-        result = basicPackageSearch(self.session, query, column, count=count, offset=offset, output=output)
+        result = basic_package_search(self.session, query, column, count=count, offset=offset, output=output)
         if 'json' in output:
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(result, indent=4))
@@ -864,7 +864,7 @@ class GetTagStatsHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         tag_id = None
         tag_name = None
         try:
@@ -872,7 +872,7 @@ class GetTagStatsHandler(BaseHandler):
             tag_name = self.get_argument('tagname')
         except Exception as e:
             pass
-        result = getTagStats(self.session, tagid=tag_id, tagname=tag_name)
+        result = get_tag_stats(self.session, tagid=tag_id, tagname=tag_name)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -880,7 +880,7 @@ class ModifyDisplayNameHandler(BaseHandler):
     @authenticated_request
     def post(self):
         self.session = self.application.session
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         nodeid = None
         displayname = None
         try:
@@ -888,7 +888,23 @@ class ModifyDisplayNameHandler(BaseHandler):
             displayname = self.get_argument('displayname')
         except Exception as e:
             pass
-        result = getTagStats(self.session, nodeid, displayname)
+        if nodeid and displayname:
+            node = self.session.query(NodeInfo).filter(NodeInfo.id == nodeid).first()
+            if node:
+                try:
+                    node.display_name = displayname
+                    self.session.commit()
+                    result = {"pass" : True,
+                              "message" : "Display name change to %s" %\
+                                            (displayname)
+                            }
+                except Exception as e:
+                    self.session.rollback()
+                    print e.message
+                    result = {"pass" : False,
+                              "message" : "Display name was not changed to %s"%\
+                                            (displayname)
+                            }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 

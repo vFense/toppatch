@@ -109,13 +109,13 @@ class Application(tornado.web.Application):
             "login_url": "/login",
         }
 
-        self.db = initEngine()
-        Session = createSession(self.db)
+        self.db = init_engine()
+        Session = create_session(self.db)
         self.session = Session
         self.scheduler = Scheduler()
         self.scheduler.add_jobstore(SQLAlchemyJobStore(engine=self.db, tablename="tp_scheduler"), "toppatch")
         self.scheduler.start()
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         self.account_manager = AccountManager(self.session)
         self.tokens = TokenManager(self.session)
 
