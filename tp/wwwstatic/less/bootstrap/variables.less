@@ -57,6 +57,24 @@
 @headingsFontWeight:    bold;    // instead of browser default, bold
 @headingsColor:         inherit; // empty to use BS default, @textColor
 
+
+// Component sizing
+// -------------------------
+// Based on 14px font-size and 20px line-height
+
+@fontSizeLarge:         @baseFontSize * 1.25; // ~18px
+@fontSizeSmall:         @baseFontSize * 0.85; // ~12px
+@fontSizeMini:          @baseFontSize * 0.75; // ~11px
+
+@paddingLarge:          11px 19px; // 44px
+@paddingSmall:          2px 10px;  // 26px
+@paddingMini:           1px 6px;   // 24px
+
+@baseBorderRadius:      4px;
+@borderRadiusLarge:     6px;
+@borderRadiusSmall:     3px;
+
+
 // Tables
 // -------------------------
 @tableBackground:                   transparent; // overall background-color
@@ -93,9 +111,11 @@
 // -------------------------
 @inputBackground:               @white;
 @inputBorder:                   #ccc;
-@inputBorderRadius:             3px;
+@inputBorderRadius:             @baseBorderRadius;
 @inputDisabledBackground:       @grayLighter;
 @formActionsBackground:         #f5f5f5;
+@inputHeight:                   @baseLineHeight + 10px; // base line-height + 8px vertical padding + 2px top/bottom border
+
 
 // Dropdowns
 // -------------------------
@@ -115,6 +135,7 @@
 
 // COMPONENT VARIABLES
 // --------------------------------------------------
+
 
 // Z-index master list
 // -------------------------
@@ -157,6 +178,7 @@
 // Navbar
 // -------------------------
 @navbarCollapseWidth:             979px;
+@navbarCollapseDesktopWidth:      @navbarCollapseWidth + 1;
 
 @navbarHeight:                    40px;
 @navbarBackgroundHighlight:       #ffffff;
@@ -247,32 +269,27 @@
 // --------------------------------------------------
 
 
-// Fixed em based grid
-// Adapts to target grid width and number of columns
-// em conversion based on @baseFontSize above
-// --------------------------------------------------
+// Default 940px grid
+// -------------------------
 @gridColumns:         12;
-
-// 960 grid
-@gridWidth:           960px;
-@gutterWidth:         (@gridWidth/@gridColumns)/4;
-@columnWidth:         (@gridWidth/@gridColumns) - @gutterWidth;
+@columnWidth:         60px;
+@gutterWidth:         20px;
 @rowWidth:            (@columnWidth * @gridColumns) + (@gutterWidth * (@gridColumns - 1));
 
 // 1200px min
-@gutterWidth1200:     30px;
 @columnWidth1200:     70px;
+@gutterWidth1200:     30px;
 @rowWidth1200:        (@gridColumns * @columnWidth1200) + (@gutterWidth1200 * (@gridColumns - 1));
 
 // 768px-979px
-@gutterWidth768:      20px;
 @columnWidth768:      42px;
+@gutterWidth768:      20px;
 @rowWidth768:         (@gridColumns * @columnWidth768) + (@gutterWidth768 * (@gridColumns - 1));
 
 // Convert to em
 // --------------------------------------------------
 
-// 960 Grid
+// 940 Grid
 @gridColumnWidth:         @em * (@columnWidth/@baseFontSize);
 @gridGutterWidth:         @em * (@gutterWidth/@baseFontSize);
 @gridRowWidth:            @em * (@rowWidth   /@baseFontSize);
@@ -293,12 +310,12 @@
 @fluidGridGutterWidth:    percentage(@gutterWidth/@rowWidth);
 
 // 1200px min
-@fluidGridColumnWidth1200:    percentage(@columnWidth1200/@rowWidth1200);
-@fluidGridGutterWidth1200:    percentage(@gutterWidth1200/@rowWidth1200);
+@fluidGridColumnWidth1200:     percentage(@columnWidth1200/@rowWidth1200);
+@fluidGridGutterWidth1200:     percentage(@gutterWidth1200/@rowWidth1200);
 
 // 768px-979px
-@fluidGridColumnWidth768:     percentage(@columnWidth768/@rowWidth768);
-@fluidGridGutterWidth768:     percentage(@gutterWidth768/@rowWidth768);
+@fluidGridColumnWidth768:      percentage(@columnWidth768/@rowWidth768);
+@fluidGridGutterWidth768:      percentage(@gutterWidth768/@rowWidth768);
 
 
 // EM: Changes below
@@ -316,28 +333,30 @@
 
 @codeFontSize: 				@baseFontSize - 2px;
 
-@h1FontSize:				36px;
-@h2FontSize:				30px;
-@h3FontSize:				24px;
-@h4FontSize:				18px;
-@h5FontSize:				14px;
-@h6FontSize:				12px;
+@h1FontSize:                @baseFontSize * 2.75; // ~38px
+@h2FontSize:                @baseFontSize * 2.25; // ~32px
+@h3FontSize:                @baseFontSize * 1.75; // ~24px
+@h4FontSize:                @baseFontSize * 1.25; // ~18px
+@h5FontSize:                @baseFontSize;
+@h6FontSize:                @baseFontSize * 0.85; // ~12px
 
-@h1LineHeight:				40px;
-@h2LineHeight:				40px;
-@h3LineHeight:				40px;
-@h4LineHeight:				20px;
-@h5LineHeight:				20px;
-@h6LineHeight:				20px;
+@h1LineHeight:				@baseLineHeight * 2;
+@h2LineHeight:				@baseLineHeight * 2;
+@h3LineHeight:				@baseLineHeight * 2;
+@h4LineHeight:				@baseLineHeight;
+@h5LineHeight:				@baseLineHeight;
+@h6LineHeight:				@baseLineHeight;
 
-@h1SmallFontSize:			24px;
-@h2SmallFontSize:			18px;
-@h3SmallFontSize:			14px;
-@h4SmallFontSize:			14px;
+@h1SmallFontSize:			@baseFontSize * 1.75; // ~24px
+@h2SmallFontSize:			@baseFontSize * 1.25; // ~18px
+@h3SmallFontSize:			@baseFontSize;
+@h4SmallFontSize:			@baseFontSize; 
 
 @legendFontSize: 			@baseFontSize * 1.5;
 @legendSmallFontSize:		@baseLineHeight * .75;
-@libstFontSize: 			@baseFontSize;			// Label, Input, Button, Select, Text Area
+
+// Label, Input, Button, Select, Text Area
+@libstFontSize: 			@baseFontSize;
 
 @preFontSize: 				@baseFontSize - 1;
 
@@ -348,23 +367,33 @@
 @abbrInitialismFontSize:	90%;
 
 @badgeFontSize:				@baseFontSize * .846;
+
 @btnFontSize:				@baseFontSize;
-@btnLargeFontSize:			@baseFontSize + 2px;
-@btnMiniFontSize:			@baseFontSize - 3px;
-@btnSmallFontSize:			@baseFontSize - 2px;
+@btnLargeFontSize:			@fontSizeLarge;
+@btnSmallFontSize:			@fontSizeSmall;
+@btnMiniFontSize:			@fontSizeMini;
+
+@btnGroupFontSize:          @baseFontSize;
+@btnGroupLargeFontSize:     16px;
+@btnGroupSmallFontSize:     12px;
+@btnGroupMiniFontSize:      11px;
 
 @carouselControlFontSize: 	60px;
 @closeFontSize:				20px;
 
+@heroFontSize:				18px;
 @heroH1FontSize:			60px;
-@heroPFontSize:				18px;
 
 @labelFontSize:				@baseFontSize * .846;
-@leadFontSize:				20px;
+@leadFontSize:				@baseFontSize * 1.5;
 
 @navbarBrandFontSize:       20px;
 @navbarSearchQuery:			13px;
 @navHeaderFontSize:			11px;
+
+@paginationLargeFontSize:   @fontSizeLarge;
+@paginationSmallFontSize:   @fontSizeSmall;
+@paginationMiniFontSize:    @fontSizeMini;
 
 @popoverTitleFontSize:		14px; // New
 @progressBarFontSize:		12px;

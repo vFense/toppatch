@@ -6,7 +6,9 @@
 // Base classes
 .label,
 .badge {
-  font-size: @em*( @labelFontSize )/@baseFontSize;
+  display: inline-block;
+  padding: @em*( 2px )/@labelFontSize @em*( 4px )/@labelFontSize;
+  font-size: @labelFontSize;
   font-weight: bold;
   line-height: @em*( 14px )/@labelFontSize; // ensure proper line-height if floated
   color: @white;
@@ -17,11 +19,11 @@
 }
 // Set unique padding and border-radii
 .label {
-  padding: @em*( 1px )/@labelFontSize @em*( 4px )/@labelFontSize @em*( 2px )/@labelFontSize;
   .border-radius(@em*( 3px )/@baseFontSize);
 }
 .badge {
-  padding: @em*( 1px )/@badgeFontSize @em*( 9px )/@badgeFontSize @em*( 2px )/@badgeFontSize;
+  padding-left: @em*( 9px )/@badgeFontSize;
+  padding-right: @em*( 9px )/@badgeFontSize;
   .border-radius(@em*( 9px )/@badgeFontSize);
 }
 

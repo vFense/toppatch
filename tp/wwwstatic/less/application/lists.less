@@ -1,6 +1,6 @@
 .list {
     // All buttons must be mini!!
-    @listFontSize: 12px;
+    @listItemFontSize: 12px;
     @listBorder: #E6E6E6;
     @listHeaderBackground: #F5F5F5;
     @listFooterBackground: #F5F5F5;
@@ -28,18 +28,13 @@
         background-color: @listFooterBackground;
     }
 
-    .legend,
-    .items,
-    .item {
-        font-size: @listFontSize;
-    }
-
     .legend {
+        font-size: @listItemFontSize;
         background-color: @listLegendBackground;
-        padding: @em*(2px)/@listFontSize 0.5em;
-        line-height: @em*( @baseLineHeight - 1px )/@listFontSize;
-        border-top: @em*(1px)/@listFontSize solid @listBorder;
-        border-bottom: @em*(1px)/@listFontSize solid @listBorder;
+        padding: @em*(2px)/@listItemFontSize 0.5em;
+        line-height: @em*( @baseLineHeight - 1px )/@listItemFontSize;
+        border-top: @em*(1px)/@listItemFontSize solid @listBorder;
+        border-bottom: @em*(1px)/@listItemFontSize solid @listBorder;
     }
 
     .items,
@@ -63,15 +58,17 @@
 
     .items {
         .item {
-            border-top: @em*(1px)/@listFontSize solid @listBorder;
-            padding: @em*(2px)/@listFontSize 0.5em;
+            font-size: @listItemFontSize;
+
+            border-top: @em*(1px)/@listItemFontSize solid @listBorder;
+            padding: @em*(2px)/@listItemFontSize 0.5em;
 
             &:first-child {
                 border-top: none !important;
             }
 
             &:last-child {
-                border-bottom: @em*(1px)/@listFontSize solid @listBorder;
+                border-bottom: @em*(1px)/@listItemFontSize solid @listBorder;
             }
 
             &:hover {
@@ -84,7 +81,7 @@
                     color: #000;
                     display: block;
                     text-decoration: none;
-                    padding: @em*(2px)/@listFontSize 0.5em;
+                    padding: @em*(2px)/@listItemFontSize 0.5em;
 
                     STRONG {
                         color: @linkColor;
@@ -96,12 +93,11 @@
                 .text-overflow();
             }
 
-            .btn {
-                line-height: @em*( 14px )/@btnFontSize;
-            }
-
-            .btn-mini {
-                line-height: @em*( 14px )/@btnMiniFontSize;
+            .btn-link {
+                border: 0;
+                border: none;
+                line-height: @em*( 18px )/@btnFontSize;
+                height: @em*( 18px )/@btnFontSize;
             }
 
             // Changing input fontsize,
@@ -125,9 +121,94 @@
 
                     // Focus state
                     &:focus {
-                        .box-shadow(inset 0 @em*( 1px )/@inputSize @em*( 1px )/@inputSize rgba(0,0,0,.075), 0 0 @em*( 8px )/@inputSize rgba(82,168,236,.6));
+                        @boxShadow: inset 0 @em*( 1px )/@inputSize @em*( 1px )/@inputSize rgba(0,0,0,.075), 0 0 @em*( 8px )/@inputSize rgba(82,168,236,.6);
+                        .box-shadow(@boxShadow);
                     }
                 }
+            }
+        }
+    }
+
+    HEADER,
+    FOOTER {
+        @baseFontSize: 14px;
+        // Changing input fontsize,
+        // Need to redo all em based rules from bootstrap
+        input {
+            &[type="text"],
+            &[type="password"] {
+                margin: 0;
+
+                height: @em*( 21px )/@baseFontSize;
+                padding: 0 @em*( 6px )/@baseFontSize;
+                font-size: @baseFontSize;
+                line-height: @em*( 14px )/@baseFontSize;
+                //.border-radius(@em*( @inputBorderRadius )/@baseFontSize);
+
+                background-color: @inputBackground;
+                border: @em*( 1px )/@baseFontSize solid @inputBorder;
+                .box-shadow(inset 0 @em*( 1px )/@baseFontSize @em*( 1px )/@baseFontSize rgba(0,0,0,.075));
+                .transition(~"border linear .2s, box-shadow linear .2s");
+
+            // Focus state
+                &:focus {
+                    @boxShadow: inset 0 @em*( 1px )/@baseFontSize @em*( 1px )/@baseFontSize rgba(0,0,0,.075), 0 0 @em*( 8px )/@baseFontSize rgba(82,168,236,.6);
+                    .box-shadow(@boxShadow);
+                }
+            }
+        }
+
+        .input-prepend {
+            margin-bottom: 0;
+        }
+
+        .add-on {
+            height: @em*( 21px )/@baseFontSize;
+            min-width: @em*( 16px )/@baseFontSize;
+            padding: 0 @em*( 5px )/@baseFontSize;
+            font-size: @baseFontSize;
+            line-height: @em*( @baseLineHeight )/@baseFontSize;
+            text-shadow: 0 @em*( 1px )/@baseFontSize 0 @white;
+            border: @em*( 1px )/@baseFontSize solid #ccc;
+        }
+
+
+        .input-prepend {
+            .add-on,
+            .btn {
+                margin-right: @em*( -1px )/@baseFontSize;
+            }
+            .add-on:first-child,
+            .btn:first-child {
+                .border-radius(@em*( @inputBorderRadius )/@baseFontSize 0 0 @em*( @inputBorderRadius )/@baseFontSize);
+            }
+        }
+        .input-append {
+            input,
+            select,
+            .uneditable-input {
+                .border-left-radius(@em*( @inputBorderRadius )/@baseFontSize 0 0 @em*( @inputBorderRadius )/@baseFontSize);
+            }
+            .add-on,
+            .btn {
+                margin-left: @em*( -1px )/@baseFontSize;
+            }
+            .add-on:last-child,
+            .btn:last-child {
+                .border-radius(0 @em*( @inputBorderRadius )/@baseFontSize @em*( @inputBorderRadius )/@baseFontSize 0);
+            }
+        }
+
+        .input-prepend.input-append {
+            .add-on:first-child,
+            .btn:first-child {
+                margin-right: @em*( -1px )/@baseFontSize;
+                .border-radius(@em*( @inputBorderRadius )/@baseFontSize 0 0 @em*( @inputBorderRadius )/@baseFontSize);
+            }
+            .add-on:last-child,
+            .btn:last-child {
+                margin-left: @em*( -1px )/@baseFontSize;
+                .border-radius(0 @em*( @inputBorderRadius )/@baseFontSize @em*( @inputBorderRadius )/@baseFontSize 0);
             }
         }
     }

@@ -48,25 +48,24 @@
 
 // Place the caret
 .dropdown .caret {
-  margin-top: @em*( 8px )/@btnFontSize;
-  margin-left: @em*( 2px )/@btnFontSize;
+  @margin-top: 8px;
+  @margin-left: 2px;
+
+  margin-top: @em*( @margin-top )/@btnFontSize;
+  margin-left: @em*( @margin-left )/@btnFontSize;
   
   &.btn-large {
-  	margin-top: @em*( 8px )/@btnLargeFontSize;
-	margin-left: @em*( 2px )/@btnLargeFontSize;
+  	margin-top: @em*( @margin-top )/@btnLargeFontSize;
+	margin-left: @em*( @margin-left )/@btnLargeFontSize;
   }
   &.btn-small {
-  	margin-top: @em*( 8px )/@btnSmallFontSize;
-	margin-left: @em*( 2px )/@btnSmallFontSize;
+  	margin-top: @em*( @margin-top )/@btnSmallFontSize;
+	margin-left: @em*( @margin-left )/@btnSmallFontSize;
   }
   &.btn-mini {
-  	margin-top: @em*( 8px )/@btnMiniFontSize;
-	margin-left: @em*( 2px )/@btnMiniFontSize;
+  	margin-top: @em*( @margin-top )/@btnMiniFontSize;
+	margin-left: @em*( @margin-left )/@btnMiniFontSize;
   }
-}
-.dropdown:hover .caret,
-.open .caret {
-  .opacity(100);
 }
 
 // The dropdown menu (ul)
@@ -105,7 +104,7 @@
   }
 
   // Links within the dropdown menu
-  a {
+  li > a {
     display: block;
     padding: @em*( 3px )/@baseFontSize @em*( 20px )/@baseFontSize;
     clear: both;
@@ -123,7 +122,6 @@
 .dropdown-submenu:hover > a {
   text-decoration: none;
   color: @dropdownLinkColorHover;
-  background-color: @dropdownLinkBackgroundHover;
   #gradient > .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
 }
 
@@ -131,10 +129,9 @@
 // ------------
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-  color: @dropdownLinkColorHover;
+  color: @dropdownLinkColorActive;
   text-decoration: none;
   outline: 0;
-  background-color: @dropdownLinkBackgroundActive;
   #gradient > .vertical(@dropdownLinkBackgroundActive, darken(@dropdownLinkBackgroundActive, 5%));
 }
 
@@ -149,6 +146,7 @@
 .dropdown-menu .disabled > a:hover {
   text-decoration: none;
   background-color: transparent;
+  background-image: none; // Remove CSS gradient
   cursor: default;
 }
 
@@ -206,6 +204,7 @@
 .dropdown-submenu {
   position: relative;
 }
+// Default dropdowns
 .dropdown-submenu > .dropdown-menu {
   top: 0;
   left: 100%;
@@ -219,6 +218,18 @@
   display: block;
 }
 
+// Dropups
+.dropup .dropdown-submenu > .dropdown-menu {
+  top: auto;
+  bottom: 0;
+  margin-top: 0;
+  margin-bottom: @em*( -2px )/@baseFontSize;
+  -webkit-border-radius: @em*( 5px )/@baseFontSize @em*( 5px )/@baseFontSize @em*( 5px )/@baseFontSize 0;
+     -moz-border-radius: @em*( 5px )/@baseFontSize @em*( 5px )/@baseFontSize @em*( 5px )/@baseFontSize 0;
+          border-radius: @em*( 5px )/@baseFontSize @em*( 5px )/@baseFontSize @em*( 5px )/@baseFontSize 0;
+}
+
+// Caret to indicate there is a submenu
 .dropdown-submenu > a:after {
   display: block;
   content: " ";
@@ -236,6 +247,21 @@
   border-left-color: @dropdownLinkColorHover;
 }
 
+// Left aligned submenus
+.dropdown-submenu.pull-left {
+  // Undo the float
+  // Yes, this is awkward since .pull-left adds a float, but it sticks to our conventions elsewhere.
+  float: none;
+
+  // Positioning the submenu
+  > .dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: @em*( 6px )/@baseFontSize 0 @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize;
+       -moz-border-radius: @em*( 6px )/@baseFontSize 0 @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize;
+            border-radius: @em*( 6px )/@baseFontSize 0 @em*( 6px )/@baseFontSize @em*( 6px )/@baseFontSize;
+  }
+}
 
 // Tweak nav headers
 // -----------------
@@ -249,5 +275,5 @@
 // ---------
 .typeahead {
   margin-top: @em*( 2px )/@baseFontSize; // give it some space to breathe
-  .border-radius(@em*( 4px )/@baseFontSize);
+  .border-radius(@em*( @baseBorderRadius )/@baseFontSize);
 }

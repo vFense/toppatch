@@ -54,7 +54,7 @@ textarea {
 // Identify controls by their labels
 label {
   display: block;
-  margin-bottom: @em*( 5px )/@baseFontSize;
+  margin-bottom: @em*( 5px )/@libstFontSize;
 }
 
 // Form controls
@@ -81,11 +81,12 @@ input[type="color"],
   display: inline-block;
   height: @em*( @baseLineHeight )/@libstFontSize;
   padding: @em*( 4px )/@libstFontSize @em*( 6px )/@libstFontSize;
-  margin-bottom: @em*( 9px )/@libstFontSize;
+  margin-bottom: @em*( @baseLineHeight / 2 )/@libstFontSize;
   font-size: @libstFontSize;
   line-height: @em*( @baseLineHeight )/@libstFontSize;
   color: @gray;
   .border-radius(@em*( @inputBorderRadius )/@libstFontSize);
+  vertical-align: middle;
 }
 
 // Reset appearance properties for textual inputs and textarea
@@ -126,7 +127,8 @@ input[type="color"],
     border-color: rgba(82,168,236,.8);
     outline: 0;
     outline: thin dotted \9; /* IE6-9 */
-    .box-shadow(inset 0 @em*( 1px )/@libstFontSize @em*( 1px )/@libstFontSize rgba(0,0,0,.075), 0 0 @em*( 8px )/@libstFontSize rgba(82,168,236,.6));
+    @box-shadow: inset 0 @em*( 1px )/@libstFontSize @em*( 1px )/@libstFontSize rgba(0,0,0,.075), 0 0 @em*( 8px )/@libstFontSize rgba(82,168,236,.6);
+    .box-shadow(@box-shadow)
   }
 }
 
@@ -154,9 +156,9 @@ input[type="checkbox"] {
 // Set the height of select and file controls to match text inputs
 select,
 input[type="file"] {
-  height: @em*( 30px )/@libstFontSize; /* In IE7, the height of the select element cannot be changed by height, only font-size */
+  height: @em*( @inputHeight )/@libstFontSize; /* In IE7, the height of the select element cannot be changed by height, only font-size */
   *margin-top: @em*( 4px )/@libstFontSize; /* For IE7, add top margin to align select with labels */
-  line-height: @em*( 30px )/@libstFontSize;
+  line-height: @em*( @inputHeight )/@libstFontSize;
 }
 
 // Make select elements obey height by applying a border
@@ -210,7 +212,7 @@ input[type="checkbox"]:focus {
 // Placeholder
 // -------------------------
 
-// Placeholder text gets special styles because when browsers invalidate entire lines if it doesn’t understand a selector
+// Placeholder text gets special styles because when browsers invalidate entire lines if it doesn't understand a selector
 input,
 textarea {
   .placeholder();
@@ -223,13 +225,13 @@ textarea {
 // Indent the labels to position radios/checkboxes as hanging
 .radio,
 .checkbox {
-  min-height: @em*( 18px )/@libstFontSize; // clear the floating input if there is no label text
-  padding-left: @em*( 18px )/@libstFontSize;
+  min-height: @em*( @baseLineHeight )/@libstFontSize; // clear the floating input if there is no label text
+  padding-left: @em*( 20px )/@libstFontSize;
 }
 .radio input[type="radio"],
 .checkbox input[type="checkbox"] {
   float: left;
-  margin-left: @em*( -18px )/@libstFontSize;
+  margin-left: @em*( -20px )/@libstFontSize;
 }
 
 // Move the options list down to align with labels
@@ -304,8 +306,17 @@ textarea[class*="span"],
 .controls-row {
   .clearfix(); // Clear the float from controls
 }
-.controls-row [class*="span"] {
-  float: left; // Float to collapse white-space for proper grid alignment
+
+// Float to collapse white-space for proper grid alignment
+.controls-row [class*="span"],
+// Redeclare the fluid grid collapse since we undo the float for inputs
+.row-fluid .controls-row [class*="span"] {
+  float: left;
+}
+// Explicity set top padding on all checkboxes/radios, not just first-child
+.controls-row .checkbox[class*="span"],
+.controls-row .radio[class*="span"] {
+  padding-top: @em*( 5px )/@libstFontSize;
 }
 
 
@@ -364,7 +375,8 @@ select:focus:required:invalid {
   border-color: #ee5f5b;
   &:focus {
     border-color: darken(#ee5f5b, 10%);
-    .box-shadow(0 0 @em*( 6px )/@libstFontSize lighten(#ee5f5b, 20%));
+    @shadow: 0 0 @em( 6px )/@libstFontSize lighten(#ee5f5b, 20%);
+    .box-shadow(@shadow);
   }
 }
 
@@ -413,7 +425,7 @@ select:focus:required:invalid {
 .input-append,
 .input-prepend {
   margin-bottom: @em*( 5px )/@baseFontSize; // Font size is 0, margin bottom will not work. See &:after below.
-  font-size: 0;
+  font-size: 0; // white space collapse hack
   white-space: nowrap; // Prevent span and input from separating
 
   // Temporary em based margin bottom fix.
@@ -423,6 +435,14 @@ select:focus:required:invalid {
     font-size: 5px;
     margin-bottom: 1em;
   }
+  
+  // Reset the white space collapse hack
+  input,
+  select,
+  .uneditable-input,
+  .dropdown-menu {
+    font-size: @baseFontSize;
+  }
 
   input,
   select,
@@ -430,7 +450,6 @@ select:focus:required:invalid {
     position: relative; // placed here by default so that on :focus we can place the input above the .add-on for full border and box-shadow goodness
     margin-bottom: 0; // prevent bottom margin from screwing up alignment in stacked forms
     *margin-left: 0;
-    font-size: @libstFontSize;
     vertical-align: top;
     .border-radius(0 @em*( @inputBorderRadius )/@libstFontSize @em*( @inputBorderRadius )/@libstFontSize 0);
     // Make input on top when focused so blue border and shadow always show
@@ -462,6 +481,7 @@ select:focus:required:invalid {
     border-color: @green;
   }
 }
+
 .input-prepend {
   .add-on,
   .btn {
@@ -469,17 +489,23 @@ select:focus:required:invalid {
   }
   .add-on:first-child,
   .btn:first-child {
+    // FYI, `.btn:first-child` accounts for a button group that's prepended
     .border-radius(@em*( @inputBorderRadius )/@libstFontSize 0 0 @em*( @inputBorderRadius )/@libstFontSize);
   }
 }
+
 .input-append {
   input,
   select,
   .uneditable-input {
-    .border-left-radius(@em*( @inputBorderRadius )/@libstFontSize 0 0 @em*( @inputBorderRadius )/@libstFontSize);
+    .border-radius(@em*( @inputBorderRadius )/@libstFontSize 0 0 @em*( @inputBorderRadius )/@libstFontSize);
+    + .btn-group .btn {
+      .border-radius(0 @em*( @inputBorderRadius )/@libstFontSize @em*( @inputBorderRadius )/@libstFontSize 0);
+    }
   }
   .add-on,
-  .btn {
+  .btn,
+  .btn-group {
     margin-left: @em*( -1px )/@libstFontSize;
   }
   .add-on:last-child,
@@ -487,12 +513,16 @@ select:focus:required:invalid {
     .border-radius(0 @em*( @inputBorderRadius )/@libstFontSize @em*( @inputBorderRadius )/@libstFontSize 0);
   }
 }
+
 // Remove all border-radius for inputs with both prepend and append
 .input-prepend.input-append {
   input,
   select,
   .uneditable-input {
     .border-radius(0);
+    + .btn-group .btn {
+      .border-radius(0 @em*( @inputBorderRadius )/@libstFontSize @em*( @inputBorderRadius )/@libstFontSize 0);
+    }
   }
   .add-on:first-child,
   .btn:first-child {
@@ -504,7 +534,11 @@ select:focus:required:invalid {
     margin-left: @em*( -1px )/@libstFontSize;
     .border-radius(0 @em*( @inputBorderRadius )/@libstFontSize @em*( @inputBorderRadius )/@libstFontSize 0);
   }
+  .btn-group:first-child {
+    margin-left: 0;
+  }
 }
+
 
 
 
