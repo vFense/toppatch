@@ -43,7 +43,9 @@ define(
                         popover = body.find('button[name=popover]'),
                         nodelist = $('#nodelist');
                     popover.unbind();
-                    popover.on('click', this.togglePopup);
+                    if (popover.data('popover')) {
+                        popover.popover('destroy');
+                    }
                     popover.popover({
                         placement: 'right',
                         title: 'Add Nodes <button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
@@ -51,15 +53,13 @@ define(
                         content: nodelist.clone(),
                         trigger: 'click'
                     });
+                    popover.on('click', this.togglePopup);
+                    popover.data('popover').tip().css('z-index', 3000);
                     body.collapse('toggle');
                     if ($icon.hasClass('icon-circle-arrow-down')) {
                         $icon.attr('class', 'icon-circle-arrow-up');
                     } else {
                         $icon.attr('class', 'icon-circle-arrow-down');
-                    }
-                    if (popover.data('popover')) {
-                        popover.data('popover').tip().css('z-index', 3000);
-                        popover.popover('hide');
                     }
                     body.on('hidden', function (event) {
                         event.stopPropagation();
