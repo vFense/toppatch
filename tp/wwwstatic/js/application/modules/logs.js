@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'app', 'modules/lists/pageable', 'text!templates/list.html'],
-    function ($, _, Backbone, app, Pager, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'modules/lists/pageable'],
+    function ($, _, Backbone, app, Pager) {
         "use strict";
         return {
             Collection: Pager.Collection.extend({
