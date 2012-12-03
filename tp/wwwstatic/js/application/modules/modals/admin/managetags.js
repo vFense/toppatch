@@ -36,8 +36,6 @@ define(
                 },
                 stoplink: function (event) {
                     event.preventDefault();
-                    var body = $(event.target).parents('.accordion-group').find('.accordion-body');
-                    /*
                     var $href = $(event.target),
                         $icon = $href.find('i'),
                         parent = $href.parents('.accordion-group'),
@@ -63,7 +61,6 @@ define(
                     } else {
                         $icon.attr('class', 'icon-circle-arrow-down');
                     }
-                    */
                     body.collapse('toggle');
                     body.on('hidden', function (event) {
                         event.stopPropagation();
