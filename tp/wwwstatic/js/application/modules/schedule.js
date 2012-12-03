@@ -16,6 +16,22 @@ define(
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
                 },
+                events: {
+                    'click button[name=remove]': 'removeSchedule'
+                },
+                removeSchedule: function (event) {
+                    var $removeButton = $(event.currentTarget),
+                        jobname = $removeButton.val(),
+                        $item = $removeButton.parents('.item');
+                    $.post('api/scheduler/remove', {jobname: jobname}, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            $item.remove();
+                        } else {
+                            window.console.log(json);
+                        }
+                    });
+                },
                 beforeRender: $.noop,
                 onRender: $.noop,
                 render: function () {

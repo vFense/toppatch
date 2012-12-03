@@ -34,6 +34,7 @@ define(
                     'click #createtag': 'createtag',
                     'click button[name=dependencies]': 'showDependencies',
                     'click input[name=taglist]': 'toggletag',
+                    'click #editDisplay': 'showEditDisplay',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
@@ -44,6 +45,12 @@ define(
                         html: true,
                         trigger: 'click',
                         content: $('#list-form')
+                    });
+                    this.$el.find('#editDisplay').popover({
+                        title: '',
+                        html: true,
+                        trigger: 'click',
+                        content: $('#display-name')
                     });
                     this.$el.find('input[name=schedule]').each(function () {
                         $(this).popover({
@@ -57,8 +64,9 @@ define(
                         var popover = this;
                         if (popover.checked) {
                             $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
-                            close = $(this).data('popover').$tip.find('a[name=close]');
-                            close.bind('click', function () {
+                            close = $(this).data('popover').$tip.find('button[name=close]');
+                            close.bind('click', function (event) {
+                                event.preventDefault();
                                 $(popover).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                                 $(popover).popover('hide');
                                 popover.checked = false;
@@ -176,11 +184,28 @@ define(
 
                     }
                 },
+                showEditDisplay: function (event) {
+                    var popover = $(event.currentTarget).data('popover'),
+                        button = popover.$tip.find('button');
+                    button.on('click', {view: this, popover: popover}, this.submitDisplayName);
+                    return false;
+                },
+                submitDisplayName: function (event) {
+                    var displayName = $(event.currentTarget).siblings('input'),
+                        node_id = event.data.view.collection.id,
+                        popover = event.data.popover;
+                    if (displayName.val()) {
+                        $.post('api/node/modifyDisplayName', { nodeid: node_id, displayname: displayName.val() }, function (json) {
+                            window.console.log(json);
+                            popover.hide();
+                        });
+                    }
+                },
                 showtags: function (evt) {
                     var showInput, addTag, tagList, close,
                         popover = $(evt.target).parent().data('popover');
                     if (popover) {
-                        showInput = popover.$tip.find('a');
+                        showInput = popover.$tip.find('button');
                         close = popover.$tip.find('#close');
                         addTag = showInput.siblings('div').children('button');
                         tagList = popover.$tip.find('input[name=taglist]');
@@ -268,7 +293,9 @@ define(
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked'),
                         popover = this.$el.find('#addTag'),
-                        dependency = this.$el.find('a[name=dependencies]');
+                        dependency = this.$el.find('a[name=dependencies]'),
+                        displayPopover = this.$el.find('#editDisplay');
+                    if (displayPopover.data('popover')) { displayPopover.popover('destroy'); }
                     if (dependency.data('popover')) { dependency.popover('destroy'); }
                     if (popover.data('popover')) { popover.popover('destroy'); }
                     if (schedule.data('popover')) {
