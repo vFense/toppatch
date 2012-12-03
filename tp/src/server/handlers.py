@@ -32,15 +32,22 @@ class LoginHandler(BaseHandler):
         self.render('../wwwstatic/login.html')
 
     def post(self):
-         if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
-            self.set_secure_cookie("user", self.get_argument("name"))
-            redirect = self.get_argument("next", None)
-            if redirect is not None:
-                self.redirect("/" + redirect)
+        username = self.get_argument("name", None);
+        password = self.get_argument("password", None);
+        if username is not None and password is not None:
+            if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
+                self.set_secure_cookie("user", self.get_argument("name"))
+                redirect = self.get_argument("next", None)
+                if redirect is not None:
+                    self.redirect("/" + redirect)
+                else:
+                    self.redirect("/")
             else:
-                self.redirect("/")
-         else:
-             self.write("Invalid username and/or password .")
+                 self.write("Invalid username and/or password .")
+                 self.redirect("/login")
+        else:
+            self.write("Username and password can't be empty.")
+            self.redirect("/login")
 
 
 

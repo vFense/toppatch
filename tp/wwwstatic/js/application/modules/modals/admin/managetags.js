@@ -43,49 +43,54 @@ define(
                         popover = body.find('button[name=popover]'),
                         nodelist = $('#nodelist');
                     popover.unbind();
+                    body.unbind();
                     if (popover.data('popover')) {
                         popover.popover('destroy');
                     }
-                    popover.popover({
-                        placement: 'right',
-                        title: 'Add Nodes <button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
-                        html: true,
-                        content: nodelist.clone(),
-                        trigger: 'click'
-                    });
-                    popover.on('click', this.togglePopup);
-                    popover.data('popover').tip().css('z-index', 3000);
-                    body.collapse('toggle');
                     if ($icon.hasClass('icon-circle-arrow-down')) {
                         $icon.attr('class', 'icon-circle-arrow-up');
+                        popover.popover({
+                            placement: 'right',
+                            title: 'Add Nodes <button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
+                            html: true,
+                            content: nodelist.clone(),
+                            trigger: 'click'
+                        });
+                        popover.on('click', this.togglePopup);
+                        popover.data('popover').tip().css('z-index', 3000);
                     } else {
                         $icon.attr('class', 'icon-circle-arrow-down');
                     }
+                    body.collapse('toggle');
                     body.on('hidden', function (event) {
                         event.stopPropagation();
                     });
                 },
                 togglePopup: function (event) {
-                    var popover = $(event.target).parent(),
-                        $tip = popover.data('popover').tip(),
-                        $spans = popover.parent().find('span'),
-                        $checkboxes;
-                    $checkboxes = $tip.find('input[name=nodelist]');
-                    $checkboxes.unbind();
-                    $checkboxes.each(function () {
-                        var ip = $(this).parent().attr('name'),
-                            that = this;
-                        $spans.each(function () {
-                            if ($(this).attr('name') === ip) {
-                                that.checked = true;
-                            }
+                    var $checkboxes, $tip, $spans, $close,
+                        popover = $(event.target).parent();
+                    if (popover.data('popover')) {
+                        $tip = popover.data('popover').tip();
+                        $spans = popover.parent().find('span');
+                        $checkboxes = $tip.find('input[name=nodelist]');
+                        $close = $tip.find('button[name=close]');
+                        $close.unbind();
+                        $checkboxes.unbind();
+                        $checkboxes.each(function () {
+                            var ip = $(this).parent().attr('name'),
+                                that = this;
+                            $spans.each(function () {
+                                if ($(this).attr('name') === ip) {
+                                    that.checked = true;
+                                }
+                            });
                         });
-                    });
-                    $checkboxes.on('change', popover, window.currentView.toggleNode);
-                    $tip.find('button[name=close]').on('click', function (event) {
-                        event.preventDefault();
-                        popover.popover('hide');
-                    });
+                        $checkboxes.on('change', popover, window.currentView.toggleNode);
+                        $close.on('click', function (event) {
+                            event.preventDefault();
+                            popover.popover('hide');
+                        });
+                    }
                 },
                 toggleNode: function (event) {
                     var params, node_ip, node_id, tag, user, nodelist, empty_div, popover, badge, badgeCounter,
