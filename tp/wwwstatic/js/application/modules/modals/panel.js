@@ -215,6 +215,7 @@ define(
                     } else {
                         Backbone.history.navigate("dashboard", true);
                     }
+                    this._opened = false;
                 }
             })
         };
