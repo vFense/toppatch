@@ -87,6 +87,7 @@ class Application(tornado.web.Application):
             (r"/api/transactions/getTransactions?", GetTransactionsHandler),
             (r"/api/package/getDependecies?", GetDependenciesHandler),
             (r"/api/package/searchByPatch?", SearchPatchHandler),
+            (r"/api/package/getTagsByTpId?", GetTagsPerTpIdHandler),
             (r"/api/node/modifyDisplayName?", ModifyDisplayNameHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/users/list?", ListUserHandler),
