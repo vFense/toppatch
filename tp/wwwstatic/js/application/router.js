@@ -55,8 +55,7 @@ define(
                     this.trigger.apply(this, ["beforeRoute"].concat(route, name));
 
                     // Track current and previous routes
-                    this.lastFragment = this.currentFragment;
-                    this.currentFragment = Backbone.history.getFragment();
+                    this.updateFragments();
 
                     // close any open modals
                     // Do not close admin panel if next route uses admin panel
@@ -250,6 +249,13 @@ define(
             },
 
             // Getters/Setters
+            updateFragments: function () {
+                var newFragment = Backbone.history.getFragment();
+                if (this.currentFragment !== newFragment) {
+                    this.lastFragment = this.currentFragment;
+                    this.currentFragment = newFragment;
+                }
+            },
             getCurrentFragment: function () { return this.currentFragment; },
             getLastFragment: function () { return this.lastFragment; }
         });
