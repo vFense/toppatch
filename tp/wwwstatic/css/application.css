@@ -514,6 +514,32 @@ BODY > HEADER #primaryNav {
 .list .items .item .btn-mini {
   line-height: 1.2727272727272727em;
 }
+.list .items .item input[type="text"],
+.list .items .item input[type="password"] {
+  margin: 0;
+  height: 1.5em;
+  padding: 0 0.5em;
+  font-size: 12px;
+  line-height: 1.1666666666666667em;
+  -webkit-border-radius: 0.25em;
+  -moz-border-radius: 0.25em;
+  border-radius: 0.25em;
+  background-color: #ffffff;
+  border: 0.08333333333333333em solid #cccccc;
+  -webkit-box-shadow: inset 0 0.08333333333333333em 0.08333333333333333em rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 0.08333333333333333em 0.08333333333333333em rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 0.08333333333333333em 0.08333333333333333em rgba(0, 0, 0, 0.075);
+  -webkit-transition: border linear .2s, box-shadow linear .2s;
+  -moz-transition: border linear .2s, box-shadow linear .2s;
+  -o-transition: border linear .2s, box-shadow linear .2s;
+  transition: border linear .2s, box-shadow linear .2s;
+}
+.list .items .item input[type="text"]:focus,
+.list .items .item input[type="password"]:focus {
+  -webkit-box-shadow: inset 0 0.08333333333333333em 0.08333333333333333em rgba(0, 0, 0, 0.075), 0 0 0.6666666666666666em rgba(82, 168, 236, 0.6);
+  -moz-box-shadow: inset 0 0.08333333333333333em 0.08333333333333333em rgba(0, 0, 0, 0.075), 0 0 0.6666666666666666em rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 0.08333333333333333em 0.08333333333333333em rgba(0, 0, 0, 0.075), 0 0 0.6666666666666666em rgba(82, 168, 236, 0.6);
+}
 .list .checkbox.inline {
   padding-top: 0;
 }
