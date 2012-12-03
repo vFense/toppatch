@@ -29,22 +29,14 @@ class RootHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
     def get(self):
-        next = self.get_argument('next', "#dashboard")
-        print self.request.arguments
-        print next
-        self.render('../wwwstatic/login.html', next=next)
+        self.render('../wwwstatic/login.html')
 
     def post(self):
          if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
             self.set_secure_cookie("user", self.get_argument("name"))
             redirect = self.get_argument("next", None)
-            print 'PRINTING REDIRECT'
-            print redirect
             if redirect is not None:
-                if redirect != '/':
-                    self.redirect(redirect)
-                else:
-                    self.redirect(redirect)
+                self.redirect("/" + redirect)
             else:
                 self.redirect("/")
          else:

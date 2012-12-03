@@ -40,7 +40,8 @@ define(
                 'admin/nodes'     : 'modal/admin/nodes',
                 'admin/timeblock' : 'modal/admin/timeblock',
                 'admin/listblocks': 'modal/admin/listblocks',
-                'admin/syslog'    : 'modal/admin/syslog'
+                'admin/syslog'    : 'modal/admin/syslog',
+                'admin/users'     : 'modal/admin/users'
 
                 // Default
                 // '*other'        : 'defaultAction'
@@ -49,14 +50,13 @@ define(
                 var modals = app.views.modals,
                     adminRoutePattern = /^admin$|\/\w/; // expect 'admin' or 'admin/foo'
 
+                // before route event
+                this.trigger.apply(this, ["beforeRoute"].concat(route, name));
+
                 // Override the route method
                 this.constructor.__super__.route.call(this, route, name, function () {
-                    // before route event
-                    this.trigger.apply(this, ["beforeRoute"].concat(route, name));
-
                     // Track current and previous routes
-                    this.lastFragment = this.currentFragment;
-                    this.currentFragment = Backbone.history.getFragment();
+                    this.updateFragments();
 
                     // close any open modals
                     // Do not close admin panel if next route uses admin panel
@@ -74,6 +74,10 @@ define(
                     // after route event
                     this.trigger.apply(this, ["afterRoute"].concat(route, name));
                 });
+            },
+            navigate: function (fragment, options) {
+                this.updateFragments();
+                this.constructor.__super__.navigate.call(this, fragment, options);
             },
             initialize: function () {
                 // Create a new ViewManager with #dashboard-view as its target element
@@ -149,9 +153,7 @@ define(
                     }
 
                     collection = new myView.Collection({
-                        type: params.type,
-                        count: params.count,
-                        offset: params.offset
+                        params: params
                     });
 
                     view = new myView.View({collection: collection});
@@ -176,6 +178,9 @@ define(
             },
             'modal/admin/syslog': function () {
                 this.openAdminModalWithView('modals/admin/syslog');
+            },
+            'modal/admin/users': function () {
+                this.openAdminModalWithView('modals/admin/users');
             },
             /*
             defaultAction: function () {
@@ -228,7 +233,7 @@ define(
                     require(
                         ['modals/panel', 'modals/admin/main', view],
                         function (panel, admin, content) {
-                            if (!modal || !modal instanceof panel.View) {
+                            if (!modal || !modal instanceof panel.View || !modal.isOpen()) {
                                 app.views.modals.admin = modal = new panel.View({
                                     span: 'span9'
                                 });
@@ -252,6 +257,13 @@ define(
             },
 
             // Getters/Setters
+            updateFragments: function () {
+                var newFragment = Backbone.history.getFragment();
+                if (this.currentFragment !== newFragment) {
+                    this.lastFragment = this.currentFragment;
+                    this.currentFragment = newFragment;
+                }
+            },
             getCurrentFragment: function () { return this.currentFragment; },
             getLastFragment: function () { return this.lastFragment; }
         });

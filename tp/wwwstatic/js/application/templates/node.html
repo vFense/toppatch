@@ -4,6 +4,7 @@
     <section class="well well-small noMargin clearfix">
         <dl>
             <dt>Node IP:</dt><dd><% print(model.ip || '<em>Not listed</em>'); %></dd>
+            <dt>Display Name:</dt><dd><% print(model.display_name || '<em>Not listed</em>'); %>&nbsp;<a href="#" id="editDisplay" data-placement="right"><i class="icon-pencil"></i></a></dd>
             <dt>Hostname:</dt><dd><% print(model['host/name'] || '<em>Not listed</em>'); %></dd>
             <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
             <dt>Tags applied:</dt>
@@ -141,10 +142,12 @@
                         </span>
                         <span class="span4 alignRight">
                             <% if (model.os_code && model.os_code == 'linux') { %>
+                            <!--
                                 <button type="button" class="btn btn-link" name="dependencies" value="<%= patch.id %>">
                                     <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;
                                     <small>Dependencies</small>&nbsp;
                                 </button>&nbsp;
+                            -->
                             <% } %>
                             <a href="#patches/<%= patch.id %>">More information</a>
                         </span>
@@ -241,6 +244,10 @@
             </div>
         </div>
     </div>
+    <div id="display-name">
+        <input type="text" class="input-medium"/>&nbsp;
+        <button class="btn btn-primary btn-mini" id="editName"><i class="icon-ok"></i></button>
+    </div>
     <form id="list-form">
         <div class="list">
             <div class="items" style="max-height: 150px; overflow: auto;">
@@ -261,7 +268,7 @@
             </div>
         </div>
         <div class="item clearfix" style="margin-top: 10px">
-            <button button="button" class="btn btn-link" id="newtag"><span>New tag...</span></button>
+            <button type="button" class="btn btn-link" id="newtag"><span>New tag...</span></button>
             <div class="hide inline input-append">
                 <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
                 <button class="btn" id="createtag">Add</button>

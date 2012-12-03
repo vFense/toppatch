@@ -21,7 +21,6 @@ define(
                         'count=' + this.getCount +
                         '&offset=' + this.offset;
                     this.query += this.filterby ? '&filterby=' + this.filterby : '';
-                    window.myCollection = this;
                 }
             }),
             TagCollection: Backbone.Collection.extend({
