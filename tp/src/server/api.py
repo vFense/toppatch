@@ -955,23 +955,23 @@ class DeleteUserHandler(BaseHandler):
                 if user.id != 1:
                     self.session.delete(user)
                     self.session.commit()
-                    result = {"pass" : True
+                    result = {"pass" : True,
                               "message" : "%s user deleted" % \
                                               (user.username)
                              }
                 else:
-                    result = {"pass" : False
+                    result = {"pass" : False,
                               "message" : "%s user could not be deleted" % \
                                               (user.username)
                              }
             except Exception as e:
                 self.session.rollback()
-                result = {"pass" : False
+                result = {"pass" : False,
                           "message" : "%s user could not be deleted" % \
                                           (user.username)
                          }
         else:
-            result = {"pass" : False
+            result = {"pass" : False,
                       "message" : "%s user does not exist" % \
                                      (user.username)
                          }
