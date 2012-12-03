@@ -74,6 +74,10 @@ define(
                     this.trigger.apply(this, ["afterRoute"].concat(route, name));
                 });
             },
+            navigate: function (fragment, options) {
+                this.updateFragments();
+                this.constructor.__super__.navigate.call(this, fragment, options);
+            },
             initialize: function () {
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element

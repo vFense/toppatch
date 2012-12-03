@@ -211,9 +211,9 @@ define(
                     if (this.isOpen()) { this.hide(); }
                     if (this._contentView) { this._contentView.close(); }
                     if (this._lastURL !== '') {
-                        Backbone.history.navigate(this._lastURL, false);
+                        app.router.navigate(this._lastURL);
                     } else {
-                        Backbone.history.navigate("dashboard", true);
+                        app.router.navigate("dashboard", {trigger: true});
                     }
                     this._opened = false;
                 }
