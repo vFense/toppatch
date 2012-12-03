@@ -4,7 +4,7 @@
     <section class="well well-small noMargin clearfix">
         <dl>
             <dt>Node IP:</dt><dd><% print(model.ip || '<em>Not listed</em>'); %></dd>
-            <dt>Display Name:</dt><dd><% print(model.display_name || '<em>Not listed</em>'); %>&nbsp;<a href="#" id="editDisplay" data-placement="right"><i class="icon-pencil"></i></a></dd>
+            <dt>Display Name:</dt><dd><% model['display/name'] ? print('<span>' + model['display/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editDisplay" data-placement="right"><i class="icon-pencil"></i></a></dd>
             <dt>Hostname:</dt><dd><% print(model['host/name'] || '<em>Not listed</em>'); %></dd>
             <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
             <dt>Tags applied:</dt>

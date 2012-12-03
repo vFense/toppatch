@@ -13,7 +13,8 @@ define(
                             {text: 'Tagging', href: 'admin/managetags'},
                             {text: 'Time Blocker', href: 'admin/timeblock'},
                             {text: 'See Time Blocks', href: 'admin/listblocks'},
-                            {text: 'Syslog Settings', href: 'admin/syslog'}
+                            {text: 'Syslog Setup', href: 'admin/syslog'},
+                            {text: 'Users', href: 'admin/users'}
                         ]
                     });
                 },

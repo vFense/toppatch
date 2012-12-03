@@ -12,15 +12,20 @@ from jsonpickle import encode
 from networking.agentoperation import AgentOperation
 from utils.common import *
 from db.query_table import *
-from db.update_table import addTimeBlock, removeTimeBlock
+from db.update_table import add_time_block, remove_time_block
 from models.scheduler import *
 
-def timeBlockLister(session):
+def time_block_lister(session):
+    """
+        return a list of timeblocks
+        arguments below..
+        session = SQLAlchemy Session Object
+    """
     blocks = session.query(TimeBlocker).all()
     windows = []
     if blocks:
         for block in blocks:
-            days_enabled, days_not_enabled = returnDays(block.days)
+            days_enabled, days_not_enabled = return_days(block.days)
             if block.start_date:
                 start_date = '%s/%s/%s' % \
                         (
@@ -67,14 +72,12 @@ def timeBlockLister(session):
                    'days_enabled' : days_enabled,
                    'days_disabled' : days_not_enabled
                    }
-            #encoded_msg = encode(msg)
             windows.append(msg)
-        #windows = encode(re.sub(r'\'|\"', '', windows))
     else:
         windows = '{"message" : "There arent any windows"}'
     return windows
 
-def timeBlockRemover(session,msg):
+def time_block_remover(session,msg):
     """The message needs to be in a valid json format.
     either you must pass the time block id or 
     the time block label, start_date, and start_time
@@ -85,15 +88,15 @@ def timeBlockRemover(session,msg):
     "start_time" : "09:00 AM"
     }
     """
-    valid, json_msg = verifyJsonIsValid(msg)
+    valid, json_msg = verify_json_is_valid(msg)
     if valid:
         if 'id' in json_msg:
-            removed = removeTimeBlock(session, id=json_msg['id'])
+            removed = remove_time_block(session, id=json_msg['id'])
         elif 'label' and 'start_date' and 'start_time' in json_msg:
             label = json_msg['label']
-            start_date = dateTimeParser(json_msg['start_date'])
-            start_time = dateTimeParser(json_msg['start_time'])
-            removed = removeTimeBlock(session, label=label, 
+            start_date = date_time_parser(json_msg['start_date'])
+            start_time = date_time_parser(json_msg['start_time'])
+            removed = remove_time_block(session, label=label, 
                     start_date=start_date, start_time=start_time
                     )
         if removed:
@@ -101,7 +104,7 @@ def timeBlockRemover(session,msg):
                     % (removed[0], removed[1])
         return removed
 
-def timeBlockAdder(session, msg):
+def time_block_adder(session, msg):
     """The message needs to be in a valid json format.
        end_date is optional. Our date format is in binary format...
        So if you have a schedule that is Mon through Fri, it will look
@@ -116,8 +119,7 @@ def timeBlockAdder(session, msg):
         "days" : "0111110"
         }
     """
-    #print type(msg), msg
-    valid, json_msg = verifyJsonIsValid(msg)
+    valid, json_msg = verify_json_is_valid(msg)
     if valid:
         if not 'enabled' in json_msg:
             json_msg['enabled'] = True
@@ -125,26 +127,22 @@ def timeBlockAdder(session, msg):
             end_date = None
         else:
            print json_msg
-           #end_date_string = returnDatetime(str(json_msg['end_date'])).split()[0]
-           end_date = dateParser(json_msg['end_date'])
+           end_date = date_parser(json_msg['end_date'])
            print end_date
         if 'start_date' in json_msg:
-           #start_date_string = returnDatetime(str(json_msg['start_date'])).split()[0]
-           start_date = dateParser(json_msg['start_date'])
+           start_date = date_parser(json_msg['start_date'])
            print start_date
         if 'start_time' in json_msg:
-           #start_time_string = returnDatetime(str(json_msg['start_time']))
-           start_time = dateTimeParser(json_msg['start_time'])
+           start_time = date_time_parser(json_msg['start_time'])
            print start_time
            utc_start_time = start_time
            print utc_start_time
         if 'end_time' in json_msg:
-           #end_time_string = returnDatetime(str(json_msg['end_time']))
-           end_time = dateTimeParser(json_msg['end_time'])
+           end_time = date_time_parser(json_msg['end_time'])
            print end_time
            utc_end_time = end_time
            print utc_end_time
-        block_added, message, block = addTimeBlock(session, json_msg['label'],
+        block_added, message, block = add_time_block(session, json_msg['label'],
                 start_date, utc_start_time, utc_end_time, json_msg['days'],
                 enabled=json_msg['enabled']
                 )
