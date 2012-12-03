@@ -49,7 +49,7 @@ define(
                         title: 'Add Nodes <button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
                         html: true,
                         content: nodelist.clone(),
-                        trigger: 'manual'
+                        trigger: 'click'
                     });
                     body.collapse('toggle');
                     if ($icon.hasClass('icon-circle-arrow-down')) {
@@ -67,10 +67,9 @@ define(
                 },
                 togglePopup: function (event) {
                     var popover = $(event.target).parent(),
-                        $tip = popover.data('popover').$tip,
+                        $tip = popover.data('popover').tip(),
                         $spans = popover.parent().find('span'),
                         $checkboxes;
-                    popover.popover('toggle');
                     $checkboxes = $tip.find('input[name=nodelist]');
                     $checkboxes.unbind();
                     $checkboxes.each(function () {
