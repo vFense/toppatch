@@ -739,6 +739,34 @@ class TimeBlockerAddHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+
+class TimeBlockerRemoverHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        tbid = None
+        label = None
+        startdate = None
+        starttime = None
+        try:
+            tbid = self.get_argument('id')
+            result = time_block_remover(self.session, tbid)
+        except Exception as e:
+            pass
+        try:
+            label = self.get_argument('label')
+            start_date = self.get_argument('start_date')
+            start_time = self.get_argument('start_time')
+            result = time_block_remover(self.session, label, 
+                    start_date, start_time)
+        except Exception as e:
+            pass
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
+
 class TagListerByTagHandler(BaseHandler):
 
     @authenticated_request

@@ -77,32 +77,29 @@ def time_block_lister(session):
         windows = '{"message" : "There arent any windows"}'
     return windows
 
-def time_block_remover(session,msg):
-    """The message needs to be in a valid json format.
-    either you must pass the time block id or 
-    the time block label, start_date, and start_time
-    {"id" : "1"} 
-    or 
-    {"label" : "test block",
-    "start_date" : "12/15/2012",
-    "start_time" : "09:00 AM"
-    }
+def time_block_remover(session, id=None, label=None, start_date=None,
+                        start_time=None):
     """
-    valid, json_msg = verify_json_is_valid(msg)
-    if valid:
-        if 'id' in json_msg:
-            removed = remove_time_block(session, id=json_msg['id'])
-        elif 'label' and 'start_date' and 'start_time' in json_msg:
-            label = json_msg['label']
-            start_date = date_time_parser(json_msg['start_date'])
-            start_time = date_time_parser(json_msg['start_time'])
-            removed = remove_time_block(session, label=label, 
-                    start_date=start_date, start_time=start_time
-                    )
-        if removed:
-            message = '{pass : %s, message %s}' \
-                    % (removed[0], removed[1])
-        return removed
+        either you must pass the time block id or 
+        the time block label, start_date, and start_time
+        id == 1 
+        or 
+        label == test block
+        start_date == 12/15/2012
+        start_time == 09:00 AM
+    """
+    if id:
+        removed = remove_time_block(session, id=id)
+    elif label and start_date and start_time:
+        start_date = date_time_parser(start_date)
+        start_time = date_time_parser(start_time)
+        removed = remove_time_block(session, label=label, 
+                start_date=start_date, start_time=start_time
+                )
+    if removed:
+        message = '{pass : %s, message %s}' \
+                % (removed[0], removed[1])
+    return removed
 
 def time_block_adder(session, msg):
     """The message needs to be in a valid json format.
