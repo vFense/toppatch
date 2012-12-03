@@ -225,7 +225,7 @@ define(
                     require(
                         ['modals/panel', 'modals/admin/main', view],
                         function (panel, admin, content) {
-                            if (!modal || !modal instanceof panel.View) {
+                            if (!modal || !modal instanceof panel.View || !modal.isOpen()) {
                                 app.views.modals.admin = modal = new panel.View({
                                     span: 'span9'
                                 });
