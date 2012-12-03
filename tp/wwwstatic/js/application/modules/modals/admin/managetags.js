@@ -21,7 +21,8 @@ define(
                 initialize: function () {
                     this.template = myTemplate;
                     window.currentView = this;
-
+                    window.console.log('hello inside tagging');
+                    window.console.log(myTemplate);
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
@@ -171,6 +172,7 @@ define(
                     if (nodelist) {
                         this.$el.html(template({data: data, nodelist: nodelist}));
                     }
+                    window.console.log(this.$el);
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;

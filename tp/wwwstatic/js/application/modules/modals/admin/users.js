@@ -1,12 +1,12 @@
 /**
  * Created with PyCharm.
  * User: parallels
- * Date: 11/21/12
- * Time: 2:54 PM
+ * Date: 12/2/12
+ * Time: 3:43 PM
  * To change this template use File | Settings | File Templates.
  */
 define(
-    ['jquery', 'underscore', 'backbone', 'text!templates/modals/admin/syslog.html'],
+    ['jquery', 'underscore', 'backbone', 'text!templates/modals/admin/users.html'],
     function ($, _, Backbone, myTemplate) {
         "use strict";
         var exports = {
@@ -38,7 +38,7 @@ define(
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var template = _.template(this.template);
-                        //data = this.collection.toJSON();
+                    //data = this.collection.toJSON();
 
                     this.$el.empty();
 

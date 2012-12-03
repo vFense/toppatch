@@ -40,7 +40,8 @@ define(
                 'admin/nodes'     : 'modal/admin/nodes',
                 'admin/timeblock' : 'modal/admin/timeblock',
                 'admin/listblocks': 'modal/admin/listblocks',
-                'admin/syslog'    : 'modal/admin/syslog'
+                'admin/syslog'    : 'modal/admin/syslog',
+                'admin/users'     : 'modal/admin/users'
 
                 // Default
                 // '*other'        : 'defaultAction'
@@ -174,6 +175,9 @@ define(
             },
             'modal/admin/syslog': function () {
                 this.openAdminModalWithView('modals/admin/syslog');
+            },
+            'modal/admin/users': function () {
+                this.openAdminModalWithView('modals/admin/users');
             },
             /*
             defaultAction: function () {
