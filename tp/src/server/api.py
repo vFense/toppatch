@@ -766,6 +766,30 @@ class TimeBlockerRemoverHandler(BaseHandler):
         self.write(json.dumps(result, indent=4))
 
 
+class TimeBlockerDisablerHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        tbid = None
+        try:
+            tbid = self.get_argument('id')
+        tb = self.session.query(TimeBlocker).TimeBlocker.id == tbid).first()
+        if tb:
+            try:
+                tb.enable = False
+                self.session.commit()
+                result = {'pass' : True,
+                          'message' : 'TimeBlock %s was disabled' % (tbid)
+                          }
+            except Exception as e:
+                self.session.rollback()
+                result = {'pass' : False,
+                          'message' : 'TimeBlock %s was not disabled' % (tbid)
+                          }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
 
 class TagListerByTagHandler(BaseHandler):
 
