@@ -888,7 +888,23 @@ class ModifyDisplayNameHandler(BaseHandler):
             displayname = self.get_argument('displayname')
         except Exception as e:
             pass
-        result = get_tag_stats(self.session, nodeid, displayname)
+        if nodeid and displayname:
+            node = self.session.query(NodeInfo).filter(NodeInfo.id == nodeid).first()
+            if node:
+                try:
+                    node.display_name = displayname
+                    session.commit()
+                    result = {"pass" : True,
+                              "message" : "Display name change to %s" %\
+                                            (displayname)
+                            }
+                except Exception as e:
+                    session.rollback()
+                    print e.message
+                    result = {"pass" : False,
+                              "message" : "Display name was not changed to %s"%\
+                                            (displayname)
+                            }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
