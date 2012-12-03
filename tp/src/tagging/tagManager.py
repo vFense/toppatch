@@ -77,7 +77,7 @@ def get_tag_stats(session, tagid=None, tagname=None):
                     "patches_failed" : int(tags[0].patches_failed),
                     "patches_pending" : int(tags[0].patches_pending)
                 }
-        list_of_tags.append(tag)
+            list_of_tags.append(tag)
     return list_of_tags
 
 
