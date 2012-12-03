@@ -90,6 +90,7 @@ class Application(tornado.web.Application):
             (r"/api/node/modifyDisplayName?", ModifyDisplayNameHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/users/list?", ListUserHandler),
+            (r"/api/users/delete?", DeleteUserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.

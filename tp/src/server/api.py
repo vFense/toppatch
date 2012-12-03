@@ -926,4 +926,54 @@ class ListUserHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+class DeleteUserHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        user = None
+        userid = None
+        username = None
+        result = None
+        try:
+            userid = self.get_argument('userid')
+        except Exception as e:
+            try:
+                username = self.get_argument('username')
+            except Exception as e:
+                result = {"pass" : False, "message" : \
+                            "either pass userid or username"
+                         }
+        if userid:
+            user = self.session.query(User).User.id == userid).first()
+        elif username:
+            user = self.session.query(User).User.username == username).first()
+        if user:
+            try:
+                if user.id != 1:
+                    self.session.delete(user)
+                    self.session.commit()
+                    result = {"pass" : True
+                              "message" : "%s user deleted" % \
+                                              (user.username)
+                             }
+                else:
+                    result = {"pass" : False
+                              "message" : "%s user could not be deleted" % \
+                                              (user.username)
+                             }
+            except Exception as e:
+                self.session.rollback()
+                result = {"pass" : False
+                          "message" : "%s user could not be deleted" % \
+                                          (user.username)
+                         }
+        else:
+            result = {"pass" : False
+                      "message" : "%s user does not exist" % \
+                                     (user.username)
+                         }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
 
