@@ -26,106 +26,68 @@
         margin-bottom: 0;
     }
 </style>
-Primary
-<div>
-    <div class="row-fluid legend alignRight">
-        <div>
-            <button class="btn btn-mini">
-                Edit
-            </button>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span9">Administrator</div>
-    </div>
-    <div class="row-fluid">
-        <div class="span9">User 1</div>
-    </div>
-</div>
-<br>
-Edit View (Options to add or delete are presented)
-<div>
-    <div class="row-fluid legend alignRight">
-        <div>
-            <button class="btn btn-mini btn-primary">
-                Done
-            </button>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span9">Administrator</div>
-    </div>
-    <div class="row-fluid">
-        <div class="span9">User 1</div>
-        <div class="span3 alignRight"><i class="icon-remove" style="color:red;"></i></div>
-    </div>
-    <div class="row-fluid">
-        <div class="span9">
-            <button class="btn btn-mini">Add new user...</button>
-        </div>
-    </div>
-</div>
-<br>
-Pressed "Add new user..."
-<div>
-    <div class="row-fluid legend alignRight">
-        <div>
-            <button class="btn btn-mini btn-primary">
-                Done
-            </button>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span9">Administrator</div>
-    </div>
-    <div class="row-fluid">
-        <div class="span9">User 1</div>
-        <div class="span3 alignRight"><i class="icon-remove" style="color:red;"></i></div>
-    </div>
-    <div class="row-fluid">
-        <div class="row-fluid">
-            <div class="span4">
-                <input placeholder="New User"/>
-            </div>
-            <div class="span4">
-                <input placeholder="Temporary Password"/>
-            </div>
-            <div class="span4 alignRight">
-                <button class="btn btn-mini">
-                    Cancel
+<article class="row-fluid">
+    <section class="span12 list">
+        <header class="clearfix">
+            <div class="pull-left">&nbsp;</div>
+            <div class="pull-right hidden-print">
+                <button class="btn btn-mini disabled" id="list-export">
+                    <span>Export</span>&nbsp;<i class="icon-download-alt"></i>
                 </button>
-                <button class="btn btn-mini btn-primary">
-                    Confirm
+                <button id="userEdit" class="btn btn-mini">
+                    Edit
+                </button>
+                <button id="doneEdit" class="btn btn-mini btn-primary hide">
+                    Done
                 </button>
             </div>
-        </div>
-    </div>
-</div>
-<br>
-Pressed Delete User (Confirm Delete Presented)
-<div>
-    <div class="row-fluid legend alignRight">
-        <div>
-            <button class="btn btn-mini btn-primary">
-                Done
-            </button>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="span9">Administrator</div>
-    </div>
-    <div class="row-fluid">
-        <div class="span9">User 1</div>
-        <div class="span3 alignRight">
-            <button class="btn btn-mini btn-danger">Delete</button>
-            <button class="btn btn-mini">Cancel</button>
-        </div>
-    </div>
-    <div class="row-fluid">
-        <div class="row-fluid">
-            <div class="span9">
-                <button class="btn btn-mini">Add new user...</button>
+        </header>
+        <div class="items">
+            <div class="item row-fluid">
+                <div class="span9">Administrator</div>
+                <div name="edit" class="span3 alignRight hide">
+                    <button name="deleteUser" class="btn btn-mini btn-link">
+                        <i class="icon-remove" style="color:red;"></i>
+                    </button>
+                    <div name="confirmDelete" class="hide">
+                        <button class="btn btn-mini btn-danger">Delete</button>
+                        <button name="cancelDelete" class="btn btn-mini">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <div class="item row-fluid">
+                <div class="span9">User 1</div>
+                <div name="edit" class="span3 alignRight hide">
+                    <button name="deleteUser" class="btn btn-mini btn-link">
+                        <i class="icon-remove" style="color:red;"></i>
+                    </button>
+                    <div name="confirmDelete" class="hide">
+                        <button class="btn btn-mini btn-danger">Delete</button>
+                        <button name="cancelDelete" class="btn btn-mini">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <div name="edit" class="row-fluid hide">
+                <div class="span9">
+                    <button id="addUser" class="btn btn-mini">Add new user...</button>
+                </div>
+                <div class="hide" name="newUserDiv">
+                    <div class="span4">
+                        <input type="text" placeholder="New User" class="input-medium"/>
+                    </div>
+                    <div class="span4">
+                        <input type="password" placeholder="Temporary Password" class="input-medium"/>
+                    </div>
+                    <div class="span4 alignRight">
+                        <button id="cancelNewUser" class="btn btn-mini">
+                            Cancel
+                        </button>
+                        <button class="btn btn-mini btn-primary">
+                            Confirm
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>​
+    </section>
+</article>

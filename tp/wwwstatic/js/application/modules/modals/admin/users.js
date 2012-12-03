@@ -25,7 +25,38 @@ define(
                     //this.collection.fetch();
                 },
                 events: {
+                    'click #userEdit': 'displayEdit',
+                    'click #doneEdit': 'displayEdit',
+                    'click #addUser': 'displayAddUser',
+                    'click #cancelNewUser': 'displayAddUser',
+                    'click button[name=deleteUser]': 'confirmDelete',
+                    'click button[name=cancelDelete]': 'confirmDelete',
                     'submit form': 'submit'
+                },
+                displayEdit: function (event) {
+                    var $editButton = $('#userEdit'),
+                        $doneButton = $('#doneEdit');
+                    $editButton.toggle();
+                    $doneButton.toggle();
+                    $('div[name=edit]').toggle();
+                },
+                displayAddUser: function (event) {
+                    var $addButton = $('#addUser'),
+                        $addUserDiv = this.$el.find('div[name=newUserDiv]');
+                    $addButton.toggle();
+                    $addUserDiv.toggle();
+                },
+                confirmDelete: function (event) {
+                    var $deleteButton, $divConfirm;
+                    if ($(event.currentTarget).attr('name') === 'deleteUser') {
+                        $deleteButton = $(event.currentTarget);
+                        $divConfirm = $deleteButton.siblings('div');
+                    } else {
+                        $divConfirm = $(event.currentTarget).parent();
+                        $deleteButton = $divConfirm.siblings('button');
+                    }
+                    $deleteButton.toggle();
+                    $divConfirm.toggle();
                 },
                 submit: function (event) {
                     var $form = $(event.target);
