@@ -3429,7 +3429,7 @@ button.close {
 }
 .btn-small {
   padding: 0.25em 0.75em;
-  font-size: 0.8571428571428571em;
+  font-size: 12px;
   line-height: 1.5em;
   border: 0.08333333333333333em solid #bbbbbb;
 }
@@ -3438,7 +3438,7 @@ button.close {
 }
 .btn-mini {
   padding: 0.18181818181818182em 0.5454545454545454em;
-  font-size: 0.7857142857142857em;
+  font-size: 11px;
   line-height: 1.5454545454545454em;
   border: 0.09090909090909091em solid #bbbbbb;
 }
