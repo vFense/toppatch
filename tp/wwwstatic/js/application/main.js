@@ -9,7 +9,7 @@ require(
             deferred;
 
         app.getUserSettings();
-        
+
         // Deferred object resolved after header and footer render.
         deferred = new $.Deferred();
         // Load and render page base page elements

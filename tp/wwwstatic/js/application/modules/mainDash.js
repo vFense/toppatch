@@ -279,7 +279,7 @@ define(
                         graphType = $("#" + widgetName).find('.graph').attr('class').split(' ')[0],
                         graph = $('input:radio[name=graph]'),
                         size = $('input:radio[name=radio]'),
-                        widgetType = $('input:radio[name=type]');
+                        widgetType = $("#" + widgetName).find('.graph').attr('value');
                     properties.set({
                         widgetName: widgetName,
                         currentWidget: "existing",
@@ -292,22 +292,34 @@ define(
                             $(this).attr('checked', false);
                         }
                     });
-                    widgetType.each(function () {
-                        if ($(this).val() === 'graph') {
-                            $(this).attr('checked', true);
-                        } else {
-                            $(this).attr('checked', false);
-                        }
-                    });
-                    graph.each(function () {
-                        if ($(this).val() === graphType) {
-                            $(this).attr('checked', true);
-                        } else {
-                            $(this).attr('checked', false);
-                        }
-                    });
+                    if (widgetType === 'tag') {
+                        $('input:radio[name=type]').each(function () {
+                            if ($(this).val() === widgetType) {
+                                $(this).attr('checked', true);
+                            } else {
+                                $(this).attr('checked', false);
+                            }
+                        });
+                        $('#graphSettings').hide();
+                    } else {
+                        $('input:radio[name=type]').each(function () {
+                            if ($(this).val() === 'graph') {
+                                $(this).attr('checked', true);
+                            } else {
+                                $(this).attr('checked', false);
+                            }
+                        });
+                        graph.each(function () {
+                            if ($(this).val() === graphType) {
+                                $(this).attr('checked', true);
+                            } else {
+                                $(this).attr('checked', false);
+                            }
+                        });
+                        $('#graphSettings').show();
+                    }
                     $('#title').val(title).attr("placeholder", title);
-                    widgetview.graphSetting();
+                    //widgetview.graphSetting();
                 } else if (param === "new") {
                     if (widgetview.counter > 5) {
                         window.console.log('too many widgets');
