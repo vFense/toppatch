@@ -60,8 +60,14 @@ define(
                     $divConfirm.toggle();
                 },
                 deleteUser: function (event) {
-                    var $deleteButton = $(event.currentTarget);
-                    window.console.log($deleteButton.val());
+                    var $deleteButton = $(event.currentTarget),
+                        $userRow = $deleteButton.parents('.item');
+                    $.post('api/users/delete', {userid: $deleteButton.val()}, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            $userRow.remove();
+                        }
+                    });
                 },
                 submit: function (event) {
                     var $form = $(event.target);
@@ -77,7 +83,7 @@ define(
                         data = this.collection.toJSON();
 
                     this.$el.empty();
-                    
+
                     this.$el.html(template({data: data}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
