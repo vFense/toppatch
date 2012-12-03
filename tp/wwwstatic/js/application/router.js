@@ -49,11 +49,11 @@ define(
                 var modals = app.views.modals,
                     adminRoutePattern = /^admin$|\/\w/; // expect 'admin' or 'admin/foo'
 
+                // before route event
+                this.trigger.apply(this, ["beforeRoute"].concat(route, name));
+
                 // Override the route method
                 this.constructor.__super__.route.call(this, route, name, function () {
-                    // before route event
-                    this.trigger.apply(this, ["beforeRoute"].concat(route, name));
-
                     // Track current and previous routes
                     this.updateFragments();
 
