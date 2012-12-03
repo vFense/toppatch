@@ -32,6 +32,7 @@ define(
                     'click button[name=confirmDelete]': 'confirmDelete',
                     'click button[name=cancelDelete]': 'confirmDelete',
                     'click button[name=deleteUser]': 'deleteUser',
+                    'click #submitUser': 'submitNewUser',
                     'submit form': 'submit'
                 },
                 displayEdit: function (event) {
@@ -66,6 +67,18 @@ define(
                         window.console.log(json);
                         if (json.pass) {
                             $userRow.remove();
+                        }
+                    });
+                },
+                submitNewUser: function (event) {
+                    var username = this.$el.find('#username').val(),
+                        password = this.$el.find('#password').val(),
+                        that = this;
+                    $.post('signup', {name: username, password: password}, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            window.console.log(json.message);
+                            that.collection.fetch();
                         }
                     });
                 },

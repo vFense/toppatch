@@ -58,15 +58,24 @@ class SignupHandler(BaseHandler):
 
 
     def post(self):
-
-        user = self.application.account_manager.user_account(str(self.get_argument("name")), str(self.get_argument("password")))
+        username = self.get_argument("name", None)
+        password = self.get_argument("password", None)
+        user = self.application.account_manager.user_account(str(username), str(password))
 
         if user is not None:
             self.application.account_manager.save_account(user)
-            self.set_secure_cookie("user", self.get_argument("name"))
-            self.redirect("/")
+            self.set_secure_cookie("user", username)
+            result = {"pass" : True,
+                      "message" : "User %s has been created." %\
+                                  (username)
+            }
         else:
-            self.write("Username already exist.")
+            result = {"pass" : False,
+                      "message" : "User %s can't be created." %\
+                                  (username)
+            }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
 
 class testHandler(BaseHandler):
     def get(self):

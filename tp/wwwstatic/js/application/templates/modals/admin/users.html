@@ -63,25 +63,25 @@
                     <div class="span9"><em>No users available.</em></div>
                 </div>
             <% } %>
-            <div name="edit" class="row-fluid hide">
-                <div class="span9">
-                    <button id="addUser" class="btn btn-mini">Add new user...</button>
+        </div>
+        <div name="edit" class="item row-fluid hide">
+            <div class="span9">
+                <button id="addUser" class="btn btn-mini">Add new user...</button>
+            </div>
+            <div class="hide" name="newUserDiv">
+                <div class="span4">
+                    <input id="username" type="text" placeholder="New User" class="input-medium"/>
                 </div>
-                <div class="hide" name="newUserDiv">
-                    <div class="span4">
-                        <input type="text" placeholder="New User" class="input-medium"/>
-                    </div>
-                    <div class="span4">
-                        <input type="password" placeholder="Temporary Password" class="input-medium"/>
-                    </div>
-                    <div class="span4 alignRight">
-                        <button id="cancelNewUser" class="btn btn-mini">
-                            Cancel
-                        </button>
-                        <button class="btn btn-mini btn-primary">
-                            Confirm
-                        </button>
-                    </div>
+                <div class="span4">
+                    <input id="password" type="password" placeholder="Temporary Password" class="input-medium"/>
+                </div>
+                <div class="span4 alignRight">
+                    <button id="cancelNewUser" class="btn btn-mini">
+                        Cancel
+                    </button>
+                    <button id="submitUser" class="btn btn-mini btn-primary">
+                        Confirm
+                    </button>
                 </div>
             </div>
         </div>
