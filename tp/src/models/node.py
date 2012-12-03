@@ -7,7 +7,8 @@ from sqlalchemy.orm import relationship, backref
 
 class NodeInfo(Base):
     """
-    Represents one row from the hosts table.
+        This table contains the base information of a node in RV
+        
     """
     __tablename__ = "node_info"
     __visit_name__ = "column"
