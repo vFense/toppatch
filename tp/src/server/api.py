@@ -781,7 +781,7 @@ class TimeBlockerDisablerHandler(BaseHandler):
                 filter(TimeBlocker.id == tbid).first()
         if tb:
             try:
-                tb.enable = False
+                tb.enabled = False
                 self.session.commit()
                 result = {'pass' : True,
                           'message' : 'TimeBlock %s was disabled' % (tbid)
