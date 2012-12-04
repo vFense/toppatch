@@ -22,7 +22,7 @@
                             <% _.each(timeblock.days_enabled, function (day) { print(day.substring(0, 2) + ' '); }) %> /
                             <%= timeblock.start_date %> /
                             <%= timeblock.end_date || 'N/A' %> /
-                            <input type="checkbox" name="timeblock" value="<%= timeblock.name %>" <% if(timeblock.enabled) { print('checked="checked"'); } %> />
+                            <input type="checkbox" name="timeblock" value="<%= timeblock.id %>" <% if(timeblock.enabled) { print('checked="checked"'); } %> />
                         </span>
                     </div>
                 <% }); %>
