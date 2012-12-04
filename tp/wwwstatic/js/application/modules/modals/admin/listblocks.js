@@ -29,8 +29,8 @@ define(
                 },
                 disableTb: function (event) {
                     var $checkbox = $(event.currentTarget);
-                    window.console.log(!$checkbox.is(':checked'));
-                    $.post('/api/timeblocker/toggle', {tpid: $checkbox.val(), toggle: !$checkbox.is(':checked')}, function (json) {
+                    window.console.log($checkbox.is(':checked'));
+                    $.post('/api/timeblocker/toggle', {tpid: $checkbox.val(), toggle: $checkbox.is(':checked')}, function (json) {
                         window.console.log(json);
                     });
                 },
