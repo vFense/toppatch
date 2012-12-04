@@ -789,8 +789,8 @@ class TimeBlockerTogglerHandler(BaseHandler):
         if tb:
             try:
                 if enable:
-                    if tb.enabled:
-                        tb.enabled = False
+                    if not tb.enabled:
+                        tb.enabled = True
                         self.session.commit()
                         result = {'pass' : True,
                                 'message' : 'TimeBlock %s was disabled' % (tbid)
@@ -800,8 +800,8 @@ class TimeBlockerTogglerHandler(BaseHandler):
                                 'message' : 'TimeBlock %s was already disabled' % (tbid)
                                 }
                 else:
-                    if not tb.enabled:
-                        tb.enabled = True
+                    if tb.enabled:
+                        tb.enabled = False
                         self.session.commit()
                         result = {'pass' : True,
                                 'message' : 'TimeBlock %s was enabled' % (tbid)
