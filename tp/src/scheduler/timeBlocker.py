@@ -63,6 +63,7 @@ def time_block_lister(session):
 
 
             msg = {
+                   'id' : block.id,
                    'name' : block.name,
                    'enabled' : block.enabled,
                    'start_date' : start_date,
