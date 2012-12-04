@@ -34,7 +34,6 @@ define(
                         tbid: $checkbox.val(),
                         toggle: $checkbox.is(':checked')
                     };
-                    window.console.log(params);
                     $.post('/api/timeblocker/toggle', params, function (json) {
                         window.console.log(json);
                     });
