@@ -2,27 +2,30 @@
 // Pagination (multiple pages)
 // --------------------------------------------------
 
-
+// Space out pagination from surrounding content
 .pagination {
-  height: @em*( @baseLineHeight * 2 )/@baseFontSize;
   margin: @em*( @baseLineHeight )/@baseFontSize 0;
- }
+}
+
 .pagination ul {
+  // Allow for text-based alignment
   display: inline-block;
   .ie7-inline-block();
+  // Reset default ul styles
   margin-left: 0;
   margin-bottom: 0;
-  .border-radius(@em*( 3px )/@baseFontSize);
+  // Visuals
+  .border-radius(@em*( @baseBorderRadius )/@baseFontSize);
   .box-shadow(0 @em*( 1px )/@baseFontSize @em*( 2px )/@baseFontSize rgba(0,0,0,.05));
 }
 .pagination ul > li {
-    display: inline;
-  }
+  display: inline; // Remove list-style and block-level defaults
+}
 .pagination ul > li > a,
 .pagination ul > li > span {
-  float: left;
-  padding: 0 @em*( 14px )/@baseFontSize;
-  line-height: @em*((@baseLineHeight * 2) - 2)/@baseFontSize;
+  float: left; // Collapse white-space
+  padding: @em*( 4px )/@baseFontSize @em*( 12px )/@baseFontSize;
+  line-height: @em*( @baseLineHeight )/@baseFontSize;
   text-decoration: none;
   background-color: @paginationBackground;
   border: @em*( 1px )/@baseFontSize solid @paginationBorder;
@@ -31,7 +34,7 @@
 .pagination ul > li > a:hover,
 .pagination ul > .active > a,
 .pagination ul > .active > span {
-  background-color: #f5f5f5;
+  background-color: @paginationActiveBackground;
 }
 .pagination ul > .active > a,
 .pagination ul > .active > span {
@@ -48,17 +51,75 @@
 .pagination ul > li:first-child > a,
 .pagination ul > li:first-child > span {
   border-left-width: @em*( 1px )/@baseFontSize;
-  .border-radius(@em*( 3px )/@baseFontSize 0 0 @em*( 3px )/@baseFontSize);
+  .border-left-radius(@em*( @baseBorderRadius )/@baseFontSize);
 }
 .pagination ul > li:last-child > a,
 .pagination ul > li:last-child > span {
-  .border-radius(0 @em*( 3px )/@baseFontSize @em*( 3px )/@baseFontSize 0);
+  .border-right-radius(@em*( @baseBorderRadius )/@baseFontSize);
 }
 
-// Centered
+
+// Alignment
+// --------------------------------------------------
+
 .pagination-centered {
   text-align: center;
 }
 .pagination-right {
   text-align: right;
+}
+
+
+// Sizing
+// --------------------------------------------------
+
+// EM Based Large
+.pagination-large {
+  ul > li > a,
+  ul > li > span {
+    padding: @em*( @paddingLarge )/@paginationLargeFontSize;
+    font-size: @paginationLargeFontSize;
+  }
+  ul > li:first-child > a,
+  ul > li:first-child > span {
+    .border-left-radius(@em*( @borderRadiusLarge )/@paginationLargeFontSize);
+  }
+  ul > li:last-child > a,
+  ul > li:last-child > span {
+    .border-right-radius(@em*( @borderRadiusLarge )/@paginationLargeFontSize);
+  }
+}
+
+// EM Based Small
+.pagination-small {
+  ul > li > a,
+  ul > li > span {
+    padding: @em*( @paddingSmall )/@paginationSmallFontSize;
+    font-size: @paginationSmallFontSize;
+  }
+  ul > li:first-child > a,
+  ul > li:first-child > span {
+    .border-left-radius(@em*( @borderRadiusSmall )/@paginationSmallFontSize);
+  }
+  ul > li:last-child > a,
+  ul > li:last-child > span {
+    .border-right-radius(@em*( @borderRadiusSmall )/@paginationSmallFontSize);
+  }
+}
+
+// EM Based Mini
+.pagination-mini {
+  ul > li > a,
+  ul > li > span {
+    padding: @em*( @paddingMini )/@paginationMiniFontSize;
+    font-size: @paginationMiniFontSize;
+  }
+  ul > li:first-child > a,
+  ul > li:first-child > span {
+    .border-left-radius(@em*( @borderRadiusSmall )/@paginationMiniFontSize);
+  }
+  ul > li:last-child > a,
+  ul > li:last-child > span {
+    .border-right-radius(@em*( @borderRadiusSmall )/@paginationMiniFontSize);
+  }
 }

@@ -80,12 +80,15 @@ define(
                 submitNewUser: function (event) {
                     var username = this.$el.find('#username').val(),
                         password = this.$el.find('#password').val(),
+                        $alert = this.$el.find('div.alert'),
                         that = this;
                     $.post('signup', {name: username, password: password}, function (json) {
                         window.console.log(json);
                         if (json.pass) {
                             window.console.log(json.message);
                             that.collection.fetch();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                         }
                     });
                 },

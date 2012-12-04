@@ -1,5 +1,16 @@
 <article>
     <section class="list">
+        <header class="clearfix">
+            <div class="pull-left">&nbsp;</div>
+            <div class="pull-right hidden-print">
+                <button class="btn btn-mini disabled" id="list-export">
+                    <span>Export</span>&nbsp;<i class="icon-download-alt"></i>
+                </button>
+                <button id="userEdit" class="btn btn-mini">
+                    Create Tag
+                </button>
+            </div>
+        </header>
         <div class="accordion items" id="accordion">
             <% if (data.length != 0) { %>
                 <% _.each(data, function (tag) { %>

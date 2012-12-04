@@ -24,152 +24,185 @@
     <button type="button" class="close" data-dismiss="alert">×</button>
     <span class="help-inline"></span>
 </article>
-<article>
-    <header><strong>Nodes that need this patch</strong></header>
-    <section class="list">
-        <% if(model.available && model.available.nodes && model.available.count != 0) { %>
-        <form action="/submitForm" method="post" class="form-inline" id="available">
-            <header class="clearfix">
-                <label class="checkbox inline">
-                    <input type="checkbox" class="toggle-all">Select / Deselect All
-                </label>
-                <div class="pull-right noMargin">
-                    <label class="checkbox inline">
-                        <input type="checkbox" name="schedule" value="once"/><small>Schedule this patch</small>&nbsp;
-                    </label>
-                    <select type="button" class="btn btn-mini" name="operation">
-                        <option value="install">Install</option>
-                        <option value="hide">Hide</option>
-                    </select>
-                    <select type="button" class="btn btn-mini" name="throttle">
-                        <option>idle</option>
-                        <option value="below_normal">below normal</option>
-                        <option>normal</option>
-                        <option value="above_normal">above normal</option>
-                        <option>high</option>
-                        <option value="real_time">real time</option>
-                    </select>
-                    <input type="submit" class="btn btn-mini btn-primary" value="Submit">
-                </div>
-                <input type="hidden" value="<% print(model.id); %>" name="patches">
+<article class="accordion">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <header>
+                <a class="accordion-toggle" data-parent="#nodeAccordion" href="#">
+                    <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Nodes that need this patch</strong>
+                </a>
             </header>
-            <div class="items">
-                <% _.each(model.available.nodes, function (node) { %>
-                    <div class="item clearfix">
-                        <span class="desc">
-                            <label class="checkbox inline">
-                                <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
-                                <%= node.ip %>
-                            </label>
-                        </span>
-                        <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
-                    </div>
-                <% }); %>
-            </div>
-        </form>
-        <% }  else { %>
-        <div class="items">
-            <div class="item"><small><em>No nodes to display</em></small></div>
         </div>
-        <% } %>
-    </section>
-</article>
-<article>
-    <header><strong>Nodes that have this patch</strong></header>
-    <section class="list">
-        <% if(model.installed && model.installed.nodes && model.installed.count != 0) { %>
-        <form action="/submitForm" method="post" class="form-inline" id="done">
-            <header class="clearfix">
-                <label class="checkbox inline">
-                    <input type="checkbox" class="toggle-all">Select / Deselect All
-                </label>
-                <div class="pull-right noMargin">
-                    <select type="button" class="btn btn-mini" name="operation">
-                        <option value="uninstall">Uninstall</option>
-                        <option value="hide">hide</option>
-                    </select>
-                    <input type="submit" class="btn btn-mini btn-primary" value="Submit">
-                </div>
-                <input type="hidden" value="<% print(model.id); %>" name="patches">
-            </header>
-            <div class="items">
-                <% _.each(model.installed.nodes, function (node) { %>
-                    <div class="item clearfix">
-                        <span class="desc">
+        <div class="accordion-body collapse">
+            <section class="list accordion-inner" >
+                <% if(model.available && model.available.nodes && model.available.count != 0) { %>
+                    <form action="/submitForm" method="post" class="form-inline" id="available">
+                        <header class="clearfix">
                             <label class="checkbox inline">
-                                <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
-                                <%= node.ip %>
+                                <input type="checkbox" class="toggle-all">Select / Deselect All
                             </label>
-                        </span>
-                        <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
+                            <div class="pull-right noMargin">
+                                <label class="checkbox inline"><small>Schedule this patch</small></label>
+                                <input type="checkbox" name="schedule" value="once"/>&nbsp;
+                                <select type="button" class="btn btn-mini" name="operation">
+                                    <option value="install">Install</option>
+                                    <option value="hide">Hide</option>
+                                </select>
+                                <select type="button" class="btn btn-mini" name="throttle">
+                                    <option>idle</option>
+                                    <option value="below_normal">below normal</option>
+                                    <option>normal</option>
+                                    <option value="above_normal">above normal</option>
+                                    <option>high</option>
+                                    <option value="real_time">real time</option>
+                                </select>
+                                <input type="submit" class="btn btn-mini btn-primary" value="Submit">
+                            </div>
+                            <input type="hidden" value="<% print(model.id); %>" name="patches">
+                        </header>
+                        <div class="items">
+                            <% _.each(model.available.nodes, function (node) { %>
+                                <div class="item clearfix">
+                                    <span class="desc">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
+                                            <%= node.ip %>
+                                        </label>
+                                    </span>
+                                    <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </form>
+                <% }  else { %>
+                    <div class="items">
+                        <div class="item"><em>No nodes to display</em></div>
                     </div>
-                <% }); %>
-            </div>
-        </form>
-        <% }  else { %>
-            <div class="items">
-                <div class="item"><small><em>No nodes to display</em></small></div>
-            </div>
-        <% } %>
-    </section>
-</article>
-<article>
-    <header><strong>Nodes installing this patch</strong></header>
-    <section class="list" id="pending">
-        <div class="items">
-            <% if(model.pending && model.pending.count != 0) { %>
-                <% _.each(model.pending.nodes, function (node) { %>
+                <% } %>
+            </section>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <header>
+                <a class="accordion-toggle"  href="#">
+                    <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Nodes that have this patch</strong>
+                </a>
+            </header>
+        </div>
+        <div class="accordion-body collapse">
+            <section class="list accordion-inner">
+                <% if(model.installed && model.installed.nodes && model.installed.count != 0) { %>
+                <form action="/submitForm" method="post" class="form-inline" id="done">
+                    <header class="clearfix">
+                        <label class="checkbox inline">
+                            <input type="checkbox" class="toggle-all">Select / Deselect All
+                        </label>
+                        <div class="pull-right noMargin">
+                            <select type="button" class="btn btn-mini" name="operation">
+                                <option value="uninstall">Uninstall</option>
+                                <option value="hide">hide</option>
+                            </select>
+                            <input type="submit" class="btn btn-mini btn-primary" value="Submit">
+                        </div>
+                        <input type="hidden" value="<% print(model.id); %>" name="patches">
+                    </header>
+                    <div class="items">
+                        <% _.each(model.installed.nodes, function (node) { %>
+                        <div class="item clearfix">
+                            <span class="desc">
+                                <label class="checkbox inline">
+                                    <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
+                                    <%= node.ip %>
+                                </label>
+                            </span>
+                            <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
+                        </div>
+                        <% }); %>
+                    </div>
+                </form>
+                <% }  else { %>
+                    <div class="items">
+                        <div class="item"><em>No nodes to display</em></div>
+                    </div>
+                <% } %>
+            </section>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <header>
+                <a class="accordion-toggle"  href="#">
+                    <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Nodes installing this patch</strong>
+                </a>
+            </header>
+        </div>
+        <div class="accordion-body collapse">
+            <section class="list accordion-inner" id="pending">
+                <div class="items">
+                    <% if(model.pending && model.pending.count != 0) { %>
+                    <% _.each(model.pending.nodes, function (node) { %>
                     <div class="item clearfix">
                         <span class="desc"><%= node.ip %></span>
                         <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
                     </div>
-                <% }); %>
-            <% }  else { %>
+                    <% }); %>
+                    <% }  else { %>
                     <div class="item" id="no-pending">
-                        <small><em>No nodes to display</em></small>
+                        <em>No nodes to display</em>
                     </div>
-            <% } %>
+                    <% } %>
+                </div>
+            </section>
         </div>
-    </section>
-</article>
-<article>
-    <header><strong>Nodes that failed to apply this patch</strong></header>
-    <section class="list">
-        <% if(model.failed && model.failed.count != 0) { %>
-        <form action="/submitForm" method="post" class="form-inline" id="failed">
-            <header class="clearfix">
-                <label class="checkbox inline">
-                    <input type="checkbox" class="toggle-all">Select / Deselect All
-                </label>
-                <div class="pull-right noMargin">
-                    <select type="button" class="btn btn-mini" name="operation">
-                        <option value="install">Reinstall</option>
-                        <option value="hide">hide</option>
-                    </select>
-                    <input type="submit" class="btn btn-mini btn-primary" value="Submit">
-                </div>
-                <input type="hidden" value="<% print(model.id); %>" name="patches">
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <header>
+                <a class="accordion-toggle"  href="#">
+                    <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Nodes that failed to apply this patch</strong>
+                </a>
             </header>
-            <div class="items">
-                <% $.each(model.failed.nodes, function (i, node) { %>
-                <div class="item clearfix">
-                    <span class="desc">
-                        <label class="checkbox inline">
-                            <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
-                            <%= node.ip %>
-                        </label>
-                    </span>
-                    <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
-                </div>
-                <% }); %>
-            </div>
-        </form>
-        <% }  else { %>
-            <div class="items">
-                <div class="item"><small><em>No nodes to display</em></small></div>
-            </div>
-        <% } %>
-    </section>
+        </div>
+        <div class="accordion-body collapse">
+            <section class="list accordion-inner">
+                <% if(model.failed && model.failed.count != 0) { %>
+                    <form action="/submitForm" method="post" class="form-inline" id="failed">
+                        <header class="clearfix">
+                            <label class="checkbox inline">
+                                <input type="checkbox" class="toggle-all">Select / Deselect All
+                            </label>
+                            <div class="pull-right noMargin">
+                                <select type="button" class="btn btn-mini" name="operation">
+                                    <option value="install">Reinstall</option>
+                                    <option value="hide">hide</option>
+                                </select>
+                                <input type="submit" class="btn btn-mini btn-primary" value="Submit">
+                            </div>
+                            <input type="hidden" value="<% print(model.id); %>" name="patches">
+                        </header>
+                        <div class="items">
+                            <% $.each(model.failed.nodes, function (i, node) { %>
+                            <div class="item clearfix">
+                        <span class="desc">
+                            <label class="checkbox inline">
+                                <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
+                                <%= node.ip %>
+                            </label>
+                        </span>
+                                <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
+                            </div>
+                            <% }); %>
+                        </div>
+                    </form>
+                <% }  else { %>
+                    <div class="items">
+                        <div class="item"><em>No nodes to display</em></div>
+                    </div>
+                <% } %>
+            </section>
+        </div>
+    </div>
 </article>
 <style>
     div.ui-datepicker{
