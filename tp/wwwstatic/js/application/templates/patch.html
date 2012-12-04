@@ -29,7 +29,9 @@
         <div class="accordion-heading">
             <header>
                 <a class="accordion-toggle" data-parent="#nodeAccordion" href="#">
-                    <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Nodes that need this patch</strong>
+                    <i class="icon-circle-arrow-down"></i>&nbsp;
+                    <strong>Nodes that need this patch</strong>
+                    <span class="badge badge-inverse pull-right"><%= model.available.nodes.length %></span>
                 </a>
             </header>
         </div>
@@ -86,7 +88,9 @@
         <div class="accordion-heading">
             <header>
                 <a class="accordion-toggle"  href="#">
-                    <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Nodes that have this patch</strong>
+                    <i class="icon-circle-arrow-down"></i>&nbsp;
+                    <strong>Nodes that have this patch</strong>
+                    <span class="badge badge-inverse pull-right"><%= model.installed.nodes.length %></span>
                 </a>
             </header>
         </div>
@@ -134,6 +138,7 @@
             <header>
                 <a class="accordion-toggle"  href="#">
                     <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Nodes installing this patch</strong>
+                    <span class="badge badge-inverse pull-right"><%= model.pending.nodes.length %></span>
                 </a>
             </header>
         </div>
@@ -141,16 +146,16 @@
             <section class="list accordion-inner" id="pending">
                 <div class="items">
                     <% if(model.pending && model.pending.count != 0) { %>
-                    <% _.each(model.pending.nodes, function (node) { %>
-                    <div class="item clearfix">
-                        <span class="desc"><%= node.ip %></span>
-                        <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
-                    </div>
-                    <% }); %>
+                        <% _.each(model.pending.nodes, function (node) { %>
+                            <div class="item clearfix">
+                                <span class="desc"><%= node.ip %></span>
+                                <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
+                            </div>
+                        <% }); %>
                     <% }  else { %>
-                    <div class="item" id="no-pending">
-                        <em>No nodes to display</em>
-                    </div>
+                        <div class="item" id="no-pending">
+                            <em>No nodes to display</em>
+                        </div>
                     <% } %>
                 </div>
             </section>
@@ -161,6 +166,7 @@
             <header>
                 <a class="accordion-toggle"  href="#">
                     <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Nodes that failed to apply this patch</strong>
+                    <span class="badge badge-inverse pull-right"><%= model.failed.nodes.length %></span>
                 </a>
             </header>
         </div>
@@ -184,12 +190,12 @@
                         <div class="items">
                             <% $.each(model.failed.nodes, function (i, node) { %>
                             <div class="item clearfix">
-                        <span class="desc">
-                            <label class="checkbox inline">
-                                <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
-                                <%= node.ip %>
-                            </label>
-                        </span>
+                                <span class="desc">
+                                    <label class="checkbox inline">
+                                        <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
+                                        <%= node.ip %>
+                                    </label>
+                                </span>
                                 <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
                             </div>
                             <% }); %>
