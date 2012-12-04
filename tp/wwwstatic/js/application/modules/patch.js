@@ -43,7 +43,7 @@ define(
                         $body.collapse('show');
                         setTimeout(function () {
                             $body.css('overflow', 'visible');
-                        }, 500);
+                        }, 300);
                     } else {
                         if ($popover.data('popover')) {
                             $popover.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
