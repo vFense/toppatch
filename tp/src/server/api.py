@@ -13,6 +13,7 @@ from models.base import Base
 from models.packages import *
 from models.node import *
 from models.ssl import *
+from models.scheduler import *
 from server.handlers import SendToSocket
 from db.client import *
 from scheduler.jobManager import job_lister, remove_job
@@ -774,6 +775,8 @@ class TimeBlockerDisablerHandler(BaseHandler):
         tbid = None
         try:
             tbid = self.get_argument('id')
+        except Exception as e:
+            pass
         tb = self.session.query(TimeBlocker).\
                 filter(TimeBlocker.id == tbid).first()
         if tb:
