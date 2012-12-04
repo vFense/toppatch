@@ -793,22 +793,22 @@ class TimeBlockerTogglerHandler(BaseHandler):
                         tb.enabled = True
                         self.session.commit()
                         result = {'pass' : True,
-                                'message' : 'TimeBlock %s was disabled' % (tbid)
+                                'message' : 'TimeBlock %s was enabled' % (tbid)
                                 }
                     else:
                         result = {'pass' : False,
-                                'message' : 'TimeBlock %s was already disabled' % (tbid)
+                                'message' : 'TimeBlock %s was already enabled' % (tbid)
                                 }
                 else:
                     if tb.enabled:
                         tb.enabled = False
                         self.session.commit()
                         result = {'pass' : True,
-                                'message' : 'TimeBlock %s was enabled' % (tbid)
+                                'message' : 'TimeBlock %s was disabled' % (tbid)
                                 }
                     else:
                         result = {'pass' : False,
-                                'message' : 'TimeBlock %s was already enabled' % (tbid)
+                                'message' : 'TimeBlock %s was already disabled' % (tbid)
                                 }
             except Exception as e:
                 self.session.rollback()
