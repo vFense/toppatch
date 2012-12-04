@@ -93,6 +93,34 @@ ui-state-highlight {
   color: #c09853;
   visibility: visible !important;
 }
+input:focus:required:invalid,
+textarea:focus:required:invalid,
+select:focus:required:invalid {
+  color: #555555;
+  border-color: #cccccc;
+}
+input:focus:required:invalid:focus,
+textarea:focus:required:invalid:focus,
+select:focus:required:invalid:focus {
+  border-color: rgba(82, 168, 236, 0.8);
+  -webkit-box-shadow: inset 0 0.07142857142857142em 0.07142857142857142em rgba(0, 0, 0, 0.075), 0 0 0.5714285714285714em rgba(82, 168, 236, 0.6);
+  -moz-box-shadow: inset 0 0.07142857142857142em 0.07142857142857142em rgba(0, 0, 0, 0.075), 0 0 0.5714285714285714em rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 0.07142857142857142em 0.07142857142857142em rgba(0, 0, 0, 0.075), 0 0 0.5714285714285714em rgba(82, 168, 236, 0.6);
+}
+input:required.invalid,
+textarea:required.invalid,
+select:required.invalid {
+  color: #b94a48;
+  border-color: #ee5f5b;
+}
+input:required.invalid:focus,
+textarea:required.invalid:focus,
+select:required.invalid:focus {
+  border-color: #e9322d;
+  -webkit-box-shadow: 0 0 1em 0.42857142857142855px #f8b9b7;
+  -moz-box-shadow: 0 0 1em 0.42857142857142855px #f8b9b7;
+  box-shadow: 0 0 1em 0.42857142857142855px #f8b9b7;
+}
 /* Sergio's Styles: To be sorted */
 /*.window {
     -moz-border-radius: 15px;
@@ -761,6 +789,9 @@ NOSCRIPT IMG.brand {
 }
 .alignRight {
   text-align: right;
+}
+.alignCenter {
+  text-align: center;
 }
 .show-grid > [class*="span"] {
   background-color: #FFF;
