@@ -774,7 +774,8 @@ class TimeBlockerDisablerHandler(BaseHandler):
         tbid = None
         try:
             tbid = self.get_argument('id')
-        tb = self.session.query(TimeBlocker).TimeBlocker.id == tbid).first()
+        tb = self.session.query(TimeBlocker).\
+                filter(TimeBlocker.id == tbid).first()
         if tb:
             try:
                 tb.enable = False
