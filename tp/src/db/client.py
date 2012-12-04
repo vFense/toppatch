@@ -1,6 +1,6 @@
 import logging
 from sqlalchemy import create_engine, exc
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from apscheduler.scheduler import Scheduler
 from models.node import NodeInfo
 
@@ -22,7 +22,7 @@ def create_session(engine):
         initialize a SQLAlchemy session to execute sql orm statements with 
         the RV database.
     """
-    Session = sessionmaker(bind=engine)
+    Session = scoped_session(sessionmaker(bind=engine))
     session = Session()
     return session
 

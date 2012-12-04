@@ -39,6 +39,7 @@ class GetJson(Protocol):
         if is_enabled:
             handoff = HandOff(ENGINE)
             Thread(target=handoff.run, args=(data, self.client_ip)).start()
+        self.session.close()
 
 def verifyCallback(connection, x509, errnum, errdepth, ok):
     if not ok:
