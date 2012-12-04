@@ -33,7 +33,7 @@ class GetJson(Protocol):
                 filter(NodeInfo.ip_address == self.client_ip).first()
         if node:
             is_enabled = self.session.query(SslInfo).\
-                    filter(SslInfo.enabled == False).\
+                    filter(SslInfo.enabled == True).\
                     filter(SslInfo.node_id == node.id).first()
         if is_enabled:
             HandOff(ENGINE, data, self.client_ip)
