@@ -111,6 +111,7 @@ def date_time_parser(schedule):
 
 
 def return_bool(fake_bool):
+    fake_bool = fake_bool.lower()
     real_bool = None
     if fake_bool == "true":
         real_bool = True

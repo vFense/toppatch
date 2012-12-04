@@ -767,7 +767,7 @@ class TimeBlockerRemoverHandler(BaseHandler):
         self.write(json.dumps(result, indent=4))
 
 
-class TimeBlockerDisablerHandler(BaseHandler):
+class TimeBlockerTogglerHandler(BaseHandler):
     @authenticated_request
     def post(self):
         self.session = self.application.session
@@ -776,7 +776,7 @@ class TimeBlockerDisablerHandler(BaseHandler):
         try:
             tbid = self.get_argument('id')
             enable = self.get_argument('toggle')
-            enable = f
+            enable = return_bool(enable)
         except Exception as e:
             pass
 
@@ -784,19 +784,36 @@ class TimeBlockerDisablerHandler(BaseHandler):
                 filter(TimeBlocker.id == tbid).first()
         if tb:
             try:
-                tb.enabled = False
-                self.session.commit()
-                result = {'pass' : True,
-                          'message' : 'TimeBlock %s was disabled' % (tbid)
-                          }
+                if enable:
+                    if tb.enabled:
+                        tb.enabled = False
+                        self.session.commit()
+                        result = {'pass' : True,
+                                'message' : 'TimeBlock %s was disabled' % (tbid)
+                                }
+                    else:
+                        result = {'pass' : False,
+                                'message' : 'TimeBlock %s was already disabled' % (tbid)
+                                }
+                else:
+                    if not tb.enabled:
+                        tb.enabled = True
+                        self.session.commit()
+                        result = {'pass' : True,
+                                'message' : 'TimeBlock %s was enabled' % (tbid)
+                                }
+                    else:
+                        result = {'pass' : False,
+                                'message' : 'TimeBlock %s was already enabled' % (tbid)
+                                }
             except Exception as e:
                 self.session.rollback()
                 result = {'pass' : False,
-                          'message' : 'TimeBlock %s was not disabled' % (tbid)
+                          'message' : 'TimeBlock %s was not disabled or enabled' % (tbid)
                           }
         else:
             result = {'pass' : False,
-                      'message' : 'TimeBlock %s was not disabled' % (tbid)
+                      'message' : 'TimeBlock %s was not disabled or enabled' % (tbid)
                      }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
