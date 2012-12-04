@@ -848,15 +848,12 @@ class TagAddHandler(BaseHandler):
     def post(self):
         self.session = self.application.session
         self.session = validate_session(self.session)
-        print '***********'
-        print 'add tag test'
+        tag = None
         try:
-            self.msg = self.get_argument('operation')
-            print '**************'
-            print self.msg
+            tag = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong argument passed %s, the argument needed is operation" % (e))
-        result = tag_adder(self.session, self.msg)
+        result = tag_adder(self.session, tag)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -891,11 +888,12 @@ class TagRemoveHandler(BaseHandler):
     def post(self):
         self.session = self.application.session
         self.session = validate_session(self.session)
+        tag = None
         try:
-            self.msg = self.get_argument('operation')
+            tag = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
-        result = tag_remove(self.session, self.msg)
+        result = tag_remove(self.session, tag)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -1079,6 +1077,46 @@ class DeleteUserHandler(BaseHandler):
             result = {"pass" : False,
                       "message" : "%s user does not exist" % \
                                      (user.username)
+                         }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
+class NodeTogglerHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        userlist = self.session.query(User).all()
+        nodeid = None
+        try:
+            nodeid = self.get_argument('nodeid')
+            toggle = self.get_argument('toggle')
+            toggle = return_bool(toggle)
+        except Exception as e:
+            pass
+        if nodeid:
+            sslinfo = self.session.query(SslInfo).\
+                    filter(SslInfo.node_id == nodeid).first()
+            if sslinfo:
+                if toggle:
+                    sslinfo.enabled = True
+                    self.session.commit()
+                    result = {"pass" : True,
+                          "message" : "node_id %s has been enabled" %\
+                                          (nodeid)
+                         }
+                else:
+                    sslinfo.enabled = False
+                    self.session.commit()
+                    result = {"pass" : True,
+                          "message" : "node_id %s has been disabled" %\
+                                          (nodeid)
+                         }
+        else:
+            result = {"pass" : False,
+                      "message" : "node_id %s does not exist" % \
+                                     (nodeid)
                          }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))

@@ -27,7 +27,16 @@ class GetJson(Protocol):
         data = self.total_data
         print data
         self.total_data = ""
-        HandOff(ENGINE, data, self.client_ip)
+        is_enabled = None
+        self.session = create_session(ENGINE)
+        node = self.session.query(NodeInfo).\
+                filter(NodeInfo.ip_address == self.client_ip).first()
+        if node:
+            is_enabled = self.session.query(SslInfo).\
+                    filter(SslInfo.enabled == True).\
+                    filter(SslInfo.node_id == node.id).first()
+        if is_enabled:
+            HandOff(ENGINE, data, self.client_ip)
 
 def verifyCallback(connection, x509, errnum, errdepth, ok):
     if not ok:
