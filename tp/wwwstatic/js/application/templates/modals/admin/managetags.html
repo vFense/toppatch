@@ -6,12 +6,25 @@
                 <button class="btn btn-mini disabled" id="list-export">
                     <span>Export</span>&nbsp;<i class="icon-download-alt"></i>
                 </button>
-                <button id="userEdit" class="btn btn-mini">
+                <button id="createTag" class="btn btn-mini">
                     Create Tag
                 </button>
             </div>
         </header>
         <div class="accordion items" id="accordion">
+            <div class="item row-fluid hide" id="newTag">
+                <div class="span8">
+                    <input id="tagName" type="text" placeholder="Tag name" required="required" class="input-medium"/>
+                </div>
+                <div class="span4 alignRight">
+                    <button id="cancelNewTag" class="btn btn-mini">
+                        Cancel
+                    </button>
+                    <button id="submitTag" class="btn btn-mini btn-primary">
+                        Confirm
+                    </button>
+                </div>
+            </div>
             <% if (data.length != 0) { %>
                 <% _.each(data, function (tag) { %>
                     <div class="accordion-group item clearfix">

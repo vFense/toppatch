@@ -850,8 +850,9 @@ class TagAddHandler(BaseHandler):
         self.session = validate_session(self.session)
         try:
             self.msg = self.get_argument('operation')
+            print self.msg
         except Exception as e:
-            self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
+            self.write("Wrong arguement passed %s, the argument needed is operation" % (e))
         result = tag_adder(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))

@@ -32,7 +32,10 @@ define(
                 },
                 events: {
                     'click a.accordion-toggle': 'stoplink',
-                    'click button[name=remove]': 'deleteTag'
+                    'click button[name=remove]': 'deleteTag',
+                    'click #createTag': 'showCreateTag',
+                    'click #cancelNewTag': 'showCreateTag',
+                    'click #submitTag': 'submitTag'
                 },
                 stoplink: function (event) {
                     event.preventDefault();
@@ -165,6 +168,29 @@ define(
                                 $item.remove();
                             }
                         });
+                },
+                showCreateTag: function (event) {
+                    var $newTagDiv = this.$el.find('#newTag');
+                    $newTagDiv.toggle().find('input').val('');
+                },
+                submitTag: function (event) {
+                    var params = {},
+                        tagname = this.$el.find('#tagName').val(),
+                        $newTagDiv = this.$el.find('#newTag'),
+                        user = window.User.get('name');
+                    params = {
+                        user: user,
+                        tag: tagname
+                    };
+                    window.console.log(params);
+                    if (tagname) {
+                        $.post('/api/tagging/addTag', {operation: params}, function (json) {
+                            window.console.log(json);
+                            if (json.pass) {
+                                $newTagDiv.hide();
+                            }
+                        });
+                    }
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
