@@ -26,9 +26,16 @@ def job_lister(session,sched):
             if type(message) == str:
                 jsonValid, message = verify_json_is_valid(message)
                 if jsonValid:
-                    node = node_exists(session, node_id=message['node_id'])
-                    message['node_id'] = node.ip_address
-                    job_listing.append(message)
+                    if 'node_id' in message:
+                        node = node_exists(session, node_id=message['node_id'])
+                        message['ipaddress'] = node.ip_address
+                        message['hostname'] = node.host_name
+                        message['displayname'] = node.display_name
+                        job_listing.append(message)
+                    elif 'tag_id' in message:
+                        tag = tag_exists(session, tag_id=message['tag_id'])
+                        message['tagname'] = tag.tag
+                        job_listing.append(message)
     return job_listing
 
 def remove_job(sched, jobname):
