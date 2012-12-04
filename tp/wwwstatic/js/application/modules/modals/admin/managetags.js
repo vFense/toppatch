@@ -58,10 +58,15 @@ define(
                         });
                         popover.on('click', this.togglePopup);
                         popover.data('popover').tip().css('z-index', 3000);
+                        body.collapse('show');
+                        setTimeout(function () {
+                            body.css('overflow', 'visible');
+                        }, 500);
                     } else {
+                        body.collapse('hide');
+                        body.css('overflow', 'hidden');
                         $icon.attr('class', 'icon-circle-arrow-down');
                     }
-                    body.collapse('toggle');
                     body.on('hidden', function (event) {
                         event.stopPropagation();
                     });

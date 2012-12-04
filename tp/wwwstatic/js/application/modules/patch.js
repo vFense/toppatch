@@ -9,22 +9,58 @@ define(
                     return this.baseUrl + '?id=' + this.id;
                 }
             }),
+            TagCollection: Backbone.Collection.extend({
+                baseUrl: 'api/package/getTagsByTpId',
+                url: function () {
+                    return this.baseUrl + '?tpid=' + this.id;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
                     this.collection =  new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
+
+                    this.tagcollection = new exports.TagCollection();
+                    this.tagcollection.bind('reset', this.render, this);
+                    this.tagcollection.id = this.collection.id;
+                    this.tagcollection.fetch();
                 },
                 events: {
+                    'click a.accordion-toggle': 'openAccordion',
                     'submit form': 'submit'
                 },
+                openAccordion: function (event) {
+                    event.preventDefault();
+                    var $href = $(event.currentTarget),
+                        $icon = $href.find('i'),
+                        $parent = $href.parents('.accordion-group'),
+                        $body = $parent.find('.accordion-body'),
+                        $popover = $body.find('input[name=schedule]');
+                    if ($icon.hasClass('icon-circle-arrow-down')) {
+                        $icon.attr('class', 'icon-circle-arrow-up');
+                        $body.collapse('show');
+                        setTimeout(function () {
+                            $body.css('overflow', 'visible');
+                        }, 300);
+                    } else {
+                        if ($popover.data('popover')) {
+                            $popover.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                            $popover.popover('hide');
+                            $popover.attr('checked', false);
+                        }
+                        $icon.attr('class', 'icon-circle-arrow-down');
+                        $body.collapse('hide');
+                        $body.css('overflow', 'hidden');
+                    }
+                },
                 submit: function (evt) {
-                    var item, span, label, checkbox, $scheduleForm, type, nodes, url, offset,
+                    var item, span, label, checkbox, $scheduleForm, type, nodes, url, offset, tags,
                         $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
                         time = '';
-                    if (schedule.length != 0) {
+                    if (schedule.length !== 0) {
                         $scheduleForm = schedule.data('popover').options.content;
                         time = $scheduleForm.find('input[name=datepicker]').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
                         label = $scheduleForm.find('input[name=label]').val() || 'Default';
@@ -32,6 +68,7 @@ define(
                     }
                     type = $form.attr('id');
                     nodes = $form.find('input[name="node"]:checked');
+                    tags = $form.find('input[name=tag]:checked');
                     url = '/submitForm?' + $form.serialize();
                     url += time ? '&time=' + time + '&label=' + label + '&offset=' + offset : '';
                     window.console.log(url);
@@ -109,11 +146,14 @@ define(
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var template = _.template(this.template),
-                        data = this.collection.toJSON()[0];
+                        data = this.collection.toJSON()[0],
+                        tagdata = this.tagcollection.toJSON()[0];
+
+                    window.console.log(tagdata);
 
                     this.$el.empty();
 
-                    this.$el.append(template({model: data}));
+                    this.$el.append(template({model: data, tags: tagdata}));
 
                     this.$el.find("a.disabled").on("click", false);
 
