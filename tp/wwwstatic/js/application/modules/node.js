@@ -35,6 +35,7 @@ define(
                     'click button[name=dependencies]': 'showDependencies',
                     'click input[name=taglist]': 'toggletag',
                     'click #editDisplay': 'showEditDisplay',
+                    'click a.accordion-toggle': 'openAccordion',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
@@ -294,6 +295,30 @@ define(
                                     $('#' + tag.replace(' ', '')).remove();
                                 }
                             });
+                    }
+                },
+                openAccordion: function (event) {
+                    event.preventDefault();
+                    var $href = $(event.currentTarget),
+                        $icon = $href.find('i'),
+                        $parent = $href.parents('.accordion-group'),
+                        $body = $parent.find('.accordion-body'),
+                        $popover = $body.find('input[name=schedule]');
+                    if ($icon.hasClass('icon-circle-arrow-down')) {
+                        $icon.attr('class', 'icon-circle-arrow-up');
+                        $body.collapse('show');
+                        setTimeout(function () {
+                            $body.css('overflow', 'visible');
+                        }, 300);
+                    } else {
+                        if ($popover.data('popover')) {
+                            $popover.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                            $popover.popover('hide');
+                            $popover.attr('checked', false);
+                        }
+                        $icon.attr('class', 'icon-circle-arrow-down');
+                        $body.collapse('hide');
+                        $body.css('overflow', 'hidden');
                     }
                 },
                 beforeClose: function () {
