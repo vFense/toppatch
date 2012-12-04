@@ -1082,3 +1082,43 @@ class DeleteUserHandler(BaseHandler):
         self.write(json.dumps(result, indent=4))
 
 
+class NodeTogglerHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        userlist = self.session.query(User).all()
+        nodeid = None
+        try:
+            nodeid = self.get_argument('nodeid')
+            toggle = self.get_argument('toggle')
+            toggle = return_bool(toggle)
+        except Exception as e:
+            pass
+        if nodeid:
+            sslinfo = self.session.query(SslInfo).\
+                    filter(SslInfo.node_id == nodeid).first()
+            if sslinfo:
+                if toggle:
+                    sslinfo.enabled = True
+                    self.session.commit()
+                    result = {"pass" : True,
+                          "message" : "node_id %s has been enabled" %\
+                                          (nodeid)
+                         }
+                else:
+                    sslinfo.enabled = False
+                    self.session.commit()
+                    result = {"pass" : True,
+                          "message" : "node_id %s has been disabled" %\
+                                          (nodeid)
+                         }
+        else:
+            result = {"pass" : False,
+                      "message" : "node_id %s does not exist" % \
+                                     (nodeid)
+                         }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
