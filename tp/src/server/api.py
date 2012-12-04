@@ -775,8 +775,11 @@ class TimeBlockerDisablerHandler(BaseHandler):
         tbid = None
         try:
             tbid = self.get_argument('id')
+            enable = self.get_argument('toggle')
+            enable = f
         except Exception as e:
             pass
+
         tb = self.session.query(TimeBlocker).\
                 filter(TimeBlocker.id == tbid).first()
         if tb:
@@ -791,6 +794,10 @@ class TimeBlockerDisablerHandler(BaseHandler):
                 result = {'pass' : False,
                           'message' : 'TimeBlock %s was not disabled' % (tbid)
                           }
+        else:
+            result = {'pass' : False,
+                      'message' : 'TimeBlock %s was not disabled' % (tbid)
+                     }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
