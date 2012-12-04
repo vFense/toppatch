@@ -888,11 +888,12 @@ class TagRemoveHandler(BaseHandler):
     def post(self):
         self.session = self.application.session
         self.session = validate_session(self.session)
+        tag = None
         try:
-            self.msg = self.get_argument('operation')
+            tag = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
-        result = tag_remove(self.session, self.msg)
+        result = tag_remove(self.session, tag)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
