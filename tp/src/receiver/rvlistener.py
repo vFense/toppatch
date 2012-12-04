@@ -1,3 +1,4 @@
+from threading import Thread
 from OpenSSL import SSL
 from twisted.internet import ssl, reactor
 from twisted.internet.protocol import Factory, Protocol
@@ -36,7 +37,8 @@ class GetJson(Protocol):
                     filter(SslInfo.enabled == True).\
                     filter(SslInfo.node_id == node.id).first()
         if is_enabled:
-            HandOff(ENGINE, data, self.client_ip)
+            handoff = HandOff(ENGINE)
+            Thread(target=handoff.run, args=(data, self.client_ip)).start()
 
 def verifyCallback(connection, x509, errnum, errdepth, ok):
     if not ok:
