@@ -77,6 +77,8 @@ class Application(tornado.web.Application):
             (r"/api/scheduler/remove?", SchedulerRemoveHandler),
             (r"/api/timeblocker/list.json/?", TimeBlockerListerHandler),
             (r"/api/timeblocker/add?", TimeBlockerAddHandler),
+            (r"/api/timeblocker/remove?", TimeBlockerRemoverHandler),
+            (r"/api/timeblocker/remove?", TimeBlockerDisablerHandler),
             (r"/api/tagging/listByTag.json/?", TagListerByTagHandler),
             (r"/api/tagging/listByNode.json/?", TagListerByNodeHandler),
             (r"/api/tagging/addTag?", TagAddHandler),

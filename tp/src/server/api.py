@@ -13,6 +13,7 @@ from models.base import Base
 from models.packages import *
 from models.node import *
 from models.ssl import *
+from models.scheduler import *
 from server.handlers import SendToSocket
 from db.client import *
 from scheduler.jobManager import job_lister, remove_job
@@ -738,6 +739,61 @@ class TimeBlockerAddHandler(BaseHandler):
         result = time_block_adder(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+
+class TimeBlockerRemoverHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        tbid = None
+        label = None
+        startdate = None
+        starttime = None
+        try:
+            tbid = self.get_argument('id')
+            result = time_block_remover(self.session, tbid)
+        except Exception as e:
+            pass
+        try:
+            label = self.get_argument('label')
+            start_date = self.get_argument('start_date')
+            start_time = self.get_argument('start_time')
+            result = time_block_remover(self.session, label, 
+                    start_date, start_time)
+        except Exception as e:
+            pass
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
+class TimeBlockerDisablerHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        tbid = None
+        try:
+            tbid = self.get_argument('id')
+        except Exception as e:
+            pass
+        tb = self.session.query(TimeBlocker).\
+                filter(TimeBlocker.id == tbid).first()
+        if tb:
+            try:
+                tb.enable = False
+                self.session.commit()
+                result = {'pass' : True,
+                          'message' : 'TimeBlock %s was disabled' % (tbid)
+                          }
+            except Exception as e:
+                self.session.rollback()
+                result = {'pass' : False,
+                          'message' : 'TimeBlock %s was not disabled' % (tbid)
+                          }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
 
 class TagListerByTagHandler(BaseHandler):
 
