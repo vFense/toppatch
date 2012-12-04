@@ -770,7 +770,7 @@ def add_results(session, data):
                reboot = None
             os_code = session.query(SystemInfo).\
                     filter_by(node_id=node_id).first().os_code
-            update_exists = node_update_exists(session, node_id, msg['toppatch_id'])
+            update_exists = node_package_exists(session, node_id, msg['toppatch_id'])
             if update_exists:
                 if data['operation'] == "install" and msg['result'] == 'success':
                     print "patch installed on %s %s" % ( node_id, msg['toppatch_id'] )
