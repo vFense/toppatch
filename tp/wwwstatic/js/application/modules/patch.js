@@ -56,7 +56,7 @@ define(
                     }
                 },
                 submit: function (evt) {
-                    var item, span, label, checkbox, $scheduleForm, type, nodes, url, offset,
+                    var item, span, label, checkbox, $scheduleForm, type, nodes, url, offset, tags,
                         $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
                         time = '';
@@ -68,6 +68,7 @@ define(
                     }
                     type = $form.attr('id');
                     nodes = $form.find('input[name="node"]:checked');
+                    tags = $form.find('input[name=tag]:checked');
                     url = '/submitForm?' + $form.serialize();
                     url += time ? '&time=' + time + '&label=' + label + '&offset=' + offset : '';
                     window.console.log(url);
@@ -152,7 +153,7 @@ define(
 
                     this.$el.empty();
 
-                    this.$el.append(template({model: data}));
+                    this.$el.append(template({model: data, tags: tagdata}));
 
                     this.$el.find("a.disabled").on("click", false);
 

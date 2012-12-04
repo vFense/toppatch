@@ -149,9 +149,12 @@ class FormHandler(BaseHandler):
         result = []
         try:
             nodes = self.request.arguments['node']
-            print nodes
         except:
             nodes = None
+        try:
+            tags = self.request.arguments['tag']
+        except:
+            tags = None
         try:
             params = self.get_argument('params')
         except:
@@ -167,7 +170,7 @@ class FormHandler(BaseHandler):
             throttle = self.get_argument('throttle')
         except:
             throttle = None
-        if nodes:
+        if nodes or tags:
             operation = self.get_argument('operation')
             if time:
                 node['schedule'] = schedule
@@ -177,11 +180,18 @@ class FormHandler(BaseHandler):
                 node['cpu_throttle'] = throttle
             if operation == 'install' or operation == 'uninstall':
                 patches = self.request.arguments['patches']
-                for node_id in nodes:
-                    node['node_id'] = node_id
-                    node['operation'] = operation
-                    node['data'] = list(patches)
-                    resultjson.append(encode(node))
+                if nodes:
+                    for node_id in nodes:
+                        node['node_id'] = node_id
+                        node['operation'] = operation
+                        node['data'] = list(patches)
+                        resultjson.append(encode(node))
+                elif tags:
+                    for tag_id in tags:
+                        node['tag_id'] = tag_id
+                        node['operation'] = operation
+                        node['data'] = list(patches)
+                        resultjson.append(encode(node))
                 if time:
                     result = job_scheduler(resultjson,
                             self.application.scheduler

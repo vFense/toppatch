@@ -1,4 +1,4 @@
-<% if ($.type(model) === 'object') { %>
+<% if ($.type(model) === 'object' && $.type(tags) === 'object') { %>
 <article>
     <header><strong>Patch Details</strong></header>
     <section class="well well-small clearfix">
@@ -28,7 +28,205 @@
     <div class="accordion-group">
         <div class="accordion-heading">
             <header>
-                <a class="accordion-toggle" data-parent="#nodeAccordion" href="#">
+                <a class="accordion-toggle" href="#">
+                    <i class="icon-circle-arrow-down"></i>&nbsp;
+                    <strong>Tags that need this patch</strong>
+                    <span class="badge badge-inverse pull-right"><%= tags.available.length %></span>
+                </a>
+            </header>
+        </div>
+        <div class="accordion-body collapse">
+            <section class="list accordion-inner">
+                <% if(tags.available && tags.available.length != 0) { %>
+                    <form action="/submitForm" method="post" class="form-inline" id="tagsAvailable">
+                        <header class="clearfix">
+                            <label class="checkbox inline">
+                                <input type="checkbox" class="toggle-all">Select / Deselect All
+                            </label>
+                            <div class="pull-right noMargin">
+                                <label class="checkbox inline"><small>Schedule this patch</small></label>
+                                <input type="checkbox" name="schedule" value="once"/>&nbsp;
+                                <select type="button" class="btn btn-mini" name="operation">
+                                    <option value="install">Install</option>
+                                    <option value="hide">Hide</option>
+                                </select>
+                                <select type="button" class="btn btn-mini" name="throttle">
+                                    <option>idle</option>
+                                    <option value="below_normal">below normal</option>
+                                    <option>normal</option>
+                                    <option value="above_normal">above normal</option>
+                                    <option>high</option>
+                                    <option value="real_time">real time</option>
+                                </select>
+                                <input type="submit" class="btn btn-mini btn-primary" value="Submit">
+                            </div>
+                            <input type="hidden" value="<% print(model.id); %>" name="patches">
+                        </header>
+                        <div class="items">
+                            <% _.each(tags.available, function (tag) { %>
+                                <div class="item clearfix">
+                                    <span class="desc">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" name="tag" value="<%= tag.tag %>">
+                                            <%= tag.tag %>
+                                        </label>
+                                    </span>
+                                    <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag %>">See list of nodes</a></span>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </form>
+                <% } else { %>
+                    <div class="items">
+                        <div class="item"><em>No tags available.</em></div>
+                    </div>
+                <% } %>
+            </section>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <header>
+                <a class="accordion-toggle" href="#">
+                    <i class="icon-circle-arrow-down"></i>&nbsp;
+                    <strong>Tags that have this patch</strong>
+                    <span class="badge badge-inverse pull-right"><%= tags.done.length %></span>
+                </a>
+            </header>
+        </div>
+        <div class="accordion-body collapse">
+            <section class="list accordion-inner">
+                <% if(tags.done && tags.done.length != 0) { %>
+                <form action="/submitForm" method="post" class="form-inline" id="tagsInstalled">
+                    <header class="clearfix">
+                        <label class="checkbox inline">
+                            <input type="checkbox" class="toggle-all">Select / Deselect All
+                        </label>
+                        <div class="pull-right noMargin">
+                            <select type="button" class="btn btn-mini" name="operation">
+                                <option value="uninstall">Uninstall</option>
+                                <option value="hide">hide</option>
+                            </select>
+                            <input type="submit" class="btn btn-mini btn-primary" value="Submit">
+                        </div>
+                        <input type="hidden" value="<% print(model.id); %>" name="patches">
+                    </header>
+                    <div class="items">
+                        <% _.each(tags.done, function (tag) { %>
+                        <div class="item clearfix">
+                            <span class="desc">
+                                <label class="checkbox inline">
+                                    <input type="checkbox" name="tag" value="<%= tag.tag %>">
+                                    <%= tag.tag %>
+                                </label>
+                            </span>
+                            <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag %>">See list of nodes</a></span>
+                        </div>
+                        <% }); %>
+                    </div>
+                </form>
+                <% } else { %>
+                    <div class="items">
+                        <div class="item"><em>No tags available.</em></div>
+                    </div>
+                <% } %>
+            </section>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <header>
+                <a class="accordion-toggle" href="#">
+                    <i class="icon-circle-arrow-down"></i>&nbsp;
+                    <strong>Tags installing this patch</strong>
+                    <span class="badge badge-inverse pull-right"><%= tags.pending.length %></span>
+                </a>
+            </header>
+        </div>
+        <div class="accordion-body collapse">
+            <section class="list accordion-inner">
+                <% if(tags.pending && tags.pending.length != 0) { %>
+                <form action="/submitForm" method="post" class="form-inline" id="tagsPending">
+                    <div class="items">
+                        <% _.each(tags.pending, function (tag) { %>
+                        <div class="item clearfix">
+                            <span class="desc"><%= tag.tag %></span>
+                            <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag %>">See list of nodes</a></span>
+                        </div>
+                        <% }); %>
+                    </div>
+                </form>
+                <% } else { %>
+                    <div class="items">
+                        <div class="item"><em>No tags available.</em></div>
+                    </div>
+                <% } %>
+            </section>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <header>
+                <a class="accordion-toggle" href="#">
+                    <i class="icon-circle-arrow-down"></i>&nbsp;
+                    <strong>Tags that failed to apply this patch</strong>
+                    <span class="badge badge-inverse pull-right"><%= tags.failed.length %></span>
+                </a>
+            </header>
+        </div>
+        <div class="accordion-body collapse">
+            <section class="list accordion-inner">
+                <% if(tags.failed && tags.failed.length != 0) { %>
+                <form action="/submitForm" method="post" class="form-inline" id="tagsFailed">
+                    <header class="clearfix">
+                        <label class="checkbox inline">
+                            <input type="checkbox" class="toggle-all">Select / Deselect All
+                        </label>
+                        <div class="pull-right noMargin">
+                            <label class="checkbox inline"><small>Schedule this patch</small></label>
+                            <input type="checkbox" name="schedule" value="once"/>&nbsp;
+                            <select type="button" class="btn btn-mini" name="operation">
+                                <option value="install">Install</option>
+                                <option value="hide">Hide</option>
+                            </select>
+                            <select type="button" class="btn btn-mini" name="throttle">
+                                <option>idle</option>
+                                <option value="below_normal">below normal</option>
+                                <option>normal</option>
+                                <option value="above_normal">above normal</option>
+                                <option>high</option>
+                                <option value="real_time">real time</option>
+                            </select>
+                            <input type="submit" class="btn btn-mini btn-primary" value="Submit">
+                        </div>
+                        <input type="hidden" value="<% print(model.id); %>" name="patches">
+                    </header>
+                    <div class="items">
+                        <% _.each(tags.failed, function (tag) { %>
+                        <div class="item clearfix">
+                            <span class="desc">
+                                <label class="checkbox inline">
+                                    <input type="checkbox" name="tag" value="<%= tag.tag %>">
+                                    <%= tag.tag %>
+                                </label>
+                            </span>
+                            <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag %>">See list of nodes</a></span>
+                        </div>
+                        <% }); %>
+                    </div>
+                </form>
+                <% } else { %>
+                    <div class="items">
+                        <div class="item"><em>No tags available.</em></div>
+                    </div>
+                <% } %>
+            </section>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <header>
+                <a class="accordion-toggle" href="#">
                     <i class="icon-circle-arrow-down"></i>&nbsp;
                     <strong>Nodes that need this patch</strong>
                     <span class="badge badge-inverse pull-right"><%= model.available.nodes.length %></span>
@@ -67,7 +265,7 @@
                                 <div class="item clearfix">
                                     <span class="desc">
                                         <label class="checkbox inline">
-                                            <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
+                                            <input type="checkbox" name="node" value="<%= node.id %>">
                                             <%= node.ip %>
                                         </label>
                                     </span>
@@ -116,7 +314,7 @@
                         <div class="item clearfix">
                             <span class="desc">
                                 <label class="checkbox inline">
-                                    <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
+                                    <input type="checkbox" name="node" value="<%= node.id %>">
                                     <%= node.ip %>
                                 </label>
                             </span>
@@ -292,11 +490,17 @@
         $(form).find(":checkbox[name=node]").each( function() {
             $(this).attr("checked", status);
         });
+        $(form).find(":checkbox[name=tag]").each( function() {
+            $(this).attr("checked", status);
+        });
     });
     $('form').submit(function (e) {
         if(this.id != 'reboot-form') {
-            var fields = $(this).find('input[name="node"]:checked');
-            if (!fields.length) {
+            var node_fields = $(this).find('input[name="node"]:checked'),
+                tag_fields = $(this).find('input[name=tag]:checked');
+            if (node_fields.length > 0 || tag_fields.length > 0) {
+                return true;
+            } else {
                 alert('Please select at least one node');
                 return false;
             }
