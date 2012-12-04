@@ -774,14 +774,16 @@ class TimeBlockerTogglerHandler(BaseHandler):
         self.session = validate_session(self.session)
         tbid = None
         try:
-            tbid = self.get_argument('id')
+            tbid = self.get_argument('tbid')
             enable = self.get_argument('toggle')
             enable = return_bool(enable)
+            print tbid, enable
         except Exception as e:
             pass
 
         tb = self.session.query(TimeBlocker).\
                 filter(TimeBlocker.id == tbid).first()
+        print tb, tbid, enable
         if tb:
             try:
                 if enable:
