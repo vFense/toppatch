@@ -174,7 +174,7 @@ define(
                     $newTagDiv.toggle().find('input').val('');
                 },
                 submitTag: function (event) {
-                    var params = {},
+                    var params = {}, that = this,
                         tagname = this.$el.find('#tagName').val(),
                         $newTagDiv = this.$el.find('#newTag'),
                         user = window.User.get('name');
@@ -184,10 +184,10 @@ define(
                     };
                     window.console.log(params);
                     if (tagname) {
-                        $.post('/api/tagging/addTag', {operation: params}, function (json) {
+                        $.post('/api/tagging/addTag', { operation: JSON.stringify(params) }, function (json) {
                             window.console.log(json);
                             if (json.pass) {
-                                $newTagDiv.hide();
+                                that.collection.fetch();
                             }
                         });
                     }
