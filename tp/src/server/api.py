@@ -848,11 +848,14 @@ class TagAddHandler(BaseHandler):
     def post(self):
         self.session = self.application.session
         self.session = validate_session(self.session)
+        print '***********'
+        print 'add tag test'
         try:
             self.msg = self.get_argument('operation')
+            print '**************'
             print self.msg
         except Exception as e:
-            self.write("Wrong arguement passed %s, the argument needed is operation" % (e))
+            self.write("Wrong argument passed %s, the argument needed is operation" % (e))
         result = tag_adder(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
