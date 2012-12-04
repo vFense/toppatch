@@ -166,12 +166,14 @@ def tag_remove(session, msg):
                      "message" : tag_out[1]
                      }
             print tag_out[2]
+            update_tag_stats(session)
             return tagged
         else:
             tagged = {
                      "pass" : nodes_removed_from_tag[0],
                      "message" : nodes_removed_from_tag[1]
                      }
+            update_tag_stats(session)
             return tagged
 
  
