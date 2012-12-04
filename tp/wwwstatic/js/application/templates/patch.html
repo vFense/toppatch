@@ -67,11 +67,11 @@
                                 <div class="item clearfix">
                                     <span class="desc">
                                         <label class="checkbox inline">
-                                            <input type="checkbox" name="tag" value="<%= tag.tag %>">
-                                            <%= tag.tag %>
+                                            <input type="checkbox" name="tag" value="<%= tag.tag_id %>">
+                                            <%= tag.tag_name %>
                                         </label>
                                     </span>
-                                    <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag %>">See list of nodes</a></span>
+                                    <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag_name %>">See list of nodes</a></span>
                                 </div>
                             <% }); %>
                         </div>
@@ -116,11 +116,11 @@
                         <div class="item clearfix">
                             <span class="desc">
                                 <label class="checkbox inline">
-                                    <input type="checkbox" name="tag" value="<%= tag.tag %>">
-                                    <%= tag.tag %>
+                                    <input type="checkbox" name="tag" value="<%= tag.tag_id %>">
+                                    <%= tag.tag_name %>
                                 </label>
                             </span>
-                            <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag %>">See list of nodes</a></span>
+                            <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag_name %>">See list of nodes</a></span>
                         </div>
                         <% }); %>
                     </div>
@@ -150,8 +150,8 @@
                     <div class="items">
                         <% _.each(tags.pending, function (tag) { %>
                         <div class="item clearfix">
-                            <span class="desc"><%= tag.tag %></span>
-                            <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag %>">See list of nodes</a></span>
+                            <span class="desc"><%= tag.tag_name %></span>
+                            <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag_name %>">See list of nodes</a></span>
                         </div>
                         <% }); %>
                     </div>
@@ -206,11 +206,11 @@
                         <div class="item clearfix">
                             <span class="desc">
                                 <label class="checkbox inline">
-                                    <input type="checkbox" name="tag" value="<%= tag.tag %>">
-                                    <%= tag.tag %>
+                                    <input type="checkbox" name="tag" value="<%= tag.tag_id %>">
+                                    <%= tag.tag_name %>
                                 </label>
                             </span>
-                            <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag %>">See list of nodes</a></span>
+                            <span class="pull-right"><a href="#nodes?filterby=<%= tag.tag_name %>">See list of nodes</a></span>
                         </div>
                         <% }); %>
                     </div>
