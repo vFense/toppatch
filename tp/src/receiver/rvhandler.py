@@ -29,9 +29,12 @@ class HandOff():
         to rvhandler. RVhandler than acts as the traffic coordinator
         for the received message.
     """
-    def __init__(self, ENGINE, data, ip_address):
+    def __init__(self, ENGINE):
         self.session = create_session(ENGINE)
         self.session = validate_session(self.session)
+
+
+    def run(self, data, ip_address):
         self.data = data
         self.valid_json, self.json_object = verify_json_is_valid(self.data)
         self.ip = ip_address

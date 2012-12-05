@@ -121,6 +121,7 @@ def time_block_exists_today(session, start_date=None, start_time=None):
                 filter(TimeBlocker.start_time <= start_time).\
                 filter(TimeBlocker.end_time >= start_time).\
                 filter(TimeBlocker.start_date <= start_date).\
+                filter(TimeBlocker.enabled == True).\
                 filter(TimeBlocker.end_date == None).all()
         if len(tbs) == 0:
             tbs = \
@@ -128,12 +129,14 @@ def time_block_exists_today(session, start_date=None, start_time=None):
                     filter(TimeBlocker.start_time <= start_time).\
                     filter(TimeBlocker.end_time >= start_time).\
                     filter(TimeBlocker.start_date <= start_date).\
+                    filter(TimeBlocker.enabled == True).\
                     filter(TimeBlocker.end_date >= start_date).all()
         elif len(tbs) == 0:
             tbs = \
                 session.query(TimeBlocker).\
                     filter(TimeBlocker.start_time <= start_time).\
                     filter(TimeBlocker.start_date <= start_date).\
+                    filter(TimeBlocker.enabled == True).\
                     filter(TimeBlocker.end_date >= start_date).all()
         today_is_blocked = False
         for tb in tbs:
