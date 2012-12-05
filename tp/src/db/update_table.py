@@ -677,16 +677,16 @@ def update_tag_stats(session):
     """
     session = validate_session(session)
     tags = session.query(TagInfo).all()
+    patchesinstalled = 0
+    patchesuninstalled = 0
+    patchespending = 0
+    rebootspending = 0
+    agentsdown = 0
+    agentsup = 0
     if len(tags) > 0:
         for tag in tags:
             nodes = session.query(TagsPerNode).\
                 filter(TagsPerNode.tag_id == tag.id).all()
-            patchesinstalled = 0
-            patchesuninstalled = 0
-            patchespending = 0
-            rebootspending = 0
-            agentsdown = 0
-            agentsup = 0
             if len(nodes) > 0:
                 for node in nodes:
                     nodeupdates = session.query(PackagePerNode).\
@@ -727,6 +727,15 @@ def update_tag_stats(session):
                                    rebootspending, agentsdown, agentsup)
                     session.add(add_tag_stats)
                     session.commit()
+            else:
+                tag_stats.update({"patches_installed" : patchesinstalled,
+                         "patches_available" : patchesuninstalled,
+                         "patches_pending" : patchespending,
+                         "patches_pending" : patchespending,
+                         "reboots_pending" : rebootspending,
+                         "agents_down" : agentsdown,
+                         "agents_up" : agentsup})
+                session.commit()
 
 
 def update_reboot_status(session, node_id, oper_type):
