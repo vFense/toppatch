@@ -741,9 +741,12 @@ def update_reboot_status(session, node_id, oper_type):
     node = node_exists(session, node_id=node_id)
     if node:
         if oper_type == 'reboot':
-            node.reboot = False,
-            node.agent_status = False
-            session.commit()
+            try:
+                node.reboot = False
+                node.agent_status = False
+                session.commit()
+            except Exception as e:
+                session.rollback()
 
 
 def add_results(session, data):
