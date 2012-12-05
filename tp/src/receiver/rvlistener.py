@@ -41,7 +41,9 @@ class GetJson(Protocol):
             handoff = HandOff(ENGINE)
             Thread(target=handoff.run,
                     args=(data, self.client_ip)).start()
-
+        else:
+            print '%s is not allowed to connect to RVhandler' %\
+                    (self.client_ip)
         self.session.close()
 
 def verifyCallback(connection, x509, errnum, errdepth, ok):
