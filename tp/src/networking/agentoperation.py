@@ -167,8 +167,8 @@ class AgentOperation():
             self.json_out ={
                      "node_id" : node_id,
                      "operation_id" : oper_id,
-                     "message" : "Agent Down"
-                     "error" : "Agent Down"
+                     "message" : "Agent Down",
+                     "error" : "Agent Down",
                      "pass" : completed
                      }
         return self.json_out
