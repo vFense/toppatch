@@ -35,6 +35,7 @@ def validate_session(session):
     try:
         session.query(NodeInfo).first()
     except Exception as e:
+        print e
         if e.connection_invalidated:
             session.rollback()
     return session
