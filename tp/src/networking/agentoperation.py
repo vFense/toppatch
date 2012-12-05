@@ -94,32 +94,20 @@ class AgentOperation():
                                 start_time=start_date.time())
                 if oper_type in SCHEDULED_OPERATIONS and time_block_exists:
                     print "THIS IS A SCHEDULED OPERATION"
+                    self.session.close()
                     return self.json_out
                 if not DATA in jsonobject:
                     message = Thread(target=self.create_sof_operation,
                             args=(node_id, node.ip_address, oper_type,
                                 oper_id)).start()
-                    #message = gevent.spawn(self.create_sof_operation, node_id, 
-                    #    node.ip_address, oper_type, oper_id
-                    #    )
-                    #self.threads.append(message)
                 elif DATA in jsonobject:
                     if type(jsonobject[DATA]) == list:
                         data = jsonobject[DATA]
                         message = Thread(target=self.create_sof_operation, 
                                 args=(node_id, node.ip_address, oper_type,
                                     oper_id, data)).start()
-                        #message = gevent.spawn(self.create_sof_operation, node_id, 
-                        #        node.ip_address, oper_type, oper_id, data
-                        #        )
-                        #self.threads.append(message)
                     else:
                         raise("You must pass an array")
-        #gevent.joinall(self.threads, 0.5)
-        #print "Starting Thread"
-        #for job in self.threads:
-        #    self.results.append(job.value)
-        #print self.results
         self.session.close()
         
     def create_sof_operation(self, node_id, node_ip, oper_type, \
@@ -141,45 +129,49 @@ class AgentOperation():
                         "operation_id" : oper_id,
                         "data" : data_list
                      }
-        update_node_stats(self.session, node_id)
-        update_network_stats(self.session)
-        update_tag_stats(self.session)
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'
         print msg
         response = None
-        connect = TcpConnect(node_ip, msg)
         completed = False
-        if not connect.error and connect.read_data:
-            response = verify_json_is_valid(connect.read_data)
-            print response
-            if response[1]['operation'] == 'received':
-                completed = True
-                update_operation_row(self.session, oper_id, oper_recv=True)
-                update_node_stats(self.session, node_id)
-                update_network_stats(self.session)
-                update_tag_stats(self.session)
-                if oper_type == 'reboot':
-                    update_reboot_status(self.session, node_id, oper_type)
-                if 'data' in jsonobject:
-                    for patch in jsonobject['data']:
-                        if oper_type == 'install':
-                            patcher = self.session.query(PackagePerNode).\
-                                filter_by(toppatch_id=patch)\
-                                .filter_by(node_id=node_id)
-                            patcher.update({"pending" : True})
-                            self.session.commit()
-                            update_node_stats(self.session, node_id)
-                            update_network_stats(self.session)
-                            update_tag_stats(self.session)
-        self.result ={
+        node = node_exists(self.session, node_id=node_id)
+        if node.agent_status:
+            connect = TcpConnect(node_ip, msg)
+            if not connect.error and connect.read_data:
+                response = verify_json_is_valid(connect.read_data)
+                print response
+                if response[1]['operation'] == 'received':
+                    completed = True
+                    update_operation_row(self.session, oper_id, oper_recv=True)
+                    if oper_type == 'reboot':
+                        update_reboot_status(self.session, node_id, oper_type)
+                    if 'data' in jsonobject:
+                        for patch in jsonobject['data']:
+                            if oper_type == 'install':
+                                patcher = self.session.query(PackagePerNode).\
+                                    filter_by(toppatch_id=patch).\
+                                    filter_by(node_id=node_id)
+                                patcher.update({"pending" : True})
+                                self.session.commit()
+                    update_node_stats(self.session, node_id)
+                    update_network_stats(self.session)
+                    update_tag_stats(self.session)
+            self.json_out ={
                      "node_id" : node_id,
                      "operation_id" : oper_id,
                      "message" : connect.read_data,
                      "error" : connect.error,
                      "pass" : completed
                      }
-        return self.result
+        else:
+            self.json_out ={
+                     "node_id" : node_id,
+                     "operation_id" : oper_id,
+                     "message" : "Agent Down"
+                     "error" : "Agent Down"
+                     "pass" : completed
+                     }
+        return self.json_out
 
 
     def create_new_operation(self, node_id, oper_type):
