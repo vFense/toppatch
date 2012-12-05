@@ -99,7 +99,6 @@ class AgentOperation():
                     message = Thread(target=self.create_sof_operation,
                             args=(node_id, node.ip_address, oper_type,
                                 oper_id)).start()
-                    self.results.append(message.value)
                     #message = gevent.spawn(self.create_sof_operation, node_id, 
                     #    node.ip_address, oper_type, oper_id
                     #    )
@@ -110,7 +109,6 @@ class AgentOperation():
                         message = Thread(target=self.create_sof_operation, 
                                 args=(node_id, node.ip_address, oper_type,
                                     oper_id, data)).start()
-                        self.results.append(message.value)
                         #message = gevent.spawn(self.create_sof_operation, node_id, 
                         #        node.ip_address, oper_type, oper_id, data
                         #        )
