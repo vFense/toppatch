@@ -9,6 +9,8 @@ from db.client import *
 from receiver.rvhandler import HandOff
 from scheduler.status_checker import *
 
+from threading import Thread
+
 ALLOWED_CIPHER_LIST = 'TLSv1+HIGH:!SSLv2:RC4+MEDIUM:!aNULL:!eNULL:!3DES:@STRENGTH'
 ENGINE = init_engine()
 
@@ -36,7 +38,13 @@ class GetJson(Protocol):
                     filter(SslInfo.enabled == True).\
                     filter(SslInfo.node_id == node.id).first()
         if is_enabled:
-            HandOff(ENGINE, data, self.client_ip)
+            handoff = HandOff(ENGINE)
+            Thread(target=handoff.run,
+                    args=(data, self.client_ip)).start()
+        else:
+            print '%s is not allowed to connect to RVhandler' %\
+                    (self.client_ip)
+        self.session.close()
 
 def verifyCallback(connection, x509, errnum, errdepth, ok):
     if not ok:
