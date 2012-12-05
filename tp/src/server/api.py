@@ -643,24 +643,15 @@ class SeverityHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class CsrHandler(BaseHandler):
+class SslHandler(BaseHandler):
     @authenticated_request
     def get(self):
         result = []
         self.session = self.application.session
         self.session = validate_session(self.session)
-        try:
-            signed = self.get_argument('signed')
-            is_signed = True if signed == 'true' or signed == 'True' else  False
-        except:
-            signed = None
-            is_signed = None
-        if signed:
-            for u in self.session.query(SslInfo, CsrInfo, NodeInfo).join(CsrInfo).join(NodeInfo).filter(CsrInfo.is_csr_signed == is_signed).all():
-                result.append({'signed': u[1].is_csr_signed, 'node_id': u[0].node_id, 'ip': u[2].ip_address})
-        else:
-            for u in self.session.query(SslInfo, CsrInfo, NodeInfo).join(CsrInfo).join(NodeInfo).all():
-                result.append({'signed': u[1].is_csr_signed, 'node_id': u[0].node_id, 'ip': u[2].ip_address})
+        for u in self.session.query(SslInfo, NodeInfo).join(NodeInfo).all():
+            result.append({'enabled': u[0].enabled, 'node_id': u[0].node_id, 'ip': u[1].ip_address})
+
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
