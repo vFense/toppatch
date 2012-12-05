@@ -8,7 +8,8 @@ from db.query_table import *
 from db.client import *
 from utils.common import *
 from models.tagging import *
-import gevent
+#import gevent
+from threading import Thread
 
 OPERATION = 'operation'
 INSTALL = 'install'
@@ -95,24 +96,32 @@ class AgentOperation():
                     print "THIS IS A SCHEDULED OPERATION"
                     return self.json_out
                 if not DATA in jsonobject:
-                    message = gevent.spawn(self.create_sof_operation, node_id, 
-                        node.ip_address, oper_type, oper_id
-                        )
-                    self.threads.append(message)
+                    message = Thread(target=self.create_sof_operation,
+                            args=(node_id, node.ip_address, oper_type,
+                                oper_id)).start()
+                    self.results.append(message.value)
+                    #message = gevent.spawn(self.create_sof_operation, node_id, 
+                    #    node.ip_address, oper_type, oper_id
+                    #    )
+                    #self.threads.append(message)
                 elif DATA in jsonobject:
                     if type(jsonobject[DATA]) == list:
                         data = jsonobject[DATA]
-                        message = gevent.spawn(self.create_sof_operation, node_id, 
-                                node.ip_address, oper_type, oper_id, data
-                                )
-                        self.threads.append(message)
+                        message = Thread(target=self.create_sof_operation, 
+                                args=(node_id, node.ip_address, oper_type,
+                                    oper_id, data)).start()
+                        self.results.append(message.value)
+                        #message = gevent.spawn(self.create_sof_operation, node_id, 
+                        #        node.ip_address, oper_type, oper_id, data
+                        #        )
+                        #self.threads.append(message)
                     else:
                         raise("You must pass an array")
-        gevent.joinall(self.threads, 0.5)
-        print "Starting Thread"
-        for job in self.threads:
-            self.results.append(job.value)
-        print self.results
+        #gevent.joinall(self.threads, 0.5)
+        #print "Starting Thread"
+        #for job in self.threads:
+        #    self.results.append(job.value)
+        #print self.results
         self.session.close()
         
     def create_sof_operation(self, node_id, node_ip, oper_type, \
