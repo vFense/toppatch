@@ -728,14 +728,18 @@ def update_tag_stats(session):
                     session.add(add_tag_stats)
                     session.commit()
             else:
-                tag_stats.update({"patches_installed" : patchesinstalled,
-                         "patches_available" : patchesuninstalled,
-                         "patches_pending" : patchespending,
-                         "patches_pending" : patchespending,
-                         "reboots_pending" : rebootspending,
-                         "agents_down" : agentsdown,
-                         "agents_up" : agentsup})
-                session.commit()
+                tag_stats = session.query(TagStats).\
+                    filter_by(tag_id=tag.id)
+                tag_exists = tag_stats.first()
+                if tag_exists:
+                    tag_stats.update({"patches_installed" : patchesinstalled,
+                            "patches_available" : patchesuninstalled,
+                            "patches_pending" : patchespending,
+                            "patches_pending" : patchespending,
+                            "reboots_pending" : rebootspending,
+                            "agents_down" : agentsdown,
+                            "agents_up" : agentsup})
+                    session.commit()
 
 
 def update_reboot_status(session, node_id, oper_type):
