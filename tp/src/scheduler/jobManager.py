@@ -135,7 +135,7 @@ def job_scheduler(job, sched, name=None):
     if 'schedule' in job_object:
         schedule = job_object['schedule']
     if 'once' in job_object['schedule']:
-        add_once(utc_timestamp, name, encoded_job_object, sched)
+        return(add_once(utc_timestamp, name, encoded_job_object, sched))
 
 
 
