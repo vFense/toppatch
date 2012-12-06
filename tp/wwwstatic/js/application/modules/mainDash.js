@@ -321,6 +321,7 @@ define(
                     $('#title').val(title).attr("placeholder", title);
                     //widgetview.graphSetting();
                 } else if (param === "new") {
+                    window.console.log(widgetview.counter);
                     if (widgetview.counter > 5) {
                         window.console.log('too many widgets');
                         setTimeout(function () { $('#widgetProperties').modal('hide'); }, 50);

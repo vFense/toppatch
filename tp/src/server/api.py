@@ -366,14 +366,14 @@ class NodesHandler(BaseHandler):
 
                 for v in self.session.query(PackagePerNode, Package).join(Package).filter(PackagePerNode.node_id == u[1].node_id).all():
                     if v[0].installed:
-                        installed.append({'name': v[1].name, 'id': v[0].toppatch_id})
+                        installed.append({'name': v[1].name, 'id': v[0].toppatch_id, 'severity': v[1].severity})
                     elif v[0].pending:
-                        pending.append({'name': v[1].name, 'id': v[0].toppatch_id})
+                        pending.append({'name': v[1].name, 'id': v[0].toppatch_id, 'severity': v[1].severity})
                     elif v[0].attempts > 0:
-                        failed.append({'name': v[1].name, 'id': v[0].toppatch_id})
-                        available.append({'name': v[1].name, 'id': v[0].toppatch_id})
+                        failed.append({'name': v[1].name, 'id': v[0].toppatch_id, 'severity': v[1].severity})
+                        available.append({'name': v[1].name, 'id': v[0].toppatch_id, 'severity': v[1].severity})
                     else:
-                        available.append({'name': v[1].name, 'id': v[0].toppatch_id})
+                        available.append({'name': v[1].name, 'id': v[0].toppatch_id, 'severity': v[1].severity})
                 tags = map(lambda x: x[1].tag, self.session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
                 resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
