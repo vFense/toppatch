@@ -323,7 +323,7 @@ define(
                     $('#title').val(title).attr("placeholder", title);
                     //widgetview.graphSetting();
                 } else if (param === "new") {
-                    if (widgetview.counter > 5) {
+                    if ($('#widget5').length !== 0) {
                         window.console.log('too many widgets');
                         setTimeout(function () { $('#widgetProperties').modal('hide'); }, 50);
                     }
@@ -346,7 +346,9 @@ define(
                         this.template = myTemplate;
                     },
                     beforeRender: $.noop,
-                    onRender: $.noop,
+                    onRender: function () {
+                        this.test();
+                    },
                     render: function () {
                         if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
@@ -362,8 +364,8 @@ define(
                         this.$el.append(that.overview.render().$el);
 
                         variables = window.User.get('widgets');
+
                         this.$el.append(tmpl(variables));
-                        this.test();
 
                         app.vent.trigger('domchange:title', 'Dashboard');
 
@@ -414,7 +416,7 @@ define(
                                     };
                                     template = _.template($("#widget_template").html(), variables);
                                     $("#insert").append(template);
-                                    widgetview.counter += 1;
+                                    //widgetview.counter += 1;
                                 }
 
                                 if (widgets[i] === 'pie') {
