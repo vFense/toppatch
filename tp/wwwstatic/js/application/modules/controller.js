@@ -1,10 +1,3 @@
-/**
- * Created with PyCharm.
- * User: parallels
- * Date: 10/6/12
- * Time: 2:02 PM
- * To change this template use File | Settings | File Templates.
- */
 define(
     ['jquery', 'underscore', 'backbone', 'text!templates/controller.html'],
     function ($, _, Backbone, myTemplate) {

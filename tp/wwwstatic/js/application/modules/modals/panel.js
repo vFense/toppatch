@@ -58,14 +58,12 @@ define(
                     // set value of '_opened' variable
                     $el.bind({
                         show: function () {
-                            that._opened = true;
                             that.trigger('show');
                         },
                         shown: function () {
                             that.trigger('shown');
                         },
                         hide: function () {
-                            that._opened = false;
                             that.trigger('hide');
                         },
                         hidden: function () {
@@ -147,7 +145,7 @@ define(
                         // If we are routed here from a bookmark,
                         // render the dashboard behind the modal.
                         if (!router.viewManager.get('currentView')) {
-                            router.home();
+                            router.showDashboard();
                         }
 
                         // Save last fragment and go back to it on 'close'
@@ -171,6 +169,8 @@ define(
                             backdrop: this.backdrop
                         });
                     }
+
+                    this._opened = true;
 
                     return this;
                 },
@@ -209,10 +209,11 @@ define(
                     if (this.isOpen()) { this.hide(); }
                     if (this._contentView) { this._contentView.close(); }
                     if (this._lastURL !== '') {
-                        Backbone.history.navigate(this._lastURL, false);
+                        app.router.navigate(this._lastURL);
                     } else {
-                        Backbone.history.navigate("dashboard", true);
+                        app.router.navigate("dashboard", {trigger: true});
                     }
+                    this._opened = false;
                 }
             })
         };

@@ -71,12 +71,13 @@ class Application(tornado.web.Application):
             (r"/api/nodes.json/?", NodesHandler),
             (r"/api/patches.json/?", PatchesHandler),
             (r"/api/severity.json/?", SeverityHandler),
-            (r"/api/csrinfo.json/?", CsrHandler),
             (r"/api/scheduler/list.json/?", SchedulerListerHandler),
             (r"/api/scheduler/add?", SchedulerAddHandler),
             (r"/api/scheduler/remove?", SchedulerRemoveHandler),
             (r"/api/timeblocker/list.json/?", TimeBlockerListerHandler),
             (r"/api/timeblocker/add?", TimeBlockerAddHandler),
+            (r"/api/timeblocker/remove?", TimeBlockerRemoverHandler),
+            (r"/api/timeblocker/toggler?", TimeBlockerTogglerHandler),
             (r"/api/tagging/listByTag.json/?", TagListerByTagHandler),
             (r"/api/tagging/listByNode.json/?", TagListerByNodeHandler),
             (r"/api/tagging/addTag?", TagAddHandler),
@@ -87,8 +88,13 @@ class Application(tornado.web.Application):
             (r"/api/transactions/getTransactions?", GetTransactionsHandler),
             (r"/api/package/getDependecies?", GetDependenciesHandler),
             (r"/api/package/searchByPatch?", SearchPatchHandler),
+            (r"/api/package/getTagsByTpId?", GetTagsPerTpIdHandler),
             (r"/api/node/modifyDisplayName?", ModifyDisplayNameHandler),
+            (r"/api/ssl/nodeToggler?", NodeTogglerHandler),
+            (r"/api/ssl/list.json/?", SslHandler),
             (r"/api/userInfo/?", UserHandler),
+            (r"/api/users/list?", ListUserHandler),
+            (r"/api/users/delete?", DeleteUserHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.
@@ -109,13 +115,13 @@ class Application(tornado.web.Application):
             "login_url": "/login",
         }
 
-        self.db = initEngine()
-        Session = createSession(self.db)
+        self.db = init_engine()
+        Session = create_session(self.db)
         self.session = Session
         self.scheduler = Scheduler()
         self.scheduler.add_jobstore(SQLAlchemyJobStore(engine=self.db, tablename="tp_scheduler"), "toppatch")
         self.scheduler.start()
-        self.session = validateSession(self.session)
+        self.session = validate_session(self.session)
         self.account_manager = AccountManager(self.session)
         self.tokens = TokenManager(self.session)
 

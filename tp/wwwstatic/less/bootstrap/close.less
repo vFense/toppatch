@@ -3,11 +3,9 @@
 // --------------------------------------------------
 
 
-// Alerts.less has a rule that modifies .close
-// Need reference to .close font size for proper em calculation
 .close {
   float: right;
-  font-size: @em*( @closeFontSize )/@baseFontSize;
+  font-size: @closeFontSize;
   font-weight: bold;
   line-height: @em*( @baseLineHeight )/@closeFontSize;
   color: @black;

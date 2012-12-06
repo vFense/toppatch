@@ -35,7 +35,7 @@ pre {
   background-color: #f5f5f5;
   border: @em*( 1px )/@preFontSize solid #ccc; // fallback for IE7-8
   border: @em*( 1px )/@preFontSize solid rgba(0,0,0,.15);
-  .border-radius(@em*( 4px )/@preFontSize);
+  .border-radius(@em*( @baseBorderRadius )/@preFontSize);
 
   // Make prettyprint styles more spaced out for readability
   &.prettyprint {

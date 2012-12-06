@@ -20,21 +20,23 @@ class SslInfo(Base):
     signed_cert_name = Column(VARCHAR(128),nullable=False)
     signed_cert_location = Column(VARCHAR(128),nullable=False)
     cert_expiration = Column(DATETIME, nullable=True)
+    enabled = Column(BOOLEAN, nullable=False)
     def __init__(self, node_id, csr_id,
                 signed_cert_name, signed_cert_location,
-                cert_expiration
+                cert_expiration, enabled=True
                 ):
         self.node_id = node_id
         self.csr_id = csr_id
         self.signed_cert_name = signed_cert_name
         self.signed_cert_location = signed_cert_location
         self.cert_expiration = cert_expiration
+        self.enabled = enabled
     def __repr__(self):
-        return "<SslInfo(%s,%s,%s,%s,%s)>" %\
+        return "<SslInfo(%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.node_id, self.csr_id,
                 self.signed_cert_name, self.signed_cert_location,
-                self.cert_expiration
+                self.cert_expiration, self.enabled
                 )
 
 class CsrInfo(Base):

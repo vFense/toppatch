@@ -7,7 +7,10 @@ from utils.common import *
 from models.account import *
 
 
-def tagLister(session):
+def tag_lister(session):
+    """
+        return a list of tags in json
+    """
     list_of_tags = []
     tags = session.query(TagInfo).all()
     for tag in tags:
@@ -24,7 +27,12 @@ def tagLister(session):
         list_of_tags.append(tag)
     return list_of_tags
 
-def tagListByNodes(session):
+
+def tag_list_by_nodes(session):
+    """
+        return a list of tags and the nodes associated with 
+        the tag name in json
+    """
     list_of_tags = []
     tags = session.query(TagInfo).all()
     for tag in tags:
@@ -41,13 +49,19 @@ def tagListByNodes(session):
         list_of_tags.append(tag)
     return list_of_tags
 
-def getTagStats(session, tagid=None, tagname=None):
+
+def get_tag_stats(session, tagid=None, tagname=None):
+    """
+        return a list of tag_statistics in json
+    """
     list_of_tags = []
     tag_stats = []
     if tagid:
-        tag_stats = session.query(TagStats, TagInfo).filter(TagInfo.id == tagid).all()
+        tag_stats = session.query(TagStats, TagInfo).\
+                filter(TagInfo.id == tagid).all()
     elif tagname:
-        tag_stats = session.query(TagStats, TagInfo).join(TagInfo).filter(TagInfo.tag == tagname).all()
+        tag_stats = session.query(TagStats, TagInfo).join(TagInfo).\
+                filter(TagInfo.tag == tagname).all()
     else:
         tag_stats = session.query(TagStats, TagInfo).join(TagInfo).all()
     if len(tag_stats) > 0:
@@ -63,11 +77,15 @@ def getTagStats(session, tagid=None, tagname=None):
                     "patches_failed" : int(tags[0].patches_failed),
                     "patches_pending" : int(tags[0].patches_pending)
                 }
-        list_of_tags.append(tag)
+            list_of_tags.append(tag)
     return list_of_tags
 
-def tagAdder(session, msg):
-    valid, json_msg = verifyJsonIsValid(msg)
+
+def tag_adder(session, msg):
+    """
+        add a new tag to RV
+    """
+    valid, json_msg = verify_json_is_valid(msg)
     if valid:
         if 'user' in json_msg:
             user_name = json_msg['user']
@@ -75,16 +93,21 @@ def tagAdder(session, msg):
             tag_name = json_msg['tag']
         user = session.query(User).filter_by(username=user_name).first()
         if user:
-            tag_out = addTag(session, tag_name=tag_name, user_id=user.id)
+            tag_out = add_tag(session, tag_name=tag_name, user_id=user.id)
             tagged = {
                      "pass" : tag_out[0],
                      "message" : tag_out[1]
                      }
-        updateTagStats(session)
+        update_tag_stats(session)
         return tagged
 
-def tagAddPerNode(session, msg):
-    valid, json_msg = verifyJsonIsValid(msg)
+
+def tag_add_per_node(session, msg):
+    """
+        Add a node to an existing tag or 
+        add a node to a new tag
+    """
+    valid, json_msg = verify_json_is_valid(msg)
     if valid:
         if 'user' in json_msg:
             user_name = json_msg['user']
@@ -95,50 +118,62 @@ def tagAddPerNode(session, msg):
         print msg
         user = session.query(User).filter_by(username=user_name).first()
         if user:
-            tag_out = addTagPerNode(session, nodes, tag_name=tag_name, user_id=user.id)
+            tag_out = add_tag_per_node(session, nodes,
+                    tag_name=tag_name, user_id=user.id)
             tagged = {
                      "pass" : tag_out[0],
                      "message" : tag_out[1]
                      }
-        updateTagStats(session)
+        update_tag_stats(session)
         return tagged
 
-def tagRemovePerNode(session, msg):
-    valid, json_msg = verifyJsonIsValid(msg)
+
+def tag_remove_per_node(session, msg):
+    """
+        Remove a node from an existing tag.
+    """
+    valid, json_msg = verify_json_is_valid(msg)
     if valid:
         if 'tag' in json_msg:
             tag_name = json_msg['tag']
         if 'nodes' in json_msg:
             nodes = json_msg['nodes']
         print msg
-        tag_out = removeNodesFromTag(session, tag_name, nodes=nodes)
+        tag_out = remove_nodes_from_tag(session, tag_name, nodes=nodes)
         tagged = {
                  "pass" : tag_out[0],
                  "message" : tag_out[1]
                  }
-        updateTagStats(session)
+        update_tag_stats(session)
         return tagged
 
-def tagRemove(session, msg):
-    valid, json_msg = verifyJsonIsValid(msg)
+
+def tag_remove(session, msg):
+    """
+        Remove a tag from RV
+    """
+    valid, json_msg = verify_json_is_valid(msg)
     if valid:
         if 'tag' in json_msg:
             tag = json_msg['tag']
-        print msg
-        nodes_removed_from_tag = removeAllNodesFromTag(session, tag)
+        print json_msg
+        nodes_removed_from_tag = remove_all_nodes_from_tag(session, tag)
         print nodes_removed_from_tag
-        tag_out = removeTag(session, tag)
+        tag_out = remove_tag(session, tag)
         if tag_out[0]:
             tagged = {
                      "pass" : tag_out[0],
                      "message" : tag_out[1]
                      }
             print tag_out[2]
+            update_tag_stats(session)
             return tagged
         else:
             tagged = {
                      "pass" : nodes_removed_from_tag[0],
                      "message" : nodes_removed_from_tag[1]
                      }
+            update_tag_stats(session)
             return tagged
+
  

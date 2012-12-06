@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 
 import re
-from db.query_table import getTransactions
-from db.client import validateSession
+from db.query_table import get_transactions
+from db.client import validate_session
 from models.node import *
 
 
-def retrieveTransactions(session, count=None, offset=None):
-    session = validateSession(session)
-    transactions, total_count = getTransactions(session, count, offset)
-    transaction = []
+def retrieve_transactions(session, count=None, offset=None):
+    """
+        Return a list of historical transactions of the RV system in json
+    """
+    session = validate_session(session)
+    transactions, total_count = get_transactions(session, count, offset)
     final_msg = {"count" : total_count, "data" : []}
     for trans in transactions:
         operation_received = None
@@ -22,12 +24,8 @@ def retrieveTransactions(session, count=None, offset=None):
            node = node_info.ip_address
         if trans[1][0].operation_received:
             operation_received = trans[1][0].operation_received.strftime("%m/%d/%Y %H:%M")
-        #if re.search(r'install|uninstall', trans[1][0].operation_type):
-        #    if not trans[1][0].results_received:
-        #        key_error = "Results were never received"
-        #        results = False
         if len(trans[1]) == 1:
-            transaction.append({
+            final_msg['data'].append({
                          "operation" : trans[1][0].operation_type,
                          "operation_sent" : trans[1][0].operation_sent.strftime("%m/%d/%Y %H:%M"),
                          "operations_received" : operation_received,
@@ -39,7 +37,7 @@ def retrieveTransactions(session, count=None, offset=None):
                          "error" : None
                          })
         elif len(trans[1]) == 2:
-            transaction.append({
+            final_msg['data'].append({
                          "operation" : trans[1][0].operation_type,
                          "operation_sent" : trans[1][0].operation_sent.strftime("%m/%d/%Y %H:%M"),
                          "operations_received" : operation_received,
@@ -50,6 +48,5 @@ def retrieveTransactions(session, count=None, offset=None):
                          "reboot" : trans[1][1][0].reboot,
                          "error" : trans[1][1][0].error,
                          })
-    final_msg['data'].append(transaction)
     return final_msg
 
