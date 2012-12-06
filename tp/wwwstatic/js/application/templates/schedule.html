@@ -2,7 +2,7 @@
     <section class="list">
         <div class="items">
             <div class="legend">
-                <span><strong>Node ID</strong> — Operation — Label</span>
+                <span><strong>Node</strong> — Operation — Label</span>
                 <span class="patches pull-right">
                     <span>Time</span> /
                     <span>Type</span> /
@@ -14,7 +14,7 @@
                 <% _.each(data, function (schedule) { %>
                     <div class="item clearfix">
                         <div class="row-fluid">
-                            <span class="span8"><strong><%= schedule.node_id %></strong> — <%= schedule.operation %> — <%= schedule.label %></span>
+                            <span class="span8"><strong><% print(schedule.displayname || schedule.hostname || schedule.ipaddress) %></strong> — <%= schedule.operation %> — <%= schedule.label %></span>
                             <span class="span4 alignRight"><%= schedule.time %> / <%= schedule.schedule %> / <%= schedule.cpu_throttle || 'N/A' %> / <button type="button" class="btn btn-link" name="remove" value="<%= schedule.label %>"><i style="color: red; vertical-align: 100%;" class="icon-remove"></i></button></span>
                         </div>
                     </div>
