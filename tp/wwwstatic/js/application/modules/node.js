@@ -42,7 +42,7 @@ define(
                 },
                 beforeRender: $.noop,
                 onRender: function () {
-                    var close;
+                    var close, that;
                     this.$el.find('#addTag').popover({
                         title: 'Tags Available<button type="button" class="btn btn-link pull-right" id="close"><i class="icon-remove"></i></button>',
                         html: true,
@@ -50,10 +50,17 @@ define(
                         content: $('#list-form')
                     });
                     this.$el.find('#editDisplay').popover({
-                        title: '',
+                        title: '&nbsp;<button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
                         html: true,
                         trigger: 'click',
                         content: $('#display-name')
+                    }).click(function (event) {
+                        that = $(this);
+                        close = $(this).data('popover').$tip.find('button[name=close]');
+                        close.unbind();
+                        close.on('click', function (event) {
+                            $(that).popover('hide');
+                        });
                     });
                     this.$el.find('input[name=schedule]').each(function () {
                         $(this).popover({
@@ -68,6 +75,7 @@ define(
                         if (popover.checked) {
                             $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
                             close = $(this).data('popover').$tip.find('button[name=close]');
+                            close.unbind();
                             close.bind('click', function (event) {
                                 event.preventDefault();
                                 $(popover).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
