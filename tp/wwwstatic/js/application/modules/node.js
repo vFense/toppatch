@@ -106,13 +106,13 @@ define(
                     var item, span, label, checkbox, $scheduleForm, type, patches, url, offset, fields,
                         $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
-                        time = '';
+                        time = '',
+                        that = this;
                     if ($form.attr('id') !== 'reboot-form') {
                         fields = $form.find('input[name="patches"]:checked');
-                        window.console.log(fields);
-                        window.console.log($form);
                         if (!fields.length) {
-                            alert('Please select at least one patch');
+                            //alert('Please select at least one patch');
+                            that.$el.find('.alert').removeClass('alert-success').addClass('alert-error').show().find('span').html('Please select at least one patch');
                             return false;
                         }
                     }
@@ -388,6 +388,13 @@ define(
                             $items.append($itemDiv);
                             counter += 1;
                         }
+                    }
+                    if (counter === 0) {
+                        $itemDiv = newElement('div').addClass('item clearfix');
+                        $div = newElement('div').addClass('row-fluid');
+                        $descSpan = newElement('span').addClass('desc span8').html('<em>No patches to display</em>');
+                        $itemDiv.append($div.append($descSpan));
+                        $items.append($itemDiv);
                     }
                     $badge.html(counter);
                 },
