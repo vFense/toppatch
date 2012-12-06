@@ -5,7 +5,7 @@ define(
         return function () {
             var margin   = {top: 20, right: 20, bottom: 20, left: 20},
                 barWidth = 70,
-                width    = 400,
+                width    = 370,
                 height   = 200,
                 title    = "Default",
                 color = d3.scale.category20();
@@ -18,7 +18,7 @@ define(
                         barWidth = 100;
                     }
                     width = (barWidth + 10) * data.length;
-                    var x = d3.scale.linear().domain([0, data.length]).range([0, width]),
+                    var x = d3.scale.linear().domain([0, data.length]).range([15, width]),
                         y = d3.scale.linear().domain([0, d3.max(data, function (datum) { return datum.value; })]).rangeRound([0, height]),
                         that = this,
                         matches = (that.id || that.attr('id')).match(/\d+$/),
