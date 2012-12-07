@@ -394,7 +394,7 @@ def add_software_installed(session, data):
     operation = operation_exists(session, data['operation_id'])
     node_id = data['node_id']
     if node_id:
-        if exists:
+        if operation:
             operation.results_received = datetime.now()
             session.commit()
         for software in data['data']:
