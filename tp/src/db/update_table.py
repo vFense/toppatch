@@ -22,7 +22,7 @@ def add_node(session, client_ip, agent_timestamp=None, node_timestamp=None):
     except:
         hostname = None
     try:
-        add_node = NodeInfo(client_ip, hostname,
+        add_node = NodeInfo(client_ip, hostname, None,
                 True, True, agent_timestamp, node_timestamp)
         session.add(add_node)
         session.commit()
@@ -394,7 +394,7 @@ def add_software_installed(session, data):
     operation = operation_exists(session, data['operation_id'])
     node_id = data['node_id']
     if node_id:
-        if exists:
+        if operation:
             operation.results_received = datetime.now()
             session.commit()
         for software in data['data']:
