@@ -40,22 +40,22 @@ def agent_status():
                 stdout = output.stdout.read()
                 percent = re.search(r'([0-9]+)\% packet loss',stdout)
                 if percent:
-                    if percent.group(1) <= '100' and percent.group(1) > '0':
+                    if int(percent.group(1)) <= 99:
                         node.host_status = True
-                        print "NODE IS UP, %d seconds since last update" %\
-                            (timediffnode.seconds)
-                    elif percent.group(1) == '100':
+                        print "NODE %s IS UP, %d seconds since last update" %\
+                            (node.ip_address, timediffnode.seconds)
+                    elif int(percent.group(1)) == 100:
                         node.host_status = False
-                        print "NODE IS DOWN, %d seconds since last update" %\
-                            (timediffnode.seconds)
+                        print "NODE %s IS DOWN, %d seconds since last update" %\
+                            (node.ip_address, timediffnode.seconds)
                 else:
                     node.host_status = False
-                    print "NODE IS DOWN, %d seconds since last update" %\
-                            (timediffnode.seconds)
+                    print "NODE %s IS DOWN, %d seconds since last update" %\
+                            (node.ip_address, timediffnode.seconds)
             else:
                 node.host_status = True
-                print "NODE IS UP, %d seconds since last update" %\
-                        (timediffnode.seconds)
+                print "NODE %s IS UP, %d seconds since last update" %\
+                        (node.ip_address, timediffnode.seconds)
         else:
             print "Status has not been updated yet"
     session.commit()
