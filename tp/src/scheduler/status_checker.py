@@ -41,19 +41,19 @@ def agent_status():
                 percent = re.search(r'([0-9]+)\% packet loss',stdout)
                 if percent:
                     if percent.group(1) <= '100' and percent.group(1) > '0':
-                        node.node_status = True
+                        node.host_status = True
                         print "NODE IS UP, %d seconds since last update" %\
                             (timediffnode.seconds)
-                    if percent.group(1) == '100':
-                        node.node_status = False
+                    elif percent.group(1) == '100':
+                        node.host_status = False
                         print "NODE IS DOWN, %d seconds since last update" %\
                             (timediffnode.seconds)
                 else:
-                    node.node_status = False
+                    node.host_status = False
                     print "NODE IS DOWN, %d seconds since last update" %\
                             (timediffnode.seconds)
             else:
-                node.node_status = True
+                node.host_status = True
                 print "NODE IS UP, %d seconds since last update" %\
                         (timediffnode.seconds)
         else:
