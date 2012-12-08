@@ -632,12 +632,17 @@ class SeverityHandler(BaseHandler):
         session = self.application.session
         session = validate_session(session)
 
-        for u in session.query(Package.severity).distinct().all():
+        for sev in session.query(Package.severity).distinct().all():
             count = 0
-            for v in session.query(Package.severity).filter(Package.severity == u.severity).all():
-                count += 1
+            for pkg_sev in session.query(Package.toppatch_id).filter(Package.severity == sev.severity).all():
+                node_sev = session.\
+                        query(PackagePerNode.toppatch_id).\
+                        filter(PackagePerNode.toppatch_id == 
+                                pkg_sev.toppatch_id).\
+                        filter(PackagePerNode.installed == False).distinct().count()
+                count = count + node_sev
 
-            result_json = { 'label' : str(u.severity), 'value' : count }
+            result_json = { 'label' : str(sev.severity), 'value' : count }
             result.append(result_json)
 
         self.set_header('Content-Type', 'application/json')
@@ -1004,6 +1009,40 @@ class ModifyDisplayNameHandler(BaseHandler):
                             }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+
+class ModifyHostNameHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        nodeid = None
+        hostname = None
+        try:
+            nodeid = self.get_argument('nodeid')
+            hostname = self.get_argument('hostname')
+        except Exception as e:
+            pass
+        if nodeid and hostname:
+            node = self.session.query(NodeInfo).filter(NodeInfo.id == nodeid).first()
+            if node:
+                try:
+                    node.host_name = hostname
+                    self.session.commit()
+                    result = {"pass" : True,
+                              "message" : "Host name change to %s" %\
+                                            (hostname)
+                            }
+                except Exception as e:
+                    self.session.rollback()
+                    print e.message
+                    result = {"pass" : False,
+                              "message" : "Host name was not changed to %s"%\
+                                            (hostname)
+                            }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
 
 class ListUserHandler(BaseHandler):
     @authenticated_request
