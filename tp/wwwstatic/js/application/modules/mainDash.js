@@ -80,32 +80,11 @@ define(
                     this.tempData = "";
                     this.title = "Default";
                 },
-                events: {
-                    'click #type1': 'graphSetting',
-                    'click #type2': 'textSetting',
-                    'click #apply': 'generate',
-                    'click #graphtype1': 'pieData',
-                    'click #graphtype2': 'otherData',
-                    'click #graphtype3': 'otherData',
-                    'click #graphtype4': 'otherData'
-                },
                 pieData: function () {
                     $("#dataToGraph").show();
                 },
                 otherData: function () {
                     $("#dataToGraph").hide();
-                },
-                generate: function () {
-                    $("#widgetProperties").modal('hide');
-                    this.render();
-                },
-                graphSetting: function () {
-                    $("#graphSettings").show();
-                    $("#textSettings").hide();
-                },
-                textSetting: function () {
-                    $("#graphSettings").hide();
-                    //$("#textSettings").show();
                 },
                 displayChart: function () {
                     if (this.graphType === "pie") {
@@ -344,6 +323,29 @@ define(
                 View: Backbone.View.extend({
                     initialize: function () {
                         this.template = myTemplate;
+                    },
+                    events: {
+                        'click #type1': 'graphSetting',
+                        'click #type2': 'textSetting',
+                        'click #apply': 'generate'
+                        //'click #graphtype1': 'pieData',
+                        //'click #graphtype2': 'otherData',
+                        //'click #graphtype3': 'otherData',
+                        //'click #graphtype4': 'otherData'
+                    },
+                    textSetting: function () {
+                        $("#graphSettings").hide();
+                        //$("#textSettings").show();
+                    },
+                    createWidget: function () {
+                        $("#widgetProperties").modal('hide');
+                        widgetview.render();
+                    },
+                    generate: function () {
+                    },
+                    graphSetting: function () {
+                        $("#graphSettings").show();
+                        $("#textSettings").hide();
                     },
                     beforeRender: $.noop,
                     onRender: function () {
