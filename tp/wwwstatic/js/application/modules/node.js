@@ -36,6 +36,7 @@ define(
                     'click button[name=dependencies]': 'showDependencies',
                     'click input[name=taglist]': 'toggletag',
                     'click #editDisplay': 'showEditDisplay',
+                    'click #editHost': 'showEditHost',
                     'click a.accordion-toggle': 'openAccordion',
                     'change select[name=severity]': 'filterBySeverity',
                     'submit form': 'submit'
@@ -49,17 +50,19 @@ define(
                         trigger: 'click',
                         content: $('#list-form')
                     });
-                    this.$el.find('#editDisplay').popover({
-                        title: '&nbsp;<button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
-                        html: true,
-                        trigger: 'click',
-                        content: $('#display-name')
-                    }).click(function (event) {
-                        that = $(this);
-                        close = $(this).data('popover').$tip.find('button[name=close]');
-                        close.unbind();
-                        close.on('click', function (event) {
-                            $(that).popover('hide');
+                    this.$el.find('a[name=editPopover]').each(function () {
+                        $(this).popover({
+                            title: '&nbsp;<button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
+                            html: true,
+                            trigger: 'click',
+                            content: $('#display-name').clone()
+                        }).click(function (event) {
+                            that = $(this);
+                            close = $(this).data('popover').$tip.find('button[name=close]');
+                            close.unbind();
+                            close.on('click', function (event) {
+                                $(that).popover('hide');
+                            });
                         });
                     });
                     this.$el.find('input[name=schedule]').each(function () {
@@ -211,7 +214,13 @@ define(
                 },
                 showEditDisplay: function (event) {
                     var popover = $(event.currentTarget).data('popover'),
-                        button = popover.$tip.find('button');
+                        button = popover.tip().find('button');
+                    button.on('click', {view: this, popover: popover}, this.submitDisplayName);
+                    return false;
+                },
+                showEditHost: function (event) {
+                    var popover = $(event.currentTarget).data('popover'),
+                        button = popover.tip().find('button');
                     button.on('click', {view: this, popover: popover}, this.submitDisplayName);
                     return false;
                 },
@@ -220,14 +229,17 @@ define(
                         $displayName = $(event.currentTarget).siblings('input'),
                         node_id = event.data.view.collection.id,
                         popover = event.data.popover,
-                        $displayNameDiv = $('#editDisplay').parent();
+                        $displayNameDiv = $(event.currentTarget).parents('dd');
                     if ($displayName.val()) {
                         $.post('api/node/modifyDisplayName', { nodeid: node_id, displayname: $displayName.val() }, function (json) {
                             window.console.log(json);
                             if (json.pass) {
                                 $em = $displayNameDiv.find('em');
                                 $span = $displayNameDiv.find('span');
-                                if ($em) { $em.remove(); }
+                                if ($em.length !== 0) {
+                                    $em.remove();
+                                    $displayNameDiv.prepend($displayName.val());
+                                }
                                 if ($span) { $span.html($displayName.val()); }
                                 popover.hide();
                             }
