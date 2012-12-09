@@ -58,7 +58,7 @@ class CsrHandOff():
                             self.node = \
                                     node_exists(self.session, node_ip=self.client_ip)
                             if self.node:
-                                self.session.delete(node)
+                                self.session.delete(self.node)
                             self.session.commit()
 
 

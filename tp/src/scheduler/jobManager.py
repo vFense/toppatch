@@ -75,10 +75,26 @@ def call_agent_operation(job):
     operation_runner.run()
 
 def add_once(timestamp, name, job, sched):
-    sched.add_date_job(call_agent_operation,
+    passed = False
+    try:
+        sched.add_date_job(call_agent_operation,
                 timestamp,args=[job],
                 name=name, jobstore="toppatch"
                 )
+        passed = True
+    except Exception as e:
+        if e.message:
+            passed = False
+    if passed:
+        return({
+                'pass' : True,
+                'message' : 'Schedule %s has been added to this time frame %s '\
+                        % (name, timestamp)
+               })
+    else:
+        return({'pass': False,
+                'message': e.message
+               })
 
 def add_recurrent(timestamp, name, job, sched):
     sched.add_date_job(call_agent_operation,
@@ -119,11 +135,7 @@ def job_scheduler(job, sched, name=None):
     if 'schedule' in job_object:
         schedule = job_object['schedule']
     if 'once' in job_object['schedule']:
-        add_once(utc_timestamp, name, encoded_job_object, sched)
-        return({
-                "pass" : True,
-                "message" : "Schedule %s has been added to this time frame %s " % (name, utc_timestamp)
-               })
+        return(add_once(utc_timestamp, name, encoded_job_object, sched))
 
 
 

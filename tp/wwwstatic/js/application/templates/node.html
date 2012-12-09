@@ -53,16 +53,23 @@
     </section>
 </article>
 <article class="alert alert-block fade in hide">
-    <button type="button" class="close" data-dismiss="alert">×</button>
     <span class="help-inline"></span>
 </article>
 <article class="accordion">
-        <div class="accordion-group">
+    <div class="accordion-group">
         <div class="accordion-heading">
             <header>
                 <a class="accordion-toggle" href="#">
                     <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Patches Available</strong>
-                    <span class="badge badge-inverse pull-right"><%= model['patch/need'].length %></span>
+                    <span class="pull-right">
+                        <select class="btn btn-mini" name="severity">
+                            <option>None</option>
+                            <option>Optional</option>
+                            <option>Recommended</option>
+                            <option>Critical</option>
+                        </select>
+                        <span class="badge badge-inverse"><%= model['patch/need'].length %></span>
+                    </span>
                 </a>
             </header>
         </div>
@@ -87,7 +94,7 @@
                                 <option>normal</option>
                                 <option value="above_normal">above normal</option>
                                 <option>high</option>
-                                <option value="real_time">real time</option>
+                                <!--<option value="real_time">real time</option>-->
                             </select>
                             <input type="submit" class="btn btn-mini btn-primary" value="Submit">
                         </div>
@@ -385,22 +392,4 @@
         <input type="text" name="label" class="input-medium"/>
     </form>
 </div>
-<script>
-    $('.toggle-all').click(function(el){
-        var status = el.target.checked,
-                form = $(el.target).parents('form');
-        $(form).find(":checkbox[name=patches]").each( function() {
-            $(this).attr("checked", status);
-        });
-    });
-    $('form').submit(function (e) {
-        if(this.id != 'reboot-form') {
-            var fields = $(this).find('input[name="patches"]:checked');
-            if (!fields.length) {
-                alert('Please select at least one patch');
-                return false;
-            }
-        }
-    });
-</script>
 <% } %>

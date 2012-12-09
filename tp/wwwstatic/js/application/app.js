@@ -129,9 +129,9 @@ define(
                                         copyFooter: true
                                     },
                                     widgets: {
-                                        'graph': ['pie', 'bar', 'summary'],
+                                        'graph': ['pie', 'bar', 'tag'],
                                         'spans': [6, 6, 12],
-                                        'titles': ['Patches by Severity', 'Nodes in Network by OS', 'Summary Charts']
+                                        'titles': ['Patches by Severity', 'Nodes in Network by OS', 'Tag Stats']
                                     }
                                 }
                             });

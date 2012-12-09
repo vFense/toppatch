@@ -198,7 +198,7 @@ def cert_exists(session, node_id):
     """
     session = validate_session(session)
     cert = \
-        session.query(SslInfo).filter_by(node_id=node)
+        session.query(SslInfo).filter_by(node_id=node_id)
     cert_exists = cert.first()
     return(cert_exists)
 

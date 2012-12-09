@@ -123,7 +123,6 @@ define(
                 render: function () {
                     this.current = properties.get("currentWidget");
                     this.type = $('input:radio[name=type]:checked').val();
-                    window.console.log(this.type);
                     this.title = this.$el.find('#title').val() === "" ? "Default" : this.$el.find('#title').val();
                     properties.set({ widgetTitle: this.title });
                     if (this.current === "new") {
@@ -137,15 +136,16 @@ define(
                     this.widget = "widget" + this.counter;
                     if (this.type === "graph") {
                         this.sizeval = $('input:radio[name=radio]:checked').val();
+                        this.graphType = $('input:radio[name=graph]:checked').val();
                         variables = {
                             widget: this.widget,
                             span: "span" + this.sizeval,
                             graphcontainer: "graphcontainer" + this.counter,
                             menu: "menu" + this.counter,
                             graph: "graph" + this.counter,
-                            title: this.title
+                            title: this.title,
+                            graphType: this.graphType
                         };
-                        this.graphType = $('input:radio[name=graph]:checked').val();
                         // Compile the template using underscore
                         this.template = _.template($("#widget_template").html(), variables);
                         // Load the compiled HTML into the Backbone "el"
@@ -181,8 +181,10 @@ define(
                             graphcontainer: "graphcontainer" + this.counter,
                             menu: "menu" + this.counter,
                             graph: "graph" + this.counter,
-                            title: this.title
+                            title: this.title,
+                            graphType: this.type
                         };
+                        this.graphType = this.type;
                         this.graph = "#graph" + this.counter;
                         this.widget = "#" + this.widget;
                         this.template = _.template($("#widget_template").html(), variables);
@@ -321,7 +323,7 @@ define(
                     $('#title').val(title).attr("placeholder", title);
                     //widgetview.graphSetting();
                 } else if (param === "new") {
-                    if (widgetview.counter > 5) {
+                    if ($('#widget5').length !== 0) {
                         window.console.log('too many widgets');
                         setTimeout(function () { $('#widgetProperties').modal('hide'); }, 50);
                     }
@@ -344,7 +346,9 @@ define(
                         this.template = myTemplate;
                     },
                     beforeRender: $.noop,
-                    onRender: $.noop,
+                    onRender: function () {
+                        this.test();
+                    },
                     render: function () {
                         if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
@@ -360,8 +364,8 @@ define(
                         this.$el.append(that.overview.render().$el);
 
                         variables = window.User.get('widgets');
+
                         this.$el.append(tmpl(variables));
-                        this.test();
 
                         app.vent.trigger('domchange:title', 'Dashboard');
 
@@ -407,11 +411,12 @@ define(
                                         graphcontainer: "graphcontainer" + (i + 1),
                                         menu: "menu" + (i + 1),
                                         graph: "graph" + (i + 1),
-                                        title: settings.titles[i]
+                                        title: settings.titles[i],
+                                        graphType: widgets[i]
                                     };
                                     template = _.template($("#widget_template").html(), variables);
                                     $("#insert").append(template);
-                                    widgetview.counter += 1;
+                                    //widgetview.counter += 1;
                                 }
 
                                 if (widgets[i] === 'pie') {
