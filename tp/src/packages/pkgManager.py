@@ -181,6 +181,9 @@ class PatchRetriever():
                     "failed": {'count' :countFailed,
                         'nodes': nodeFailed}
                 }
+        else:
+            resultjson = {"pass": False, "message": "Invalid TopPatch ID %s" %\
+                    (tpid)
         return(resultjson)
 
 
@@ -214,6 +217,7 @@ class PatchRetriever():
                             node_pkg[0].severity, avail,\
                             installed, pending, failed)
                     data.append(result)
+            resultjson = {"count": count, "data": data}
 
         elif pstatus == 'installed':
             count = self.session.query(PackagePerNode).\
@@ -236,6 +240,7 @@ class PatchRetriever():
                             node_pkg[0].severity, avail,\
                             installed, pending, failed)
                     data.append(result)
+            resultjson = {"count": count, "data": data}
 
         elif pstatus == 'pending':
             count = self.session.query(PackagePerNode).\
@@ -260,6 +265,7 @@ class PatchRetriever():
                             node_pkg[0].severity, avail,\
                             installed, pending, failed)
                     data.append(result)
+            resultjson = {"count": count, "data": data}
 
         elif pstatus == 'failed':
             count = self.session.query(PackagePerNode).\
@@ -286,7 +292,10 @@ class PatchRetriever():
                             node_pkg[0].severity, avail,\
                             installed, pending, failed)
                     data.append(result)
-        resultjson = {"count": count, "data": data}
+            resultjson = {"count": count, "data": data}
+        else:
+            resultjson = {"pass": False, "message": "Invalid Package Status %s" %\
+                    (pstatus)
         return(resultjson)
 
 

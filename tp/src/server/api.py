@@ -370,7 +370,7 @@ class PatchesHandler(BaseHandler):
         queryCount = 10
         queryOffset = 0
         tpid = None
-        ptype = None
+        pstatus = None
         try:
             tpid = self.get_argument('id')
         except:
@@ -381,20 +381,24 @@ class PatchesHandler(BaseHandler):
         except:
             pass
         try:
-            ptype = self.get_argument('type')
+            pstatus = self.get_argument('type')
         except:
             pass
         patches = PatchRetriever(self.session,
             qcount=queryCount, qoffset=queryOffset)
         if tpid:
             results = patches.get_by_toppatch_id(tpid)
-        elif ptype:
-            if patch_oper.search(ptype):
-                results = patches.get_by_type(ptype)
+        elif pstatus:
+            if patch_oper.search(pstatus):
+                results = patches.get_by_type(pstatus)
             elif patch_sev:
-                results = patches.get_by_severity(ptype)
+                results = patches.get_by_severity(pstatus)
+            else:
+                results = {"pass": False, "message":
+                        "Invalid Status or Severity"
+                        }
         else:
-                results = patches.get_pkg_default()
+            results = patches.get_pkg_default()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(results, indent=4))
 
