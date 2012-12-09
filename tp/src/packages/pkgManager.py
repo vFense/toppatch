@@ -182,8 +182,9 @@ class PatchRetriever():
                         'nodes': nodeFailed}
                 }
         else:
-            resultjson = {"pass": False, "message": "Invalid TopPatch ID %s" %\
-                    (tpid)
+            resultjson = {"pass": False,
+                    "message": "Invalid TopPatch ID %s" % (tpid)
+                    }
         return(resultjson)
 
 
@@ -294,8 +295,9 @@ class PatchRetriever():
                     data.append(result)
             resultjson = {"count": count, "data": data}
         else:
-            resultjson = {"pass": False, "message": "Invalid Package Status %s" %\
-                    (pstatus)
+            resultjson = {"pass": False,
+                    "message": "Invalid Package Status %s" % (pstatus)
+                    }
         return(resultjson)
 
 
