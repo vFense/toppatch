@@ -139,7 +139,8 @@ class NodeHandler(BaseHandler):
         resultjson = []
         self.session = self.application.session
         self.session = validate_session(self.session)
-        for u in self.session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo, NodeStats):
+        for u in self.session.query(NodeInfo, SystemInfo, NodeStats).\
+                join(SystemInfo, NodeStats):
             print u
             resultjson.append({"id" : u[0].id,
                                "host_name" : u[0].host_name,
@@ -171,10 +172,14 @@ class NetworkHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         for u in self.session.query(NetworkStats).all():
-            resultjson.append({"key" : "installed", "data" : u.patches_installed})
-            resultjson.append({"key" : "available", "data" : u.patches_available})
-            resultjson.append({"key" : "pending", "data" : u.patches_pending})
-            resultjson.append({"key" : "failed", "data" : u.patches_failed})
+            resultjson.append({"key" : "installed",
+                "data" : u.patches_installed})
+            resultjson.append({"key" : "available",
+                "data" : u.patches_available})
+            resultjson.append({"key" : "pending",
+                "data" : u.patches_pending})
+            resultjson.append({"key" : "failed",
+                "data" : u.patches_failed})
         self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
@@ -189,17 +194,33 @@ class SummaryHandler(BaseHandler):
         session = validate_session(session)
         for u in session.query(SystemInfo.os_code).distinct().all():
             osTypeResult = []
-            for v in session.query(SystemInfo.os_string).filter(SystemInfo.os_code == u.os_code).distinct().all():
+            for v in session.query(SystemInfo.os_string).\
+                    filter(SystemInfo.os_code == u.os_code).\
+                    distinct().all():
                 nodeResult = []
-                for w in session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats).filter(SystemInfo.os_string == v.os_string).distinct().all():
+                for w in session.query(NodeInfo, SystemInfo, NodeStats).\
+                        join(SystemInfo).join(NodeStats).\
+                        filter(SystemInfo.os_string == v.os_string).\
+                        distinct().all():
                     nodeResult.append({"name" : w[0].ip_address,
-                                       "children" : [{"name" : "Patches Installed", "size" : w[2].patches_installed},
-                                           {"name" : "Patches Available", "size" : w[2].patches_available},
-                                           {"name" : "Patches Pending", "size" : w[2].patches_pending},
-                                           {"name" : "Patches Failed", "size" : w[2].patches_failed}]})
-                osTypeResult.append({"name" : v.os_string, "children" : nodeResult})
-            osResult.append({"name" : u.os_code, "children" : osTypeResult})
-        root = {"name" : "192.168.1.0", "children" : osResult }
+                                       "children" : [
+                                           {"name" : "Patches Installed",
+                                               "size" : w[2].patches_installed},
+                                           {"name" : "Patches Available",
+                                               "size" : w[2].patches_available},
+                                           {"name" : "Patches Pending",
+                                               "size" : w[2].patches_pending},
+                                           {"name" : "Patches Failed",
+                                               "size" : w[2].patches_failed}
+                                           ]
+                                       }
+                                       )
+                osTypeResult.append({"name" : v.os_string,
+                    "children" : nodeResult})
+            osResult.append({"name" : u.os_code,
+                "children" : osTypeResult})
+        root = {"name" : "192.168.1.0",
+                "children" : osResult }
         session.close()
         self.set_header('Content-Type', 'application/json')
         print json.dumps(root, indent=4)
@@ -214,29 +235,42 @@ class GraphHandler(BaseHandler):
         osType = []
         self.session = self.application.session
         self.session = validate_session(self.session)
-        for u in self.session.query(SystemInfo.os_string, func.count(SystemInfo.os_string)).group_by(SystemInfo.os_string).all():
+        for u in self.session.query(SystemInfo.os_string,
+                func.count(SystemInfo.os_string)).\
+                        group_by(SystemInfo.os_string).all():
             nodeResult = []
-            for v in self.session.query(NodeInfo, SystemInfo, NodeStats).filter(SystemInfo.os_string == u[0]).join(SystemInfo).join(NodeStats).all():
+            for v in self.session.query(NodeInfo, SystemInfo, NodeStats).\
+                    filter(SystemInfo.os_string == u[0]).join(SystemInfo).\
+                    join(NodeStats).all():
                 nodeResult.append({"name" : v[0].ip_address,
                                    "os" : v[1].os_string,
-                                   "children" : [{"name" : "Patches Installed", "size" : v[2].patches_installed, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_installed}},
-                                                {"name" : "Patches Available", "size" : v[2].patches_available, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_available}},
-                                                {"name" : "Patches Pending", "size" : v[2].patches_pending, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_pending}},
-                                                {"name" : "Patches Failed", "size" : v[2].patches_failed, "graphData" : {"label" : v[0].ip_address, "value" : v[2].patches_failed}}]})
-            """
-            os = str(u[0]).split()
-            ostring = ''
-            j = 0
-            while j < len(os):
-                if j < 4:
-                    if j == 0 and os[j] == 'Windows':
-                        ostring += os[j][:3]
-                        ostring += ' '
-                    else:
-                        ostring += os[j]
-                        ostring += ' '
-                j += 1
-            """
+                                   "children" : [{"name" : "Patches Installed",
+                                       "size" : v[2].patches_installed,
+                                       "graphData" : {"label" : v[0].ip_address,
+                                           "value" : v[2].patches_installed
+                                           }
+                                    },
+                                {"name" : "Patches Available",
+                                    "size" : v[2].patches_available,
+                                    "graphData" : {"label" : v[0].ip_address,
+                                        "value" : v[2].patches_available
+                                    }
+                                },
+                                {"name" : "Patches Pending",
+                                    "size" : v[2].patches_pending,
+                                    "graphData" : {"label" : v[0].ip_address,
+                                        "value" : v[2].patches_pending
+                                        }
+                                },
+                                {"name" : "Patches Failed",
+                                    "size" : v[2].patches_failed,
+                                    "graphData" : {"label" : v[0].ip_address,
+                                        "value" : v[2].patches_failed
+                                        }
+                                    }
+                                ]
+                                   }
+                                   )
             osType.append({"label" : u[0], "value" : u[1], "data" : nodeResult})
         resultjson = osType
         self.session.close()
@@ -255,16 +289,22 @@ class OsHandler(BaseHandler):
         type = self.get_argument('type')
         self.session = self.application.session
         self.session = validate_session(self.session)
-        for u in self.session.query(NodeInfo, SystemInfo, NodeStats).filter(SystemInfo.os_string == type).join(SystemInfo).join(NodeStats).all():
+        for u in self.session.query(NodeInfo, SystemInfo, NodeStats).\
+                filter(SystemInfo.os_string == type).join(SystemInfo).\
+                join(NodeStats).all():
             installed += u[2].patches_installed
             available += u[2].patches_available
             pending += u[2].patches_pending
             failed += u[2].patches_failed
         if installed or available or pending or failed:
-            resultjson.append({"label" : "Installed", "value" : installed})
-            resultjson.append({"label" : "Available", "value" : available})
-            resultjson.append({"label" : "Pending", "value" : pending})
-            resultjson.append({"label" : "Failed", "value" : failed})
+            resultjson.append({"label" : "Installed",
+                "value" : installed})
+            resultjson.append({"label" : "Available",
+                "value" : available})
+            resultjson.append({"label" : "Pending",
+                "value" : pending})
+            resultjson.append({"label" : "Failed",
+                "value" : failed})
             self.session.close()
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson, indent=4))
@@ -285,23 +325,46 @@ class NodesHandler(BaseHandler):
         except:
             id = None
         if id:
-            for u in self.session.query(NodeInfo, SystemInfo).filter(SystemInfo.node_id == id).join(SystemInfo):
+            for u in self.session.query(NodeInfo, SystemInfo).\
+                    filter(SystemInfo.node_id == id).join(SystemInfo):
                 installed = []
                 failed = []
                 pending = []
                 available = []
 
-                for v in self.session.query(PackagePerNode, Package).join(Package).filter(PackagePerNode.node_id == u[1].node_id).all():
+                for v in self.session.query(PackagePerNode, Package).\
+                        join(Package).filter(PackagePerNode.node_id == u[1].\
+                        node_id).all():
                     if v[0].installed:
-                        installed.append({'name': v[1].name, 'id': v[0].toppatch_id, 'severity': v[1].severity})
+                        installed.append({'name': v[1].name,
+                            'id': v[0].toppatch_id,
+                            'severity': v[1].severity
+                            })
                     elif v[0].pending:
-                        pending.append({'name': v[1].name, 'id': v[0].toppatch_id, 'severity': v[1].severity})
+                        pending.append({'name': v[1].name,
+                            'id': v[0].toppatch_id,
+                            'severity': v[1].severity
+                            })
                     elif v[0].attempts > 0:
-                        failed.append({'name': v[1].name, 'id': v[0].toppatch_id, 'severity': v[1].severity})
-                        available.append({'name': v[1].name, 'id': v[0].toppatch_id, 'severity': v[1].severity})
+                        failed.append({'name': v[1].name,
+                            'id': v[0].toppatch_id,
+                            'severity': v[1].severity
+                            })
+                        available.append({'name': v[1].name,
+                            'id': v[0].toppatch_id,
+                            'severity': v[1].severity
+                            })
                     else:
-                        available.append({'name': v[1].name, 'id': v[0].toppatch_id, 'severity': v[1].severity})
-                tags = map(lambda x: x[1].tag, self.session.query(TagsPerNode, TagInfo).join(TagInfo).filter(TagsPerNode.node_id == u[1].node_id).all())
+                        available.append({'name': v[1].name,
+                            'id': v[0].toppatch_id,
+                            'severity': v[1].severity
+                            })
+                tags = map(lambda x: x[1].tag,
+                        self.session.query(TagsPerNode, TagInfo).\
+                                join(TagInfo).\
+                                filter(TagsPerNode.node_id == u[1].node_id).\
+                                all()
+                                )
                 resultjson = {'ip': u[0].ip_address,
                               'host/name': u[0].host_name,
                               'display/name': u[0].display_name,
@@ -331,10 +394,12 @@ class NodesHandler(BaseHandler):
                 queryOffset = 0
                 filter = None
 
-            nodes_query = self.session.query(NodeInfo, SystemInfo, NodeStats).join(SystemInfo).join(NodeStats)
+            nodes_query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
+                    join(SystemInfo).join(NodeStats)
 
             if filter is not None:
-                nodes_query = nodes_query.join(TagsPerNode).join(TagInfo).filter(TagInfo.tag == filter)
+                nodes_query = nodes_query.join(TagsPerNode).\
+                        join(TagInfo).filter(TagInfo.tag == filter)
 
             for u in nodes_query.limit(queryCount).offset(queryOffset):
                 resultnode = {'ip': u[0].ip_address,
@@ -426,8 +491,10 @@ class SslHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         for u in self.session.query(SslInfo, NodeInfo).join(NodeInfo).all():
-            result.append({'enabled': u[0].enabled, 'node_id': u[0].node_id, 'ip': u[1].ip_address})
-
+            result.append({'enabled': u[0].enabled,
+                'node_id': u[0].node_id,
+                'ip': u[1].ip_address
+                })
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -473,7 +540,8 @@ class SchedulerAddHandler(BaseHandler):
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
-            self.write("Wrong argument passed %s, the arguement needed is operation" % (e))
+            self.write("Wrong argument passed"+
+            " %s, the arguement needed is operation" % (e))
         result = job_scheduler(self.msg, self.sched)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
@@ -489,7 +557,8 @@ class SchedulerRemoveHandler(BaseHandler):
         try:
             jobname = self.get_argument('jobname')
         except Exception as e:
-            self.write("Wrong arguement passed %s, the argument needed is jobname" % (e))
+            self.write("Wrong arguement passed"+
+            " %s, the argument needed is jobname" % (e))
         result = remove_job(self.sched, jobname)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
@@ -502,7 +571,8 @@ class TimeBlockerAddHandler(BaseHandler):
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
-            self.write("Wrong arguement passed %s, the argument needed is operation" % (e))
+            self.write("Wrong arguement passed"+
+            "%s, the argument needed is operation" % (e))
         result = time_block_adder(self.session, self.msg)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
