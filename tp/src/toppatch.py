@@ -90,6 +90,7 @@ class Application(tornado.web.Application):
             (r"/api/package/searchByPatch?", SearchPatchHandler),
             (r"/api/package/getTagsByTpId?", GetTagsPerTpIdHandler),
             (r"/api/node/modifyDisplayName?", ModifyDisplayNameHandler),
+            (r"/api/node/modifyHostName?", ModifyHostNameHandler),
             (r"/api/ssl/nodeToggler?", NodeTogglerHandler),
             (r"/api/ssl/list.json/?", SslHandler),
             (r"/api/userInfo/?", UserHandler),
