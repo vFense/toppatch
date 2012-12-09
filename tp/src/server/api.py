@@ -554,16 +554,25 @@ class PatchesHandler(BaseHandler):
                                 v.severity, countAvailable, countInstalled, countPending, countFailed)
                             data.append(result)
                 else:
-                    count += self.session.query(func.count(Package.severity)).filter(Package.severity == type).first()[0]
-                    for u in self.session.query(Package).filter(Package.severity == type).limit(queryCount).offset(queryOffset).all():
-                        countAvailable = query_count.filter(PackagePerNode.toppatch_id == u.toppatch_id, PackagePerNode.installed == False, PackagePerNode.pending == False).first()[0]
-                        countInstalled = query_count.filter(PackagePerNode.toppatch_id == u.toppatch_id, PackagePerNode.installed == True).first()[0]
-                        countPending = query_count.filter(PackagePerNode.toppatch_id == u.toppatch_id, PackagePerNode.installed == False, PackagePerNode.pending == True).first()[0]
-                        countFailed = query_count.filter(PackagePerNode.toppatch_id == u.toppatch_id, PackagePerNode.installed == False, PackagePerNode.pending == False, PackagePerNode.attempts > 0).first()[0]
+                    count += self.session.query(Package, PackagePerNode).\
+                            filter(Package.severity == type,\
+                            PackagePerNode.installed == False).\
+                            group_by(PackagePerNode.toppatch_id).\
+                            join(PackagePerNode).count()
+                    for u in self.session.query(Package, PackagePerNode).\
+                                 filter(Package.severity == type,
+                                 PackagePerNode.installed == False).\
+                                 group_by(PackagePerNode.toppatch_id).\
+                                 join(PackagePerNode).limit(queryCount).\
+                                 offset(queryOffset).all():
+                        countAvailable = query_count.filter(PackagePerNode.toppatch_id == u[0].toppatch_id, PackagePerNode.installed == False, PackagePerNode.pending == False).first()[0]
+                        countInstalled = query_count.filter(PackagePerNode.toppatch_id == u[0].toppatch_id, PackagePerNode.installed == True).first()[0]
+                        countPending = query_count.filter(PackagePerNode.toppatch_id == u[0].toppatch_id, PackagePerNode.installed == False, PackagePerNode.pending == True).first()[0]
+                        countFailed = query_count.filter(PackagePerNode.toppatch_id == u[0].toppatch_id, PackagePerNode.installed == False, PackagePerNode.pending == False, PackagePerNode.attempts > 0).first()[0]
 
 
-                        result = self._json_results(u.vendor_id, u.toppatch_id, u.date_pub, u.name, u.description,
-                            u.severity, countAvailable, countInstalled, countPending, countFailed)
+                        result = self._json_results(u[0].vendor_id, u[0].toppatch_id, u[0].date_pub, u[0].name, u[0].description,
+                            u[0].severity, countAvailable, countInstalled, countPending, countFailed)
                         data.append(result)
 
             else:
@@ -631,16 +640,19 @@ class SeverityHandler(BaseHandler):
         result = []
         session = self.application.session
         session = validate_session(session)
-
+        print "IM IN SEVERITY HANDLER"
         for sev in session.query(Package.severity).distinct().all():
-            count = 0
-            for pkg_sev in session.query(Package.toppatch_id).filter(Package.severity == sev.severity).all():
-                node_sev = session.\
-                        query(PackagePerNode.toppatch_id).\
-                        filter(PackagePerNode.toppatch_id == 
-                                pkg_sev.toppatch_id).\
-                        filter(PackagePerNode.installed == False).distinct().count()
-                count = count + node_sev
+            count = session.query(Package, PackagePerNode).\
+                    filter(Package.severity == sev.severity).\
+                    filter(PackagePerNode.installed == False).\
+                    group_by(PackagePerNode.toppatch_id).join(PackagePerNode).count()
+            #for pkg_sev in session.query(Package.toppatch_id).filter(Package.severity == sev.severity).all():
+            #    node_sev = session.\
+            #            query(PackagePerNode.toppatch_id).\
+            #            filter(PackagePerNode.toppatch_id == 
+            #                    pkg_sev.toppatch_id).\
+            #            filter(PackagePerNode.installed == False).group_by(PackagePerNode.toppatch_id).count()
+            #    count = count + node_sev
 
             result_json = { 'label' : str(sev.severity), 'value' : count }
             result.append(result_json)
