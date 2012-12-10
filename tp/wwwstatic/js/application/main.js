@@ -8,50 +8,10 @@ require(
             userName,
             deferred;
 
-        $.ajax({
-            url: '/api/userInfo',
-            dataType: 'json',
-            async: false,
-            success: function (json) {
-                userSettings = json;
-                userName = userSettings.name;
-                if (localStorage.getItem(userName) === null) {
-                    User.Model = Backbone.Model.extend({
-                        defaults: {
-                            name: userName,
-                            show: {
-                                brandHeader: true,
-                                dashNav: true,
-                                copyFooter: true
-                            },
-                            widgets: {
-                                'graph': ['pie', 'bar', 'summary'],
-                                'spans': [6, 6, 12],
-                                'titles': ['Patches by Severity', 'Nodes in Network by OS', 'Summary Charts']
-                            }
-                        }
-                    });
-                    window.User = new User.Model();
-                    localStorage.setItem(userName, JSON.stringify(window.User));
-                } else {
-                    var test = JSON.parse(localStorage.getItem(userName));
-                    User.Model = Backbone.Model.extend({
-                        defaults: {
-                            name: test.name,
-                            show: test.show,
-                            widgets: test.widgets,
-                            access: test.access
-                        }
-                    });
-                    window.User = new User.Model();
-                }
-
-            }
-        });
+        app.getUserSettings();
 
         // Deferred object resolved after header and footer render.
         deferred = new $.Deferred();
-
         // Load and render page base page elements
         // Insert nav bar to header.
         require(

@@ -28,8 +28,15 @@ define(
                     'click input[name=timeblock]': 'disableTb'
                 },
                 disableTb: function (event) {
-                    var $checkbox = $(event.target);
-                    console.log($checkbox.val());
+                    var $checkbox = $(event.currentTarget), params;
+                    window.console.log($checkbox.is(':checked'));
+                    params = {
+                        tbid: $checkbox.val(),
+                        toggle: $checkbox.is(':checked')
+                    };
+                    $.post('/api/timeblocker/toggle', params, function (json) {
+                        window.console.log(json);
+                    });
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,

@@ -4,7 +4,7 @@ define(
         "use strict";
         var exports = {
             Collection : Backbone.Collection.extend({
-                baseUrl: 'api/csrinfo.json/',
+                baseUrl: 'api/ssl/list.json/',
                 filter: '',
                 url: function () {
                     return this.baseUrl + this.filter;
@@ -18,25 +18,15 @@ define(
                     this.collection.fetch();
                 },
                 events: {
-                    'submit form': 'submit'
+                    'click input:checkbox[name=csr]': 'toggleApprove'
                 },
-                submit: function (evt) {
-                    var form = $(evt.target),
-                        that = this;
-                    console.log(form.serialize());
-                    $.post(
-                        "/adminForm?" + form.serialize(),
-                        function (json) {
-                            console.log(json);
-                            if (!json.error) {
-                                form.find('input:checked').parents('.item').remove();
-                                that.$el.find('.alert').show();
-                            } else {
-                                console.log('Error while processing the CSRs');
-                            }
-                        }
-                    );
-                    return false;
+                toggleApprove: function (event) {
+                    var $checkbox = $(event.currentTarget),
+                        node_id = $checkbox.val(),
+                        toggle = $checkbox.is(':checked');
+                    $.post('api/ssl/nodeToggler', {nodeid: node_id, toggle: toggle}, function (json) {
+                        window.console.log(json);
+                    });
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,

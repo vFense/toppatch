@@ -1,9 +1,25 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'utilities/vent', 'utilities/viewManager', 'd3charts/loadAll'],
-    function ($, _, Backbone, vent, ViewManager, charts) {
+    [
+        'jquery',
+        'underscore',
+        'backbone',
+        'utilities/vent',
+        'utilities/viewManager',
+        'utilities/subClasser',
+        'd3charts/loadAll'
+    ],
+    function (
+        $,
+        _,
+        Backbone,
+        vent,
+        ViewManager,
+        subClasser,
+        charts
+    ) {
         "use strict";
 
-        var app = window.app = { root: '/' },
+        var app = {},
             overviewInstalled = {'data': 0},
             overviewPending = {'data': 0},
             overviewAvailable = {'data': 0},
@@ -14,7 +30,7 @@ define(
             dataType: 'json',
             async: false,
             success: function (json) {
-                if(json.length != 0) {
+                if (json.length !== 0) {
                     overviewInstalled = json[0];
                     overviewAvailable = json[1];
                     overviewPending = json[2];
@@ -23,7 +39,9 @@ define(
             }
         });
 
+        // Vars and Functions
         _.extend(app, {
+            root: '/',
             $doc: $(document),
             title: $(document).attr('title'),
             vent: vent,
@@ -33,17 +51,30 @@ define(
                     admin: undefined
                 }
             },
+            parseQuery: function (query) {
+                var params = {};
+                _.each(query.split('&'), function (value) {
+                    var param = value.split('=');
+                    params[param[0]] = param[1];
+                });
+                return params;
+            },
+            __subClass: subClasser
+        });
+
+        // WebSockets
+        _.extend(app, {
             startWs: function () {
                 var ws = new WebSocket("wss://" + window.location.host + "/ws");
-                ws.onmessage = function(evt) {
-                    console.log(['websocket', 'message', evt]);
+                ws.onmessage = function (evt) {
+                    window.console.log(['websocket', 'message', evt]);
                     $.ajax({
                         url: '/api/networkData',
                         dataType: 'json',
                         async: false,
                         success: function (json) {
-                            console.log(json);
-                            for(var i = 0; i < json.length; i++) {
+                            window.console.log(json);
+                            for (var i = 0; i < json.length; i++) {
                                 if(json[i].key == 'installed') {
                                     $('.success').children('dd').children().html(json[i].data);
                                 }
@@ -61,22 +92,14 @@ define(
                     });
                 };
                 ws.onclose = function(evt) {
-                    console.log(['websocket', 'closed', evt]);
+                    window.console.log(['websocket', 'closed', evt]);
                 };
                 ws.onopen = function(evt) {
-                    console.log(['websocket', 'opened', evt]);
+                    window.console.log(['websocket', 'opened', evt]);
                 };
                 ws.onerror = function(evt) {
-                    console.log(['websocket', 'error', evt]);
+                    window.console.log(['websocket', 'error', evt]);
                 }
-            },
-            parseQuery: function (query) {
-                var params = {};
-                _.each(query.split('&'), function (value) {
-                    var param = value.split('=');
-                    params[param[0]] = param[1];
-                });
-                return params;
             },
             chart: {
                 partition: charts.partition,
@@ -85,6 +108,50 @@ define(
                 stackedBar: charts.stackedBar,
                 generateTable: charts.generateTable,
                 line: charts.line
+            },
+            getUserSettings: function () {
+                var userSettings, userName,
+                    User = {};
+                $.ajax({
+                    url: '/api/userInfo',
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+                        userSettings = json;
+                        userName = userSettings.name;
+                        if (localStorage.getItem(userName) === null) {
+                            User.Model = Backbone.Model.extend({
+                                defaults: {
+                                    name: userName,
+                                    show: {
+                                        brandHeader: true,
+                                        dashNav: true,
+                                        copyFooter: true
+                                    },
+                                    widgets: {
+                                        'graph': ['pie', 'bar', 'tag'],
+                                        'spans': [6, 6, 12],
+                                        'titles': ['Patches by Severity', 'Nodes in Network by OS', 'Tag Stats']
+                                    }
+                                }
+                            });
+                            window.User = new User.Model();
+                            localStorage.setItem(userName, JSON.stringify(window.User));
+                        } else {
+                            var test = JSON.parse(localStorage.getItem(userName));
+                            User.Model = Backbone.Model.extend({
+                                defaults: {
+                                    name: test.name,
+                                    show: test.show,
+                                    widgets: test.widgets,
+                                    access: test.access
+                                }
+                            });
+                            window.User = new User.Model();
+                        }
+
+                    }
+                });
             },
             data: {
                 overviewData: [

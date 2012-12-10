@@ -10,7 +10,7 @@
   margin-bottom: @em*( 20px )/@baseFontSize;
   background-color: @wellBackground;
   border: @em*( 1px )/@baseFontSize solid darken(@wellBackground, 7%);
-  .border-radius(@em*( 4px )/@baseFontSize);
+  .border-radius(@em*( @baseBorderRadius )/@baseFontSize);
   .box-shadow(inset 0 @em*( 1px )/@baseFontSize @em*( 1px )/@baseFontSize rgba(0,0,0,.05));
   blockquote {
     border-color: #ddd;
@@ -21,9 +21,9 @@
 // Sizes
 .well-large {
   padding: @em*( 24px )/@baseFontSize;
-  .border-radius(@em*( 6px )/@baseFontSize);
+  .border-radius(@em*( @borderRadiusLarge )/@baseFontSize);
 }
 .well-small {
   padding: @em*( 9px )/@baseFontSize;
-  .border-radius(@em*( 3px )/@baseFontSize);
+  .border-radius(@em*( @borderRadiusSmall )/@baseFontSize);
 }

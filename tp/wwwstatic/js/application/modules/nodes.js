@@ -21,8 +21,6 @@ define(
                         'count=' + this.getCount +
                         '&offset=' + this.offset;
                     this.query += this.filterby ? '&filterby=' + this.filterby : '';
-                    this.baseUrl = this.filterby ? '/api/tagging/listByTag.json' : '/api/nodes.json';
-                    window.myCollection = this;
                 }
             }),
             TagCollection: Backbone.Collection.extend({

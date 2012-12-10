@@ -35,7 +35,19 @@ week_day = {
             }
 
 
-def verifyJsonIsValid(data):
+GMT_BY_TIME = {
+              '+10:30' : 'LHST', '+3:30' : 'IRST', '+12:45' : 'CHAST',
+              '+5:45' : 'NPT', '+8:45' : 'ACWST', '+9:30' : 'ACST',
+              '+8:00' : 'ACIT', '+6:30' : 'MMT', '+8:15' : 'APO',
+              '+12' : 'WFT', '+13:45' : 'CHADT', '+5:30' :'IST',
+              '+11:30' : 'NFT', '+13' : 'TOT', '+4:30' : 'IRDT',
+              '+11' : 'VUT', '+10' : 'YAPT', '+14' : 'LINT',
+              '+3' : 'SYST', '+2' : 'WAST', '+1' : 'WEST',
+              '+7' : 'WIB', '+6' : 'YEKST', '+5' : 'YEKT',
+              '+4' : 'SCT', '+9' : 'YAKT', '+8' : 'WITA'
+              }
+
+def verify_json_is_valid(data):
     verified = True
     json_data = None
     try:
@@ -44,7 +56,8 @@ def verifyJsonIsValid(data):
         verified = False
     return(verified, json_data)
 
-def dateParser(unformatted_date):
+
+def date_parser(unformatted_date):
     if unformatted_date != "":
         if type(unformatted_date) == unicode:
             unformatted_date.encode('utf-8')
@@ -55,12 +68,14 @@ def dateParser(unformatted_date):
         formatted_date = None
     return formatted_date
 
-def dateTimeParser(schedule):
+
+def date_time_parser(schedule):
     if type(schedule) == unicode:
         schedule.encode('utf-8')
     try:
-        am_pm = re.search(r'(AM|PM)', schedule).group()
-        schedule = re.sub(r'\s+AM|\s+PM', '', schedule)
+        am_pm = re.search(r'(AM|PM)', schedule, re.IGNORECASE).group()
+        schedule = re.sub(r'\s+(?i)AM|\s+(?i)PM', '', schedule, re.IGNORECASE)
+        am_pm = am_pm.upper()
     except Exception as e:
         am_pm = "AM"
         if len(schedule.split(" ")) == 1:
@@ -73,6 +88,7 @@ def dateTimeParser(schedule):
                 new_hour = twentyfour_hour_reversed[str(int(schedule.split(" ")[1].split(":")[0]))]
                 schedule = re.sub(r'([0-9]+)(:[0-9]+)', str(new_hour)+'\g<2>', schedule)
                 am_pm = "PM"
+        am_pm = am_pm.upper()
     pformatted = map(lambda x: int(x),re.split(r'\/|:|\s+', schedule))
     print pformatted
     if len(pformatted) == 5 and am_pm:
@@ -93,7 +109,9 @@ def dateTimeParser(schedule):
         formatted_date = time(hour, minute)
     return formatted_date
 
-def returnBool(fake_bool):
+
+def return_bool(fake_bool):
+    fake_bool = fake_bool.lower()
     real_bool = None
     if fake_bool == "true":
         real_bool = True
@@ -101,12 +119,14 @@ def returnBool(fake_bool):
         real_bool = False
     return real_bool
 
-def getExpirefromCert(cert):
+
+def get_expire_from_cert(cert):
     asn1_time = re.search(r'([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})', cert).group(1,2,3,4,5,6)
     t = map(lambda x: int(x), asn1_time)
     return datetime(t[0], t[1], t[2], t[3], t[4], t[5])
 
-def returnDatetime(timestamp):
+
+def return_datetime(timestamp):
     stamp_length = len(timestamp)
     timestamp = int(timestamp)
     valid_timestamp = False
@@ -121,7 +141,8 @@ def returnDatetime(timestamp):
     else:
         return ("Invalid TimeStamp")
 
-def returnDays(days):
+
+def return_days(days):
     if len(days) == 7:
         days_enabled = []
         days_not_enabled = []
@@ -133,7 +154,9 @@ def returnDays(days):
         return(days_enabled, days_not_enabled)
 
 
-def returnUtc(non_utc_time):
+def return_utc(non_utc_time):
     utc_time = non_utc_time.replace(tzinfo=tzlocal())\
                              .astimezone(tzoffset('GMT', 0))
     return utc_time
+
+

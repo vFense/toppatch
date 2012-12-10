@@ -32,7 +32,10 @@ define(
                 },
                 events: {
                     'click a.accordion-toggle': 'stoplink',
-                    'click a[name=remove]': 'deleteTag'
+                    'click button[name=remove]': 'deleteTag',
+                    'click #createTag': 'showCreateTag',
+                    'click #cancelNewTag': 'showCreateTag',
+                    'click #submitTag': 'submitTag'
                 },
                 stoplink: function (event) {
                     event.preventDefault();
@@ -40,50 +43,62 @@ define(
                         $icon = $href.find('i'),
                         parent = $href.parents('.accordion-group'),
                         body = parent.find('.accordion-body'),
-                        popover = body.find('a[name=popover]'),
+                        popover = body.find('button[name=popover]'),
                         nodelist = $('#nodelist');
                     popover.unbind();
-                    popover.on('click', this.togglePopup);
-                    popover.popover({
-                        placement: 'right',
-                        title: 'Add Nodes <a href="javascript:;" class="pull-right" name="close"><i class="icon-remove"></i></a>',
-                        html: true,
-                        content: nodelist.clone(),
-                        trigger: 'manual'
-                    });
-                    body.collapse('toggle');
+                    body.unbind();
+                    if (popover.data('popover')) {
+                        popover.popover('destroy');
+                    }
                     if ($icon.hasClass('icon-circle-arrow-down')) {
                         $icon.attr('class', 'icon-circle-arrow-up');
-                    } else {
-                        $icon.attr('class', 'icon-circle-arrow-down');
-                    }
-                    if (popover.data('popover')) {
+                        popover.popover({
+                            placement: 'right',
+                            title: 'Add Nodes <button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
+                            html: true,
+                            content: nodelist.clone(),
+                            trigger: 'click'
+                        });
+                        popover.on('click', this.togglePopup);
                         popover.data('popover').tip().css('z-index', 3000);
-                        popover.popover('hide');
+                        body.collapse('show');
+                        setTimeout(function () {
+                            body.css('overflow', 'visible');
+                        }, 500);
+                    } else {
+                        body.collapse('hide');
+                        body.css('overflow', 'hidden');
+                        $icon.attr('class', 'icon-circle-arrow-down');
                     }
                     body.on('hidden', function (event) {
                         event.stopPropagation();
                     });
                 },
                 togglePopup: function (event) {
-                    var popover = $(event.target).parent(),
-                        $tip = popover.data('popover').$tip,
-                        $spans = popover.parent().find('span'),
-                        $checkboxes;
-                    popover.popover('toggle');
-                    $checkboxes = $tip.find('input[name=nodelist]');
-                    $checkboxes.unbind();
-                    $checkboxes.each(function () {
-                        var ip = $(this).parent().attr('name'),
-                            that = this;
-                        $spans.each(function () {
-                            if ($(this).attr('name') === ip) {
-                                that.checked = true;
-                            }
+                    var $checkboxes, $tip, $spans, $close,
+                        popover = $(event.target).parent();
+                    if (popover.data('popover')) {
+                        $tip = popover.data('popover').tip();
+                        $spans = popover.parent().find('span');
+                        $checkboxes = $tip.find('input[name=nodelist]');
+                        $close = $tip.find('button[name=close]');
+                        $close.unbind();
+                        $checkboxes.unbind();
+                        $checkboxes.each(function () {
+                            var ip = $(this).parent().attr('name'),
+                                that = this;
+                            $spans.each(function () {
+                                if ($(this).attr('name') === ip) {
+                                    that.checked = true;
+                                }
+                            });
                         });
-                    });
-                    $checkboxes.on('change', popover, window.currentView.toggleNode);
-                    $tip.find('a[name=close]').on('click', function (event) { popover.popover('hide'); });
+                        $checkboxes.on('change', popover, window.currentView.toggleNode);
+                        $close.on('click', function (event) {
+                            event.preventDefault();
+                            popover.popover('hide');
+                        });
+                    }
                 },
                 toggleNode: function (event) {
                     var params, node_ip, node_id, tag, user, nodelist, empty_div, popover, badge, badgeCounter,
@@ -132,6 +147,7 @@ define(
                     }
                 },
                 deleteTag: function (event) {
+                    event.preventDefault();
                     var params, user,
                         $icon = $(event.target),
                         $item = $icon.parents('.accordion-group'),
@@ -153,6 +169,29 @@ define(
                             }
                         });
                 },
+                showCreateTag: function (event) {
+                    var $newTagDiv = this.$el.find('#newTag');
+                    $newTagDiv.toggle().find('input').val('');
+                },
+                submitTag: function (event) {
+                    var params = {}, that = this,
+                        tagname = this.$el.find('#tagName').val(),
+                        $newTagDiv = this.$el.find('#newTag'),
+                        user = window.User.get('name');
+                    params = {
+                        user: user,
+                        tag: tagname
+                    };
+                    window.console.log(params);
+                    if (tagname) {
+                        $.post('/api/tagging/addTag', { operation: JSON.stringify(params) }, function (json) {
+                            window.console.log(json);
+                            if (json.pass) {
+                                that.collection.fetch();
+                            }
+                        });
+                    }
+                },
                 beforeRender: $.noop,
                 onRender: $.noop,
                 render: function () {
@@ -172,8 +211,12 @@ define(
                     return this;
                 },
                 beforeClose: function (event) {
-                    var popover = this.$el.find('a[name=popover]');
-                    if (popover.data('popover')) { popover.popover('destroy'); }
+                    var popover = this.$el.find('button[name=popover]');
+                    popover.each(function (i, pop) {
+                        if ($(pop).data('popover')) {
+                            $(pop).popover('destroy');
+                        }
+                    });
                 }
             })
         };

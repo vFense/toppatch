@@ -12,7 +12,6 @@ define(
                     return this.show + this.filter;
                 };
                 this.comparator = function (model) {};
-                window.myCollection = this;
             }
         });
         exports.View = Backbone.View.extend({
