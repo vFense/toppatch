@@ -835,6 +835,8 @@ class ModifyDisplayNameHandler(BaseHandler):
             node = self.session.query(NodeInfo).filter(NodeInfo.id == nodeid).first()
             if node:
                 try:
+                    if re.search(r'none', displayname, re.IGNORECASE):
+                        displayname = return_bool(displayname)
                     node.display_name = displayname
                     self.session.commit()
                     result = {"pass" : True,
@@ -868,6 +870,8 @@ class ModifyHostNameHandler(BaseHandler):
             node = self.session.query(NodeInfo).filter(NodeInfo.id == nodeid).first()
             if node:
                 try:
+                    if re.search(r'none', hostname, re.IGNORECASE):
+                        hostname = return_bool(hostname)
                     node.host_name = hostname
                     self.session.commit()
                     result = {"pass" : True,
