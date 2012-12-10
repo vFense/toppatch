@@ -2,12 +2,60 @@ from socket import SOCK_DGRAM, SOCK_STREAM
 import socket, sys, struct
 import logging
 import logging.config
+import ConfigParser
 
-def create_send_log(host='localhost', port='514', proto='TCP'):
-    rproto = {'UDP': 'handlers.socket.SOCK_DGRAM', 'TCP': 'handlers.socket.SOCK_STREAM'}
-    FILE = '/opt/TopPatch/tp/src/logger/logging_new.config'
+class RvLogger():
+    def __init__(self):
+        self.rproto = {
+                'UDP': 'handlers.socket.SOCK_DGRAM',
+                'TCP': 'handlers.socket.SOCK_STREAM'
+                }
+        self.CONFDIR = '/opt/TopPatch/tp/src/logger/'
+        self.NEWCONFIG = CONFIDIR+'logging_new.config'
+        self.CONFIG = CONFDIR+'logging.config'
+        self.level = {
+                 'CRITICAL': CRITICAL,
+                 'ERROR': ERROR,
+                 'WARN': WARN,
+                 'INFO': INFO,
+                 'DEBUG': DEBUG,
+                 }
+
+    def create_config(self, loglevel='INFO',
+            loghost=None, logport=None, logproto=None):
+        self.Config = ConfigParser.ConfigParser()
+        self.loggers = ['root', 'rvlistener', 'rvweb', 'csrlistener']
+        self.handlers = ['root', 'rvlist_file', 'rvweb_file', 'csrlist_file']
+        self.formatters = ['default'] 
+        self.section_logger_name = 'loggers'
+        self.section_handler_name = 'handlers'
+        self.section_formatters_name = 'formatters'
+
+    def create_logger_list_section(self, additional_loggers=[]):
+        if len(additionalloggers) > 0:
+            self.loggers = self.loggers + additionalloggers
+        self.Config.add_section(self.section_logger_name)
+        self.Config.set(section_name, 'key', self.loggers)
+
+
+    def create_handler_list_section(self, additionalhandlers=[]):
+        if len(additionalhandlers) > 0:
+            self.handlers = self.handlers + additionalhandlers
+        self.Config.add_section(self.section_handler_name)
+        self.Config.set(section_name, 'key', self.handlers)
+
+
+    def create_formatter_list_section(self, additionalformatters=[]):
+        if len(additionalformatters) > 0:
+            self.formatters = self.formatters + additionalformatters
+        self.Config.add_section(self.section_formatters_name)
+        self.Config.set(section_name, 'key', self.formatters)
+
+    def create_app_logger(self):
+
+def create_new_log_config(level='INFO', host=None, port=None, proto=None):
     msg = ""
-    newfile = open(FILE, 'w')
+    newfile = open(NEWCONFIG, 'w')
     newfile.write('[loggers]\n')
     newfile.write('keys=root,rvlistener,rvweb,csrlistener\n\n')
     newfile.write('[handlers]\n')
@@ -71,6 +119,8 @@ def create_send_log(host='localhost', port='514', proto='TCP'):
     newfile.write('format=%(asctime)s - %(name)s - %(levelname)s - %(message)s\n')
     newfile.write('datefmt=\n')
     newfile.close()
+
+def send_new_logging_config():
     msg = open(FILE, 'r').read()
     t = logging.config.listen(9999)
     t.start()
