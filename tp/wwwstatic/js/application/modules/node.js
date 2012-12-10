@@ -215,36 +215,55 @@ define(
                 showEditDisplay: function (event) {
                     var popover = $(event.currentTarget).data('popover'),
                         button = popover.tip().find('button');
-                    button.on('click', {view: this, popover: popover}, this.submitDisplayName);
+                    button.on('click', {view: this, popover: popover}, this.submitNameOperation);
                     return false;
                 },
                 showEditHost: function (event) {
                     var popover = $(event.currentTarget).data('popover'),
                         button = popover.tip().find('button');
-                    button.on('click', {view: this, popover: popover}, this.submitDisplayName);
+                    button.on('click', {view: this, popover: popover}, this.submitNameOperation);
                     return false;
                 },
-                submitDisplayName: function (event) {
-                    var $em, $span,
+                submitNameOperation: function (event) {
+                    var $em, $span, params, url,
                         $displayName = $(event.currentTarget).siblings('input'),
                         node_id = event.data.view.collection.id,
                         popover = event.data.popover,
+                        operation = popover.$element.attr('id'),
                         $displayNameDiv = $(event.currentTarget).parents('dd');
-                    if ($displayName.val()) {
-                        $.post('api/node/modifyDisplayName', { nodeid: node_id, displayname: $displayName.val() }, function (json) {
-                            window.console.log(json);
-                            if (json.pass) {
-                                $em = $displayNameDiv.find('em');
-                                $span = $displayNameDiv.find('span');
-                                if ($em.length !== 0) {
-                                    $em.remove();
-                                    $displayNameDiv.prepend($displayName.val());
-                                }
-                                if ($span) { $span.html($displayName.val()); }
-                                popover.hide();
-                            }
-                        });
+                    window.console.log(operation);
+                    if (operation === 'editDisplay') {
+                        params = {
+                            nodeid: node_id,
+                            displayname: $displayName.val() || 'None'
+                        };
+                        url = 'api/node/modifyDisplayName';
+                    } else if (operation === 'editHost') {
+                        params = {
+                            nodeid: node_id,
+                            hostname: $displayName.val() || 'None'
+                        };
+                        url = 'api/node/modifyHostName';
                     }
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            $em = $displayNameDiv.find('em');
+                            $span = $displayNameDiv.find('span');
+                            if ($em.length !== 0) {
+                                $em.remove();
+                                $span.remove();
+                                if ($displayName.val()) {
+                                    $displayNameDiv.prepend('<span>' + $displayName.val() + '</span>');
+                                } else {
+
+                                    $displayNameDiv.prepend('<em>Not listed</em>');
+                                }
+                            }
+                            if ($span) { $span.html($displayName.val() || '<em>Not listed</em>'); }
+                            popover.hide();
+                        }
+                    });
                 },
                 showtags: function (evt) {
                     var showInput, addTag, tagList, close,
