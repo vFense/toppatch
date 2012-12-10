@@ -14,22 +14,34 @@ class RvLogger():
         self.NEWCONFIG = CONFIDIR+'logging_new.config'
         self.CONFIG = CONFDIR+'logging.config'
         self.level = {
-                 'CRITICAL': CRITICAL,
-                 'ERROR': ERROR,
-                 'WARN': WARN,
-                 'INFO': INFO,
-                 'DEBUG': DEBUG,
+                 'CRITICAL': 'CRITICAL',
+                 'ERROR': 'ERROR',
+                 'WARN': 'WARN',
+                 'INFO': 'INFO',
+                 'DEBUG': 'DEBUG',
                  }
 
-    def create_config(self, loglevel='INFO',
+    def create_config(self, loglevel='INFO', LOGDIR='/opt/TopPatch/var/log/',
             loghost=None, logport=None, logproto=None):
+        try:
+            self.loglevel = self.level[loglevel]
+        execpt Exception as e:
+            print 'incorrect level %s ' % (loglevel)
+            print 'acceptable levels are %s' % (",".join(self.level.values())
         self.Config = ConfigParser.ConfigParser()
+        self.logdir = LOGDIR
         self.loggers = ['root', 'rvlistener', 'rvweb', 'csrlistener']
         self.handlers = ['root', 'rvlist_file', 'rvweb_file', 'csrlist_file']
         self.formatters = ['default'] 
         self.section_logger_name = 'loggers'
         self.section_handler_name = 'handlers'
         self.section_formatters_name = 'formatters'
+        self.syslog = None
+        if loghost:
+            self.syslog = 'syslog_'+loghost
+            self.loggers.append(self.syslog)
+            self.handlers.append(self.syslog)
+        self.logger_handler = zip(self.loggers, self.handlers)
 
     def create_logger_list_section(self, additional_loggers=[]):
         if len(additionalloggers) > 0:
@@ -51,65 +63,54 @@ class RvLogger():
         self.Config.add_section(self.section_formatters_name)
         self.Config.set(section_name, 'key', self.formatters)
 
-    def create_app_logger(self):
+    def create_logger_settings(self):
+        default_name = 'logger_'
+        for name in self.logger_handler:
+            app_name = default_name + name[0]
+            handlers = [app_name]
+            self.Config.add_section(app_name)
+            if self.syslog:
+                handlers.append(self.syslog)
+            self.Config.set(app_name, 'level', self.loglevel)
+            self.Config.set(app_name, 'propagate', '0')
+            self.Config.set(app_name, 'qualname', app_name)
+            self.Config.set(app_name, 'handlers', handlers)
+
+
+    def create_handler_settings(self):
+        default_name = 'handler_'
+        for name in self.logger_handler:
+            handler_name = default_name + name[1]
+            handlers = [handler_name]
+            self.Config.add_section(handler_name)
+            if self.syslog:
+                handlers.append(self.syslog)
+            if re.search(r'root', name[1]):
+                self.Config.set(handler_name, 'class',
+                        'StreamHandler')
+                self.Config.set(handler_name, 'stream',
+                        'sys.stdout')
+                self.Config.set(handler_name, 'args',
+                        '(sys.stdout,)')
+            elif re.search(r'syslog', name[1]):
+                self.Config.set(handler_name, 'class',
+                        'handlers.SysLogHandler')
+                self.Config.set(handler_name, 'args',
+                        'handlers.SysLogHandler')
+            else:
+                logfile = '("'+ self.logdir + handler_name + '.log,")'
+                self.Config.set(handler_name, 'class',
+                        'handlers.TimedRotatingFileHandler')
+                self.Config.set(handler_name, 'interval', 'midnight')
+                self.Config.set(handler_name, 'backupCount', '5')
+                self.Config.set(handler_name, 'args', logfile)
+            self.Config.set(handler_name, 'level', self.loglevel)
+            self.Config.set(handler_name, 'formatter', self.formatters)
+            self.Config.set(handler_name, 'handlers', handlers)
 
 def create_new_log_config(level='INFO', host=None, port=None, proto=None):
     msg = ""
     newfile = open(NEWCONFIG, 'w')
-    newfile.write('[loggers]\n')
-    newfile.write('keys=root,rvlistener,rvweb,csrlistener\n\n')
-    newfile.write('[handlers]\n')
-    newfile.write('keys=hand01,rvlist_file,rvweb_file,csrlist_file,syslog\n\n')
-    newfile.write('[formatters]\n')
-    newfile.write('keys=default\n\n')
-    newfile.write('[logger_root]\n')
-    newfile.write('level=NOTSET\n')
-    newfile.write('handlers=hand01\n')
-    newfile.write('qualname=root\n')
-    newfile.write('propagate=0\n\n')
-    newfile.write('[logger_rvlistener]\n')
-    newfile.write('level=INFO\n')
-    newfile.write('propagate=0\n')
-    newfile.write('qualname=rvlistener\n')
-    newfile.write('handlers=rvlist_file,syslog\n\n')
-    newfile.write('[logger_rvweb]\n')
-    newfile.write('level=INFO\n')
-    newfile.write('propagate=0\n')
-    newfile.write('qualname=rvweb\n')
-    newfile.write('handlers=rvweb_file,syslog\n\n')
-    newfile.write('[logger_csrlistener]\n')
-    newfile.write('level=INFO\n')
-    newfile.write('propagate=0\n')
-    newfile.write('qualname=csrlistener\n')
-    newfile.write('handlers=csrlist_file,syslog\n\n')
-    newfile.write('[handler_hand01]\n')
-    newfile.write('class=StreamHandler\n')
-    newfile.write('level=NOTSET\n')
-    newfile.write('formatter=default\n')
-    newfile.write('args=(sys.stdout,)\n')
-    newfile.write('stream=sys.stdout\n\n')
-    newfile.write('[handler_rvlist_file]\n')
-    newfile.write('class=handlers.TimedRotatingFileHandler\n')
-    newfile.write('interval=midnight\n')
-    newfile.write('backupCount=5\n')
-    newfile.write('formatter=default\n')
-    newfile.write('level=INFO\n')
-    newfile.write('args=("/opt/TopPatch/var/log/rvlistener.log",)\n\n')
-    newfile.write('[handler_rvweb_file]\n')
-    newfile.write('class=handlers.TimedRotatingFileHandler\n')
-    newfile.write('interval=midnight\n')
-    newfile.write('backupCount=5\n')
-    newfile.write('formatter=default\n')
-    newfile.write('level=INFO\n')
-    newfile.write('args=("/opt/TopPatch/var/log/rvweb.log",)\n\n')
-    newfile.write('[handler_csrlist_file]\n')
-    newfile.write('class=handlers.TimedRotatingFileHandler\n')
-    newfile.write('interval=midnight\n')
-    newfile.write('backupCount=5\n')
-    newfile.write('formatter=default\n')
-    newfile.write('level=INFO\n')
-    newfile.write('args=("/opt/TopPatch/var/log/csrlistener.log",)\n\n')
-    newfile.write('[handler_syslog]\n')
     newfile.write('class=handlers.SysLogHandler\n')
     newfile.write('level=ERROR\n')
     newfile.write('formatter=form05\n')
