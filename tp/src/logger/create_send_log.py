@@ -20,14 +20,26 @@ class RvLogger():
                  'INFO': 'INFO',
                  'DEBUG': 'DEBUG',
                  }
+        self.rproto = {
+                'TCP': 'TCP',
+                'UDP': 'UDP',
+                }
 
     def create_config(self, loglevel='INFO', LOGDIR='/opt/TopPatch/var/log/',
             loghost=None, logport=None, logproto=None):
         try:
             self.loglevel = self.level[loglevel]
-        execpt Exception as e:
+        except Exception as e:
             print 'incorrect level %s ' % (loglevel)
             print 'acceptable levels are %s' % (",".join(self.level.values())
+        if logproto and loghost and logport:
+            try:
+                self.logproto = self.rproto[logproto]
+                self.logport = str(logport)
+                self.loghost = loghost
+            except Exception as e:
+                print 'incorrect protocol %s ' % (logproto)
+                print 'acceptable levels are %s' % (",".join(self.rproto.values())
         self.Config = ConfigParser.ConfigParser()
         self.logdir = LOGDIR
         self.loggers = ['root', 'rvlistener', 'rvweb', 'csrlistener']
@@ -63,6 +75,7 @@ class RvLogger():
         self.Config.add_section(self.section_formatters_name)
         self.Config.set(section_name, 'key', self.formatters)
 
+
     def create_logger_settings(self):
         default_name = 'logger_'
         for name in self.logger_handler:
@@ -93,10 +106,16 @@ class RvLogger():
                 self.Config.set(handler_name, 'args',
                         '(sys.stdout,)')
             elif re.search(r'syslog', name[1]):
+                args = '(("%s", %s,),%s, %s)' %\
+                        (self.loghost, self.logport,
+                                'handlers.SysLogHandler.LOG_USER',
+                                self.logproto
+                                )
                 self.Config.set(handler_name, 'class',
                         'handlers.SysLogHandler')
                 self.Config.set(handler_name, 'args',
-                        'handlers.SysLogHandler')
+                        args)
+                self.Config.set(handler_name, 'facility', 'LOG_USER')
             else:
                 logfile = '("'+ self.logdir + handler_name + '.log,")'
                 self.Config.set(handler_name, 'class',
@@ -108,17 +127,20 @@ class RvLogger():
             self.Config.set(handler_name, 'formatter', self.formatters)
             self.Config.set(handler_name, 'handlers', handlers)
 
+
+    def create_formatter_settings(self):
+        default_name = 'formatter_'
+        for name in self.formatters:
+            app_name = default_name + name
+            msg_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            self.Config.add_section(app_name)
+            self.Config.set(app_name, 'format', msg_format)
+            self.Config.set(app_name, 'datefmt', '')
+
+
 def create_new_log_config(level='INFO', host=None, port=None, proto=None):
     msg = ""
     newfile = open(NEWCONFIG, 'w')
-    newfile.write('class=handlers.SysLogHandler\n')
-    newfile.write('level=ERROR\n')
-    newfile.write('formatter=form05\n')
-    newfile.write('args=(("'+host+'", '+port+'),handlers.SysLogHandler.LOG_USER, '+str(rproto[proto])+')\n')
-    newfile.write('facility=LOG_USER\n\n')
-    newfile.write('[formatter_default]\n')
-    newfile.write('format=%(asctime)s - %(name)s - %(levelname)s - %(message)s\n')
-    newfile.write('datefmt=\n')
     newfile.close()
 
 def send_new_logging_config():
