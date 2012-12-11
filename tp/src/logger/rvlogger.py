@@ -37,6 +37,7 @@ class RvLogger():
                 '1': 'TCP',
                 '2': 'UDP'
                 }
+        self.results = None
 
 
     def get_logging_config(self):
@@ -55,17 +56,17 @@ class RvLogger():
                 syslog['logport'] = handler.address[1]
                 syslog['logproto'] = self.proto_map[str(handler.socktype)]
         if len(logfiles) > 0:
-            json_results = {
+            self.results = {
                     'logfiles': logfiles,
                     'syslog': syslog,
                     'loglevel': level
                     }
         else:
-            json_results = {
+            self.results = {
                     'pass': True,
                     'message': 'Logs do not exist'
                     }
-        return(json_results)
+
 
     def create_config(self, loglevel='INFO', LOGDIR='/opt/TopPatch/var/log/',
             initialize=True, loghost=None, logport=None, logproto=None):
@@ -107,10 +108,10 @@ class RvLogger():
             if os.path.exists(self.CONFIG_FILE):
                 os.rename(self.CONFIG_FILE, self.BACKUP_CONFIG_FILE)
             passed, message =self._initialize_logger_config()
-            return({
+            self.results = {
                 'pass': passed,
                 'message': message
-                })
+                }
             
 
     def _initialize_logger_config(self):
@@ -246,7 +247,7 @@ class RvLogger():
         except Exception as e:
             print e, "BOOM I CANT CONNECT"
             passed = False
-            message = e.message+' '+self.LISTENER_HOST+
+            message = e.message+' '+self.LISTENER_HOST+\
                     ' '+ str(self.LISTENER_PORT)
         if passed:
             print "I'm sending the new config file over"

@@ -23,6 +23,7 @@ from search.search import *
 from packages.pkgManager import *
 from node.nodeManager import *
 from transactions.transactions_manager import *
+from logger.rvlogger import RvLogger
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -997,3 +998,46 @@ class NodeTogglerHandler(BaseHandler):
         self.write(json.dumps(result, indent=4))
 
 
+
+class LoggingModifyerHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        level = 'INFO'
+        host = None
+        port = None
+        proto = None
+        passed = None
+        try:
+            host = self.get_argument('host')
+            port = self.get_argument('port')
+            proto = self.get_argument('proto')
+            level = self.get_argument('level')
+            logger = RvLogger()
+            logger.create_config(loglevel=level, loghost=host,
+                    logport=port, logproto=proto)
+            results = logger.self.results
+        except Exception as e:
+            try:
+                level = self.get_argument('level')
+                logger = RvLogger()
+                logger.create(loglevel=level)
+                results = logger.self.results
+            except Exception as f:
+                passed = False
+                results = {
+                    'pass': passed,
+                    'message': 'incorrect parameters passed'
+                    }
+
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
+
+
+class LoggingListerHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        logger = RvLogger()
+        logger.get_logging_config()
+        results = logger.results
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
