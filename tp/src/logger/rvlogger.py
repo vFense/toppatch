@@ -107,11 +107,7 @@ class RvLogger():
         if initialize:
             if os.path.exists(self.CONFIG_FILE):
                 os.rename(self.CONFIG_FILE, self.BACKUP_CONFIG_FILE)
-            passed, message =self._initialize_logger_config()
-            self.results = {
-                'pass': passed,
-                'message': message
-                }
+            self._initialize_logger_config()
             
 
     def _initialize_logger_config(self):
