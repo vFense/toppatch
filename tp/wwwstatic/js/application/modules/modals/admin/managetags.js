@@ -35,7 +35,9 @@ define(
                     'click button[name=remove]': 'deleteTag',
                     'click #createTag': 'showCreateTag',
                     'click #cancelNewTag': 'showCreateTag',
-                    'click #submitTag': 'submitTag'
+                    'click #submitTag': 'submitTag',
+                    'click button[name=confirmDelete]': 'confirmDelete',
+                    'click button[name=cancelDelete]': 'confirmDelete'
                 },
                 stoplink: function (event) {
                     event.preventDefault();
@@ -146,14 +148,25 @@ define(
                             });
                     }
                 },
+                confirmDelete: function (event) {
+                    var $deleteButton, $divConfirm;
+                    if ($(event.currentTarget).attr('name') === 'confirmDelete') {
+                        $deleteButton = $(event.currentTarget);
+                        $divConfirm = $deleteButton.siblings('div');
+                    } else {
+                        $divConfirm = $(event.currentTarget).parent();
+                        $deleteButton = $divConfirm.siblings('button');
+                    }
+                    $deleteButton.toggle();
+                    $divConfirm.toggle();
+                },
                 deleteTag: function (event) {
                     event.preventDefault();
                     var params, user,
-                        $icon = $(event.target),
-                        $item = $icon.parents('.accordion-group'),
-                        tag = $icon.parent().attr('id'),
+                        $button = $(event.target),
+                        $item = $button.parents('.accordion-group'),
+                        tag = $button.val(),
                         popover = $item.find('a[name=popover]');
-
                     if (popover.data('popover')) { popover.popover('destroy'); }
                     user = window.User.get('name');
                     params = {
