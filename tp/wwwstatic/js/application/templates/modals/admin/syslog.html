@@ -1,24 +1,49 @@
-<article>
-    <section class="row span6">
+<% if (data) { %>
+    <article>
         <form>
-            <div class="span4">
-                <label class="control-label">Syslog Server:</label>
-                <input type="text" name="server"/>
-            </div>
-            <div class="span4">
-                <label class="control-label">Port #:</label>
-                <input type="text" name="port"/>
-            </div>
-            <div class="span4">
-                <label class="control-label">Protocol:</label>
-                <select name="protocol">
-                    <option value="udp">UDP</option>
-                    <option value="tcp">TCP</option>
-                </select>
-            </div>
-            <div class="span4">
-                <input type="submit" value="Save" class="btn btn-primary" name="submit"/>
-            </div>
+            <section class="row-fluid span8">
+                <div class="span4">
+                    <label class="control-label">Syslog Server:</label>
+                    <input type="text" name="host" value="<% print(data.syslog.loghost || '') %>"/>
+                </div>
+                <div class="span4">
+                    <label class="control-label">Protocol:</label>
+                    <select name="proto">
+                        <option <% if (data.syslog.logproto && data.syslog.logproto === 'UDP') { print('SELECTED'); } %> value="udp">UDP</option>
+                        <option <% if (data.syslog.logproto && data.syslog.logproto === 'TCP') { print('SELECTED'); } %> value="tcp">TCP</option>
+                    </select>
+                </div>
+            </section>
+            <section class="row-fluid span8">
+                <div class="span4">
+                    <label class="control-label">Port #:</label>
+                    <input type="text" name="port"  value="<% print(data.syslog.logport || '') %>"/>
+                </div>
+                <div class="span4">
+                    <label class="control-label">Verbose:</label>
+                    <select name="level">
+                        <option <% if (data.loglevel && data.loglevel === 'NOTSET') { print('SELECTED'); } %> value="NOTSET">Not Set</option>
+                        <option <% if (data.loglevel && data.loglevel === 'DEBUG') { print('SELECTED'); } %> value="DEBUG">Debug</option>
+                        <option <% if (data.loglevel && data.loglevel === 'INFO') { print('SELECTED'); } %> value="INFO">Info</option>
+                        <option <% if (data.loglevel && data.loglevel === 'WARNING') { print('SELECTED'); } %> value="WARNING">Warning</option>
+                        <option <% if (data.loglevel && data.loglevel === 'ERROR') { print('SELECTED'); } %> value="ERROR">Error</option>
+                        <option <% if (data.loglevel && data.loglevel === 'CRITICAL') { print('SELECTED'); } %> value="CRITICAL">Critical</option>
+                    </select>
+                </div>
+            </section>
+            <section class="row-fluid span8">
+                <div class="span4"></div>
+                <div class="span4 alignRight">
+                    <input type="submit" value="Save" class="btn btn-primary" name="submit"/>
+                </div>
+            </section>
+            <section class="row-fluid span8">
+                <div class="span8">
+                    <div class="alert alert-block fade in hide">
+                        <span class="help-inline"></span>
+                    </div>
+                </div>
+            </section>
         </form>
-    </section>
-</article>
+    </article>
+<% } %>

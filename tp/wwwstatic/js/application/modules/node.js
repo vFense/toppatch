@@ -35,8 +35,8 @@ define(
                     'click #createtag': 'createtag',
                     'click button[name=dependencies]': 'showDependencies',
                     'click input[name=taglist]': 'toggletag',
-                    'click #editDisplay': 'showEditDisplay',
-                    'click #editHost': 'showEditHost',
+                    'click #editDisplay': 'showEditOperation',
+                    'click #editHost': 'showEditOperation',
                     'click a.accordion-toggle': 'openAccordion',
                     'change select[name=severity]': 'filterBySeverity',
                     'submit form': 'submit'
@@ -212,15 +212,10 @@ define(
                         */
                     }
                 },
-                showEditDisplay: function (event) {
+                showEditOperation: function (event) {
                     var popover = $(event.currentTarget).data('popover'),
                         button = popover.tip().find('button');
-                    button.on('click', {view: this, popover: popover}, this.submitNameOperation);
-                    return false;
-                },
-                showEditHost: function (event) {
-                    var popover = $(event.currentTarget).data('popover'),
-                        button = popover.tip().find('button');
+                    button.unbind();
                     button.on('click', {view: this, popover: popover}, this.submitNameOperation);
                     return false;
                 },
