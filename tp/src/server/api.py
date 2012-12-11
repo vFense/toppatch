@@ -1011,14 +1011,19 @@ class LoggingModifyerHandler(BaseHandler):
             host = self.get_argument('host')
             port = self.get_argument('port')
             proto = self.get_argument('proto')
+            proto = proto.upper()
             level = self.get_argument('level')
+            level = level.upper()
             logger = RvLogger()
             connected = logger.connect_to_loghost(host, port, proto)
+            print connected, host, port, proto, level
             if connected:
                 logger.create_config(loglevel=level, loghost=host,
                         logport=port, logproto=proto)
-                results = logger.self.results
+                results = logger.results
+                passed = True
             else:
+                passed = False
                 results = {
                         'pass': False,
                         'message': 'Cant connect to %s on %s using proto %s' %\
@@ -1029,14 +1034,13 @@ class LoggingModifyerHandler(BaseHandler):
                 level = self.get_argument('level')
                 logger = RvLogger()
                 logger.create(loglevel=level)
-                results = logger.self.results
+                results = logger.results
             except Exception as f:
                 passed = False
                 results = {
                     'pass': passed,
                     'message': 'incorrect parameters passed'
                     }
-
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(results, indent=4))
 

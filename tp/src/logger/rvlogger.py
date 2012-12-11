@@ -108,7 +108,7 @@ class RvLogger():
         self.now = '%s_%s_%s_%s_%s_%s' % \
                 (now.year, now.month, now.day,
                     now.hour, now.minute, now.second)
-        self.BACKUP_CONFIG_FILE = self.CONFIG_DIR + 'logging-%s.conf' % (self.now) 
+        self.BACKUP_CONFIG_FILE = self.CONFIG_DIR + 'logging-%s.config' % (self.now) 
         if initialize:
             self._initialize_logger_config()
             
@@ -121,9 +121,9 @@ class RvLogger():
         self._create_logger_settings()
         self._create_handler_settings()
         self._create_formatter_settings()
-        logfile = open(self.CONFIG_FILE, 'w')
         if os.path.exists(self.CONFIG_FILE):
             os.rename(self.CONFIG_FILE, self.BACKUP_CONFIG_FILE)
+        logfile = open(self.CONFIG_FILE, 'w')
         self.Config.write(logfile)
         logfile.close()
         self._start_listener()
@@ -241,7 +241,7 @@ class RvLogger():
 
     def _send_config(self, msg):
         sleep(1)
-        sender = socket(AF_INET, self.rproto_socket[self.socket_logproto])
+        sender = socket(AF_INET, SOCK_STREAM)
         passed = True
         message = None
         print "Im about to connect to the listener"
@@ -249,19 +249,23 @@ class RvLogger():
             print self.LISTENER_HOST, self.LISTENER_PORT
             sender.connect((self.LISTENER_HOST, self.LISTENER_PORT))
             print "I'm connected to the listener"
+            passed = True
         except Exception as e:
             print e, "BOOM I CANT CONNECT"
             if self.count == 0:
                 self.count = self.count + 1
-                self._send_config(self, msg)
+                self._send_config(msg)
             passed = False
             message = e.message+' '+self.LISTENER_HOST+\
                     ' '+ str(self.LISTENER_PORT)
         if passed:
             print "I'm sending the new config file over"
-            sender.send(struct.pack('>L', len(msg)))
-            sender.send(msg)
-            print "new config sent"
+            try:
+                sender.send(struct.pack('>L', len(msg)))
+                sender.send(msg)
+                print "new config sent"
+            except Exception as e:
+                print e
             sender.shutdown(SHUT_RDWR)
             sender.close()
             passed = True
@@ -273,8 +277,8 @@ class RvLogger():
         sender.settimeout(1)
         connected = None
         try:
-            print loghost, logport
             sender.connect((loghost, int(logport)))
+            sender.send("up")
             connected = True
         except Exception as e:
             connected = False
