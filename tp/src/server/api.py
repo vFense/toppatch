@@ -1023,6 +1023,7 @@ class LoggingModifyerHandler(BaseHandler):
                         'pass': False,
                         'message': 'Cant connect to %s on %s using proto %s' %\
                                 (host, port, proto)
+                                }
         except Exception as e:
             try:
                 level = self.get_argument('level')
