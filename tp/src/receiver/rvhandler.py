@@ -1,13 +1,17 @@
 from json import loads, dumps
 from jsonpickle import encode, decode
 from datetime import datetime
-
+import logging
+import logging.config
 from db.update_table import *
 from db.query_table import *
 from db.client import *
 from utils.common import verify_json_is_valid
 from networking.agentoperation import AgentOperation
 
+
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvlistener')
 OPERATION = 'operation'
 OPERATION_ID = 'operation_id'
 INSTALL = 'install'
@@ -70,6 +74,10 @@ class HandOff():
                 pass
         else:
             print "Json is not valid %s" % ( data )
+            logger.info('Json is not valid %s' %\
+                    (data)
+                    )
+
         self.session.close()
 
     def get_data(self, oper):
