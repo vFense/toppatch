@@ -39,6 +39,7 @@ define(
                             $alert.removeClass('alert-success').addClass('alert-error');
                         } else {
                             $alert.removeClass('alert-error').addClass('alert-success');
+                            $alert.find('span').html(json.message);
                         }
                         $alert.show();
                     });
