@@ -68,6 +68,8 @@ class Application(tornado.web.Application):
             (r"/api/summaryData/?", SummaryHandler),
             #(r"/api/patchData/?", PatchHandler),
             (r"/api/graphData/?", GraphHandler),
+            (r"/api/logger/modifyLogging?", LoggingModifyerHandler),
+            (r"/api/logger/listLogging?", LoggingListerHandler),
             (r"/api/nodes.json/?", NodesHandler),
             (r"/api/patches.json/?", PatchesHandler),
             (r"/api/severity.json/?", SeverityHandler),
