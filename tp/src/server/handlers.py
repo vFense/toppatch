@@ -1,4 +1,5 @@
 
+from time import sleep
 import tornado.web
 import tornado.websocket
 import re
@@ -199,6 +200,7 @@ class FormHandler(BaseHandler):
                 else:
                     operation_runner = AgentOperation(resultjson)
                     operation_runner.run()
+                    sleep(.50)
                     result = operation_runner.json_out
                     print result
             elif operation == 'reboot':
@@ -213,6 +215,7 @@ class FormHandler(BaseHandler):
                 else:
                     operation_runner = AgentOperation(resultjson)
                     operation_runner.run()
+                    sleep(.50)
                     result = operation_runner.json_out
                     print result
             self.set_header('Content-Type', 'application/json')
