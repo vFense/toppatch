@@ -96,7 +96,7 @@ class AgentOperation():
                         node.ip_address
                         )
                 start_date = datetime.now()
-                time_block_exists, time_block, self.json_out = \
+                time_block_exists, time_block, time_block_results = \
                         time_block_exists_today(self.session, 
                                 start_date=start_date.date(),
                                 start_time=start_date.time())
@@ -105,7 +105,8 @@ class AgentOperation():
                             (node.ip_address, oper_type)
                             )
                     self.session.close()
-                    return self.json_out
+                    self.json_out = time_block_results
+                    return(self.json_out)
                 if not DATA in jsonobject:
                     message = Thread(target=self.create_sof_operation,
                             args=(node_id, node.ip_address, oper_type,

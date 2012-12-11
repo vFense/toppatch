@@ -7,9 +7,9 @@ import os
 import threading
 import logging
 import logging.config
-#import gevent
-#from gevent import monkey
-#monkey.patch_all(thread=True)
+import gevent
+from gevent import monkey
+monkey.patch_all(thread=True)
 
 import tornado.httpserver
 import tornado.ioloop
