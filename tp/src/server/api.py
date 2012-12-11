@@ -6,6 +6,8 @@ import tornado.web
 try: import simplejson as json
 except ImportError: import json
 
+import logging
+import logging.config
 from models.application import *
 from server.decorators import authenticated_request
 from server.handlers import BaseHandler
@@ -29,6 +31,8 @@ from sqlalchemy.orm import sessionmaker, class_mapper
 
 from jsonpickle import encode
 
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
 
 class ApiHandler(BaseHandler):
     """ Trying to figure out this whole RESTful api thing with json."""
@@ -142,7 +146,6 @@ class NodeHandler(BaseHandler):
         self.session = validate_session(self.session)
         for u in self.session.query(NodeInfo, SystemInfo, NodeStats).\
                 join(SystemInfo, NodeStats):
-            print u
             resultjson.append({"id" : u[0].id,
                                "host_name" : u[0].host_name,
                                "display_name" : u[0].display_name,
@@ -224,7 +227,6 @@ class SummaryHandler(BaseHandler):
                 "children" : osResult }
         session.close()
         self.set_header('Content-Type', 'application/json')
-        print json.dumps(root, indent=4)
         self.write(json.dumps(root))
 
 
@@ -616,24 +618,27 @@ class TimeBlockerTogglerHandler(BaseHandler):
             tbid = self.get_argument('tbid')
             enable = self.get_argument('toggle')
             enable = return_bool(enable)
-            print tbid, enable, "WORK"
         except Exception as e:
-            print e
             pass
 
         tb = self.session.query(TimeBlocker).\
                 filter(TimeBlocker.id == tbid).first()
-        print tb, tbid, enable
         if tb:
             try:
                 if enable:
                     if not tb.enabled:
                         tb.enabled = True
                         self.session.commit()
+                        logger.info('TimeBlock %s was enabled' %\
+                                (tbid)
+                                )
                         result = {'pass' : True,
                                 'message' : 'TimeBlock %s was enabled' % (tbid)
                                 }
                     else:
+                        logger.info('TimeBlock %s was already enabled' %\
+                                (tbid)
+                                )
                         result = {'pass' : False,
                                 'message' : 'TimeBlock %s was already enabled' % (tbid)
                                 }
@@ -641,19 +646,31 @@ class TimeBlockerTogglerHandler(BaseHandler):
                     if tb.enabled:
                         tb.enabled = False
                         self.session.commit()
+                        logger.info('TimeBlock %s was disabled' %\
+                                (tbid)
+                                )
                         result = {'pass' : True,
                                 'message' : 'TimeBlock %s was disabled' % (tbid)
                                 }
                     else:
+                        logger.info('TimeBlock %s was already disabled' %\
+                                (tbid)
+                                )
                         result = {'pass' : False,
                                 'message' : 'TimeBlock %s was already disabled' % (tbid)
                                 }
             except Exception as e:
                 self.session.rollback()
+                logger.warn('TimeBlock %s was not disabled or enabled' %\
+                        (tbid)
+                        )
                 result = {'pass' : False,
                           'message' : 'TimeBlock %s was not disabled or enabled' % (tbid)
                           }
         else:
+            logger.warn('TimeBlock %s was not disabled or enabled' %\
+                    (tbid)
+                    )
             result = {'pass' : False,
                       'message' : 'TimeBlock %s was not disabled or enabled' % (tbid)
                      }
@@ -840,13 +857,18 @@ class ModifyDisplayNameHandler(BaseHandler):
                         displayname = return_bool(displayname)
                     node.display_name = displayname
                     self.session.commit()
+                    logger.info('Display name was changed to %s' %\
+                            (displayname)
+                            )
                     result = {"pass" : True,
                               "message" : "Display name change to %s" %\
                                             (displayname)
                             }
                 except Exception as e:
                     self.session.rollback()
-                    print e.message
+                    logger.error('Display name was not changed to %s' %\
+                            (displayname)
+                            )
                     result = {"pass" : False,
                               "message" : "Display name was not changed to %s"%\
                                             (displayname)
@@ -875,13 +897,18 @@ class ModifyHostNameHandler(BaseHandler):
                         hostname = return_bool(hostname)
                     node.host_name = hostname
                     self.session.commit()
+                    logger.info('Host name was changed to %s' %\
+                            (hostname)
+                            )
                     result = {"pass" : True,
                               "message" : "Host name change to %s" %\
                                             (hostname)
                             }
                 except Exception as e:
                     self.session.rollback()
-                    print e.message
+                    logger.error('Host name was not changed to %s' %\
+                            (hostname)
+                            )
                     result = {"pass" : False,
                               "message" : "Host name was not changed to %s"%\
                                             (hostname)
@@ -920,6 +947,7 @@ class DeleteUserHandler(BaseHandler):
             try:
                 username = self.get_argument('username')
             except Exception as e:
+                logger.error('either pass userid or username')
                 result = {"pass" : False, "message" : \
                             "either pass userid or username"
                          }
@@ -934,17 +962,26 @@ class DeleteUserHandler(BaseHandler):
                 if user.id != 1:
                     self.session.delete(user)
                     self.session.commit()
+                    logger.info('user %s hs been deleted'%\
+                            (user.username)
+                           ) 
                     result = {"pass" : True,
                               "message" : "%s user deleted" % \
                                               (user.username)
                              }
                 else:
+                    logger.info('user %s could not be deleted'%\
+                            (user.username)
+                           ) 
                     result = {"pass" : False,
                               "message" : "%s user could not be deleted" % \
                                               (user.username)
                              }
             except Exception as e:
                 self.session.rollback()
+                logger.info('user %s could not be deleted'%\
+                        (user.username)
+                        ) 
                 result = {"pass" : False,
                           "message" : "%s user could not be deleted" % \
                                           (user.username)
@@ -978,6 +1015,9 @@ class NodeTogglerHandler(BaseHandler):
                 if toggle:
                     sslinfo.enabled = True
                     self.session.commit()
+                    logger.info('ssl communication for nodeid %s '%\
+                            (nodeid) + 'has been enabled'
+                           ) 
                     result = {"pass" : True,
                           "message" : "node_id %s has been enabled" %\
                                           (nodeid)
@@ -985,11 +1025,15 @@ class NodeTogglerHandler(BaseHandler):
                 else:
                     sslinfo.enabled = False
                     self.session.commit()
+                    logger.info('ssl communication for nodeid %s '%\
+                            (nodeid) + 'has been disabled'
+                           ) 
                     result = {"pass" : True,
                           "message" : "node_id %s has been disabled" %\
                                           (nodeid)
                          }
         else:
+            logger.warn('invalid nodeid %s' % (nodeid))
             result = {"pass" : False,
                       "message" : "node_id %s does not exist" % \
                                      (nodeid)
@@ -1014,13 +1058,12 @@ class LoggingModifyerHandler(BaseHandler):
             proto = proto.upper()
             level = self.get_argument('level')
             level = level.upper()
-            logger = RvLogger()
-            connected = logger.connect_to_loghost(host, port, proto)
-            print connected, host, port, proto, level
+            rvlogger = RvLogger()
+            connected = rvlogger.connect_to_loghost(host, port, proto)
             if connected:
-                logger.create_config(loglevel=level, loghost=host,
+                rvlogger.create_config(loglevel=level, loghost=host,
                         logport=port, logproto=proto)
-                results = logger.results
+                results = rvlogger.results
                 passed = True
             else:
                 passed = False
@@ -1032,9 +1075,9 @@ class LoggingModifyerHandler(BaseHandler):
         except Exception as e:
             try:
                 level = self.get_argument('level')
-                logger = RvLogger()
-                logger.create(loglevel=level)
-                results = logger.results
+                rvlogger = RvLogger()
+                rvlogger.create(loglevel=level)
+                results = rvlogger.results
             except Exception as f:
                 passed = False
                 results = {
@@ -1048,8 +1091,8 @@ class LoggingModifyerHandler(BaseHandler):
 class LoggingListerHandler(BaseHandler):
     @authenticated_request
     def get(self):
-        logger = RvLogger()
-        logger.get_logging_config()
-        results = logger.results
+        rvlogger = RvLogger()
+        rvlogger.get_logging_config()
+        results = rvlogger.results
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(results, indent=4))
