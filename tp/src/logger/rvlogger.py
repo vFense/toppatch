@@ -115,6 +115,7 @@ class RvLogger():
             
 
     def _initialize_logger_config(self):
+        self.count = 0
         self._create_logger_list_section()
         self._create_handler_list_section()
         self._create_formatter_list_section()
@@ -128,7 +129,10 @@ class RvLogger():
         config = open(self.CONFIG_FILE, 'r').read()
         passed, message = self._send_config(config)
         self._shutdown_listener()
-        return(passed, message)
+        self.results = {
+                'pass': passed, 
+                'message': message
+                }
 
     def _create_logger_list_section(self, additionalloggers=[]):
         if len(additionalloggers) > 0:
@@ -246,6 +250,9 @@ class RvLogger():
             print "I'm connected to the listener"
         except Exception as e:
             print e, "BOOM I CANT CONNECT"
+            if self.count == 0:
+                self.count = self.count + 1
+                self._send_config(self, msg)
             passed = False
             message = e.message+' '+self.LISTENER_HOST+\
                     ' '+ str(self.LISTENER_PORT)
