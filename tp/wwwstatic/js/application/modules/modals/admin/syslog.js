@@ -11,7 +11,7 @@ define(
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
-                baseUrl: '',
+                baseUrl: 'api/logger/getParams',
                 filter: '',
                 url: function () {
                     return this.baseUrl + this.filter;
@@ -20,16 +20,28 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
-                    //this.collection = new exports.Collection();
-                    //this.collection.bind('reset', this.render, this);
-                    //this.collection.fetch();
+                    this.collection = new exports.Collection();
+                    this.collection.bind('reset', this.render, this);
+                    this.collection.fetch();
                 },
                 events: {
                     'submit form': 'submit'
                 },
                 submit: function (event) {
-                    var $form = $(event.target);
-                    window.console.log($form);
+                    var $form = $(event.target),
+                        url = 'api/logger/modifyLogging',
+                        $alert = this.$el.find('.alert');
+                    window.console.log($form.serialize());
+                    $.post(url, $form.serialize(), function (json) {
+                        window.console.log(json);
+                        if (!json.pass) {
+                            $alert.find('span').html(json.message);
+                            $alert.removeClass('alert-success').addClass('alert-error');
+                        } else {
+                            $alert.removeClass('alert-error').addClass('alert-success');
+                        }
+                        $alert.show();
+                    });
                     return false;
                 },
                 beforeRender: $.noop,
@@ -37,12 +49,12 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var template = _.template(this.template);
-                        //data = this.collection.toJSON();
+                    var template = _.template(this.template),
+                        data = this.collection.toJSON()[0];
 
                     this.$el.empty();
 
-                    this.$el.html(template());
+                    this.$el.html(template({data: data}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
