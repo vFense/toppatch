@@ -1,8 +1,8 @@
 <% if (data) { %>
     <article>
         <form>
-            <section class="row-fluid span8">
-                <div class="span4">
+            <section class="row-fluid">
+                <div class="span6">
                     <label class="control-label">Syslog Server:</label>
                     <input type="text" name="host" value="<% print(data.syslog.loghost || '') %>"/>
                 </div>
@@ -14,8 +14,8 @@
                     </select>
                 </div>
             </section>
-            <section class="row-fluid span8">
-                <div class="span4">
+            <section class="row-fluid">
+                <div class="span6">
                     <label class="control-label">Port #:</label>
                     <input type="text" name="port"  value="<% print(data.syslog.logport || '') %>"/>
                 </div>
@@ -31,16 +31,36 @@
                     </select>
                 </div>
             </section>
-            <section class="row-fluid span8">
-                <div class="span4"></div>
+            <section class="row-fluid">
+                <div class="span10">
+                    <div class="alert alert-block fade in hide">
+                        <span class="help-inline"></span>
+                    </div>
+                </div>
+            </section>
+            <section class="row-fluid">
+                <div class="span6"></div>
                 <div class="span4 alignRight">
                     <input type="submit" value="Save" class="btn btn-primary" name="submit"/>
                 </div>
             </section>
-            <section class="row-fluid span8">
-                <div class="span8">
-                    <div class="alert alert-block fade in hide">
-                        <span class="help-inline"></span>
+            <section class="row-fluid">
+                <div class="list span12" style="margin-top: 5px;">
+                    <header class="clearfix">
+                        <span>Log Locations:</span>
+                    </header>
+                    <div class="items">
+                        <% if (data.logfiles.length !== 0) { %>
+                            <% _.each(data.logfiles, function (logfile) { %>
+                                <div class="item">
+                                    <span class="desc"><%= logfile %></span>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="item">
+                                <em>No logs found</em>
+                            </div>
+                        <% } %>
                     </div>
                 </div>
             </section>
