@@ -12,9 +12,6 @@ from receiver.rvhandler import HandOff
 from scheduler.status_checker import *
 
 from threading import Thread
-import gevent
-from gevent import monkey
-monkey.patch_all(thread=True)
 
 logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvlistener')
