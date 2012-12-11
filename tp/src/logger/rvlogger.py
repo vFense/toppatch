@@ -32,6 +32,10 @@ class RvLogger():
                 'UDP': 'handlers.socket.SOCK_DGRAM',
                 'TCP': 'handlers.socket.SOCK_STREAM'
                 }
+        self.rproto_socket = {
+                'UDP': SOCK_DGRAM,
+                'TCP': SOCK_STREAM
+                }
         self.proto_map = {
                 '0': 'RAW',
                 '1': 'TCP',
@@ -78,6 +82,7 @@ class RvLogger():
         if logproto and loghost and logport:
             try:
                 self.logproto = self.rproto[logproto]
+                self.socket_logproto = self.rproto_socket[logproto]
                 self.logport = str(logport)
                 self.loghost = loghost
             except Exception as e:
@@ -236,7 +241,7 @@ class RvLogger():
 
     def _send_config(self, msg):
         sleep(1)
-        sender = socket(AF_INET, SOCK_STREAM)
+        sender = socket(AF_INET, self.rproto_socket[self.socket_logproto])
         passed = True
         message = None
         print "Im about to connect to the listener"
@@ -262,3 +267,15 @@ class RvLogger():
             passed = True
             message = 'new config sent'
         return(passed, message)
+
+    def connect_to_loghost(self, loghost, logport, logproto):
+        sender = socket(AF_INET, self.rproto_socket[logproto])
+        sender.settimeout(1)
+        connected = None
+        try:
+            print loghost, logport
+            sender.connect((loghost, int(logport)))
+            connected = True
+        except Exception as e:
+            connected = False
+        return(connected)

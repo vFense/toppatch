@@ -1013,9 +1013,16 @@ class LoggingModifyerHandler(BaseHandler):
             proto = self.get_argument('proto')
             level = self.get_argument('level')
             logger = RvLogger()
-            logger.create_config(loglevel=level, loghost=host,
-                    logport=port, logproto=proto)
-            results = logger.self.results
+            connected = logger.connect_to_loghost(host, port, proto)
+            if connected:
+                logger.create_config(loglevel=level, loghost=host,
+                        logport=port, logproto=proto)
+                results = logger.self.results
+            else:
+                results = {
+                        'pass': False,
+                        'message': 'Cant connect to %s on %s using proto %s' %\
+                                (host, port, proto)
         except Exception as e:
             try:
                 level = self.get_argument('level')
