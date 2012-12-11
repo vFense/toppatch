@@ -73,11 +73,9 @@ class HandOff():
             else:
                 pass
         else:
-            print "Json is not valid %s" % ( data )
             logger.info('Json is not valid %s' %\
                     (data)
                     )
-
         self.session.close()
 
     def get_data(self, oper):
@@ -90,10 +88,19 @@ class HandOff():
 
 
     def add_update(self):
+        logger.debug('Adding Software to package table')
         add_software_update(self.session, self.json_object)
+        logger.debug('Adding Software Status to the package_per_node table %s' %\
+                ('for node' % self.node.ip_address)
+                )
         add_software_per_node(self.session, self.json_object)
+        logger.debug('updateing node_stats for %s' % \
+                (self.node.ip_address)
+                )
         update_node_stats(self.session, self.node.id)
+        logger.debug('updateing network_stats')
         update_network_stats(self.session)
+        logger.debug('updateing tag_stats')
         update_tag_stats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
@@ -104,18 +111,35 @@ class HandOff():
         if os_code_exists:
             os_code = os_code_exists.os_code
             if os_code == "windows":
+                logger.debug('adding 3rd party software to'+\
+                        ' software_available table')
                 add_software_available(self.session, self.json_object)
+                logger.debug('adding 3rd party software to'+\
+                        ' software_installed table for node %s' %\
+                        (self.node.ip_address)
+                        )
                 add_software_installed(self.session, self.json_object)
+        logger.debug('updateing node_stats for %s' % \
+                (self.node.ip_address)
+                )
         update_node_stats(self.session, self.node.id)
+        logger.debug('updateing network_stats')
         update_network_stats(self.session)
+        logger.debug('updateing tag_stats')
         update_tag_stats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
 
     def update_results(self):
         results = add_results(self.session, self.json_object)
+        logger.debug('updateing node_stats for %s' % \
+                (self.node.ip_address)
+                )
+        update_node_stats(self.session, self.node.id)
+        logger.debug('updateing network_stats')
         update_node_stats(self.session, self.node.id)
         update_network_stats(self.session)
+        logger.debug('updateing tag_stats')
         update_tag_stats(self.session)
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
@@ -126,6 +150,7 @@ class HandOff():
 
 
     def node_update(self):
+        logger.debug('no status updated for node %s' % (self.node.ip_address))
         results = update_node(self.session, self.node.id, self.ip)
 
 

@@ -1,12 +1,14 @@
 import re
 import sys
 import gevent
-#from gevent import monkey
 import ssl
 import socket
 import select
+import logging
+import logging.config
 
-#monkey.patch_socket()
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
 
 class TcpConnect():
     """
@@ -50,7 +52,6 @@ class TcpConnect():
             self.tcp_socket.connect((self.host, self.port))
             connected = True
         except Exception as e:
-            print e
             if e.errno == 111 and \
                     self.connection_count < 1 or \
                     re.search(r'operation timed out', e.message) and \
@@ -59,13 +60,14 @@ class TcpConnect():
                 self.tcp_socket = self.socket_init()
                 self._connect()
             else:
-                print "I CAN NOT CONNECT TO THE REMOTE AGENT", e
+                logger.error('Cant connect to %s on port %s. Error:%s' %\
+                        (self.host, self.port, e.message)
+                        )
                 return(self._error_handler(e))
         if connected:
             return self._write()
 
     def _error_handler(self, e):
-        print dir(e), e
         if e is None:
             self.error = "Error Undefined"
         elif e.message:
@@ -97,7 +99,9 @@ class TcpConnect():
                 self._connect()
             else:
                 self.error = self._error_handler(error)
-                print "writing to socket failed", error
+                logger.error('Cant write to the socket on host %s:%s' %\
+                        (self.host, self.port)
+                        )
                 self._close()
 
     def _read(self):
@@ -106,11 +110,15 @@ class TcpConnect():
             try:
                 self.read_data = self.tcp_socket.recv(1024)
             except Exception as e:
-                print "I CAN NOT READ FROM REMOTE SOCKET", dir(e), e
+                logger.error('Cant read from the socket on host %s:%s' %\
+                        (self.host, self.port)
+                        )
                 self.error = self._error_handler(e)
         else:
             self.error = self._error_handler(error)
-            print "reading from socket failed", error
+            logger.error('Cant read from the socket on host %s:%s' %\
+                    (self.host, self.port)
+                    )
         self._close()
 
 
