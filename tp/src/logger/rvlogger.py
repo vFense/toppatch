@@ -105,8 +105,6 @@ class RvLogger():
                     now.hour, now.minute, now.second)
         self.BACKUP_CONFIG_FILE = self.CONFIG_DIR + 'logging-%s.conf' % (self.now) 
         if initialize:
-            if os.path.exists(self.CONFIG_FILE):
-                os.rename(self.CONFIG_FILE, self.BACKUP_CONFIG_FILE)
             self._initialize_logger_config()
             
 
@@ -119,6 +117,8 @@ class RvLogger():
         self._create_handler_settings()
         self._create_formatter_settings()
         logfile = open(self.CONFIG_FILE, 'w')
+        if os.path.exists(self.CONFIG_FILE):
+            os.rename(self.CONFIG_FILE, self.BACKUP_CONFIG_FILE)
         self.Config.write(logfile)
         logfile.close()
         self._start_listener()
