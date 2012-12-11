@@ -677,16 +677,16 @@ def update_tag_stats(session):
     """
     session = validate_session(session)
     tags = session.query(TagInfo).all()
-    patchesinstalled = 0
-    patchesuninstalled = 0
-    patchespending = 0
-    rebootspending = 0
-    agentsdown = 0
-    agentsup = 0
     if len(tags) > 0:
         for tag in tags:
             nodes = session.query(TagsPerNode).\
                 filter(TagsPerNode.tag_id == tag.id).all()
+            patchesinstalled = 0
+            patchesuninstalled = 0
+            patchespending = 0
+            rebootspending = 0
+            agentsdown = 0
+            agentsup = 0
             if len(nodes) > 0:
                 for node in nodes:
                     nodeupdates = session.query(PackagePerNode).\
