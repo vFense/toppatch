@@ -642,9 +642,12 @@ def update_network_stats(session, username='system_user'):
     agentsup = session.query(NodeInfo).\
             filter(NodeInfo.agent_status == True).count()
     stats = session.query(PackagePerNode)
-    totalinstalled = stats.filter_by(installed=True).count()
-    totalnotinstalled = stats.filter_by(installed=False).count()
-    totalpending = stats.filter_by(pending=True).count()
+    totalinstalled = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(installed=True).count()
+    totalnotinstalled = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(installed=False).count()
+    totalpending = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(pending=True).count()
     networkstats = session.query(NetworkStats)
     networkstatsexists = networkstats.filter_by(id=1).first()
     if networkstatsexists:
