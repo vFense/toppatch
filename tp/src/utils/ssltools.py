@@ -91,7 +91,7 @@ def save_key(location, key, key_type, name=socket.gethostname()):
     try:
         file_exists = os.stat(path_to_key)
         if file_exists:
-            logger.warn('File %s already exists' % (path_to_key)
+            logger.warn('File %s already exists' % (path_to_key))
     except OSError as e:
         if e.errno == 2:
             print e
