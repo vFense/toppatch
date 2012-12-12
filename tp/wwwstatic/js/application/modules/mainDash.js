@@ -63,201 +63,25 @@ define(
                     d3.select(selection).datum(json).call(stackedChart);
                 });
             },
-            WidgetView = Backbone.View.extend({
-                initialize: function () {
-                    this.widget = "widget1";
-                    this.type = "graph";
-                    this.current = "new";
-                    this.sizeval = "3";
-                    this.classType = ["info", "success", "warning", "error"];
-                    this.counter = 4;
-                    this.graphType = 'pie';
-                    this.graph = '#graph1';
-                    this.graphData = 'os';
-                    this.template = "";
-                    this.title = "Default";
-                    this.myClass = "span";
-                    this.tempData = "";
-                    this.title = "Default";
-                },
-                pieData: function () {
-                    $("#dataToGraph").show();
-                },
-                otherData: function () {
-                    $("#dataToGraph").hide();
-                },
-                displayChart: function () {
-                    if (this.graphType === "pie") {
-                        pieGraph(this.graph);
-                    } else if (this.graphType === "bar") {
-                        barGraph(this.graph);
-                    } else if (this.graphType === "line") {
-                        lineGraph(this.graph);
-                    } else if (this.graphType === "stacked") {
-                        stackedGraph(this.graph);
-                    } else if (this.graphType === "summary") {
-                        interactiveGraph(this.graph);
-                    }
-                },
-                render: function () {
-                    this.current = properties.get("currentWidget");
-                    this.type = $('input:radio[name=type]:checked').val();
-                    this.title = this.$el.find('#title').val() === "" ? "Default" : this.$el.find('#title').val();
-                    properties.set({ widgetTitle: this.title });
-                    if (this.current === "new") {
-                        this.renderNew();
-                    } else {
-                        this.renderExisting();
-                    }
-                },
-                renderNew: function () {
-                    var variables, index;
-                    this.widget = "widget" + this.counter;
-                    if (this.type === "graph") {
-                        this.sizeval = $('input:radio[name=radio]:checked').val();
-                        this.graphType = $('input:radio[name=graph]:checked').val();
-                        variables = {
-                            widget: this.widget,
-                            span: "span" + this.sizeval,
-                            graphcontainer: "graphcontainer" + this.counter,
-                            menu: "menu" + this.counter,
-                            graph: "graph" + this.counter,
-                            title: this.title,
-                            graphType: this.graphType
-                        };
-                        // Compile the template using underscore
-                        this.template = _.template($("#widget_template").html(), variables);
-                        // Load the compiled HTML into the Backbone "el"
-                        $("#insert").append(this.template);
-                        this.graphData = $('input:radio[name=graphdata]:checked').val();
-                        this.graph = "#" + $("#" + this.widget).children().children("div").attr("id");
-                        this.counter += 1;
-                        this.displayChart();
-                        this.saveState();
-                        $(".properties").click(function () { exports.View.setProperties(this, 'existing'); });
-                        $('.remove').click(function () { exports.View.hideWidget(this); });
-                    } else {
-                        /*
-                        this.sizeval = "3";
-                        this.title = $('input:radio[name=param]:checked');
-                        index =  $("input:radio[name='param']").index(this.title);
-                        this.tempData = this.getOverviewData();
-                        variables = {
-                            widget: this.widget,
-                            span: "span" + this.sizeval,
-                            type: this.classType[index],
-                            title: this.title.val(),
-                            data: this.tempData
-                        };
-                        this.template = _.template($("#text_template").html(), variables);
-                        $("#insert").append(this.template);
-                        this.counter += 1;
-                        */
-                        this.sizeval = $('input:radio[name=radio]:checked').val();
-                        variables = {
-                            widget: this.widget,
-                            span: "span" + this.sizeval,
-                            graphcontainer: "graphcontainer" + this.counter,
-                            menu: "menu" + this.counter,
-                            graph: "graph" + this.counter,
-                            title: this.title,
-                            graphType: this.type
-                        };
-                        this.graphType = this.type;
-                        this.graph = "#graph" + this.counter;
-                        this.widget = "#" + this.widget;
-                        this.template = _.template($("#widget_template").html(), variables);
-                        $("#insert").append(this.template);
-                        this.counter += 1;
-                        this.getTags();
-                    }
-                },
-                renderExisting: function () {
-                    var variables, index, parent;
-                    this.widget = "#" + properties.get("widgetName");
-                    this.graph = "#" + $(this.widget + " .graph").attr("id");
-                    this.title = properties.get('widgetTitle');
-                    if (this.type === "graph") {
-                        this.myClass = $(this.widget).attr("class");
-                        this.sizeval = $('input:radio[name=radio]:checked').val();
-                        this.graphType = $('input:radio[name=graph]:checked').val();
-                        this.graphData = $('input:radio[name=graphdata]:checked').val();
-                        $(this.widget + '-title').html(this.title);
-                        $(this.widget).removeClass(this.myClass).addClass("span" + this.sizeval + " widget editable");
-                        this.displayChart();
-                        this.saveState();
-                    } else {
-                        this.sizeval = $('input:radio[name=radio]:checked').val();
-                        this.graphType = 'tag';
-                        this.myClass = $(this.widget).attr("class");
-                        $(this.widget + '-title').html(this.title);
-                        $(this.widget).removeClass(this.myClass).addClass("span" + this.sizeval + " widget editable");
-                        this.getTags();
-                        //text widget block
-                        /*
-                        parent = $(this.widget).parent();
-                        this.title = $('input:radio[name=param]:checked');
-                        index =  $("input:radio[name='param']").index(this.title);
-                        this.tempData = this.getOverviewData();
-                        this.sizeval = "3";
-                        variables = {
-                            widget: this.widget,
-                            span: "span" + this.sizeval,
-                            title: this.title.val(),
-                            type: this.classType[index],
-                            data: this.tempData
-                        };
-                        this.template = _.template($("#text_template").html(), variables);
-                        $(this.widget).remove();
-                        $(parent).append(this.template);
-                        */
-                    }
-                },
-                getTags: function () {
-                    var that = this, tag_template;
-                    $.ajax({
-                        url: 'api/tagging/tagStats',
-                        dataType: 'json',
-                        async: false,
-                        success: function (data) {
-                            $(that.graph).empty();
-                            tag_template = _.template($('#tags_template').html(), {data: data});
-                            $(that.graph).html(tag_template);
-                            that.saveState();
-                        }
-                    });
-                },
-                getOverviewData: function () {
-                    var type = $(this.title).val();
-                    if (type === "Patched") {
-                        return app.data.nodeData.Patched;
-                    } else if (type === "Scheduled Patches") {
-                        return app.data.nodeData.Unpatched;
-                    } else if (type === "Nodes") {
-                        return app.data.nodeData.Nodes;
-                    } else if (type === "Failed Patches") {
-                        return app.data.nodeData.Failed;
-                    }
-                },
-                saveState: function () {
-                    var widgets = window.User.get('widgets'),
-                        userName = window.User.get('name'),
-                        matches = this.graph.match(/\d+$/),
-                        position = matches[0] - 1;
-                    widgets.graph[position] = this.graphType;
-                    widgets.spans[position] = this.sizeval;
-                    widgets.titles[position] = this.title;
-                    window.User.set('widgets', widgets);
-                    localStorage.setItem(userName, JSON.stringify(window.User));
-                }
-            }),
-            widgetview = new WidgetView({ el: 'body' }),
-
             exports = {
                 Model: Backbone.Model.extend({}),
                 View: Backbone.View.extend({
                     initialize: function () {
                         this.template = myTemplate;
+                        this.widget = "widget1";
+                        this.type = "graph";
+                        this.current = "new";
+                        this.sizeval = "3";
+                        this.classType = ["info", "success", "warning", "error"];
+                        this.counter = 4;
+                        this.graphType = 'pie';
+                        this.graph = '#graph1';
+                        this.graphData = 'os';
+                        this.template = "";
+                        this.title = "Default";
+                        this.myClass = "span";
+                        this.tempData = "";
+                        this.title = "Default";
                     },
                     events: {
                         'click #type1': 'graphSetting',
@@ -274,7 +98,7 @@ define(
                     },
                     createWidget: function () {
                         $("#widgetProperties").modal('hide');
-                        widgetview.render();
+                        this.widgetrender();
                     },
                     graphSetting: function () {
                         $("#graphSettings").show();
@@ -346,6 +170,170 @@ define(
                             $('#title').val('').attr("placeholder", "Default");
                         }
                     },
+                    widgetrender: function () {
+                        var that = this,
+                            self = this;
+                        window.console.log(that);
+                        window.console.log(self);
+                        that.current = properties.get("currentWidget");
+                        that.type = $('input:radio[name=type]:checked').val();
+                        that.title = that.$el.find('#title').val() === "" ? "Default" : that.$el.find('#title').val();
+                        properties.set({ widgetTitle: that.title });
+                        if (that.current === "new") {
+                            self.renderNew();
+                        } else {
+                            self.renderExisting();
+                        }
+                    },
+                    displayChart: function () {
+                        var that = this;
+                        if (that.graphType === "pie") {
+                            pieGraph(that.graph);
+                        } else if (that.graphType === "bar") {
+                            barGraph(that.graph);
+                        } else if (that.graphType === "line") {
+                            lineGraph(that.graph);
+                        } else if (that.graphType === "stacked") {
+                            stackedGraph(this.graph);
+                        } else if (this.graphType === "summary") {
+                            interactiveGraph(that.graph);
+                        }
+                    },
+                    renderNew: function () {
+                        var variables, index,
+                            that = this,
+                            self = this;
+                        that.widget = "widget" + that.counter;
+                        if (that.type === "graph") {
+                            that.sizeval = $('input:radio[name=radio]:checked').val();
+                            that.graphType = $('input:radio[name=graph]:checked').val();
+                            variables = {
+                                widget: that.widget,
+                                span: "span" + that.sizeval,
+                                graphcontainer: "graphcontainer" + that.counter,
+                                menu: "menu" + that.counter,
+                                graph: "graph" + that.counter,
+                                title: that.title,
+                                graphType: that.graphType
+                            };
+                            // Compile the template using underscore
+                            that.template = _.template($("#widget_template").html(), variables);
+                            // Load the compiled HTML into the Backbone "el"
+                            $("#insert").append(that.template);
+                            that.graphData = $('input:radio[name=graphdata]:checked').val();
+                            that.graph = "#" + $("#" + that.widget).children().children("div").attr("id");
+                            that.counter += 1;
+                            self.displayChart();
+                            self.saveState();
+                            $(".properties").click(function () { self.setProperties(this, 'existing'); });
+                            $('.remove').click(function () { self.hideWidget(this); });
+                        } else {
+                            /*
+                             this.sizeval = "3";
+                             this.title = $('input:radio[name=param]:checked');
+                             index =  $("input:radio[name='param']").index(this.title);
+                             this.tempData = this.getOverviewData();
+                             variables = {
+                             widget: this.widget,
+                             span: "span" + this.sizeval,
+                             type: this.classType[index],
+                             title: this.title.val(),
+                             data: this.tempData
+                             };
+                             this.template = _.template($("#text_template").html(), variables);
+                             $("#insert").append(this.template);
+                             this.counter += 1;
+                             */
+                            that.sizeval = $('input:radio[name=radio]:checked').val();
+                            variables = {
+                                widget: that.widget,
+                                span: "span" + that.sizeval,
+                                graphcontainer: "graphcontainer" + that.counter,
+                                menu: "menu" + that.counter,
+                                graph: "graph" + that.counter,
+                                title: that.title,
+                                graphType: that.type
+                            };
+                            that.graphType = that.type;
+                            that.graph = "#graph" + that.counter;
+                            that.widget = "#" + that.widget;
+                            that.template = _.template($("#widget_template").html(), variables);
+                            $("#insert").append(that.template);
+                            that.counter += 1;
+                            self.getTags();
+                        }
+                    },
+                    renderExisting: function () {
+                        var variables, index,
+                            that = this,
+                            self = this;
+                        that.widget = "#" + properties.get("widgetName");
+                        that.graph = "#" + $(that.widget + " .graph").attr("id");
+                        that.title = properties.get('widgetTitle');
+                        if (that.type === "graph") {
+                            that.myClass = $(that.widget).attr("class");
+                            that.sizeval = $('input:radio[name=radio]:checked').val();
+                            that.graphType = $('input:radio[name=graph]:checked').val();
+                            that.graphData = $('input:radio[name=graphdata]:checked').val();
+                            $(that.widget + '-title').html(that.title);
+                            $(that.widget).removeClass(that.myClass).addClass("span" + that.sizeval + " widget editable");
+                            self.displayChart();
+                            self.saveState();
+                        } else {
+                            that.sizeval = $('input:radio[name=radio]:checked').val();
+                            that.graphType = 'tag';
+                            that.myClass = $(that.widget).attr("class");
+                            $(that.widget + '-title').html(that.title);
+                            $(that.widget).removeClass(that.myClass).addClass("span" + that.sizeval + " widget editable");
+                            self.getTags();
+                            //text widget block
+                            /*
+                             parent = $(this.widget).parent();
+                             this.title = $('input:radio[name=param]:checked');
+                             index =  $("input:radio[name='param']").index(this.title);
+                             this.tempData = this.getOverviewData();
+                             this.sizeval = "3";
+                             variables = {
+                             widget: this.widget,
+                             span: "span" + this.sizeval,
+                             title: this.title.val(),
+                             type: this.classType[index],
+                             data: this.tempData
+                             };
+                             this.template = _.template($("#text_template").html(), variables);
+                             $(this.widget).remove();
+                             $(parent).append(this.template);
+                             */
+                        }
+                    },
+                    saveState: function () {
+                        var widgets = window.User.get('widgets'),
+                            userName = window.User.get('name'),
+                            that = this,
+                            matches = that.graph.match(/\d+$/),
+                            position = matches[0] - 1;
+                        widgets.graph[position] = that.graphType;
+                        widgets.spans[position] = that.sizeval;
+                        widgets.titles[position] = that.title;
+                        window.User.set('widgets', widgets);
+                        localStorage.setItem(userName, JSON.stringify(window.User));
+                    },
+                    getTags: function () {
+                        var self = this,
+                            that = this,
+                            tag_template;
+                        $.ajax({
+                            url: 'api/tagging/tagStats',
+                            dataType: 'json',
+                            async: false,
+                            success: function (data) {
+                                $(that.graph).empty();
+                                tag_template = _.template($('#tags_template').html(), {data: data});
+                                $(that.graph).html(tag_template);
+                                self.saveState();
+                            }
+                        });
+                    },
                     beforeRender: $.noop,
                     onRender: function () {
                         this.test();
@@ -354,7 +342,7 @@ define(
                         if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                         var variables,
-                            tmpl = _.template(this.template),
+                            tmpl = _.template(myTemplate),
                             that = this;
 
                         this.$el.empty();
@@ -376,6 +364,7 @@ define(
                     test: function () {
                         var that = this;
                         setTimeout(function () {
+                            window.console.log('inside test');
                             $(".movable").sortable({
                                 containment: 'body',
                                 appendTo: '#dashboard-view',
@@ -418,7 +407,6 @@ define(
                                     };
                                     template = _.template($("#widget_template").html(), variables);
                                     $("#insert").append(template);
-                                    //widgetview.counter += 1;
                                 }
 
                                 if (widgets[i] === 'pie') {
@@ -432,11 +420,11 @@ define(
                                 } else if (widgets[i] === 'line') {
                                     lineGraph('#graph' + (i + 1));
                                 } else if (widgets[i] === 'tag') {
-                                    widgetview.graph = '#graph' + (i + 1);
-                                    widgetview.sizeval = settings.spans[i];
-                                    widgetview.title = settings.titles[i];
-                                    widgetview.graphType = widgets[i];
-                                    widgetview.getTags();
+                                    that.graph = '#graph' + (i + 1);
+                                    that.sizeval = settings.spans[i];
+                                    that.title = settings.titles[i];
+                                    that.graphType = widgets[i];
+                                    that.getTags();
                                 }
                             }
                             $(".properties").click(function () { that.setProperties(this, 'existing'); });
