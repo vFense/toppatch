@@ -134,8 +134,8 @@ define(
                         this.counter += 1;
                         this.displayChart();
                         this.saveState();
-                        $(".properties").click(function () { setProperties(this, 'existing'); });
-                        $('.remove').click(function () { hideWidget(this); });
+                        $(".properties").click(function () { exports.View.setProperties(this, 'existing'); });
+                        $('.remove').click(function () { exports.View.hideWidget(this); });
                     } else {
                         /*
                         this.sizeval = "3";
@@ -252,72 +252,7 @@ define(
                 }
             }),
             widgetview = new WidgetView({ el: 'body' }),
-            setProperties = function (obj, param) {
-                if (param === "existing") {
-                    var widgetName = $(obj).parents('.widget').attr("id"),
-                        title = $("#" + widgetName + "-title").html(),
-                        span = $("#" + widgetName).attr('class').split(' ')[0].match(/\d+$/)[0],
-                        graphType = $("#" + widgetName).find('.graph').attr('class').split(' ')[0],
-                        graph = $('input:radio[name=graph]'),
-                        size = $('input:radio[name=radio]'),
-                        widgetType = $("#" + widgetName).find('.graph').attr('value');
-                    properties.set({
-                        widgetName: widgetName,
-                        currentWidget: "existing",
-                        widgetTitle: title
-                    });
-                    size.each(function () {
-                        if ($(this).val() === span) {
-                            $(this).attr('checked', true);
-                        } else {
-                            $(this).attr('checked', false);
-                        }
-                    });
-                    if (widgetType === 'tag') {
-                        $('input:radio[name=type]').each(function () {
-                            if ($(this).val() === widgetType) {
-                                $(this).attr('checked', true);
-                            } else {
-                                $(this).attr('checked', false);
-                            }
-                        });
-                        $('#graphSettings').hide();
-                    } else {
-                        $('input:radio[name=type]').each(function () {
-                            if ($(this).val() === 'graph') {
-                                $(this).attr('checked', true);
-                            } else {
-                                $(this).attr('checked', false);
-                            }
-                        });
-                        graph.each(function () {
-                            if ($(this).val() === graphType) {
-                                $(this).attr('checked', true);
-                            } else {
-                                $(this).attr('checked', false);
-                            }
-                        });
-                        $('#graphSettings').show();
-                    }
-                    $('#title').val(title).attr("placeholder", title);
-                    //widgetview.graphSetting();
-                } else if (param === "new") {
-                    if ($('#widget5').length !== 0) {
-                        window.console.log('too many widgets');
-                        setTimeout(function () { $('#widgetProperties').modal('hide'); }, 50);
-                    }
-                    properties.set({
-                        currentWidget: "new"
-                    });
-                    $("#graphSettings").hide();
-                    $('INPUT:text, SELECT', '#properties-form').val('');
-                    $('INPUT:checkbox, INPUT:radio', '#properties-form').removeAttr('checked').removeAttr('selected');
-                    $('#title').val('').attr("placeholder", "Default");
-                }
-            },
-            hideWidget = function (obj) {
-                $(obj).parents('.widget').hide();
-            },
+
             exports = {
                 Model: Backbone.Model.extend({}),
                 View: Backbone.View.extend({
@@ -327,7 +262,7 @@ define(
                     events: {
                         'click #type1': 'graphSetting',
                         'click #type2': 'textSetting',
-                        'click #apply': 'generate'
+                        'click #apply': 'createWidget'
                         //'click #graphtype1': 'pieData',
                         //'click #graphtype2': 'otherData',
                         //'click #graphtype3': 'otherData',
@@ -341,11 +276,75 @@ define(
                         $("#widgetProperties").modal('hide');
                         widgetview.render();
                     },
-                    generate: function () {
-                    },
                     graphSetting: function () {
                         $("#graphSettings").show();
                         $("#textSettings").hide();
+                    },
+                    hideWidget: function (object) {
+                        $(object).parents('.widget').hide();
+                    },
+                    setProperties: function (obj, param) {
+                        if (param === "existing") {
+                            var widgetName = $(obj).parents('.widget').attr("id"),
+                                title = $("#" + widgetName + "-title").html(),
+                                span = $("#" + widgetName).attr('class').split(' ')[0].match(/\d+$/)[0],
+                                graphType = $("#" + widgetName).find('.graph').attr('class').split(' ')[0],
+                                graph = $('input:radio[name=graph]'),
+                                size = $('input:radio[name=radio]'),
+                                widgetType = $("#" + widgetName).find('.graph').attr('value');
+                            properties.set({
+                                widgetName: widgetName,
+                                currentWidget: "existing",
+                                widgetTitle: title
+                            });
+                            size.each(function () {
+                                if ($(this).val() === span) {
+                                    $(this).attr('checked', true);
+                                } else {
+                                    $(this).attr('checked', false);
+                                }
+                            });
+                            if (widgetType === 'tag') {
+                                $('input:radio[name=type]').each(function () {
+                                    if ($(this).val() === widgetType) {
+                                        $(this).attr('checked', true);
+                                    } else {
+                                        $(this).attr('checked', false);
+                                    }
+                                });
+                                $('#graphSettings').hide();
+                            } else {
+                                $('input:radio[name=type]').each(function () {
+                                    if ($(this).val() === 'graph') {
+                                        $(this).attr('checked', true);
+                                    } else {
+                                        $(this).attr('checked', false);
+                                    }
+                                });
+                                graph.each(function () {
+                                    if ($(this).val() === graphType) {
+                                        $(this).attr('checked', true);
+                                    } else {
+                                        $(this).attr('checked', false);
+                                    }
+                                });
+                                $('#graphSettings').show();
+                            }
+                            $('#title').val(title).attr("placeholder", title);
+                            //widgetview.graphSetting();
+                        } else if (param === "new") {
+                            if ($('#widget5').length !== 0) {
+                                window.console.log('too many widgets');
+                                setTimeout(function () { $('#widgetProperties').modal('hide'); }, 50);
+                            }
+                            properties.set({
+                                currentWidget: "new"
+                            });
+                            $("#graphSettings").hide();
+                            $('INPUT:text, SELECT', '#properties-form').val('');
+                            $('INPUT:checkbox, INPUT:radio', '#properties-form').removeAttr('checked').removeAttr('selected');
+                            $('#title').val('').attr("placeholder", "Default");
+                        }
                     },
                     beforeRender: $.noop,
                     onRender: function () {
@@ -375,6 +374,7 @@ define(
                         return this;
                     },
                     test: function () {
+                        var that = this;
                         setTimeout(function () {
                             $(".movable").sortable({
                                 containment: 'body',
@@ -399,9 +399,9 @@ define(
                                 distance: 20
                             }).disableSelection();
                             $("#restore").click(function () { $(".widget").show(); });
-                            $(".properties").click(function () { setProperties(this, 'existing'); });
-                            $('#addwidget').click(function () { setProperties(this, 'new'); });
-                            $('.remove').click(function () { hideWidget(this); });
+                            $(".properties").click(function () { that.setProperties(this, 'existing'); });
+                            $('#addwidget').click(function () { that.setProperties(this, 'new'); });
+                            $('.remove').click(function () { that.hideWidget(this); });
                             var i, variables, template,
                                 widgets = window.User.get('widgets').graph,
                                 settings = window.User.get('widgets');
@@ -439,8 +439,8 @@ define(
                                     widgetview.getTags();
                                 }
                             }
-                            $(".properties").click(function () { setProperties(this, 'existing'); });
-                            $('.remove').click(function () { hideWidget(this); });
+                            $(".properties").click(function () { that.setProperties(this, 'existing'); });
+                            $('.remove').click(function () { that.hideWidget(this); });
                         }, 200);
                     }
                 })
