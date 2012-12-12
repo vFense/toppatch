@@ -82,7 +82,7 @@ def get_tag_stats(session, tagid=None, tagname=None):
     return list_of_tags
 
 
-def tag_adder(session, msg):
+def tag_adder(session, msg, username=None):
     """
         add a new tag to RV
     """
@@ -103,7 +103,7 @@ def tag_adder(session, msg):
         return tagged
 
 
-def tag_add_per_node(session, msg):
+def tag_add_per_node(session, msg, username=None):
     """
         Add a node to an existing tag or 
         add a node to a new tag
@@ -119,7 +119,8 @@ def tag_add_per_node(session, msg):
         user = session.query(User).filter_by(username=user_name).first()
         if user:
             tag_out = add_tag_per_node(session, nodes,
-                    tag_name=tag_name, user_id=user.id)
+                    tag_name=tag_name, user_id=user.id,
+                    username=username)
             tagged = {
                      "pass" : tag_out[0],
                      "message" : tag_out[1]
@@ -128,7 +129,7 @@ def tag_add_per_node(session, msg):
         return tagged
 
 
-def tag_remove_per_node(session, msg):
+def tag_remove_per_node(session, msg, username=None):
     """
         Remove a node from an existing tag.
     """
@@ -147,7 +148,7 @@ def tag_remove_per_node(session, msg):
         return tagged
 
 
-def tag_remove(session, msg):
+def tag_remove(session, msg, username=None):
     """
         Remove a tag from RV
     """
