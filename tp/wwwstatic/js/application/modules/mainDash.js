@@ -13,30 +13,7 @@ define(
                     initialize: function () {}
                 })
             )(),
-            barGraph = function (selection) {
-                var width = $(selection).width();
-                $(selection).attr('class', 'bar graph');
-                d3.json("../api/graphData", function (json) {
-                    var barWidth = (width / json.length) - 10,
-                        graphBar = app.chart.bar().barWidth(barWidth);
-                    d3.select(selection).datum(json).call(graphBar);
-                });
-            },
-            interactiveGraph = function (selection) {
-                var interGraph = app.chart.partition();
-                $(selection).attr('class', 'summary graph');
-                d3.json("../api/summaryData", function (json) {
-                    d3.select(selection).datum(json).call(interGraph);
-                });
-            },
-            pieGraph = function (selection) {
-                var width = $(selection).width(),
-                    pieChart = app.chart.pie().width(width);
-                $(selection).attr('class', 'pie graph');
-                d3.json("../api/severity.json", function (json) {
-                    d3.select(selection).datum(json).call(pieChart);
-                });
-            },
+            /*
             lineGraph = function (selection) {
                 var data = [
                         {"label": new Date('1960').getFullYear(), "value": 60},
@@ -53,16 +30,7 @@ define(
                 //title = properties.get('widgetTitle') === 'Default' ? "Line Graph" : properties.get('widgetTitle'),
                 d3.select(selection).datum(data).call(lineChart);
             },
-            stackedGraph = function (selection) {
-                //var data = app.data.osData,
-                //title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
-                var width = $(selection).width(),
-                    stackedChart = app.chart.stackedBar().width(width);
-                $(selection).attr('class', 'stacked graph');
-                d3.json("../api/graphData", function (json) {
-                    d3.select(selection).datum(json).call(stackedChart);
-                });
-            },
+            */
             exports = {
                 Model: Backbone.Model.extend({}),
                 View: Backbone.View.extend({
@@ -171,33 +139,29 @@ define(
                         }
                     },
                     widgetrender: function () {
-                        var that = this,
-                            self = this;
-                        window.console.log(that);
-                        window.console.log(self);
+                        var that = this;
                         that.current = properties.get("currentWidget");
                         that.type = $('input:radio[name=type]:checked').val();
                         that.title = that.$el.find('#title').val() === "" ? "Default" : that.$el.find('#title').val();
                         properties.set({ widgetTitle: that.title });
                         if (that.current === "new") {
-                            self.renderNew();
+                            that.renderNew();
                         } else {
-                            self.renderExisting();
+                            that.renderExisting();
                         }
                     },
                     displayChart: function () {
-                        var that = this;
-                        if (that.graphType === "pie") {
-                            pieGraph(that.graph);
-                        } else if (that.graphType === "bar") {
-                            barGraph(that.graph);
-                        } else if (that.graphType === "line") {
-                            lineGraph(that.graph);
-                        } else if (that.graphType === "stacked") {
-                            stackedGraph(this.graph);
+                        if (this.graphType === "pie") {
+                            this.pieGraph(this.graph);
+                        } else if (this.graphType === "bar") {
+                            this.barGraph(this.graph);
+                        } else if (this.graphType === "stacked") {
+                            this.stackedGraph(this.graph);
                         } else if (this.graphType === "summary") {
-                            interactiveGraph(that.graph);
-                        }
+                            this.interactiveGraph(this.graph);
+                        } /* else if (that.graphType === "line") {
+                            lineGraph(that.graph);
+                        } */
                     },
                     renderNew: function () {
                         var variables, index,
@@ -336,7 +300,33 @@ define(
                     },
                     beforeRender: $.noop,
                     onRender: function () {
-                        this.test();
+
+                        $(document).find("#restore").click(function () { $(".widget").show(); });
+                        $(document).find('#addwidget').click(function () { that.setProperties(this, 'new'); });
+
+                        this.$el.find(".movable").sortable({
+                            containment: 'body',
+                            appendTo: '#dashboard-view',
+                            helper: 'clone',
+                            connectWith: '.movable',
+                            items: 'dl, .widget',
+                            distance: 20
+                        });
+                        this.$el.find("#dashboard-view").sortable({
+                            containment: 'body',
+                            appendTo: '#dashboard-view',
+                            helper: 'clone',
+                            items: '.row, .row-fluid',
+                            handle: '.row-handle',
+                            placeholder: "ui-state-highlight",
+                            start: function (event, ui) {
+                                ui.placeholder.css('height', ui.helper.css('height'));
+                                ui.placeholder.css('width', ui.helper.css('width'));
+                            },
+                            axis: 'y',
+                            distance: 20
+                        }).disableSelection();
+                        this.populateWidgets();
                     },
                     render: function () {
                         if (this.beforeRender !== $.noop) { this.beforeRender(); }
@@ -361,39 +351,47 @@ define(
                         if (this.onRender !== $.noop) { this.onRender(); }
                         return this;
                     },
-                    test: function () {
-                        var that = this;
+                    stackedGraph: function (selection) {
+                        //var data = app.data.osData,
+                        //title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
+                        var width = $(selection).width(),
+                            stackedChart = app.chart.stackedBar().width(width);
+                        $(selection).attr('class', 'stacked graph');
+                        d3.json("../api/graphData", function (json) {
+                            d3.select(selection).datum(json).call(stackedChart);
+                        });
+                    },
+                    pieGraph: function (selection) {
+                        var width = this.$el.find(selection).width(),
+                            pieChart = app.chart.pie().width(width);
+                        $(selection).attr('class', 'pie graph');
+                        d3.json("../api/severity.json", function (json) {
+                            d3.select(selection).datum(json).call(pieChart);
+                        });
+                    },
+                    barGraph: function (selection) {
+                        var width = $(selection).width();
+                        $(selection).attr('class', 'bar graph');
+                        d3.json("../api/graphData", function (json) {
+                            var barWidth = (width / json.length) - 10,
+                                graphBar = app.chart.bar().barWidth(barWidth);
+                            d3.select(selection).datum(json).call(graphBar);
+                        });
+                    },
+                    interactiveGraph: function (selection) {
+                        var interGraph = app.chart.partition();
+                        $(selection).attr('class', 'summary graph');
+                        d3.json("../api/summaryData", function (json) {
+                            d3.select(selection).datum(json).call(interGraph);
+                        });
+                    },
+                    populateWidgets: function () {
+                        var i, variables, template,
+                            that = this,
+                            widgets = window.User.get('widgets').graph,
+                            settings = window.User.get('widgets');
+
                         setTimeout(function () {
-                            window.console.log('inside test');
-                            $(".movable").sortable({
-                                containment: 'body',
-                                appendTo: '#dashboard-view',
-                                helper: 'clone',
-                                connectWith: '.movable',
-                                items: 'dl, .widget',
-                                distance: 20
-                            });
-                            $("#dashboard-view").sortable({
-                                containment: 'body',
-                                appendTo: '#dashboard-view',
-                                helper: 'clone',
-                                items: '.row, .row-fluid',
-                                handle: '.row-handle',
-                                placeholder: "ui-state-highlight",
-                                start: function (event, ui) {
-                                    ui.placeholder.css('height', ui.helper.css('height'));
-                                    ui.placeholder.css('width', ui.helper.css('width'));
-                                },
-                                axis: 'y',
-                                distance: 20
-                            }).disableSelection();
-                            $("#restore").click(function () { $(".widget").show(); });
-                            $(".properties").click(function () { that.setProperties(this, 'existing'); });
-                            $('#addwidget').click(function () { that.setProperties(this, 'new'); });
-                            $('.remove').click(function () { that.hideWidget(this); });
-                            var i, variables, template,
-                                widgets = window.User.get('widgets').graph,
-                                settings = window.User.get('widgets');
                             for (i = 0; i < widgets.length; i += 1) {
                                 if ($('#widget' + (i + 1)).length === 0) {
                                     variables = {
@@ -410,25 +408,25 @@ define(
                                 }
 
                                 if (widgets[i] === 'pie') {
-                                    pieGraph('#graph' + (i + 1));
+                                    that.pieGraph('#graph' + (i + 1));
                                 } else if (widgets[i] === 'bar') {
-                                    barGraph('#graph' + (i + 1));
+                                    that.barGraph('#graph' + (i + 1));
                                 } else if (widgets[i] === 'summary') {
-                                    interactiveGraph('#graph' + (i + 1));
+                                    that.interactiveGraph('#graph' + (i + 1));
                                 } else if (widgets[i] === 'stacked') {
-                                    stackedGraph('#graph' + (i + 1));
-                                } else if (widgets[i] === 'line') {
-                                    lineGraph('#graph' + (i + 1));
+                                    that.stackedGraph('#graph' + (i + 1));
                                 } else if (widgets[i] === 'tag') {
                                     that.graph = '#graph' + (i + 1);
                                     that.sizeval = settings.spans[i];
                                     that.title = settings.titles[i];
                                     that.graphType = widgets[i];
                                     that.getTags();
-                                }
+                                }/*else if (widgets[i] === 'line') {
+                                 lineGraph('#graph' + (i + 1));
+                                 }*/
                             }
-                            $(".properties").click(function () { that.setProperties(this, 'existing'); });
-                            $('.remove').click(function () { that.hideWidget(this); });
+                            that.$el.find(".properties").click(function () { that.setProperties(this, 'existing'); });
+                            that.$el.find('.remove').click(function () { that.hideWidget(this); });
                         }, 200);
                     }
                 })
