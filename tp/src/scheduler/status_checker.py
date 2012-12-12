@@ -22,19 +22,20 @@ def agent_status():
     session = create_session(ENGINE)
     session = validate_session(session)
     nodes = session.query(NodeInfo).all()
+    username = 'system_list'
     for node in nodes:
         if node.last_agent_update and node.last_node_update:
             timediffagent = datetime.now() - node.last_agent_update
             timediffnode = datetime.now() - node.last_node_update
             if timediffagent.seconds > 480:
                 node.agent_status = False
-                logger.info('AGENT IS DOWN, %d seconds since last update' %\
-                        (timediffagent.seconds)
+                logger.info('%s - AGENT %s is DOWN, %d seconds since last update' %\
+                        (username, node.ip_address, timediffagent.seconds)
                         )
             else:
                 node.agent_status = True
-                logger.info('AGENT IS UP, %d seconds since last update' %\
-                        (timediffagent.seconds)
+                logger.info('%s - AGENT %s is UP, %d seconds since last update' %\
+                        (username, node.ip_address, timediffagent.seconds)
                         )
             if timediffnode.seconds > 480:
                 ping_cmd = ping_cmd + node.ip_address
@@ -45,27 +46,27 @@ def agent_status():
                 if percent:
                     if int(percent.group(1)) <= 99:
                         node.host_status = True
-                        logger.info('NODE IS UP, %d seconds since last update'%\
-                                (timediffagent.seconds)
+                        logger.info('%s - NODE %s is UP, %d seconds since last update'%\
+                                (username, node.ip_address, timediffagent.seconds)
                                 )
                     elif int(percent.group(1)) == 100:
                         node.host_status = False
-                        logger.info('NODE %s is DOWN, %d seconds since last update'%\
-                                (node.ip_address, timediffnode.seconds)
+                        logger.info('%s - NODE %s is DOWN, %d seconds since last update'%\
+                                (username, node.ip_address, timediffnode.seconds)
                                 )
                 else:
                     node.host_status = False
-                    logger.info('NODE %s is DOWN, %d seconds since last update'%\
-                           (node.ip_address, timediffnode.seconds)
+                    logger.info('%s - NODE %s is DOWN, %d seconds since last update'%\
+                           (username, node.ip_address, timediffnode.seconds)
                            )
             else:
                 node.host_status = True
-                logger.info('NODE %s is UP, %d seconds since last update'%\
-                       (node.ip_address, timediffnode.seconds)
+                logger.info('%s - NODE %s is UP, %d seconds since last update'%\
+                       (username, node.ip_address, timediffnode.seconds)
                        )
         else:
-            logger.info('Status for %s has not been updated yet' %\
-                    (node.ip_address)
+            logger.info('%s - Status for %s has not been updated yet' %\
+                    (username, node.ip_address)
                     )
     session.commit()
     session.close
