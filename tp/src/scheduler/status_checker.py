@@ -22,7 +22,7 @@ def agent_status():
     session = create_session(ENGINE)
     session = validate_session(session)
     nodes = session.query(NodeInfo).all()
-    username = 'system_list'
+    username = 'system_user'
     for node in nodes:
         if node.last_agent_update and node.last_node_update:
             timediffagent = datetime.now() - node.last_agent_update
