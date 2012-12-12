@@ -27,6 +27,7 @@ class CsrHandOff():
         self.cert_error = None
         self.error = None
         self.client_ip = ip_address
+        self.username = 'system_user'
         self.valid_json, self.json_object = verify_json_is_valid(data)
         if self.valid_json:
             self.data = self.json_object
@@ -47,13 +48,14 @@ class CsrHandOff():
                                 self.client_ip, self.signed_cert)
                         self.results = self.send_cert(self.node, \
                             self.signed_cert)
-                        logger.debug('ERROR: %s\tDATA: %s' % \
-                                (self.results.error, self.results.read_data)
+                        logger.debug('%s - ERROR: %s\tDATA: %s' % \
+                                (self.username, self.results.error,
+                                    self.results.read_data)
                                 )
                         if self.results.error:
                             logger.error(self.results.error)
-                            logger.error('Deleteing CSR and CERT for %s' %\
-                                    (self.results.err)
+                            logger.error('%s - Deleteing CSR and CERT for %s' %\
+                                    (self.username, self.results.err)
                                     )
                             self.csr_exists = \
                                     csr_exists(self.session, self.client_ip)
@@ -63,25 +65,26 @@ class CsrHandOff():
                             cert_file_deleted = os.remove(self.cert_path)
                             self.session.delete(self.cert_exists)
                             self.session.delete(self.csr_exists)
-                            logger.error('CSR and CERT for %s were deleleted' %\
-                                    (self.node.ip_address)
+                            logger.error('%s - CSR and CERT for %s were deleted' %\
+                                    (self.username, self.node.ip_address)
                                     )
                             self.node = \
                                     node_exists(self.session, node_ip=self.client_ip)
                             if self.node:
                                 self.session.delete(self.node)
-                                logger.error('Deleteing Node %s' %\
-                                        (self.node.ip_address)
+                                logger.error('%s - Deleteing Node %s' %\
+                                        (self.username, self.node.ip_address)
                                         )
                             self.session.commit()
 
 
                 else:
-                    print 'csr for %s %s' % (self.client_ip, self.error)
+                    logger.error('csr for %s %s' % \
+                            (self.client_ip, self.error))
             self.session.close()
         else:
-            logger.debug('JSON NOT VALID from node %s, msg=%s' % \
-                        (ipaddress, data)
+            logger.debug('%s - JSON NOT VALID from node %s, msg=%s' % \
+                        (self.username, ipaddress, data)
                         )
 
 

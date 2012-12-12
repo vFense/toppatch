@@ -81,30 +81,30 @@ def save_key(location, key, key_type, name=socket.gethostname()):
         os.stat(location)
     except OSError as e:
         if e.errno == 2:
-            logger.error('ssl directory %s does not exists' %\
-                    (location)
+            logger.error('%s - ssl directory %s does not exists' %\
+                    ('system_user', location)
                     )
         elif e.errno == 13:
-            logger.error('Do not have permission to write to %s' %\
-                    (location)
+            logger.error('%s - Do not have permission to write to %s' %\
+                    ('system_user', location)
                     )
     try:
         file_exists = os.stat(path_to_key)
         if file_exists:
-            logger.warn('File %s already exists' % (path_to_key))
+            logger.warn('%s - File %s already exists' %\
+                    ('system_user', path_to_key))
     except OSError as e:
         if e.errno == 2:
-            print e
             open(path_to_key, 'w').write(\
                     DUMP_KEY(FILE_TYPE_PEM, key)
                     )
             status = True
-            logger.error('Writing ssl cert to %s ' %\
-                    (location)
+            logger.error('%s - Writing ssl cert to %s ' %\
+                    ('system_user', location)
                     )
         elif e.errno == 13:
-            logger.error('Do not have permission to write to %s' %\
-                    (location)
+            logger.error('%s - Do not have permission to write to %s' %\
+                    ('system_user', location)
                     )
     return(path_to_key, name, status)
 
