@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from datetime import datetime
-import logging
+import logging, logging.config
 import re
 from subprocess import Popen, PIPE, STDOUT
 from db.client import *
@@ -10,29 +10,33 @@ from db.update_table import *
 
 from apscheduler.scheduler import Scheduler
 
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
+
 ENGINE = init_engine()
 sched = Scheduler()
 sched.start()
-logging.basicConfig()
 @sched.interval_schedule(minutes=3)
 def agent_status():
     ping_cmd = '/bin/ping -c1 -W1 '
     session = create_session(ENGINE)
     session = validate_session(session)
     nodes = session.query(NodeInfo).all()
+    username = 'system_list'
     for node in nodes:
         if node.last_agent_update and node.last_node_update:
-            #timediff = node.last_agent_update - datetime.now()
             timediffagent = datetime.now() - node.last_agent_update
             timediffnode = datetime.now() - node.last_node_update
             if timediffagent.seconds > 480:
                 node.agent_status = False
-                print "AGENT IS DOWN, %d seconds since last update" %\
-                        (timediffagent.seconds)
+                logger.info('%s - AGENT %s is DOWN, %d seconds since last update' %\
+                        (username, node.ip_address, timediffagent.seconds)
+                        )
             else:
                 node.agent_status = True
-                print "AGENT IS UP, %d seconds since last update" %\
-                        (timediffagent.seconds)
+                logger.info('%s - AGENT %s is UP, %d seconds since last update' %\
+                        (username, node.ip_address, timediffagent.seconds)
+                        )
             if timediffnode.seconds > 480:
                 ping_cmd = ping_cmd + node.ip_address
                 output = Popen([ping_cmd], shell=True, stdout=PIPE,
@@ -42,21 +46,27 @@ def agent_status():
                 if percent:
                     if int(percent.group(1)) <= 99:
                         node.host_status = True
-                        print "NODE %s IS UP, %d seconds since last update" %\
-                            (node.ip_address, timediffnode.seconds)
+                        logger.info('%s - NODE %s is UP, %d seconds since last update'%\
+                                (username, node.ip_address, timediffagent.seconds)
+                                )
                     elif int(percent.group(1)) == 100:
                         node.host_status = False
-                        print "NODE %s IS DOWN, %d seconds since last update" %\
-                            (node.ip_address, timediffnode.seconds)
+                        logger.info('%s - NODE %s is DOWN, %d seconds since last update'%\
+                                (username, node.ip_address, timediffnode.seconds)
+                                )
                 else:
                     node.host_status = False
-                    print "NODE %s IS DOWN, %d seconds since last update" %\
-                            (node.ip_address, timediffnode.seconds)
+                    logger.info('%s - NODE %s is DOWN, %d seconds since last update'%\
+                           (username, node.ip_address, timediffnode.seconds)
+                           )
             else:
                 node.host_status = True
-                print "NODE %s IS UP, %d seconds since last update" %\
-                        (node.ip_address, timediffnode.seconds)
+                logger.info('%s - NODE %s is UP, %d seconds since last update'%\
+                       (username, node.ip_address, timediffnode.seconds)
+                       )
         else:
-            print "Status has not been updated yet"
+            logger.info('%s - Status for %s has not been updated yet' %\
+                    (username, node.ip_address)
+                    )
     session.commit()
     session.close

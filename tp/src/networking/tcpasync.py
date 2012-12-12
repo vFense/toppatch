@@ -1,23 +1,27 @@
 import re
 import sys
 import gevent
-#from gevent import monkey
 import ssl
 import socket
 import select
+import logging
+import logging.config
 
-#monkey.patch_socket()
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
 
 class TcpConnect():
     """
     Connect to the remote agent, using a secured or a nonsecured
     tcp connection. We are using the socket library backed by Gevent.
     """
-    def __init__(self, host, msg, port=9003, secure=True, timeout=60):
+    def __init__(self, host, msg, port=9003, secure=True, timeout=60,
+            username='system_user'):
         self.secure = secure
         self.host = host
         self.msg = msg
         self.port = port
+        self.username = username
         self.connection_count = 0
         self.write_connection_count = 0
         self.write_count = 0
@@ -50,7 +54,6 @@ class TcpConnect():
             self.tcp_socket.connect((self.host, self.port))
             connected = True
         except Exception as e:
-            print e
             if e.errno == 111 and \
                     self.connection_count < 1 or \
                     re.search(r'operation timed out', e.message) and \
@@ -59,13 +62,14 @@ class TcpConnect():
                 self.tcp_socket = self.socket_init()
                 self._connect()
             else:
-                print "I CAN NOT CONNECT TO THE REMOTE AGENT", e
+                logger.error('%s - Cant connect to %s on port %s. Error:%s' %\
+                        (self.username, self.host, self.port, e.message)
+                        )
                 return(self._error_handler(e))
         if connected:
             return self._write()
 
     def _error_handler(self, e):
-        print dir(e), e
         if e is None:
             self.error = "Error Undefined"
         elif e.message:
@@ -97,7 +101,9 @@ class TcpConnect():
                 self._connect()
             else:
                 self.error = self._error_handler(error)
-                print "writing to socket failed", error
+                logger.error('%s - Cant write to the socket on host %s:%s' %\
+                        (self.username, self.host, self.port)
+                        )
                 self._close()
 
     def _read(self):
@@ -106,11 +112,15 @@ class TcpConnect():
             try:
                 self.read_data = self.tcp_socket.recv(1024)
             except Exception as e:
-                print "I CAN NOT READ FROM REMOTE SOCKET", dir(e), e
+                logger.error('%s - Cant read from the socket on host %s:%s' %\
+                        (self.username, self.host, self.port)
+                        )
                 self.error = self._error_handler(e)
         else:
             self.error = self._error_handler(error)
-            print "reading from socket failed", error
+            logger.error('%s - Cant read from the socket on host %s:%s' %\
+                    (self.username, self.host, self.port)
+                    )
         self._close()
 
 
