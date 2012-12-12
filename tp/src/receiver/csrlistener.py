@@ -7,13 +7,18 @@ from db.query_table import *
 from db.client import *
 from utils.common import verify_json_is_valid
 from csrhandler import CsrHandOff
+import logging
+import logging.config
 
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('csrlistener')
 ENGINE = init_engine()
 c = ENGINE.connect()
 try:
     c.execute("SELECT * FROM node_info")
     c.close()
 except exc.DBAPIError, e:
+    logger.debug(e.message)
     c = e.connect()
     c.execute("SELECT * FROM node_info")
 
@@ -31,7 +36,9 @@ class CsrReceiver(Protocol):
     def connectionMade(self):
         self.client_peer = self.transport.getPeer()
         self.client_ip = self.client_peer.host
-        print self.client_peer
+        logger.info('agent %s connected' %\
+                (self.client_peer)
+                )
 
     def dataReceived(self, data):
         self.total_data = self.total_data + data
@@ -39,6 +46,9 @@ class CsrReceiver(Protocol):
     def connectionLost(self, reason):
         self.transport.loseConnection()
         data = self.total_data
+        logger.debug('data received from agent %s\n%s' %\
+                (self.client_peer, data)
+                )
         self.total_data = ""
         CsrHandOff(ENGINE, self.client_ip, data)
 

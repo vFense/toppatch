@@ -1,3 +1,5 @@
+import logging
+import logging.config
 from OpenSSL import SSL
 from twisted.internet import ssl, reactor
 from twisted.internet.protocol import Factory, Protocol
@@ -11,6 +13,9 @@ from scheduler.status_checker import *
 
 from threading import Thread
 
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvlistener')
+
 ALLOWED_CIPHER_LIST = 'TLSv1+HIGH:!SSLv2:RC4+MEDIUM:!aNULL:!eNULL:!3DES:@STRENGTH'
 ENGINE = init_engine()
 
@@ -19,7 +24,9 @@ class GetJson(Protocol):
     def connectionMade(self):
         self.client_peer = self.transport.getPeer()
         self.client_ip = self.client_peer.host
-        print self.client_peer
+        logger.info('agent %s connected' %\
+                (self.client_peer)
+                )
 
     def dataReceived(self, data):
         self.total_data = self.total_data + data
@@ -27,7 +34,9 @@ class GetJson(Protocol):
     def connectionLost(self, reason):
         self.transport.loseConnection()
         data = self.total_data
-        print data
+        logger.debug('data received from agent %s\n%s' %\
+                (self.client_peer, data)
+                )
         self.total_data = ""
         is_enabled = None
         self.session = create_session(ENGINE)
@@ -38,12 +47,16 @@ class GetJson(Protocol):
                     filter(SslInfo.enabled == True).\
                     filter(SslInfo.node_id == node.id).first()
         if is_enabled:
+            logger.debug('calling HandOff for %s' %\
+                    (self.client_peer)
+                    )
             handoff = HandOff(ENGINE)
             Thread(target=handoff.run,
                     args=(data, self.client_ip)).start()
         else:
-            print '%s is not allowed to connect to RVhandler' %\
-                    (self.client_ip)
+            logger.debug('%s is not allowed to connect to RVhandler' %\
+                    (self.client_peer)
+                    )
         self.session.close()
 
 def verifyCallback(connection, x509, errnum, errdepth, ok):
