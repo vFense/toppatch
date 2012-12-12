@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-
+import logging
+import logging.config
 from datetime import datetime
 from socket import gethostbyaddr
 from models.base import Base
@@ -12,6 +13,9 @@ from utils.common import *
 from db.client import *
 from db.query_table import *
 from networking.tcpasync import TcpConnect
+
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
 
 
 def add_node(session, client_ip, agent_timestamp=None, node_timestamp=None):
@@ -26,9 +30,12 @@ def add_node(session, client_ip, agent_timestamp=None, node_timestamp=None):
                 True, True, agent_timestamp, node_timestamp)
         session.add(add_node)
         session.commit()
+        logger.info('node %s added to node_info' %\
+                client_ip)
         return add_node
     except Exception as e:
-        print e
+        logger.error('node %s could not be added to node_info' %\
+                client_ip)
 
 
 def add_tag(session, tag_name, user_id=None):
@@ -44,7 +51,6 @@ def add_tag(session, tag_name, user_id=None):
         return(True, "Tag %s added" % (tag_name), add_tag)
     except Exception as e:
         session.rollback()
-        print e
         return(False, "Tag %s failed to add" % (tag_name))
 
 
@@ -142,7 +148,6 @@ def add_time_block(session, label, start_date, start_time, end_time,
         session.commit()
         return(True, "Time Block Added", add_block)
     except Exception as e:
-        print e
         session.rollback()
         return(False, "Time Block Could Not Be Added", e)
 
@@ -165,7 +170,6 @@ def add_csr(session, client_ip, location, csr_name,
         return add_csr
     except Exception as e:
         session.rollback()
-        print e
 
 
 def add_cert(session, node_id, cert_id, cert_name,
@@ -185,11 +189,9 @@ def add_cert(session, node_id, cert_id, cert_name,
                     cert_location, cert_expiration)
         session.add(add_cert)
         session.commit()
-        print add_cert
         return add_cert
     except Exception as e:
         session.rollback()
-        print e
 
 def add_operation(session, node_id, operation, result_id=None,
         operation_sent=None, operation_received=None, results_received=None):
@@ -236,11 +238,9 @@ def add_system_info(session, data, node_info):
             try:
                 session.add(system_info)
                 session.commit()
-                print "system info was added"
                 return system_info
             except Exception as e:
                 session.rollback()
-                print "BOOOH system info was not added"
 
 
 def add_software_update(session, data):
@@ -447,9 +447,7 @@ def remove_all_nodes_from_tag(session, tagname):
     """
     session = validate_session(session)
     tag = tag_exists(session, tag_name=tagname)
-    print "IM IN REMOVE ALL NODES FROM TAG", tag
     if not tag:
-        print "WHY AM I HERE", tag
         return(False, "Tag %s does not exists" % (tagname), tagname)
     tags_per_node = \
             session.query(TagsPerNode, TagInfo).\
@@ -523,7 +521,6 @@ def remove_time_block(session, id=None, label=None,
     session = validate_session(session)
     timeblock = time_block_exists(session, id,
             label, start_date, start_time)
-    print timeblock
     if timeblock:
         object_deleted = False, "Time Block %s has not been deleted"\
                 % (timeblock.name)
@@ -573,7 +570,6 @@ def update_node(session, node_id, ipaddress):
         except Exception as e:
             session.rollback()
             error = e.message
-            print error
     if node:
         node.last_agent_update = datetime.now()
         node.last_node_update = datetime.now()
@@ -590,8 +586,6 @@ def update_node(session, node_id, ipaddress):
             if installed and pending:
                 i.pending=False
         session.commit()
-    else:
-        print "System Info for %s does not exist yet" % ( node_id )
     return node
 
 
@@ -765,14 +759,12 @@ def add_results(session, data):
     session = validate_session(session)
     operation = operation_exists(session, data['operation_id'])
     node = node_exists(session,node_id=data['node_id'])
-    print node
     if node:
         node_id = data['node_id']
         if data['operation'] == 'reboot':
             node.reboot = False
             session.commit()
         for msg in data['data']:
-            print msg
             if 'reboot' in msg:
                 reboot = return_bool(msg['reboot'])
             else:
@@ -782,7 +774,6 @@ def add_results(session, data):
             update_exists = node_package_exists(session, node_id, msg['toppatch_id'])
             if update_exists:
                 if data['operation'] == "install" and msg['result'] == 'success':
-                    print "patch installed on %s %s" % ( node_id, msg['toppatch_id'] )
                     update_exists.installed = True
                     update_exists.date_installed = datetime.now()
                     update_exists.pending = False
@@ -797,7 +788,6 @@ def add_results(session, data):
                         if node.reboot == False:
                             node.reboot = reboot
                 elif data['operation'] == "uninstall" and msg['result'] == 'success':
-                    print "deleting patch from managed_windows_updates %s on node_id %s" % ( msg['toppatch_id'], node_id )
                     update_exists.installed = False
                     update_exists.pending = False
                     if reboot:

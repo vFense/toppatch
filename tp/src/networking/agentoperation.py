@@ -91,6 +91,14 @@ class AgentOperation():
             if json_valid:
                 node_id = jsonobject['node_id']
                 node = node_exists(self.session, node_id=node_id)
+                if not node.agent_status:
+                    if len(self.system_list) > 1:
+                        self.json_out ={
+                            "node_id" : node_id,
+                            "message" : "Agent Down",
+                            "error" : "Agent Down",
+                            "pass" : False
+                            }
                 oper_type = jsonobject[OPERATION]
                 oper_id = self.create_new_operation(node_id, oper_type,
                         node.ip_address

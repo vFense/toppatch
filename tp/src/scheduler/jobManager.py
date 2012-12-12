@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from datetime import datetime
-import logging
+import logging, logging.config
 from apscheduler.scheduler import Scheduler
 from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
 
@@ -10,6 +10,9 @@ from utils.common import *
 from db.query_table import *
 from db.client import *
 from models.scheduler import *
+
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
 
 def job_lister(session,sched):
     """
@@ -127,11 +130,10 @@ def job_scheduler(job, sched, name=None):
                 time_block_exists_today(session,
                     start_date=utc_timestamp.date(),
                     start_time=utc_timestamp.time())
-        print time_block_exists, time_block, json_out
         if time_block_exists:
             return json_out
     encoded_job_object = dumps(job_object)
-    print encoded_job_object
+    logger.debug(encoded_job_object)
     if 'schedule' in job_object:
         schedule = job_object['schedule']
     if 'once' in job_object['schedule']:
