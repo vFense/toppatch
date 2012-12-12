@@ -167,7 +167,8 @@ class HandOff():
 
 
     def node_update(self):
-        logger.debug('status updated for node %s' % (self.node.ip_address))
+        logger.debug('%s - status updated for node %s' % \
+                (self.username, self.node.ip_address))
         results = update_node(self.session, self.node.id, self.ip)
 
 
