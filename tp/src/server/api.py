@@ -10,7 +10,7 @@ import logging
 import logging.config
 from models.application import *
 from server.decorators import authenticated_request
-from server.handlers import BaseHandler
+from server.handlers import BaseHandler, LoginHandler
 from models.base import Base
 from models.packages import *
 from models.node import *
@@ -137,8 +137,8 @@ class ApiHandler(BaseHandler):
 
         return root_list
 
-class NodeHandler(BaseHandler):
 
+class NodeHandler(BaseHandler):
     @authenticated_request
     def get(self):
         resultjson = []
@@ -169,7 +169,6 @@ class NodeHandler(BaseHandler):
 
 
 class NetworkHandler(BaseHandler):
-
     @authenticated_request
     def get(self):
         resultjson = []
@@ -190,7 +189,6 @@ class NetworkHandler(BaseHandler):
 
 
 class SummaryHandler(BaseHandler):
-
     @authenticated_request
     def get(self):
         osResult = []
@@ -231,7 +229,6 @@ class SummaryHandler(BaseHandler):
 
 
 class GraphHandler(BaseHandler):
-
     @authenticated_request
     def get(self):
         resultjson = []
@@ -280,8 +277,8 @@ class GraphHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
 
-class OsHandler(BaseHandler):
 
+class OsHandler(BaseHandler):
     @authenticated_request
     def get(self):
         resultjson = []
@@ -316,8 +313,8 @@ class OsHandler(BaseHandler):
             resultjson = {'error' : 'no data to display'}
             self.write(json.dumps(resultjson, indent=4))
 
-class NodesHandler(BaseHandler):
 
+class NodesHandler(BaseHandler):
     @authenticated_request
     def get(self):
         resultjson = []
@@ -396,14 +393,11 @@ class NodesHandler(BaseHandler):
                 queryCount = 10
                 queryOffset = 0
                 filter = None
-
             nodes_query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
                     join(SystemInfo).join(NodeStats)
-
             if filter is not None:
                 nodes_query = nodes_query.join(TagsPerNode).\
                         join(TagInfo).filter(TagInfo.tag == filter)
-
             for u in nodes_query.limit(queryCount).offset(queryOffset):
                 resultnode = {'ip': u[0].ip_address,
                               'hostname': u[0].host_name,
@@ -419,16 +413,14 @@ class NodesHandler(BaseHandler):
                               'patch/pend': u[2].patches_pending
                                }
                 data.append(resultnode)
-
             count = nodes_query.count()
             resultjson = {"count": count, "nodes": data}
-
         self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
 
-class PatchesHandler(BaseHandler):
 
+class PatchesHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
@@ -470,6 +462,7 @@ class PatchesHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(results, indent=4))
 
+
 class SeverityHandler(BaseHandler):
     @authenticated_request
     def get(self):
@@ -483,9 +476,9 @@ class SeverityHandler(BaseHandler):
                     group_by(PackagePerNode.toppatch_id).join(PackagePerNode).count()
             result_json = { 'label' : str(sev.severity), 'value' : count }
             result.append(result_json)
-
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
 
 class SslHandler(BaseHandler):
     @authenticated_request
@@ -501,8 +494,8 @@ class SslHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class UserHandler(BaseHandler):
 
+class UserHandler(BaseHandler):
     @authenticated_request
     def get(self):
         resultjson = {"name" : self.current_user}
@@ -511,8 +504,8 @@ class UserHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
 
-class SchedulerListerHandler(BaseHandler):
 
+class SchedulerListerHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
@@ -522,8 +515,8 @@ class SchedulerListerHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class TimeBlockerListerHandler(BaseHandler):
 
+class TimeBlockerListerHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
@@ -533,10 +526,11 @@ class TimeBlockerListerHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class SchedulerAddHandler(BaseHandler):
 
+class SchedulerAddHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         self.sched = self.application.scheduler
@@ -545,14 +539,15 @@ class SchedulerAddHandler(BaseHandler):
         except Exception as e:
             self.write("Wrong argument passed"+
             " %s, the arguement needed is operation" % (e))
-        result = job_scheduler(self.msg, self.sched)
+        result = job_scheduler(self.msg, self.sched, username=username)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class SchedulerRemoveHandler(BaseHandler):
 
+class SchedulerRemoveHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         self.sched = self.application.scheduler
@@ -562,13 +557,15 @@ class SchedulerRemoveHandler(BaseHandler):
         except Exception as e:
             self.write("Wrong arguement passed"+
             " %s, the argument needed is jobname" % (e))
-        result = remove_job(self.sched, jobname)
+        result = remove_job(self.sched, jobname, username=username)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
 
 class TimeBlockerAddHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         try:
@@ -576,7 +573,7 @@ class TimeBlockerAddHandler(BaseHandler):
         except Exception as e:
             self.write("Wrong arguement passed"+
             "%s, the argument needed is operation" % (e))
-        result = time_block_adder(self.session, self.msg)
+        result = time_block_adder(self.session, self.msg, username=username)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -584,6 +581,7 @@ class TimeBlockerAddHandler(BaseHandler):
 class TimeBlockerRemoverHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         tbid = None
@@ -592,7 +590,7 @@ class TimeBlockerRemoverHandler(BaseHandler):
         starttime = None
         try:
             tbid = self.get_argument('id')
-            result = time_block_remover(self.session, tbid)
+            result = time_block_remover(self.session, tbid, username=username)
         except Exception as e:
             pass
         try:
@@ -610,6 +608,7 @@ class TimeBlockerRemoverHandler(BaseHandler):
 class TimeBlockerTogglerHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         tbid = None
@@ -629,15 +628,15 @@ class TimeBlockerTogglerHandler(BaseHandler):
                     if not tb.enabled:
                         tb.enabled = True
                         self.session.commit()
-                        logger.info('TimeBlock %s was enabled' %\
-                                (tbid)
+                        logger.info('%s - TimeBlock %s was enabled' %\
+                                (username, tbid)
                                 )
                         result = {'pass' : True,
                                 'message' : 'TimeBlock %s was enabled' % (tbid)
                                 }
                     else:
-                        logger.info('TimeBlock %s was already enabled' %\
-                                (tbid)
+                        logger.info('%s - TimeBlock %s was already enabled' %\
+                                (username, tbid)
                                 )
                         result = {'pass' : False,
                                 'message' : 'TimeBlock %s was already enabled' % (tbid)
@@ -646,30 +645,30 @@ class TimeBlockerTogglerHandler(BaseHandler):
                     if tb.enabled:
                         tb.enabled = False
                         self.session.commit()
-                        logger.info('TimeBlock %s was disabled' %\
-                                (tbid)
+                        logger.info('%s - TimeBlock %s was disabled' %\
+                                (username, tbid)
                                 )
                         result = {'pass' : True,
                                 'message' : 'TimeBlock %s was disabled' % (tbid)
                                 }
                     else:
-                        logger.info('TimeBlock %s was already disabled' %\
-                                (tbid)
+                        logger.info('%s - TimeBlock %s was already disabled' %\
+                                (username, tbid)
                                 )
                         result = {'pass' : False,
                                 'message' : 'TimeBlock %s was already disabled' % (tbid)
                                 }
             except Exception as e:
                 self.session.rollback()
-                logger.warn('TimeBlock %s was not disabled or enabled' %\
-                        (tbid)
+                logger.warn('%s - TimeBlock %s was not disabled or enabled' %\
+                        (username, tbid)
                         )
                 result = {'pass' : False,
                           'message' : 'TimeBlock %s was not disabled or enabled' % (tbid)
                           }
         else:
-            logger.warn('TimeBlock %s was not disabled or enabled' %\
-                    (tbid)
+            logger.warn('%s - TimeBlock %s was not disabled or enabled' %\
+                    (username, tbid)
                     )
             result = {'pass' : False,
                       'message' : 'TimeBlock %s was not disabled or enabled' % (tbid)
@@ -679,7 +678,6 @@ class TimeBlockerTogglerHandler(BaseHandler):
 
 
 class TagListerByTagHandler(BaseHandler):
-
     @authenticated_request
     def get(self):
         self.session = self.application.session
@@ -688,8 +686,8 @@ class TagListerByTagHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class TagListerByNodeHandler(BaseHandler):
 
+class TagListerByNodeHandler(BaseHandler):
     @authenticated_request
     def get(self):
         self.session = self.application.session
@@ -698,9 +696,11 @@ class TagListerByNodeHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+
 class TagAddHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         tag = None
@@ -708,39 +708,46 @@ class TagAddHandler(BaseHandler):
             tag = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong argument passed %s, the argument needed is operation" % (e))
-        result = tag_adder(self.session, tag)
+        result = tag_adder(self.session, tag, username=username)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
 
 class TagAddPerNodeHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
-        result = tag_add_per_node(self.session, self.msg)
+        result = tag_add_per_node(self.session, self.msg, username=username)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
 
 class TagRemovePerNodeHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         try:
             self.msg = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
-        result = tag_remove_per_node(self.session, self.msg)
+        result = tag_remove_per_node(self.session, self.msg,
+                username=username)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
 
 class TagRemoveHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         tag = None
@@ -748,9 +755,10 @@ class TagRemoveHandler(BaseHandler):
             tag = self.get_argument('operation')
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
-        result = tag_remove(self.session, tag)
+        result = tag_remove(self.session, tag, username=username)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
 
 class GetTransactionsHandler(BaseHandler):
     @authenticated_request
@@ -766,6 +774,7 @@ class GetTransactionsHandler(BaseHandler):
         result = retrieve_transactions(self.session, count=queryCount, offset=queryOffset)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
         
 class GetDependenciesHandler(BaseHandler):
     @authenticated_request
@@ -779,6 +788,7 @@ class GetDependenciesHandler(BaseHandler):
         result = retrieve_dependencies(self.session, pkg_id)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
 
 class SearchPatchHandler(BaseHandler):
     @authenticated_request
@@ -805,6 +815,7 @@ class SearchPatchHandler(BaseHandler):
             self.set_header('Content-Type', 'application/csv')
             self.write(result)
 
+
 class GetTagStatsHandler(BaseHandler):
     @authenticated_request
     def get(self):
@@ -821,6 +832,7 @@ class GetTagStatsHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+
 class GetTagsPerTpIdHandler(BaseHandler):
     @authenticated_request
     def get(self):
@@ -836,10 +848,10 @@ class GetTagsPerTpIdHandler(BaseHandler):
         self.write(json.dumps(result, indent=4))
 
 
-
 class ModifyDisplayNameHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         nodeid = None
@@ -857,8 +869,8 @@ class ModifyDisplayNameHandler(BaseHandler):
                         displayname = return_bool(displayname)
                     node.display_name = displayname
                     self.session.commit()
-                    logger.info('Display name was changed to %s' %\
-                            (displayname)
+                    logger.info('%s - Display name was changed to %s' %\
+                            (username, displayname)
                             )
                     result = {"pass" : True,
                               "message" : "Display name change to %s" %\
@@ -866,8 +878,8 @@ class ModifyDisplayNameHandler(BaseHandler):
                             }
                 except Exception as e:
                     self.session.rollback()
-                    logger.error('Display name was not changed to %s' %\
-                            (displayname)
+                    logger.error('%s - Display name was not changed to %s' %\
+                            (username, displayname)
                             )
                     result = {"pass" : False,
                               "message" : "Display name was not changed to %s"%\
@@ -880,6 +892,7 @@ class ModifyDisplayNameHandler(BaseHandler):
 class ModifyHostNameHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         nodeid = None
@@ -897,8 +910,8 @@ class ModifyHostNameHandler(BaseHandler):
                         hostname = return_bool(hostname)
                     node.host_name = hostname
                     self.session.commit()
-                    logger.info('Host name was changed to %s' %\
-                            (hostname)
+                    logger.info('%s - Host name was changed to %s' %\
+                            (username, hostname)
                             )
                     result = {"pass" : True,
                               "message" : "Host name change to %s" %\
@@ -906,8 +919,8 @@ class ModifyHostNameHandler(BaseHandler):
                             }
                 except Exception as e:
                     self.session.rollback()
-                    logger.error('Host name was not changed to %s' %\
-                            (hostname)
+                    logger.error('%s - Host name was not changed to %s' %\
+                            (username, hostname)
                             )
                     result = {"pass" : False,
                               "message" : "Host name was not changed to %s"%\
@@ -935,6 +948,7 @@ class ListUserHandler(BaseHandler):
 class DeleteUserHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         user = None
@@ -947,7 +961,9 @@ class DeleteUserHandler(BaseHandler):
             try:
                 username = self.get_argument('username')
             except Exception as e:
-                logger.error('either pass userid or username')
+                logger.error('%s - either pass userid or username'%\
+                        (username)
+                        )
                 result = {"pass" : False, "message" : \
                             "either pass userid or username"
                          }
@@ -962,16 +978,16 @@ class DeleteUserHandler(BaseHandler):
                 if user.id != 1:
                     self.session.delete(user)
                     self.session.commit()
-                    logger.info('user %s hs been deleted'%\
-                            (user.username)
+                    logger.info('%s - user %s hs been deleted'%\
+                            (username, user.username)
                            ) 
                     result = {"pass" : True,
                               "message" : "%s user deleted" % \
                                               (user.username)
                              }
                 else:
-                    logger.info('user %s could not be deleted'%\
-                            (user.username)
+                    logger.info('%s - user %s could not be deleted'%\
+                            (username, user.username)
                            ) 
                     result = {"pass" : False,
                               "message" : "%s user could not be deleted" % \
@@ -979,8 +995,8 @@ class DeleteUserHandler(BaseHandler):
                              }
             except Exception as e:
                 self.session.rollback()
-                logger.info('user %s could not be deleted'%\
-                        (user.username)
+                logger.info('%s - user %s could not be deleted'%\
+                        (username, user.username)
                         ) 
                 result = {"pass" : False,
                           "message" : "%s user could not be deleted" % \
@@ -998,6 +1014,7 @@ class DeleteUserHandler(BaseHandler):
 class NodeTogglerHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         userlist = self.session.query(User).all()
@@ -1015,8 +1032,8 @@ class NodeTogglerHandler(BaseHandler):
                 if toggle:
                     sslinfo.enabled = True
                     self.session.commit()
-                    logger.info('ssl communication for nodeid %s '%\
-                            (nodeid) + 'has been enabled'
+                    logger.info('%s - ssl communication for nodeid %s '%\
+                            (username, nodeid) + 'has been enabled'
                            ) 
                     result = {"pass" : True,
                           "message" : "node_id %s has been enabled" %\
@@ -1025,15 +1042,15 @@ class NodeTogglerHandler(BaseHandler):
                 else:
                     sslinfo.enabled = False
                     self.session.commit()
-                    logger.info('ssl communication for nodeid %s '%\
-                            (nodeid) + 'has been disabled'
+                    logger.info('%s - ssl communication for nodeid %s '%\
+                            (username, nodeid) + 'has been disabled'
                            ) 
                     result = {"pass" : True,
                           "message" : "node_id %s has been disabled" %\
                                           (nodeid)
                          }
         else:
-            logger.warn('invalid nodeid %s' % (nodeid))
+            logger.warn('%s - invalid nodeid %s' % (username, nodeid))
             result = {"pass" : False,
                       "message" : "node_id %s does not exist" % \
                                      (nodeid)
@@ -1046,6 +1063,7 @@ class NodeTogglerHandler(BaseHandler):
 class LoggingModifyerHandler(BaseHandler):
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         level = 'INFO'
         host = None
         port = None

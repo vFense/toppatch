@@ -145,6 +145,7 @@ class FormHandler(BaseHandler):
 
     @authenticated_request
     def post(self):
+        username = self.get_current_user()
         resultjson = []
         node = {}
         result = []
@@ -195,10 +196,12 @@ class FormHandler(BaseHandler):
                         resultjson.append(encode(node))
                 if time:
                     result = job_scheduler(resultjson,
-                            self.application.scheduler
+                            self.application.scheduler,
+                            username=username
                             )
                 else:
-                    operation_runner = AgentOperation(resultjson)
+                    operation_runner = AgentOperation(resultjson,
+                            username=username)
                     operation_runner.run()
                     sleep(.50)
                     result = operation_runner.json_out
@@ -210,10 +213,13 @@ class FormHandler(BaseHandler):
                     resultjson.append(encode(node))
                 if time:
                     result = job_scheduler(resultjson,
-                            self.application.scheduler
+                            self.application.scheduler,
+                            username=username
                             )
                 else:
-                    operation_runner = AgentOperation(resultjson)
+                    operation_runner = AgentOperation(resultjson,
+                            username=username
+                            )
                     operation_runner.run()
                     sleep(.50)
                     result = operation_runner.json_out
@@ -221,13 +227,12 @@ class FormHandler(BaseHandler):
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(result))
             print json.dumps(result)
-            #self.write(json.dumps(resultjson))
 
         if params:
             resultjson = json.loads(params)
-            operation_runner = AgentOperation(resultjson)
+            operation_runner = AgentOperation(resultjson,
+                    username=username)
             operation_runner.run()
-
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(resultjson))
 

@@ -15,11 +15,13 @@ class TcpConnect():
     Connect to the remote agent, using a secured or a nonsecured
     tcp connection. We are using the socket library backed by Gevent.
     """
-    def __init__(self, host, msg, port=9003, secure=True, timeout=60):
+    def __init__(self, host, msg, port=9003, secure=True, timeout=60,
+            username='system_user'):
         self.secure = secure
         self.host = host
         self.msg = msg
         self.port = port
+        self.username = username
         self.connection_count = 0
         self.write_connection_count = 0
         self.write_count = 0
@@ -60,8 +62,8 @@ class TcpConnect():
                 self.tcp_socket = self.socket_init()
                 self._connect()
             else:
-                logger.error('Cant connect to %s on port %s. Error:%s' %\
-                        (self.host, self.port, e.message)
+                logger.error('%s - Cant connect to %s on port %s. Error:%s' %\
+                        (self.username, self.host, self.port, e.message)
                         )
                 return(self._error_handler(e))
         if connected:
@@ -99,8 +101,8 @@ class TcpConnect():
                 self._connect()
             else:
                 self.error = self._error_handler(error)
-                logger.error('Cant write to the socket on host %s:%s' %\
-                        (self.host, self.port)
+                logger.error('%s - Cant write to the socket on host %s:%s' %\
+                        (self.username, self.host, self.port)
                         )
                 self._close()
 
@@ -110,14 +112,14 @@ class TcpConnect():
             try:
                 self.read_data = self.tcp_socket.recv(1024)
             except Exception as e:
-                logger.error('Cant read from the socket on host %s:%s' %\
-                        (self.host, self.port)
+                logger.error('%s - Cant read from the socket on host %s:%s' %\
+                        (self.username, self.host, self.port)
                         )
                 self.error = self._error_handler(e)
         else:
             self.error = self._error_handler(error)
-            logger.error('Cant read from the socket on host %s:%s' %\
-                    (self.host, self.port)
+            logger.error('%s - Cant read from the socket on host %s:%s' %\
+                    (self.username, self.host, self.port)
                     )
         self._close()
 

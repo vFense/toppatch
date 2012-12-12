@@ -24,6 +24,7 @@ def job_lister(session,sched):
     jobs = sched.get_jobs()
     job_listing = []
     for schedule in jobs:
+        username = schedule.args.pop()
         messages = schedule.args
         for message in messages:
             if type(message) == str:
@@ -34,14 +35,16 @@ def job_lister(session,sched):
                         message['ipaddress'] = node.ip_address
                         message['hostname'] = node.host_name
                         message['displayname'] = node.display_name
+                        message['username'] = username
                         job_listing.append(message)
                     elif 'tag_id' in message:
                         tag = tag_exists(session, tag_id=message['tag_id'])
                         message['tagname'] = tag.tag
+                        message['username'] = username
                         job_listing.append(message)
     return job_listing
 
-def remove_job(sched, jobname):
+def remove_job(sched, jobname, username='system_user'):
     """
         remove the scheduled job in RV
         arguments below..
@@ -73,15 +76,15 @@ def remove_job(sched, jobname):
                 "message" : "Job with name %s does not exist" % (jobname)
                })
 
-def call_agent_operation(job):
-    operation_runner = AgentOperation(job)
+def call_agent_operation(job, username):
+    operation_runner = AgentOperation(job, username=username)
     operation_runner.run()
 
-def add_once(timestamp, name, job, sched):
+def add_once(timestamp, name, job, sched, username):
     passed = False
     try:
         sched.add_date_job(call_agent_operation,
-                timestamp,args=[job],
+                timestamp,args=[job, username],
                 name=name, jobstore="toppatch"
                 )
         passed = True
@@ -105,7 +108,7 @@ def add_recurrent(timestamp, name, job, sched):
                 name=name, jobstore="toppatch"
                 )
 
-def job_scheduler(job, sched, name=None):
+def job_scheduler(job, sched, name=None, username='system_user'):
     """
         job_scheduler handles the adding of scheduled jobs
         arguments below...
@@ -133,11 +136,13 @@ def job_scheduler(job, sched, name=None):
         if time_block_exists:
             return json_out
     encoded_job_object = dumps(job_object)
-    logger.debug(encoded_job_object)
+    logger.debug('%s - %s' % (username, encoded_job_object))
     if 'schedule' in job_object:
         schedule = job_object['schedule']
     if 'once' in job_object['schedule']:
-        return(add_once(utc_timestamp, name, encoded_job_object, sched))
+        return(add_once(utc_timestamp, name, encoded_job_object,
+            sched, username)
+            )
 
 
 

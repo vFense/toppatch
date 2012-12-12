@@ -14,11 +14,8 @@ from db.client import *
 from db.query_table import *
 from networking.tcpasync import TcpConnect
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
-logger = logging.getLogger('rvapi')
-
-
-def add_node(session, client_ip, agent_timestamp=None, node_timestamp=None):
+def add_node(session, client_ip, agent_timestamp=None,
+        node_timestamp=None, username='system_user'):
     """Add a node to the database"""
     session = validate_session(session)
     try:
@@ -30,15 +27,16 @@ def add_node(session, client_ip, agent_timestamp=None, node_timestamp=None):
                 True, True, agent_timestamp, node_timestamp)
         session.add(add_node)
         session.commit()
-        logger.info('node %s added to node_info' %\
-                client_ip)
+        logger.info('%s - node %s added to node_info' %\
+                (username, client_ip)
+                )
         return add_node
     except Exception as e:
         logger.error('node %s could not be added to node_info' %\
                 client_ip)
 
 
-def add_tag(session, tag_name, user_id=None):
+def add_tag(session, tag_name, user_id=None, username='system_user'):
     """
         Add a tag to the database
     """
@@ -54,7 +52,7 @@ def add_tag(session, tag_name, user_id=None):
         return(False, "Tag %s failed to add" % (tag_name))
 
 
-def add_dependency(session, data):
+def add_dependency(session, data, username='system_user'):
     """
         Add a dependency to the corresponding toppatch_id
         into the database
@@ -78,7 +76,7 @@ def add_dependency(session, data):
 
 
 def add_tag_per_node(session, nodes=[], tag_id=None, tag_name=None,
-                user_id=None):
+                user_id=None, username='system_user'):
     """
         Add a list of nodes to an existing tag
         into the database
@@ -123,7 +121,7 @@ def add_tag_per_node(session, nodes=[], tag_id=None, tag_name=None,
 
 def add_time_block(session, label, start_date, start_time, end_time,
                   days, end_date=None, span_end_date_time=None, span=False,
-                  enabled=False):
+                  enabled=False, username='system_user'):
     """
         Add a new timeblock to RV.
         arguments below..
@@ -153,7 +151,8 @@ def add_time_block(session, label, start_date, start_time, end_time,
 
 
 def add_csr(session, client_ip, location, csr_name,
-            signed=False, signed_date=False):
+            signed=False, signed_date=False,
+            username='system_user'):
     """
         Add a new Certificate Signed Request into RV
         arguments below..
@@ -173,7 +172,7 @@ def add_csr(session, client_ip, location, csr_name,
 
 
 def add_cert(session, node_id, cert_id, cert_name,
-            cert_location, cert_expiration):
+            cert_location, cert_expiration, username='system_user'):
     """
         Add a new Signed Certificate into RV
         arguments below..
@@ -194,7 +193,8 @@ def add_cert(session, node_id, cert_id, cert_name,
         session.rollback()
 
 def add_operation(session, node_id, operation, result_id=None,
-        operation_sent=None, operation_received=None, results_received=None):
+        operation_sent=None, operation_received=None, results_received=None,
+        username='system_user'):
     """
         Add a new Operation into RV
         arguments below..
@@ -213,7 +213,7 @@ def add_operation(session, node_id, operation, result_id=None,
         return add_oper
 
 
-def add_system_info(session, data, node_info):
+def add_system_info(session, data, node_info, username='system_user'):
     """
         Add the system information of an existing node
         arguments below..
@@ -243,7 +243,7 @@ def add_system_info(session, data, node_info):
                 session.rollback()
 
 
-def add_software_update(session, data):
+def add_software_update(session, data, username='system_user'):
     """
         Add software to the RV database, if the software does not exist.
         arguments below..
@@ -279,7 +279,7 @@ def add_software_update(session, data):
                     except:
                         session.rollback()
 
-def add_software_per_node(session, data):
+def add_software_per_node(session, data, username='system_user'):
     """
         Create a new entry in the packages_per_node table
         arguments below..
@@ -346,7 +346,7 @@ def add_software_per_node(session, data):
                     session.rollback()
 
 
-def add_software_available(session, data):
+def add_software_available(session, data, username='system_user'):
     """
         Create a new entry in the software_available table
         This table is as of right now, strictly for Windows 3rd
@@ -378,7 +378,7 @@ def add_software_available(session, data):
                     session.rollback()
 
 
-def add_software_installed(session, data):
+def add_software_installed(session, data, username='system_user'):
     """
         Create a new entry in the software_installed table
         This table is a foreignKey to an existing row in 
@@ -414,7 +414,7 @@ def add_software_installed(session, data):
                         session.rollback()
 
 
-def remove_tag(session, tagname):
+def remove_tag(session, tagname, username='system_user'):
     """
         Remove a tag from the database
         arguments below..
@@ -438,7 +438,7 @@ def remove_tag(session, tagname):
             return(False, "Tag %s does not exists" % (tagname))
 
 
-def remove_all_nodes_from_tag(session, tagname):
+def remove_all_nodes_from_tag(session, tagname, username='system_user'):
     """
         Remove all nodes from a tag in the database
         arguments below..
@@ -470,7 +470,7 @@ def remove_all_nodes_from_tag(session, tagname):
             (tagname), tagname)
 
 
-def remove_nodes_from_tag(session, tag_name, nodes=[]):
+def remove_nodes_from_tag(session, tag_name, nodes=[], username='system_user'):
     """
         Remove a node from a tag in the database
         arguments below..
@@ -510,7 +510,7 @@ def remove_nodes_from_tag(session, tag_name, nodes=[]):
 
 
 def remove_time_block(session, id=None, label=None,
-            start_date=None, start_time=None):
+            start_date=None, start_time=None, username='system_user'):
     """
         Remove a timeblock from the database
         arguments below..
@@ -535,7 +535,7 @@ def remove_time_block(session, id=None, label=None,
 
 
 def update_operation_row(session, oper_id, results_recv=None,
-            oper_recv=None):
+            oper_recv=None, username='system_user'):
     """
         update an existing operation in the RV database
         arguments below..
@@ -552,7 +552,7 @@ def update_operation_row(session, oper_id, results_recv=None,
         session.commit()
 
 
-def update_node(session, node_id, ipaddress):
+def update_node(session, node_id, ipaddress, username='system_user'):
     """
         update an existing node in the RV database
         arguments below..
@@ -589,7 +589,7 @@ def update_node(session, node_id, ipaddress):
     return node
 
 
-def update_node_stats(session, node_id):
+def update_node_stats(session, node_id, username='system_user'):
     """
         update the stats of the node in the node_stats table in RV
         arguments below..
@@ -628,7 +628,7 @@ def update_node_stats(session, node_id):
         session.commit()
 
 
-def update_network_stats(session):
+def update_network_stats(session, username='system_user'):
     """
         update the global stats in network_stats table in RV
         arguments below..
@@ -663,7 +663,7 @@ def update_network_stats(session):
         session.commit()
 
 
-def update_tag_stats(session):
+def update_tag_stats(session, username='system_user'):
     """
         update the global tag stats in tag_stats table in RV
         arguments below..
@@ -729,7 +729,7 @@ def update_tag_stats(session):
                     session.commit()
 
 
-def update_reboot_status(session, node_id, oper_type):
+def update_reboot_status(session, node_id, oper_type, username='system_user'):
     """
         update the reboot status on a node in the node_info table in RV
         arguments below..
@@ -749,7 +749,7 @@ def update_reboot_status(session, node_id, oper_type):
                 session.rollback()
 
 
-def add_results(session, data):
+def add_results(session, data, username='system_user'):
     """
         Add a new entry in the results table in RV
         arguments below..

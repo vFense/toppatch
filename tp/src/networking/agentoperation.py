@@ -35,7 +35,7 @@ ALLOWED_OPERATIONS = [SYSTEMINFO, UPDATESINSTALLED,
 SCHEDULED_OPERATIONS = [INSTALL, UNINSTALL, HIDE, SHOW, REBOOT]
 
 class AgentOperation():
-    def __init__(self, system_list):
+    def __init__(self, system_list, username='system_user'):
         """
         This class will take a list and iterate through it.
         Through each iteration, the object in each array will
@@ -56,24 +56,33 @@ class AgentOperation():
         self.session = validate_session(self.session)
         self.system_list = system_list
         self.total_nodes = None
+        self.username = username
         self.results = {}
         self.json_out = {}
         if type(system_list) == list:
-            logger.debug('operation received was of type list')
+            logger.debug('%s - operation received was of type list'%\
+                    (self.username)
+                    )
             self.system_list = system_list
             self.total_nodes = len(self.system_list)
         else:
             json_valid, self.system_list = verify_json_is_valid(system_list)
             if type(self.system_list) != list:
-                logger.debug('operation received was of type string')
+                logger.debug('%s - operation received was of type string'%\
+                    (self.username)
+                    )
                 self.system_list = [self.system_list]
         if type(self.system_list[0]) == dict:
             verify_obj = self.system_list[0]
         else:
             is_verified, verify_obj = verify_json_is_valid(self.system_list[0])
-        logger.debug('json received was validated')
+        logger.debug('%s - json received was validated'%\
+                    (self.username)
+                    )
         if 'tag_id' in verify_obj:
-            logger.debug('operation received, was for a tag')
+            logger.debug('%s - operation received, was for a tag'%\
+                    (self.username)
+                    )
             system_list = self.convert_tag_op_to_node_op(self.system_list)
             if len(system_list) > 0:
                 self.system_list = system_list
@@ -107,10 +116,11 @@ class AgentOperation():
                 time_block_exists, time_block, time_block_results = \
                         time_block_exists_today(self.session, 
                                 start_date=start_date.date(),
-                                start_time=start_date.time())
+                                start_time=start_date.time()
+                                )
                 if oper_type in SCHEDULED_OPERATIONS and time_block_exists:
-                    logger.debug('TimeBlock exists on %s for operation %s' %\
-                            (node.ip_address, oper_type)
+                    logger.debug('%s - TimeBlock exists on %s for operation %s' %\
+                            (self.username, node.ip_address, oper_type)
                             )
                     self.session.close()
                     self.json_out = time_block_results
@@ -150,27 +160,29 @@ class AgentOperation():
                      }
         msg = encode(jsonobject) 
         msg = msg + '<EOF>'
-        logger.debug('messaged to be sent %s' %\
-                (msg)
+        logger.debug('%s - messaged to be sent %s' %\
+                (self.username, msg)
                 )
         response = None
         completed = False
         node = node_exists(self.session, node_id=node_id)
         if node.agent_status:
             connect = TcpConnect(node_ip, msg)
-            logger.debug('connecting to agent %s' %\
-                    (node_ip)
+            logger.debug('%s - connecting to agent %s' %\
+                    (self.username, node_ip)
                     )
             if not connect.error and connect.read_data:
                 response = verify_json_is_valid(connect.read_data)
                 if response[1]['operation'] == 'received':
-                    logger.info('operation received from agent %s' %\
-                        (node_ip)
+                    logger.info('%s - operation received from agent %s' %\
+                        (self.username, node_ip)
                         )
                     completed = True
-                    update_operation_row(self.session, oper_id, oper_recv=True)
+                    update_operation_row(self.session, oper_id, oper_recv=True,
+                            username=self.username)
                     if oper_type == 'reboot':
-                        update_reboot_status(self.session, node_id, oper_type)
+                        update_reboot_status(self.session, node_id, oper_type,
+                                username=self.username)
                     if 'data' in jsonobject:
                         for patch in jsonobject['data']:
                             if oper_type == 'install':
@@ -190,8 +202,8 @@ class AgentOperation():
                      "pass" : completed
                      }
         else:
-            logger.debug('cannot connect to agent %s, agent down' %\
-                    (node_ip)
+            logger.debug('%s - cannot connect to agent %s, agent down' %\
+                    (self.username, node_ip)
                     )
             self.json_out ={
                      "node_id" : node_id,
@@ -208,11 +220,11 @@ class AgentOperation():
         Add a new operation to the operations table and
         return the autogenerated operation_id
         """
-        logger.debug('adding a new operation for %s: operation%s'% \
-                (ipaddress, oper_type)
+        logger.debug('%s - adding a new operation for %s: operation%s'% \
+                (self.username, ipaddress, oper_type)
                 )
         oper = add_operation(self.session, node_id, oper_type,
-                    operation_sent=datetime.now()
+                    operation_sent=datetime.now(), username=self.username
                     )
         return oper.id
 
