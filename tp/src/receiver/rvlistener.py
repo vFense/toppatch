@@ -24,8 +24,8 @@ class GetJson(Protocol):
     def connectionMade(self):
         self.client_peer = self.transport.getPeer()
         self.client_ip = self.client_peer.host
-        logger.info('agent %s connected' %\
-                (self.client_ip)
+        logger.info('%s - agent %s connected' %\
+                ('system_user', self.client_ip)
                 )
 
     def dataReceived(self, data):
@@ -34,8 +34,8 @@ class GetJson(Protocol):
     def connectionLost(self, reason):
         self.transport.loseConnection()
         data = self.total_data
-        logger.debug('data received from agent %s:%s' %\
-                (self.client_ip, data)
+        logger.debug('%s - data received from agent %s:%s' %\
+                ('system_user', self.client_ip, data)
                 )
         self.total_data = ""
         is_enabled = None
@@ -47,15 +47,15 @@ class GetJson(Protocol):
                     filter(SslInfo.enabled == True).\
                     filter(SslInfo.node_id == node.id).first()
         if is_enabled:
-            logger.debug('calling HandOff for %s' %\
-                    (self.client_peer)
+            logger.debug('%s - calling HandOff for %s' %\
+                    ('system_user', self.client_peer)
                     )
             handoff = HandOff(ENGINE)
             Thread(target=handoff.run,
                     args=(data, self.client_ip)).start()
         else:
-            logger.debug('%s is not allowed to connect to RVhandler' %\
-                    (self.client_ip)
+            logger.debug('%s - %s is not allowed to connect to RVhandler' %\
+                    ('system_user', self.client_ip)
                     )
         self.session.close()
 
