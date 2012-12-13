@@ -23,8 +23,10 @@ def job_lister(session,sched):
     """
     jobs = sched.get_jobs()
     job_listing = []
+    username = None
     for schedule in jobs:
-        username = schedule.args.pop()
+        if len(schedule.args) >1:
+            username = schedule.args.pop()
         messages = schedule.args
         for message in messages:
             if type(message) == str:

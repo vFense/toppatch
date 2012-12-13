@@ -83,7 +83,7 @@ def time_block_lister(session):
     return windows
 
 def time_block_remover(session, id=None, label=None, start_date=None,
-                        start_time=None):
+                        start_time=None, username='system_user'):
     """
         either you must pass the time block id or 
         the time block label, start_date, and start_time
@@ -106,7 +106,7 @@ def time_block_remover(session, id=None, label=None, start_date=None,
                 % (removed[0], removed[1])
     return removed
 
-def time_block_adder(session, msg):
+def time_block_adder(session, msg, username='system_user'):
     """The message needs to be in a valid json format.
        end_date is optional. Our date format is in binary format...
        So if you have a schedule that is Mon through Fri, it will look
@@ -141,6 +141,8 @@ def time_block_adder(session, msg):
                 start_date, utc_start_time, utc_end_time, json_msg['days'],
                 enabled=json_msg['enabled']
                 )
-        logger.debug(message, json_msg["label"], block_added)
+        logger.debug('%s - %s, %s, %s' % (username, message,
+            json_msg["label"], block_added)
+            )
         return {"message" : message,"label" : json_msg['label'], "pass" : block_added}
 
