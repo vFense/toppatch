@@ -40,15 +40,19 @@ def add_node(session, client_ip, agent_timestamp=None,
 def add_global_user_permissions(session, user_id=None, isadmin=False,
         isglobal=False, viewonly=False, install=False, uninstall=False,
         reboot=False, schedule=False, wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False,
-        date_created=datetime.now(), date_modified=datetime.now(),
-        username='system_user'):
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_created=datetime.now(),
+        date_modified=datetime.now(),
+        username='system_user'
+        ):
     """
         Add a global user permission to the database
     """
     session = validate_session(session)
     date_created=datetime.now()
-    if user_id:
+    user_exists = session.query(GlobalUserAccess).\
+            filter_by(user_id=user_id).first()
+    if user_id and not user_exists:
         try:
             add_acl = GlobalUserAccess(user_id, is_admin=isadmin,
                     is_global=isglobal, view_only=viewonly,
@@ -57,6 +61,8 @@ def add_global_user_permissions(session, user_id=None, isadmin=False,
                     allow_wol=wol, allow_snapshot_creation=snapshot_creation,
                     allow_snapshot_removal=snapshot_removal,
                     allow_snapshot_revert=snapshot_revert,
+                    allow_tag_creation=tag_creation,
+                    allow_tag_removal=tag_removal,
                     date_created=date_created, date_modified=date_modified
                     )
             session.add(add_acl)
@@ -65,20 +71,24 @@ def add_global_user_permissions(session, user_id=None, isadmin=False,
         except Exception as e:
             session.rollback()
             return(False, "Failed to add ACL for user %s" % (user_id))
+    elif user_id and user_exists:
+        return(False, "Failed to add ACL for user %s" % (user_id))
 
 
 def add_node_user_permissions(session, node_id=None, user_id=None,
         install=False, uninstall=False, reboot=False, schedule=False,
         wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False,
-        date_created=datetime.now(), date_modified=datetime.now(),
-        username='system_user'):
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_created=datetime.now(),
+        date_modified=datetime.now(), user_access=False,
+        username='system_user'
+        ):
     """
         Add a user permission to a node in the database
     """
     session = validate_session(session)
     date_created=datetime.now()
-    if user_id and node_id:
+    if user_id and node_id and user_access:
         try:
             add_acl = NodeUserAccess(node_id, user_id,
                     allow_install=install, allow_uninstall=uninstall,
@@ -86,7 +96,10 @@ def add_node_user_permissions(session, node_id=None, user_id=None,
                     allow_wol=wol, allow_snapshot_creation=snapshot_creation,
                     allow_snapshot_removal=snapshot_removal,
                     allow_snapshot_revert=snapshot_revert,
-                    date_created=date_created, date_modified=date_modified
+                    allow_tag_creation=tag_creation,
+                    allow_tag_removal=tag_removal,
+                    date_created=date_created, date_modified=date_modified,
+                    user_access=user_access
                     )
             session.add(add_acl)
             session.commit()
@@ -101,15 +114,17 @@ def add_node_user_permissions(session, node_id=None, user_id=None,
 def add_tag_user_permissions(session, tag_id=None, user_id=None,
         install=False, uninstall=False, reboot=False, schedule=False,
         wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False,
-        date_created=datetime.now(), date_modified=datetime.now(),
-        username='system_user'):
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_Creation=False, date_created=datetime.now(),
+        date_modified=datetime.now(), user_access=False,
+        username='system_user'
+        ):
     """
         Add a user permission to a node in the database
     """
     session = validate_session(session)
     date_created=datetime.now()
-    if user_id and tag_id:
+    if user_id and tag_id and user_access:
         try:
             add_acl = NodeUserAccess(tag_id, user_id,
                     allow_install=install, allow_uninstall=uninstall,
@@ -117,7 +132,10 @@ def add_tag_user_permissions(session, tag_id=None, user_id=None,
                     allow_wol=wol, allow_snapshot_creation=snapshot_creation,
                     allow_snapshot_removal=snapshot_removal,
                     allow_snapshot_revert=snapshot_revert,
-                    date_created=date_created, date_modified=date_modified
+                    allow_tag_creation=tag_creation,
+                    allow_tag_removal=tag_removal,
+                    date_created=date_created, date_modified=date_modified,
+                    user_access=user_access
                     )
             session.add(add_acl)
             session.commit()
@@ -848,8 +866,8 @@ def update_reboot_status(session, node_id, oper_type, username='system_user'):
 def update_global_user_permissions(session, user_id=None, isadmin=False,
         isglobal=False, viewonly=False, install=False, uninstall=False,
         reboot=False, schedule=False, wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False,
-        date_modified=datetime.now(),
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_modified=datetime.now(),
         username='system_user'
         ):
     """
@@ -876,6 +894,8 @@ def update_global_user_permissions(session, user_id=None, isadmin=False,
                 user.allow_snapshot_creation = snapshot_creation
                 user.allow_snapshot_removal = snapshot_removal
                 user.allow_snapshot_revert = snapshot_revert
+                user.allow_tag_creation = tag_creation
+                user.allow_tag_removal = tag_removal
                 user.date_modified = date_modified
                 session.commit()
                 return(True, "User ACL %s modified for " % (user_id))
@@ -889,8 +909,8 @@ def update_global_user_permissions(session, user_id=None, isadmin=False,
 def update_node_user_permissions(session, node_id=None, user_id=None,
         install=False, uninstall=False, reboot=False, schedule=False,
         wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False,
-        date_modified=datetime.now(),
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_modified=datetime.now(),
         username='system_user'
         ):
     """
@@ -900,11 +920,13 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
     session = validate_session(session)
     user = None
     if user_id and node_id:
-        try:
-            user = session.query(GlobalUserAccess).\
-                    filter(GlobalUserAccess.user_id == user_id).first()
-        except Exception as e:
-            pass
+        user_access = session.query(GlobalUserAccess).\
+                filter(GlobalUserAccess.user_id == user_id).first()
+        if user_access:
+            user = session.query(NodeUserAccess).\
+                    filter(NodeUserAccess.user_id == user_id).\
+                    filter(NodeUserAccess.user_access == user_access.id).\
+                    filter(NodeUserAccess.node_id == node_id).first()
         if user:
             try:
                 user.allow_install = install
@@ -915,7 +937,10 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
                 user.allow_snapshot_creation = snapshot_creation
                 user.allow_snapshot_removal = snapshot_removal
                 user.allow_snapshot_revert = snapshot_revert
+                user.allow_tag_creation = tag_creation
+                user.allow_tag_removal = tag_removal
                 user.date_modified = date_modified
+                user.user_access = user_access
                 session.commit()
                 return(True, "ACL for user %s was modified for node %s" % \
                         (user_id, node_id))
@@ -924,15 +949,15 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
                 return(False, "Failed to modify ACL for user %s on node %s" % \
                         (user_id, node_id))
     else:
-        return(False, "Invalid user_id %s and or node_id" % \
+        return(False, "Invalid user_id %s and or node_id %s" % \
                 (user_id, node_id))
 
 
 def update_tag_user_permissions(session, tag_id=None, user_id=None,
         install=False, uninstall=False, reboot=False, schedule=False,
         wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False,
-        date_modified=datetime.now(),
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_modified=datetime.now(),
         username='system_user'
         ):
     """
@@ -941,12 +966,15 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
     """
     session = validate_session(session)
     user = None
+
     if user_id and tag_id:
-        try:
-            user = session.query(GlobalUserAccess).\
-                    filter(GlobalUserAccess.user_id == user_id).first()
-        except Exception as e:
-            pass
+        user_access = session.query(GlobalUserAccess).\
+                filter(GlobalUserAccess.user_id == user_id).first()
+        if user_access:
+            user = session.query(TagUserAccess).\
+                    filter(TagUserAccess.user_id == user_id).\
+                    filter(TagUserAccess.user_access == user_access.id).\
+                    filter(TagUserAccess.tag_id == tag_id).first()
         if user:
             try:
                 user.allow_install = install
@@ -957,7 +985,10 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
                 user.allow_snapshot_creation = snapshot_creation
                 user.allow_snapshot_removal = snapshot_removal
                 user.allow_snapshot_revert = snapshot_revert
+                user.allow_tag_creation = tag_creation
+                user.allow_tag_removal = tag_removal
                 user.date_modified = date_modified
+                user.user_access = user_access
                 session.commit()
                 return(True, "ACL for user %s was modified for tag %s" % \
                         (user_id, tag_id))
