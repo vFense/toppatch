@@ -2,17 +2,6 @@ define(
     ['jquery', 'underscore', 'backbone', 'd3', 'app', 'text!templates/mainDash.html', 'modules/overview', 'jquery.ui.sortable' ],
     function ($, _, Backbone, d3, app, myTemplate, Overview) {
         "use strict";
-        var properties = new (
-                Backbone.Model.extend({
-                    defaults: {
-                        widgetName: "widget1",
-                        currentWidget: "existing",
-                        widgetType: "graph",
-                        widgetTitle: "Default"
-                    },
-                    initialize: function () {}
-                })
-            )(),
             /*
             lineGraph = function (selection) {
                 var data = [
@@ -31,7 +20,7 @@ define(
                 d3.select(selection).datum(data).call(lineChart);
             },
             */
-            exports = {
+        var exports = {
                 Model: Backbone.Model.extend({}),
                 View: Backbone.View.extend({
                     initialize: function () {
@@ -50,15 +39,18 @@ define(
                         this.myClass = "span";
                         this.tempData = "";
                         this.title = "Default";
+                        this.defaults = {
+                            widgetName: "widget1",
+                            currentWidget: "existing",
+                            widgetType: "graph",
+                            widgetTitle: "Default"
+                        };
+                        window.User.set('properties', this.defaults);
                     },
                     events: {
                         'click #type1': 'graphSetting',
                         'click #type2': 'textSetting',
                         'click #apply': 'createWidget'
-                        //'click #graphtype1': 'pieData',
-                        //'click #graphtype2': 'otherData',
-                        //'click #graphtype3': 'otherData',
-                        //'click #graphtype4': 'otherData'
                     },
                     textSetting: function () {
                         $("#graphSettings").hide();
@@ -84,11 +76,10 @@ define(
                                 graph = $('input:radio[name=graph]'),
                                 size = $('input:radio[name=radio]'),
                                 widgetType = $("#" + widgetName).find('.graph').attr('value');
-                            properties.set({
-                                widgetName: widgetName,
-                                currentWidget: "existing",
-                                widgetTitle: title
-                            });
+                            this.defaults.widgetName = widgetName;
+                            this.defaults.currentWidget = 'existing';
+                            this.defaults.widgetTitle = title;
+                            window.User.set('properties', this.defaults);
                             size.each(function () {
                                 if ($(this).val() === span) {
                                     $(this).attr('checked', true);
@@ -129,9 +120,8 @@ define(
                                 window.console.log('too many widgets');
                                 setTimeout(function () { $('#widgetProperties').modal('hide'); }, 50);
                             }
-                            properties.set({
-                                currentWidget: "new"
-                            });
+                            this.defaults.currentWidget = 'new';
+                            window.User.set('properties', this.defaults);
                             $("#graphSettings").hide();
                             $('INPUT:text, SELECT', '#properties-form').val('');
                             $('INPUT:checkbox, INPUT:radio', '#properties-form').removeAttr('checked').removeAttr('selected');
@@ -140,10 +130,11 @@ define(
                     },
                     widgetrender: function () {
                         var that = this;
-                        that.current = properties.get("currentWidget");
+                        that.current = window.User.get('properties').currentWidget;
                         that.type = $('input:radio[name=type]:checked').val();
                         that.title = that.$el.find('#title').val() === "" ? "Default" : that.$el.find('#title').val();
-                        properties.set({ widgetTitle: that.title });
+                        this.defaults.widgetTitle = that.title;
+                        window.User.set('properties', this.defaults);
                         if (that.current === "new") {
                             that.renderNew();
                         } else {
@@ -231,9 +222,9 @@ define(
                         var variables, index,
                             that = this,
                             self = this;
-                        that.widget = "#" + properties.get("widgetName");
+                        that.widget = "#" + window.User.get('properties').widgetName;//properties.get("widgetName");
                         that.graph = "#" + $(that.widget + " .graph").attr("id");
-                        that.title = properties.get('widgetTitle');
+                        that.title = window.User.get('properties').widgetTitle;//properties.get('widgetTitle');
                         if (that.type === "graph") {
                             that.myClass = $(that.widget).attr("class");
                             that.sizeval = $('input:radio[name=radio]:checked').val();
@@ -300,7 +291,7 @@ define(
                     },
                     beforeRender: $.noop,
                     onRender: function () {
-
+                        var that = this;
                         $(document).find("#restore").click(function () { $(".widget").show(); });
                         $(document).find('#addwidget').click(function () { that.setProperties(this, 'new'); });
 
