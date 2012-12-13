@@ -39,13 +39,13 @@ define(
                         this.myClass = "span";
                         this.tempData = "";
                         this.title = "Default";
-                        this.defaults = {
+                        this.properties = {
                             widgetName: "widget1",
                             currentWidget: "existing",
                             widgetType: "graph",
                             widgetTitle: "Default"
                         };
-                        window.User.set('properties', this.defaults);
+                        window.User.set('properties', this.properties);
                     },
                     events: {
                         'click #type1': 'graphSetting',
@@ -76,10 +76,10 @@ define(
                                 graph = $('input:radio[name=graph]'),
                                 size = $('input:radio[name=radio]'),
                                 widgetType = $("#" + widgetName).find('.graph').attr('value');
-                            this.defaults.widgetName = widgetName;
-                            this.defaults.currentWidget = 'existing';
-                            this.defaults.widgetTitle = title;
-                            window.User.set('properties', this.defaults);
+                            this.properties.widgetName = widgetName;
+                            this.properties.currentWidget = 'existing';
+                            this.properties.widgetTitle = title;
+                            window.User.set('properties', this.properties);
                             size.each(function () {
                                 if ($(this).val() === span) {
                                     $(this).attr('checked', true);
@@ -120,8 +120,8 @@ define(
                                 window.console.log('too many widgets');
                                 setTimeout(function () { $('#widgetProperties').modal('hide'); }, 50);
                             }
-                            this.defaults.currentWidget = 'new';
-                            window.User.set('properties', this.defaults);
+                            this.properties.currentWidget = 'new';
+                            window.User.set('properties', this.properties);
                             $("#graphSettings").hide();
                             $('INPUT:text, SELECT', '#properties-form').val('');
                             $('INPUT:checkbox, INPUT:radio', '#properties-form').removeAttr('checked').removeAttr('selected');
@@ -133,8 +133,8 @@ define(
                         that.current = window.User.get('properties').currentWidget;
                         that.type = $('input:radio[name=type]:checked').val();
                         that.title = that.$el.find('#title').val() === "" ? "Default" : that.$el.find('#title').val();
-                        this.defaults.widgetTitle = that.title;
-                        window.User.set('properties', this.defaults);
+                        this.properties.widgetTitle = that.title;
+                        window.User.set('properties', this.properties);
                         if (that.current === "new") {
                             that.renderNew();
                         } else {
