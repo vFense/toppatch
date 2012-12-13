@@ -143,5 +143,6 @@ def time_block_adder(session, msg, username='system_user'):
                 )
         logger.debug('%s - %s, %s, %s' % (username, message,
             json_msg["label"], block_added)
+            )
         return {"message" : message,"label" : json_msg['label'], "pass" : block_added}
 
