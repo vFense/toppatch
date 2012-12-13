@@ -14,6 +14,7 @@ from utils.common import *
 from db.client import *
 from db.query_table import *
 from networking.tcpasync import TcpConnect
+from sqlalchemy import or_
 
 def add_node(session, client_ip, agent_timestamp=None,
         node_timestamp=None, username='system_user'):
@@ -37,7 +38,8 @@ def add_node(session, client_ip, agent_timestamp=None,
                 client_ip)
 
 
-def add_global_user_permissions(session, user_id=None, isadmin=False,
+def add_global_user_permissions(session, user_id=None, group_id=None,
+        isadmin=False,
         isglobal=False, viewonly=False, install=False, uninstall=False,
         reboot=False, schedule=False, wol=False, snapshot_creation=False,
         snapshot_removal=False, snapshot_revert=False, tag_creation=False,
@@ -52,10 +54,13 @@ def add_global_user_permissions(session, user_id=None, isadmin=False,
     date_created=datetime.now()
     user_exists = session.query(GlobalUserAccess).\
             filter_by(user_id=user_id).first()
-    if user_id and not user_exists:
+    group_exists = session.query(GlobalUserAccess).\
+            filter_by(group_id=group_id).first()
+    if user_id and not user_exists or \
+            group_id and not group_exists:
         try:
-            add_acl = GlobalUserAccess(user_id, is_admin=isadmin,
-                    is_global=isglobal, view_only=viewonly,
+            add_acl = GlobalUserAccess(user_id=user_id, group_id=group_id,
+                    is_admin=isadmin, is_global=isglobal, view_only=viewonly,
                     allow_install=install, allow_uninstall=uninstall,
                     allow_reboot=reboot, allow_schedule=schedule,
                     allow_wol=wol, allow_snapshot_creation=snapshot_creation,
@@ -76,11 +81,11 @@ def add_global_user_permissions(session, user_id=None, isadmin=False,
 
 
 def add_node_user_permissions(session, node_id=None, user_id=None,
-        install=False, uninstall=False, reboot=False, schedule=False,
-        wol=False, snapshot_creation=False,
+        group_id=None, install=False, uninstall=False, reboot=False,
+        schedule=False, wol=False, snapshot_creation=False,
         snapshot_removal=False, snapshot_revert=False, tag_creation=False,
         tag_removal=False, date_created=datetime.now(),
-        date_modified=datetime.now(), user_access=False,
+        date_modified=datetime.now(),
         username='system_user'
         ):
     """
@@ -88,10 +93,15 @@ def add_node_user_permissions(session, node_id=None, user_id=None,
     """
     session = validate_session(session)
     date_created=datetime.now()
-    if user_id and node_id and user_access:
+    access = session.query(GlobalUserAccess).\
+            filter(or_(GlobalUserAccess.user_id == user_id,\
+            GlobalUserAccess.group_id == group_id)).first()
+    if user_id and node_id and access \
+            or group_id and node_id and access:
         try:
-            add_acl = NodeUserAccess(node_id, user_id,
-                    allow_install=install, allow_uninstall=uninstall,
+            add_acl = NodeUserAccess(node_id, user_id=user_id,
+                    group_id=group_id, allow_install=install,
+                    allow_uninstall=uninstall,
                     allow_reboot=reboot, allow_schedule=schedule,
                     allow_wol=wol, allow_snapshot_creation=snapshot_creation,
                     allow_snapshot_removal=snapshot_removal,
@@ -99,7 +109,7 @@ def add_node_user_permissions(session, node_id=None, user_id=None,
                     allow_tag_creation=tag_creation,
                     allow_tag_removal=tag_removal,
                     date_created=date_created, date_modified=date_modified,
-                    user_access=user_access
+                    user_access=access.id
                     )
             session.add(add_acl)
             session.commit()
@@ -124,7 +134,11 @@ def add_tag_user_permissions(session, tag_id=None, user_id=None,
     """
     session = validate_session(session)
     date_created=datetime.now()
-    if user_id and tag_id and user_access:
+    access = session.query(GlobalUserAccess).\
+            filter(or_(GlobalUserAccess.user_id == user_id,\
+            GlobalUserAccess.group_id == group_id)).first()
+    if user_id and tag_id and access or \
+            group_id and tag_id and access:
         try:
             add_acl = NodeUserAccess(tag_id, user_id,
                     allow_install=install, allow_uninstall=uninstall,
@@ -135,7 +149,7 @@ def add_tag_user_permissions(session, tag_id=None, user_id=None,
                     allow_tag_creation=tag_creation,
                     allow_tag_removal=tag_removal,
                     date_created=date_created, date_modified=date_modified,
-                    user_access=user_access
+                    user_access=access.id
                     )
             session.add(add_acl)
             session.commit()

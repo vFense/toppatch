@@ -6,6 +6,8 @@ from models.user_acl import *
 from models.account import *
 from models.node import *
 
+from sqlalchemy import or_
+
 logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvapi')
 
@@ -19,6 +21,7 @@ def verify_user(session, user_name=None, action=None, node_id=None,
     global_query = session.query(GlobalUserAccess)
     node_query = session.query(NodeUserAccess)
     tag_query = session.query(NodeUserAccess)
+    groups = None
     user = None
     node = None
     tag = None
@@ -53,24 +56,33 @@ def verify_user(session, user_name=None, action=None, node_id=None,
         user = session.query(User).\
                 filter(User.id == user_id).first()
     if user:
-        user_access = global_query.\
-                filter(GlobalUserAccess.user_id == user.id).first()
-        if user_access.is_admin and action in operation_call:
-            logger.info('User %s is an admin' % (user.username))
-            return True
-        elif user_access.is_admin and not action in operation_call:
-            logger.info('Invalid Operation %s' % (action))
-            return False
-        elif user_access:
+        groups = map(lambda gid: gid.group_id, session.query(UsersInAGroup).\
+                filter(UsersInAGroup.user_id == user.id).all())
+        if len(groups) >= 1:
+             group_access = global_query.\
+                    filter(GlobalUserAccess.group_id.in_(groups)).all()
+        else:
+            user_access = global_query.\
+                    filter(GlobalUserAccess.user_id == user.id).first()
+        elif user_access.is_admin and action in operation_call or\
+                True in map(lambda gid: gid.is_admin, groups):
+                logger.info('User %s is an admin' % (user.username))
+                return True
+            elif user_access.is_admin and not action in operation_call:
+                logger.info('Invalid Operation %s' % (action))
+                return False
             if node:
                 user_for_node_exists = node_query.\
                         filter(NodeUserAccess.node_id == node.id).\
-                        filter(NodeUserAccess.user_access == user_access.id).\
+                        filter(_or(NodeUserAccess.user_access == user_access.id,
+                            NodeUserAccess.group_id.in_(groups))).\
                         filter(NodeUserAccess.user_id == user.id).first()
             if tag:
                 user_for_tag_exists = tag_query.\
                         filter(TagUserAccess.tag_id == tag.id).\
                         filter(TagUserAccess.user_access == user_access.id).\
+                        filter(_or(TagUserAccess.user_access == user_access.id,\
+                            TagUserAccess.group_id.in_(groups))).\
                         filter(TagUserAccess.user_id == user.id).first()
             if action in operation_call:
                 if re.search(r'^create_tag$', action):
@@ -495,4 +507,101 @@ def verify_user(session, user_name=None, action=None, node_id=None,
                 (user_name, user_name)
                 )
         return False
+
+
+    def group_acl_exists(self, node=None, tag=None):
+        if node:
+            self.user_for_node_exists = node_query.\
+                    filter(NodeUserAccess.node_id == node.id).\
+                    filter(_or(NodeUserAccess.user_access == user_access.id,
+                        NodeUserAccess.group_id.in_(groups))).\
+                    filter(NodeUserAccess.user_id == user.id).first()
+        if tag:
+            self.user_for_tag_exists = tag_query.\
+                    filter(TagUserAccess.tag_id == tag.id).\
+                    filter(TagUserAccess.user_access == user_access.id).\
+                    filter(_or(TagUserAccess.user_access == user_access.id,\
+                        TagUserAccess.group_id.in_(groups))).\
+                    filter(TagUserAccess.user_id == user.id).first()
+
+
+    def has_permission(self, user=None, groups=None,
+            user_access=None, group_access=None, node=None,
+            tag=None, acl_key=None):
+        if user_access:
+            user_hash = user_access.__dict__
+            if True in user_hash['is_global'] and True in user_hash[acl_key] \
+                    and False in user_hash['is_admin']:
+                logger.info('%s - %s has global permission for %s' %\
+                        (user.username, user.username, action)
+                        )
+                return True
+            elif self.user_for_node_exists:
+                if True in user_hash[acl_key] and \
+                        False in user_hash['is_admin']:
+                    logger.info('%s - %s has %s permission on node  %s' %\
+                            (user.username, user.username, action, node.ip_address)
+                            )
+                    return True
+                else:
+                    logger.info('%s - %s doesnt has %s'%\
+                            (user.username, user.username, action)+
+                            'permission on node  %s' %\
+                            (node.ip_address)
+                            )
+                    return False
+            elif self.user_for_tag_exists:
+                if True in user_hash[acl_key] and \
+                        False in user_hash['is_admin']:
+                    logger.info('%s - %s has %s'%\
+                            (user.username, user.username, action)+
+                            'permission on this tag  %s' %\
+                            (tag.tag)
+                            )
+                    return True
+                else:
+                    logger.info('%s - %s doesnt has %s'%\
+                            (user.username, user.username, action)+
+                            'permission on this tag  %s' %\
+                            (tag.tag)
+                        )
+                    return False
+
+        elif group_access:
+            if True in map(lambda gid: gid.is_global, group_access) and \
+                    True in map(lambda gid: gid.allow_tag_creation, group_access) \
+                    and not user_access.is_admin:
+                logger.info('%s - %s has global permission for %s' %\
+                        (user.username, user.username, action)
+                        )
+                return True
+        elif user_for_node_exists:
+            if user_for_node_exists.allow_tag_creation:
+                logger.info('%s - %s has %s permission on node  %s' %\
+                        (user.username, user.username, action, node.ip_address)
+                        )
+                return True
+            else:
+                logger.info('%s - %s doesnt has %s'%\
+                        (user.username, user.username, action)+
+                        'permission on node  %s' %\
+                        (node.ip_address)
+                        )
+                return False
+        elif user_for_tag_exists:
+            if user_for_tag_exists.allow_tag_creation:
+                logger.info('%s - %s has %s'%\
+                        (user.username, user.username, action)+
+                        'permission on this tag  %s' %\
+                        (tag.tag)
+                        )
+                return True
+            else:
+                logger.info('%s - %s doesnt has %s'%\
+                        (user.username, user.username, action)+
+                        'permission on this tag  %s' %\
+                        (tag.tag)
+                        )
+                return False
+
 
