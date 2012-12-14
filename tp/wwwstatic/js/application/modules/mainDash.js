@@ -2,24 +2,6 @@ define(
     ['jquery', 'underscore', 'backbone', 'd3', 'app', 'text!templates/mainDash.html', 'modules/overview', 'jquery.ui.sortable' ],
     function ($, _, Backbone, d3, app, myTemplate, Overview) {
         "use strict";
-            /*
-            lineGraph = function (selection) {
-                var data = [
-                        {"label": new Date('1960').getFullYear(), "value": 60},
-                        {"label": new Date('1970').getFullYear(), "value": 20},
-                        {"label": new Date('1980').getFullYear(), "value": 43},
-                        {"label": new Date('1990').getFullYear(), "value": 15},
-                        {"label": new Date('2000').getFullYear(), "value": 5},
-                        {"label": new Date('2010').getFullYear(), "value": 25},
-                        {"label": new Date('2012').getFullYear(), "value": 65}
-                    ],
-                    width = $(selection).width(),
-                    lineChart = app.chart.line().width(width);
-                $(selection).attr('class', 'line graph');
-                //title = properties.get('widgetTitle') === 'Default' ? "Line Graph" : properties.get('widgetTitle'),
-                d3.select(selection).datum(data).call(lineChart);
-            },
-            */
         var exports = {
                 Model: Backbone.Model.extend({}),
                 View: Backbone.View.extend({
@@ -375,7 +357,23 @@ define(
                         d3.json("../api/summaryData", function (json) {
                             d3.select(selection).datum(json).call(interGraph);
                         });
-                    },
+                    },/*
+                    lineGraph: function (selection) {
+                         var data = [
+                         {"label": new Date('1960').getFullYear(), "value": 60},
+                         {"label": new Date('1970').getFullYear(), "value": 20},
+                         {"label": new Date('1980').getFullYear(), "value": 43},
+                         {"label": new Date('1990').getFullYear(), "value": 15},
+                         {"label": new Date('2000').getFullYear(), "value": 5},
+                         {"label": new Date('2010').getFullYear(), "value": 25},
+                         {"label": new Date('2012').getFullYear(), "value": 65}
+                         ],
+                         width = $(selection).width(),
+                         lineChart = app.chart.line().width(width);
+                         $(selection).attr('class', 'line graph');
+                         //title = properties.get('widgetTitle') === 'Default' ? "Line Graph" : properties.get('widgetTitle'),
+                         d3.select(selection).datum(data).call(lineChart);
+                    }, */
                     populateWidgets: function () {
                         var i, variables, template,
                             that = this,
