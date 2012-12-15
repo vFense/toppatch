@@ -56,6 +56,7 @@ class HandOff():
                 pass
             if self.json_object[OPERATION] == SYSTEM_INFO:
                 add_system_info(self.session, self.json_object, self.node)
+                update_node_stats(self.session, self.node.id)
             if self.json_object[OPERATION] == UPDATES_PENDING or \
                     self.json_object[OPERATION] == UPDATES_INSTALLED:
                 self.add_update()
@@ -71,6 +72,7 @@ class HandOff():
                 self.update_results()
             if self.json_object[OPERATION] == REBOOT:
                 update_reboot_status(self.session, exists)
+                update_node_stats(self.session, self.node.id)
             else:
                 pass
         else:
