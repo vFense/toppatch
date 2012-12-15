@@ -14,6 +14,9 @@ from db.client import *
 from db.query_table import *
 from networking.tcpasync import TcpConnect
 
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
+
 def add_node(session, client_ip, agent_timestamp=None,
         node_timestamp=None, username='system_user'):
     """Add a node to the database"""
