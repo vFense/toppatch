@@ -31,7 +31,7 @@ class GlobalUserAccess(Base):
     allow_tag_removal = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     date_created = Column(DATETIME, nullable=True)
     date_modified = Column(DATETIME, nullable=True)
-    def __init__(self, user_id=None, is_admin=False, is_global=False,
+    def __init__(self, user_id=None, is_admin=False, is_global=True,
             read_only=False, allow_install=False, allow_uninstall=False,
             allow_reboot=False, allow_schedule=False, allow_wol=False,
             allow_snapshot_creation=False, allow_snapshot_removal=False,
@@ -93,7 +93,7 @@ class GlobalGroupAccess(Base):
     allow_tag_removal = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     date_created = Column(DATETIME, nullable=True)
     date_modified = Column(DATETIME, nullable=True)
-    def __init__(self, group_id=None, is_admin=False, is_global=False,
+    def __init__(self, group_id=None, is_admin=False, is_global=True,
             read_only=False, allow_install=False, allow_uninstall=False,
             allow_reboot=False, allow_schedule=False, allow_wol=False,
             allow_snapshot_creation=False, allow_snapshot_removal=False,
