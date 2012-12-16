@@ -90,7 +90,6 @@ def date_time_parser(schedule):
                 am_pm = "PM"
         am_pm = am_pm.upper()
     pformatted = map(lambda x: int(x),re.split(r'\/|:|\s+', schedule))
-    print pformatted
     if len(pformatted) == 5 and am_pm:
         month, day, year, hour, minute = pformatted
         if am_pm == 'PM' and str(hour) in twentyfour_hour or \
@@ -160,3 +159,8 @@ def return_utc(non_utc_time):
     return utc_time
 
 
+def return_modified_list(list_to_modify):
+    for i in list_to_modify:
+        i['date_modified'] = i['date_modified'].strftime('%m/%d/%Y %H:%M')
+        i['date_created'] = i['date_created'].strftime('%m/%d/%Y %H:%M')
+    return(list_to_modify)

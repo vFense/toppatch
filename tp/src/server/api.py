@@ -22,6 +22,7 @@ from scheduler.jobManager import job_lister, remove_job
 from scheduler.timeBlocker import *
 from tagging.tagManager import *
 from search.search import *
+from utils.common import *
 from packages.pkgManager import *
 from node.nodeManager import *
 from transactions.transactions_manager import *
@@ -936,12 +937,45 @@ class ListUserHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         userlist = self.session.query(User).all()
+        user_dict = {}
+        user_groups = map(lambda x: (x[0].user_id, x[1].groupname), 
+                self.session.query(UsersInAGroup, Group).join(Group).all())
+        for i in user_groups:
+            if str(i[0]) in user_dict:
+                user_dict[str(i[0])].append(i[1])
+            else:
+                user_dict[str(i[0])] = [i[1]]
+        node_acl_list =[]
+        tag_acl_list = []
+        global_acl_list = []
         result = []
-        if userlist:
-            for user in userlist:
-                result.append({"username" : user.username,
-                               "id" : user.id
-                              })
+        for user in userlist:
+            if not str(user.id) in user_dict:
+                user_dict[str(user.id)] = []
+            node_user_acl = self.session.query(NodeUserAccess).\
+                    filter(NodeUserAccess.user_id == user.id).\
+                    all()
+            node_acl_list = map(lambda node: node.__dict__, node_user_acl)
+            map(lambda node: node.pop('_sa_instance_state'), node_acl_list)
+            global_user_acl = self.session.query(GlobalUserAccess).\
+                    filter(GlobalUserAccess.user_id == user.id).\
+                    all()
+            global_acl_list = map(lambda user: user.__dict__, global_user_acl)
+            map(lambda user: user.pop('_sa_instance_state'), global_acl_list)
+            tag_user_acl = self.session.query(TagUserAccess).\
+                    filter(TagUserAccess.user_id == user.id).\
+                    all()
+            tag_acl_list = map(lambda tag: tag.__dict__, tag_user_acl)
+            map(lambda tag: tag.pop('_sa_instance_state'), tag_acl_list)
+
+            result.append({
+                'username': user.username,
+                'id': user.id,
+                'groups': user_dict[str(user.id)],
+                'global_acls': return_modified_list(global_acl_list),
+                'node_acls': return_modified_list(node_acl_list),
+                'tag_acls': return_modified_list(tag_acl_list)
+                })
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
