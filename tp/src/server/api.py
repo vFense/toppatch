@@ -957,16 +957,19 @@ class ListUserHandler(BaseHandler):
                     all()
             node_acl_list = map(lambda node: node.__dict__, node_user_acl)
             map(lambda node: node.pop('_sa_instance_state'), node_acl_list)
+            map(lambda node: node.pop('is_global'), node_acl_list)
             global_user_acl = self.session.query(GlobalUserAccess).\
                     filter(GlobalUserAccess.user_id == user.id).\
                     all()
             global_acl_list = map(lambda user: user.__dict__, global_user_acl)
             map(lambda user: user.pop('_sa_instance_state'), global_acl_list)
+            map(lambda user: user.pop('is_global'), global_acl_list)
             tag_user_acl = self.session.query(TagUserAccess).\
                     filter(TagUserAccess.user_id == user.id).\
                     all()
             tag_acl_list = map(lambda tag: tag.__dict__, tag_user_acl)
             map(lambda tag: tag.pop('_sa_instance_state'), tag_acl_list)
+            map(lambda tag: tag.pop('is_global'), tag_acl_list)
 
             result.append({
                 'username': user.username,
