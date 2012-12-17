@@ -109,11 +109,30 @@ class ModifyUserFromGroupHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         user_id = self.get_argument("user_id", None)
+        username = self.get_argument("username", None)
         group_id = self.get_argument("group_id", None)
+        groupname = self.get_argument("groupname", None)
         action = self.get_argument("action", None)
         if user_id and group_id:
             result = modify_user_from_group(self.session, 
                     user_id=user_id, group_id=group_id, action=action)
+        elif username and groupname:
+            user = self.session.query(User).\
+                    filter(User.username == username).first()
+            group = self.session.query(Group).\
+                    filter(Group.groupname == groupname).first()
+            result = modify_user_from_group(self.session, 
+                    user_id=user.id, group_id=group.id, action=action)
+        elif user_id and groupname:
+            group = self.session.query(Group).\
+                    filter(Group.groupname == groupname).first()
+            result = modify_user_from_group(self.session, 
+                    user_id=user_id, group_id=group.id, action=action)
+        elif username and group_id:
+            user = self.session.query(User).\
+                    filter(User.username == username).first()
+            result = modify_user_from_group(self.session, 
+                    user_id=user.id, group_id=group_id, action=action)
         else:
             result = {
                     'pass': False,
