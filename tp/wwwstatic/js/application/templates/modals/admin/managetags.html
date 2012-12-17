@@ -36,7 +36,7 @@
                             </span>
                             <div style="margin-top: 6px" class="span4 alignRight">
                                 <span class="badge badge-inverse"><%= tag.nodes.length %></span>&nbsp;
-                                <button type="button" class="btn btn-link" name="confirmDelete" id="<%= tag.tag_name %>"><i style="color: red;" class="icon-remove"></i></button>
+                                <button type="button" class="btn btn-link noPadding" name="confirmDelete" id="<%= tag.tag_name %>"><i style="color: red;" class="icon-remove"></i></button>
                                 <div name="confirmDelete" class="hide">
                                     <button name="remove" class="btn btn-mini btn-danger" value="<%= tag.tag_name %>">Delete</button>
                                     <button name="cancelDelete" class="btn btn-mini">Cancel</button>
@@ -54,7 +54,7 @@
                                     <em name="nonode">No nodes contain this tag</em>
                                 <% } %>
                                 </div>
-                                &nbsp;<button type="button" class="btn btn-link" name="popover" value="<%= tag.tag_name %>"><i style="color: green;" class="icon-plus"></i></button>
+                                &nbsp;<button type="button" class="btn btn-link noPadding" name="popover" value="<%= tag.tag_name %>"><i style="color: green;" class="icon-plus"></i></button>
                             </div>
                         </div>
                     </div>

@@ -45,21 +45,22 @@ define(
                 onRender: function () {
                     var close, that;
                     this.$el.find('#addTag').popover({
-                        title: 'Tags Available<button type="button" class="btn btn-link pull-right" id="close"><i class="icon-remove"></i></button>',
+                        title: 'Tags Available<button type="button" class="btn btn-link noPadding pull-right" id="close"><i class="icon-remove"></i></button>',
                         html: true,
                         trigger: 'click',
                         content: $('#list-form')
                     });
                     this.$el.find('a[name=editPopover]').each(function () {
                         $(this).popover({
-                            title: '&nbsp;<button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
+                            title: '&nbsp;<button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
                             html: true,
                             trigger: 'click',
                             content: $('#display-name').clone()
                         }).click(function (event) {
                             that = $(this);
-                            close = $(this).data('popover').$tip.find('button[name=close]');
+                            close = $(this).data('popover').tip().find('button[name=close]');
                             close.unbind();
+                            window.console.log(close);
                             close.on('click', function (event) {
                                 $(that).popover('hide');
                             });
@@ -68,7 +69,7 @@ define(
                     this.$el.find('input[name=schedule]').each(function () {
                         $(this).popover({
                             placement: 'top',
-                            title: 'Patch Scheduling<button type="button" class="btn btn-link pull-right" name="close"><i class="icon-remove"></i></button>',
+                            title: 'Patch Scheduling<button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
                             html: true,
                             content: $('#schedule-form').clone(),
                             trigger: 'click'
@@ -214,7 +215,7 @@ define(
                 },
                 showEditOperation: function (event) {
                     var popover = $(event.currentTarget).data('popover'),
-                        button = popover.tip().find('button');
+                        button = popover.tip().find('button[name=editProperty]');
                     button.unbind();
                     button.on('click', {view: this, popover: popover}, this.submitNameOperation);
                     return false;
