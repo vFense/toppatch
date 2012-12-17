@@ -62,7 +62,7 @@ class DeleteUserHandler(BaseHandler):
             result = delete_user(self.session, user.id)
         else:
             result = {
-                    'passed': False,
+                    'pass': False,
                     'message': 'Incorrect arguments passed. username or userid'
                     }
         self.set_header('Content-Type', 'application/json')
@@ -153,12 +153,25 @@ class DeleteGroupHandler(BaseHandler):
             result = delete_user(self.session, group.id)
         else:
             result = {
-                    'passed': False,
+                    'pass': False,
                     'message': 'Incorrect arguments passed. groupname or groupid'
                     }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
 
+
+
+class AclModifierHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        user_name = self.get_current_user()
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        acl_type = self.get_argument('type', None)
+        acl_action = self.get_argument('action', None)
+        acl = self.get_argument('acl', None)
+        if acl_type and acl_action and acl:
+            acl_modifier(session, acl_type, acl_action, acl)
 
 

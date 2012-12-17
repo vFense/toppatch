@@ -8,6 +8,7 @@ from server.oauth import token
 from utils.security import Crypto
 from db.client import validate_session
 from db.update_table import *
+from utils.common import *
 
 
 logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
@@ -59,7 +60,7 @@ def list_user(session):
     return result
 
 def create_user(session, username=None, password=None,
-        fullname=None, email=None, groupname=None,
+        fullname=None, email=None, groupname='READ_ONLY',
         user_name=None):
     session = validate_session(session)
     if username and password and groupname:
@@ -78,16 +79,16 @@ def create_user(session, username=None, password=None,
                     user_to_group = \
                             add_user_to_group(session, user_id=user.id,
                                     group_id=group.id)
-                    if user_to_group['passed'] == True:
+                    if user_to_group['pass'] == True:
                         return({
-                            'passed': True,
+                            'pass': True,
                             'message': \
                                     'User %s was created and added to group %s'%\
                                     (username, groupname)
                             })
                     else:
                         return({
-                            'passed': False,
+                            'pass': False,
                             'message': \
                                     'User %s was created and not added to group %s'%\
                                     (username, groupname)
@@ -95,13 +96,13 @@ def create_user(session, username=None, password=None,
             except Exception as e:
                 session.rollback()
                 return({
-                    'passed': False,
+                    'pass': False,
                     'message': 'User %s was not created and added to group %s'%\
                             (username, groupname)
                     })
         else:
             return({
-                    'passed': False,
+                    'pass': False,
                     'message': 'User %s already exists'%\
                         (username)
                     })
@@ -211,7 +212,7 @@ def create_group(session, groupname):
         return(result)
     else:
         return({
-            'passed': False,
+            'pass': False,
             'message': 'Need to pass the groupname'
             })
 
@@ -282,8 +283,54 @@ def delete_group(session, group_id=None, username='system_user'):
               (username)
               ) 
         result = {
-                'passed': False,
+                'pass': False,
                 'message': 'Need to pass the groupid'
                 }
     return result
 
+def acl_modifier(session, acl_type, acl_action, acl):
+    session = validate_session(session)
+    valid_acl_type = ['global_user', 'global_group', 'node_user', \
+            'node_group', 'tag_user', 'tag_group']
+    valid_acl_action = ['create', 'modify', 'delete']
+    result = None
+    if acl_type and acl_action and acl:
+        if acl_type in valid_acl_type and \
+                acl_action in \
+                valid_acl_action:
+            for i in acl:
+                if 'true' in acl[i] or\
+                        'false' in acl[i]:
+                    acl[i] = return_bool(acl[i])
+            if acl_action == 'create':
+                if 'global_user' in acl_type:
+                    result = add_global_user_acl(session, acl)
+                if 'global_group' in acl_type:
+                    result = add_global_group_acl(session, acl)
+                if 'node_user' in acl_type:
+                    result = add_node_user_acl(session, acl)
+                if 'node_group' in acl_type:
+                    result = add_node_group_acl(session, acl)
+                if 'tag_user' in acl_type:
+                    result = add_tag_user_acl(session, acl)
+                if 'tag_group' in acl_type:
+                    result = add_tag_group_acl(session, acl)
+            elif acl_action == 'modify':
+                print 'here'
+                if 'global_user' in acl_type:
+                    result = update_global_user_acl(session, acl)
+                if 'global_group' in acl_type:
+                    print 'made it'
+                    print acl
+                    result = update_global_group_acl(session, **acl)
+                    print result
+                if 'node_user' in acl_type:
+                    result = update_node_user_acl(session, acl)
+                if 'node_group' in acl_type:
+                    result = update_node_group_acl(session, acl)
+                if 'tag_user' in acl_type:
+                    result = update_tag_user_acl(session, acl)
+                if 'tag_group' in acl_type:
+                    result = update_tag_group_acl(session, acl)
+    print result
+    return result

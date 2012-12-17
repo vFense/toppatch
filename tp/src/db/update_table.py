@@ -49,25 +49,25 @@ def add_group(session, groupname=None):
                 session.add(group)
                 session.commit()
                 return({
-                    'passed': True,
+                    'pass': True,
                     'message': 'Group %s added' % (groupname)
                     })
             except Exception as e:
                 session.rollback()
                 return({
-                    'passed': False,
+                    'pass': False,
                     'message': e
                     })
         else:
             return({
-                'passed': False,
+                'pass': False,
                 'message': '%s already exists' %\
                         (group_exists.id)
                 })
 
     else:
         return({
-            'passed': False,
+            'pass': False,
             'message': 'Need to pass the group_id'
             })
 
@@ -84,25 +84,25 @@ def add_user_to_group(session, user_id=None, group_id=None):
                 session.add(add_user)
                 session.commit()
                 return({
-                    'passed': True,
+                    'pass': True,
                     'message': '%s added to %s' %\
                             (user_id, group_id)
                         })
             except Exception as e:
                 session.rollback()
                 return({
-                    'passed': False,
+                    'pass': False,
                     'message': e
                     })
         else:
             return({
-                'passed': False,
+                'pass': False,
                 'message': '%s already in this group %s' %\
                         (user_id, group_id)
                 })
     else:
         return({
-            'passed': False,
+            'pass': False,
             'message': 'Need to pass the user_id and group_id'
             })
 
@@ -138,12 +138,21 @@ def add_global_user_acl(session, user_id=None, isadmin=False,
                     )
             session.add(add_acl)
             session.commit()
-            return(True, "User ACL %s added for " % (user_id))
+            return({
+                'pass': True,
+                'message': 'User ACL was added for %s' % (user_id)
+                })
         except Exception as e:
             session.rollback()
-            return(False, "Failed to add ACL for user %s" % (user_id))
+            return({
+                'pass': False,
+                'message': 'Failed to add ACL for user %s' % (user_id)
+                })
     elif user_id and user_exists:
-        return(False, "Failed to add ACL for user %s" % (user_id))
+        return({
+            'pass': False,
+            'message': 'Failed to add ACL for user %s' % (user_id)
+            })
 
 
 def add_global_group_acl(session, group_id=None, isadmin=False,
@@ -176,12 +185,21 @@ def add_global_group_acl(session, group_id=None, isadmin=False,
                     )
             session.add(add_acl)
             session.commit()
-            return(True, "Group ACL %s added" % (group_id))
+            return({
+                'pass': True,
+                'message': 'Group ACL %s added' % (group_id)
+                })
         except Exception as e:
             session.rollback()
-            return(False, "Failed to add ACL for Group %s" % (group_id))
+            return({
+                'pass': False,
+                'message': 'Failed to add ACL for Group %s' % (group_id)
+                })
     elif group_id and group_exists:
-        return(False, "Failed to add ACL for Group %s" % (group_id))
+        return({
+            'pass': False,
+            'message': 'Failed to add ACL for Group %s' % (group_id)
+            })
 
 
 def add_node_user_acl(session, node_id=None, user_id=None,
@@ -213,12 +231,18 @@ def add_node_user_acl(session, node_id=None, user_id=None,
                     )
             session.add(add_acl)
             session.commit()
-            return(True, "User ACL %s added for Node %s" % \
-                    (user_id, node_id))
+            return({
+                'pass': True,
+                'message': 'User ACL %s added for Node %s' % \
+                    (user_id, node_id)
+                    })
         except Exception as e:
             session.rollback()
-            return(False, "Failed to add ACL for User %s on Node %s" % \
-                    (user_id, node_id))
+            return({
+                'pass': False,
+                'message': 'Failed to add ACL for User %s on Node %s' % \
+                    (user_id, node_id)
+                    })
 
 
 def add_node_group_acl(session, node_id=None, group_id=None,
@@ -250,12 +274,18 @@ def add_node_group_acl(session, node_id=None, group_id=None,
                     )
             session.add(add_acl)
             session.commit()
-            return(True, "Group ACL %s added for Node %s" % \
-                    (group_id, node_id))
+            return({
+                'pass': True,
+                'message': 'Group ACL %s added for Node %s' % \
+                    (group_id, node_id)
+                    })
         except Exception as e:
             session.rollback()
-            return(False, "Failed to add ACL for Group %s on Node %s" % \
-                    (group_id, node_id))
+            return({
+                'pass': False,
+                'message': 'Failed to add ACL for Group %s on Node %s' % \
+                    (group_id, node_id)
+                    })
 
 
 
@@ -288,13 +318,19 @@ def add_tag_user_acl(session, tag_id=None, user_id=None,
                     )
             session.add(add_acl)
             session.commit()
-            return(True, "User ACL %s added for Tag %s" % \
-                    (user_id, tag_id))
+            return({
+                'pass': True,
+                'message': 'User ACL %s added for Tag %s' % \
+                    (user_id, tag_id)
+                    })
         except Exception as e:
             session.rollback()
             print e 
-            return(False, "Failed to add ACL for User %s on Tag %s" % \
-                    (user_id, tag_id))
+            return({
+                'pass': False,
+                'message': 'Failed to add ACL for User %s on Tag %s' % \
+                    (user_id, tag_id)
+                    })
 
 
 def add_tag_group_acl(session, tag_id=None, group_id=None,
@@ -326,12 +362,18 @@ def add_tag_group_acl(session, tag_id=None, group_id=None,
                     )
             session.add(add_acl)
             session.commit()
-            return(True, "Group ACL %s added for Tag %s" % \
-                    (group_id, tag_id))
+            return({
+                'pass': True,
+                'message': 'Group ACL %s added for Tag %s' % \
+                    (group_id, tag_id)
+                    })
         except Exception as e:
             session.rollback()
-            return(False, "Failed to add ACL for Group %s on Tag %s" % \
-                    (group_id, tag_id))
+            return({
+                'pass': False,
+                'message': 'Failed to add ACL for Group %s on Tag %s' % \
+                    (group_id, tag_id)
+                    })
 
 
 def add_tag(session, tag_name, user_id=None, username='system_user'):
@@ -1085,12 +1127,21 @@ def update_global_user_acl(session, user_id=None, isadmin=False,
                 user.allow_tag_removal = tag_removal
                 user.date_modified = date_modified
                 session.commit()
-                return(True, "User ACL %s modified for " % (user_id))
+                return({
+                    'pass': True,
+                    'message': 'User ACL %s modified' % (user_id)
+                    })
             except Exception as e:
                 session.rollback()
-                return(False, "Failed to modify ACL for user %s" % (user_id))
+                return({
+                    'pass': False,
+                    'message': 'Failed to modify ACL for user %s' % (user_id)
+                    })
     else:
-        return(False, "Invalid user_id %s" % (user_id))
+        return({
+            'pass': False,
+            'message': 'Invalid user_id %s' % (user_id)
+            })
 
 
 def update_global_group_acl(session, group_id=None, isadmin=False,
@@ -1105,6 +1156,7 @@ def update_global_group_acl(session, group_id=None, isadmin=False,
     """
     session = validate_session(session)
     group = None
+    print group_id
     if group_id:
         try:
             group = session.query(GlobalGroupAccess).\
@@ -1128,12 +1180,21 @@ def update_global_group_acl(session, group_id=None, isadmin=False,
                 group.allow_tag_removal = tag_removal
                 group.date_modified = date_modified
                 session.commit()
-                return(True, "Group ACL %s modified" % (group_id))
+                return({
+                    'pass': True,
+                    'message': 'Group ACL %s modified' % (group_id)
+                    })
             except Exception as e:
                 session.rollback()
-                return(False, "Failed to modify ACL for Group %s" % (group_id))
+                return({
+                    'pass': False,
+                    'message': 'Failed to modify ACL for Group %s' % (group_id)
+                    })
     else:
-        return(False, "Invalid group_id %s" % (group_id))
+        return({
+            'pass': False,
+            'message': 'Invalid group_id %s' % (group_id)
+            })
 
 
 
@@ -1168,14 +1229,22 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
                 user.allow_tag_removal = tag_removal
                 user.date_modified = date_modified
                 session.commit()
-                return(True, "ACL for User %s was modified for Node %s" % \
-                        (user_id, node_id))
+                return({
+                    'pass': True,
+                    'message': 'ACL for User %s was modified for Node %s' % \
+                            (user_id, node_id)
+                            })
             except Exception as e:
                 session.rollback()
-                return(False, "Failed to modify ACL for User %s on Node %s" % \
-                        (user_id, node_id))
+                return({
+                    'pass': False,
+                    'message': 'Failed to modify ACL for User %s on Node %s' % \
+                        (user_id, node_id)
+                        })
     else:
-        return(False, "Invalid user_id %s and or node_id %s" % \
+        return({
+            'pass': False,
+            'message': 'Invalid user_id %s and or node_id %s' % \
                 (user_id, node_id))
 
 
@@ -1210,14 +1279,21 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
                 group.allow_tag_removal = tag_removal
                 group.date_modified = date_modified
                 session.commit()
-                return(True, "ACL for Group %s was modified for Node %s" % \
-                        (group_id, node_id))
+                return({
+                    'pass': True, 
+                    'message': 'ACL for Group %s was modified for Node %s' % \
+                        (group_id, node_id)
+                        })
             except Exception as e:
                 session.rollback()
-                return(False, "Failed to modify ACL for Group %s on Node %s" % \
+                return({
+                    'pass': False,
+                    'message': 'Failed to modify ACL for Group %s on Node %s' % \
                         (group_id, node_id))
     else:
-        return(False, "Invalid group_id %s and or node_id %s" % \
+        return({
+            'pass': False, 
+            'message': 'Invalid group_id %s and or node_id %s' % \
                 (group_id, node_id))
 
 
@@ -1253,15 +1329,24 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
                 user.allow_tag_removal = tag_removal
                 user.date_modified = date_modified
                 session.commit()
-                return(True, "ACL for User %s was modified for Tag %s" % \
-                        (user_id, tag_id))
+                return({
+                    'pass': True,
+                    'message': 'ACL for User %s was modified for Tag %s' % \
+                        (user_id, tag_id)
+                        })
             except Exception as e:
                 session.rollback()
-                return(False, "Failed to modify ACL for User %s on Tag %s" % \
-                        (user_id, tag_id))
+                return({
+                    'pass': False,
+                    'message': 'Failed to modify ACL for User %s on Tag %s' % \
+                        (user_id, tag_id)
+                        })
     else:
-        return(False, "Invalid user_id %s and or tag_id" % \
-                (user_id, tag_id))
+        return({
+            'pass': False,
+            'message': 'Invalid user_id %s and or tag_id' % \
+                (user_id, tag_id)
+                })
 
 
 def update_tag_group_permissions(session, tag_id=None, group_id=None,
@@ -1296,15 +1381,24 @@ def update_tag_group_permissions(session, tag_id=None, group_id=None,
                 group.allow_tag_removal = tag_removal
                 group.date_modified = date_modified
                 session.commit()
-                return(True, "ACL for Group %s was modified for Tag %s" % \
-                        (group_id, tag_id))
+                return({
+                    'pass': True,
+                    'message': 'ACL for Group %s was modified for Tag %s' % \
+                        (group_id, tag_id)
+                        })
             except Exception as e:
                 session.rollback()
-                return(False, "Failed to modify ACL for Group %s on Tag %s" % \
-                        (group_id, tag_id))
+                return({
+                    'pass': False,
+                    'message': 'Failed to modify ACL for Group %s on Tag %s' % \
+                        (group_id, tag_id)
+                        })
     else:
-        return(False, "Invalid group_id %s and or tag_id" % \
-                (group_id, tag_id))
+        return({
+            'pass': False,
+            'message': 'Invalid group_id %s and or tag_id' % \
+                (group_id, tag_id)
+                })
 
 
 def add_results(session, data, username='system_user'):
