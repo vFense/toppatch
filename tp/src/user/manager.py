@@ -173,7 +173,7 @@ def delete_user(session, user_id, username='system_user'):
 def modify_user_from_group(session, user_id=None, group_id=None, action=None):
     session = validate_session(session)
     if user_id and group_id and action:
-        user = session.query(UserInAGroup).\
+        user = session.query(UsersInAGroup).\
                 filter(UsersInAGroup.user_id == user_id).\
                 filter(UsersInAGroup.group_id == group_id).first()
         group = session.query(Group).filter(Group.id == group_id).first()
