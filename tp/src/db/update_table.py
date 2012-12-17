@@ -34,8 +34,78 @@ def add_node(session, client_ip, agent_timestamp=None,
                 )
         return add_node
     except Exception as e:
+        session.rollback()
         logger.error('node %s could not be added to node_info' %\
                 client_ip)
+
+def add_group(session, groupname=None):
+    session = validate_session(session)
+    if groupname:
+        group_exists = session.query(Group).\
+                filter(Group.groupname == groupname).first()
+        if not group_exists:
+            group = Group(groupname=groupname)
+            try:
+                session.add(group)
+                session.commit()
+                return({
+                    'passed': True,
+                    'message': 'Group %s added' % (groupname)
+                    })
+            except Exception as e:
+                session.rollback()
+                return({
+                    'passed': False,
+                    'message': e
+                    })
+        else:
+            return({
+                'passed': False,
+                'message': '%s already exists' %\
+                        (group_id)
+                })
+
+    else:
+        return({
+            'passed': False,
+            'message': 'Need to pass the group_id'
+            })
+
+def add_user_to_group(session, user_id=None, group_id=None):
+    session = validate_session(session)
+    if user_id and group_id:
+        group_for_user_exists = session.query(UsersInAGroup).\
+                filter(UsersInAGroup.user_id == user_id).\
+                filter(UsersInAGroup.group_id == group_id).\
+                first()
+        if not group_for_user_exists:
+            add_user = UsersInAGroup(user_id, group_id)
+            try:
+                session.add(add_user)
+                session.commit()
+                return({
+                    'passed': True,
+                    'message': '%s added to %s' %\
+                            (user_id, group_id)
+                        })
+            except Exception as e:
+                session.rollback()
+                return({
+                    'passed': False,
+                    'message': e
+                    })
+        else:
+            return({
+                'passed': False,
+                'message': '%s already in this group %s' %\
+                        (user_id, group_id)
+                })
+    else:
+        return({
+            'passed': False,
+            'message': 'Need to pass the user_id and group_id'
+            })
+
 
 
 def add_global_user_acl(session, user_id=None, isadmin=False,
@@ -1182,7 +1252,6 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
                 user.allow_tag_creation = tag_creation
                 user.allow_tag_removal = tag_removal
                 user.date_modified = date_modified
-                user.user_access = user_access
                 session.commit()
                 return(True, "ACL for User %s was modified for Tag %s" % \
                         (user_id, tag_id))
@@ -1226,7 +1295,6 @@ def update_tag_group_permissions(session, tag_id=None, group_id=None,
                 group.allow_tag_creation = tag_creation
                 group.allow_tag_removal = tag_removal
                 group.date_modified = date_modified
-                group.user_access = user_access
                 session.commit()
                 return(True, "ACL for Group %s was modified for Tag %s" % \
                         (group_id, tag_id))
