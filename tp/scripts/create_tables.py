@@ -8,6 +8,7 @@ from models.cve import *
 from models.packages import *
 from models.node import *
 from models.ssl import *
+from models.user_acl import *
 from models.scheduler import *
 from models.tagging import *
 from sqlalchemy import create_engine
