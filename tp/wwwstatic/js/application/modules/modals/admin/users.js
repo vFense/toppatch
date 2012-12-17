@@ -43,6 +43,7 @@ define(
                     'click button[name=confirmDelete]': 'confirmDelete',
                     'click button[name=cancelDelete]': 'confirmDelete',
                     'click button[name=deleteUser]': 'deleteUser',
+                    'click button[name=groups]': 'showGroups',
                     'click #submitUser': 'submitNewUser',
                     'submit form': 'submit'
                 },
@@ -68,7 +69,7 @@ define(
                         $divConfirm = $deleteButton.siblings('div');
                     } else {
                         $divConfirm = $(event.currentTarget).parent();
-                        $deleteButton = $divConfirm.siblings('button');
+                        $deleteButton = $divConfirm.siblings('button[name=confirmDelete]');
                     }
                     $deleteButton.toggle();
                     $divConfirm.toggle();
@@ -110,13 +111,41 @@ define(
                         }
                     });
                 },
+                showGroups: function (event) {
+                    var $popover = $(event.currentTarget),
+                        userId = parseInt($popover.val(), 10),
+                        userData = this.collection.toJSON(),
+                        $inputs = $popover.data('popover').options.content.find('input[type=checkbox]');
+                    _.each(userData, function (user) {
+                        if (user.id === userId) {
+                            _.each(user.groups, function (group) {
+                                $inputs.each(function () {
+                                    if (this.value === group) {
+                                        this.checked = true;
+                                    }
+                                });
+                            });
+                        }
+                    });
+                },
                 submit: function (event) {
                     var $form = $(event.target);
                     window.console.log($form);
                     return false;
                 },
                 beforeRender: $.noop,
-                onRender: $.noop,
+                onRender: function () {
+                    var that = this;
+                    this.$el.find('button[name=groups]').each(function () {
+                        $(this).popover({
+                            placement: 'right',
+                            title: '<div class="alignLeft"><span>Groups</span><button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button></div>',
+                            html: true,
+                            content: that.$el.find('#grouplist').clone(),
+                            trigger: 'click'
+                        });
+                    });
+                },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
