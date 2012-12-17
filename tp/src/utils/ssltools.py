@@ -1,5 +1,6 @@
 import os
 import socket
+import logging, logging.config
 from datetime import datetime
 from OpenSSL import crypto
 
@@ -29,6 +30,10 @@ EXTENSION = {
             2 : '.cert',
             3 : '.key'
             }
+
+
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
 
 def load_private_key(privkey=CA_PKEY):
     pkey = LOAD_PKEY(FILE_TYPE_PEM, open(privkey, 'rb').read())
@@ -76,25 +81,31 @@ def save_key(location, key, key_type, name=socket.gethostname()):
         os.stat(location)
     except OSError as e:
         if e.errno == 2:
-            print 'The directory %s does not exist' % (location)
+            logger.error('%s - ssl directory %s does not exists' %\
+                    ('system_user', location)
+                    )
         elif e.errno == 13:
-            print 'Do not have sufficient permission to write to %s'\
-                    % (location)
+            logger.error('%s - Do not have permission to write to %s' %\
+                    ('system_user', location)
+                    )
     try:
         file_exists = os.stat(path_to_key)
         if file_exists:
-            print 'File %s already exists' % (path_to_key)
-            print ' not be overwritten'
+            logger.warn('%s - File %s already exists' %\
+                    ('system_user', path_to_key))
     except OSError as e:
         if e.errno == 2:
-            print e
             open(path_to_key, 'w').write(\
                     DUMP_KEY(FILE_TYPE_PEM, key)
                     )
             status = True
+            logger.error('%s - Writing ssl cert to %s ' %\
+                    ('system_user', location)
+                    )
         elif e.errno == 13:
-            print 'Do not have sufficient permission to write to %s'\
-                    % (location)
+            logger.error('%s - Do not have permission to write to %s' %\
+                    ('system_user', location)
+                    )
     return(path_to_key, name, status)
 
 

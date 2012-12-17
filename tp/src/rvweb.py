@@ -5,6 +5,8 @@ import base64
 import uuid
 import os
 import threading
+import logging
+import logging.config
 import gevent
 from gevent import monkey
 monkey.patch_all(thread=True)
@@ -32,7 +34,6 @@ from twisted.internet import reactor
 
 from apscheduler.scheduler import Scheduler
 from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
-
 
 define("port", default=8000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
@@ -129,6 +130,25 @@ class Application(tornado.web.Application):
         self.tokens = TokenManager(self.session)
 
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
+
+    def log_request(self, handler):
+        logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+        log = logging.getLogger('rvweb')
+        log_method = log.debug
+        if handler.get_status() <= 299:
+            log_method = log.info
+        elif handler.get_status() <= 399 and \
+                handler.get_status() >= 300:
+            log_method = log.warn
+        elif handler.get_status() <= 499 and \
+                handler.get_status() >= 400:
+            log_method = log.error
+        elif handler.get_status() <= 599 and \
+                handler.get_status() >= 500:
+            log_method = log.error
+        request_time = 1000.0 * handler.request.request_time()
+        log_message = '%d %s %.2fms' % (handler.get_status(), handler._request_summary(), request_time)
+        log_method(log_message)
 
 
 class HelloWorldProtocol(Protocol):

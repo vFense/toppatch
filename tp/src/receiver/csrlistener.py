@@ -36,8 +36,8 @@ class CsrReceiver(Protocol):
     def connectionMade(self):
         self.client_peer = self.transport.getPeer()
         self.client_ip = self.client_peer.host
-        logger.info('agent %s connected' %\
-                (self.client_peer)
+        logger.info('%s - agent %s connected' %\
+                ('system_user', self.client_ip)
                 )
 
     def dataReceived(self, data):
@@ -46,8 +46,8 @@ class CsrReceiver(Protocol):
     def connectionLost(self, reason):
         self.transport.loseConnection()
         data = self.total_data
-        logger.debug('data received from agent %s\n%s' %\
-                (self.client_peer, data)
+        logger.debug('%s - data received from agent %s\n%s' %\
+                ('system_user', self.client_ip, data)
                 )
         self.total_data = ""
         CsrHandOff(ENGINE, self.client_ip, data)

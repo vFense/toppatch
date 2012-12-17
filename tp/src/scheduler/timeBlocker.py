@@ -3,7 +3,7 @@
 from datetime import datetime
 from datetime import timedelta
 from dateutil.tz import *
-import logging
+import logging, logging.config
 import re
 from apscheduler.scheduler import Scheduler
 from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
@@ -14,6 +14,10 @@ from utils.common import *
 from db.query_table import *
 from db.update_table import add_time_block, remove_time_block
 from models.scheduler import *
+
+
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
 
 def time_block_lister(session):
     """
@@ -79,7 +83,7 @@ def time_block_lister(session):
     return windows
 
 def time_block_remover(session, id=None, label=None, start_date=None,
-                        start_time=None):
+                        start_time=None, username='system_user'):
     """
         either you must pass the time block id or 
         the time block label, start_date, and start_time
@@ -102,7 +106,7 @@ def time_block_remover(session, id=None, label=None, start_date=None,
                 % (removed[0], removed[1])
     return removed
 
-def time_block_adder(session, msg):
+def time_block_adder(session, msg, username='system_user'):
     """The message needs to be in a valid json format.
        end_date is optional. Our date format is in binary format...
        So if you have a schedule that is Mon through Fri, it will look
@@ -124,26 +128,21 @@ def time_block_adder(session, msg):
         if not 'end_date' in json_msg:
             end_date = None
         else:
-           print json_msg
            end_date = date_parser(json_msg['end_date'])
-           print end_date
         if 'start_date' in json_msg:
            start_date = date_parser(json_msg['start_date'])
-           print start_date
         if 'start_time' in json_msg:
            start_time = date_time_parser(json_msg['start_time'])
-           print start_time
            utc_start_time = start_time
-           print utc_start_time
         if 'end_time' in json_msg:
            end_time = date_time_parser(json_msg['end_time'])
-           print end_time
            utc_end_time = end_time
-           print utc_end_time
         block_added, message, block = add_time_block(session, json_msg['label'],
                 start_date, utc_start_time, utc_end_time, json_msg['days'],
                 enabled=json_msg['enabled']
                 )
-        print '{message : %s,label : %s, pass : %s}' % (message, json_msg["label"], block_added)
+        logger.debug('%s - %s, %s, %s' % (username, message,
+            json_msg["label"], block_added)
+            )
         return {"message" : message,"label" : json_msg['label'], "pass" : block_added}
 

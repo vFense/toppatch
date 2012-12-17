@@ -54,6 +54,7 @@ def get_tag_stats(session, tagid=None, tagname=None):
     """
         return a list of tag_statistics in json
     """
+    update_tag_stats(session)
     list_of_tags = []
     tag_stats = []
     if tagid:
@@ -81,7 +82,7 @@ def get_tag_stats(session, tagid=None, tagname=None):
     return list_of_tags
 
 
-def tag_adder(session, msg):
+def tag_adder(session, msg, username=None):
     """
         add a new tag to RV
     """
@@ -102,7 +103,7 @@ def tag_adder(session, msg):
         return tagged
 
 
-def tag_add_per_node(session, msg):
+def tag_add_per_node(session, msg, username=None):
     """
         Add a node to an existing tag or 
         add a node to a new tag
@@ -115,11 +116,11 @@ def tag_add_per_node(session, msg):
             tag_name = json_msg['tag']
         if 'nodes' in json_msg:
             nodes = json_msg['nodes']
-        print msg
         user = session.query(User).filter_by(username=user_name).first()
         if user:
             tag_out = add_tag_per_node(session, nodes,
-                    tag_name=tag_name, user_id=user.id)
+                    tag_name=tag_name, user_id=user.id,
+                    username=username)
             tagged = {
                      "pass" : tag_out[0],
                      "message" : tag_out[1]
@@ -128,7 +129,7 @@ def tag_add_per_node(session, msg):
         return tagged
 
 
-def tag_remove_per_node(session, msg):
+def tag_remove_per_node(session, msg, username=None):
     """
         Remove a node from an existing tag.
     """
@@ -138,7 +139,6 @@ def tag_remove_per_node(session, msg):
             tag_name = json_msg['tag']
         if 'nodes' in json_msg:
             nodes = json_msg['nodes']
-        print msg
         tag_out = remove_nodes_from_tag(session, tag_name, nodes=nodes)
         tagged = {
                  "pass" : tag_out[0],
@@ -148,7 +148,7 @@ def tag_remove_per_node(session, msg):
         return tagged
 
 
-def tag_remove(session, msg):
+def tag_remove(session, msg, username=None):
     """
         Remove a tag from RV
     """
@@ -156,16 +156,13 @@ def tag_remove(session, msg):
     if valid:
         if 'tag' in json_msg:
             tag = json_msg['tag']
-        print json_msg
         nodes_removed_from_tag = remove_all_nodes_from_tag(session, tag)
-        print nodes_removed_from_tag
         tag_out = remove_tag(session, tag)
         if tag_out[0]:
             tagged = {
                      "pass" : tag_out[0],
                      "message" : tag_out[1]
                      }
-            print tag_out[2]
             update_tag_stats(session)
             return tagged
         else:

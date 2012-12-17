@@ -1,20 +1,23 @@
 #!/usr/bin/env python
 
-
+import logging
+import logging.config
 from datetime import datetime
 from socket import gethostbyaddr
 from models.base import Base
 from models.packages import *
 from models.node import *
 from models.tagging import *
+from models.user_acl import *
 from models.scheduler import *
 from utils.common import *
 from db.client import *
 from db.query_table import *
 from networking.tcpasync import TcpConnect
+from sqlalchemy import or_
 
-
-def add_node(session, client_ip, agent_timestamp=None, node_timestamp=None):
+def add_node(session, client_ip, agent_timestamp=None,
+        node_timestamp=None, username='system_user'):
     """Add a node to the database"""
     session = validate_session(session)
     try:
@@ -26,12 +29,242 @@ def add_node(session, client_ip, agent_timestamp=None, node_timestamp=None):
                 True, True, agent_timestamp, node_timestamp)
         session.add(add_node)
         session.commit()
+        logger.info('%s - node %s added to node_info' %\
+                (username, client_ip)
+                )
         return add_node
     except Exception as e:
-        print e
+        logger.error('node %s could not be added to node_info' %\
+                client_ip)
 
 
-def add_tag(session, tag_name, user_id=None):
+def add_global_user_acl(session, user_id=None, isadmin=False,
+        isglobal=True, readonly=False, install=False, uninstall=False,
+        reboot=False, schedule=False, wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_created=datetime.now(),
+        date_modified=datetime.now(),
+        username='system_user'
+        ):
+    """
+        Add a Global User ACL to the database
+    """
+    session = validate_session(session)
+    date_created=datetime.now()
+    user_exists = session.query(GlobalUserAccess).\
+            filter_by(user_id=user_id).first()
+    if user_id and not user_exists:
+        try:
+            add_acl = GlobalUserAccess(user_id=user_id, is_admin=isadmin,
+                    is_global=isglobal, read_only=readonly,
+                    allow_install=install, allow_uninstall=uninstall,
+                    allow_reboot=reboot, allow_schedule=schedule,
+                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
+                    allow_snapshot_removal=snapshot_removal,
+                    allow_snapshot_revert=snapshot_revert,
+                    allow_tag_creation=tag_creation,
+                    allow_tag_removal=tag_removal,
+                    date_created=date_created, date_modified=date_modified
+                    )
+            session.add(add_acl)
+            session.commit()
+            return(True, "User ACL %s added for " % (user_id))
+        except Exception as e:
+            session.rollback()
+            return(False, "Failed to add ACL for user %s" % (user_id))
+    elif user_id and user_exists:
+        return(False, "Failed to add ACL for user %s" % (user_id))
+
+
+def add_global_group_acl(session, group_id=None, isadmin=False,
+        isglobal=True, readonly=False, install=False, uninstall=False,
+        reboot=False, schedule=False, wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_created=datetime.now(),
+        date_modified=datetime.now(),
+        username='system_user'
+        ):
+    """
+        Add a Global Group ACL to the database
+    """
+    session = validate_session(session)
+    date_created=datetime.now()
+    group_exists = session.query(GlobalGroupAccess).\
+            filter_by(group_id=group_id).first()
+    if group_id and not group_exists:
+        try:
+            add_acl = GlobalGroupAccess(group_id=group_id, is_admin=isadmin,
+                    is_global=isglobal, read_only=readonly,
+                    allow_install=install, allow_uninstall=uninstall,
+                    allow_reboot=reboot, allow_schedule=schedule,
+                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
+                    allow_snapshot_removal=snapshot_removal,
+                    allow_snapshot_revert=snapshot_revert,
+                    allow_tag_creation=tag_creation,
+                    allow_tag_removal=tag_removal,
+                    date_created=date_created, date_modified=date_modified
+                    )
+            session.add(add_acl)
+            session.commit()
+            return(True, "Group ACL %s added" % (group_id))
+        except Exception as e:
+            session.rollback()
+            return(False, "Failed to add ACL for Group %s" % (group_id))
+    elif group_id and group_exists:
+        return(False, "Failed to add ACL for Group %s" % (group_id))
+
+
+def add_node_user_acl(session, node_id=None, user_id=None,
+        install=False, uninstall=False, reboot=False,
+        schedule=False, wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_created=datetime.now(),
+        date_modified=datetime.now(), username='system_user'
+        ):
+    """
+        Add a User ACL to a node in the database
+    """
+    session = validate_session(session)
+    date_created=datetime.now()
+    user_for_node_exists = session.query(NodeUserAccess).\
+            filter_by(user_id=user_id).\
+            filter_by(node_id=node_id).first()
+    if user_id and node_id and not user_for_node_exists:
+        try:
+            add_acl = NodeUserAccess(node_id, user_id=user_id,
+                    allow_install=install, allow_uninstall=uninstall,
+                    allow_reboot=reboot, allow_schedule=schedule,
+                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
+                    allow_snapshot_removal=snapshot_removal,
+                    allow_snapshot_revert=snapshot_revert,
+                    allow_tag_creation=tag_creation,
+                    allow_tag_removal=tag_removal,
+                    date_created=date_created, date_modified=date_modified
+                    )
+            session.add(add_acl)
+            session.commit()
+            return(True, "User ACL %s added for Node %s" % \
+                    (user_id, node_id))
+        except Exception as e:
+            session.rollback()
+            return(False, "Failed to add ACL for User %s on Node %s" % \
+                    (user_id, node_id))
+
+
+def add_node_group_acl(session, node_id=None, group_id=None,
+        install=False, uninstall=False, reboot=False,
+        schedule=False, wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_created=datetime.now(),
+        date_modified=datetime.now(), username='system_user'
+        ):
+    """
+        Add a Group ACL to a Node in the database
+    """
+    session = validate_session(session)
+    date_created=datetime.now()
+    group_for_node_exists = session.query(NodeGroupAccess).\
+            filter_by(group_id=group_id).\
+            filter_by(node_id=node_id).first()
+    if node_id and group_id and not group_for_node_exists:
+        try:
+            add_acl = NodeGroupAccess(node_id, group_id=group_id,
+                    allow_install=install, allow_uninstall=uninstall,
+                    allow_reboot=reboot, allow_schedule=schedule,
+                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
+                    allow_snapshot_removal=snapshot_removal,
+                    allow_snapshot_revert=snapshot_revert,
+                    allow_tag_creation=tag_creation,
+                    allow_tag_removal=tag_removal,
+                    date_created=date_created, date_modified=date_modified
+                    )
+            session.add(add_acl)
+            session.commit()
+            return(True, "Group ACL %s added for Node %s" % \
+                    (group_id, node_id))
+        except Exception as e:
+            session.rollback()
+            return(False, "Failed to add ACL for Group %s on Node %s" % \
+                    (group_id, node_id))
+
+
+
+def add_tag_user_acl(session, tag_id=None, user_id=None,
+        install=False, uninstall=False, reboot=False, schedule=False,
+        wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_created=datetime.now(),
+        date_modified=datetime.now(), username='system_user'
+        ):
+    """
+        Add a User ACL to a Tag in the database
+    """
+    session = validate_session(session)
+    date_created=datetime.now()
+    user_for_tag_exists = session.query(TagUserAccess).\
+            filter_by(user_id=user_id).\
+            filter_by(tag_id=tag_id).first()
+    if user_id and tag_id and not user_for_tag_exists:
+        try:
+            add_acl = TagUserAccess(tag_id, user_id=user_id,
+                    allow_install=install, allow_uninstall=uninstall,
+                    allow_reboot=reboot, allow_schedule=schedule,
+                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
+                    allow_snapshot_removal=snapshot_removal,
+                    allow_snapshot_revert=snapshot_revert,
+                    allow_tag_creation=tag_creation,
+                    allow_tag_removal=tag_removal,
+                    date_created=date_created, date_modified=date_modified
+                    )
+            session.add(add_acl)
+            session.commit()
+            return(True, "User ACL %s added for Tag %s" % \
+                    (user_id, tag_id))
+        except Exception as e:
+            session.rollback()
+            print e 
+            return(False, "Failed to add ACL for User %s on Tag %s" % \
+                    (user_id, tag_id))
+
+
+def add_tag_group_acl(session, tag_id=None, group_id=None,
+        install=False, uninstall=False, reboot=False, schedule=False,
+        wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_created=datetime.now(),
+        date_modified=datetime.now(), username='system_user'
+        ):
+    """
+        Add a Group ACL to a Tag in the database
+    """
+    session = validate_session(session)
+    date_created=datetime.now()
+    group_for_tag_exists = session.query(TagGroupAccess).\
+            filter_by(group_id=group_id).\
+            filter_by(tag_id=tag_id).first()
+    if group_id and tag_id and not group_for_tag_exists:
+        try:
+            add_acl = TagGroupAccess(tag_id, group_id,
+                    allow_install=install, allow_uninstall=uninstall,
+                    allow_reboot=reboot, allow_schedule=schedule,
+                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
+                    allow_snapshot_removal=snapshot_removal,
+                    allow_snapshot_revert=snapshot_revert,
+                    allow_tag_creation=tag_creation,
+                    allow_tag_removal=tag_removal,
+                    date_created=date_created, date_modified=date_modified
+                    )
+            session.add(add_acl)
+            session.commit()
+            return(True, "Group ACL %s added for Tag %s" % \
+                    (group_id, tag_id))
+        except Exception as e:
+            session.rollback()
+            return(False, "Failed to add ACL for Group %s on Tag %s" % \
+                    (group_id, tag_id))
+
+
+def add_tag(session, tag_name, user_id=None, username='system_user'):
     """
         Add a tag to the database
     """
@@ -44,11 +277,10 @@ def add_tag(session, tag_name, user_id=None):
         return(True, "Tag %s added" % (tag_name), add_tag)
     except Exception as e:
         session.rollback()
-        print e
         return(False, "Tag %s failed to add" % (tag_name))
 
 
-def add_dependency(session, data):
+def add_dependency(session, data, username='system_user'):
     """
         Add a dependency to the corresponding toppatch_id
         into the database
@@ -72,7 +304,7 @@ def add_dependency(session, data):
 
 
 def add_tag_per_node(session, nodes=[], tag_id=None, tag_name=None,
-                user_id=None):
+                user_id=None, username='system_user'):
     """
         Add a list of nodes to an existing tag
         into the database
@@ -117,7 +349,7 @@ def add_tag_per_node(session, nodes=[], tag_id=None, tag_name=None,
 
 def add_time_block(session, label, start_date, start_time, end_time,
                   days, end_date=None, span_end_date_time=None, span=False,
-                  enabled=False):
+                  enabled=False, username='system_user'):
     """
         Add a new timeblock to RV.
         arguments below..
@@ -142,13 +374,13 @@ def add_time_block(session, label, start_date, start_time, end_time,
         session.commit()
         return(True, "Time Block Added", add_block)
     except Exception as e:
-        print e
         session.rollback()
         return(False, "Time Block Could Not Be Added", e)
 
 
 def add_csr(session, client_ip, location, csr_name,
-            signed=False, signed_date=False):
+            signed=False, signed_date=False,
+            username='system_user'):
     """
         Add a new Certificate Signed Request into RV
         arguments below..
@@ -165,11 +397,10 @@ def add_csr(session, client_ip, location, csr_name,
         return add_csr
     except Exception as e:
         session.rollback()
-        print e
 
 
 def add_cert(session, node_id, cert_id, cert_name,
-            cert_location, cert_expiration):
+            cert_location, cert_expiration, username='system_user'):
     """
         Add a new Signed Certificate into RV
         arguments below..
@@ -185,14 +416,13 @@ def add_cert(session, node_id, cert_id, cert_name,
                     cert_location, cert_expiration)
         session.add(add_cert)
         session.commit()
-        print add_cert
         return add_cert
     except Exception as e:
         session.rollback()
-        print e
 
 def add_operation(session, node_id, operation, result_id=None,
-        operation_sent=None, operation_received=None, results_received=None):
+        operation_sent=None, operation_received=None, results_received=None,
+        username='system_user'):
     """
         Add a new Operation into RV
         arguments below..
@@ -211,7 +441,7 @@ def add_operation(session, node_id, operation, result_id=None,
         return add_oper
 
 
-def add_system_info(session, data, node_info):
+def add_system_info(session, data, node_info, username='system_user'):
     """
         Add the system information of an existing node
         arguments below..
@@ -236,14 +466,12 @@ def add_system_info(session, data, node_info):
             try:
                 session.add(system_info)
                 session.commit()
-                print "system info was added"
                 return system_info
             except Exception as e:
                 session.rollback()
-                print "BOOOH system info was not added"
 
 
-def add_software_update(session, data):
+def add_software_update(session, data, username='system_user'):
     """
         Add software to the RV database, if the software does not exist.
         arguments below..
@@ -279,7 +507,7 @@ def add_software_update(session, data):
                     except:
                         session.rollback()
 
-def add_software_per_node(session, data):
+def add_software_per_node(session, data, username='system_user'):
     """
         Create a new entry in the packages_per_node table
         arguments below..
@@ -346,7 +574,7 @@ def add_software_per_node(session, data):
                     session.rollback()
 
 
-def add_software_available(session, data):
+def add_software_available(session, data, username='system_user'):
     """
         Create a new entry in the software_available table
         This table is as of right now, strictly for Windows 3rd
@@ -378,7 +606,7 @@ def add_software_available(session, data):
                     session.rollback()
 
 
-def add_software_installed(session, data):
+def add_software_installed(session, data, username='system_user'):
     """
         Create a new entry in the software_installed table
         This table is a foreignKey to an existing row in 
@@ -414,7 +642,7 @@ def add_software_installed(session, data):
                         session.rollback()
 
 
-def remove_tag(session, tagname):
+def remove_tag(session, tagname, username='system_user'):
     """
         Remove a tag from the database
         arguments below..
@@ -438,7 +666,7 @@ def remove_tag(session, tagname):
             return(False, "Tag %s does not exists" % (tagname))
 
 
-def remove_all_nodes_from_tag(session, tagname):
+def remove_all_nodes_from_tag(session, tagname, username='system_user'):
     """
         Remove all nodes from a tag in the database
         arguments below..
@@ -447,9 +675,7 @@ def remove_all_nodes_from_tag(session, tagname):
     """
     session = validate_session(session)
     tag = tag_exists(session, tag_name=tagname)
-    print "IM IN REMOVE ALL NODES FROM TAG", tag
     if not tag:
-        print "WHY AM I HERE", tag
         return(False, "Tag %s does not exists" % (tagname), tagname)
     tags_per_node = \
             session.query(TagsPerNode, TagInfo).\
@@ -472,7 +698,7 @@ def remove_all_nodes_from_tag(session, tagname):
             (tagname), tagname)
 
 
-def remove_nodes_from_tag(session, tag_name, nodes=[]):
+def remove_nodes_from_tag(session, tag_name, nodes=[], username='system_user'):
     """
         Remove a node from a tag in the database
         arguments below..
@@ -512,7 +738,7 @@ def remove_nodes_from_tag(session, tag_name, nodes=[]):
 
 
 def remove_time_block(session, id=None, label=None,
-            start_date=None, start_time=None):
+            start_date=None, start_time=None, username='system_user'):
     """
         Remove a timeblock from the database
         arguments below..
@@ -523,7 +749,6 @@ def remove_time_block(session, id=None, label=None,
     session = validate_session(session)
     timeblock = time_block_exists(session, id,
             label, start_date, start_time)
-    print timeblock
     if timeblock:
         object_deleted = False, "Time Block %s has not been deleted"\
                 % (timeblock.name)
@@ -538,7 +763,7 @@ def remove_time_block(session, id=None, label=None,
 
 
 def update_operation_row(session, oper_id, results_recv=None,
-            oper_recv=None):
+            oper_recv=None, username='system_user'):
     """
         update an existing operation in the RV database
         arguments below..
@@ -555,7 +780,7 @@ def update_operation_row(session, oper_id, results_recv=None,
         session.commit()
 
 
-def update_node(session, node_id, ipaddress):
+def update_node(session, node_id, ipaddress, username='system_user'):
     """
         update an existing node in the RV database
         arguments below..
@@ -573,7 +798,6 @@ def update_node(session, node_id, ipaddress):
         except Exception as e:
             session.rollback()
             error = e.message
-            print error
     if node:
         node.last_agent_update = datetime.now()
         node.last_node_update = datetime.now()
@@ -590,12 +814,10 @@ def update_node(session, node_id, ipaddress):
             if installed and pending:
                 i.pending=False
         session.commit()
-    else:
-        print "System Info for %s does not exist yet" % ( node_id )
     return node
 
 
-def update_node_stats(session, node_id):
+def update_node_stats(session, node_id, username='system_user'):
     """
         update the stats of the node in the node_stats table in RV
         arguments below..
@@ -634,7 +856,7 @@ def update_node_stats(session, node_id):
         session.commit()
 
 
-def update_network_stats(session):
+def update_network_stats(session, username='system_user'):
     """
         update the global stats in network_stats table in RV
         arguments below..
@@ -648,9 +870,12 @@ def update_network_stats(session):
     agentsup = session.query(NodeInfo).\
             filter(NodeInfo.agent_status == True).count()
     stats = session.query(PackagePerNode)
-    totalinstalled = stats.filter_by(installed=True).count()
-    totalnotinstalled = stats.filter_by(installed=False).count()
-    totalpending = stats.filter_by(pending=True).count()
+    totalinstalled = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(installed=True).count()
+    totalnotinstalled = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(installed=False).count()
+    totalpending = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(pending=True).count()
     networkstats = session.query(NetworkStats)
     networkstatsexists = networkstats.filter_by(id=1).first()
     if networkstatsexists:
@@ -669,7 +894,7 @@ def update_network_stats(session):
         session.commit()
 
 
-def update_tag_stats(session):
+def update_tag_stats(session, username='system_user'):
     """
         update the global tag stats in tag_stats table in RV
         arguments below..
@@ -735,7 +960,7 @@ def update_tag_stats(session):
                     session.commit()
 
 
-def update_reboot_status(session, node_id, oper_type):
+def update_reboot_status(session, node_id, oper_type, username='system_user'):
     """
         update the reboot status on a node in the node_info table in RV
         arguments below..
@@ -755,7 +980,266 @@ def update_reboot_status(session, node_id, oper_type):
                 session.rollback()
 
 
-def add_results(session, data):
+def update_global_user_acl(session, user_id=None, isadmin=False,
+        isglobal=True, viewonly=False, install=False, uninstall=False,
+        reboot=False, schedule=False, wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_modified=datetime.now(),
+        username='system_user'
+        ):
+    """
+        Modify the Global ACL of a User in the database
+    """
+    session = validate_session(session)
+    user = None
+    if user_id:
+        try:
+            user = session.query(GlobalUserAccess).\
+                    filter(GlobalUserAccess.user_id == user_id).first()
+        except Exception as e:
+            pass
+        if user:
+            try:
+                user.is_admin = isadmin
+                user.is_global = isglobal
+                user.view_only = viewonly
+                user.allow_install = install
+                user.allow_uninstall = uninstall
+                user.allow_reboot = reboot
+                user.allow_schedule = schedule
+                user.allow_wol = wol
+                user.allow_snapshot_creation = snapshot_creation
+                user.allow_snapshot_removal = snapshot_removal
+                user.allow_snapshot_revert = snapshot_revert
+                user.allow_tag_creation = tag_creation
+                user.allow_tag_removal = tag_removal
+                user.date_modified = date_modified
+                session.commit()
+                return(True, "User ACL %s modified for " % (user_id))
+            except Exception as e:
+                session.rollback()
+                return(False, "Failed to modify ACL for user %s" % (user_id))
+    else:
+        return(False, "Invalid user_id %s" % (user_id))
+
+
+def update_global_group_acl(session, group_id=None, isadmin=False,
+        isglobal=True, viewonly=False, install=False, uninstall=False,
+        reboot=False, schedule=False, wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_modified=datetime.now(),
+        username='system_user'
+        ):
+    """
+        Modify the Global ACL of a Group in the database
+    """
+    session = validate_session(session)
+    group = None
+    if group_id:
+        try:
+            group = session.query(GlobalGroupAccess).\
+                    filter(GlobalGroupAccess.group_id == group_id).first()
+        except Exception as e:
+            pass
+        if group:
+            try:
+                group.is_admin = isadmin
+                group.is_global = isglobal
+                group.view_only = viewonly
+                group.allow_install = install
+                group.allow_uninstall = uninstall
+                group.allow_reboot = reboot
+                group.allow_schedule = schedule
+                group.allow_wol = wol
+                group.allow_snapshot_creation = snapshot_creation
+                group.allow_snapshot_removal = snapshot_removal
+                group.allow_snapshot_revert = snapshot_revert
+                group.allow_tag_creation = tag_creation
+                group.allow_tag_removal = tag_removal
+                group.date_modified = date_modified
+                session.commit()
+                return(True, "Group ACL %s modified" % (group_id))
+            except Exception as e:
+                session.rollback()
+                return(False, "Failed to modify ACL for Group %s" % (group_id))
+    else:
+        return(False, "Invalid group_id %s" % (group_id))
+
+
+
+def update_node_user_permissions(session, node_id=None, user_id=None,
+        install=False, uninstall=False, reboot=False, schedule=False,
+        wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_modified=datetime.now(),
+        username='system_user'
+        ):
+    """
+        modify the global permissions of a user on a node 
+        in the database
+    """
+    session = validate_session(session)
+    user = None
+    if user_id and node_id:
+        user = session.query(NodeUserAccess).\
+                filter(NodeUserAccess.user_id == user_id).\
+                filter(NodeUserAccess.node_id == node_id).first()
+        if user:
+            try:
+                user.allow_install = install
+                user.allow_uninstall = uninstall
+                user.allow_reboot = reboot
+                user.allow_schedule = schedule
+                user.allow_wol = wol
+                user.allow_snapshot_creation = snapshot_creation
+                user.allow_snapshot_removal = snapshot_removal
+                user.allow_snapshot_revert = snapshot_revert
+                user.allow_tag_creation = tag_creation
+                user.allow_tag_removal = tag_removal
+                user.date_modified = date_modified
+                session.commit()
+                return(True, "ACL for User %s was modified for Node %s" % \
+                        (user_id, node_id))
+            except Exception as e:
+                session.rollback()
+                return(False, "Failed to modify ACL for User %s on Node %s" % \
+                        (user_id, node_id))
+    else:
+        return(False, "Invalid user_id %s and or node_id %s" % \
+                (user_id, node_id))
+
+
+def update_node_group_permissions(session, node_id=None, group_id=None,
+        install=False, uninstall=False, reboot=False, schedule=False,
+        wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_modified=datetime.now(),
+        username='system_user'
+        ):
+    """
+        Modify the Global ACL of a Group on a node 
+        in the database
+    """
+    session = validate_session(session)
+    group = None
+    if group_id and node_id:
+        group = session.query(NodeUserAccess).\
+                filter(NodeGroupAccess.group_id == group_id).\
+                filter(NodeGroupAccess.node_id == node_id).first()
+        if group:
+            try:
+                group.allow_install = install
+                group.allow_uninstall = uninstall
+                group.allow_reboot = reboot
+                group.allow_schedule = schedule
+                group.allow_wol = wol
+                group.allow_snapshot_creation = snapshot_creation
+                group.allow_snapshot_removal = snapshot_removal
+                group.allow_snapshot_revert = snapshot_revert
+                group.allow_tag_creation = tag_creation
+                group.allow_tag_removal = tag_removal
+                group.date_modified = date_modified
+                session.commit()
+                return(True, "ACL for Group %s was modified for Node %s" % \
+                        (group_id, node_id))
+            except Exception as e:
+                session.rollback()
+                return(False, "Failed to modify ACL for Group %s on Node %s" % \
+                        (group_id, node_id))
+    else:
+        return(False, "Invalid group_id %s and or node_id %s" % \
+                (group_id, node_id))
+
+
+def update_tag_user_permissions(session, tag_id=None, user_id=None,
+        install=False, uninstall=False, reboot=False, schedule=False,
+        wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_modified=datetime.now(),
+        username='system_user'
+        ):
+    """
+        Modify the Global ACL of a User on a Tag 
+        in the database
+    """
+    session = validate_session(session)
+    user = None
+
+    if user_id and tag_id:
+        user = session.query(TagUserAccess).\
+                filter(TagUserAccess.user_id == user_id).\
+                filter(TagUserAccess.tag_id == tag_id).first()
+        if user:
+            try:
+                user.allow_install = install
+                user.allow_uninstall = uninstall
+                user.allow_reboot = reboot
+                user.allow_schedule = schedule
+                user.allow_wol = wol
+                user.allow_snapshot_creation = snapshot_creation
+                user.allow_snapshot_removal = snapshot_removal
+                user.allow_snapshot_revert = snapshot_revert
+                user.allow_tag_creation = tag_creation
+                user.allow_tag_removal = tag_removal
+                user.date_modified = date_modified
+                user.user_access = user_access
+                session.commit()
+                return(True, "ACL for User %s was modified for Tag %s" % \
+                        (user_id, tag_id))
+            except Exception as e:
+                session.rollback()
+                return(False, "Failed to modify ACL for User %s on Tag %s" % \
+                        (user_id, tag_id))
+    else:
+        return(False, "Invalid user_id %s and or tag_id" % \
+                (user_id, tag_id))
+
+
+def update_tag_group_permissions(session, tag_id=None, group_id=None,
+        install=False, uninstall=False, reboot=False, schedule=False,
+        wol=False, snapshot_creation=False,
+        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
+        tag_removal=False, date_modified=datetime.now(),
+        username='system_user'
+        ):
+    """
+        Modify the Global ACL of a Group on a Tag 
+        in the database
+    """
+    session = validate_session(session)
+    group = None
+
+    if group_id and tag_id:
+        group = session.query(TagGroupAccess).\
+                filter(TagGroupAccess.group_id == group_id).\
+                filter(TagGroupAccess.tag_id == tag_id).first()
+        if group:
+            try:
+                group.allow_install = install
+                group.allow_uninstall = uninstall
+                group.allow_reboot = reboot
+                group.allow_schedule = schedule
+                group.allow_wol = wol
+                group.allow_snapshot_creation = snapshot_creation
+                group.allow_snapshot_removal = snapshot_removal
+                group.allow_snapshot_revert = snapshot_revert
+                group.allow_tag_creation = tag_creation
+                group.allow_tag_removal = tag_removal
+                group.date_modified = date_modified
+                group.user_access = user_access
+                session.commit()
+                return(True, "ACL for Group %s was modified for Tag %s" % \
+                        (group_id, tag_id))
+            except Exception as e:
+                session.rollback()
+                return(False, "Failed to modify ACL for Group %s on Tag %s" % \
+                        (group_id, tag_id))
+    else:
+        return(False, "Invalid group_id %s and or tag_id" % \
+                (group_id, tag_id))
+
+
+def add_results(session, data, username='system_user'):
     """
         Add a new entry in the results table in RV
         arguments below..
@@ -765,14 +1249,12 @@ def add_results(session, data):
     session = validate_session(session)
     operation = operation_exists(session, data['operation_id'])
     node = node_exists(session,node_id=data['node_id'])
-    print node
     if node:
         node_id = data['node_id']
         if data['operation'] == 'reboot':
             node.reboot = False
             session.commit()
         for msg in data['data']:
-            print msg
             if 'reboot' in msg:
                 reboot = return_bool(msg['reboot'])
             else:
@@ -782,7 +1264,6 @@ def add_results(session, data):
             update_exists = node_package_exists(session, node_id, msg['toppatch_id'])
             if update_exists:
                 if data['operation'] == "install" and msg['result'] == 'success':
-                    print "patch installed on %s %s" % ( node_id, msg['toppatch_id'] )
                     update_exists.installed = True
                     update_exists.date_installed = datetime.now()
                     update_exists.pending = False
@@ -797,7 +1278,6 @@ def add_results(session, data):
                         if node.reboot == False:
                             node.reboot = reboot
                 elif data['operation'] == "uninstall" and msg['result'] == 'success':
-                    print "deleting patch from managed_windows_updates %s on node_id %s" % ( msg['toppatch_id'], node_id )
                     update_exists.installed = False
                     update_exists.pending = False
                     if reboot:
