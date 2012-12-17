@@ -142,6 +142,7 @@ define(
                     var action, params,
                         user = $(this).parents('.list').data('user'),
                         $checkbox = $(this),
+                        $alert = this.$el.find('div.alert'),
                         checked = this.checked;
                     if (checked) {
                         action = 'add';
@@ -156,6 +157,11 @@ define(
                     window.console.log(params);
                     $.post('api/users/toggleGroup', params, function (json) {
                         window.console.log(json);
+                        if (json.pass) {
+                            $alert.hide();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                        }
                     });
                 },
                 submit: function (event) {
