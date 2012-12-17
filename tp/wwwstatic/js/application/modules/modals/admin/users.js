@@ -117,11 +117,8 @@ define(
                         userData = this.collection.toJSON(),
                         $popover = $popoverLink.data('popover'),
                         $close = $popover.tip().find('button[name=close]'),
+                        $list = $popover.tip().find('.list'),
                         $inputs = $popover.options.content.find('input[type=checkbox]');
-                    $close.unbind();
-                    $close.on('click', function () {
-                        $popoverLink.popover('hide');
-                    });
                     _.each(userData, function (user) {
                         if (user.id === userId) {
                             _.each(user.groups, function (group) {
@@ -132,6 +129,33 @@ define(
                                 });
                             });
                         }
+                    });
+                    $list.data('user', userId);
+                    $inputs.unbind();
+                    $close.unbind();
+                    $close.on('click', function () {
+                        $popoverLink.popover('hide');
+                    });
+                    $inputs.on('change', this, this.toggleGroup);
+                },
+                toggleGroup: function (event) {
+                    var action, params,
+                        user = $(this).parents('.list').data('user'),
+                        $checkbox = $(this),
+                        checked = this.checked;
+                    if (checked) {
+                        action = 'add';
+                    } else {
+                        action = 'remove';
+                    }
+                    params = {
+                        user_id: user,
+                        groupname: $checkbox.val(),
+                        action: action
+                    };
+                    window.console.log(params);
+                    $.post('api/users/toggleGroup', params, function (json) {
+                        window.console.log(json);
                     });
                 },
                 submit: function (event) {
