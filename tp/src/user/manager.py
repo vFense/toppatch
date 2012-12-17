@@ -327,4 +327,16 @@ def acl_modifier(session, acl_type, acl_action, acl):
                     result = update_tag_user_acl(session, **acl)
                 if 'tag_group' in acl_type:
                     result = update_tag_group_acl(session, **acl)
+            elif acl_action == 'delete':
+                result = remove_acl(session, acl_type, **acl)
+        else:
+            result({
+                'pass': False,
+                'message': 'the acl_type or acl_action was invalid'
+                })
+    else:
+        result({
+            'pass': False,
+            'message': 'Arguments needed are acl_type, acl_action, and acl'
+            })
     return result

@@ -758,6 +758,52 @@ def add_software_installed(session, data, username='system_user'):
                         session.rollback()
 
 
+def remove_acl(session, acl_type, user_id=None,
+        group_id=None, tag_id=None, node_id=None):
+    session = validate_session(session)
+    acl = None
+    if 'global_user' in acl_type and user_id:
+        acl = session.query(GlobalUserAccess).\
+                filter(GlobalUserAccess.user_id == user_id).first()
+    elif 'global_group' in acl_type and group_id:
+        acl = session.query(GlobalGroupAccess).\
+                filter(GlobalGroupAccess.group_id == group_id).first()
+    elif 'node_user' in acl_type and user_id and node_id:
+        acl = session.query(NodeUserAccess).\
+                filter(NodeUserAccess.user_id == user_id).\
+                filter(NodeUserAccess.node_id == node_id).first()
+    elif 'node_group' in acl_type and group_id and node_id:
+        acl = session.query(NodeGroupAccess).\
+                filter(NodeGroupAccess.group_id == group_id).\
+                filter(NodeGroupAccess.node_id == node_id).first()
+    elif 'tag_user' in acl_type and user_id and tag_id:
+        acl = session.query(TagUserAccess).\
+                filter(TagUserAccess.user_id == user_id).\
+                filter(TagUserAccess.tag_id == tag_id).first()
+    elif 'tag_group' in acl_type and group_id and tag_id:
+        acl = session.query(TagGroupAccess).\
+                filter(TagGroupAccess.group_id == group_id).\
+                filter(TagGroupAccess.tag_id == tag_id).first()
+    if acl:
+        try:
+            session.delete(acl)
+            session.commit()
+            return({
+                'pass': True,
+                'message': 'ACL deleted'
+                })
+        except Exception as e:
+            session.rollback()
+            return({
+                'pass': False,
+                'message': 'ACL could not be deleted'
+                })
+    else:
+        return({
+            'pass': False,
+            'message': 'Not a valid ACL'
+            })
+
 def remove_tag(session, tagname, username='system_user'):
     """
         Remove a tag from the database

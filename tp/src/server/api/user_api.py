@@ -171,7 +171,19 @@ class AclModifierHandler(BaseHandler):
         acl_type = self.get_argument('type', None)
         acl_action = self.get_argument('action', None)
         acl = self.get_argument('acl', None)
-        if acl_type and acl_action and acl:
-            acl_modifier(session, acl_type, acl_action, acl)
+        valid_json, json_acl = verify_json_is_valid(acl)
+        result = None
+        if acl_type and acl_action and acl and valid_json:
+            result = \
+                    acl_modifier(session, acl_type, acl_action, json_acl)
+        else:
+            result = {
+                    'pass': False,
+                    'message': 'Incorrect arguments passed. %s:%s, %s, %s' %\
+                            ('Arguments needed', 'acl_type', 'acl_action', 
+                                'acl')
+                    }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
 
 
