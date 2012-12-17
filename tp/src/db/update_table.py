@@ -1290,12 +1290,14 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
                 return({
                     'pass': False,
                     'message': 'Failed to modify ACL for Group %s on Node %s' % \
-                        (group_id, node_id))
+                        (group_id, node_id)
+                        })
     else:
         return({
             'pass': False, 
             'message': 'Invalid group_id %s and or node_id %s' % \
-                (group_id, node_id))
+                (group_id, node_id)
+                })
 
 
 def update_tag_user_permissions(session, tag_id=None, user_id=None,
