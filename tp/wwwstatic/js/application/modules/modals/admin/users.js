@@ -142,7 +142,7 @@ define(
                     var action, params,
                         user = $(this).parents('.list').data('user'),
                         $checkbox = $(this),
-                        $alert = this.$el.find('div.alert'),
+                        $alert = event.data.$el.find('div.alert'),
                         checked = this.checked;
                     if (checked) {
                         action = 'add';
@@ -154,9 +154,7 @@ define(
                         groupname: $checkbox.val(),
                         action: action
                     };
-                    window.console.log(params);
-                    $.post('api/users/toggleGroup', params, function (json) {
-                        window.console.log(json);
+                    $.post('api/users/toggleGroup', params, function (json) {\
                         if (json.pass) {
                             $alert.hide();
                         } else {
