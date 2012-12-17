@@ -48,7 +48,7 @@
                     </div>
                     <div class="span3">
                         <select class="btn btn-mini" name="groups">
-                            <option value="default">Default</option>
+                            <option value="READ_ONLY">Default</option>
                             <% if (groups.length !== 0) { %>
                                 <% _.each(groups, function (group) { %>
                                     <option value="<%= group.groupname %>"><%= group.groupname %></option>
