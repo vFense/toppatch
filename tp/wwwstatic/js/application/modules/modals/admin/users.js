@@ -112,10 +112,16 @@ define(
                     });
                 },
                 showGroups: function (event) {
-                    var $popover = $(event.currentTarget),
-                        userId = parseInt($popover.val(), 10),
+                    var $popoverLink = $(event.currentTarget),
+                        userId = parseInt($popoverLink.val(), 10),
                         userData = this.collection.toJSON(),
-                        $inputs = $popover.data('popover').options.content.find('input[type=checkbox]');
+                        $popover = $popoverLink.data('popover'),
+                        $close = $popover.tip().find('button[name=close]'),
+                        $inputs = $popover.options.content.find('input[type=checkbox]');
+                    $close.unbind();
+                    $close.on('click', function () {
+                        $popoverLink.popover('hide');
+                    });
                     _.each(userData, function (user) {
                         if (user.id === userId) {
                             _.each(user.groups, function (group) {
