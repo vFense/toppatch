@@ -17,12 +17,23 @@ define(
                     return this.baseUrl + this.filter;
                 }
             }),
+            GroupCollection: Backbone.Collection.extend({
+                baseUrl: 'api/groups/list',
+                filter: '',
+                url: function () {
+                    return this.baseUrl + this.filter;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
+
+                    this.groupCollection = new exports.GroupCollection();
+                    this.groupCollection.bind('reset', this.render, this);
+                    this.groupCollection.fetch();
                 },
                 events: {
                     'click #userEdit': 'displayEdit',
@@ -80,9 +91,16 @@ define(
                 submitNewUser: function (event) {
                     var username = this.$el.find('#username').val(),
                         password = this.$el.find('#password').val(),
+                        group = this.$el.find('select[name=groups]').val(),
                         $alert = this.$el.find('div.alert'),
+                        params = {
+                            name: username,
+                            password: password,
+                            group: group
+                        },
                         that = this;
-                    $.post('signup', {name: username, password: password}, function (json) {
+                    window.console.log(params);
+                    $.post('signup', params, function (json) {
                         window.console.log(json);
                         if (json.pass) {
                             window.console.log(json.message);
@@ -103,11 +121,12 @@ define(
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var template = _.template(this.template),
-                        data = this.collection.toJSON();
+                        data = this.collection.toJSON(),
+                        groups = this.groupCollection.toJSON();
 
                     this.$el.empty();
 
-                    this.$el.html(template({data: data}));
+                    this.$el.html(template({data: data, groups: groups}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;

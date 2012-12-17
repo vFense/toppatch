@@ -40,13 +40,23 @@
                     <button class="btn btn-mini">Add new user...</button>
                 </div>
                 <div class="hide" name="newUserDiv">
-                    <div class="span4">
+                    <div class="span3">
                         <input id="username" type="text" placeholder="New User" class="input-medium"/>
                     </div>
-                    <div class="span4">
+                    <div class="span3">
                         <input id="password" type="password" placeholder="Temporary Password" class="input-medium"/>
                     </div>
-                    <div class="span4 alignRight">
+                    <div class="span3">
+                        <select class="btn btn-mini" name="groups">
+                            <option value="default">Default</option>
+                            <% if (groups.length !== 0) { %>
+                                <% _.each(groups, function (group) { %>
+                                    <option value="<%= group.groupname %>"><%= group.groupname %></option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="span3 alignRight">
                         <button id="cancelNewUser" class="btn btn-mini">
                             Cancel
                         </button>
