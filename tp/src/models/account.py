@@ -5,7 +5,7 @@ from models.base import Base
 # If not included here, sqlalchemy complains about dependency stuff.
 #from models.oauth.token import *
 
-from sqlalchemy import String, Column, Integer, Text, ForeignKey, schema, types
+from sqlalchemy import String, Column, Integer, Text, ForeignKey, schema, types, INTEGER, VARCHAR
 from sqlalchemy.orm import relationship, backref
 
 class User(Base):
@@ -33,6 +33,55 @@ class User(Base):
         self.hash = password
         self.fullname = fullname
         self.email = email
+
+
+class Group(Base):
+    """ Basic User Account class representing a record from the 'accounts' table.
+
+    An account represents a user of the TP program. Consist of a name, email, and password.
+
+    """
+    __tablename__ = "groups"
+    __visit_name__ = "column"
+    __table_args__ = { 
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    groupname = Column(VARCHAR(255), nullable=False, unique=True)
+    def __init__(self, groupname=None):
+        self.groupname = groupname
+    def __repr__(self):
+        return "<Group(%s)>" %\
+                (
+                self.groupname
+                )
+
+
+class UsersInAGroup(Base):
+    """ Basic User Account class representing a record from the 'accounts' table.
+
+    An account represents a user of the TP program. Consist of a name, email, and password.
+
+    """
+    __tablename__ = "users_in_a_group"
+    __visit_name__ = "column"
+    __table_args__ = { 
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    group_id = Column(INTEGER, ForeignKey('groups.id'))
+    def __init__(self, user_id, group_id):
+        self.user_id = user_id
+        self.group_id = group_id
+    def __repr__(self):
+        return "<UsersInAGroup(%s,%s)>" %\
+                (
+                self.user_id, self.group_id
+                )
+
 
 class Developer(Base):
     """ Class that helps and defines a row in the "developers" table. """
