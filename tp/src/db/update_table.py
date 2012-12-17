@@ -1245,7 +1245,8 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
         return({
             'pass': False,
             'message': 'Invalid user_id %s and or node_id %s' % \
-                (user_id, node_id))
+                (user_id, node_id)
+                })
 
 
 def update_node_group_permissions(session, node_id=None, group_id=None,
