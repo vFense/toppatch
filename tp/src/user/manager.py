@@ -170,6 +170,60 @@ def delete_user(session, user_id, username='system_user'):
     return result
 
 
+def modify_user_from_group(session, user_id=None, group_id=None, action=None):
+    session = validate_session(session)
+    if user_id and group_id and action:
+        user = session.query(UserInAGroup).\
+                filter(UsersInAGroup.user_id == user_id).\
+                filter(UsersInAGroup.group_id == group_id).first()
+        group = session.query(Group).filter(Group.id == group_id).first()
+        if user and group and 'remove' in action:
+            try:
+                session.delete(user)
+                session.commit()
+                return({
+                    'pass': True,
+                    'message': 'User %s has been removed from Group %s' %\
+                            (user.username, group.groupname)
+                            })
+            except Exception as e:
+                session.rollback()
+                return({
+                    'pass': False,
+                    'message': 'User %s couldnt be removed from the Group %s' %\
+                            (user.username, group.groupname)
+                            })
+        elif not user and group and 'add' in action:
+            try:
+                user = session.query(User).filter(User.id == user_id).first()
+                addtogroup = UsersInAGroup(user_id, group_id)
+                session.add(addtogroup)
+                session.commit()
+                return({
+                    'pass': True,
+                    'message': 'User %s has been removed from Group %s' %\
+                            (user.username, group.groupname)
+                            })
+            except Exception as e:
+                session.rollback()
+                return({
+                    'pass': False,
+                    'message': 'User %s couldnt be added to the Group %s' %\
+                            (user.username, group.groupname)
+                            })
+        else:
+            return({
+                'pass': False,
+                'message': 'User %s and or Group %s do not exist' %\
+                        (user_id, group_id)
+                        })
+    else:
+        return({
+            'pass': False,
+            'message': 'Incorrect parameters were passed'
+            })
+
+
 def list_groups(session):
     session = validate_session(session)
     grouplist = session.query(Group).all()
