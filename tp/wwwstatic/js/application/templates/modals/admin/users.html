@@ -20,10 +20,13 @@
                     <div class="item row-fluid">
                         <div class="span9"><%= user.username %></div>
                         <div name="edit" class="span3 alignRight hide">
+                            <button name="groups" value="<%= user.id %>" class="btn btn-link noPadding">
+                                <i class="icon-user" style="color: blue"></i>
+                            </button>&nbsp;
                             <button name="confirmDelete" class="btn btn-link noPadding">
                                 <i class="icon-remove" style="color:red;"></i>
                             </button>
-                            <div name="confirmDelete" class="hide">
+                            <div name="divConfirmDelete" class="hide">
                                 <button name="deleteUser" class="btn btn-mini btn-danger" value="<%= user.id %>">Delete</button>
                                 <button name="cancelDelete" class="btn btn-mini">Cancel</button>
                             </div>
@@ -40,13 +43,23 @@
                     <button class="btn btn-mini">Add new user...</button>
                 </div>
                 <div class="hide" name="newUserDiv">
-                    <div class="span4">
+                    <div class="span3">
                         <input id="username" type="text" placeholder="New User" class="input-medium"/>
                     </div>
-                    <div class="span4">
+                    <div class="span3">
                         <input id="password" type="password" placeholder="Temporary Password" class="input-medium"/>
                     </div>
-                    <div class="span4 alignRight">
+                    <div class="span3">
+                        <select class="btn btn-mini" name="groups">
+                            <option value="READ_ONLY">Default</option>
+                            <% if (groups.length !== 0) { %>
+                                <% _.each(groups, function (group) { %>
+                                    <option value="<%= group.groupname %>"><%= group.groupname %></option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="span3 alignRight">
                         <button id="cancelNewUser" class="btn btn-mini">
                             Cancel
                         </button>
@@ -60,6 +73,21 @@
                 <div class="alert alert-block fade in hide">
                     <span class="help-inline">test</span>
                 </div>
+            </div>
+        </div>
+    </section>
+    <section class="hide" id="hiddenElements">
+        <div class="list" id="grouplist">
+            <div class="items">
+                <% if (groups.length !== 0) { %>
+                    <% _.each(groups, function (group) { %>
+                        <div class="item clearfix">
+                            <label class="checkbox"><%= group.groupname %>
+                                <input type="checkbox" value="<%= group.groupname %>"/>
+                            </label>
+                        </div>
+                    <% }); %>
+                <% } %>
             </div>
         </div>
     </section>

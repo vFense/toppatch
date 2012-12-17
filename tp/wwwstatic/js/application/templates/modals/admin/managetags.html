@@ -29,15 +29,19 @@
                 <% _.each(data, function (tag) { %>
                     <div class="accordion-group item clearfix">
                         <div class="accordion-heading row-fluid">
-                            <span class="desc span10">
+                            <span class="desc span8">
                                 <a class="accordion-toggle" data-parent="#accordion" href="#<% print(tag.tag_name.replace(' ', '')); %>">
                                     <i class="icon-circle-arrow-down"></i>&nbsp;<%= tag.tag_name %>
                                 </a>
                             </span>
-                            <span style="margin-top: 6px" class="span2 alignRight">
+                            <div style="margin-top: 6px" class="span4 alignRight">
                                 <span class="badge badge-inverse"><%= tag.nodes.length %></span>&nbsp;
-                                <button type="button" class="btn btn-link" name="remove" id="<%= tag.tag_name %>"><i style="color: red;" class="icon-remove"></i></button>
-                            </span>
+                                <button type="button" class="btn btn-link" name="confirmDelete" id="<%= tag.tag_name %>"><i style="color: red;" class="icon-remove"></i></button>
+                                <div name="confirmDelete" class="hide">
+                                    <button name="remove" class="btn btn-mini btn-danger" value="<%= tag.tag_name %>">Delete</button>
+                                    <button name="cancelDelete" class="btn btn-mini">Cancel</button>
+                                </div>
+                            </div>
                         </div>
                         <div id="<% print(tag.tag_name.replace(' ', '')); %>" class="accordion-body collapse">
                             <div class="accordion-inner">

@@ -17,12 +17,23 @@ define(
                     return this.baseUrl + this.filter;
                 }
             }),
+            GroupCollection: Backbone.Collection.extend({
+                baseUrl: 'api/groups/list',
+                filter: '',
+                url: function () {
+                    return this.baseUrl + this.filter;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
+
+                    this.groupCollection = new exports.GroupCollection();
+                    this.groupCollection.bind('reset', this.render, this);
+                    this.groupCollection.fetch();
                 },
                 events: {
                     'click #userEdit': 'displayEdit',
@@ -32,6 +43,7 @@ define(
                     'click button[name=confirmDelete]': 'confirmDelete',
                     'click button[name=cancelDelete]': 'confirmDelete',
                     'click button[name=deleteUser]': 'deleteUser',
+                    'click button[name=groups]': 'showGroups',
                     'click #submitUser': 'submitNewUser',
                     'submit form': 'submit'
                 },
@@ -57,7 +69,7 @@ define(
                         $divConfirm = $deleteButton.siblings('div');
                     } else {
                         $divConfirm = $(event.currentTarget).parent();
-                        $deleteButton = $divConfirm.siblings('button');
+                        $deleteButton = $divConfirm.siblings('button[name=confirmDelete]');
                     }
                     $deleteButton.toggle();
                     $divConfirm.toggle();
@@ -80,9 +92,16 @@ define(
                 submitNewUser: function (event) {
                     var username = this.$el.find('#username').val(),
                         password = this.$el.find('#password').val(),
+                        group = this.$el.find('select[name=groups]').val(),
                         $alert = this.$el.find('div.alert'),
+                        params = {
+                            name: username,
+                            password: password,
+                            group: group
+                        },
                         that = this;
-                    $.post('signup', {name: username, password: password}, function (json) {
+                    window.console.log(params);
+                    $.post('signup', params, function (json) {
                         window.console.log(json);
                         if (json.pass) {
                             window.console.log(json.message);
@@ -92,22 +111,51 @@ define(
                         }
                     });
                 },
+                showGroups: function (event) {
+                    var $popover = $(event.currentTarget),
+                        userId = parseInt($popover.val(), 10),
+                        userData = this.collection.toJSON(),
+                        $inputs = $popover.data('popover').options.content.find('input[type=checkbox]');
+                    _.each(userData, function (user) {
+                        if (user.id === userId) {
+                            _.each(user.groups, function (group) {
+                                $inputs.each(function () {
+                                    if (this.value === group) {
+                                        this.checked = true;
+                                    }
+                                });
+                            });
+                        }
+                    });
+                },
                 submit: function (event) {
                     var $form = $(event.target);
                     window.console.log($form);
                     return false;
                 },
                 beforeRender: $.noop,
-                onRender: $.noop,
+                onRender: function () {
+                    var that = this;
+                    this.$el.find('button[name=groups]').each(function () {
+                        $(this).popover({
+                            placement: 'right',
+                            title: '<div class="alignLeft"><span>Groups</span><button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button></div>',
+                            html: true,
+                            content: that.$el.find('#grouplist').clone(),
+                            trigger: 'click'
+                        });
+                    });
+                },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var template = _.template(this.template),
-                        data = this.collection.toJSON();
+                        data = this.collection.toJSON(),
+                        groups = this.groupCollection.toJSON();
 
                     this.$el.empty();
 
-                    this.$el.html(template({data: data}));
+                    this.$el.html(template({data: data, groups: groups}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
