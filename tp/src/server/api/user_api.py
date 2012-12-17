@@ -83,6 +83,7 @@ class CreateUserHandler(BaseHandler):
         group = self.get_argument("group", 'READ_ONLY')
 
         if username and password and group:
+            password = password.encode('utf8')
             user = self.session.query(User).\
                     filter(User.username == username).first()
             if not user:
