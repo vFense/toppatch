@@ -299,38 +299,32 @@ def acl_modifier(session, acl_type, acl_action, acl):
                 acl_action in \
                 valid_acl_action:
             for i in acl:
-                if 'true' in acl[i] or\
-                        'false' in acl[i]:
+                if 'true' in acl[i] or 'false' in acl[i]:
                     acl[i] = return_bool(acl[i])
             if acl_action == 'create':
                 if 'global_user' in acl_type:
-                    result = add_global_user_acl(session, acl)
+                    result = add_global_user_acl(session, **acl)
                 if 'global_group' in acl_type:
-                    result = add_global_group_acl(session, acl)
+                    result = add_global_group_acl(session, **acl)
                 if 'node_user' in acl_type:
-                    result = add_node_user_acl(session, acl)
+                    result = add_node_user_acl(session, **acl)
                 if 'node_group' in acl_type:
-                    result = add_node_group_acl(session, acl)
+                    result = add_node_group_acl(session, **acl)
                 if 'tag_user' in acl_type:
-                    result = add_tag_user_acl(session, acl)
+                    result = add_tag_user_acl(session, **acl)
                 if 'tag_group' in acl_type:
-                    result = add_tag_group_acl(session, acl)
+                    result = add_tag_group_acl(session, **acl)
             elif acl_action == 'modify':
-                print 'here'
                 if 'global_user' in acl_type:
-                    result = update_global_user_acl(session, acl)
+                    result = update_global_user_acl(session, **acl)
                 if 'global_group' in acl_type:
-                    print 'made it'
-                    print acl
                     result = update_global_group_acl(session, **acl)
-                    print result
                 if 'node_user' in acl_type:
-                    result = update_node_user_acl(session, acl)
+                    result = update_node_user_acl(session, **acl)
                 if 'node_group' in acl_type:
-                    result = update_node_group_acl(session, acl)
+                    result = update_node_group_acl(session, **acl)
                 if 'tag_user' in acl_type:
-                    result = update_tag_user_acl(session, acl)
+                    result = update_tag_user_acl(session, **acl)
                 if 'tag_group' in acl_type:
-                    result = update_tag_group_acl(session, acl)
-    print result
+                    result = update_tag_group_acl(session, **acl)
     return result

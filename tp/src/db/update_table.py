@@ -146,12 +146,14 @@ def add_global_user_acl(session, user_id=None, isadmin=False,
             session.rollback()
             return({
                 'pass': False,
-                'message': 'Failed to add ACL for user %s' % (user_id)
+                'message': 'Failed to add ACL for user %s: %s' % \
+                        (user_id, e)
                 })
     elif user_id and user_exists:
         return({
             'pass': False,
-            'message': 'Failed to add ACL for user %s' % (user_id)
+            'message': 'Failed to add ACL for user %s: %s' % \
+                    (user_id, 'User ACL already Exists')
             })
 
 
@@ -169,7 +171,7 @@ def add_global_group_acl(session, group_id=None, isadmin=False,
     session = validate_session(session)
     date_created=datetime.now()
     group_exists = session.query(GlobalGroupAccess).\
-            filter_by(group_id=group_id).first()
+            filter(GlobalGroupAccess.group_id == group_id).first()
     if group_id and not group_exists:
         try:
             add_acl = GlobalGroupAccess(group_id=group_id, is_admin=isadmin,
@@ -193,12 +195,14 @@ def add_global_group_acl(session, group_id=None, isadmin=False,
             session.rollback()
             return({
                 'pass': False,
-                'message': 'Failed to add ACL for Group %s' % (group_id)
+                'message': 'Failed to add ACL for Group %s: %s' % \
+                        (group_id, e)
                 })
     elif group_id and group_exists:
         return({
             'pass': False,
-            'message': 'Failed to add ACL for Group %s' % (group_id)
+            'message': 'Failed to add ACL for Group %s: %s' % \
+                    (group_id, 'Group ACL already exists')
             })
 
 
@@ -215,8 +219,8 @@ def add_node_user_acl(session, node_id=None, user_id=None,
     session = validate_session(session)
     date_created=datetime.now()
     user_for_node_exists = session.query(NodeUserAccess).\
-            filter_by(user_id=user_id).\
-            filter_by(node_id=node_id).first()
+            filter(NodeUserAccess.user_id == user_id).\
+            filter(NodeUserAccess.node_id == node_id).first()
     if user_id and node_id and not user_for_node_exists:
         try:
             add_acl = NodeUserAccess(node_id, user_id=user_id,
@@ -240,8 +244,8 @@ def add_node_user_acl(session, node_id=None, user_id=None,
             session.rollback()
             return({
                 'pass': False,
-                'message': 'Failed to add ACL for User %s on Node %s' % \
-                    (user_id, node_id)
+                'message': 'Failed to add ACL for User %s on Node %s:%s' % \
+                    (user_id, node_id, e)
                     })
 
 
@@ -283,8 +287,8 @@ def add_node_group_acl(session, node_id=None, group_id=None,
             session.rollback()
             return({
                 'pass': False,
-                'message': 'Failed to add ACL for Group %s on Node %s' % \
-                    (group_id, node_id)
+                'message': 'Failed to add ACL for Group %s on Node %s:%s' % \
+                    (group_id, node_id, e)
                     })
 
 
@@ -328,8 +332,8 @@ def add_tag_user_acl(session, tag_id=None, user_id=None,
             print e 
             return({
                 'pass': False,
-                'message': 'Failed to add ACL for User %s on Tag %s' % \
-                    (user_id, tag_id)
+                'message': 'Failed to add ACL for User %s on Tag %s:%s' % \
+                    (user_id, tag_id, e)
                     })
 
 
@@ -371,8 +375,8 @@ def add_tag_group_acl(session, tag_id=None, group_id=None,
             session.rollback()
             return({
                 'pass': False,
-                'message': 'Failed to add ACL for Group %s on Tag %s' % \
-                    (group_id, tag_id)
+                'message': 'Failed to add ACL for Group %s on Tag %s:%s' % \
+                    (group_id, tag_id, e)
                     })
 
 
@@ -1093,7 +1097,7 @@ def update_reboot_status(session, node_id, oper_type, username='system_user'):
 
 
 def update_global_user_acl(session, user_id=None, isadmin=False,
-        isglobal=True, viewonly=False, install=False, uninstall=False,
+        isglobal=True, readonly=False, install=False, uninstall=False,
         reboot=False, schedule=False, wol=False, snapshot_creation=False,
         snapshot_removal=False, snapshot_revert=False, tag_creation=False,
         tag_removal=False, date_modified=datetime.now(),
@@ -1145,7 +1149,7 @@ def update_global_user_acl(session, user_id=None, isadmin=False,
 
 
 def update_global_group_acl(session, group_id=None, isadmin=False,
-        isglobal=True, viewonly=False, install=False, uninstall=False,
+        isglobal=True, readonly=False, install=False, uninstall=False,
         reboot=False, schedule=False, wol=False, snapshot_creation=False,
         snapshot_removal=False, snapshot_revert=False, tag_creation=False,
         tag_removal=False, date_modified=datetime.now(),
