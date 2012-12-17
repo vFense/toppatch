@@ -202,7 +202,7 @@ def modify_user_from_group(session, user_id=None, group_id=None, action=None):
                 session.commit()
                 return({
                     'pass': True,
-                    'message': 'User %s has been removed from Group %s' %\
+                    'message': 'User %s has been added to Group %s' %\
                             (user.username, group.groupname)
                             })
             except Exception as e:
