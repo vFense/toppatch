@@ -80,7 +80,7 @@ class CreateUserHandler(BaseHandler):
         email = self.get_argument("email", None)
         fullname = self.get_argument("fullname", None)
         password = self.get_argument("password", None)
-        group = self.get_argument("group", READ_ONLY)
+        group = self.get_argument("group", 'READ_ONLY')
 
         if username and password and group:
             user = self.session.query(User).\
