@@ -100,18 +100,18 @@ class VerifyUser():
                     print self.acls
                 else:
                     return({
-                        'passed': False,
+                        'pass': False,
                         'message': 'ACCESS DENIED FOR %s' % \
                                 (self.user.username)
                         })
             else:
                 return({
-                    'passed': False,
+                    'pass': False,
                     'message': 'Operation %s is not valid' % (self.action),
                     })
         else:
             return({
-                'passed': False,
+                'pass': False,
                 'message': 'Username or ID %s doesnt exist' % \
                         (self.global_user_name)
                 })
