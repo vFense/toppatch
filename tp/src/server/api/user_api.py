@@ -103,16 +103,17 @@ class CreateUserHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-class DeleteUserFromGroupHandler(BaseHandler):
+class ModifyUserFromGroupHandler(BaseHandler):
     def post(self):
         user_name = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         user_id = self.get_argument("user_id", None)
         group_id = self.get_argument("group_id", None)
+        action = self.get_argument("action", None)
         if user_id and group_id:
-            result = delete_user_from_group(self.session, 
-                    user_id=user_id, group_id=group_id)
+            result = modify_user_from_group(self.session, 
+                    user_id=user_id, group_id=group_id, action=action)
         else:
             result = {
                     'pass': False,

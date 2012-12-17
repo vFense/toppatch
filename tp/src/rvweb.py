@@ -110,7 +110,7 @@ class Application(tornado.web.Application):
             (r"/api/users/list?", ListUserHandler),
             (r"/api/users/create?", CreateUserHandler),
             (r"/api/users/delete?", DeleteUserHandler),
-            (r"/api/users/remove_from_group?", DeleteUserFromGroupHandler),
+            (r"/api/users/toggleGroup?", ModifyUserFromGroupHandler),
             (r"/api/groups/list?", ListGroupHandler),
             (r"/api/groups/create?", CreateGroupHandler),
             (r"/api/groups/delete?", DeleteGroupHandler),
