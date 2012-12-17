@@ -72,6 +72,26 @@ def create_user(session, username=None, password=None,
                 user = User(username, user_hash, fullname, email)
                 session.add(user)
                 session.commit()
+                group = session.query(Group).\
+                        filter(Group.groupname == groupname).first()
+                if group:
+                    user_to_group = \
+                            add_user_to_group(session, user_id=user.id,
+                                    group_id=group.id)
+                    if user_to_group['passed'] == True:
+                        return({
+                            'passed': True,
+                            'message': \
+                                    'User %s was created and added to group %s'%\
+                                    (username, groupname)
+                            })
+                    else:
+                        return({
+                            'passed': False,
+                            'message': \
+                                    'User %s was created and not added to group %s'%\
+                                    (username, groupname)
+                            })
             except Exception as e:
                 session.rollback()
                 return({
@@ -79,18 +99,6 @@ def create_user(session, username=None, password=None,
                     'message': 'User %s was not created and added to group %s'%\
                             (username, groupname)
                     })
-            group = session.query(Group).\
-                    filter(Group.groupname == groupname).first()
-            if group:
-                user_to_group = \
-                        add_user_to_group(session, user_id=user.id,
-                                group_id=group.id)
-                if user_to_group['passed'] == True:
-                    return({
-                        'passed': True,
-                        'message': 'User %s was created and added to group %s'%\
-                                (username, groupname)
-                        })
         else:
             return({
                     'passed': False,
@@ -200,7 +208,7 @@ def create_group(session, groupname):
     result = None
     if groupname:
         result = add_group(session, groupname)
-        return(group_added)
+        return(result)
     else:
         return({
             'passed': False,

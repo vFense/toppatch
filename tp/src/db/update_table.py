@@ -62,7 +62,7 @@ def add_group(session, groupname=None):
             return({
                 'passed': False,
                 'message': '%s already exists' %\
-                        (group_id)
+                        (group_exists.id)
                 })
 
     else:
