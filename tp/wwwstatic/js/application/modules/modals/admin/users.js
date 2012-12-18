@@ -182,6 +182,14 @@ define(
                                 aclExists = true;
                                 $list.find('div[name=newacl]').hide();
                                 $list.find('div.items').show();
+                                window.console.log(user.global_acls[0]);
+                                $inputs.each(function () {
+                                    window.console.log(this.name);
+                                    window.console.log(user.global_acls[0][this.name]);
+                                    if (user.global_acls[0][this.name]) {
+                                        this.checked = true;
+                                    }
+                                });
                             }
                         }
                     });
