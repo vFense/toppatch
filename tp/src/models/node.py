@@ -110,7 +110,7 @@ class NetworkInterface(Base):
         self.ip_address = ip_address
         self.interface = interface
     def __repr__(self):
-        return "<NodeInfo(%s,%s,%s,%s)>" %\
+        return "<NetworkInterface(%s,%s,%s,%s)>" %\
                 (
                 self.node_id, self.mac_address,
                 self.ip_address, self.interface
