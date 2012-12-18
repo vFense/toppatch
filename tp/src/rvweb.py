@@ -70,7 +70,7 @@ class Application(tornado.web.Application):
             (r"/login/oauth/access_token", AccessTokenHandler),
 
             #### API Handlers
-            (r"/api/nodeData/?", NodeHandler),
+            #(r"/api/nodeData/?", NodeHandler),
             (r"/api/osData/?", OsHandler),
             (r"/api/networkData/?", NetworkHandler),
             (r"/api/summaryData/?", SummaryHandler),
