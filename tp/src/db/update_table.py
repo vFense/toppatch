@@ -578,14 +578,18 @@ def add_system_info(session, data, node_info, username='system_user'):
             data['version_minor'], data['version_build'],
             data['meta'], data['bit_type']
             )
-        for network in data['net_info']:
-            net_info = NetworkInterface(node_id=node_if, 
-                    mac_address=network['mac'],
-                    ip_address=network['ip'],
-                    interface=network['interface_name']
-                    )
-            if net_info:
-                session.add(net_info)
+        if 'net_info' in data:
+            for network in data['net_info']:
+                net_info = NetworkInterface(node_id=node_if, 
+                        mac_address=network['mac'],
+                        ip_address=network['ip'],
+                        interface=network['interface_name']
+                        )
+                try:
+                    session.add(net_info)
+                    session.commit(net_info)
+                except Exception as e:
+                    session.rollback()
         if system_info:
             try:
                 session.add(system_info)
