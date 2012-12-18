@@ -44,6 +44,7 @@ define(
                     'click button[name=cancelDelete]': 'confirmDelete',
                     'click button[name=deleteUser]': 'deleteUser',
                     'click button[name=groups]': 'showGroups',
+                    'click button[name=globalacl]': 'showAclPopover',
                     'click #submitUser': 'submitNewUser',
                     'submit form': 'submit'
                 },
@@ -142,7 +143,7 @@ define(
                     var action, params,
                         user = $(this).parents('.list').data('user'),
                         $checkbox = $(this),
-                        $alert = this.$el.find('div.alert'),
+                        $alert = event.data.$el.find('div.alert'),
                         checked = this.checked;
                     if (checked) {
                         action = 'add';
@@ -154,14 +155,75 @@ define(
                         groupname: $checkbox.val(),
                         action: action
                     };
-                    window.console.log(params);
                     $.post('api/users/toggleGroup', params, function (json) {
-                        window.console.log(json);
                         if (json.pass) {
                             $alert.hide();
                         } else {
                             $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                         }
+                    });
+                },
+                showAclPopover: function (event) {
+                    var aclExists = false,
+                        that = this,
+                        $popoverLink = $(event.currentTarget),
+                        userId = parseInt($popoverLink.val(), 10),
+                        userData = this.collection.toJSON(),
+                        $popover = $popoverLink.data('popover'),
+                        $newAclButton = $popover.tip().find('button[name=newAclButton]'),
+                        $close = $popover.tip().find('button[name=close]'),
+                        $cancelButton = $popover.tip().find('button[name=cancelAcl]'),
+                        $submitButton = $popover.tip().find('button[name=submitAcl]'),
+                        $list = $popover.tip().find('.list'),
+                        $inputs = $list.find('input[type=checkbox]');
+                    _.each(userData, function (user) {
+                        if (user.id === userId) {
+                            if (user.global_acls.length !== 0) {
+                                aclExists = true;
+                                $list.find('div[name=newacl]').hide();
+                                $list.find('div.items').show();
+                            }
+                        }
+                    });
+                    $newAclButton.unbind();
+                    $cancelButton.unbind();
+                    $submitButton.unbind();
+                    $close.unbind();
+                    $close.on('click', function () {
+                        $popoverLink.popover('hide');
+                    });
+                    $newAclButton.on('click', this, this.showAclList);
+                    $cancelButton.on('click', this, this.showAclList);
+                    $submitButton.on('click', {view: this, aclExists: aclExists, user_id: userId, checkboxes: $inputs}, this.submitGlobalAcl);
+                },
+                showAclList: function (event) {
+                    var $newAclButton = $(event.currentTarget),
+                        $newAclDiv = $newAclButton.parents('div.list').find('div[name=newacl]'),
+                        $newAclList = $newAclDiv.siblings('div.items');
+                    $newAclDiv.toggle();
+                    $newAclList.toggle();
+                },
+                submitGlobalAcl: function (event) {
+                    var params,
+                        aclExists = event.data.aclExists,
+                        userId = event.data.user_id,
+                        acl = { user_id: userId },
+                        $checkboxes = event.data.checkboxes,
+                        aclType = 'global_user',
+                        aclAction = aclExists ? 'modify' : 'create',
+                        url = aclExists ? 'api/acl/modify' : 'api/acl/create';
+                    $checkboxes.each(function () {
+                        acl[this.name] = this.checked;
+                    });
+                    params = {
+                        acl_type: aclType,
+                        acl_action: aclAction,
+                        acl: acl
+                    };
+                    window.console.log('******PARAMETERS IM SENDING**********');
+                    window.console.log(params);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
                     });
                 },
                 submit: function (event) {
@@ -178,6 +240,15 @@ define(
                             title: '<div class="alignLeft"><span>Groups</span><button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button></div>',
                             html: true,
                             content: that.$el.find('#grouplist').clone(),
+                            trigger: 'click'
+                        });
+                    });
+                    this.$el.find('button[name=globalacl]').each(function () {
+                        $(this).popover({
+                            placement: 'right',
+                            title: '<div class="alignLeft"><span>Global User Acl</span><button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button></div>',
+                            html: true,
+                            content: that.$el.find('#globalacl').clone(),
                             trigger: 'click'
                         });
                     });
