@@ -91,7 +91,6 @@ class CreateUserHandler(BaseHandler):
                         username=username, password=password,
                         fullname=fullname, email=email,
                         groupname=group)
-                self.set_secure_cookie("user", username)
                 result = user_add
         else:
             result = {"pass" : False,

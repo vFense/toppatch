@@ -180,3 +180,19 @@ class OsHandler(BaseHandler):
             self.write(json.dumps(resultjson, indent=4))
 
 
+class GetTagStatsHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        tag_id = None
+        tag_name = None
+        try:
+            tag_id = self.get_argument('tagid')
+            tag_name = self.get_argument('tagname')
+        except Exception as e:
+            pass
+        result = get_tag_stats(self.session, tagid=tag_id, tagname=tag_name)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
