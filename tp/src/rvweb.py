@@ -29,6 +29,8 @@ from server.api.node_api import *
 from server.api.stats_api import *
 from server.api.tag_api import *
 from server.api.scheduler_api import *
+from server.api.transactions_api import *
+from server.api.packages_api import *
 from server.api.api import *
 from server.api import *
 from server.account.manager import AccountManager
@@ -70,7 +72,6 @@ class Application(tornado.web.Application):
             (r"/login/oauth/access_token", AccessTokenHandler),
 
             #### API Handlers
-            #(r"/api/nodeData/?", NodeHandler),
             (r"/api/osData/?", OsHandler),
             (r"/api/networkData/?", NetworkHandler),
             (r"/api/summaryData/?", SummaryHandler),
