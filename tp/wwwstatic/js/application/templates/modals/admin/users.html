@@ -20,6 +20,9 @@
                     <div class="item row-fluid">
                         <div class="span9"><%= user.username %></div>
                         <div name="edit" class="span3 alignRight hide">
+                            <button name="globalacl" value="<%= user.id %>" class="btn btn-link noPadding">
+                                <i class="icon-pencil" style="color: #daa520;"></i>
+                            </button>
                             <button name="groups" value="<%= user.id %>" class="btn btn-link noPadding">
                                 <i class="icon-user" style="color: blue"></i>
                             </button>&nbsp;
@@ -77,6 +80,82 @@
         </div>
     </section>
     <section class="hide" id="hiddenElements">
+        <div class="list" id="globalacl" data-user="">
+            <div name="newacl" class="alignLeft">
+                <button class="btn btn-link noPadding" name="newAclButton">Create New Acl</button>
+            </div>
+            <div class="items alignLeft hide">
+                <div class="item clearfix">
+                    <label class="checkbox">Read Only
+                        <input type="checkbox" name="readonly"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Wake on Lan
+                        <input type="checkbox" name="wol"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Reboot
+                        <input type="checkbox" name="reboot"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Tag Creation
+                        <input type="checkbox" name="tag_creation"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Snapshot Removal
+                        <input type="checkbox" name="snapshot_removal"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Snapshot Revert
+                        <input type="checkbox" name="snapshot_revert"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Uninstall
+                        <input type="checkbox" name="uninstall"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Snapshot Creation
+                        <input type="checkbox" name="snapshot_creation"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Tag Removal
+                        <input type="checkbox" name="tag_removal"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Admin
+                        <input type="checkbox" name="isadmin"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Global
+                        <input type="checkbox" name="isglobal"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Install
+                        <input type="checkbox" name="install"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Schedule
+                        <input type="checkbox" name="schedule"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <button name="cancelAcl" class="btn btn-mini btn-danger">Cancel</button>
+                    <button name="submitAcl" class="btn btn-mini btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
         <div class="list" id="grouplist" data-user="">
             <div class="items">
                 <% if (groups.length !== 0) { %>
