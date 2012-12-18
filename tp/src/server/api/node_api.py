@@ -138,24 +138,23 @@ class NodesHandler(BaseHandler):
                     join(SystemInfo, NodeStats).limit(queryCount).\
                     offset(queryOffset)
         if node_id:
-            for node_info in self.session.query(NodeInfo, SystemInfo,\
-                    NetworkInterface).filter(SystemInfo.node_id == node_id).\
-                    join(SystemInfo, NetworkInterface):
+            for node_info in self.session.query(NodeInfo, SystemInfo).\
+                    filter(SystemInfo.node_id == node_id).\
+                    join(SystemInfo).all():
                 installed = []
                 failed = []
                 pending = []
                 available = []
                 net = []
-                if len(node_info) >=3:
-                    net_info = node_info[2]
-                    for net in net_info:
-                        if net.node_id:
-                            network = {
-                                    'interface_name': net.interface,
-                                    'mac': net.mac_address,
-                                    'ip': net.ip_address
-                                    }
-                            net.append(network)
+                network = self.session.query(NetworkInterface).\
+                    filter(NetworkInterface.node_id == node_id).all()
+                if len(network) >=1:
+                    for net_info in network:
+                        net.append({
+                                'interface_name': net_info.interface,
+                                'mac': net_info.mac_address,
+                                'ip': net_info.ip_address
+                                })
                 for pkg in self.session.query(PackagePerNode, Package).\
                         join(Package).filter(PackagePerNode.node_id \
                         == node_info[1].node_id).all():
@@ -205,14 +204,11 @@ class NodesHandler(BaseHandler):
                               'patch/fail': failed,
                               'patch/pend': pending
                                }
-            print resultjson
-            print "foo"
             if len(resultjson) == 0:
                 resultjson = {'error' : 'no data to display'}
         else:
             data = []
             count = 0
-            print query
             for node_info in query:
                 resultnode = {'ip': node_info[0].ip_address,
                               'hostname': node_info[0].host_name,
@@ -230,8 +226,6 @@ class NodesHandler(BaseHandler):
                 data.append(resultnode)
             count = query.count()
             resultjson = {"count": count, "nodes": data}
-            print resultjson
-            print "ROO"
         self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
