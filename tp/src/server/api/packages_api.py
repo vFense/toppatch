@@ -67,23 +67,10 @@ class PatchesHandler(BaseHandler):
         self.session = validate_session(self.session)
         patch_oper = re.compile(r'installed|available|pending|failed')
         patch_sev = re.compile(r'Critical|Optional|Recommended')
-        queryCount = 10
-        queryOffset = 0
-        tpid = None
-        pstatus = None
-        try:
-            tpid = self.get_argument('id')
-        except:
-            pass
-        try:
-            queryCount = self.get_argument('count')
-            queryOffset = self.get_argument('offset')
-        except:
-            pass
-        try:
-            pstatus = self.get_argument('type')
-        except:
-            pass
+        tpid = self.get_argument('id', None)
+        queryCount = self.get_argument('count', 10)
+        queryOffset = self.get_argument('offset', 0)
+        pstatus = self.get_argument('type', None)
         patches = PatchRetriever(self.session,
             qcount=queryCount, qoffset=queryOffset)
         if tpid:
@@ -125,12 +112,14 @@ class GetTagsPerTpIdHandler(BaseHandler):
     def get(self):
         self.session = self.application.session
         self.session = validate_session(self.session)
-        tpid = None
-        try:
-            tpid = self.get_argument('tpid')
-        except Exception as e:
-            pass
-        result = list_tags_per_tpid(self.session, tpid)
+        tpid = self.get_argument('tpid', None)
+        if tpid:
+            result = list_tags_per_tpid(self.session, tpid)
+        else:
+            result({
+                'pass': False,
+                'message': 'please pass tpid'
+                })
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
