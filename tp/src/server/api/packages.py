@@ -120,4 +120,32 @@ class SeverityHandler(BaseHandler):
         self.write(json.dumps(result, indent=4))
 
 
+class GetTagsPerTpIdHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        tpid = None
+        try:
+            tpid = self.get_argument('tpid')
+        except Exception as e:
+            pass
+        result = list_tags_per_tpid(self.session, tpid)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
+
+class GetDependenciesHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        try:
+            pkg_id = self.get_argument('toppatch_id')
+        except Exception as e:
+            self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
+        result = retrieve_dependencies(self.session, pkg_id)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
 
