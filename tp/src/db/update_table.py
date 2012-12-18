@@ -591,7 +591,7 @@ def add_system_info(session, data, node_info, username='system_user'):
             )
         if 'net_info' in data:
             for network in data['net_info']:
-                net_info = NetworkInterface(node_id=node_if, 
+                net_info = NetworkInterface(node_id=node_id, 
                         mac_address=network['mac'],
                         ip_address=network['ip'],
                         interface=network['interface_name']
