@@ -339,7 +339,6 @@ def add_tag_user_acl(session, tag_id=None, user_id=None,
                     })
         except Exception as e:
             session.rollback()
-            print e 
             return({
                 'pass': False,
                 'message': 'Failed to add ACL for User %s on Tag %s:%s' % \
@@ -1232,7 +1231,6 @@ def update_global_group_acl(session, group_id=None, is_admin=False,
     """
     session = validate_session(session)
     group = None
-    print group_id
     if group_id:
         try:
             group = session.query(GlobalGroupAccess).\
