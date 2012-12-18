@@ -266,7 +266,7 @@
                                     <span class="desc">
                                         <label class="checkbox inline">
                                             <input type="checkbox" name="node" value="<%= node.id %>">
-                                            <%= node.ip %>
+                                            <% print(node.displayname || node.hostname || node.ip); %>
                                         </label>
                                     </span>
                                     <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
@@ -315,7 +315,7 @@
                             <span class="desc">
                                 <label class="checkbox inline">
                                     <input type="checkbox" name="node" value="<%= node.id %>">
-                                    <%= node.ip %>
+                                    <% print(node.displayname || node.hostname || node.ip); %>
                                 </label>
                             </span>
                             <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
@@ -346,7 +346,7 @@
                     <% if(model.pending && model.pending.count != 0) { %>
                         <% _.each(model.pending.nodes, function (node) { %>
                             <div class="item clearfix">
-                                <span class="desc"><%= node.ip %></span>
+                                <span class="desc"><% print(node.displayname || node.hostname || node.ip); %></span>
                                 <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
                             </div>
                         <% }); %>
@@ -391,7 +391,7 @@
                                 <span class="desc">
                                     <label class="checkbox inline">
                                         <input type="checkbox" id="<%= node.id %>" name="node" value="<%= node.id %>">
-                                        <%= node.ip %>
+                                        <% print(node.displayname || node.hostname || node.ip); %>
                                     </label>
                                 </span>
                                 <span class="pull-right"><a href="#nodes/<%= node.id %>">More information</a></span>
