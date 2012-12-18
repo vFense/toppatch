@@ -353,9 +353,9 @@ def acl_modifier(session, acl_type, acl_action, acl):
         if acl_type in valid_acl_type and \
                 acl_action in \
                 valid_acl_action:
-            for i in acl:
-                if 'true' in acl[i] or 'false' in acl[i]:
-                    acl[i] = return_bool(acl[i])
+            for key, value in acl.items():
+                if value == 'true'  or value == 'false':
+                    acl[key] = return_bool(value)
             if acl_action == 'create':
                 if 'global_user' in acl_type:
                     result = add_global_user_acl(session, **acl)
