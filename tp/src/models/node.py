@@ -101,16 +101,19 @@ class NetworkInterface(Base):
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
     mac_address = Column(VARCHAR(12), nullable=True, unique=True)
-    ip_address = Column(VARCHAR(16), nullable=False, unique=True)
+    ip_address = Column(VARCHAR(16), nullable=False, unique=False)
     interface = Column(VARCHAR(32), nullable=True, unique=False)
-    def __init__(self, mac_address, ip_address, interface):
+    def __init__(self, node_id=None, mac_address=None,
+            ip_address=None, interface=None):
+        self.node_id = node_id
         self.mac_address = mac_address
         self.ip_address = ip_address
         self.interface = interface
     def __repr__(self):
-        return "<NodeInfo(%s,%s,%s)>" %\
+        return "<NetworkInterface(%s,%s,%s,%s)>" %\
                 (
-                self.mac_address, self.ip_address, self.interface
+                self.node_id, self.mac_address,
+                self.ip_address, self.interface
                 )
 
 class Operations(Base):
