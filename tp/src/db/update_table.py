@@ -1166,8 +1166,8 @@ def update_reboot_status(session, node_id, oper_type, username='system_user'):
                 session.rollback()
 
 
-def update_global_user_acl(session, user_id=None, isadmin=False,
-        is_global=True, readonly=False, allow_install=False,
+def update_global_user_acl(session, user_id=None, is_admin=False,
+        is_global=True, read_only=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
         allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -1189,7 +1189,7 @@ def update_global_user_acl(session, user_id=None, isadmin=False,
             try:
                 user.is_admin = is_admin
                 user.is_global = is_global
-                user.read_only = readonly
+                user.read_only = read_only
                 user.allow_install = allow_install
                 user.allow_uninstall = allow_uninstall
                 user.allow_reboot = allow_reboot
@@ -1243,7 +1243,7 @@ def update_global_group_acl(session, group_id=None, is_admin=False,
             try:
                 group.is_admin = is_admin
                 group.is_global = is_global
-                group.view_only = read_only
+                group.read_only = read_only
                 group.allow_install = allow_install
                 group.allow_uninstall = allow_uninstall
                 group.allow_reboot = allow_reboot
