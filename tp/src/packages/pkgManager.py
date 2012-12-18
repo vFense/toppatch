@@ -145,7 +145,7 @@ class PatchRetriever():
                     countInstalled += 1
                     nodeInstalled.append({
                         'id': node[0].node_id,
-                        'ip': node[1].ip_address
+                        'ip': node[1].ip_address,
                         'hostname': node[1].host_name,
                         'displayname': node[1].display_name
                         })
@@ -153,7 +153,7 @@ class PatchRetriever():
                     countPending += 1
                     nodePending.append({
                         'id': node[0].node_id,
-                        'ip': node[1].ip_address
+                        'ip': node[1].ip_address,
                         'hostname': node[1].host_name,
                         'displayname': node[1].display_name
                         })
@@ -161,14 +161,14 @@ class PatchRetriever():
                     countFailed += 1
                     nodeFailed.append({
                         'id': node[0].node_id,
-                        'ip': node[1].ip_address
+                        'ip': node[1].ip_address,
                         'hostname': node[1].host_name,
                         'displayname': node[1].display_name
                         })
                     countAvailable += 1
                     nodeAvailable.append({
                         'id': node[0].node_id,
-                        'ip': node[1].ip_address
+                        'ip': node[1].ip_address,
                         'hostname': node[1].host_name,
                         'displayname': node[1].display_name
                         })
@@ -176,7 +176,7 @@ class PatchRetriever():
                     countAvailable += 1
                     nodeAvailable.append({
                         'id': node[0].node_id,
-                        'ip': node[1].ip_address
+                        'ip': node[1].ip_address,
                         'hostname': node[1].host_name,
                         'displayname': node[1].display_name
                         })
