@@ -206,13 +206,15 @@ class AclModifierHandler(BaseHandler):
         user_name = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
-        acl_type = self.get_argument('type', None)
-        acl_action = self.get_argument('action', None)
+        acl_type = self.get_argument('acl_type', None)
+        acl_action = self.get_argument('acl_action', None)
         acl = self.get_argument('acl', None)
-        valid_json, json_acl = verify_json_is_valid(acl)
         result = None
-        if acl_type and acl_action and acl and valid_json:
-            result = \
+        print acl
+        if acl:
+            valid_json, json_acl = verify_json_is_valid(acl)
+            if acl_type and acl_action and acl and valid_json:
+                result = \
                     acl_modifier(session, acl_type, acl_action, json_acl)
         else:
             result = {
