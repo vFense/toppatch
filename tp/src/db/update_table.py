@@ -108,12 +108,13 @@ def add_user_to_group(session, user_id=None, group_id=None):
 
 
 
-def add_global_user_acl(session, user_id=None, isadmin=False,
-        isglobal=True, readonly=False, install=False, uninstall=False,
-        reboot=False, schedule=False, wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_created=datetime.now(),
-        date_modified=datetime.now(),
+def add_global_user_acl(session, user_id=None, is_admin=False,
+        is_global=True, read_only=False, allow_install=False, 
+        allow_uninstall=False, allow_reboot=False, allow_schedule=False,
+        allow_wol=False, allow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False, 
+        date_created=datetime.now(), date_modified=datetime.now(),
         username='system_user'
         ):
     """
@@ -125,15 +126,16 @@ def add_global_user_acl(session, user_id=None, isadmin=False,
             filter_by(user_id=user_id).first()
     if user_id and not user_exists:
         try:
-            add_acl = GlobalUserAccess(user_id=user_id, is_admin=isadmin,
-                    is_global=isglobal, read_only=readonly,
-                    allow_install=install, allow_uninstall=uninstall,
-                    allow_reboot=reboot, allow_schedule=schedule,
-                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
-                    allow_snapshot_removal=snapshot_removal,
-                    allow_snapshot_revert=snapshot_revert,
-                    allow_tag_creation=tag_creation,
-                    allow_tag_removal=tag_removal,
+            add_acl = GlobalUserAccess(user_id=user_id, is_admin=is_admin,
+                    is_global=is_global, read_only=read_only,
+                    allow_install=allow_install, 
+                    allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
+                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_snapshot_creation=allow_snapshot_creation,
+                    allow_snapshot_removal=allow_snapshot_removal,
+                    allow_snapshot_revert=allow_snapshot_revert,
+                    allow_tag_creation=allow_tag_creation,
+                    allow_tag_removal=allow_tag_removal,
                     date_created=date_created, date_modified=date_modified
                     )
             session.add(add_acl)
@@ -157,12 +159,13 @@ def add_global_user_acl(session, user_id=None, isadmin=False,
             })
 
 
-def add_global_group_acl(session, group_id=None, isadmin=False,
-        isglobal=True, readonly=False, install=False, uninstall=False,
-        reboot=False, schedule=False, wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_created=datetime.now(),
-        date_modified=datetime.now(),
+def add_global_group_acl(session, group_id=None, is_admin=False,
+        is_global=True, read_only=False, allow_install=False, 
+        allow_uninstall=False, allow_reboot=False, allow_schedule=False,
+        allow_wol=False, allow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False,
+        date_created=datetime.now(), date_modified=datetime.now(),
         username='system_user'
         ):
     """
@@ -174,15 +177,16 @@ def add_global_group_acl(session, group_id=None, isadmin=False,
             filter(GlobalGroupAccess.group_id == group_id).first()
     if group_id and not group_exists:
         try:
-            add_acl = GlobalGroupAccess(group_id=group_id, is_admin=isadmin,
-                    is_global=isglobal, read_only=readonly,
-                    allow_install=install, allow_uninstall=uninstall,
-                    allow_reboot=reboot, allow_schedule=schedule,
-                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
-                    allow_snapshot_removal=snapshot_removal,
-                    allow_snapshot_revert=snapshot_revert,
-                    allow_tag_creation=tag_creation,
-                    allow_tag_removal=tag_removal,
+            add_acl = GlobalGroupAccess(group_id=group_id, is_admin=is_admin,
+                    is_global=is_global, read_only=read_only,
+                    allow_install=allow_install, 
+                    allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
+                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_snapshot_creation=allow_snapshot_creation,
+                    allow_snapshot_removal=allow_snapshot_removal,
+                    allow_snapshot_revert=allow_snapshot_revert,
+                    allow_tag_creation=allow_tag_creation,
+                    allow_tag_removal=allow_tag_removal,
                     date_created=date_created, date_modified=date_modified
                     )
             session.add(add_acl)
@@ -207,11 +211,12 @@ def add_global_group_acl(session, group_id=None, isadmin=False,
 
 
 def add_node_user_acl(session, node_id=None, user_id=None,
-        install=False, uninstall=False, reboot=False,
-        schedule=False, wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_created=datetime.now(),
-        date_modified=datetime.now(), username='system_user'
+        allow_install=False, allow_uninstall=False, allow_reboot=False,
+        allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False,
+        date_created=datetime.now(), date_modified=datetime.now(),
+        username='system_user'
         ):
     """
         Add a User ACL to a node in the database
@@ -224,13 +229,14 @@ def add_node_user_acl(session, node_id=None, user_id=None,
     if user_id and node_id and not user_for_node_exists:
         try:
             add_acl = NodeUserAccess(node_id, user_id=user_id,
-                    allow_install=install, allow_uninstall=uninstall,
-                    allow_reboot=reboot, allow_schedule=schedule,
-                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
-                    allow_snapshot_removal=snapshot_removal,
-                    allow_snapshot_revert=snapshot_revert,
-                    allow_tag_creation=tag_creation,
-                    allow_tag_removal=tag_removal,
+                    allow_install=allow_install, 
+                    allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
+                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_snapshot_creation=allow_snapshot_creation,
+                    allow_snapshot_removal=allow_snapshot_removal,
+                    allow_snapshot_revert=allow_snapshot_revert,
+                    allow_tag_creation=allow_tag_creation,
+                    allow_tag_removal=allow_tag_removal,
                     date_created=date_created, date_modified=date_modified
                     )
             session.add(add_acl)
@@ -250,11 +256,12 @@ def add_node_user_acl(session, node_id=None, user_id=None,
 
 
 def add_node_group_acl(session, node_id=None, group_id=None,
-        install=False, uninstall=False, reboot=False,
-        schedule=False, wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_created=datetime.now(),
-        date_modified=datetime.now(), username='system_user'
+        allow_install=False, allow_uninstall=False, allow_reboot=False,
+        allow_schedule=False, wol=False, allow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False,
+        date_created=datetime.now(), date_modified=datetime.now(),
+        username='system_user'
         ):
     """
         Add a Group ACL to a Node in the database
@@ -267,13 +274,14 @@ def add_node_group_acl(session, node_id=None, group_id=None,
     if node_id and group_id and not group_for_node_exists:
         try:
             add_acl = NodeGroupAccess(node_id, group_id=group_id,
-                    allow_install=install, allow_uninstall=uninstall,
-                    allow_reboot=reboot, allow_schedule=schedule,
-                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
-                    allow_snapshot_removal=snapshot_removal,
-                    allow_snapshot_revert=snapshot_revert,
-                    allow_tag_creation=tag_creation,
-                    allow_tag_removal=tag_removal,
+                    allow_install=allow_install, 
+                    allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
+                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_snapshot_creation=allow_snapshot_creation,
+                    allow_snapshot_removal=allow_snapshot_removal,
+                    allow_snapshot_revert=allow_snapshot_revert,
+                    allow_tag_creation=allow_tag_creation,
+                    allow_tag_removal=allow_tag_removal,
                     date_created=date_created, date_modified=date_modified
                     )
             session.add(add_acl)
@@ -294,11 +302,12 @@ def add_node_group_acl(session, node_id=None, group_id=None,
 
 
 def add_tag_user_acl(session, tag_id=None, user_id=None,
-        install=False, uninstall=False, reboot=False, schedule=False,
-        wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_created=datetime.now(),
-        date_modified=datetime.now(), username='system_user'
+        allow_install=False, allow_uninstall=False, allow_reboot=False,
+        allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False,
+        date_created=datetime.now(), date_modified=datetime.now(),
+        username='system_user'
         ):
     """
         Add a User ACL to a Tag in the database
@@ -311,13 +320,14 @@ def add_tag_user_acl(session, tag_id=None, user_id=None,
     if user_id and tag_id and not user_for_tag_exists:
         try:
             add_acl = TagUserAccess(tag_id, user_id=user_id,
-                    allow_install=install, allow_uninstall=uninstall,
-                    allow_reboot=reboot, allow_schedule=schedule,
-                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
-                    allow_snapshot_removal=snapshot_removal,
-                    allow_snapshot_revert=snapshot_revert,
-                    allow_tag_creation=tag_creation,
-                    allow_tag_removal=tag_removal,
+                    allow_install=allow_install, 
+                    allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
+                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_snapshot_creation=allow_snapshot_creation,
+                    allow_snapshot_removal=allow_snapshot_removal,
+                    allow_snapshot_revert=allow_snapshot_revert,
+                    allow_tag_creation=allow_tag_creation,
+                    allow_tag_removal=allow_tag_removal,
                     date_created=date_created, date_modified=date_modified
                     )
             session.add(add_acl)
@@ -338,11 +348,12 @@ def add_tag_user_acl(session, tag_id=None, user_id=None,
 
 
 def add_tag_group_acl(session, tag_id=None, group_id=None,
-        install=False, uninstall=False, reboot=False, schedule=False,
-        wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_created=datetime.now(),
-        date_modified=datetime.now(), username='system_user'
+        allow_install=False, allow_uninstall=False, allow_reboot=False,
+        allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False,
+        date_created=datetime.now(), date_modified=datetime.now(),
+        username='system_user'
         ):
     """
         Add a Group ACL to a Tag in the database
@@ -355,13 +366,14 @@ def add_tag_group_acl(session, tag_id=None, group_id=None,
     if group_id and tag_id and not group_for_tag_exists:
         try:
             add_acl = TagGroupAccess(tag_id, group_id,
-                    allow_install=install, allow_uninstall=uninstall,
-                    allow_reboot=reboot, allow_schedule=schedule,
-                    allow_wol=wol, allow_snapshot_creation=snapshot_creation,
-                    allow_snapshot_removal=snapshot_removal,
-                    allow_snapshot_revert=snapshot_revert,
-                    allow_tag_creation=tag_creation,
-                    allow_tag_removal=tag_removal,
+                    allow_install=allow_install, 
+                    allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
+                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_snapshot_creation=allow_snapshot_creation,
+                    allow_snapshot_removal=allow_snapshot_removal,
+                    allow_snapshot_revert=allow_snapshot_revert,
+                    allow_tag_creation=allow_tag_creation,
+                    allow_tag_removal=allow_tag_removal,
                     date_created=date_created, date_modified=date_modified
                     )
             session.add(add_acl)
@@ -1155,11 +1167,12 @@ def update_reboot_status(session, node_id, oper_type, username='system_user'):
 
 
 def update_global_user_acl(session, user_id=None, isadmin=False,
-        isglobal=True, readonly=False, install=False, uninstall=False,
-        reboot=False, schedule=False, wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_modified=datetime.now(),
-        username='system_user'
+        is_global=True, readonly=False, allow_install=False,
+        allow_uninstall=False, allow_reboot=False, allow_schedule=False,
+        allow_wol=False, allow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False,
+        date_modified=datetime.now(), username='system_user'
         ):
     """
         Modify the Global ACL of a User in the database
@@ -1174,19 +1187,19 @@ def update_global_user_acl(session, user_id=None, isadmin=False,
             pass
         if user:
             try:
-                user.is_admin = isadmin
-                user.is_global = isglobal
-                user.view_only = viewonly
-                user.allow_install = install
-                user.allow_uninstall = uninstall
-                user.allow_reboot = reboot
-                user.allow_schedule = schedule
-                user.allow_wol = wol
-                user.allow_snapshot_creation = snapshot_creation
-                user.allow_snapshot_removal = snapshot_removal
-                user.allow_snapshot_revert = snapshot_revert
-                user.allow_tag_creation = tag_creation
-                user.allow_tag_removal = tag_removal
+                user.is_admin = is_admin
+                user.is_global = is_global
+                user.read_only = readonly
+                user.allow_install = allow_install
+                user.allow_uninstall = allow_uninstall
+                user.allow_reboot = allow_reboot
+                user.allow_schedule = allow_schedule
+                user.allow_wol = allow_wol
+                user.allow_snapshot_creation = allow_snapshot_creation
+                user.allow_snapshot_removal = allow_snapshot_removal
+                user.allow_snapshot_revert = allow_snapshot_revert
+                user.allow_tag_creation = allow_tag_creation
+                user.allow_tag_removal = allow_tag_removal
                 user.date_modified = date_modified
                 session.commit()
                 return({
@@ -1206,12 +1219,13 @@ def update_global_user_acl(session, user_id=None, isadmin=False,
             })
 
 
-def update_global_group_acl(session, group_id=None, isadmin=False,
-        isglobal=True, readonly=False, install=False, uninstall=False,
-        reboot=False, schedule=False, wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_modified=datetime.now(),
-        username='system_user'
+def update_global_group_acl(session, group_id=None, is_admin=False,
+        is_global=True, read_only=False, allow_install=False,
+        allow_uninstall=False, allow_reboot=False, allow_schedule=False,
+        allow_wol=False, alow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False, 
+        date_modified=datetime.now(), username='system_user'
         ):
     """
         Modify the Global ACL of a Group in the database
@@ -1227,19 +1241,19 @@ def update_global_group_acl(session, group_id=None, isadmin=False,
             pass
         if group:
             try:
-                group.is_admin = isadmin
-                group.is_global = isglobal
-                group.view_only = viewonly
-                group.allow_install = install
-                group.allow_uninstall = uninstall
-                group.allow_reboot = reboot
-                group.allow_schedule = schedule
-                group.allow_wol = wol
-                group.allow_snapshot_creation = snapshot_creation
-                group.allow_snapshot_removal = snapshot_removal
-                group.allow_snapshot_revert = snapshot_revert
-                group.allow_tag_creation = tag_creation
-                group.allow_tag_removal = tag_removal
+                group.is_admin = is_admin
+                group.is_global = is_global
+                group.view_only = read_only
+                group.allow_install = allow_install
+                group.allow_uninstall = allow_uninstall
+                group.allow_reboot = allow_reboot
+                group.allow_schedule = allow_schedule
+                group.allow_wol = allow_wol
+                group.allow_snapshot_creation = allow_snapshot_creation
+                group.allow_snapshot_removal = allow_snapshot_removal
+                group.allow_snapshot_revert = allow_snapshot_revert
+                group.allow_tag_creation = allow_tag_creation
+                group.allow_tag_removal = allow_tag_removal
                 group.date_modified = date_modified
                 session.commit()
                 return({
@@ -1261,11 +1275,11 @@ def update_global_group_acl(session, group_id=None, isadmin=False,
 
 
 def update_node_user_permissions(session, node_id=None, user_id=None,
-        install=False, uninstall=False, reboot=False, schedule=False,
-        wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_modified=datetime.now(),
-        username='system_user'
+        allow_install=False, allow_uninstall=False, allow_reboot=False,
+        allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False,
+        date_modified=datetime.now(), username='system_user'
         ):
     """
         modify the global permissions of a user on a node 
@@ -1279,16 +1293,16 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
                 filter(NodeUserAccess.node_id == node_id).first()
         if user:
             try:
-                user.allow_install = install
-                user.allow_uninstall = uninstall
-                user.allow_reboot = reboot
-                user.allow_schedule = schedule
-                user.allow_wol = wol
-                user.allow_snapshot_creation = snapshot_creation
-                user.allow_snapshot_removal = snapshot_removal
-                user.allow_snapshot_revert = snapshot_revert
-                user.allow_tag_creation = tag_creation
-                user.allow_tag_removal = tag_removal
+                user.allow_install = allow_install
+                user.allow_uninstall = allow_uninstall
+                user.allow_reboot = allow_reboot
+                user.allow_schedule = allow_schedule
+                user.allow_wol = allow_wol
+                user.allow_snapshot_creation = allow_snapshot_creation
+                user.allow_snapshot_removal = allow_snapshot_removal
+                user.allow_snapshot_revert = allow_snapshot_revert
+                user.allow_tag_creation = allow_tag_creation
+                user.allow_tag_removal = allow_tag_removal
                 user.date_modified = date_modified
                 session.commit()
                 return({
@@ -1312,11 +1326,11 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
 
 
 def update_node_group_permissions(session, node_id=None, group_id=None,
-        install=False, uninstall=False, reboot=False, schedule=False,
-        wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_modified=datetime.now(),
-        username='system_user'
+        allow_install=False, allow_uninstall=False, allow_reboot=False,
+        allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False,
+        date_modified=datetime.now(), username='system_user'
         ):
     """
         Modify the Global ACL of a Group on a node 
@@ -1330,16 +1344,16 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
                 filter(NodeGroupAccess.node_id == node_id).first()
         if group:
             try:
-                group.allow_install = install
-                group.allow_uninstall = uninstall
-                group.allow_reboot = reboot
-                group.allow_schedule = schedule
-                group.allow_wol = wol
-                group.allow_snapshot_creation = snapshot_creation
-                group.allow_snapshot_removal = snapshot_removal
-                group.allow_snapshot_revert = snapshot_revert
-                group.allow_tag_creation = tag_creation
-                group.allow_tag_removal = tag_removal
+                group.allow_install = allow_install
+                group.allow_uninstall = allow_uninstall
+                group.allow_reboot = allow_reboot
+                group.allow_schedule = allow_schedule
+                group.allow_wol = allow_wol
+                group.allow_snapshot_creation = allow_snapshot_creation
+                group.allow_snapshot_removal = allow_snapshot_removal
+                group.allow_snapshot_revert = allow_snapshot_revert
+                group.allow_tag_creation = allow_tag_creation
+                group.allow_tag_removal = allow_tag_removal
                 group.date_modified = date_modified
                 session.commit()
                 return({
@@ -1363,10 +1377,11 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
 
 
 def update_tag_user_permissions(session, tag_id=None, user_id=None,
-        install=False, uninstall=False, reboot=False, schedule=False,
-        wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_modified=datetime.now(),
+        allow_install=False, allow_uninstall=False, allow_reboot=False,
+        allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False,
+        date_modified=datetime.now(),
         username='system_user'
         ):
     """
@@ -1382,16 +1397,16 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
                 filter(TagUserAccess.tag_id == tag_id).first()
         if user:
             try:
-                user.allow_install = install
-                user.allow_uninstall = uninstall
-                user.allow_reboot = reboot
-                user.allow_schedule = schedule
-                user.allow_wol = wol
-                user.allow_snapshot_creation = snapshot_creation
-                user.allow_snapshot_removal = snapshot_removal
-                user.allow_snapshot_revert = snapshot_revert
-                user.allow_tag_creation = tag_creation
-                user.allow_tag_removal = tag_removal
+                user.allow_install = allow_install
+                user.allow_uninstall = allow_uninstall
+                user.allow_reboot = allow_reboot
+                user.allow_schedule = allow_schedule
+                user.allow_wol = allow_wol
+                user.allow_snapshot_creation = allow_snapshot_creation
+                user.allow_snapshot_removal = allow_snapshot_removal
+                user.allow_snapshot_revert = allow_snapshot_revert
+                user.allow_tag_creation = allow_tag_creation
+                user.allow_tag_removal = allow_tag_removal
                 user.date_modified = date_modified
                 session.commit()
                 return({
@@ -1415,11 +1430,11 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
 
 
 def update_tag_group_permissions(session, tag_id=None, group_id=None,
-        install=False, uninstall=False, reboot=False, schedule=False,
-        wol=False, snapshot_creation=False,
-        snapshot_removal=False, snapshot_revert=False, tag_creation=False,
-        tag_removal=False, date_modified=datetime.now(),
-        username='system_user'
+        allow_install=False, allow_uninstall=False, allow_reboot=False,
+        allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
+        allow_snapshot_removal=False, allow_snapshot_revert=False,
+        allow_tag_creation=False, allow_tag_removal=False,
+        date_modified=datetime.now(), username='system_user'
         ):
     """
         Modify the Global ACL of a Group on a Tag 
@@ -1434,16 +1449,16 @@ def update_tag_group_permissions(session, tag_id=None, group_id=None,
                 filter(TagGroupAccess.tag_id == tag_id).first()
         if group:
             try:
-                group.allow_install = install
-                group.allow_uninstall = uninstall
-                group.allow_reboot = reboot
-                group.allow_schedule = schedule
-                group.allow_wol = wol
-                group.allow_snapshot_creation = snapshot_creation
-                group.allow_snapshot_removal = snapshot_removal
-                group.allow_snapshot_revert = snapshot_revert
-                group.allow_tag_creation = tag_creation
-                group.allow_tag_removal = tag_removal
+                group.allow_install = allow_install
+                group.allow_uninstall = allow_uninstall
+                group.allow_reboot = allow_reboot
+                group.allow_schedule = allow_schedule
+                group.allow_wol = allow_wol
+                group.allow_snapshot_creation = allow_snapshot_creation
+                group.allow_snapshot_removal = allow_snapshot_removal
+                group.allow_snapshot_revert = allow_snapshot_revert
+                group.allow_tag_creation = allow_tag_creation
+                group.allow_tag_removal = allow_tag_removal
                 group.date_modified = date_modified
                 session.commit()
                 return({
