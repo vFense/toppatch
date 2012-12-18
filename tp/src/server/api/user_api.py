@@ -215,7 +215,7 @@ class AclModifierHandler(BaseHandler):
             valid_json, json_acl = verify_json_is_valid(acl)
             if acl_type and acl_action and acl and valid_json:
                 result = \
-                    acl_modifier(session, acl_type, acl_action, json_acl)
+                    acl_modifier(self.session, acl_type, acl_action, json_acl)
         else:
             result = {
                     'pass': False,
