@@ -184,8 +184,6 @@ define(
                                 $list.find('div.items').show();
                                 $list.find('button[name=cancelAcl]').remove();
                                 $inputs.each(function () {
-                                    window.console.log(this.name);
-                                    window.console.log(user.global_acls[0][this.name]);
                                     if (user.global_acls[0][this.name]) {
                                         this.checked = true;
                                     }
@@ -229,8 +227,6 @@ define(
                         acl_action: aclAction,
                         acl: JSON.stringify(acl)
                     };
-                    window.console.log('******PARAMETERS IM SENDING**********');
-                    window.console.log(params);
                     $.post(url, params, function (json) {
                         window.console.log(json);
                         if (json.pass) {
