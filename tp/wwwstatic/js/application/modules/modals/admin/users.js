@@ -207,6 +207,7 @@ define(
                     var params,
                         aclExists = event.data.aclExists,
                         userId = event.data.user_id,
+                        $alert = event.data.view.$el.find('div.alert'),
                         acl = { user_id: userId },
                         $checkboxes = event.data.checkboxes,
                         aclType = 'global_user',
@@ -218,12 +219,18 @@ define(
                     params = {
                         acl_type: aclType,
                         acl_action: aclAction,
-                        acl: acl
+                        acl: JSON.stringify(acl)
                     };
                     window.console.log('******PARAMETERS IM SENDING**********');
                     window.console.log(params);
                     $.post(url, params, function (json) {
                         window.console.log(json);
+                        if (json.pass) {
+                            $alert.hide();
+                            event.data.view.collection.fetch();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                        }
                     });
                 },
                 submit: function (event) {
