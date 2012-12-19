@@ -18,7 +18,8 @@ define(
                         barWidth = 100;
                     }
                     width = (barWidth + 10) * data.length;
-                    var x = d3.scale.linear().domain([0, data.length]).range([15, width]),
+                    var txt, txtMask, txtRect,
+                        x = d3.scale.linear().domain([0, data.length]).range([15, width]),
                         y = d3.scale.linear().domain([0, d3.max(data, function (datum) { return datum.value; })]).rangeRound([0, height]),
                         that = this,
                         matches = (that.id || that.attr('id')).match(/\d+$/),
@@ -33,7 +34,7 @@ define(
                             attr("width", width).
                             attr("height", height + 20);
 
-                    barDemo.selectAll("rect")
+                    barDemo.selectAll("svg > rect")
                         .data(data)
                         .enter()
                         .append("svg:rect")
@@ -42,9 +43,29 @@ define(
                         .attr("height", function (datum) { return y(datum.value); })
                         .attr("width", barWidth)
                         .attr("fill", function (d, i) { return color(i); }) //"#2d578b")
-                        .append("svg:title").text(function (d) { return d.label + ": " + d.value; });
+                        .on('mouseover', function (d) {
+                            var mousePos = d3.mouse(this), textLength;
+                            mousePos[0] = mousePos[0] + 5;
+                            mousePos[1] = mousePos[1] + 5;
+                            txt.text(d.label + ': ' + d.value + ' nodes.');
+                            textLength = txt.style('width');
+                            txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                            txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                        })
+                        .on('mousemove', function (d) {
+                            var mousePos = d3.mouse(this);
+                            mousePos[0] = mousePos[0] + 5;
+                            mousePos[1] = mousePos[1] + 5;
+                            txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                            txtRect.style('opacity', '0.3');
+                        })
+                        .on('mouseout', function (d) {
+                            txt.text('');
+                            txtRect.style('opacity', '0');
+                        });
+                        //.append("svg:title").text(function (d) { return d.label + ": " + d.value; });
 
-                    barDemo.selectAll("text")
+                    barDemo.selectAll("svg > text")
                         .data(data)
                         .enter()
                         .append("svg:text")
@@ -85,6 +106,16 @@ define(
                         .attr('transform', 'translate(15, 5)')
                         .attr("class", "yAxis");
 
+                    txtMask = barDemo.append('g').attr({width: '100px', height: '30px'});
+
+                    txtRect = txtMask.append('rect')
+                        .attr({width: '100px', height: '30px', fill: 'white', stroke: 'black'})
+                        .style('opacity', '0');
+
+                    txt = txtMask.append('text')
+                        .attr({fill: 'black', dy: '18px'})
+                        .style('font-size', '1.3em')
+                        .text("");
                     /*barDemo.selectAll("rect")
                         .data(data)
                         .enter().append("svg:title")
