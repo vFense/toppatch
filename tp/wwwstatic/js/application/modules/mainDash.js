@@ -350,7 +350,7 @@ define(
                     pieGraph: function (selection) {
                         var span = this.$el.find(selection).parents('article').attr('class').split(' ')[0],
                             width = this.emToPx(parseFloat(this.getStyleWidth('.' + span))),
-                            pieChart = app.chart.pie().width(width);
+                            pieChart = app.chart.newpie().width(width);
                         this.$el.find(selection).attr('class', 'pie graph');
                         d3.json("../api/severity.json", function (json) {
                             d3.select(selection).datum(json).call(pieChart);

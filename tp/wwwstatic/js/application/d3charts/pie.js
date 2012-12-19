@@ -229,10 +229,13 @@ define(['jquery', 'd3'], function ($, d3) {
                 //window.console.log(title);
                 arcs.append("svg:path")
                     .attr("fill", function (d, i) { return color(i); }) //set the color for each slice to be chosen from the color function defined above
+                    .attr("stroke", "black")
                     .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
                 arcs.filter(function (d) { return d.endAngle - d.startAngle > .2; })
                     .append("svg:text")
                     .attr("dy", ".35em")
+                    .style("font-size", "10px")
+                    .style("font-family", "Arial")
                     .attr("text-anchor", "middle")
                     .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
                     .text(function (d) {
