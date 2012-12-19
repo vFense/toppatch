@@ -132,7 +132,7 @@ class NodesHandler(BaseHandler):
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
                     join(SystemInfo, NodeStats,TagsPerNode, TagInfo).\
                     filter(TagInfo.tag == filter_by_tags).\
-                    limit(queryCount).offset(queryOffset).all()
+                    limit(queryCount).offset(queryOffset)
         else:
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
                     join(SystemInfo, NodeStats).limit(queryCount).\
