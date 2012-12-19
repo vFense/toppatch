@@ -52,6 +52,22 @@
         </dl>
     </section>
 </article>
+<article>
+    <header><strong>Network Interfaces</strong></header>
+    <section class="well well-small noMargin clearfix">
+        <% if (model.networking.length !== 0) { %>
+            <dl>
+            <% _.each(model.networking, function (interface) { %>
+                <dt><%= interface.interface_name %>:</dt>
+                <dd>IP Address - <%= interface.ip %><br>
+                    MAC Address - <%= interface.mac %></dd>
+            <% }); %>
+            </dl>
+        <% } else { %>
+            <span><em>No interfaces available.</em></span>
+        <% } %>
+    </section>
+</article>
 <article class="alert alert-block fade in hide">
     <span class="help-inline"></span>
 </article>
