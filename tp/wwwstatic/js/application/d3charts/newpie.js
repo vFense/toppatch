@@ -12,6 +12,7 @@ define(['jquery', 'd3'], function ($, d3) {
             height	= 220,
             r = (width / 3),
             colors = d3.scale.category20(),
+            severityColors = ['#0099FF', '#FF3300', '#FFFF00'],
             graph = this;
 
         function chart(selection) {
@@ -21,7 +22,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     that = this,
                     matches = that.id.match(/\d+$/),
                     widget = "#widget" + matches[0],
-                    svg = d3.select(this).append("svg").attr("width", width).attr("height", height),
+                    svg = d3.select(this).html('').append("svg").attr("width", width).attr("height", height),
                     defs = svg.append("svg:defs"),
                     pieChart = d3.layout.pie().sort(null).value(function (d) { return d.value; }),
                     arc = d3.svg.arc().innerRadius(0).outerRadius(r),
@@ -56,132 +57,117 @@ define(['jquery', 'd3'], function ($, d3) {
                     .attr("in", "SourceGraphic")
                     .attr("in2", "offsetBlur")
                     .attr("mode", "normal");
+                // Create a gradient for each entry (each entry identified by its unique category)
+                var gradients = defs.selectAll(".gradient").data(data, function (d) { return d.label; });
+                gradients.enter().append("svg:radialGradient")
+                    .attr("id", function (d, i) { return "gradient" + i; })
+                    .attr("class", "gradient")
+                    .attr("xlink:href", "#master");
 
-                // Redraw the graph given a certain level of data
-                function updateGraph(cat) {
-                    var currData = data;
+                gradients.append("svg:stop").attr("offset", "0%").attr("stop-color", getColor);
+                gradients.append("svg:stop").attr("offset", "90%").attr("stop-color", getColor);
+                gradients.append("svg:stop").attr("offset", "100%").attr("stop-color", getDarkerColor);
 
+                // Create a sector for each entry in the enter selection
+                var slice = arcGroup.selectAll('g.slice')
+                    .data(pieChart(data)).enter().append('svg:g').attr('class', 'slice'),
+                    paths = slice.append("svg:path").attr("class", "sector"),
+                    //.data(pieChart(currData), function (d) { return d.data.label; }),
+                    labels = slice.append("svg:text");
 
+                //paths.enter().append("svg:path").attr("class", "sector");
 
-                    // Create a gradient for each entry (each entry identified by its unique category)
-                    var gradients = defs.selectAll(".gradient").data(currData, function (d) { return d.label; });
-                    gradients.enter().append("svg:radialGradient")
-                        .attr("id", function (d, i) { return "gradient" + i; })
-                        .attr("class", "gradient")
-                        .attr("xlink:href", "#master");
+                //labels.enter().append("svg:text").attr("class", "label");
 
-                    gradients.append("svg:stop").attr("offset", "0%").attr("stop-color", getColor);
-                    gradients.append("svg:stop").attr("offset", "90%").attr("stop-color", getColor);
-                    gradients.append("svg:stop").attr("offset", "100%").attr("stop-color", getDarkerColor);
+                // Each sector will refer to its gradient fill
+                paths.attr("fill", function (d, i) { return "url(#gradient" + i + ")"; })
+                    .transition().duration(1000).attrTween("d", tweenIn).each("end", function () {
+                        this._listenToEvents = true;
+                    });
 
-                    // Create a sector for each entry in the enter selection
-                    var slice = arcGroup.selectAll('g.slice')
-                        .data(pieChart(currData)).enter().append('svg:g').attr('class', 'slice'),
-                        paths = slice.append("svg:path").attr("class", "sector"),
-                        //.data(pieChart(currData), function (d) { return d.data.label; }),
-                        labels = slice.append("svg:text");
+                var txtMask = svg.append('g').attr({width: '100px', height: '30px'});
 
-                    //paths.enter().append("svg:path").attr("class", "sector");
+                var txtRect = txtMask.append('rect')
+                    .attr({width: '100px', height: '30px', fill: 'white', stroke: 'black'})
+                    .style('opacity', '0');
 
-                    //labels.enter().append("svg:text").attr("class", "label");
+                var txt = txtMask.append('text')
+                    .attr({fill: 'black', dy: '18px'})
+                    .style('font-size', '1.3em')
+                    .text("");
 
-                    // Each sector will refer to its gradient fill
-                    paths.attr("fill", function (d, i) { return "url(#gradient" + i + ")"; })
-                        .transition().duration(1000).attrTween("d", tweenIn).each("end", function () {
-                            this._listenToEvents = true;
-                        });
-
-                    var txtMask = arcGroup.append('g').attr({width: '100px', height: '30px'});
-
-                    var txtRect = txtMask.append('rect')
-                        .attr({width: '100px', height: '30px', fill: 'white', stroke: 'black'})
-                        .style('opacity', '0');
-
-                    var txt = txtMask.append('text')
-                        .attr({fill: 'black', dy: '18px'})
-                        .style('font-size', '1.3em')
-                        .text("");
-
-                    // Mouse interaction handling
-                    paths/*.on("click", function (d) {
+                // Mouse interaction handling
+                paths.on("click", function (d) {
+                    window.location.hash = '#patches?type=' + d.data.label;
+                })
+                    .on("mouseover", function (d) {
+                        var mousePos = d3.mouse(this), textLength, ang;
+                        mousePos[0] = mousePos[0] + width / 2 + 5;
+                        mousePos[1] = mousePos[1] + height / 2 + 5;
+                        txt.text(d.data.label + ": " + d.data.value + ' patches');
+                        textLength = txt.style('width');
+                        txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                        txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                        // Mouseover effect if no transition has started
                         if (this._listenToEvents) {
-                            // Reset inmediatelly
-                            d3.select(this).attr("transform", "translate(0,0)");
-                            // Change level on click if no transition has started
-                            paths.each(function () {
-                                this._listenToEvents = false;
-                            });
-                            updateGraph(d.data.children? d.data.cat : undefined);
+                            // Calculate angle bisector
+                            ang = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                            // Transformate to SVG space
+                            ang = (ang - (Math.PI / 2)) * -1;
+
+                            // Calculate a 10% radius displacement
+                            var x = Math.cos(ang) * r * 0.1;
+                            var y = Math.sin(ang) * r * -0.1;
+
+                            d3.select(this).transition()
+                                .duration(300).attr("transform", "translate(" + x + "," + y + ")");
+
+                            d3.select(this.parentNode).select("text").transition().duration(300)
+                                .attr("transform", function (data) {
+                                    var c = arc.centroid(d),
+                                        x = c[0],
+                                        y = c[1],
+                                        labelr = r / 1.6,
+                                    // pythagorean theorem for hypotenuse
+                                        h = Math.sqrt(x * x + y * y);
+                                    return "translate(" + (x / h * labelr) + ',' + (y / h * labelr) +  ") rotate(" + angle(d) + ")";
+                                });
                         }
-                    })*/
-                        .on("mouseover", function (d) {
-                            var mousePos = d3.mouse(this), textLength, ang;
-                            mousePos[0] = mousePos[0] + 5;
-                            mousePos[1] = mousePos[1] + 5;
-                            txt.text(d.data.label + ": " + d.data.value + ' patches');
-                            textLength = txt.style('width');
-                            txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                            txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
-                            // Mouseover effect if no transition has started
-                            if (this._listenToEvents) {
-                                // Calculate angle bisector
-                                ang = d.startAngle + (d.endAngle - d.startAngle) / 2;
-                                // Transformate to SVG space
-                                ang = (ang - (Math.PI / 2)) * -1;
-
-                                // Calculate a 10% radius displacement
-                                var x = Math.cos(ang) * r * 0.1;
-                                var y = Math.sin(ang) * r * -0.1;
-
-                                d3.select(this).transition()
-                                    .duration(300).attr("transform", "translate(" + x + "," + y + ")");
-                                d3.select(this.parentNode).select("text").transition().duration(300)
-                                    .attr("transform", function (data) {
-                                        var c = arc.centroid(d),
-                                            x = c[0],
-                                            y = c[1],
-                                            labelr = r / 1.6,
-                                        // pythagorean theorem for hypotenuse
-                                            h = Math.sqrt(x * x + y * y);
-                                        return "translate(" + (x / h * labelr) + ',' + (y / h * labelr) +  ") rotate(" + angle(d) + ")";
-                                    });
-                            }
-                        })
-                        .on('mousemove', function (d) {
-                            var mousePos = d3.mouse(this);
-                            mousePos[0] = mousePos[0] + 5;
-                            mousePos[1] = mousePos[1] + 5;
-                            txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                            txtRect.style('opacity', '0.3');
-                        })
-                        .on("mouseout", function (d) {
-                            // Mouseout effect if no transition has started
-                            txt.text('');
-                            txtRect.style('opacity', '0');
-                            if (this._listenToEvents) {
-                                d3.select(this).transition()
-                                    .duration(150).attr("transform", "translate(0,0)");
-                                d3.select(this.parentNode).select("text").transition().duration(150)
-                                    .attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")");
-                            }
-                        });
-                    labels.filter(function (d) { return d.endAngle - d.startAngle > 0.2; })
-                        .attr("dy", ".35em")
-                        .style("font-size", "10px")
-                        .style("font-family", "Arial")
-                        .attr("text-anchor", "middle")
-                        .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
-                        .text(function (d) {
-                            var osname = d.data.label + ' - ' + Math.floor((d.endAngle - d.startAngle) / (2 * Math.PI) * 100) + '%';
-                            return osname;
-                        });
-                    /*
-                    // Collapse sectors for the exit selection
-                    slice.exit().transition()
-                        .duration(1000)
-                        .attrTween("d", tweenOut).remove();
-                        */
-                }
+                    })
+                    .on('mousemove', function (d) {
+                        var mousePos = d3.mouse(this);
+                        mousePos[0] = mousePos[0] + width / 2 + 5;
+                        mousePos[1] = mousePos[1] + height / 2 + 5;
+                        txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                        txtRect.style('opacity', '0.3');
+                    })
+                    .on("mouseout", function (d) {
+                        // Mouseout effect if no transition has started
+                        txt.text('');
+                        txtRect.style('opacity', '0');
+                        if (this._listenToEvents) {
+                            d3.select(this).transition()
+                                .duration(150).attr("transform", "translate(0,0)");
+                            d3.select(this.parentNode).select("text").transition().duration(150)
+                                .attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")");
+                        }
+                    });
+                labels.filter(function (d) { return d.endAngle - d.startAngle > 0.2; })
+                    .attr("dy", ".35em")
+                    .style("font-size", "10px")
+                    .style("font-family", "Arial")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
+                    .text(function (d) {
+                        var osname = d.data.label + ' - ' + Math.floor((d.endAngle - d.startAngle) / (2 * Math.PI) * 100) + '%';
+                        return osname;
+                    });
+                /*
+                // Collapse sectors for the exit selection
+                slice.exit().transition()
+                    .duration(1000)
+                    .attrTween("d", tweenOut).remove();
+                    */
                 function angle(d) {
                     var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
                     return a > 90 ? a - 180 : a;
@@ -211,7 +197,7 @@ define(['jquery', 'd3'], function ($, d3) {
 
                 // Helper function to extract color from data object
                 function getColor(data, index) {
-                    return colors(index);
+                    return severityColors[index];
                 }
                 // Helper function to extract a darker version of the color
                 function getDarkerColor(data, index){
@@ -225,7 +211,6 @@ define(['jquery', 'd3'], function ($, d3) {
                     }
                     return data;
                 }
-                updateGraph();
             });
         }
         chart.r = function (value) {
