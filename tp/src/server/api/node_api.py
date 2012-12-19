@@ -39,13 +39,8 @@ class ModifyDisplayNameHandler(BaseHandler):
         username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
-        nodeid = None
-        displayname = None
-        try:
-            nodeid = self.get_argument('nodeid')
-            displayname = self.get_argument('displayname')
-        except Exception as e:
-            pass
+        nodeid = self.get_argument('nodeid', None)
+        displayname = self.get_argument('displayname', None)
         if nodeid and displayname:
             node = self.session.query(NodeInfo).filter(NodeInfo.id == nodeid).first()
             if node:
@@ -70,6 +65,17 @@ class ModifyDisplayNameHandler(BaseHandler):
                               "message" : "Display name was not changed to %s"%\
                                             (displayname)
                             }
+            else:
+                result = {
+                        "pass" : False,
+                        "message" : "Invalid node_id %s"%\
+                                        (node_id)
+                        }
+        else:
+            result = {
+                    "pass" : False,
+                    "message" : "Insufficient arguments"
+                    }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -80,13 +86,8 @@ class ModifyHostNameHandler(BaseHandler):
         username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
-        nodeid = None
-        hostname = None
-        try:
-            nodeid = self.get_argument('nodeid')
-            hostname = self.get_argument('hostname')
-        except Exception as e:
-            pass
+        nodeid = self.get_argument('nodeid', None)
+        hostname = self.get_argument('hostname', None)
         if nodeid and hostname:
             node = self.session.query(NodeInfo).filter(NodeInfo.id == nodeid).first()
             if node:
@@ -98,8 +99,9 @@ class ModifyHostNameHandler(BaseHandler):
                     logger.info('%s - Host name was changed to %s' %\
                             (username, hostname)
                             )
-                    result = {"pass" : True,
-                              "message" : "Host name change to %s" %\
+                    result = {
+                            "pass" : True,
+                            "message" : "Host name change to %s" %\
                                             (hostname)
                             }
                 except Exception as e:
@@ -107,10 +109,22 @@ class ModifyHostNameHandler(BaseHandler):
                     logger.error('%s - Host name was not changed to %s' %\
                             (username, hostname)
                             )
-                    result = {"pass" : False,
-                              "message" : "Host name was not changed to %s"%\
+                    result = {
+                            "pass" : False,
+                            "message" : "Host name was not changed to %s"%\
                                             (hostname)
                             }
+            else:
+                result = {
+                        "pass" : False,
+                        "message" : "Invalid node_id %s"%\
+                                        (node_id)
+                        }
+        else:
+            result = {
+                    "pass" : False,
+                    "message" : "Insufficient arguments"
+                    }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -253,25 +267,28 @@ class NodeTogglerHandler(BaseHandler):
                     logger.info('%s - ssl communication for nodeid %s '%\
                             (username, nodeid) + 'has been enabled'
                            ) 
-                    result = {"pass" : True,
-                          "message" : "node_id %s has been enabled" %\
+                    result = {
+                            "pass" : True,
+                            "message" : "node_id %s has been enabled" %\
                                           (nodeid)
-                         }
+                            }
                 else:
                     sslinfo.enabled = False
                     self.session.commit()
                     logger.info('%s - ssl communication for nodeid %s '%\
                             (username, nodeid) + 'has been disabled'
                            ) 
-                    result = {"pass" : True,
-                          "message" : "node_id %s has been disabled" %\
+                    result = {
+                            "pass" : True,
+                            "message" : "node_id %s has been disabled" %\
                                           (nodeid)
-                         }
+                            }
         else:
             logger.warn('%s - invalid nodeid %s' % (username, nodeid))
-            result = {"pass" : False,
-                      "message" : "node_id %s does not exist" % \
+            result = {
+                    "pass" : False,
+                    "message" : "node_id %s does not exist" % \
                                      (nodeid)
-                         }
+                    }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))

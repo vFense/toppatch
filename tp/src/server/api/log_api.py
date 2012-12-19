@@ -38,42 +38,32 @@ class LoggingModifyerHandler(BaseHandler):
     @authenticated_request
     def post(self):
         username = self.get_current_user()
-        level = 'INFO'
-        host = None
-        port = None
-        proto = None
-        passed = None
-        try:
-            host = self.get_argument('host')
-            port = self.get_argument('port')
-            proto = self.get_argument('proto')
-            proto = proto.upper()
-            level = self.get_argument('level')
-            level = level.upper()
+        host = self.get_argument('host', None)
+        port = self.get_argument('port', None)
+        proto = self.get_argument('proto', 'UDP')
+        level = self.get_argument('level', 'INFO')
+        proto = proto.upper()
+        level = level.upper()
+        if host and port and proto and level:
             rvlogger = RvLogger()
             connected = rvlogger.connect_to_loghost(host, port, proto)
             if connected:
                 rvlogger.create_config(loglevel=level, loghost=host,
                         logport=port, logproto=proto)
                 results = rvlogger.results
-                passed = True
             else:
-                passed = False
                 results = {
                         'pass': False,
                         'message': 'Cant connect to %s on %s using proto %s' %\
                                 (host, port, proto)
-                                }
-        except Exception as e:
-            try:
-                level = self.get_argument('level')
-                rvlogger = RvLogger()
-                rvlogger.create(loglevel=level)
-                results = rvlogger.results
-            except Exception as f:
-                passed = False
-                results = {
-                    'pass': passed,
+                        }
+        elif level and not host and not port:
+            rvlogger = RvLogger()
+            rvlogger.create_config(loglevel=level)
+            results = rvlogger.results
+        else:
+            results = {
+                    'pass': False,
                     'message': 'incorrect parameters passed'
                     }
         self.set_header('Content-Type', 'application/json')
