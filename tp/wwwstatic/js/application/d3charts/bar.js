@@ -146,7 +146,7 @@ define(
                     txtMask = barDemo.append('g').attr({width: '100px', height: '30px'});
 
                     txtRect = txtMask.append('rect')
-                        .attr({width: '100px', height: '30px', fill: 'white', stroke: 'black'})
+                        .attr({width: '100px', height: '30px', fill: 'lightblue', stroke: 'black'})
                         .style('opacity', '0');
 
                     txt = txtMask.append('text')

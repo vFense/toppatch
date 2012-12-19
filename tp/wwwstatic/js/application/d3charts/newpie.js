@@ -12,7 +12,7 @@ define(['jquery', 'd3'], function ($, d3) {
             height	= 220,
             r = (width / 3),
             colors = d3.scale.category20(),
-            severityColors = ['#0099FF', '#FF3300', '#FFFF00'],
+            severityColors = ['#FFFF00', '#FF0000', '#FF6600'],
             graph = this;
 
         function chart(selection) {
@@ -88,7 +88,7 @@ define(['jquery', 'd3'], function ($, d3) {
                 var txtMask = svg.append('g').attr({width: '100px', height: '30px'});
 
                 var txtRect = txtMask.append('rect')
-                    .attr({width: '100px', height: '30px', fill: 'white', stroke: 'black'})
+                    .attr({width: '100px', height: '30px', fill: 'lightblue', stroke: 'black'})
                     .style('opacity', '0');
 
                 var txt = txtMask.append('text')
@@ -116,8 +116,8 @@ define(['jquery', 'd3'], function ($, d3) {
                             ang = (ang - (Math.PI / 2)) * -1;
 
                             // Calculate a 10% radius displacement
-                            var x = Math.cos(ang) * r * 0.1;
-                            var y = Math.sin(ang) * r * -0.1;
+                            var x = Math.cos(ang) * r * 0.14;
+                            var y = Math.sin(ang) * r * -0.14;
 
                             d3.select(this).transition()
                                 .duration(300).attr("transform", "translate(" + x + "," + y + ")");
