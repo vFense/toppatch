@@ -9,4 +9,5 @@
 .ssh
 *.pyc
 *.log
+*.log.*
 .DS_Store
