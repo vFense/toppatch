@@ -20,9 +20,18 @@ from sqlalchemy.engine import *
 from sqlalchemy.orm import *
 
 from db.client import *
-from server.handlers import RootHandler, LoginHandler, SignupHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler, AdminHandler
+from server.handlers import RootHandler, LoginHandler, WebsocketHandler, testHandler, LogoutHandler, DeveloperRegistrationHandler, FormHandler, AdminHandler
 from server.oauth.handlers import AuthorizeHandler, AccessTokenHandler
 
+from server.api.user_api import *
+from server.api.log_api import *
+from server.api.node_api import *
+from server.api.stats_api import *
+from server.api.tag_api import *
+from server.api.scheduler_api import *
+from server.api.transactions_api import *
+from server.api.packages_api import *
+from server.api.api import *
 from server.api import *
 from server.account.manager import AccountManager
 from server.oauth.token import TokenManager
@@ -50,7 +59,7 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/?", RootHandler),
             (r"/login/?", LoginHandler),
-            (r"/signup/?", SignupHandler),
+            (r"/signup/?", CreateUserHandler),
             (r"/logout/?", LogoutHandler),
             (r"/ws/?", WebsocketHandler),
             (r"/test/?", testHandler),
@@ -63,7 +72,6 @@ class Application(tornado.web.Application):
             (r"/login/oauth/access_token", AccessTokenHandler),
 
             #### API Handlers
-            (r"/api/nodeData/?", NodeHandler),
             (r"/api/osData/?", OsHandler),
             (r"/api/networkData/?", NetworkHandler),
             (r"/api/summaryData/?", SummaryHandler),
@@ -96,9 +104,17 @@ class Application(tornado.web.Application):
             (r"/api/node/modifyHostName?", ModifyHostNameHandler),
             (r"/api/ssl/nodeToggler?", NodeTogglerHandler),
             (r"/api/ssl/list.json/?", SslHandler),
+            (r"/api/acl/create?", AclModifierHandler),
+            (r"/api/acl/modify?", AclModifierHandler),
+            (r"/api/acl/delete?", AclModifierHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/users/list?", ListUserHandler),
+            (r"/api/users/create?", CreateUserHandler),
             (r"/api/users/delete?", DeleteUserHandler),
+            (r"/api/users/toggleGroup?", ModifyUserFromGroupHandler),
+            (r"/api/groups/list?", ListGroupHandler),
+            (r"/api/groups/create?", CreateGroupHandler),
+            (r"/api/groups/delete?", DeleteGroupHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.

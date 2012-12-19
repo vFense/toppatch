@@ -93,9 +93,9 @@ class HandOff():
                 (self.username)
                 )
         add_software_update(self.session, self.json_object)
-        logger.debug('%s - Adding Software Status to the package'+\
-                '_per_node table %s' %\
-                (self.username, 'for node' % self.node.ip_address)
+        logger.debug('%s - Adding Software Status to the %s %s' %\
+                (self.username, 'package_per_node table for node', 
+                    self.node.ip_address)
                 )
         add_software_per_node(self.session, self.json_object)
         logger.debug('%s - updateing node_stats for %s' % \
@@ -119,14 +119,13 @@ class HandOff():
         if os_code_exists:
             os_code = os_code_exists.os_code
             if os_code == "windows":
-                logger.debug('%s - adding 3rd party software to'+\
-                        ' software_available table' % \
-                        (self.username)
+                logger.debug('%s - adding 3rd party software to %s' %\
+                        (self.username, 'software_available table')
                         )
                 add_software_available(self.session, self.json_object)
-                logger.debug('%s - adding 3rd party software to'+\
-                        ' software_installed table for node %s' %\
-                        (self.username, self.node.ip_address)
+                logger.debug('%s - adding 3rd party software to %s %s' %\
+                        (self.username, 'software_installed table for node',
+                            self.node.ip_address)
                         )
                 add_software_installed(self.session, self.json_object)
         logger.debug('%s - updateing node_stats for %s' % \

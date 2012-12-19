@@ -141,6 +141,8 @@ def time_block_adder(session, msg, username='system_user'):
                 start_date, utc_start_time, utc_end_time, json_msg['days'],
                 enabled=json_msg['enabled']
                 )
-        logger.debug('%s - ',message, json_msg["label"], block_added % (username))
+        logger.debug('%s - %s, %s, %s' % (username, message,
+            json_msg["label"], block_added)
+            )
         return {"message" : message,"label" : json_msg['label'], "pass" : block_added}
 
