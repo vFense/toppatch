@@ -67,7 +67,11 @@ define(
                         .attr("xlink:href", "#masterbar");
 
                     gradients.append("svg:stop").attr("offset", "0%").attr("stop-color", getColor);
-                    gradients.append("svg:stop").attr("offset", "90%").attr("stop-color", getColor);
+                    /*gradients.append("svg:stop").attr("offset", "40%").attr("stop-color", getColor);
+                    gradients.append("svg:stop").attr("offset", "50%").attr("stop-color", getDarkerColor);
+                    gradients.append("svg:stop").attr("offset", "60%").attr("stop-color", getDarkerColor);
+                    gradients.append("svg:stop").attr("offset", "75%").attr("stop-color", getDarkerColor);
+                    gradients.append("svg:stop").attr("offset", "90%").attr("stop-color", getDarkerColor);*/
                     gradients.append("svg:stop").attr("offset", "100%").attr("stop-color", getDarkerColor);
 
                     barDemo.selectAll("svg > rect")
