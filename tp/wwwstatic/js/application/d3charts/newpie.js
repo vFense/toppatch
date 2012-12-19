@@ -21,7 +21,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     that = this,
                     matches = that.id.match(/\d+$/),
                     widget = "#widget" + matches[0],
-                    svg = d3.select(this).append("svg").attr("width", width).attr("height", height),
+                    svg = d3.select(this).html('').append("svg").attr("width", width).attr("height", height),
                     defs = svg.append("svg:defs"),
                     pieChart = d3.layout.pie().sort(null).value(function (d) { return d.value; }),
                     arc = d3.svg.arc().innerRadius(0).outerRadius(r),
@@ -56,7 +56,6 @@ define(['jquery', 'd3'], function ($, d3) {
                     .attr("in", "SourceGraphic")
                     .attr("in2", "offsetBlur")
                     .attr("mode", "normal");
-
                 // Redraw the graph given a certain level of data
                 function updateGraph(cat) {
                     var currData = data;

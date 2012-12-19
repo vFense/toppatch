@@ -18,13 +18,12 @@ define(
                         barWidth = 100;
                     }
                     width = (barWidth + 10) * data.length;
-                    var txt, txtMask, txtRect,
+                    var txt, txtMask, txtRect, defs, barDemo, mainGradient, shadow, gradients,
                         x = d3.scale.linear().domain([0, data.length]).range([15, width]),
                         y = d3.scale.linear().domain([0, d3.max(data, function (datum) { return datum.value; })]).rangeRound([0, height]),
                         that = this,
                         matches = (that.id || that.attr('id')).match(/\d+$/),
-                        widget = "#widget" + matches[0],
-                        barDemo;
+                        widget = "#widget" + matches[0];
 
                     //$(widget + "-title").html(title);
                     $(this).html("");
@@ -34,6 +33,43 @@ define(
                             attr("width", width).
                             attr("height", height + 20);
 
+                    defs = barDemo.append("svg:defs");
+
+                    mainGradient = defs.append("svg:linearGradient")
+                        .attr("gradientUnits", "userSpaceOnUse")
+                        .attr('x1', 0).attr('y1', 100)
+                        .attr('x2', 0).attr('y2', 10)
+                        .attr("id", "masterbar");
+
+                    shadow = defs.append("filter").attr("id", "shadow")
+                        .attr("filterUnits", "userSpaceOnUse")
+                        .attr("x", -1 * (width / 2)).attr("y", -1 * (height / 2))
+                        .attr("width", width).attr("height", height);
+                    shadow.append("feGaussianBlur")
+                        .attr("in", "SourceAlpha")
+                        .attr("stdDeviation", "4")
+                        .attr("result", "blur");
+                    shadow.append("feOffset")
+                        .attr("in", "blur")
+                        .attr("dx", "4").attr("dy", "4")
+                        .attr("result", "offsetBlur");
+                    shadow.append("feBlend")
+                        .attr("in", "SourceGraphic")
+                        .attr("in2", "offsetBlur")
+                        .attr("mode", "normal");
+
+                    gradients = defs.selectAll(".gradient").data(data, function (d) { return d; });
+                    gradients.enter().append("svg:linearGradient")
+                        .attr("id", function (d, i) { return "bargradient" + i; })
+                        .attr("class", "gradient")
+                        .attr('y1', function (d, i) { return height; })
+                        .attr('y2', function (d, i) { return height - y(d.value) + 15; })
+                        .attr("xlink:href", "#masterbar");
+
+                    gradients.append("svg:stop").attr("offset", "0%").attr("stop-color", getColor);
+                    gradients.append("svg:stop").attr("offset", "90%").attr("stop-color", getColor);
+                    gradients.append("svg:stop").attr("offset", "100%").attr("stop-color", getDarkerColor);
+
                     barDemo.selectAll("svg > rect")
                         .data(data)
                         .enter()
@@ -42,7 +78,8 @@ define(
                         .attr("y", function (datum) { return height - y(datum.value); })
                         .attr("height", function (datum) { return y(datum.value); })
                         .attr("width", barWidth)
-                        .attr("fill", function (d, i) { return color(i); }) //"#2d578b")
+                        .attr("stroke", "white")
+                        .attr("fill", function (d, i) { return "url(#bargradient" + i + ")"; })
                         .on('mouseover', function (d) {
                             var mousePos = d3.mouse(this), textLength;
                             mousePos[0] = mousePos[0] + 5;
@@ -116,6 +153,13 @@ define(
                         .attr({fill: 'black', dy: '18px'})
                         .style('font-size', '1.3em')
                         .text("");
+                    function getColor(data, index) {
+                        return color(index);
+                    }
+                    // Helper function to extract a darker version of the color
+                    function getDarkerColor(data, index){
+                        return d3.rgb(getColor(data, index)).darker();
+                    }
                     /*barDemo.selectAll("rect")
                         .data(data)
                         .enter().append("svg:title")
