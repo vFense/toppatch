@@ -256,18 +256,17 @@ define(
                         localStorage.setItem(userName, JSON.stringify(window.User));
                     },
                     getTags: function () {
-                        var self = this,
-                            that = this,
+                        var that = this,
                             tag_template;
                         $.ajax({
                             url: 'api/tagging/tagStats',
                             dataType: 'json',
                             async: false,
                             success: function (data) {
-                                $(that.graph).empty();
+                                that.$el.find(that.graph).empty();
                                 tag_template = _.template($('#tags_template').html(), {data: data});
-                                $(that.graph).html(tag_template);
-                                self.saveState();
+                                that.$el.find(that.graph).html(tag_template);
+                                that.saveState();
                             }
                         });
                     },
@@ -324,27 +323,44 @@ define(
                         if (this.onRender !== $.noop) { this.onRender(); }
                         return this;
                     },
+                    getStyleWidth: function (className) {
+                        var classes = document.styleSheets[2].rules || document.styleSheets[2].cssRules,
+                            x = 0;
+                        for (x = 0; x < classes.length; x += 1) {
+                            if (classes[x].selectorText === className) {
+                                return classes[x].style.width;
+                            }
+                        }
+                    },
+                    emToPx: function (input) {
+                        var emSize = parseFloat($("body").css("font-size"));
+                        return (emSize * input);
+                    },
                     stackedGraph: function (selection) {
                         //var data = app.data.osData,
                         //title = properties.get('widgetTitle') === 'Default' ? "Nodes in Network by OS" : properties.get('widgetTitle'),
-                        var width = $(selection).width(),
+                        var span = this.$el.find(selection).parents('article').attr('class').split(' ')[0],
+                            width = this.emToPx(parseFloat(this.getStyleWidth('.' + span))),
                             stackedChart = app.chart.stackedBar().width(width);
-                        $(selection).attr('class', 'stacked graph');
+                        this.$el.find(selection).attr('class', 'stacked graph');
                         d3.json("../api/graphData", function (json) {
                             d3.select(selection).datum(json).call(stackedChart);
                         });
                     },
                     pieGraph: function (selection) {
-                        var width = this.$el.find(selection).width(),
+                        var span = this.$el.find(selection).parents('article').attr('class').split(' ')[0],
+                            width = this.emToPx(parseFloat(this.getStyleWidth('.' + span))),
                             pieChart = app.chart.pie().width(width);
-                        $(selection).attr('class', 'pie graph');
+                        this.$el.find(selection).attr('class', 'pie graph');
                         d3.json("../api/severity.json", function (json) {
                             d3.select(selection).datum(json).call(pieChart);
                         });
                     },
                     barGraph: function (selection) {
-                        var width = $(selection).width();
-                        $(selection).attr('class', 'bar graph');
+                        var span = this.$el.find(selection).parents('article').attr('class').split(' ')[0],
+                            width = this.emToPx(parseFloat(this.getStyleWidth('.' + span)));
+
+                        this.$el.find(selection).attr('class', 'bar graph');
                         d3.json("../api/graphData", function (json) {
                             var barWidth = (width / json.length) - 10,
                                 graphBar = app.chart.bar().barWidth(barWidth);
@@ -353,7 +369,7 @@ define(
                     },
                     interactiveGraph: function (selection) {
                         var interGraph = app.chart.partition();
-                        $(selection).attr('class', 'summary graph');
+                        this.$el.find(selection).attr('class', 'summary graph');
                         d3.json("../api/summaryData", function (json) {
                             d3.select(selection).datum(json).call(interGraph);
                         });
@@ -379,44 +395,42 @@ define(
                             that = this,
                             widgets = window.User.get('widgets').graph,
                             settings = window.User.get('widgets');
-
-                        setTimeout(function () {
-                            for (i = 0; i < widgets.length; i += 1) {
-                                if ($('#widget' + (i + 1)).length === 0) {
-                                    variables = {
-                                        widget: "widget" + (i + 1),
-                                        span: "span" + settings.spans[i],
-                                        graphcontainer: "graphcontainer" + (i + 1),
-                                        menu: "menu" + (i + 1),
-                                        graph: "graph" + (i + 1),
-                                        title: settings.titles[i],
-                                        graphType: widgets[i]
-                                    };
-                                    template = _.template($("#widget_template").html(), variables);
-                                    $("#insert").append(template);
-                                }
-
-                                if (widgets[i] === 'pie') {
-                                    that.pieGraph('#graph' + (i + 1));
-                                } else if (widgets[i] === 'bar') {
-                                    that.barGraph('#graph' + (i + 1));
-                                } else if (widgets[i] === 'summary') {
-                                    that.interactiveGraph('#graph' + (i + 1));
-                                } else if (widgets[i] === 'stacked') {
-                                    that.stackedGraph('#graph' + (i + 1));
-                                } else if (widgets[i] === 'tag') {
-                                    that.graph = '#graph' + (i + 1);
-                                    that.sizeval = settings.spans[i];
-                                    that.title = settings.titles[i];
-                                    that.graphType = widgets[i];
-                                    that.getTags();
-                                }/*else if (widgets[i] === 'line') {
-                                 lineGraph('#graph' + (i + 1));
-                                 }*/
+                        
+                        for (i = 0; i < widgets.length; i += 1) {
+                            if ($('#widget' + (i + 1)).length === 0) {
+                                variables = {
+                                    widget: "widget" + (i + 1),
+                                    span: "span" + settings.spans[i],
+                                    graphcontainer: "graphcontainer" + (i + 1),
+                                    menu: "menu" + (i + 1),
+                                    graph: "graph" + (i + 1),
+                                    title: settings.titles[i],
+                                    graphType: widgets[i]
+                                };
+                                template = _.template($("#widget_template").html(), variables);
+                                $("#insert").append(template);
                             }
-                            that.$el.find(".properties").click(function () { that.setProperties(this, 'existing'); });
-                            that.$el.find('.remove').click(function () { that.hideWidget(this); });
-                        }, 200);
+
+                            if (widgets[i] === 'pie') {
+                                that.pieGraph('#graph' + (i + 1));
+                            } else if (widgets[i] === 'bar') {
+                                that.barGraph('#graph' + (i + 1));
+                            } else if (widgets[i] === 'summary') {
+                                that.interactiveGraph('#graph' + (i + 1));
+                            } else if (widgets[i] === 'stacked') {
+                                that.stackedGraph('#graph' + (i + 1));
+                            } else if (widgets[i] === 'tag') {
+                                that.graph = '#graph' + (i + 1);
+                                that.sizeval = settings.spans[i];
+                                that.title = settings.titles[i];
+                                that.graphType = widgets[i];
+                                that.getTags();
+                            }/*else if (widgets[i] === 'line') {
+                             lineGraph('#graph' + (i + 1));
+                             }*/
+                        }
+                        that.$el.find(".properties").click(function () { that.setProperties(this, 'existing'); });
+                        that.$el.find('.remove').click(function () { that.hideWidget(this); });
                     }
                 })
             };
