@@ -15,6 +15,12 @@ from db.client import *
 from db.query_table import *
 from networking.tcpasync import TcpConnect
 from sqlalchemy import or_
+<<<<<<< HEAD
+=======
+
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
+>>>>>>> abd7b7252be9e59b2cb6def6f45c610405f37b84
 
 logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvapi')
