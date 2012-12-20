@@ -12,7 +12,7 @@ define(['jquery', 'd3'], function ($, d3) {
             height	= 220,
             r = (width / 3),
             colors = d3.scale.category20(),
-            severityColors = ['#FFFF00', '#FF0000', '#FF6600'],
+            severityColors = ['#FFC125', '#FF3030', '#FF6600'],
             graph = this;
 
         function chart(selection) {
