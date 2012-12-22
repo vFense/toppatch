@@ -68,7 +68,7 @@ define(['jquery', 'd3'], function ($, d3) {
                 }
                 // Helper function to extract color from data object
                 function getColor(data, index) {
-                    return severityColors[index];
+                    return index <= 2 ? severityColors[index] : colors(index);
                 }
                 // Helper function to extract a darker version of the color
                 function getDarkerColor(data, index) {
