@@ -132,7 +132,7 @@ define(
                                     widgets: {
                                         'graph': ['pie', 'bar', 'tag'],
                                         'spans': [6, 6, 12],
-                                        'titles': ['Patches by Severity', 'Nodes in Network by OS', 'Tag Stats']
+                                        'titles': ['Nodes in Network by OS', 'Patches by Severity', 'Tag Stats']
                                     }
                                 }
                             });

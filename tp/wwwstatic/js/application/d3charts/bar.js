@@ -31,7 +31,8 @@ define(
                     barDemo = d3.select(this).
                             append("svg:svg").
                             attr("width", width).
-                            attr("height", height + 20);
+                            attr("height", height + 20).
+                            style("overflow", "visible");
 
                     defs = barDemo.append("svg:defs");
 
@@ -63,7 +64,7 @@ define(
                         .attr("id", function (d, i) { return "bargradient" + i; })
                         .attr("class", "gradient")
                         .attr('y1', function (d, i) { return height; })
-                        .attr('y2', function (d, i) { return height - y(d.value) + 15; })
+                        .attr('y2', function (d, i) { return y(d.value) > 15 ? height - y(d.value) + 15 : height - y(15); })
                         .attr("xlink:href", "#masterbar");
 
                     gradients.append("svg:stop").attr("offset", "0%").attr("stop-color", getColor);
@@ -79,8 +80,8 @@ define(
                         .enter()
                         .append("svg:rect")
                         .attr("x", function (datum, index) { return x(index); })
-                        .attr("y", function (datum) { return height - y(datum.value); })
-                        .attr("height", function (datum) { return y(datum.value); })
+                        .attr("y", function (datum) { return y(datum.value) > 15 ? height - y(datum.value) : height - y(15); })
+                        .attr("height", function (datum) { return y(datum.value) > 15 ? y(datum.value) : y(15); })
                         .attr("width", barWidth)
                         .attr("stroke", "white")
                         .attr("fill", function (d, i) { return "url(#bargradient" + i + ")"; })
@@ -88,7 +89,7 @@ define(
                             var mousePos = d3.mouse(this), textLength;
                             mousePos[0] = mousePos[0] + 5;
                             mousePos[1] = mousePos[1] + 5;
-                            txt.text(d.label + ': ' + d.value + ' nodes.');
+                            txt.text(d.label + ': ' + d.value + ' patches.');
                             textLength = txt.style('width');
                             txtMask.attr({transform: 'translate(' + mousePos + ')'});
                             txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
@@ -111,7 +112,7 @@ define(
                         .enter()
                         .append("svg:text")
                         .attr("x", function (datum, index) { return x(index) + barWidth; })
-                        .attr("y", function (datum) { return height - y(datum.value); })
+                        .attr("y", function (datum) { return y(datum.value) > 15 ? height - y(datum.value) : height - y(15); })
                         .attr("dx", -barWidth / 2)
                         .attr("dy", "1.2em")
                         .attr("text-anchor", "middle")

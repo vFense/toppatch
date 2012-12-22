@@ -21,7 +21,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     that = this,
                     matches = that.id.match(/\d+$/),
                     widget = "#widget" + matches[0],
-                    svg = d3.select(this).html('').append("svg").attr("width", width).attr("height", height),
+                    svg = d3.select(this).html('').append("svg").attr("width", width).attr("height", height).style('overflow', 'visible'),
                     defs = svg.append("svg:defs"),
                     pieChart = d3.layout.pie().sort(null).value(function (d) { return d.value; }),
                     arc = d3.svg.arc().innerRadius(0).outerRadius(r),
@@ -133,7 +133,7 @@ define(['jquery', 'd3'], function ($, d3) {
                         var mousePos = d3.mouse(this), textLength, ang;
                         mousePos[0] = mousePos[0] + width / 2 + 5;
                         mousePos[1] = mousePos[1] + height / 2 + 5;
-                        txt.text(d.data.label + ": " + d.data.value + ' patches');
+                        txt.text(d.data.label + ": " + d.data.value + ' nodes.');
                         textLength = txt.style('width');
                         txtMask.attr({transform: 'translate(' + mousePos + ')'});
                         txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
@@ -188,7 +188,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     .attr("text-anchor", "middle")
                     .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
                     .text(function (d) {
-                        var osname = d.data.label + ' - ' + Math.floor((d.endAngle - d.startAngle) / (2 * Math.PI) * 100) + '%';
+                        var osname = d.data.label.substr(0, 10) + ' - ' + Math.floor((d.endAngle - d.startAngle) / (2 * Math.PI) * 100) + '%';
                         return osname;
                     });
                 /*
