@@ -102,6 +102,8 @@ class Application(tornado.web.Application):
             (r"/api/package/getTagsByTpId?", GetTagsPerTpIdHandler),
             (r"/api/node/modifyDisplayName?", ModifyDisplayNameHandler),
             (r"/api/node/modifyHostName?", ModifyHostNameHandler),
+            (r"/api/node/delete?", NodeRemoverHandler),
+            (r"/api/node/cleanData?", NodeCleanerHandler),
             (r"/api/ssl/nodeToggler?", NodeTogglerHandler),
             (r"/api/ssl/list.json/?", SslHandler),
             (r"/api/acl/create?", AclModifierHandler),
