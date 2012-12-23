@@ -233,3 +233,51 @@ def node_toggler(session, nodeid=None, toggle=False, username='system_user'):
     return(result)
 
 
+def get_node_stats(session, nodeid=None, hostname=None,
+        displayname=None, computername=None,
+        username='system_user'):
+    """
+        return a list of node_statistics in json
+    """
+    session = validate_session(session)
+    node = None
+    if nodeid:
+        node = session.query(NodeInfo).\
+            filter(NodeInfo.id == nodeid).first()
+    elif hostname:
+        node = session.query(NodeInfo).\
+            filter(NodeInfo.host_name == hostname).first()
+    elif displayname:
+        node = session.query(NodeInfo).\
+            filter(NodeInfo.display_name == displayname).first()
+    elif computername:
+        node = session.query(NodeInfo).\
+            filter(NodeInfo.computer_name == computername).first()
+    else:
+        result = {
+            'pass': False,
+            'message': 'Incorrect arguments passed'
+            }
+    if node:
+        update_node_stats(session, node.id, username)
+        node_stats = session.query(NodeStats).\
+                filter(NodeStats.node_id == node.id).first()
+        if node_stats:
+            result = {
+                    "id" : int(node.id),
+                    "host_name" : node.host_name,
+                    "display_name" : node.display_name,
+                    "computer_name" : node.computer_name,
+                    "ip_address" : node.ip_address,
+                    "reboots_pending" : int(node_stats.reboots_pending),
+                    "agents_down" : int(node_stats.agents_down),
+                    "agents_up" : int(node_stats.agents_up),
+                    "patches_completed" : int(node_stats.patches_installed),
+                    "patches_available" : int(node_stats.patches_available),
+                    "patches_failed" : int(noed_stats.patches_failed),
+                    "patches_pending" : int(node_stats.patches_pending)
+                }
+    return(result)
+
+
+
