@@ -75,6 +75,48 @@ class ModifyHostNameHandler(BaseHandler):
         self.write(json.dumps(result, indent=4))
 
 
+class NodeCleanerHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        nodeid = self.get_argument('nodeid', None)
+        if nodeid:
+            result = node_remover(self.session, node_id=nodeid,
+                    certs=False, just_clean_and_not_delete=True
+                    )
+        else:
+            result = {
+                'pass': False,
+                'message': 'Incorrect argument passed. %s' %
+                    ('Arguments needed are: nodeid')
+                }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
+class NodeRemoverHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        nodeid = self.get_argument('nodeid', None)
+        if nodeid:
+            result = node_remover(self.session, node_id=nodeid,
+                    certs=True, just_clean_and_not_delete=False
+                    )
+        else:
+            result = {
+                'pass': False,
+                'message': 'Incorrect argument passed. %s' %
+                    ('Arguments needed are: nodeid')
+                }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
 class NodeTogglerHandler(BaseHandler):
     @authenticated_request
     def post(self):

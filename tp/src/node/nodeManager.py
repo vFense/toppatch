@@ -97,7 +97,9 @@ def change_host_name(session, nodeid=None, hostname=None, username='system_user'
     return(result)
 
 
-def node_remover(session, node_id=None, certs=True, username='system_user'):
+def node_remover(session, node_id=None, certs=True,
+        just_clean_and_not_delete=False,
+        username='system_user'):
     session = validate_session(session)
     result = None
     if node_id:
@@ -117,6 +119,9 @@ def node_remover(session, node_id=None, certs=True, username='system_user'):
                 session.query(SoftwareInstalled).\
                     filter(SoftwareInstalled.node_id == node.id).delete()
                 session.commit()
+                session.query(SoftwareAvailable).\
+                    filter(SoftwareAvailable.node_id == node.id).delete()
+                session.commit()
                 session.query(NodeStats).\
                     filter(NodeStats.node_id == node.id).delete()
                 session.commit()
@@ -126,32 +131,45 @@ def node_remover(session, node_id=None, certs=True, username='system_user'):
                 session.query(NodeUserAccess).\
                     filter(NodeUserAccess.node_id == node.id).delete()
                 session.commit()
-                ssl_info = session.query(SslInfo).\
-                    filter(SslInfo.node_id == node.id).first()
-                csr_id = ssl_info.csr_id
-                session.delete(ssl_info)
+                session.query(SystemInfo).\
+                    filter(SystemInfo.node_id == node_id).delete()
                 session.commit()
-                session.query(NodeInfo).\
-                    filter(NodeInfo.node_id == node_id).delete()
-                session.commit()
-                if certs:
-                    session.query(CsrInfo).\
-                        filter(CsrInfo.id == csr_id).delete()
+                if not just_clean_and_not_delete:
+                    ssl_info = session.query(SslInfo).\
+                        filter(SslInfo.node_id == node.id).delete()
                     session.commit()
-                result = {
-                    'pass': True,
-                    'message': '%s has been delete from RemediationVault' %
-                        (node.host_name)
-                    }
-                logger.info('%s - Node %s was deleted from RemediationVault' %
-                            (username, node.host_name)
-                        )
+                    session.query(NodeInfo).\
+                        filter(NodeInfo.id == node_id).delete()
+                    session.commit()
+                    session.query(CsrInfo).\
+                        filter(CsrInfo.ip_address == node.ip_address).delete()
+                    session.commit()
+                    result = {
+                        'pass': True,
+                        'message': 'All information for %s has been deleted' %
+                                (node.host_name,
+                                'from RemediationVault, except for ssl_info'
+                                )
+                            }
+                    logger.info('%s - Node %s was cleaned %s' %
+                                (username, node.host_name,
+                                'from RemediationVault, except for ssl_info'
+                                )
+                            )
+                else:
+                    result = {
+                        'pass': True,
+                        'message': '%s has been deleted from RemediationVault' %
+                                (node.host_name)
+                            }
+                    logger.info('%s - Node %s was deleted from RemediationVault' %
+                                (username, node.host_name)
+                            )
             except Exception as e:
-                print e
                 result = {
                     'pass': False,
-                    'message': '%s could not be deleted from RemediationVault' %
-                        (node.host_name)
+                    'message': '%s could not be deleted from %s. Error:%s' %
+                        (node.host_name, 'RemediationVault', e)
                     }
                 logger.info('%s - Node %s could not be deleted from %s' %
                             (username, node.host_name, 'RemediationVault')
