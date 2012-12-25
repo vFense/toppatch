@@ -10,76 +10,70 @@ define(
     function ($, d3) {
         "use strict";
         return function () {
+            var width    = 370,
+                height   = 200,
+                angle = 30,
+                depth = 20;
             function chart(selection) {
                 selection.each(function (data) {
-                    var x3d = d3.select(this)
-                        .append("x3d:x3d")
-                        .attr("height", "500px")
-                        .attr("width", "500px"),
-                        scene = x3d.append("x3d:scene"),
-                        // set up the axes
-                        x = d3.scale.linear().domain([0, 100]).range([0, 10]),
-                        y = d3.scale.linear().domain([0, 100]).range([0, 10]),
-                        z = d3.scale.linear().domain([0, 100]).range([0, 10]),
-                        datapoints = scene.selectAll(".datapoints");
-                    window.console.log(x3d[0][0]);
-                    window.console.log(scene[0][0]);
-
-                    function plotAxis(scale, location, size, numTicks) {
-                        // the axis line
-                        var ticks;
-                        scene.append("x3d:transform")
-                            .attr("translation", location.replace("D", (scale.range()[0] + scale.range()[1]) / 2))
-                            .append("x3d:shape")
-                            .append("x3d:box")
-                            .attr("size", location.replace(/0/g, size).replace("D", scale.range()[1]));
-
-                        // ticks along the axis
-                        ticks = scene.selectAll("abcd").data(scale.ticks(numTicks))
-                            .enter()
-                            .append("x3d:transform")
-                            .attr("translation", function (d) { return location.replace("D", scale(d)); });
-
-                        ticks
-                            .append("x3d:shape")
-                            .append("x3d:box")
-                            .attr("size", size * 3 + " " + size * 3 + " " + size * 3);
-                        ticks
-                            .append("x3d:billboard").append("x3d:shape")
-                            .append("x3d:text")
-                            .attr("string", scale.tickFormat(10))
-                            .attr("solid", "true")
-                            .append("x3d:fontstyle").attr("size", 0.6).attr("justify", "MIDDLE");
+                    var svg, frontRect, sideRect, topRect, rightTopTriangle,
+                        colors = d3.scale.category20(),
+                        x = d3.scale.linear().domain([0, data.length]).range([15, width]),
+                        y = d3.scale.linear().domain([0, d3.max(data, function (datum) { return datum.value; })]).rangeRound([0, height]),
+                        barWidth = width / data.length - (width * 0.1);
+                    $(this).html("");
+                    function topColor(color) {
+                        return colors(color);
                     }
-
-                    function plotData() {
-                        datapoints = datapoints.data(d3.range(50).map(function () { return {x: Math.random() * 100, y: Math.random() * 100, z: Math.random() * 100}; }));
-                        datapoints.exit().remove();  // Remove any excess datapoints, if needed
-                        datapoints.enter()          // Draw a box for each new datapoint
-                            .append("x3d:transform")
-                            .attr("class", "datapoints")
-                            .append("x3d:shape").attr("diffuseColor", function () { return Math.random() + " " + Math.random() + " " + Math.random(); })
-                            .append("x3d:box")
-                            .attr("size", "0.2 0.2 0.2");
-                        datapoints.transition()  // Move each box to the right point location
-                            .duration(2000)
-                            .attr("translation", function (d) { return x(d.x) + " " + y(d.y) + " " + z(d.z); });
-
+                    function frontColor(color) {
+                        return d3.rgb(topColor(color)).darker();
                     }
+                    function sideColor(color) {
+                        return d3.rgb(frontColor(color)).darker();
+                    }
+                    svg = d3.select(this)
+                        .append("svg:svg")
+                        .attr("width", width)
+                        .attr("height", height + depth);
 
-                    // Create the x3d scene
-                    //d3.ns.prefix.x3da = "http://www.web3d.org/specifications/x3d-namespace";
+                    topRect = svg.selectAll("svg > top_rect")
+                        .data(data).enter()
+                        .append("svg:rect")
+                        .attr("class", "top_rect")
+                        .attr("x", function (d, index) { return x(index) + depth; })
+                        .attr("y", function (d, index) { return y(d.value) > 15 ? height - y(d.value) - depth : height - y(15); })
+                        .attr("height", function (d) { return y(d.value) > 15 ? y(d.value) : y(15); })
+                        .attr("width", barWidth)
+                        .attr("stroke", "0")
+                        .attr("fill", function (d, index) { return topColor(index); });
 
-                    plotAxis(x, "D 0 0", 0.01, 10);
-                    plotAxis(y, "0 D 0", 0.01, 10);
-                    plotAxis(z, "0 0 D", 0.01, 10);
+                    frontRect = svg.selectAll("svg > front_rect")
+                        .data(data).enter()
+                        .append("svg:rect")
+                        .attr("class", "front_rect")
+                        .attr("x", function (d, index) { return x(index); })
+                        .attr("y", function (d) { return y(d.value) > 15 ? height - y(d.value) + depth : height - y(15) + depth; })
+                        .attr("height", function (d) { return y(d.value) > 15 ? y(d.value) : y(15); })
+                        .attr("width", barWidth)
+                        .attr("stroke", function (d, index) { return sideColor(index); })//stroke same color as sideRect
+                        .attr("fill", function (d, index) { return frontColor(index); });
+
+                    sideRect = svg.selectAll("svg > side_rect")
+                        .data(data).enter()
+                        .append("svg:rect")
+                        .attr("class", "side_rect")
+                        .attr("x", function (d, index) { return x(index) + barWidth; })
+                        .attr("y", function (d, index) { return y(d.value) > 15 ? height - y(d.value) + depth : height - y(15) + depth; })
+                        .attr("height", function (d) { return y(d.value) > 15 ? y(d.value) : y(15); })
+                        .attr("width", depth)
+                        .attr("stroke", "0")
+                        .attr("fill", function (d, index) { return sideColor(index); });
+
+                    rightTopTriangle = svg.selectAll("svg > right_top_triangle")
+                        .data(data).enter()
+                        .append("svg:path")
 
 
-                    // and plot random data every 2500 ms
-                    plotData();
-                    //setInterval(plotData,2500);
-                    // zoom out the viewport
-                    //setTimeout(function () { x3d[0][0].runtime.showAll(); }, 50);
                 });
             }
             return chart;
