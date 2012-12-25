@@ -27,6 +27,13 @@ define(
 
                     //$(widget + "-title").html(title);
                     $(this).html("");
+                    function getColor(data, index) {
+                        return color(index);
+                    }
+                    // Helper function to extract a darker version of the color
+                    function getDarkerColor(data, index) {
+                        return d3.rgb(getColor(data, index)).darker();
+                    }
 
                     barDemo = d3.select(this).
                             append("svg:svg").
@@ -40,7 +47,7 @@ define(
                         .attr("gradientUnits", "userSpaceOnUse")
                         .attr('x1', 0).attr('y1', 100)
                         .attr('x2', 0).attr('y2', 10)
-                        .attr("id", "masterbar");
+                        .attr("id", "mastgrad_bar3d");
 
                     shadow = defs.append("filter").attr("id", "shadow")
                         .attr("filterUnits", "userSpaceOnUse")
@@ -63,16 +70,11 @@ define(
                     gradients.enter().append("svg:linearGradient")
                         .attr("id", function (d, i) { return "bargradient" + i; })
                         .attr("class", "gradient")
-                        .attr('y1', function (d, i) { return height; })
-                        .attr('y2', function (d, i) { return y(d.value) > 15 ? height - y(d.value) + 15 : height - y(15); })
+                        .attr('y1', height)
+                        .attr('y2', function (d) { return y(d.value) > 15 ? height - y(d.value) + 15 : height - y(15); })
                         .attr("xlink:href", "#masterbar");
 
                     gradients.append("svg:stop").attr("offset", "0%").attr("stop-color", getColor);
-                    /*gradients.append("svg:stop").attr("offset", "40%").attr("stop-color", getColor);
-                    gradients.append("svg:stop").attr("offset", "50%").attr("stop-color", getDarkerColor);
-                    gradients.append("svg:stop").attr("offset", "60%").attr("stop-color", getDarkerColor);
-                    gradients.append("svg:stop").attr("offset", "75%").attr("stop-color", getDarkerColor);
-                    gradients.append("svg:stop").attr("offset", "90%").attr("stop-color", getDarkerColor);*/
                     gradients.append("svg:stop").attr("offset", "100%").attr("stop-color", getDarkerColor);
 
                     barDemo.selectAll("svg > rect")
@@ -131,13 +133,13 @@ define(
                         .attr("text-anchor", "middle")
                         .attr("style", "font-size: 10")
                         .text(function (datum) {
-                            var label = datum.label.split(' '), osname = '';
+                            var label = datum.label.split(' '), osname = '', k;
                             if (label.length > 3) {
-                                for(var k = 0; k < label.length -1; k++) {
-                                    if (label[k] == 'Windows') {
+                                for (k = 0; k < label.length - 1; k += 1) {
+                                    if (label[k] === 'Windows') {
                                         osname += label[k].substring(0, 3) + ' ';
                                     } else {
-                                        osname+= label[k] + ' ';
+                                        osname += label[k] + ' ';
                                     }
                                 }
                             } else {
@@ -158,13 +160,7 @@ define(
                         .attr({fill: 'black', dy: '18px'})
                         .style('font-size', '1.3em')
                         .text("");
-                    function getColor(data, index) {
-                        return color(index);
-                    }
-                    // Helper function to extract a darker version of the color
-                    function getDarkerColor(data, index){
-                        return d3.rgb(getColor(data, index)).darker();
-                    }
+
                     /*barDemo.selectAll("rect")
                         .data(data)
                         .enter().append("svg:title")
@@ -206,50 +202,3 @@ define(
         };
     }
 );
-/*
-$application.horizontalBarChart = function () {
-    "use strict";
-    var margin    = {top: 20, right: 20, bottom: 20, left: 20},
-        barWidth = 70,
-        width    = 618,    // Golden Ratio 1000/Phi
-        height    = 1000,
-        format    = d3.format(",.0f"),
-        xScale    = d3.scale.linear().range([0, width]),
-        yScale    = d3.scale.ordinal().rangeRoundBands([0, height], 0.1),
-        xAxis    = d3.svg.axis().scale(xScale).orient("top").tickSize(-6, 0),
-        yAxis    = d3.svg.axis().scale(yScale).orient("left").tickSize(0);
-
-    function chart(selection) {
-        selection.each(function (d, i) {
-            // generate chart here; `d` is the data and `this` is the element
-
-        });
-    }
-
-    chart.margin = function (value) {
-        if (!arguments.length) { return margin; }
-        margin = value;
-        return chart;
-    };
-
-    chart.width = function (value) {
-        if (!arguments.length) { return width; }
-        width = value;
-        return chart;
-    };
-
-    chart.height = function (value) {
-        if (!arguments.length) { return height; }
-        height = value;
-        return chart;
-    };
-
-    chart.barWidth = function (value) {
-        if (!arguments.length) { return barWidth; }
-        barWidth = value;
-    return chart;
-    };
-
-    return chart;
-};
-    */

@@ -68,7 +68,7 @@ define(['jquery', 'd3'], function ($, d3) {
                 }
                 // Helper function to extract color from data object
                 function getColor(data, index) {
-                    return index <= 2 ? severityColors[index] : colors(index);
+                    return index <= 2 ? d3.rgb(severityColors[index]).brighter() : colors(index);
                 }
                 // Helper function to extract a darker version of the color
                 function getDarkerColor(data, index) {
@@ -117,7 +117,7 @@ define(['jquery', 'd3'], function ($, d3) {
                 txtMask = svg.append('g').attr({width: '100px', height: '30px'});
 
                 txtRect = txtMask.append('rect')
-                    .attr({width: '100px', height: '30px', fill: 'lightblue', stroke: 'black'})
+                    .attr({width: '100px', height: '30px', fill: 'lightblue', stroke: 'black', 'rx': '6', 'ry': '6'})
                     .style('opacity', '0');
 
                 txt = txtMask.append('text')
@@ -143,10 +143,9 @@ define(['jquery', 'd3'], function ($, d3) {
                             ang = d.startAngle + (d.endAngle - d.startAngle) / 2;
                             // Transformate to SVG space
                             ang = (ang - (Math.PI / 2)) * -1;
-
                             // Calculate a 10% radius displacement
-                            x = Math.cos(ang) * r * 0.14;
-                            y = Math.sin(ang) * r * -0.14;
+                            x = Math.cos(ang) * r * 0.1;
+                            y = Math.sin(ang) * r * -0.1;
 
                             d3.select(this).transition()
                                 .duration(300).attr("transform", "translate(" + x + "," + y + ")");
