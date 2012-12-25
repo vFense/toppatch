@@ -5,8 +5,9 @@ define([
     'd3charts/stackedBar',
     'd3charts/tableGenerator',
     'd3charts/line',
-    'd3charts/newpie'
-], function (partition, pie, bar, stackedBar, tableGenerator, line, newpie) {
+    'd3charts/newpie',
+    'd3charts/bar_3d'
+], function (partition, pie, bar, stackedBar, tableGenerator, line, newpie, bar_3d) {
     "use strict";
     return {
         "partition": partition,
@@ -15,6 +16,7 @@ define([
         "stackedBar": stackedBar,
         "generateTable": tableGenerator,
         "line": line,
-        "newpie": newpie
+        "newpie": newpie,
+        "bar_3d": bar_3d
     };
 });
