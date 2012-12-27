@@ -17,6 +17,7 @@ define(
             function chart(selection) {
                 selection.each(function (data) {
                     var svg, frontRect, sideRect, topRect, rightTopTriangle, leftTopTriangle, botWhiteTriangle, txtMask, txtRect, txt,
+                        that = this,
                         colors = d3.scale.category20(),
                         x = d3.scale.linear().domain([0, data.length]).range([15, width]),
                         y = d3.scale.linear().domain([0, d3.max(data, function (datum) { return datum.value; })]).rangeRound([0, height]),
@@ -31,19 +32,19 @@ define(
                     function sideColor(color) {
                         return d3.rgb(frontColor(color)).darker();
                     }
-                    function textMouseOver(container, d) {
-                        var mousePos = d3.mouse(container), textLength;
-                        mousePos[0] = mousePos[0] + 5;
-                        mousePos[1] = mousePos[1] + 5;
+                    function textMouseOver(d) {
+                        var mousePos = d3.mouse(that), textLength;
+                        mousePos[0] = mousePos[0] - 10;
+                        mousePos[1] = mousePos[1] - 38;
                         txt.text(d.label + ': ' + d.value + ' patches.');
                         textLength = txt.style('width');
                         txtMask.attr({transform: 'translate(' + mousePos + ')'});
                         txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
                     }
-                    function textMouseMove(container) {
-                        var mousePos = d3.mouse(container);
-                        mousePos[0] = mousePos[0] + 5;
-                        mousePos[1] = mousePos[1] + 5;
+                    function textMouseMove() {
+                        var mousePos = d3.mouse(that);
+                        mousePos[0] = mousePos[0] - 10;
+                        mousePos[1] = mousePos[1] - 38;
                         txtMask.attr({transform: 'translate(' + mousePos + ')'});
                         txtRect.style('opacity', '0.3');
                     }
@@ -68,10 +69,10 @@ define(
                         .attr("stroke-width", "0")
                         .attr("fill", function (d, index) { return topColor(index); })
                         .on('mouseover', function (d) {
-                            textMouseOver(this, d);
+                            textMouseOver(d);
                         })
                         .on('mousemove', function (d) {
-                            textMouseMove(this);
+                            textMouseMove();
                         })
                         .on('mouseout', function (d) {
                             textMouseOut();
@@ -87,11 +88,11 @@ define(
                         .attr("width", depth)
                         .attr("stroke", "0")
                         .attr("fill", function (d, index) { return sideColor(index); })
-                        .on('mouseover', function (d) {
-                            textMouseOver(this, d);
+                        .on('mouseover', function (d, i) {
+                            textMouseOver(d);
                         })
                         .on('mousemove', function (d) {
-                            textMouseMove(this);
+                            textMouseMove();
                         })
                         .on('mouseout', function (d) {
                             textMouseOut();
@@ -153,10 +154,10 @@ define(
                         .attr("stroke", function (d, index) { return sideColor(index); })//stroke same color as sideRect
                         .attr("fill", function (d, index) { return frontColor(index); })
                         .on('mouseover', function (d) {
-                            textMouseOver(this, d);
+                            textMouseOver(d);
                         })
                         .on('mousemove', function (d) {
-                            textMouseMove(this);
+                            textMouseMove();
                         })
                         .on('mouseout', function (d) {
                             textMouseOut();

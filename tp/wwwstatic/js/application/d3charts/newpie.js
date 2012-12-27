@@ -74,6 +74,26 @@ define(['jquery', 'd3'], function ($, d3) {
                 function getDarkerColor(data, index) {
                     return d3.rgb(getColor(data, index)).darker();
                 }
+                function textMouseOver(d) {
+                    var mousePos = d3.mouse(that), textLength;
+                    mousePos[0] = mousePos[0] - 10;
+                    mousePos[1] = mousePos[1] - 38;
+                    txt.text(d.data.label + ": " + d.data.value + ' nodes.');
+                    textLength = txt.style('width');
+                    txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                    txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                }
+                function textMouseMove() {
+                    var mousePos = d3.mouse(that);
+                    mousePos[0] = mousePos[0] - 10;
+                    mousePos[1] = mousePos[1] - 38;
+                    txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                    txtRect.style('opacity', '0.3');
+                }
+                function textMouseOut() {
+                    txt.text('');
+                    txtRect.style('opacity', '0');
+                }
                 shadow.append("feGaussianBlur")
                     .attr("in", "SourceAlpha")
                     .attr("stdDeviation", "4")
@@ -131,12 +151,13 @@ define(['jquery', 'd3'], function ($, d3) {
                 })
                     .on("mouseover", function (d) {
                         var mousePos = d3.mouse(this), textLength, ang;
-                        mousePos[0] = mousePos[0] + width / 2 + 5;
-                        mousePos[1] = mousePos[1] + height / 2 + 5;
+                        textMouseOver(d);
+                        /*mousePos[0] = mousePos[0] + width / 2 - 10;
+                        mousePos[1] = mousePos[1] + height / 2 - 35;
                         txt.text(d.data.label + ": " + d.data.value + ' nodes.');
                         textLength = txt.style('width');
                         txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                        txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                        txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');*/
                         // Mouseover effect if no transition has started
                         if (this._listenToEvents) {
                             // Calculate angle bisector
@@ -163,11 +184,7 @@ define(['jquery', 'd3'], function ($, d3) {
                         }
                     })
                     .on('mousemove', function (d) {
-                        var mousePos = d3.mouse(this);
-                        mousePos[0] = mousePos[0] + width / 2 + 5;
-                        mousePos[1] = mousePos[1] + height / 2 + 5;
-                        txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                        txtRect.style('opacity', '0.3');
+                        textMouseMove();
                     })
                     .on("mouseout", function (d) {
                         // Mouseout effect if no transition has started
@@ -175,8 +192,8 @@ define(['jquery', 'd3'], function ($, d3) {
                         txtRect.style('opacity', '0');
                         if (this._listenToEvents) {
                             d3.select(this).transition()
-                                .duration(150).attr("transform", "translate(0,0)");
-                            d3.select(this.parentNode).select("text").transition().duration(150)
+                                .duration(0).attr("transform", "translate(0,0)");
+                            d3.select(this.parentNode).select("text").transition().duration(0)
                                 .attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")");
                         }
                     });
