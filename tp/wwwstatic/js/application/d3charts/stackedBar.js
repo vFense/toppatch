@@ -27,13 +27,32 @@ define(
                     // generate chart here; `d` is the data and `this` is the element
                     $(this).html("");
                     var x, y, y2, stacked, line, data_array, secondStacked,
-                        secondLabel, secondLine,
+                        secondLabel, secondLine, txtMask, txtRect, txt,
                         y0 = [],
                         tempData = [],
                         that = this,
                         matches = that.id.match(/\d+$/),
                         widget = "#widget" + matches[0];
-                    //$(widget + "-title").html(title);
+                    function textMouseOver(container, d) {
+                        var mousePos = d3.mouse(container), textLength;
+                        mousePos[0] = mousePos[0] - 10;
+                        mousePos[1] = mousePos[1] - 38;
+                        txt.text(d.label);
+                        textLength = txt.style('width');
+                        txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                        txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                    }
+                    function textMouseMove() {
+                        var mousePos = d3.mouse(this);
+                        mousePos[0] = mousePos[0] - 10;
+                        mousePos[1] = mousePos[1] - 38;
+                        txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                        txtRect.style('opacity', '0.3');
+                    }
+                    function textMouseOut() {
+                        txt.text('');
+                        txtRect.style('opacity', '0');
+                    }
                     x = d3.scale.ordinal().rangeRoundBands([0, width - 50]);
                     y = d3.scale.linear().range([0, height]);
                     y0[0] = 0;
@@ -201,26 +220,20 @@ define(
                                 });
                                 that = this;
                             }
-                        });
+                        })
+                        .on('mouseover', function (d) {
+                            textMouseOver(this, d);
+                        })
+                        .on('mousemove', textMouseMove)
+                        .on('mouseout', textMouseOut);
                     label = valgroup.filter(function (d) { return y(d[0].y) > 25; })
                         .selectAll("text").
                         data(function (d) { return d; }).
                         enter().
                         append("svg:text").
                         text(function (d) {
-                            var label = d.label.split(' '), osname = '', k;
-                            if (label.length > 3) {
-                                for (k = 0; k < label.length - 1; k += 1) {
-                                    if (label[k] === 'Windows') {
-                                        osname += label[k].substring(0, 3) + ' ';
-                                    } else {
-                                        osname += label[k] + ' ';
-                                    }
-                                }
-                            } else {
-                                osname = d.label;
-                            }
-                            return osname;
+                            var label = d.label.length > 15 ? d.label.substr(0, 15) : d.label;
+                            return label;
                         }).
                         attr("x", function (d) { return x.rangeBand() - x.rangeBand() / 6 - 10; }).
                         //attr("dx", "50").
@@ -252,6 +265,16 @@ define(
                             array[1] = { x: x.rangeBand() - x.rangeBand() / 4, y: -y(d.y0) - y(d.y) / 2 };
                             return line(array);
                         });
+                    txtMask = svg.append('g').attr({width: '100px', height: '30px'});
+
+                    txtRect = txtMask.append('rect')
+                        .attr({width: '100px', height: '30px', fill: 'lightblue', stroke: 'black', 'rx': '6', 'ry': '6'})
+                        .style('opacity', '0');
+
+                    txt = txtMask.append('text')
+                        .attr({fill: 'black', dy: '18px'})
+                        .style('font-size', '1.3em')
+                        .text("");
                 });
             }
 

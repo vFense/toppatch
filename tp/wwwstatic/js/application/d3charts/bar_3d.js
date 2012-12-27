@@ -153,15 +153,9 @@ define(
                         .attr("width", barWidth)
                         .attr("stroke", function (d, index) { return sideColor(index); })//stroke same color as sideRect
                         .attr("fill", function (d, index) { return frontColor(index); })
-                        .on('mouseover', function (d) {
-                            textMouseOver(d);
-                        })
-                        .on('mousemove', function (d) {
-                            textMouseMove();
-                        })
-                        .on('mouseout', function (d) {
-                            textMouseOut();
-                        });
+                        .on('mouseover', textMouseOver)
+                        .on('mousemove', textMouseMove)
+                        .on('mouseout', textMouseOut);
 
                     svg.selectAll("svg > text")
                         .data(data)

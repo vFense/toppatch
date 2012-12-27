@@ -150,14 +150,8 @@ define(['jquery', 'd3'], function ($, d3) {
                     window.location.hash = '#patches?type=' + d.data.label;
                 })
                     .on("mouseover", function (d) {
-                        var mousePos = d3.mouse(this), textLength, ang;
+                        var ang;
                         textMouseOver(d);
-                        /*mousePos[0] = mousePos[0] + width / 2 - 10;
-                        mousePos[1] = mousePos[1] + height / 2 - 35;
-                        txt.text(d.data.label + ": " + d.data.value + ' nodes.');
-                        textLength = txt.style('width');
-                        txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                        txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');*/
                         // Mouseover effect if no transition has started
                         if (this._listenToEvents) {
                             // Calculate angle bisector
@@ -170,7 +164,6 @@ define(['jquery', 'd3'], function ($, d3) {
 
                             d3.select(this).transition()
                                 .duration(300).attr("transform", "translate(" + x + "," + y + ")");
-
                             d3.select(this.parentNode).select("text").transition().duration(300)
                                 .attr("transform", function (data) {
                                     var c = arc.centroid(d),
@@ -183,13 +176,10 @@ define(['jquery', 'd3'], function ($, d3) {
                                 });
                         }
                     })
-                    .on('mousemove', function (d) {
-                        textMouseMove();
-                    })
+                    .on('mousemove', textMouseMove)
                     .on("mouseout", function (d) {
                         // Mouseout effect if no transition has started
-                        txt.text('');
-                        txtRect.style('opacity', '0');
+                        textMouseOut();
                         if (this._listenToEvents) {
                             d3.select(this).transition()
                                 .duration(0).attr("transform", "translate(0,0)");
