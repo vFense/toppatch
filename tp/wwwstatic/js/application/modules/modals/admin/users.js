@@ -24,6 +24,20 @@ define(
                     return this.baseUrl + this.filter;
                 }
             }),
+            NodeCollection: Backbone.Collection.extend({
+                baseUrl: 'api/nodes.json',
+                filter: '',
+                url: function () {
+                    return this.baseUrl + this.filter;
+                }
+            }),
+            TagCollection: Backbone.Collection.extend({
+                baseUrl: 'api/tagging/listByTag.json',
+                filter: '',
+                url: function () {
+                    return this.baseUrl + this.filter;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
@@ -34,6 +48,14 @@ define(
                     this.groupCollection = new exports.GroupCollection();
                     this.groupCollection.bind('reset', this.render, this);
                     this.groupCollection.fetch();
+
+                    this.nodeCollection = new exports.NodeCollection();
+                    this.nodeCollection.bind('reset', this.render, this);
+                    this.nodeCollection.fetch();
+
+                    this.tagCollection = new exports.TagCollection();
+                    this.tagCollection.bind('reset', this.render, this);
+                    this.tagCollection.fetch();
                 },
                 events: {
                     'click #userEdit': 'displayEdit',
@@ -46,6 +68,11 @@ define(
                     'click button[name=groups]': 'showGroups',
                     'click button[name=globalacl]': 'showAclPopover',
                     'click #submitUser': 'submitNewUser',
+                    'click button[name=toggleAcl]': 'toggleAclAccordion',
+                    'click button[name=showAcl]': 'toggleAclDiv',
+                    'click button[name=hideAcl]': 'toggleAclDiv',
+                    'click button[name=submitAclNode]': 'submitAcl',
+                    'click button[name=submitAclTag]': 'submitAcl',
                     'submit form': 'submit'
                 },
                 displayEdit: function (event) {
@@ -237,6 +264,79 @@ define(
                         }
                     });
                 },
+                toggleAclAccordion: function (event) {
+                    var $href = $(event.currentTarget),
+                        $icon = $href.find('i'),
+                        $accordionParent = $href.parents('.accordion-group'),
+                        $accordionBody = $accordionParent.find('.accordion-body');
+                    $accordionBody.unbind();
+                    if ($icon.hasClass('icon-circle-arrow-down')) {
+                        $icon.attr('class', 'icon-circle-arrow-up');
+                        $accordionBody.collapse('show');
+                    } else {
+                        $icon.attr('class', 'icon-circle-arrow-down');
+                        $accordionBody.collapse('hide');
+                    }
+                    $accordionBody.on('hidden', function (event) {
+                        event.stopPropagation();
+                    });
+                },
+                toggleAclDiv: function (event) {
+                    var $aclDiv, $aclButton = $(event.currentTarget);
+                    if ($aclButton.attr('name') === 'showAcl') {
+                        $aclDiv = $aclButton.siblings('div[name=aclOptions]');
+                        $aclDiv.toggle();
+                        $aclButton.toggle();
+                    } else {
+                        $aclDiv = $aclButton.parents('div[name=aclOptions]');
+                        $aclDiv.siblings('button').toggle();
+                        $aclDiv.toggle();
+
+                    }
+                },
+                submitAcl: function (event) {
+                    var params, aclType,
+                        that = this,
+                        $button = $(event.currentTarget),
+                        aclAction = 'create',
+                        userId = $button.attr('value'),
+                        type = $button.attr('name'),
+                        $aclOptionsDiv = $button.parents('div[name=aclOptions]'),
+                        $alert = $aclOptionsDiv.find('.alert'),
+                        aclId = $aclOptionsDiv.find('select').val(),
+                        $checkboxes = $aclOptionsDiv.find('input[type=checkbox]'),
+                        acl = { user_id: userId },
+                        url = 'api/acl/create';
+                    if (aclId !== "0") {
+                        if (type === 'submitAclNode') {
+                            aclType = 'node_user';
+                            acl.node_id = aclId;
+                        } else {
+                            aclType = 'tag_user';
+                            acl.tag_id = aclId;
+                        }
+                        $checkboxes.each(function () {
+                            acl[this.name] = this.checked;
+                        });
+                        params = {
+                            acl_type: aclType,
+                            acl_action: aclAction,
+                            acl: JSON.stringify(acl)
+                        };
+                        $.post(url, params, function (json) {
+                            window.console.log(json);
+                            if (json.pass) {
+                                $alert.hide();
+                                that.collection.fetch();
+                            } else {
+                                $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                            }
+                        });
+                        window.console.log(params);
+                    } else {
+                        $alert.removeClass('alert-success').addClass('alert-error').show().html('Please select an option.');
+                    }
+                },
                 submit: function (event) {
                     var $form = $(event.target);
                     window.console.log($form);
@@ -269,11 +369,13 @@ define(
 
                     var template = _.template(this.template),
                         data = this.collection.toJSON(),
-                        groups = this.groupCollection.toJSON();
+                        groups = this.groupCollection.toJSON(),
+                        nodes = this.nodeCollection.toJSON()[0],
+                        tags = this.tagCollection.toJSON();
 
                     this.$el.empty();
 
-                    this.$el.html(template({data: data, groups: groups}));
+                    this.$el.html(template({data: data, groups: groups, nodes: nodes, tags: tags}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
