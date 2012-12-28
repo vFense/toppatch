@@ -21,13 +21,14 @@ define(['jquery', 'd3'], function ($, d3) {
         function chart(selection) {
             selection.each(function (data) {
                 // generate chart here; `d` is the data and `this` is the element
-                var that = this, link, options,
+                var link, options, warning, container, vis,
+                    that = this,
                     matches = that.id.match(/\d+$/),
                     widget = "#widget" + matches[0];
                 //$(widget + "-title").html(title);
                 $(this).html("");
 
-                var vis = d3.select(this)
+                vis = d3.select(this)
                     .append("svg:svg")              //create the SVG element inside the <body>
                     .data([data])                   //associate our data with the document
                     .attr("width", width)           //set the width and height of our visualization (these will be attributes of the <svg> tag
@@ -35,7 +36,7 @@ define(['jquery', 'd3'], function ($, d3) {
                 if (previousData.length !== 0) {
                     renderLinks();
                 }
-                var warning = vis.selectAll('warning')
+                warning = vis.selectAll('warning')
                     .data(['warning']).enter()
                     .append('svg:text')
                     .attr('x', (width / 4) - 40)
@@ -44,7 +45,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     .style('opacity', '0')
                     .text('');
 
-                var container = vis.append("svg:g")                //make a group to hold our pie chart
+                container = vis.append("svg:g")                //make a group to hold our pie chart
                     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");  //move the center of the pie chart from 0, 0 to radius, radius
 
                 var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
@@ -58,11 +59,22 @@ define(['jquery', 'd3'], function ($, d3) {
                 var pie = d3.layout.pie().sort(null)          //this will create arc data for us given a list of values
                     .value(function (d) { return d.value; });    //we must tell it out to access the value of each element in our data array
 
+                var txtMask = vis.append('g').attr({width: '100px', height: '30px'});
+
+                var txtRect = txtMask.append('rect')
+                    .attr({width: '100px', height: '30px', fill: 'white', stroke: 'black'})
+                    .style('opacity', '0');
+
+                var txt = txtMask.append('text')
+                    .attr({fill: 'black', dy: '18px'})
+                    .style('font-size', '1.3em')
+                    .text("");
+
                 var arcs = container.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
                     .data(pie(data))                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
                     .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
                     .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
-                    .attr("class", "slice")    //allow us to style things in the slices (like text)
+                    .attr("class", 'slice')    //allow us to style things in the slices (like text)
                     .on("click", function (d) {
                         if (d.data.label) {
                             window.location.hash = '#patches?type=' + d.data.label;
@@ -71,6 +83,13 @@ define(['jquery', 'd3'], function ($, d3) {
                         }
                     })
                     .on("mouseover", function (d) {
+                        var mousePos = d3.mouse(this), textLength;
+                        mousePos[0] = mousePos[0] + width / 2 + 5;
+                        mousePos[1] = mousePos[1] + height / 2 + 5;
+                        txt.text(d.data.label + ": " + d.data.value + ' patches');
+                        textLength = txt.style('width');
+                        txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                        txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
                         //console.log(d3.select(this).select("path").transition().attr("fill", color(i + 2)));
                         d3.select(this).select("path").transition().duration(500)
                             //.attr("fill", color(i + 2))
@@ -108,7 +127,16 @@ define(['jquery', 'd3'], function ($, d3) {
                                 return osname;
                             });
                     })
+                    .on('mousemove', function (d) {
+                        var mousePos = d3.mouse(this);
+                        mousePos[0] = mousePos[0] + width / 2 + 5;
+                        mousePos[1] = mousePos[1] + height / 2 + 5;
+                        txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                        txtRect.style('opacity', '0.3');
+                    })
                     .on("mouseout", function (d, i) {
+                        txt.text('');
+                        txtRect.style('opacity', '0');
                         d3.select(this).select("path").transition()
                             .duration(500)
                             .attr("fill", color(i))
@@ -190,14 +218,24 @@ define(['jquery', 'd3'], function ($, d3) {
                         .on('mouseout', function () { linkMouseOut(this); })
                         .on("click", function () { disappear('previous', 'None') });
                 }
-                arcs.append("svg:title")
-                    .text(function (d) { return d.data.label + ": " + d.data.value + ' patches'; });
+                /*
+                var title = arcs.append("svg:title")
+                    .text(function (d) {
+                        $(this).tooltip({title: 'hello'});
+                        window.console.log($(this));
+                        return d.data.label + ": " + d.data.value + ' patches';
+                    });
+                */
+                //window.console.log(title);
                 arcs.append("svg:path")
                     .attr("fill", function (d, i) { return color(i); }) //set the color for each slice to be chosen from the color function defined above
+                    .attr("stroke", "black")
                     .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
                 arcs.filter(function (d) { return d.endAngle - d.startAngle > .2; })
                     .append("svg:text")
                     .attr("dy", ".35em")
+                    .style("font-size", "10px")
+                    .style("font-family", "Arial")
                     .attr("text-anchor", "middle")
                     .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
                     .text(function (d) {

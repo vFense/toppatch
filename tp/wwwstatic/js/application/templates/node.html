@@ -4,8 +4,8 @@
     <section class="well well-small noMargin clearfix">
         <dl>
             <dt>Node IP:</dt><dd><% print(model.ip || '<em>Not listed</em>'); %></dd>
-            <dt>Display Name:</dt><dd><% model['display/name'] ? print('<span>' + model['display/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editDisplay" data-placement="right" name="editPopover"><i class="icon-pencil"></i></a></dd>
-            <dt>Hostname:</dt><dd><% model['host/name'] ? print('<span>' + model['host/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editHost" data-placement="right" name="editPopover"><i class="icon-pencil"></i></a></dd>
+            <dt>Display Name:</dt><dd><% model['display/name'] ? print('<span>' + model['display/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editDisplay" data-placement="right" name="editPopover"><i class="icon-pencil" style="color: #daa520"></i></a></dd>
+            <dt>Hostname:</dt><dd><% model['host/name'] ? print('<span>' + model['host/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editHost" data-placement="right" name="editPopover"><i class="icon-pencil" style="color: #daa520"></i></a></dd>
             <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
             <dt>Tags applied:</dt>
             <dd>
@@ -50,6 +50,22 @@
                 <% } %>
             </dd>
         </dl>
+    </section>
+</article>
+<article>
+    <header><strong>Network Interfaces</strong></header>
+    <section class="well well-small noMargin clearfix">
+        <% if (model.networking.length !== 0) { %>
+            <dl>
+            <% _.each(model.networking, function (interface) { %>
+                <dt><%= interface.interface_name %>:</dt>
+                <dd>IP Address - <%= interface.ip %><br>
+                    MAC Address - <%= interface.mac %></dd>
+            <% }); %>
+            </dl>
+        <% } else { %>
+            <span><em>No interfaces available.</em></span>
+        <% } %>
     </section>
 </article>
 <article class="alert alert-block fade in hide">

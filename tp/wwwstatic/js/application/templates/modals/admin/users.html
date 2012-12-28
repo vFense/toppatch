@@ -17,21 +17,216 @@
         <div class="items">
             <% if (data.length !== 0) { %>
                 <% _.each(data, function (user) { %>
-                    <div class="item row-fluid">
-                        <div class="span9"><%= user.username %></div>
-                        <div name="edit" class="span3 alignRight hide">
-                            <button name="globalacl" value="<%= user.id %>" class="btn btn-link noPadding">
-                                <i class="icon-pencil" style="color: #daa520;"></i>
-                            </button>
-                            <button name="groups" value="<%= user.id %>" class="btn btn-link noPadding">
-                                <i class="icon-user" style="color: blue"></i>
-                            </button>&nbsp;
-                            <button name="confirmDelete" class="btn btn-link noPadding">
-                                <i class="icon-remove" style="color:red;"></i>
-                            </button>
-                            <div name="divConfirmDelete" class="hide">
-                                <button name="deleteUser" class="btn btn-mini btn-danger" value="<%= user.id %>">Delete</button>
-                                <button name="cancelDelete" class="btn btn-mini">Cancel</button>
+                    <div class="accordion-group item row-fluid">
+                        <div class="accordion-heading span12">
+                            <div class="span9">
+                                <div name="edit" class="hide pull-left">
+                                    <button name="toggleAcl" class="btn btn-link noPadding">
+                                        <i class="icon-circle-arrow-down"></i>
+                                    </button>
+                                </div>&nbsp;
+                                <span><%= user.username %></span>
+                            </div>
+                            <div name="edit" class="span3 alignRight hide">
+                                <button name="globalacl" value="<%= user.id %>" class="btn btn-link noPadding">
+                                    <i class="icon-pencil" style="color: #daa520;"></i>
+                                </button>
+                                <button name="groups" value="<%= user.id %>" class="btn btn-link noPadding">
+                                    <i class="icon-user" style="color: blue"></i>
+                                </button>&nbsp;
+                                <button name="confirmDelete" class="btn btn-link noPadding">
+                                    <i class="icon-remove" style="color:red;"></i>
+                                </button>
+                                <div name="divConfirmDelete" class="hide">
+                                    <button name="deleteUser" class="btn btn-mini btn-danger" value="<%= user.id %>">Delete</button>
+                                    <button name="cancelDelete" class="btn btn-mini">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-body span12 collapse">
+                            <div class="accordion-inner alignLeft">
+                                <div class="span12">
+                                    <button name="showAcl" class="btn btn-link noPadding"><small>Create Node Acl</small></button>
+                                    <div name="aclOptions" class="hide span12">
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Read Only</small>
+                                                <input type="checkbox" name="read_only"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Wake on Lan</small>
+                                                <input type="checkbox" name="allow_wol"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Reboot</small>
+                                                <input type="checkbox" name="allow_reboot"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Tag Creation</small>
+                                                <input type="checkbox" name="allow_tag_creation"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Removal</small>
+                                                <input type="checkbox" name="allow_snapshot_removal"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Revert</small>
+                                                <input type="checkbox" name="allow_snapshot_revert"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Uninstall</small>
+                                                <input type="checkbox" name="allow_uninstall"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Creation</small>
+                                                <input type="checkbox" name="allow_snapshot_creation"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Tag Removal</small>
+                                                <input type="checkbox" name="allow_tag_removal"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Admin</small>
+                                                <input type="checkbox" name="is_admin"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Install</small>
+                                                <input type="checkbox" name="allow_install"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Schedule</small>
+                                                <input type="checkbox" name="allow_schedule"/>
+                                            </label>
+                                        </div>
+                                        <span class="span11 alignRight">
+                                            <span class="alert fade in hide inline"></span>
+                                            <select name="nodelist" class="btn btn-mini">
+                                                <option value="0">Select one...</option>
+                                                <% if(nodes && nodes.nodes.length != 0) {
+                                                    _.each(nodes.nodes, function (node) { %>
+                                                        <option value="<%= node.id %>"><% print(node.displayname || node.hostname || node.ip); %></option>
+                                                    <% });
+                                                } %>
+                                            </select>
+                                            <button name="submitAclNode" value="<%= user.id %>" class="btn btn-mini btn-primary">Create</button>
+                                            <button name="hideAcl" class="btn btn-mini">Cancel</button>
+                                        </span>
+                                    </div>
+                                    <div class="list">
+                                        <div class="items">
+                                        <% if(user.node_acls.length != 0) { %>
+                                            <div class="item clearfix">
+                                                Node Acls go here - Pending
+                                            </div>
+                                        <% } else { %>
+                                            <div class="item clearfix">
+                                                No node Acls.
+                                            </div>
+                                        <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="span12 noMargin">
+                                    <button name="showAcl" class="btn btn-link noPadding"><small>Create Tag Acl</small></button>
+                                    <div name="aclOptions" class="hide span12">
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Read Only</small>
+                                                <input type="checkbox" name="read_only"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Wake on Lan</small>
+                                                <input type="checkbox" name="allow_wol"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Reboot</small>
+                                                <input type="checkbox" name="allow_reboot"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Tag Creation</small>
+                                                <input type="checkbox" name="allow_tag_creation"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Removal</small>
+                                                <input type="checkbox" name="allow_snapshot_removal"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Revert</small>
+                                                <input type="checkbox" name="allow_snapshot_revert"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Uninstall</small>
+                                                <input type="checkbox" name="allow_uninstall"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Creation</small>
+                                                <input type="checkbox" name="allow_snapshot_creation"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Tag Removal</small>
+                                                <input type="checkbox" name="allow_tag_removal"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Admin</small>
+                                                <input type="checkbox" name="is_admin"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Install</small>
+                                                <input type="checkbox" name="allow_install"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Schedule</small>
+                                                <input type="checkbox" name="allow_schedule"/>
+                                            </label>
+                                        </div>
+                                        <span class="span11 alignRight">
+                                            <span class="alert fade in hide inline"></span>
+                                            <select name="taglist" class="btn btn-mini">
+                                                <option value="0">Select one...</option>
+                                                <% if(tags && tags.length != 0) {
+                                                    _.each(tags, function (tag) { %>
+                                                        <option value="<%= tag.tag_id %>"><%= tag.tag_name %></option>
+                                                    <% });
+                                                } %>
+                                            </select>
+                                            <button name="submitAclTag" value="<%= user.id %>" class="btn btn-mini btn-primary">Create</button>
+                                            <button name="hideAcl" class="btn btn-mini">Cancel</button>
+                                        </span>
+                                    </div>
+                                    <div class="list">
+                                        <div class="items">
+                                            <% if(user.tag_acls.length != 0) { %>
+                                                <div class="item clearfix">
+                                                    Tag Acls go here - Pending
+                                                </div>
+                                            <% } else { %>
+                                                <div class="item clearfix">
+                                                    No tag Acls.
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
