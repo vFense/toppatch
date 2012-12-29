@@ -352,7 +352,7 @@ define(
                             width = this.emToPx(parseFloat(this.getStyleWidth('.' + span))),
                             pieChart = app.chart.newpie().width(width);
                         this.$el.find(selection).attr('class', 'pie graph');
-                        d3.json("../api/severity.json", function (json) {
+                        d3.json("../api/graphData", function (json) {
                             d3.select(selection).datum(json).call(pieChart);
                         });
                     },
@@ -361,9 +361,9 @@ define(
                             width = this.emToPx(parseFloat(this.getStyleWidth('.' + span)));
 
                         this.$el.find(selection).attr('class', 'bar graph');
-                        d3.json("../api/graphData", function (json) {
+                        d3.json("../api/severity.json", function (json) {
                             var barWidth = (width / json.length) - 10,
-                                graphBar = app.chart.bar().barWidth(barWidth);
+                                graphBar = app.chart.bar_3d();//app.chart.bar().barWidth(barWidth);
                             d3.select(selection).datum(json).call(graphBar);
                         });
                     },

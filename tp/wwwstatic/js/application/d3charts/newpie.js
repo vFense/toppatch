@@ -12,21 +12,19 @@ define(['jquery', 'd3'], function ($, d3) {
             height	= 220,
             r = (width / 3),
             colors = d3.scale.category20(),
-            severityColors = ['#0099FF', '#FF3300', '#FFFF00'],
-            graph = this;
+            severityColors = ['#FFC125', '#FF3030', '#FF6600'];
 
         function chart(selection) {
             selection.each(function (data) {
                 // generate chart here; `d` is the data and `this` is the element
-                var link, warning, container,
+                var gradients, _current, slice, paths, labels, txtMask, txtRect, txt, x, y,
                     that = this,
                     matches = that.id.match(/\d+$/),
                     widget = "#widget" + matches[0],
-                    svg = d3.select(this).html('').append("svg").attr("width", width).attr("height", height),
+                    svg = d3.select(this).html('').append("svg").attr("width", width).attr("height", height).style('overflow', 'visible'),
                     defs = svg.append("svg:defs"),
                     pieChart = d3.layout.pie().sort(null).value(function (d) { return d.value; }),
                     arc = d3.svg.arc().innerRadius(0).outerRadius(r),
-                    MAX_SECTORS = 15, // Less than 20 please
                 // Declare a main gradient with the dimensions for all gradient entries to refer
                     mainGrad = defs.append("svg:radialGradient")
                     .attr("gradientUnits", "userSpaceOnUse")
@@ -45,6 +43,57 @@ define(['jquery', 'd3'], function ($, d3) {
                     .attr("filterUnits", "userSpaceOnUse")
                     .attr("x", -1 * (width / 2)).attr("y", -1 * (height / 2))
                     .attr("width", width).attr("height", height);
+                function angle(d) {
+                    var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+                    return a > 90 ? a - 180 : a;
+                }
+                // "Fold" pie sectors by tweening its current start/end angles
+                // into 2*PI
+                function tweenOut(data) {
+                    data.startAngle = data.endAngle = (2 * Math.PI);
+                    var interpolation = d3.interpolate(_current, data);
+                    _current = interpolation(0);
+                    return function (t) {
+                        return arc(interpolation(t));
+                    };
+                }
+                // "Unfold" pie sectors by tweening its start/end angles
+                // from 0 into their final calculated values
+                function tweenIn(data) {
+                    var interpolation = d3.interpolate({startAngle: 0, endAngle: 0}, data);
+                    _current = interpolation(0);
+                    return function (t) {
+                        return arc(interpolation(t));
+                    };
+                }
+                // Helper function to extract color from data object
+                function getColor(data, index) {
+                    return index <= 2 ? d3.rgb(severityColors[index]).brighter() : colors(index);
+                }
+                // Helper function to extract a darker version of the color
+                function getDarkerColor(data, index) {
+                    return d3.rgb(getColor(data, index)).darker();
+                }
+                function textMouseOver(d) {
+                    var mousePos = d3.mouse(that), textLength;
+                    mousePos[0] = mousePos[0] - 10;
+                    mousePos[1] = mousePos[1] - 38;
+                    txt.text(d.data.label + ": " + d.data.value + ' nodes.');
+                    textLength = txt.style('width');
+                    txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                    txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                }
+                function textMouseMove() {
+                    var mousePos = d3.mouse(that);
+                    mousePos[0] = mousePos[0] - 10;
+                    mousePos[1] = mousePos[1] - 38;
+                    txtMask.attr({transform: 'translate(' + mousePos + ')'});
+                    txtRect.style('opacity', '0.3');
+                }
+                function textMouseOut() {
+                    txt.text('');
+                    txtRect.style('opacity', '0');
+                }
                 shadow.append("feGaussianBlur")
                     .attr("in", "SourceAlpha")
                     .attr("stdDeviation", "4")
@@ -58,7 +107,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     .attr("in2", "offsetBlur")
                     .attr("mode", "normal");
                 // Create a gradient for each entry (each entry identified by its unique category)
-                var gradients = defs.selectAll(".gradient").data(data, function (d) { return d.label; });
+                gradients = defs.selectAll(".gradient").data(data, function (d) { return d.label; });
                 gradients.enter().append("svg:radialGradient")
                     .attr("id", function (d, i) { return "gradient" + i; })
                     .attr("class", "gradient")
@@ -69,11 +118,11 @@ define(['jquery', 'd3'], function ($, d3) {
                 gradients.append("svg:stop").attr("offset", "100%").attr("stop-color", getDarkerColor);
 
                 // Create a sector for each entry in the enter selection
-                var slice = arcGroup.selectAll('g.slice')
-                    .data(pieChart(data)).enter().append('svg:g').attr('class', 'slice'),
-                    paths = slice.append("svg:path").attr("class", "sector"),
+                slice = arcGroup.selectAll('g.slice')
+                    .data(pieChart(data)).enter().append('svg:g').attr('class', 'slice');
+                paths = slice.append("svg:path").attr("class", "sector");
                     //.data(pieChart(currData), function (d) { return d.data.label; }),
-                    labels = slice.append("svg:text");
+                labels = slice.append("svg:text");
 
                 //paths.enter().append("svg:path").attr("class", "sector");
 
@@ -85,13 +134,13 @@ define(['jquery', 'd3'], function ($, d3) {
                         this._listenToEvents = true;
                     });
 
-                var txtMask = svg.append('g').attr({width: '100px', height: '30px'});
+                txtMask = svg.append('g').attr({width: '100px', height: '30px'});
 
-                var txtRect = txtMask.append('rect')
-                    .attr({width: '100px', height: '30px', fill: 'white', stroke: 'black'})
+                txtRect = txtMask.append('rect')
+                    .attr({width: '100px', height: '30px', fill: 'lightblue', stroke: 'black', 'rx': '6', 'ry': '6'})
                     .style('opacity', '0');
 
-                var txt = txtMask.append('text')
+                txt = txtMask.append('text')
                     .attr({fill: 'black', dy: '18px'})
                     .style('font-size', '1.3em')
                     .text("");
@@ -101,27 +150,20 @@ define(['jquery', 'd3'], function ($, d3) {
                     window.location.hash = '#patches?type=' + d.data.label;
                 })
                     .on("mouseover", function (d) {
-                        var mousePos = d3.mouse(this), textLength, ang;
-                        mousePos[0] = mousePos[0] + width / 2 + 5;
-                        mousePos[1] = mousePos[1] + height / 2 + 5;
-                        txt.text(d.data.label + ": " + d.data.value + ' patches');
-                        textLength = txt.style('width');
-                        txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                        txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                        var ang;
+                        textMouseOver(d);
                         // Mouseover effect if no transition has started
                         if (this._listenToEvents) {
                             // Calculate angle bisector
                             ang = d.startAngle + (d.endAngle - d.startAngle) / 2;
                             // Transformate to SVG space
                             ang = (ang - (Math.PI / 2)) * -1;
-
                             // Calculate a 10% radius displacement
-                            var x = Math.cos(ang) * r * 0.1;
-                            var y = Math.sin(ang) * r * -0.1;
+                            x = Math.cos(ang) * r * 0.1;
+                            y = Math.sin(ang) * r * -0.1;
 
                             d3.select(this).transition()
                                 .duration(300).attr("transform", "translate(" + x + "," + y + ")");
-
                             d3.select(this.parentNode).select("text").transition().duration(300)
                                 .attr("transform", function (data) {
                                     var c = arc.centroid(d),
@@ -134,21 +176,14 @@ define(['jquery', 'd3'], function ($, d3) {
                                 });
                         }
                     })
-                    .on('mousemove', function (d) {
-                        var mousePos = d3.mouse(this);
-                        mousePos[0] = mousePos[0] + width / 2 + 5;
-                        mousePos[1] = mousePos[1] + height / 2 + 5;
-                        txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                        txtRect.style('opacity', '0.3');
-                    })
+                    .on('mousemove', textMouseMove)
                     .on("mouseout", function (d) {
                         // Mouseout effect if no transition has started
-                        txt.text('');
-                        txtRect.style('opacity', '0');
+                        textMouseOut();
                         if (this._listenToEvents) {
                             d3.select(this).transition()
-                                .duration(150).attr("transform", "translate(0,0)");
-                            d3.select(this.parentNode).select("text").transition().duration(150)
+                                .duration(0).attr("transform", "translate(0,0)");
+                            d3.select(this.parentNode).select("text").transition().duration(0)
                                 .attr("transform", "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")");
                         }
                     });
@@ -159,7 +194,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     .attr("text-anchor", "middle")
                     .attr("transform", function (d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
                     .text(function (d) {
-                        var osname = d.data.label + ' - ' + Math.floor((d.endAngle - d.startAngle) / (2 * Math.PI) * 100) + '%';
+                        var osname = d.data.label.substr(0, 10) + ' - ' + Math.floor((d.endAngle - d.startAngle) / (2 * Math.PI) * 100) + '%';
                         return osname;
                     });
                 /*
@@ -168,49 +203,18 @@ define(['jquery', 'd3'], function ($, d3) {
                     .duration(1000)
                     .attrTween("d", tweenOut).remove();
                     */
-                function angle(d) {
-                    var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
-                    return a > 90 ? a - 180 : a;
-                }
-                // "Fold" pie sectors by tweening its current start/end angles
-                // into 2*PI
-                function tweenOut(data) {
-                    data.startAngle = data.endAngle = (2 * Math.PI);
-                    var interpolation = d3.interpolate(this._current, data);
-                    this._current = interpolation(0);
-                    return function(t) {
-                        return arc(interpolation(t));
-                    };
-                }
 
-
-                // "Unfold" pie sectors by tweening its start/end angles
-                // from 0 into their final calculated values
-                function tweenIn(data) {
-                    var interpolation = d3.interpolate({startAngle: 0, endAngle: 0}, data);
-                    this._current = interpolation(0);
-                    return function(t) {
-                        return arc(interpolation(t));
-                    };
-                }
-
-
-                // Helper function to extract color from data object
-                function getColor(data, index) {
-                    return severityColors[index];
-                }
-                // Helper function to extract a darker version of the color
-                function getDarkerColor(data, index){
-                    return d3.rgb(getColor(data, index)).darker();
-                }
-                function findChildenByCat(cat){
-                    for(i=-1; i++ < data.length - 1; ){
-                        if(data[i].cat == cat){
+                /*
+                function findChildenByCat(cat) {
+                    var i;
+                    for (i = -1; i++ < data.length - 1;) {
+                        if (data[i].cat == cat){
                             return data[i].children;
                         }
                     }
                     return data;
                 }
+                */
             });
         }
         chart.r = function (value) {

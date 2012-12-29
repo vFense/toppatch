@@ -108,7 +108,8 @@ define(
                 stackedBar: charts.stackedBar,
                 generateTable: charts.generateTable,
                 line: charts.line,
-                newpie: charts.newpie
+                newpie: charts.newpie,
+                bar_3d: charts.bar_3d
             },
             getUserSettings: function () {
                 var userSettings, userName,
@@ -132,7 +133,7 @@ define(
                                     widgets: {
                                         'graph': ['pie', 'bar', 'tag'],
                                         'spans': [6, 6, 12],
-                                        'titles': ['Patches by Severity', 'Nodes in Network by OS', 'Tag Stats']
+                                        'titles': ['Nodes in Network by OS', 'Patches by Severity', 'Tag Stats']
                                     }
                                 }
                             });
