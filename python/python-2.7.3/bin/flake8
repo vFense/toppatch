@@ -1,9 +1,9 @@
 #!/opt/TopPatch/python/current/bin/python
-# EASY-INSTALL-ENTRY-SCRIPT: 'flake8==1.5','console_scripts','flake8'
-__requires__ = 'flake8==1.5'
+# EASY-INSTALL-ENTRY-SCRIPT: 'flake8==1.7.0','console_scripts','flake8'
+__requires__ = 'flake8==1.7.0'
 import sys
 from pkg_resources import load_entry_point
 
 sys.exit(
-   load_entry_point('flake8==1.5', 'console_scripts', 'flake8')()
+   load_entry_point('flake8==1.7.0', 'console_scripts', 'flake8')()
 )
