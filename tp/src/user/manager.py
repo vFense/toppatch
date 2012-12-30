@@ -107,6 +107,23 @@ def create_user(session, username=None, password=None,
                         (username)
                     })
 
+
+def authenticate_account(session, username, password):
+    """ Checks if the username and password are correct.
+    Returns True if it is, False otherwise.
+    """
+
+    session = validate_session(session)
+    account = session.query(User).filter(User.username == username).first()
+    # Check if account/username exist. False if it doesn't.
+    if account is None:
+        return False
+
+    if Crypto.verify_scrypt_hash(password, account.hash):
+        return True
+    else:
+        return False
+
 def delete_user(session, user_id, username='system_user'):
     session = validate_session(session)
     result = None
