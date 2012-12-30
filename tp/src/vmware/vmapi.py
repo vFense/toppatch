@@ -14,7 +14,7 @@ logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvapi')
 
 def create_vm_config(server, username, password,
-        create_snapshot=False, cycle='3h'):
+        create_snapshot=False, cycle='12h'):
     CONFIG = CONFIG_DIR + CONFIG_FILE
     if server and username and password:
         if os.path.exists(CONFIG):
@@ -38,7 +38,7 @@ def create_vm_config(server, username, password,
         logfile.close()
 
 
-class vmapi():
+class VmApi():
     def __init__(self, config_file=None):
         self.CONFIG = None
         self.validated = False
@@ -515,4 +515,31 @@ class vmapi():
                 })
 
 
-
+    def get_all_vms(self, username='system_user'):
+        message = None
+        passed = None
+        vms = {}
+        if not self.vim.loggedin:
+            self.vim.relogin()
+        try:
+            all_vms = self.vim.getVirtualMachines()
+            for vm in all_vms:
+                if vm.guest.toolsVersionStatus != 'guestToolsNotInstalled' or \
+                        vm.guest.toolsVersionStatus != 'guestToolsUnmanaged':
+                    vms[vm.name] = {
+                            'vm_name': vm.name,
+                            'ip_address': vm.guest.ipAddress,
+                            'host_name': vm.guest.hostName,
+                            'snapshots': self.get_all_snapshots(vm_name=vm.name,
+                                                username=username)
+                            }
+            passed = True
+            return(vms)
+        except Exception as e:
+            passed = False
+            message = '%s - couldnt retreive the virtual machines: %s' % \
+                    (username, e)
+            return({
+                'pass': passed,
+                'message': message
+                })
