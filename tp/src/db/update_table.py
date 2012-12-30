@@ -21,8 +21,8 @@ logger = logging.getLogger('rvapi')
 
 
 def add_node(session, client_ip=None, agent_timestamp=None,
-        node_timestamp=None,host_name=None, display_name=None,
-        computer_name=None, username='system_user'):
+        node_timestamp=None, host_name=None, display_name=None,
+        computer_name=None, vm_name=None, username='system_user'):
     """Add a node to the database"""
     session = validate_session(session)
     if not host_name and client_ip:
@@ -32,8 +32,8 @@ def add_node(session, client_ip=None, agent_timestamp=None,
             host_name = None
     try:
         addnode = NodeInfo(ip_address=client_ip, host_name=host_name,
-            display_name=displa_name, computer_name=computer_name,
-            node_status=True, agent_status=True,
+            display_name=display_name, computer_name=computer_name,
+            vm_name=vm_name, host_status=True, agent_status=True,
             last_agent_update=agent_timestamp,
             last_node_update=node_timestamp)
         session.add(addnode)
@@ -41,11 +41,12 @@ def add_node(session, client_ip=None, agent_timestamp=None,
         logger.info('%s - node %s added to node_info' %
                 (username, client_ip)
                 )
-        return add_node
+        return addnode
     except Exception as e:
         session.rollback()
-        logger.error('node %s could not be added to node_info' %
-                client_ip)
+        logger.error('node %s could not be added to node_info:%s' %
+                (client_ip, e)
+		)
 
 
 def add_group(session, groupname=None):
