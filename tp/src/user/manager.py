@@ -112,17 +112,15 @@ def authenticate_account(session, username, password):
     """ Checks if the username and password are correct.
     Returns True if it is, False otherwise.
     """
-
+    authenticated = False
     session = validate_session(session)
     account = session.query(User).filter(User.username == username).first()
-    # Check if account/username exist. False if it doesn't.
-    if account is None:
-        return False
-
-    if Crypto.verify_scrypt_hash(password, account.hash):
-        return True
+    if account:
+    	authenticated = Crypto.verify_scrypt_hash(password, account.hash)
     else:
-        return False
+        authenticated = False
+    print "AUTHENTICATED", authenticated
+    return authenticated
 
 def delete_user(session, user_id, username='system_user'):
     session = validate_session(session)
