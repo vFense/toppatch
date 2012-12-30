@@ -112,32 +112,218 @@ class vmapi():
                 return(validated, [])
 
 
-    def create_snapshot(self, vm_name=None, snap_name=None,
-            memory=True, quiesce=True, snap_description=None):
-            if not self.vim.loggedin:
-                self.vim.relogin()
-            if vm_name and snap_name:
-                if not snap_description:
-                    snap_description = snap_name
-                vm = self.vim.getVirtualMachine(vm_name)
-                if vm:
-                    try:
-                        snap = vm.CreateSnapshot_Task(snap_name, memory,
-                                quiesce, snap_description)
-                        logger.info('%s created for %s' % \
-                            (snap_name, vm_name)
-                            )
-                    except Exception as e:
-                        logger.error(e)
-                else:
-                    logger.error('VM by the name of %s does not exist' % \
-                            (vm_name)
-                            )
+    def shutdown_vm(self, vm_name=None, username='system_user'):
+        message = None
+        passed = None
+        if not self.vim.loggedin:
+            self.vim.relogin()
+        if vm_name:
+            vm = self.vim.getVirtualMachine(vm_name)
+            if vm:
+                try:
+                    vm.ShutdownGuest()
+                    message = '%s - %s is shutting down' % \
+                            (username, vm_name)
+                    logger.info(message)
+                    passed = True
+                except Exception as e:
+                    message = '%s - error during shutdown process:%s on %s'% \
+                            (username, e, vm_name)
+                    logger.error(message)
+                    passed = False
             else:
-                logger.error('insufficient parameters')
+                message = '%s - VM by the name of %s does not exist' % \
+                        (username, vm_name)
+                logger.error(message)
+                passed = False
+        else:
+            message = '%s - insufficient parameters' % (username)
+            logger.error(message)
+            passed = False
+        return({
+            'pass': passed,
+            'message': message
+            })
 
 
-    def get_all_snapshots(self, vm_name=None):
+    def poweroff_vm(self, vm_name=None, username='system_user'):
+        message = None
+        passed = None
+        if not self.vim.loggedin:
+            self.vim.relogin()
+        if vm_name:
+            vm = self.vim.getVirtualMachine(vm_name)
+            if vm:
+                try:
+                    vm.PowerOffVM_Task()
+                    message = '%s - %s is powered off' % \
+                            (username, vm_name)
+                    logger.info(message)
+                    passed = True
+                except Exception as e:
+                    message = '%s - error during poweroff process:%s on %s'% \
+                            (username, e, vm_name)
+                    logger.error(message)
+                    passed = False
+            else:
+                message = '%s - VM by the name of %s does not exist' % \
+                        (username, vm_name)
+                logger.error(message)
+                passed = False
+        else:
+            message = '%s - insufficient parameters' % (username)
+            logger.error(message)
+            passed = False
+        return({
+            'pass': passed,
+            'message': message
+            })
+
+
+    def poweron_vm(self, vm_name=None, username='system_user'):
+        message = None
+        passed = None
+        if not self.vim.loggedin:
+            self.vim.relogin()
+        if vm_name:
+            vm = self.vim.getVirtualMachine(vm_name)
+            if vm:
+                try:
+                    vm.PowerOnVM_Task()
+                    message = '%s - %s is powered on' % \
+                            (username, vm_name)
+                    logger.info(message)
+                    passed = True
+                except Exception as e:
+                    message = '%s - error during poweron process:%s on %s'% \
+                            (username, e, vm_name)
+                    logger.error(message)
+                    passed = False
+            else:
+                message = '%s - VM by the name of %s does not exist' % \
+                        (username, vm_name)
+                logger.error(message)
+                passed = False
+        else:
+            message = '%s - insufficient parameters' % (username)
+            logger.error(message)
+            passed = False
+        return({
+            'pass': passed,
+            'message': message
+            })
+
+
+    def reboot_vm(self, vm_name=None, username='system_user'):
+        message = None
+        passed = None
+        if not self.vim.loggedin:
+            self.vim.relogin()
+        if vm_name:
+            vm = self.vim.getVirtualMachine(vm_name)
+            if vm:
+                try:
+                    vm.RebootGuest()
+                    message = '%s - %s is rebooting' % \
+                            (username, vm_name)
+                    logger.info(message)
+                    passed = True
+                except Exception as e:
+                    message = '%s - error during reboot process:%s on %s'% \
+                            (username, e, vm_name)
+                    logger.error(message)
+                    passed = False
+            else:
+                message = '%s - VM by the name of %s does not exist' % \
+                        (username, vm_name)
+                logger.error(message)
+                passed = False
+        else:
+            message = '%s - insufficient parameters' % (username)
+            logger.error(message)
+            passed = False
+        return({
+            'pass': passed,
+            'message': message
+            })
+
+
+    def reset_vm(self, vm_name=None):
+        message = None
+        passed = None
+        if not self.vim.loggedin:
+            self.vim.relogin()
+        if vm_name:
+            vm = self.vim.getVirtualMachine(vm_name)
+            if vm:
+                try:
+                    vm.ResetVM_Task()
+                    message = '%s - %s is in the process of a hard reboot'% \
+                            (username, vm_name)
+                    logger.info(message)
+                    passed = True
+                except Exception as e:
+                    message = '%s - error during reboot process:%s on %s'% \
+                            (username, e, vm_name)
+                    logger.error(message)
+                    passed = False
+            else:
+                message = '%s - VM by the name of %s does not exist' % \
+                        (username, vm_name)
+                logger.error(message)
+                passed = False
+        else:
+            message = '%s - insufficient parameters' % (username)
+            logger.error(message)
+            passed = False
+        return({
+            'pass': passed,
+            'message': message
+            })
+
+
+    def create_snapshot(self, vm_name=None, snap_name=None,
+            memory=True, quiesce=True, snap_description=None,
+            username='system_user'):
+        message = None
+        passed = None
+        if not self.vim.loggedin:
+            self.vim.relogin()
+        if vm_name and snap_name:
+            if not snap_description:
+                snap_description = snap_name
+            vm = self.vim.getVirtualMachine(vm_name)
+            if vm:
+                try:
+                    snap = vm.CreateSnapshot_Task(snap_name, memory,
+                            quiesce, snap_description)
+                    message = '%s - snapshot %s created on %s'% \
+                            (username, snap_name, vm_name)
+                    logger.info(message)
+                    passed = True
+                except Exception as e:
+                    message = '%s - error during snapshot creation:%s on %s'% \
+                            (username, e, vm_name)
+                    logger.error(message)
+                    passed = False
+            else:
+                message = '%s - VM by the name of %s does not exist' % \
+                        (username, vm_name)
+                logger.error(message)
+                passed = False
+        else:
+            message = '%s - insufficient parameters' % (username)
+            logger.error(message)
+            passed = False
+        return({
+            'pass': passed,
+            'message': message
+            })
+
+
+    def get_all_snapshots(self, vm_name=None, username='system_user'):
+        message = None
+        passed = True
         snaps = {}
         if not self.vim.loggedin:
             self.vim.relogin()
@@ -159,36 +345,67 @@ class vmapi():
                             snapshot_list = snapshot_list.childSnapshotList[0]
                         else:
                             snapshot_list = None
-                    print snaps
+                    return(snaps)
                 else:
-                    logger.info('Snapshots do not exist for %s' % vm_name)
+                    message = '%s - Snapshots do not exist for %s' % \
+                            (username, vm_name)
+                    logger.info(message)
+                    passed = False
             else:
-                logger.error('VM by the name of %s does not exist' % \
-                        (vm_name)
-                        )
+                message = '%s - VM by the name of %s does not exist' % \
+                        (username, vm_name)
+                logger.error(message)
+                passed = False
         else:
-            logger.error('insufficient parameters')
+            message = '%s - insufficient parameters' % (username)
+            logger.error(message)
+            passed = False
+        if not passed:
+            return({
+                'pass': passed,
+                'message': message
+                })
 
 
-    def remove_all_snapshots(self, vm_name=None):
+    def remove_all_snapshots(self, vm_name=None, username='system_user'):
+        message = None
+        passed = None
         if not self.vim.loggedin:
             self.vim.relogin()
         if vm_name:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                task = vm.RemoveAllSnapshots_Task()
-                logger.info('All snapshots on %s have been deleted' %
-                        (vm_name)
-                        )
+                try:
+                    task = vm.RemoveAllSnapshots_Task()
+                    message = ' %s - All snapshots on %s have been deleted' %\
+                        (username, vm_name)
+                    logger.info(message)
+                    passed = True
+                except Exception as e:
+                    message = '%s - Snapshots werent deleted on %s' % \
+                            (username, vm_name)
+                    logger.error(message)
+                    passed = False
             else:
-                logger.error('VM by the name of %s does not exist' % \
-                        (vm_name)
-                        )
+                message = '%s - VM by the name of %s does not exist' % \
+                        (username, vm_name)
+                logger.error(message)
+                passed = False
+        else:
+            message = '%s - insufficient parameters' % (username)
+            logger.error(message)
+            passed = False
+        if not passed:
+            return({
+                'pass': passed,
+                'message': message
+                })
 
 
     def remove_snapshot(self, vm_name=None, snap_name=None,
-            remove_children=True):
-        snap_deleted = False
+            remove_children=True, username='system_user'):
+        message = None
+        passed = None
         if not self.vim.loggedin:
             self.vim.relogin()
         if vm_name:
@@ -202,36 +419,55 @@ class vmapi():
                             try:
                                 snapshot_list.snapshot.\
                                         RemoveSnapshot_Task(remove_children)
-                                snap_deleted = True
+                                message = ' %s - snap %s was deleted on %s' %\
+                                        (username, snap_name, vm_name)
+                                logger.info(message)
+                                passed = True
                                 if removed_children:
-                                    logger.info('Snapshot %s deleted on %s %s' %\
-                                        (snap_name, vm_name.
+                                    message = '%s - snap %s deleted on %s %s' %\
+                                        (username, snap_name, vm_name,
                                             'and all of its children')
-                                        )
+                                    logger.info(message)
                                 else:
-                                    logger.info('Snapshot %s deleted on %s' %\
-                                        (snap_name, vm_name)
-                                        )
+                                    message = ' %s - snap %s was deleted on %s' %\
+                                            (username, snap_name, vm_name)
+                                    logger.info(message)
 
                             except Exception as e:
-                                logger.error(e)
+                                message = '%s - %s couldnt be deleted on %s'%\
+                                        (username, snap_name, vm_name)
+                                logger.error(message)
+                                passed = False
                         i = i + 1
                         if len(snapshot_list.childSnapshotList) > 0:
                             snapshot_list = snapshot_list.childSnapshotList[0]
                         else:
                             snapshot_list = None
                 else:
-                    logger.info('Snapshots do not exist for %s' % vm_name)
+                    message = '%s - Snapshots do not exist for %s' % \
+                            (username, vm_name)
+                    logger.error(message)
+                    passed = False
             else:
-                logger.error('VM by the name of %s does not exist' % \
-                        (vm_name)
-                        )
+                message = '%s - VM by the name of %s does not exist' % \
+                        (username, vm_name)
+                logger.error(message)
+                passed = False
         else:
-            logger.error('insufficient parameters')
+            message = '%s - insufficient parameters' % (username)
+            logger.error(message)
+            passed = False
+        if not passed:
+            return({
+                'pass': passed,
+                'message': message
+                })
 
 
-    def revert_to_snapshot(self, vm_name=None, snap_name=None):
-        snap_reverted = False
+    def revert_to_snapshot(self, vm_name=None, snap_name=None,
+                username='system_user'):
+        message = None
+        passed = None
         if not self.vim.loggedin:
             self.vim.relogin()
         if vm_name:
@@ -244,25 +480,39 @@ class vmapi():
                         if snap_name == snapshot_list.name:
                             try:
                                 snapshot_list.snapshot.RevertToSnapshot_Task()
-                                snap_reverted = True
-                                logger.info('%s was reverted to %s' % \
-                                    (vm_name, snap_name)
-                                    )
+                                message = ' %s - %s was reverted to %s' %\
+                                        (username, vm_name, snap_name)
+                                logger.info(message)
+                                passed = True
                             except Exception as e:
-                                logger.error(e)
+                                message = '%s - %s couldnt revert to %s'%\
+                                        (username, vm_name, snap_name)
+                                logger.error(message)
+                                passed = False
                         i = i + 1
                         if len(snapshot_list.childSnapshotList) > 0:
                             snapshot_list = snapshot_list.childSnapshotList[0]
                         else:
                             snapshot_list = None
                 else:
-                    logger.info('Snapshots do not exist for %s' % vm_name)
+                    message = '%s - Snapshots do not exist for %s' % \
+                            (username, vm_name)
+                    logger.error(message)
+                    passed = False
             else:
-                logger.error('VM by the name of %s does not exist' % \
-                        (vm_name)
-                        )
+                message = '%s - VM by the name of %s does not exist' % \
+                        (username, vm_name)
+                logger.error(message)
+                passed = False
         else:
-            logger.error('insufficient parameters')
+            message = '%s - insufficient parameters' % (username)
+            logger.error(message)
+            passed = False
+        if not passed:
+            return({
+                'pass': passed,
+                'message': message
+                })
 
 
 
