@@ -186,7 +186,8 @@ class vmapi():
                         )
 
 
-    def remove_snapshots(self, vm_name=None, snap_name=None):
+    def remove_snapshot(self, vm_name=None, snap_name=None,
+            remove_children=True):
         snap_deleted = False
         if not self.vim.loggedin:
             self.vim.relogin()
@@ -200,11 +201,18 @@ class vmapi():
                         if snap_name == snapshot_list.name:
                             try:
                                 snapshot_list.snapshot.\
-                                    currentSnapshot.RemoveSnapshot_Task()
+                                        RemoveSnapshot_Task(remove_children)
                                 snap_deleted = True
-                                logger.info('Snapshot %s deleted on %s' % \
-                                    (snap_name, vm_name)
-                                    )
+                                if removed_children:
+                                    logger.info('Snapshot %s deleted on %s %s' %\
+                                        (snap_name, vm_name.
+                                            'and all of its children')
+                                        )
+                                else:
+                                    logger.info('Snapshot %s deleted on %s' %\
+                                        (snap_name, vm_name)
+                                        )
+
                             except Exception as e:
                                 logger.error(e)
                         i = i + 1
@@ -222,7 +230,7 @@ class vmapi():
             logger.error('insufficient parameters')
 
 
-    def revert_snapshots(self, vm_name=None, snap_name=None):
+    def revert_to_snapshot(self, vm_name=None, snap_name=None):
         snap_reverted = False
         if not self.vim.loggedin:
             self.vim.relogin()
@@ -235,8 +243,7 @@ class vmapi():
                     while snapshot_list:
                         if snap_name == snapshot_list.name:
                             try:
-                                snapshot_list.snapshot.\
-                                    currentSnapshot.RevertToSnapshot_Task()
+                                snapshot_list.snapshot.RevertToSnapshot_Task()
                                 snap_reverted = True
                                 logger.info('%s was reverted to %s' % \
                                     (vm_name, snap_name)
