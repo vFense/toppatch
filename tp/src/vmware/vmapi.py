@@ -10,7 +10,6 @@ CONFIG_FILE = 'visdk.config'
 HOST_SECTION = 'vm_api_host'
 CREDS_SECTION = 'vm_credentials'
 OPTIONS = 'options'
-
 logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvapi')
 
@@ -56,6 +55,7 @@ class vmapi():
             self.connected, self.logged_in, self.vim = self._connect()
         else:     
             logger.error('Missing config file %s', self.CONFIG)
+
 
     def _connect(self):
         connected = False
@@ -171,9 +171,8 @@ class vmapi():
 
 
     def remove_all_snapshots(self, vm_name=None):
-        snaps = {}
-        if not vim.loggedin:
-            vim.relogin()
+        if not self.vim.loggedin:
+            self.vim.relogin()
         if vm_name:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
@@ -185,3 +184,78 @@ class vmapi():
                 logger.error('VM by the name of %s does not exist' % \
                         (vm_name)
                         )
+
+
+    def remove_snapshots(self, vm_name=None, snap_name=None):
+        snap_deleted = False
+        if not self.vim.loggedin:
+            self.vim.relogin()
+        if vm_name:
+            vm = self.vim.getVirtualMachine(vm_name)
+            if vm:
+                if len(vm.snapshot) >0:
+                    snapshot_list = vm.snapshot.rootSnapshotList[0]
+                    i = 1
+                    while snapshot_list:
+                        if snap_name == snapshot_list.name:
+                            try:
+                                snapshot_list.snapshot.\
+                                    currentSnapshot.RemoveSnapshot_Task()
+                                snap_deleted = True
+                                logger.info('Snapshot %s deleted on %s' % \
+                                    (snap_name, vm_name)
+                                    )
+                            except Exception as e:
+                                logger.error(e)
+                        i = i + 1
+                        if len(snapshot_list.childSnapshotList) > 0:
+                            snapshot_list = snapshot_list.childSnapshotList[0]
+                        else:
+                            snapshot_list = None
+                else:
+                    logger.info('Snapshots do not exist for %s' % vm_name)
+            else:
+                logger.error('VM by the name of %s does not exist' % \
+                        (vm_name)
+                        )
+        else:
+            logger.error('insufficient parameters')
+
+
+    def revert_snapshots(self, vm_name=None, snap_name=None):
+        snap_reverted = False
+        if not self.vim.loggedin:
+            self.vim.relogin()
+        if vm_name:
+            vm = self.vim.getVirtualMachine(vm_name)
+            if vm:
+                if len(vm.snapshot) >0:
+                    snapshot_list = vm.snapshot.rootSnapshotList[0]
+                    i = 1
+                    while snapshot_list:
+                        if snap_name == snapshot_list.name:
+                            try:
+                                snapshot_list.snapshot.\
+                                    currentSnapshot.RevertToSnapshot_Task()
+                                snap_reverted = True
+                                logger.info('%s was reverted to %s' % \
+                                    (vm_name, snap_name)
+                                    )
+                            except Exception as e:
+                                logger.error(e)
+                        i = i + 1
+                        if len(snapshot_list.childSnapshotList) > 0:
+                            snapshot_list = snapshot_list.childSnapshotList[0]
+                        else:
+                            snapshot_list = None
+                else:
+                    logger.info('Snapshots do not exist for %s' % vm_name)
+            else:
+                logger.error('VM by the name of %s does not exist' % \
+                        (vm_name)
+                        )
+        else:
+            logger.error('insufficient parameters')
+
+
+
