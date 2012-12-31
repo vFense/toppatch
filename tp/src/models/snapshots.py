@@ -17,7 +17,7 @@ class SnapshotsPerNode(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
-    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"), unique=True)
+    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"), unique=False)
     name = Column(VARCHAR(256), nullable=False, unique=False)
     description = Column(VARCHAR(256), nullable=True, unique=False)
     order = Column(INTEGER)

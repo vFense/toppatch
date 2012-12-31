@@ -36,7 +36,7 @@ sched = Scheduler()
 sched.start()
 ENGINE = init_engine()
 @sched.interval_schedule(**parse_interval(interval))
-def get_vm_data():
+def get_vm_data(username='system_user'):
     session = create_session(ENGINE)
     nodes = session.query(NodeInfo).all()
     vm = VmApi()
@@ -64,22 +64,25 @@ def get_vm_data():
                                     (username, snap.name)
                             logger.error(message)
                 if len(value['snapshots']) >0:
-                    for snapshot in value['snapshots']:
-                        snap = SnapshotsPerNode(node_id=node.id,
-                                name=snapshot['name'],
-                                description=snapshot['description'],
-                                order=int(snapshot['order']),
-                                created_time=snapshot['created_time']
+                    for snaps in value['snapshots'].values():
+			print snaps['name']
+                       	snap = SnapshotsPerNode(node_id=node.id,
+                                name=snaps['name'],
+                                description=snaps['description'],
+                                order=int(snaps['order_id']),
+                                created_time=snaps['created']
                                 )
                         try:
                             session.add(snap)
                             session.commit()
                             message = '%s - Snapshot %s added into RV' % \
-                                    (username, snapshot['name'])
+                                    (username, snaps['name'])
                             logger.info(message)
+                            passed = True
                         except Exception as e:
+			    session.rollback()
                             passed = False
                             message = '%s - Couldnt add snapshot %s' % \
-                                    (username, snapshot['name'])
+                                 (username, snaps['name'])
                             logger.error(message)
     session.close()
