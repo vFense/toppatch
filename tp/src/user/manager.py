@@ -68,7 +68,7 @@ def create_user(session, username=None, password=None,
                 filter(User.username == username).first()
         if not user_exists:
             user = None
-            user_hash = Crypto.hash_scrypt(password)
+            user_hash = Crypto.hash_bcrypt(password)
             try:
                 user = User(username, user_hash, fullname, email)
                 session.add(user)
@@ -116,7 +116,7 @@ def authenticate_account(session, username, password):
     session = validate_session(session)
     account = session.query(User).filter(User.username == username).first()
     if account:
-    	authenticated = Crypto.verify_scrypt_hash(password, account.hash)
+    	authenticated = Crypto.verify_bcrypt_hash(password, account.hash)
     else:
         authenticated = False
     print "AUTHENTICATED", authenticated
