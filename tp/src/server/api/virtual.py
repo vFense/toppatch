@@ -26,6 +26,7 @@ from node.nodeManager import *
 from transactions.transactions_manager import *
 from logger.rvlogger import RvLogger
 from user.manager import *
+from vmware.vmapi import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
