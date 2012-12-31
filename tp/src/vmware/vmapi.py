@@ -49,7 +49,7 @@ def create_vm_config(server, username, password,
         logfile.close()
 
 
-def get_snapshost_for_vm(session, node_id=None):
+def get_snapshost_for_vm(session, node_id=None, username='system_user'):
         session = validate_session(session)
         snaps = []
         message = None
