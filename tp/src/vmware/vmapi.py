@@ -16,7 +16,7 @@ logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvapi')
 
 def cycle_validator(cycle):
-    vaild = True
+    valid = True
     cycles = cycle.split(" ")
     for i in cycles:
         if not re.search(r'(^[0-9]+)(h|m|s)', i):

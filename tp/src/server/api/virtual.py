@@ -27,6 +27,7 @@ from transactions.transactions_manager import *
 from logger.rvlogger import RvLogger
 from user.manager import *
 from vmware.vmapi import *
+from vmware.collector import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -39,6 +40,8 @@ class CreateVmwareConfigHandler(BaseHandler):
     @authenticated_request
     def post(self):
         passed = False
+        session = self.application.session
+        session = validate_session(session)
         username = self.get_current_user()
         vm_host = self.get_argument('vmhost', None)
         vm_user = self.get_argument('user', None)
@@ -58,6 +61,19 @@ class CreateVmwareConfigHandler(BaseHandler):
                     vim.login(vm_user, vm_password)
                     create_vm_config(vm_host, vm_user, vm_password,
                             create_snapshot=snapshot, cycle=cycle)
+		    get_vm_data(username=username)
+		    sched = self.application.scheduler
+		    try:
+			sched.unschedule_func(get_vm_data)
+			logger.info('unschedule the vmware data collector')
+		    except Exception as e:
+			logger.info(e)
+		    sched.add_interval_job(get_vm_data,
+				args=[username=username],
+				name='vmware collector'
+				jobstore='toppatch'
+				**parse_interval(cycle),
+				)
                     message = 'Valid Host and Credentials'
                     passed = True
                 except Exception as e:

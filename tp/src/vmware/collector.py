@@ -30,20 +30,16 @@ def parse_interval(interval):
 
 CONFIG = CONFIG_DIR + CONFIG_FILE
 reader = SafeConfigParser()
-if os.path.exists(CONFIG):
-    reader.read(CONFIG)
-    interval = reader.get(OPTIONS, 'cycle_connect_time')
-else:
-    interval = '12h'
-sched = Scheduler()
-sched.start()
-ENGINE = init_engine()
-@sched.interval_schedule(**parse_interval(interval))
+#if os.path.exists(CONFIG):
+#    reader.read(CONFIG)
+#    interval = reader.get(OPTIONS, 'cycle_connect_time')
+#else:
+#    interval = '12h'
 def get_vm_data(username='system_user'):
+    ENGINE = init_engine()
     session = create_session(ENGINE)
+    session = validate_session(session)
     nodes = session.query(NodeInfo).all()
-    if not os.path.exists(CONFIG):
-        return(False)
     vm = VmApi()
     vm_nodes = vm.get_all_vms()
     for node in nodes:
@@ -70,24 +66,24 @@ def get_vm_data(username='system_user'):
                             logger.error(message)
                 if len(value['snapshots']) >0:
                     for snaps in value['snapshots'].values():
-			print snaps['name']
-                       	snap = SnapshotsPerNode(node_id=node.id,
-                                name=snaps['name'],
-                                description=snaps['description'],
-                                order=int(snaps['order_id']),
-                                created_time=snaps['created']
-                                )
-                        try:
-                            session.add(snap)
-                            session.commit()
-                            message = '%s - Snapshot %s added into RV' % \
+			if type(snaps) == {}:
+                       	    snap = SnapshotsPerNode(node_id=node.id,
+                                    name=snaps['name'],
+                                    description=snaps['description'],
+                                    order=int(snaps['order_id']),
+                                    created_time=snaps['created']
+                                    )
+                            try:
+                                session.add(snap)
+                                session.commit()
+                                message = '%s - Snapshot %s added into RV' % \
                                     (username, snaps['name'])
-                            logger.info(message)
-                            passed = True
-                        except Exception as e:
-			    session.rollback()
-                            passed = False
-                            message = '%s - Couldnt add snapshot %s' % \
-                                 (username, snaps['name'])
-                            logger.error(message)
+                                logger.info(message)
+                                passed = True
+                            except Exception as e:
+			        session.rollback()
+                                passed = False
+                                message = '%s - Couldnt add snapshot %s' % \
+                                      (username, snaps['name'])
+                                logger.error(message)
     session.close()
