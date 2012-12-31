@@ -22,7 +22,7 @@ def parse_interval(interval):
     interval = interval.split(" ")
     interval_time = {}
     for i in interval:
-        if re.search(r'(^[0-9]+)(h|m)', i):
+        if re.search(r'(^[0-9]+)(h|m|s)', i):
             key, value = re.search(r'(^[0-9]+)(h|m|s)', i).group(1,2)
             interval_time[tconvert[value]] = int(key)
     return interval_time

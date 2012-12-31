@@ -3,6 +3,8 @@ import logging, logging.config
 import ConfigParser
 from ConfigParser import SafeConfigParser
 from pyvisdk import Vim
+from db.client import *
+from db.query_table import *
 
 
 CONFIG_DIR = '/opt/TopPatch/tp/src/vmware/'
@@ -12,6 +14,15 @@ CREDS_SECTION = 'vm_credentials'
 OPTIONS = 'options'
 logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvapi')
+
+def cycle_validator(cycle):
+    vaild = True
+    cycles = cycle.split(" ")
+    for i in cycles:
+        if not re.search(r'(^[0-9]+)(h|m|s)', i):
+            valid = False
+    return valid
+
 
 def create_vm_config(server, username, password,
         create_snapshot=False, cycle='12h'):
@@ -36,6 +47,37 @@ def create_vm_config(server, username, password,
         logfile = open(CONFIG, 'w')
         Config.write(logfile)
         logfile.close()
+
+
+def get_snapshost_for_vm(session, node_id=None):
+        session = validate_session(session)
+        snaps = []
+        message = None
+        passed = True
+        if node_id:
+            snapshots = snapshots_exist(session, node_id=node_id)
+            if len(snapshots) >0:
+                for snap in snapshots:
+                    snaps.append({
+                        'snap_name': snap.name,
+                        'snap_description': snap.description,
+                        'snap_order': snap.order,
+                        'created_time': snap.created_time.\
+                                strftime('%m/%d/%Y %H:%M')
+                        })
+            else:
+                message= 'Snapshots do not exist for %s'
+                passed = False
+        else:
+            message= 'Insufficient arguments'
+            passed = False
+        if passed:
+            return(snaps)
+        else:
+            return({
+                'pass': passed,
+                'message': message
+                })
 
 
 class VmApi():
@@ -283,7 +325,7 @@ class VmApi():
 
 
     def create_snapshot(self, vm_name=None, snap_name=None,
-            memory=True, quiesce=True, snap_description=None,
+            memory=False, quiesce=False, snap_description=None,
             username='system_user'):
         message = None
         passed = None
