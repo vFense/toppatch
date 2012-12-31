@@ -78,8 +78,6 @@ class CreateSnapshotHandler(BaseHandler):
     @authenticated_request
     def post(self):
         username = self.get_current_user()
-        self.session = self.application.session
-        self.session = validate_session(self.session)
         vm_name = self.get_argument('vmname', None)
         snap_name = self.get_argument('snapname', None)
         memory = self.get_argument('memory', False)
@@ -167,6 +165,48 @@ class RemoveAllSnapshotsHandler(BaseHandler):
                     'pass': False,
                     'message': 'Needed arguments: %s\n%s' % \
                             ('vnname and snapname')
+                    }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
+class GetNodeSnapshotsHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        username = self.get_current_user()
+        result = None
+        session = self.application.session
+        session = validate_session(session)
+        node_id = self.get_argument('nodeid', None)
+        vm_name = self.get_argument('vmname', None)
+        display_name = self.get_argument('displayname', None)
+        host_name = self.get_argument('hostname', None)
+        if node_id:
+            result = get_snapshost_for_vm(node_id=node_id,
+                    username=username)
+        elif vm_name:
+            node = session.query(NodeInfo).\
+                    filter(NodeInfo.vm_name == vm_name).first()
+            if node:
+                result = get_snapshost_for_vm(node_id=node.id,
+                        username=username)
+        elif display_name:
+            node = session.query(NodeInfo).\
+                    filter(NodeInfo.display_name == display_name).first()
+            if node:
+                result = get_snapshost_for_vm(node_id=node.id,
+                        username=username)
+        elif host_name:
+            node = session.query(NodeInfo).\
+                    filter(NodeInfo.host_name == host_name).first()
+            if node:
+                result = get_snapshost_for_vm(node_id=node.id,
+                        username=username)
+        else:
+            result = {
+                    'pass': False,
+                    'message': 'Optional arguments: %s\n' % \
+                            ('nodeid or vmname or displayname or hostname')
                     }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
