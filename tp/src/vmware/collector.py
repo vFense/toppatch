@@ -30,8 +30,11 @@ def parse_interval(interval):
 
 CONFIG = CONFIG_DIR + CONFIG_FILE
 reader = SafeConfigParser()
-reader.read(CONFIG)
-interval = reader.get(OPTIONS, 'cycle_connect_time')
+if os.path.exists(CONFIG):
+    reader.read(CONFIG)
+    interval = reader.get(OPTIONS, 'cycle_connect_time')
+else:
+    interval = '12h'
 sched = Scheduler()
 sched.start()
 ENGINE = init_engine()
@@ -39,6 +42,8 @@ ENGINE = init_engine()
 def get_vm_data(username='system_user'):
     session = create_session(ENGINE)
     nodes = session.query(NodeInfo).all()
+    if not os.path.exists(CONFIG):
+        return(False)
     vm = VmApi()
     vm_nodes = vm.get_all_vms()
     for node in nodes:

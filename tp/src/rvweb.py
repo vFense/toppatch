@@ -32,6 +32,7 @@ from server.api.scheduler_api import *
 from server.api.transactions_api import *
 from server.api.packages_api import *
 from server.api.api import *
+from server.api.vmware import *
 from server.api import *
 from server.account.manager import AccountManager
 from server.oauth.token import TokenManager
@@ -117,6 +118,12 @@ class Application(tornado.web.Application):
             (r"/api/groups/list?", ListGroupHandler),
             (r"/api/groups/create?", CreateGroupHandler),
             (r"/api/groups/delete?", DeleteGroupHandler),
+            (r"/api/vmware/snapshots/list?", GetNodeSnapshotsHandler),
+            (r"/api/vmware/snapshots/create?", CreateSnapshotHandler),
+            (r"/api/vmware/snapshots/revert?", RevertSnapshotHandler),
+            (r"/api/vmware/snapshots/remove?", RemoveSnapshotHandler),
+            (r"/api/vmware/snapshots/removeAll?", RemoveAllSnapshotsHandler),
+            (r"/api/vmware/createConfig?", CreateVmwareConfigHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.
