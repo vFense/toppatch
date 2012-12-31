@@ -93,20 +93,9 @@ class HandOff():
                 (self.username)
                 )
         add_software_update(self.session, self.json_object)
-<<<<<<< HEAD
-<<<<<<< HEAD
         logger.debug('%s - Adding Software Status to the %s %s' %\
                 (self.username, 'package_per_node table for node', 
                     self.node.ip_address)
-=======
-        logger.debug('%s - Adding Software Status to the package'%\
-                (self.username)+ 'for node %s' % (self.node.ip_address)
->>>>>>> Development
-=======
-        logger.debug('%s - Adding Software Status to the %s %s' %\
-                (self.username, 'package_per_node table for node', 
-                    self.node.ip_address)
->>>>>>> b8abe06ede767edccb34614b49a0992d2a7f3d03
                 )
         add_software_per_node(self.session, self.json_object)
         logger.debug('%s - updateing node_stats for %s' % \
@@ -134,22 +123,9 @@ class HandOff():
                         (self.username, 'software_available table')
                         )
                 add_software_available(self.session, self.json_object)
-<<<<<<< HEAD
-<<<<<<< HEAD
                 logger.debug('%s - adding 3rd party software to %s %s' %\
                         (self.username, 'software_installed table for node',
                             self.node.ip_address)
-=======
-                logger.debug('%s - adding 3rd party software to'%\
-                        (self.username)+\
-                        ' software_installed table for node %s' %\
-                        (self.node.ip_address)
->>>>>>> Development
-=======
-                logger.debug('%s - adding 3rd party software to %s %s' %\
-                        (self.username, 'software_installed table for node',
-                            self.node.ip_address)
->>>>>>> b8abe06ede767edccb34614b49a0992d2a7f3d03
                         )
                 add_software_installed(self.session, self.json_object)
         logger.debug('%s - updateing node_stats for %s' % \
