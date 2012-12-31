@@ -56,6 +56,7 @@ class HandOff():
                 pass
             if self.json_object[OPERATION] == SYSTEM_INFO:
                 add_system_info(self.session, self.json_object, self.node)
+                update_node_stats(self.session, self.node.id)
             if self.json_object[OPERATION] == UPDATES_PENDING or \
                     self.json_object[OPERATION] == UPDATES_INSTALLED:
                 self.add_update()
@@ -71,6 +72,7 @@ class HandOff():
                 self.update_results()
             if self.json_object[OPERATION] == REBOOT:
                 update_reboot_status(self.session, exists)
+                update_node_stats(self.session, self.node.id)
             else:
                 pass
         else:
@@ -93,9 +95,14 @@ class HandOff():
                 (self.username)
                 )
         add_software_update(self.session, self.json_object)
+<<<<<<< HEAD
         logger.debug('%s - Adding Software Status to the %s %s' %\
                 (self.username, 'package_per_node table for node', 
                     self.node.ip_address)
+=======
+        logger.debug('%s - Adding Software Status to the package'%\
+                (self.username)+ 'for node %s' % (self.node.ip_address)
+>>>>>>> Development
                 )
         add_software_per_node(self.session, self.json_object)
         logger.debug('%s - updateing node_stats for %s' % \
@@ -123,9 +130,16 @@ class HandOff():
                         (self.username, 'software_available table')
                         )
                 add_software_available(self.session, self.json_object)
+<<<<<<< HEAD
                 logger.debug('%s - adding 3rd party software to %s %s' %\
                         (self.username, 'software_installed table for node',
                             self.node.ip_address)
+=======
+                logger.debug('%s - adding 3rd party software to'%\
+                        (self.username)+\
+                        ' software_installed table for node %s' %\
+                        (self.node.ip_address)
+>>>>>>> Development
                         )
                 add_software_installed(self.session, self.json_object)
         logger.debug('%s - updateing node_stats for %s' % \
