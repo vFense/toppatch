@@ -610,7 +610,7 @@ def add_system_info(session, data, node_info, username='system_user'):
                         )
                 try:
                     session.add(net_info)
-                    session.commit(net_info)
+                    session.commit()
                 except Exception as e:
                     session.rollback()
         if system_info:
