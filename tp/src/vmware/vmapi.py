@@ -33,7 +33,7 @@ def create_vm_config(server, username, password,
             right_now = '%s_%s_%s_%s_%s_%s' % \
                 (now.year, now.month, now.day,
                 now.hour, now.minute, now.second)
-            BACKUP_CONFIG = CONFIG_DIR + 'logging-%s.config' % (right_now) 
+            BACKUP_CONFIG = CONFIG_DIR + 'visdk-%s.config' % (right_now) 
             os.rename(self.CONFIG_FILE, self.BACKUP_CONFIG_FILE)
         Config = ConfigParser.ConfigParser()
         Config.add_section(HOST_SECTION)
