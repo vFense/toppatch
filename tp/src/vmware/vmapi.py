@@ -85,40 +85,50 @@ class VmApi():
         self.CONFIG = None
         self.validated = False
         self.connected = False
+        self.error = None
         if config_file:
             self.CONFIG = config_file
         else:
             self.CONFIG = CONFIG_DIR + CONFIG_FILE
         if os.path.exists(self.CONFIG):
-            self.validated, creds = self._validate_config_file()
-            self.host = creds[0]
-            self.username = creds[1]
-            self.password = creds[2]
-            self.connected, self.logged_in, self.vim = self._connect()
-        else:     
-            logger.error('Missing config file %s', self.CONFIG)
+            self.validated, self.error, creds = self._validate_config_file()
+            if self.validated:
+                self.host = creds[0]
+                self.username = creds[1]
+                self.password = creds[2]
+                self.connected, self.error, self.logged_in, \
+                        self.vim = self._connect()
+        else:
+            msg = 'Missing config file %s' % (self.CONFIG)
+            self.error = msg
+            logger.error(msg)
 
 
     def _connect(self):
         connected = False
         logged_in = False
+        msg = None
         try:
             vim = Vim(self.host)
             connected = True
         except Exception as e:
             logger.error(e)
+            msg = e
+            return(connected, msg, logged_in, None)
         if connected:
             try:
                 vim.login(self.username, self.password)
                 logged_in = True
             except Exception as e:
                 logger.error(e)
+                msg = e
+                return(connected, msg, logged_in, None)
             if logged_in:
-                return(connected, logged_in, vim)
+                return(connected, msg, logged_in, vim)
             else:
-                return(connected, logged_in, None)
+                return(connected, msg, logged_in, None)
         else:
-            return(connected, logged_in, None)
+            return(connected, msg, logged_in, None)
 
 
     def _validate_config_file(self):
@@ -127,31 +137,45 @@ class VmApi():
             try:
                 reader.read(self.CONFIG)
             except Exception as e:
-                print e
+                msg = e
+                logger.error(e)
+                return(validated, msg, [])
             if reader.has_section(HOST_SECTION) and \
                 reader.has_section(CREDS_SECTION):
                 if reader.has_option(HOST_SECTION, 'server'):
                     server = reader.get(HOST_SECTION, 'server')
                 else:
                     validated = False
-                    logger.error('Missing server option')
+                    msg = 'VMWare Missing server option'
+                    logger.error(msg)
+                    return(validated, msg, [])
                 if reader.has_option(CREDS_SECTION, 'username'):
                     username = reader.get(CREDS_SECTION, 'username')
                 else:
                     validated = False
-                    logger.error('Missing username option')
+                    msg = 'VMWare Missing username option'
+                    logger.error(msg)
+                    return(validated, msg, [])
                 if reader.has_option(CREDS_SECTION, 'password'):
                     password = reader.get(CREDS_SECTION, 'password')
                 else:
                     validated = False
-                    logger.error('Missing password option')
+                    msg = 'VMWare Missing password option'
+                    logger.error(msg)
+                    return(validated, msg, [])
             else: 
                 validated = False
-                logger.error('Missing config sections')
+                msg = 'Missing config section'
+                logger.error(msg)
+                return(validated, msg, [])
             if validated:
-                return(validated, [server, username, password])
+                msg = 'VMWare Config was validated'
+                logger.info(msg)
+                return(validated, msg, [server, username, password])
             else:
-                return(validated, [])
+                msg = 'VMWare Config was not validated'
+                logger.error(msg)
+                return(validated, msg, [])
 
 
     def shutdown_vm(self, vm_name=None, username='system_user'):

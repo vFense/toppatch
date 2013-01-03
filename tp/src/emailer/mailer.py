@@ -60,12 +60,13 @@ class MailClient():
         self.CONFIG = None
         self.validated = False
         self.connected = False
+        self.error = None
         if config_file:
             self.CONFIG = config_file
         else:
             self.CONFIG = CONFIG_DIR + CONFIG_FILE
         if os.path.exists(self.CONFIG):
-            self.validated, creds = self._validate_config_file()
+            self.validated, self.error, creds = self._validate_config_file()
             if self.validated:
                 self.server = creds[0]
                 self.username = creds[1]
@@ -76,7 +77,10 @@ class MailClient():
                 self.to_email = creds[5]
                 self.is_tls = creds[6]
                 self.is_ssl = creds[7]
-                self.connected, self.logged_in, self.mail = self._connect()
+                self.connected, self.error, self.logged_in, \
+                        self.mail = self._connect()
+            else:
+                self.error = 
         else:     
             logger.error('Missing config file %s', self.CONFIG)
 
@@ -84,6 +88,7 @@ class MailClient():
     def _connect(self):
         connected = False
         logged_in = False
+        msg = None
         try:
             if self.is_ssl:
                 mail = smtplib.SMTP_SSL(self.server, self.port, timeout=5)
@@ -92,6 +97,8 @@ class MailClient():
             connected = True
         except Exception as e:
             logger.error(e)
+            msg = e
+            return(connected, msg, logged_in, None)
         if connected:
             try:
                 if self.is_tls:
@@ -100,70 +107,91 @@ class MailClient():
                 logged_in = True
             except Exception as e:
                 logger.error(e)
+                msg = e
+                return(connected, msg, logged_in, None)
             if logged_in:
-                return(connected, logged_in, mail)
+                return(connected, msg, logged_in, mail)
             else:
-                return(connected, logged_in, None)
+                return(connected, msg, logged_in, None)
         else:
-            return(connected, logged_in, None)
+            return(connected, msg, logged_in, None)
 
 
     def _validate_config_file(self):
             reader = SafeConfigParser()
             validated = True
+            msg = None
             try:
                 reader.read(self.CONFIG)
             except Exception as e:
                 logger.error(e)
                 validated = False
-                return(validated, [])
+                return(validated, msg, [])
             if reader.has_section(HOST_SECTION) and \
                 reader.has_section(CREDS_SECTION):
                 if reader.has_option(HOST_SECTION, 'server'):
                     server = reader.get(HOST_SECTION, 'server')
                 else:
                     validated = False
-                    logger.error('Missing server option')
+                    msg = 'Missing server option'
+                    logger.error(msg)
+                    return(validated, msg, [])
                 if reader.has_option(HOST_SECTION, 'port'):
                     port = reader.get(HOST_SECTION, 'port')
                 else:
                     validated = False
-                    logger.error('Missing port option')
+                    msg = 'Missing port option'
+                    logger.error(msg)
+                    return(validated, msg, [])
                 if reader.has_option(HOST_SECTION, 'from_email'):
                     from_email = reader.get(HOST_SECTION, 'from_email')
                 else:
                     validated = False
-                    logger.error('Missing from_email option')
+                    msg = 'Missing from_email option'
+                    logger.error(msg)
+                    return(validated, msg, [])
                 if reader.has_option(HOST_SECTION, 'to_email'):
                     to_email = reader.get(HOST_SECTION, 'to_email')
                 else:
                     validated = False
-                    logger.error('Missing to_email option')
+                    msg = 'Missing to_email option'
+                    logger.error(msg)
+                    return(validated, msg, [])
                 if reader.has_option(HOST_SECTION, 'is_tls'):
                     is_tls = return_bool(reader.get(HOST_SECTION, 'is_tls'))
                 else:
                     validated = False
-                    logger.error('Missing is_tls option')
+                    msg = 'Missing is_tls option'
+                    logger.error(msg)
+                    return(validated, msg, [])
                 if reader.has_option(HOST_SECTION, 'is_ssl'):
                     is_ssl = return_bool(reader.get(HOST_SECTION, 'is_ssl'))
                 else:
                     validated = False
-                    logger.error('Missing is_tls option')
+                    msg = 'Missing is_ssl option'
+                    logger.error(msg)
+                    return(validated, msg, [])
                 if reader.has_option(CREDS_SECTION, 'username'):
                     username = reader.get(CREDS_SECTION, 'username')
                 else:
                     validated = False
-                    logger.error('Missing username option')
+                    msg = 'Missing username option'
+                    logger.error(msg)
+                    return(validated, msg, [])
                 if reader.has_option(CREDS_SECTION, 'password'):
                     password = reader.get(CREDS_SECTION, 'password')
                 else:
                     validated = False
-                    logger.error('Missing password option')
+                    msg = 'Missing password option'
+                    logger.error(msg)
+                    return(validated, msg, [])
             else: 
                 validated = False
-                logger.error('Missing config sections')
+                msg = 'Missing config section'
+                logger.error(msg)
+                return(validated, msg, [])
             if validated:
-                return(validated, [server, username, password, port, 
+                return(validated, msg, [server, username, password, port, 
                         from_email, to_email, is_tls, is_ssl])
             else:
-                return(validated, [])
+                return(validated, msg, [])
