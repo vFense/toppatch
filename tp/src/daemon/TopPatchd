@@ -113,7 +113,8 @@ def TopPatch_stop():
     for service in SERVICES:
         if os.path.exists(service[1]):
             pid = open(service[1], 'r').read()
-            os.kill(int(pid), signal.SIGTERM)
+            if re.search(r'[0-9]+', pid):
+                os.kill(int(pid), signal.SIGTERM)
             os.remove(service[1])
             time.sleep(2)
         else:
