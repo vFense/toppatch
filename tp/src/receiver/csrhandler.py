@@ -55,7 +55,7 @@ class CsrHandOff():
                         if self.results.error:
                             logger.error(self.results.error)
                             logger.error('%s - Deleteing CSR and CERT for %s' %\
-                                    (self.username, self.results.err)
+                                    (self.username, self.results.error)
                                     )
                             self.csr_exists = \
                                     csr_exists(self.session, self.client_ip)

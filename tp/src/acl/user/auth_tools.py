@@ -352,7 +352,7 @@ class VerifyUser():
                     self.tag_length_of_nodes_that_have_acls == \
                     len(self.tag_length_of_nodes):
                 allowed = True
-                message = 'ACL for %s %s'%\
+                message = 'ACL for %s %s %s %s %s'%\
                         (self.user.username, self.tag.tag,
                                 'exists for all the nodes in this tag.',
                                 'This Tag should have an ACL instead',
@@ -410,7 +410,7 @@ class VerifyUser():
                         self.tag_length_of_nodes_that_have_acls == \
                         self.tag_length_of_nodes:
                     allowed = True
-                    message = 'Group ACL for %s %s'%\
+                    message = 'Group ACL for %s %s %s %s %s'%\
                             (self.user.username, self.tag.tag,
                                     'exists for all the nodes in this tag.',
                                     'This Tag should have an ACL instead',
