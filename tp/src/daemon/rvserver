@@ -5,20 +5,8 @@ NAME=TopPatchServer
 DESC=TopPatchServer
 TOPPATCHDIR=/opt/TopPatch
 DAEMON=/opt/TopPatch/tp/src/daemon/TopPatchd
-USER=allen
-PYTHONSTARTUP="$TOPPATCHDIR/conf/pythonstartup"
-export PYTHONSTARTUP
+USER=toppatch
 
-LD_LIBRARY_PATH="/opt/TopPatch/python/current/lib:/opt/TopPatch/python/python-2.7.3/lib/python2.7/lib-dynload:/opt/TopPatch/mysql/current/lib:/opt/TopPatch/lib/x86_64"
-export LD_LIBRARY_PATH
-
-PATH="$TOPPATCHDIR/bin:$TOPPATCHDIR/python/current/bin:$TOPPATCHDIR/mysql/current/bin:$PATH"
-export PATH
-
-PYTHONPATH="$VIRTUAL_ENV/tp/src"
-export PYTHONPATH
-
-which python
 set -e
 
 case "$1" in
