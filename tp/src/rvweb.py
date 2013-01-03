@@ -45,7 +45,7 @@ from twisted.internet import reactor
 from apscheduler.scheduler import Scheduler
 from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
 
-define("port", default=8000, help="run on port", type=int)
+define("port", default=9000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
 
 class HeaderModule(tornado.web.UIModule):

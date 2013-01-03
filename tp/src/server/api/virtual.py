@@ -69,10 +69,10 @@ class CreateVmwareConfigHandler(BaseHandler):
 		    except Exception as e:
 			logger.info(e)
 		    sched.add_interval_job(get_vm_data,
-				args=[username=username],
-				name='vmware collector'
-				jobstore='toppatch'
-				**parse_interval(cycle),
+				args=[username],
+				name='vmware collector',
+				jobstore='toppatch',
+				**parse_interval(cycle)
 				)
                     message = 'Valid Host and Credentials'
                     passed = True
