@@ -103,11 +103,17 @@ class CreateSnapshotHandler(BaseHandler):
         result = None
         if vm_name and snap_name:
             vm = VmApi()
-            result = vm.create_snapshot(vm_name=vm_name,
-                    snap_name=snap_name, memory=memory,
-                    quiesce=quiesce, snap_description=snap_description,
-                    username=username
-                    )
+            if not vm.error:
+                result = vm.create_snapshot(vm_name=vm_name,
+                        snap_name=snap_name, memory=memory,
+                        quiesce=quiesce, snap_description=snap_description,
+                        username=username
+                        )
+            else:
+                result = {
+                        'pass': False,
+                        'message': vm.error
+                        }
         else:
             result = {
                     'pass': False,
@@ -130,9 +136,15 @@ class RevertSnapshotHandler(BaseHandler):
         result = None
         if vm_name and snap_name:
             vm = VmApi()
-            result = vm.revert_to_snapshot(vm_name=vm_name,
-                    snap_name=snap_name, username=username
-                    )
+            if not vm.error:
+                result = vm.revert_to_snapshot(vm_name=vm_name,
+                        snap_name=snap_name, username=username
+                        )
+            else:
+                result = {
+                        'pass': False,
+                        'message': vm.error
+                        }
         else:
             result = {
                     'pass': False,
@@ -153,10 +165,16 @@ class RemoveSnapshotHandler(BaseHandler):
         result = None
         if vm_name and snap_name and children:
             vm = VmApi()
-            result = vm.remove_snapshot(vm_name=vm_name,
-                    snap_name=snap_name, remove_children=children,
-                    username=username
-                    )
+            if not vm.error:
+                result = vm.remove_snapshot(vm_name=vm_name,
+                        snap_name=snap_name, remove_children=children,
+                        username=username
+                        )
+            else:
+                result = {
+                        'pass': False,
+                        'message': vm.error
+                        }
         else:
             result = {
                     'pass': False,
@@ -175,8 +193,14 @@ class RemoveAllSnapshotsHandler(BaseHandler):
         result = None
         if vm_name:
             vm = VmApi()
-            result = vm.remove_all_snapshots(vm_name=vm_name,
-                    username=username)
+            if not vm.error:
+                result = vm.remove_all_snapshots(vm_name=vm_name,
+                        username=username)
+            else:
+                result = {
+                        'pass': False,
+                        'message': vm.error
+                        }
         else:
             result = {
                     'pass': False,
