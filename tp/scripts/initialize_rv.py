@@ -189,3 +189,5 @@ if __name__ == '__main__':
                     ('Please login as user=admin, passwd=toppatch')
         else:
             print 'RV Failed to initialize, please contact TopPatch support'
+    else:
+        print msg
