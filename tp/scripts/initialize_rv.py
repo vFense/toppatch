@@ -1,14 +1,11 @@
 import os
-import os.path
+import shutil
 import sys
 import re
 from time import sleep
-import shlex
-import signal
 import subprocess
 import logging, logging.config
 from db.client import *
-from db.update_table import *
 from user.manager import *
 
 logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
@@ -132,20 +129,63 @@ def user_creation(session):
     return(completed)
 
 
-db_initialized, msg = initialize_db()
-initialized = False
-if db_initialized:
-    ENGINE = init_engine()
-    session = create_session(ENGINE)
-    groups_created = group_creation(session)
-    if groups_created:
-        acls_created = acl_creation(session)
-        if acls_created:
-            users_created = user_creation(session)
-            if users_created:
-                initialized = True
-    if initialized:
-        print 'RV environment has been succesfully initialized\n%s' %\
-                ('Please loging as user=admin, passwd=toppatch')
-    else:
-        print 'RV Failed to initialize, please contact TopPatch support'
+def clean_database(connected):
+    os.chdir(MYSQL_PATH)
+    completed = True
+    sql_msg = None
+    msg = None
+    if connected:
+        mysql_stop = subprocess.Popen(['./support-files/mysql.server',
+            'stop'], stdout=subprocess.PIPE)
+        mysql_stop.poll()
+        mysql_stop.wait()
+        if mysql_stop.returncode == 0:
+            sql_msg = 'MySQL stopped successfully\n'
+        else:
+            sql_msg = 'MySQL couldnt be stopped\n'
+    try:
+        a = shutil.rmtree(MYSQL_PATH+'/data')
+        msg = 'MySQL Data directory removed and cleaned'
+    except Exception as e:
+        msg = 'MySQL Data directory could not be removed'
+        completed = False
+    if sql_msg and msg:
+        msg = sql_msg + msg
+    elif sql_msg and not msg:
+        msg = sql_msg
+    return(completed, msg)
+
+
+if __name__ == '__main__':
+    try:
+        ENGINE = init_engine()
+        ENGINE.connect()
+        connected = True
+        sql_msg = 'MySQL is Running'
+    except Exception as e:
+        connected = False
+        sql_msg = 'MySQL is not Running'
+    print sql_msg
+    db_clean, db_msg = clean_database(connected)
+    print db_msg
+    db_initialized, msg = initialize_db()
+    initialized = False
+    if db_initialized:
+        ENGINE = init_engine()
+        session = create_session(ENGINE)
+        print 'MySQL is Running and Connected'
+        groups_created = group_creation(session)
+        if groups_created:
+            print 'RV Groups were created successfully'
+            acls_created = acl_creation(session)
+            if acls_created:
+                print 'RV ACLs for the user Groups were created successfully'
+                users_created = user_creation(session)
+                if users_created:
+                    print 'RV default Users were created successfully'
+                    initialized = True
+        if initialized:
+            print 'RV environment has been succesfully initialized\n%s' %\
+                    ('Please login as user=admin, passwd=toppatch')
+        else:
+            print 'RV Failed to initialize, please contact TopPatch support'
