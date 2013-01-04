@@ -47,6 +47,10 @@ users_to_groups = [('admin', 'ADMIN'),
         ]
 
 def initialize_db():
+    if not os.path.exists('/opt/TopPatch/var/tmp'):
+        os.mkdir('/opt/TopPatch/var/tmp')
+    if not os.path.exists('/opt/TopPatch/var/log'):
+        os.mkdir('/opt/TopPatch/var/log')
     completed = True
     msg = 'RV Database initialized and populated'
     os.chdir(MYSQL_PATH)
