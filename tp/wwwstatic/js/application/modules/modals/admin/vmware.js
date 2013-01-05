@@ -28,28 +28,39 @@ define(
                     'submit form': 'submit'
                 },
                 submit: function (event) {
-                    /*
                     var $form = $(event.target),
-                        url = 'api/logger/modifyLogging',
-                        $alert = this.$el.find('.alert');
-                    window.console.log($form.serialize());
-                    $.post(url, $form.serialize(), function (json) {
+                        that = this,
+                        url = '/api/vmware/createConfig',
+                        $alert = this.$el.find('.alert'),
+                        $hostInput = $form.find('input[name=vm_host]'),
+                        $cycleInput = $form.find('select'),
+                        $ssInput = $form.find('input[type=checkbox]'),
+                        $userInput = $form.find('input[name=vm_user]'),
+                        $passInput = $form.find('input[name=vm_password]');
+                    if (!$hostInput.val()) {
+                        $hostInput.parents('.control-group').addClass('error');
+                        $alert.removeClass('alert-success').addClass('alert-error').html('Please fill the required fields.').show();
+                        return false;
+                    } else {
+                        url += '?' + $hostInput.serialize() + '&' + $cycleInput.serialize();
+                        url += '&' + $userInput.serialize() + '&' + $passInput.serialize();
+                        url += '&' + $ssInput.attr('name') + '=' + $ssInput.prop('checked');
+                        that.$el.find('.control-group').removeClass('error');
+                    }
+                    window.console.log(url);
+                    $.post(url, function (json) {
                         window.console.log(json);
                         if (!json.pass) {
-                            $alert.find('span').html(json.message);
-                            $alert.removeClass('alert-success').addClass('alert-error');
+                            $alert.removeClass('alert-success').addClass('alert-error').html(json.message);
                         } else {
-                            $alert.removeClass('alert-error').addClass('alert-success');
-                            $alert.find('span').html(json.message);
+                            $alert.removeClass('alert-error').addClass('alert-success').html(json.message);
                         }
                         $alert.show();
                     });
-                    */
-                    window.console.log(event);
                     return false;
                 },
                 beforeRender: $.noop,
-                onRender: $.noop,
+                onRender: function () { this.$el.find('label').show(); },//$.noop,
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
