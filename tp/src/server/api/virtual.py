@@ -36,7 +36,6 @@ class GetVmwareConfigHandler(BaseHandler):
         result = {
             'host': vm.host.
             'username': vm.username,
-            'password': vm.password,
             'cycle': vm.cycle,
             'snapshot_before_patch': vm.create_snapshot_before_patch
             }
