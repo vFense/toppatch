@@ -30,6 +30,6 @@ class SnapshotsPerNode(Base):
         self.order = order
         self.created_time = created_time
     def __repr__(self):
-        return "<SnapshotsPerNode(%s,%s,%s,%s,%S)>" %\
+        return "<SnapshotsPerNode(%s,%s,%s,%s,%s)>" %\
                 (self.node_id, self.name, self.description,
                 self.order, self.created_time)

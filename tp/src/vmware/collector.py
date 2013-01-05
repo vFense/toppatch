@@ -42,12 +42,13 @@ def get_vm_data(username='system_user'):
     nodes = session.query(NodeInfo).all()
     vm = VmApi()
     vm_nodes = vm.get_all_vms()
+    print vm_nodes
     for node in nodes:
         for key, value in vm_nodes.items():
             if node.host_name == value['host_name'] or \
-                    node.ip_address == value['ip_address'] or \
-                    node.vm_name == value['vm_name']:
+                    node.ip_address == value['ip_address']:
                 node.vm_name = value['vm_name']
+                session.commit()
                 snapshots = session.query(SnapshotsPerNode).\
                     filter(SnapshotsPerNode.node_id == node.id).all()
                 if len(snapshots) >0:
@@ -66,7 +67,7 @@ def get_vm_data(username='system_user'):
                             logger.error(message)
                 if len(value['snapshots']) >0:
                     for snaps in value['snapshots'].values():
-			if type(snaps) == {}:
+			if type(snaps) == dict:
                        	    snap = SnapshotsPerNode(node_id=node.id,
                                     name=snaps['name'],
                                     description=snaps['description'],

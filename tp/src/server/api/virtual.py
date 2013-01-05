@@ -16,20 +16,12 @@ from models.ssl import *
 from models.scheduler import *
 from server.handlers import SendToSocket
 from db.client import *
-from scheduler.jobManager import job_lister, remove_job
-from scheduler.timeBlocker import *
-from tagging.tagManager import *
-from search.search import *
 from utils.common import *
-from packages.pkgManager import *
 from node.nodeManager import *
-from transactions.transactions_manager import *
 from logger.rvlogger import RvLogger
 from user.manager import *
 from vmware.vmapi import *
 from vmware.collector import *
-from sqlalchemy import distinct, func
-from sqlalchemy.orm import sessionmaker, class_mapper
 
 from jsonpickle import encode
 
@@ -40,14 +32,17 @@ class CreateVmwareConfigHandler(BaseHandler):
     @authenticated_request
     def post(self):
         passed = False
+        logged_in = False
         session = self.application.session
         session = validate_session(session)
         username = self.get_current_user()
-        vm_host = self.get_argument('vmhost', None)
-        vm_user = self.get_argument('user', None)
-        vm_password = self.get_argument('password', None)
+        vm_host = self.get_argument('vm_host', None)
+        vm_user = self.get_argument('vm_user', None)
+        vm_password = self.get_argument('vm_password', None)
         snapshot = self.get_argument('snapshot', False)
-        cycle = self.get_argument('cycle', '12h')
+        #cycle = self.get_argument('cycle', '12h')
+        cycle = '12h'
+        print vm_host, vm_user, vm_password, cycle_validator(cycle)
         if vm_host and vm_user and vm_password and \
                 cycle_validator(cycle):
             vim = None
@@ -59,6 +54,14 @@ class CreateVmwareConfigHandler(BaseHandler):
             if vim:
                 try:
                     vim.login(vm_user, vm_password)
+                    message = 'Valid Host and Credentials'
+                    passed = True
+                    logged_in = True
+		except Exception as e:
+                    message = 'Invalid username or password'
+                    passed = False
+                    logger.info(e)
+                if logged_in:
                     create_vm_config(vm_host, vm_user, vm_password,
                             create_snapshot=snapshot, cycle=cycle)
 		    get_vm_data(username=username)
@@ -67,6 +70,7 @@ class CreateVmwareConfigHandler(BaseHandler):
 			sched.unschedule_func(get_vm_data)
 			logger.info('unschedule the vmware data collector')
 		    except Exception as e:
+			print e
 			logger.info(e)
 		    sched.add_interval_job(get_vm_data,
 				args=[username],
@@ -74,11 +78,6 @@ class CreateVmwareConfigHandler(BaseHandler):
 				jobstore='toppatch',
 				**parse_interval(cycle)
 				)
-                    message = 'Valid Host and Credentials'
-                    passed = True
-                except Exception as e:
-                    message = 'Invalid username or password'
-                    passed = False
         else:
             message = 'Invalid cycle: %s\n Valid cycle examples:%s' %\
                     (cycle, '12h or 3h 30m')
