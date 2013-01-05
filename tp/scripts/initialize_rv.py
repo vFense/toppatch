@@ -1,17 +1,17 @@
-
-
+import os
+import shutil
+import sys
+import re
+from time import sleep
+import subprocess
+import logging, logging.config
 from db.client import *
-from db.update_table import *
 from user.manager import *
 
-
-ENGINE = init_engine()
-session = create_session(ENGINE)
-create_group(session, groupname='ADMIN')
-create_group(session, groupname='READ_ONLY')
-create_group(session, groupname='API_RO')
-create_group(session, groupname='API_RW')
-
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
+MYSQL_PATH = '/opt/TopPatch/mysql/current'
+PYTHON_PATH = '/opt/TopPatch/python/current'
 acl_admin = {
         'group_id': '1', 'is_admin': 'true', 'is_global': 'true',
         'allow_install': 'true', 'allow_uninstall': 'true',
@@ -39,16 +39,159 @@ acl_api_rw = {
         'allow_tag_removal':'true'
         }
 
-acl_group_a = acl_modifier(session, 'global_group', 'create', acl_admin)
-print acl_group_a
-acl_group_b = acl_modifier(session, 'global_group', 'create', acl_ro)
-print acl_group_b
-acl_group_c = acl_modifier(session, 'global_group', 'create', acl_api_rw)
-print acl_group_c
+acls = [acl_admin, acl_ro, acl_api_rw]
+groups = ['ADMIN', 'READ_ONLY', 'API_RO', 'API_RW']
+users_to_groups = [('admin', 'ADMIN'),
+        ('monitor', 'API_RO'),
+        ('remote', 'API_RW')
+        ]
 
-a = create_user(session, username='admin', password='toppatch', groupname='ADMIN', user_name='initializer')
-print a
-b = create_user(session, username='monitor', password='toppatch', groupname='API_RO', user_name='initializer')
-print b
-c = create_user(session, username='remote', password='toppatch', groupname='API_RW', user_name='initializer')
-print c
+def initialize_db():
+    if not os.path.exists('/opt/TopPatch/var/tmp'):
+        os.mkdir('/opt/TopPatch/var/tmp')
+    if not os.path.exists('/opt/TopPatch/var/log'):
+        os.mkdir('/opt/TopPatch/var/log')
+    completed = True
+    msg = 'RV Database initialized and populated'
+    os.chdir(MYSQL_PATH)
+    mysql_install = subprocess.Popen(['./scripts/mysql_install_db'],
+            stdout=subprocess.PIPE)
+    mysql_install.poll()
+    mysql_install.wait()
+    if mysql_install.returncode == 0:
+        mysql_start = subprocess.Popen(['./support-files/mysql.server',
+            'start'], stdout=subprocess.PIPE)
+        mysql_start.poll()
+        mysql_start.wait()
+    else:
+        completed = False
+        msg = 'Failed during MySQL initialization'
+        return(completed, msg)
+    if mysql_start.returncode == 0:
+        mysql_password = subprocess.Popen(['./bin/mysqladmin',
+            '-u', 'root', 'password', 'topmiamipatch'],
+            stdout=subprocess.PIPE)
+        mysql_password.poll()
+        mysql_password.wait()
+    else:
+        completed = False
+        msg = 'Failed during MySQL startup process'
+        return(completed, msg)
+    if mysql_password.returncode == 0:
+        create_db = subprocess.Popen(['./bin/mysql',
+            '-u', 'root', '--password=topmiamipatch',
+            '-e create database toppatch_server;'],
+            stdout=subprocess.PIPE)
+        create_db.poll()
+        create_db.wait()
+    else:
+        completed = False
+        msg = 'Failed during MySQL password change'
+        return(completed, msg)
+    if create_db.returncode == 0:
+        os.chdir(PYTHON_PATH)
+        create_tables = subprocess.Popen(['./bin/python',
+            '/opt/TopPatch/tp/scripts/create_tables.py'],
+            stdout=subprocess.PIPE)
+        create_tables.poll()
+        create_tables.wait()
+    else:
+        completed = False
+        msg = 'Failed during MySQL toppatch_server db creation'
+        return(completed, msg)
+    if not create_tables.returncode == 0:
+        completed = False
+        msg = 'Failed during MySQL toppatch_server tables creation'
+        return(completed, msg)
+    return(completed, msg)
+
+
+def group_creation(session):
+    completed = True
+    for group in groups:
+        g = create_group(session, groupname=group)
+        if not g['pass']:
+            completed = False
+    return(completed)
+
+
+def acl_creation(session):
+    completed = True
+    for acl in acls:
+        acl_group = acl_modifier(session, 'global_group', 'create', acl)
+        if not acl_group['pass']:
+            completed = False
+    return(completed)
+
+def user_creation(session):
+    completed = True
+    for users in users_to_groups:
+        user = create_user(session, username=users[0], password='toppatch',
+                groupname=users[1], user_name='initializer')
+        if not user['pass']:
+            completed = False
+    return(completed)
+
+
+def clean_database(connected):
+    os.chdir(MYSQL_PATH)
+    completed = True
+    sql_msg = None
+    msg = None
+    if connected:
+        mysql_stop = subprocess.Popen(['./support-files/mysql.server',
+            'stop'], stdout=subprocess.PIPE)
+        mysql_stop.poll()
+        mysql_stop.wait()
+        if mysql_stop.returncode == 0:
+            sql_msg = 'MySQL stopped successfully\n'
+        else:
+            sql_msg = 'MySQL couldnt be stopped\n'
+    try:
+        a = shutil.rmtree(MYSQL_PATH+'/data')
+        msg = 'MySQL Data directory removed and cleaned'
+    except Exception as e:
+        msg = 'MySQL Data directory could not be removed'
+        completed = False
+    if sql_msg and msg:
+        msg = sql_msg + msg
+    elif sql_msg and not msg:
+        msg = sql_msg
+    return(completed, msg)
+
+
+if __name__ == '__main__':
+    try:
+        ENGINE = init_engine()
+        ENGINE.connect()
+        connected = True
+        sql_msg = 'MySQL is Running'
+    except Exception as e:
+        connected = False
+        sql_msg = 'MySQL is not Running'
+    print sql_msg
+    db_clean, db_msg = clean_database(connected)
+    print db_msg
+    db_initialized, msg = initialize_db()
+    initialized = False
+    if db_initialized:
+        ENGINE = init_engine()
+        session = create_session(ENGINE)
+        print 'MySQL is Running and Connected'
+        groups_created = group_creation(session)
+        if groups_created:
+            print 'RV Groups were created successfully'
+            acls_created = acl_creation(session)
+            if acls_created:
+                print 'RV ACLs for the user Groups were created successfully'
+                users_created = user_creation(session)
+                if users_created:
+                    print 'RV default Users were created successfully'
+                    initialized = True
+        if initialized:
+            print 'RV environment has been succesfully initialized\n%s' %\
+                    ('Please login as user=admin, passwd=toppatch')
+        else:
+            print 'RV Failed to initialize, please contact TopPatch support'
+    else:
+        print msg
