@@ -94,11 +94,11 @@ class CreateSnapshotHandler(BaseHandler):
     @authenticated_request
     def post(self):
         username = self.get_current_user()
-        vm_name = self.get_argument('vmname', None)
-        snap_name = self.get_argument('snapname', None)
+        vm_name = self.get_argument('vm_name', None)
+        snap_name = self.get_argument('snap_name', None)
         memory = self.get_argument('memory', False)
         quiesce = self.get_argument('quiesce', False)
-        snap_description = self.get_argument('description', None)
+        snap_description = self.get_argument('snap_description', None)
         result = None
         if vm_name and snap_name:
             vm = VmApi()
@@ -130,8 +130,8 @@ class RevertSnapshotHandler(BaseHandler):
     @authenticated_request
     def post(self):
         username = self.get_current_user()
-        vm_name = self.get_argument('vmname', None)
-        snap_name = self.get_argument('snapname', None)
+        vm_name = self.get_argument('vm_name', None)
+        snap_name = self.get_argument('snap_name', None)
         result = None
         if vm_name and snap_name:
             vm = VmApi()
@@ -158,8 +158,8 @@ class RemoveSnapshotHandler(BaseHandler):
     @authenticated_request
     def post(self):
         username = self.get_current_user()
-        vm_name = self.get_argument('vmname', None)
-        snap_name = self.get_argument('snapname', None)
+        vm_name = self.get_argument('vm_name', None)
+        snap_name = self.get_argument('snap_name', None)
         children = self.get_argument('children', True)
         result = None
         if vm_name and snap_name and children:
@@ -188,7 +188,7 @@ class RemoveAllSnapshotsHandler(BaseHandler):
     @authenticated_request
     def post(self):
         username = self.get_current_user()
-        vm_name = self.get_argument('vmname', None)
+        vm_name = self.get_argument('vm_name', None)
         result = None
         if vm_name:
             vm = VmApi()
@@ -217,10 +217,10 @@ class GetNodeSnapshotsHandler(BaseHandler):
         result = None
         session = self.application.session
         session = validate_session(session)
-        node_id = self.get_argument('nodeid', None)
-        vm_name = self.get_argument('vmname', None)
-        display_name = self.get_argument('displayname', None)
-        host_name = self.get_argument('hostname', None)
+        node_id = self.get_argument('node_id', None)
+        vm_name = self.get_argument('vm_name', None)
+        display_name = self.get_argument('display_name', None)
+        host_name = self.get_argument('host_name', None)
         if node_id:
             result = get_snapshost_for_vm(session, node_id=node_id,
                     username=username)
