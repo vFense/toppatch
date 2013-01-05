@@ -34,7 +34,7 @@ class GetVmwareConfigHandler(BaseHandler):
     def get(self):
         vm = VmApi()
         result = {
-            'host': vm.host.
+            'host': vm.host,
             'username': vm.username,
             'cycle': vm.cycle,
             'snapshot_before_patch': vm.create_snapshot_before_patch
