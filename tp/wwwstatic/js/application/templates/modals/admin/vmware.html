@@ -1,74 +1,55 @@
-<article>
-    <form>
-        <section class="row-fluid">
-            <div class="control-group span6">
-                <label class="control-label">VMWare Host:</label>
-                <div class="controls">
-                    <input type="text" name="vm_host" value=""/>
+<% if(data) { %>
+    <article>
+        <form>
+            <section class="row-fluid">
+                <div class="control-group span6">
+                    <label class="control-label">VMWare Host:</label>
+                    <div class="controls">
+                        <input type="text" name="vm_host" value="<%= data.host %>"/>
+                    </div>
                 </div>
-            </div>
-            <div class="control-group span4">
-                <label class="control-label">Collecting Cycle:</label>
-                <div class="controls">
-                    <select name="cycle">
-                        <option value="">Select One...</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                        <option>9</option>
-                        <option>10</option>
-                        <option>11</option>
-                        <option>12</option>
-                        <option>13</option>
-                        <option>14</option>
-                        <option>15</option>
-                        <option>16</option>
-                        <option>17</option>
-                        <option>18</option>
-                        <option>19</option>
-                        <option>20</option>
-                        <option>21</option>
-                        <option>22</option>
-                        <option>23</option>
-                        <option>24</option>
-                    </select>
+                <div class="control-group span4">
+                    <label class="control-label">Collecting Cycle:</label>
+                    <div class="controls">
+                        <select name="cycle">
+                            <option value="">Select One...</option>
+                            <% for (var i = 1; i <= 24; i++) { %>
+                                <option value="<% print(i + 'h'); %>" <% if (data.cycle == (i + 'h')) { print('SELECTED'); } %>><%= i %></option>
+                            <% } %>
+                        </select>
+                    </div>
                 </div>
-            </div>
-        </section>
-        <section class="row-fluid">
-            <div class="control-group span6">
-                <label class="control-label">User:</label>
-                <div class="controls">
-                    <input type="text" name="vm_user"  value=""/>
+            </section>
+            <section class="row-fluid">
+                <div class="control-group span6">
+                    <label class="control-label">User:</label>
+                    <div class="controls">
+                        <input type="text" name="vm_user"  value="<%= data.username %>"/>
+                    </div>
                 </div>
-            </div>
-            <div class="control-group span4">
-                <label class="control-label">Password:</label>
-                <div class="controls">
-                    <input type="password" name="vm_password"  value=""/>
+                <div class="control-group span4">
+                    <label class="control-label">Password:</label>
+                    <div class="controls">
+                        <input type="password" name="vm_password"  value=""/>
+                    </div>
                 </div>
-            </div>
-        </section>
-        <section class="row-fluid">
-            <div class="span6">
-                <label class="control-label checkbox">
-                    Automatic Snapshots<input type="checkbox" name="snapshot"  value=""/>
-                </label>
-            </div>
-            <div class="span4">
-                <div class="alert alert-block fade in hide"></div>
-            </div>
-        </section>
-        <section class="row-fluid">
-            <div class="span6"></div>
-            <div class="span4 alignRight">
-                <input type="submit" value="Save" class="btn btn-primary" name="submit"/>
-            </div>
-        </section>
-    </form>
-</article>
+            </section>
+            <section class="row-fluid">
+                <div class="span6">
+                    <label class="control-label checkbox">
+                        Automatic Snapshots<input type="checkbox" name="snapshot"  <% if(data.snapshots_before_patch) { print('CHECKED'); } %>/>
+                    </label>
+                </div>
+                <div class="span4">
+                    <div class="alert alert-block fade in hide"></div>
+                </div>
+            </section>
+            <section class="row-fluid">
+                <div class="span6"></div>
+                <div class="span4 alignRight">
+                    <input type="submit" value="Save" class="btn btn-primary" name="submit"/>
+                </div>
+            </section>
+        </form>
+    </article>
+<% } %>
