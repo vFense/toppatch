@@ -224,7 +224,7 @@ def store_cert(session, ip, cert):
     csr = csr_exists(session, ip)
     cert_path, cert_name, cert_error = \
         save_key(CLIENT_KEY_DIR, cert, TYPE_CERT, name=ip)
-    node = add_node(session, ip)
+    node = add_node(session, client_ip=ip)
     cert_row = add_cert(session, node.id, csr.id,
         cert_name, cert_path, expiration)
     csr.is_csr_signed = True

@@ -7,6 +7,7 @@ try: import simplejson as json
 except ImportError: import json
 from models.node import NodeInfo
 from db.client import *
+from user.manager import *
 from networking.agentoperation import AgentOperation
 from scheduler.jobManager import job_scheduler, job_lister
 from server.decorators import authenticated_request
@@ -33,11 +34,16 @@ class LoginHandler(BaseHandler):
         self.render('../wwwstatic/login.html')
 
     def post(self):
+        session = self.application.session
+        session = validate_session(session)
         username = self.get_argument("name", None);
+	username = username.encode('utf8')
         password = self.get_argument("password", None);
+	password = password.encode('utf8')
         if username is not None and password is not None:
-            if self.application.account_manager.authenticate_account(str(self.get_argument("name")), str(self.get_argument("password"))):
-                self.set_secure_cookie("user", self.get_argument("name"))
+	    authenticated = authenticate_account(session, username, password)
+            if authenticated:
+                self.set_secure_cookie("user", username)
                 redirect = self.get_argument("next", None)
                 if redirect is not None:
                     self.redirect("/" + redirect)

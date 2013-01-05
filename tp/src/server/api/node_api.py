@@ -33,43 +33,24 @@ from jsonpickle import encode
 logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvapi')
 
+
 class ModifyDisplayNameHandler(BaseHandler):
     @authenticated_request
     def post(self):
         username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
-        nodeid = None
-        displayname = None
-        try:
-            nodeid = self.get_argument('nodeid')
-            displayname = self.get_argument('displayname')
-        except Exception as e:
-            pass
+        nodeid = self.get_argument('nodeid', None)
+        displayname = self.get_argument('displayname', None)
         if nodeid and displayname:
-            node = self.session.query(NodeInfo).filter(NodeInfo.id == nodeid).first()
-            if node:
-                try:
-                    if re.search(r'none', displayname, re.IGNORECASE):
-                        displayname = return_bool(displayname)
-                    node.display_name = displayname
-                    self.session.commit()
-                    logger.info('%s - Display name was changed to %s' %\
-                            (username, displayname)
-                            )
-                    result = {"pass" : True,
-                              "message" : "Display name change to %s" %\
-                                            (displayname)
-                            }
-                except Exception as e:
-                    self.session.rollback()
-                    logger.error('%s - Display name was not changed to %s' %\
-                            (username, displayname)
-                            )
-                    result = {"pass" : False,
-                              "message" : "Display name was not changed to %s"%\
-                                            (displayname)
-                            }
+            result = change_display_name(self.session, nodeid=nodeid,
+                displayname=displayname, username=username)
+            print result
+        else:
+            result = {
+                    "pass" : False,
+                    "message" : "Insufficient arguments"
+                    }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -80,41 +61,85 @@ class ModifyHostNameHandler(BaseHandler):
         username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
-        nodeid = None
-        hostname = None
-        try:
-            nodeid = self.get_argument('nodeid')
-            hostname = self.get_argument('hostname')
-        except Exception as e:
-            pass
+        nodeid = self.get_argument('nodeid', None)
+        hostname = self.get_argument('hostname', None)
         if nodeid and hostname:
-            node = self.session.query(NodeInfo).filter(NodeInfo.id == nodeid).first()
-            if node:
-                try:
-                    if re.search(r'none', hostname, re.IGNORECASE):
-                        hostname = return_bool(hostname)
-                    node.host_name = hostname
-                    self.session.commit()
-                    logger.info('%s - Host name was changed to %s' %\
-                            (username, hostname)
-                            )
-                    result = {"pass" : True,
-                              "message" : "Host name change to %s" %\
-                                            (hostname)
-                            }
-                except Exception as e:
-                    self.session.rollback()
-                    logger.error('%s - Host name was not changed to %s' %\
-                            (username, hostname)
-                            )
-                    result = {"pass" : False,
-                              "message" : "Host name was not changed to %s"%\
-                                            (hostname)
-                            }
+            result = change_host_name(self.session, nodeid=nodeid,
+                hostname=hostname, username=username)
+        else:
+            result = {
+                    "pass" : False,
+                    "message" : "Insufficient arguments"
+                    }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
 
+class NodeCleanerHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        nodeid = self.get_argument('nodeid', None)
+        if nodeid:
+            result = node_remover(self.session, node_id=nodeid,
+                    certs=False, just_clean_and_not_delete=True
+                    )
+        else:
+            result = {
+                'pass': False,
+                'message': 'Incorrect argument passed. %s' %
+                    ('Arguments needed are: nodeid')
+                }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
+class NodeRemoverHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        nodeid = self.get_argument('nodeid', None)
+        if nodeid:
+            result = node_remover(self.session, node_id=nodeid,
+                    certs=True, just_clean_and_not_delete=False
+                    )
+        else:
+            result = {
+                'pass': False,
+                'message': 'Incorrect argument passed. %s' %
+                    ('Arguments needed are: nodeid')
+                }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
+class NodeTogglerHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        userlist = self.session.query(User).all()
+        nodeid = self.get_argument('nodeid', None)
+        toggle = self.get_argument('toggle', None)
+        if toggle and nodeid:
+            toggle = return_bool(toggle)
+            result = node_toggler(self.session, nodeid=nodeid,
+                    toggle=toggle, username=username)
+        else:
+            return({
+                'pass': False,
+                'message': 'Incorrect Parameters passed. %s %s' %
+                        ('Correct Parameters are:',
+                         'nodeid and toggle'
+                         )
+                })
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
 
 
 class NodesHandler(BaseHandler):
@@ -232,46 +257,3 @@ class NodesHandler(BaseHandler):
 
 
 
-class NodeTogglerHandler(BaseHandler):
-    @authenticated_request
-    def post(self):
-        username = self.get_current_user()
-        self.session = self.application.session
-        self.session = validate_session(self.session)
-        userlist = self.session.query(User).all()
-        nodeid = self.get_argument('nodeid', None)
-        toggle = self.get_argument('toggle', None)
-        if toggle:
-            toggle = return_bool(toggle)
-        if nodeid:
-            sslinfo = self.session.query(SslInfo).\
-                    filter(SslInfo.node_id == nodeid).first()
-            if sslinfo:
-                if toggle:
-                    sslinfo.enabled = True
-                    self.session.commit()
-                    logger.info('%s - ssl communication for nodeid %s '%\
-                            (username, nodeid) + 'has been enabled'
-                           ) 
-                    result = {"pass" : True,
-                          "message" : "node_id %s has been enabled" %\
-                                          (nodeid)
-                         }
-                else:
-                    sslinfo.enabled = False
-                    self.session.commit()
-                    logger.info('%s - ssl communication for nodeid %s '%\
-                            (username, nodeid) + 'has been disabled'
-                           ) 
-                    result = {"pass" : True,
-                          "message" : "node_id %s has been disabled" %\
-                                          (nodeid)
-                         }
-        else:
-            logger.warn('%s - invalid nodeid %s' % (username, nodeid))
-            result = {"pass" : False,
-                      "message" : "node_id %s does not exist" % \
-                                     (nodeid)
-                         }
-        self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(result, indent=4))

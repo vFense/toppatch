@@ -18,27 +18,36 @@ from sqlalchemy import or_
 
 logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvapi')
-def add_node(session, client_ip, agent_timestamp=None,
-        node_timestamp=None, username='system_user'):
+
+
+def add_node(session, client_ip=None, agent_timestamp=None,
+        node_timestamp=None, host_name=None, display_name=None,
+        computer_name=None, vm_name=None, username='system_user'):
     """Add a node to the database"""
     session = validate_session(session)
+    if not host_name and client_ip:
+        try:
+            host_name = gethostbyaddr(client_ip)[0]
+        except:
+            host_name = None
     try:
-        hostname = gethostbyaddr(client_ip)[0]
-    except:
-        hostname = None
-    try:
-        add_node = NodeInfo(client_ip, hostname, None,
-                True, True, agent_timestamp, node_timestamp)
-        session.add(add_node)
+        addnode = NodeInfo(ip_address=client_ip, host_name=host_name,
+            display_name=display_name, computer_name=computer_name,
+            vm_name=vm_name, host_status=True, agent_status=True,
+            last_agent_update=agent_timestamp,
+            last_node_update=node_timestamp)
+        session.add(addnode)
         session.commit()
-        logger.info('%s - node %s added to node_info' %\
+        logger.info('%s - node %s added to node_info' %
                 (username, client_ip)
                 )
-        return add_node
+        return addnode
     except Exception as e:
         session.rollback()
-        logger.error('node %s could not be added to node_info' %\
-                client_ip)
+        logger.error('node %s could not be added to node_info:%s' %
+                (client_ip, e)
+		)
+
 
 def add_group(session, groupname=None):
     session = validate_session(session)
@@ -72,6 +81,7 @@ def add_group(session, groupname=None):
             'pass': False,
             'message': 'Need to pass the group_id'
             })
+
 
 def add_user_to_group(session, user_id=None, group_id=None):
     session = validate_session(session)
@@ -111,11 +121,11 @@ def add_user_to_group(session, user_id=None, group_id=None):
 
 
 def add_global_user_acl(session, user_id=None, is_admin=False,
-        is_global=True, read_only=False, allow_install=False, 
+        is_global=True, read_only=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
         allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False, 
+        allow_tag_creation=False, allow_tag_removal=False,
         date_created=datetime.now(), date_modified=datetime.now(),
         username='system_user'
         ):
@@ -130,9 +140,9 @@ def add_global_user_acl(session, user_id=None, is_admin=False,
         try:
             add_acl = GlobalUserAccess(user_id=user_id, is_admin=is_admin,
                     is_global=is_global, read_only=read_only,
-                    allow_install=allow_install, 
+                    allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
-                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
                     allow_snapshot_removal=allow_snapshot_removal,
                     allow_snapshot_revert=allow_snapshot_revert,
@@ -162,7 +172,7 @@ def add_global_user_acl(session, user_id=None, is_admin=False,
 
 
 def add_global_group_acl(session, group_id=None, is_admin=False,
-        is_global=True, read_only=False, allow_install=False, 
+        is_global=True, read_only=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
         allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -181,9 +191,9 @@ def add_global_group_acl(session, group_id=None, is_admin=False,
         try:
             add_acl = GlobalGroupAccess(group_id=group_id, is_admin=is_admin,
                     is_global=is_global, read_only=read_only,
-                    allow_install=allow_install, 
+                    allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
-                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
                     allow_snapshot_removal=allow_snapshot_removal,
                     allow_snapshot_revert=allow_snapshot_revert,
@@ -231,9 +241,9 @@ def add_node_user_acl(session, node_id=None, user_id=None,
     if user_id and node_id and not user_for_node_exists:
         try:
             add_acl = NodeUserAccess(node_id, user_id=user_id,
-                    allow_install=allow_install, 
+                    allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
-                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
                     allow_snapshot_removal=allow_snapshot_removal,
                     allow_snapshot_revert=allow_snapshot_revert,
@@ -276,9 +286,9 @@ def add_node_group_acl(session, node_id=None, group_id=None,
     if node_id and group_id and not group_for_node_exists:
         try:
             add_acl = NodeGroupAccess(node_id, group_id=group_id,
-                    allow_install=allow_install, 
+                    allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
-                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
                     allow_snapshot_removal=allow_snapshot_removal,
                     allow_snapshot_revert=allow_snapshot_revert,
@@ -322,9 +332,9 @@ def add_tag_user_acl(session, tag_id=None, user_id=None,
     if user_id and tag_id and not user_for_tag_exists:
         try:
             add_acl = TagUserAccess(tag_id, user_id=user_id,
-                    allow_install=allow_install, 
+                    allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
-                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
                     allow_snapshot_removal=allow_snapshot_removal,
                     allow_snapshot_revert=allow_snapshot_revert,
@@ -367,9 +377,9 @@ def add_tag_group_acl(session, tag_id=None, group_id=None,
     if group_id and tag_id and not group_for_tag_exists:
         try:
             add_acl = TagGroupAccess(tag_id, group_id,
-                    allow_install=allow_install, 
+                    allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
-                    allow_schedule=allow_schedule, allow_wol=allow_wol, 
+                    allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
                     allow_snapshot_removal=allow_snapshot_removal,
                     allow_snapshot_revert=allow_snapshot_revert,
@@ -515,7 +525,7 @@ def add_csr(session, client_ip, location, csr_name,
         arguments below..
         session == SQLAlchemy Session
         client_ip == "192.168.0.1"
-        location == The directory location 
+        location == The directory location
         ("/opt/TopPatch/var/lib/ssl/client/csr/192.168.0.1.csr")
     """
     session = validate_session(session)
@@ -536,7 +546,7 @@ def add_cert(session, node_id, cert_id, cert_name,
         session == SQLAlchemy Session
         node_id == 1 This is the id of the node that this cert belongs too.
         cert_id == 1 This is the id corresponding csr_id
-        cert_location == The directory location 
+        cert_location == The directory location
         ("/opt/TopPatch/var/lib/ssl/client/keys/192.168.0.1.cert")
     """
     session = validate_session(session)
@@ -593,14 +603,14 @@ def add_system_info(session, data, node_info, username='system_user'):
             )
         if 'net_info' in data:
             for network in data['net_info']:
-                net_info = NetworkInterface(node_id=node_id, 
+                net_info = NetworkInterface(node_id=node_id,
                         mac_address=network['mac'],
                         ip_address=network['ip'],
                         interface=network['interface_name']
                         )
                 try:
                     session.add(net_info)
-                    session.commit(net_info)
+                    session.commit()
                 except Exception as e:
                     session.rollback()
         if system_info:
@@ -677,27 +687,27 @@ def add_software_per_node(session, data, username='system_user'):
             if not update_exists:
                 if node.os_code == "linux":
                     node_update = PackagePerNode(node_id,
-                        addupdate['toppatch_id'], date_installed, 
+                        addupdate['toppatch_id'], date_installed,
                         hidden, installed=installed, is_linux=True
                         )
                 elif node.os_code == "windows":
                     node_update = PackagePerNode(node_id,
-                        addupdate['toppatch_id'], date_installed, 
+                        addupdate['toppatch_id'], date_installed,
                         hidden, installed=installed, is_windows=True
                         )
                 elif node.os_code == "mac":
                     node_update = PackagePerNode(node_id,
-                        addupdate['toppatch_id'], date_installed, 
+                        addupdate['toppatch_id'], date_installed,
                         hidden, installed=installed, is_mac=True
                         )
                 elif node.os_code == "bsd":
                     node_update = PackagePerNode(node_id,
-                        addupdate['toppatch_id'], date_installed, 
+                        addupdate['toppatch_id'], date_installed,
                         hidden, installed=installed, is_bsd=True
                         )
                 elif node.os_code == "unix":
                     node_update = PackagePerNode(node_id,
-                        addupdate['toppatch_id'], date_installed, 
+                        addupdate['toppatch_id'], date_installed,
                         hidden, installed=installed, is_unix=True
                         )
                 try:
@@ -750,7 +760,7 @@ def add_software_available(session, data, username='system_user'):
 def add_software_installed(session, data, username='system_user'):
     """
         Create a new entry in the software_installed table
-        This table is a foreignKey to an existing row in 
+        This table is a foreignKey to an existing row in
         software_available for a node.
         This table is as of right now, strictly for Windows 3rd
         party applications
@@ -903,7 +913,7 @@ def remove_nodes_from_tag(session, tag_name, nodes=[], username='system_user'):
                     filter(TagsPerNode.node_id == node).all()
         if len(tags_per_node) > 0:
             try:
-                tags_deleted = map(lambda nodes: session.delete(nodes[0]), 
+                tags_deleted = map(lambda nodes: session.delete(nodes[0]),
                         tags_per_node)
                 session.commit()
                 nodes_completed.append(node)
@@ -1225,7 +1235,7 @@ def update_global_group_acl(session, group_id=None, is_admin=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
         allow_wol=False, alow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False, 
+        allow_tag_creation=False, allow_tag_removal=False,
         date_modified=datetime.now(), username='system_user'
         ):
     """
@@ -1282,7 +1292,7 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
         date_modified=datetime.now(), username='system_user'
         ):
     """
-        modify the global permissions of a user on a node 
+        modify the global permissions of a user on a node
         in the database
     """
     session = validate_session(session)
@@ -1333,7 +1343,7 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
         date_modified=datetime.now(), username='system_user'
         ):
     """
-        Modify the Global ACL of a Group on a node 
+        Modify the Global ACL of a Group on a node
         in the database
     """
     session = validate_session(session)
@@ -1357,7 +1367,7 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
                 group.date_modified = date_modified
                 session.commit()
                 return({
-                    'pass': True, 
+                    'pass': True,
                     'message': 'ACL for Group %s was modified for Node %s' % \
                         (group_id, node_id)
                         })
@@ -1370,7 +1380,7 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
                         })
     else:
         return({
-            'pass': False, 
+            'pass': False,
             'message': 'Invalid group_id %s and or node_id %s' % \
                 (group_id, node_id)
                 })
@@ -1385,7 +1395,7 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
         username='system_user'
         ):
     """
-        Modify the Global ACL of a User on a Tag 
+        Modify the Global ACL of a User on a Tag
         in the database
     """
     session = validate_session(session)
@@ -1437,7 +1447,7 @@ def update_tag_group_permissions(session, tag_id=None, group_id=None,
         date_modified=datetime.now(), username='system_user'
         ):
     """
-        Modify the Global ACL of a Group on a Tag 
+        Modify the Global ACL of a Group on a Tag
         in the database
     """
     session = validate_session(session)
