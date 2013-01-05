@@ -11,7 +11,7 @@ define(
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
-                baseUrl: '',
+                baseUrl: '/api/vmware/config/list',
                 filter: '',
                 url: function () {
                     return this.baseUrl + this.filter;
@@ -30,7 +30,7 @@ define(
                 submit: function (event) {
                     var $form = $(event.target),
                         that = this,
-                        url = '/api/vmware/createConfig',
+                        url = '/api/vmware/config/create',
                         $alert = this.$el.find('.alert'),
                         $hostInput = $form.find('input[name=vm_host]'),
                         $cycleInput = $form.find('select'),
@@ -42,7 +42,7 @@ define(
                         $alert.removeClass('alert-success').addClass('alert-error').html('Please fill the required fields.').show();
                         return false;
                     } else {
-                        url += '?' + $hostInput.serialize() + '&' + $cycleInput.serialize();
+                        url += '?' + $hostInput.serialize() + '&' + $cycleInput.serialize() + 'h';
                         url += '&' + $userInput.serialize() + '&' + $passInput.serialize();
                         url += '&' + $ssInput.attr('name') + '=' + $ssInput.prop('checked');
                         that.$el.find('.control-group').removeClass('error');
