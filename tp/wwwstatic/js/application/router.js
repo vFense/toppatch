@@ -41,6 +41,7 @@ define(
                 'admin/timeblock' : 'modal/admin/timeblock',
                 'admin/listblocks': 'modal/admin/listblocks',
                 'admin/syslog'    : 'modal/admin/syslog',
+                'admin/vmware'    : 'modal/admin/vmware',
                 'admin/users'     : 'modal/admin/users'
 
                 // Default
@@ -178,6 +179,9 @@ define(
             },
             'modal/admin/syslog': function () {
                 this.openAdminModalWithView('modals/admin/syslog');
+            },
+            'modal/admin/vmware': function () {
+                this.openAdminModalWithView('modals/admin/vmware');
             },
             'modal/admin/users': function () {
                 this.openAdminModalWithView('modals/admin/users');

@@ -73,6 +73,8 @@ define(
                     'click button[name=hideAcl]': 'toggleAclDiv',
                     'click button[name=submitAclNode]': 'submitAcl',
                     'click button[name=submitAclTag]': 'submitAcl',
+                    'click button[name=removeAclTag]': 'removeAcl',
+                    'click button[name=removeAclNode]': 'removeAcl',
                     'submit form': 'submit'
                 },
                 displayEdit: function (event) {
@@ -336,6 +338,40 @@ define(
                     } else {
                         $alert.removeClass('alert-success').addClass('alert-error').show().html('Please select an option.');
                     }
+                },
+                removeAcl: function (event) {
+                    var acl_type, params,
+                        $button = $(event.currentTarget),
+                        //$aclOptionsDiv = $button.parents('div[name=aclOptions]'),
+                        //$alert = $aclOptionsDiv.find('.alert'),
+                        that = this,
+                        type = $button.attr('name'),
+                        userId = $button.attr('value'),
+                        aclId = $button.parents('.item').attr('name'),
+                        acl = { user_id : userId },
+                        acl_action = 'delete',
+                        url = 'api/acl/delete';
+                    if (type === 'removeAclNode') {
+                        acl.node_id = aclId;
+                        acl_type = 'node_user';
+                    } else {
+                        acl.tag_id = aclId;
+                        acl_type = 'tag_user';
+                    }
+                    params = {
+                        acl_type: acl_type,
+                        acl_action: acl_action,
+                        acl: JSON.stringify(acl)
+                    };
+                    window.console.log(params);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            that.collection.fetch();
+                        } /*else {
+                            //$alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                        } */
+                    });
                 },
                 submit: function (event) {
                     var $form = $(event.target);
