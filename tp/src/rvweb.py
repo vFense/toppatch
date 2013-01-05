@@ -123,7 +123,8 @@ class Application(tornado.web.Application):
             (r"/api/vmware/snapshots/revert?", RevertSnapshotHandler),
             (r"/api/vmware/snapshots/remove?", RemoveSnapshotHandler),
             (r"/api/vmware/snapshots/removeAll?", RemoveAllSnapshotsHandler),
-            (r"/api/vmware/createConfig?", CreateVmwareConfigHandler),
+            (r"/api/vmware/config/create?", CreateVmwareConfigHandler),
+            (r"/api/vmware/config/list?", GetVmwareConfigHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.

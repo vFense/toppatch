@@ -28,6 +28,23 @@ from jsonpickle import encode
 logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvapi')
 
+
+class GetVmwareConfigHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        vm = VmApi()
+        result = {
+            'host': vm.host.
+            'username': vm.username,
+            'password': vm.password,
+            'cycle': vm.cycle,
+            'snapshot_before_patch': vm.create_snapshot_before_patch
+            }
+     
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
 class CreateVmwareConfigHandler(BaseHandler):
     @authenticated_request
     def post(self):
