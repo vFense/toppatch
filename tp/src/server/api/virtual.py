@@ -102,7 +102,8 @@ class CreateSnapshotHandler(BaseHandler):
         result = None
         if vm_name and snap_name:
             vm = VmApi()
-            if not vm.error:
+            vm.connect()
+            if vm.logged_in:
                 result = vm.create_snapshot(vm_name=vm_name,
                         snap_name=snap_name, memory=memory,
                         quiesce=quiesce, snap_description=snap_description,
@@ -135,7 +136,8 @@ class RevertSnapshotHandler(BaseHandler):
         result = None
         if vm_name and snap_name:
             vm = VmApi()
-            if not vm.error:
+            vm.connect()
+            if vm.logged_in:
                 result = vm.revert_to_snapshot(vm_name=vm_name,
                         snap_name=snap_name, username=username
                         )
@@ -164,7 +166,8 @@ class RemoveSnapshotHandler(BaseHandler):
         result = None
         if vm_name and snap_name and children:
             vm = VmApi()
-            if not vm.error:
+            vm.connect()
+            if vm.logged_in:
                 result = vm.remove_snapshot(vm_name=vm_name,
                         snap_name=snap_name, remove_children=children,
                         username=username
@@ -192,7 +195,8 @@ class RemoveAllSnapshotsHandler(BaseHandler):
         result = None
         if vm_name:
             vm = VmApi()
-            if not vm.error:
+            vm.connect()
+            if vm.logged_in:
                 result = vm.remove_all_snapshots(vm_name=vm_name,
                         username=username)
             else:

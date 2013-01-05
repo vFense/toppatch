@@ -34,7 +34,7 @@ def create_vm_config(server, username, password,
                 (now.year, now.month, now.day,
                 now.hour, now.minute, now.second)
             BACKUP_CONFIG = CONFIG_DIR + 'visdk-%s.config' % (right_now) 
-            os.rename(self.CONFIG, self.BACKUP_CONFIG)
+            os.rename(CONFIG, BACKUP_CONFIG)
         Config = ConfigParser.ConfigParser()
         Config.add_section(HOST_SECTION)
         Config.set(HOST_SECTION, 'server', server)
@@ -47,6 +47,7 @@ def create_vm_config(server, username, password,
         logfile = open(CONFIG, 'w')
         Config.write(logfile)
         logfile.close()
+
 
 
 def get_snapshost_for_vm(session, node_id=None, username='system_user'):
@@ -86,35 +87,47 @@ class VmApi():
         self.validated = False
         self.connected = False
         self.error = None
+        self.config_exists = None
         if config_file:
             self.CONFIG = config_file
         else:
             self.CONFIG = CONFIG_DIR + CONFIG_FILE
         if os.path.exists(self.CONFIG):
-            self.validated, self.error, creds = self._validate_config_file()
+            self.config_exists = True
+        else:
+            self.config_exists = False
+        if self.config_exists:
+            self.validated, self.error, creds = \
+                    self._get_and_validate_config()
             if self.validated:
                 self.host = creds[0]
                 self.username = creds[1]
                 self.password = creds[2]
-                self.connected, self.error, self.logged_in, \
-                        self.vim = self._connect()
+                self.create_snapshot_before_patch = creds[3]
+                self.cycle = creds[4]
+            else:
+                self.host = None
+                self.username = None
+                self.password = None
+                self.create_snapshot_before_patch = None
+                self.cycle = None
         else:
             msg = 'Missing config file %s' % (self.CONFIG)
             self.error = msg
             logger.error(msg)
 
 
-    def _connect(self):
+    def connect(self):
         connected = False
         logged_in = False
         msg = None
+        vim = None
         try:
             vim = Vim(self.host)
             connected = True
         except Exception as e:
             logger.error(e)
             msg = e
-            return(connected, msg, logged_in, None)
         if connected:
             try:
                 vim.login(self.username, self.password)
@@ -122,16 +135,14 @@ class VmApi():
             except Exception as e:
                 logger.error(e)
                 msg = e
-                return(connected, msg, logged_in, None)
-            if logged_in:
-                return(connected, msg, logged_in, vim)
-            else:
-                return(connected, msg, logged_in, None)
-        else:
-            return(connected, msg, logged_in, None)
+        self.connected = connected
+        self.error = msg
+        self.logged_in = logged_in
+        self.vim = vim
+        return(connected, msg, logged_in, vim)
 
 
-    def _validate_config_file(self):
+    def _get_and_validate_config(self):
             reader = SafeConfigParser()
             validated = True
             try:
@@ -163,6 +174,22 @@ class VmApi():
                     msg = 'VMWare Missing password option'
                     logger.error(msg)
                     return(validated, msg, [])
+                if reader.has_option(OPTIONS, 'create_snapshot_before_patch'):
+                    snapshot_before_patch = reader.get(OPTIONS,
+                            'create_snapshot_before_patch')
+                else:
+                    validated = False
+                    msg = 'VMWare Missing create_snapshot option'
+                    logger.error(msg)
+                    return(validated, msg, [])
+                if reader.has_option(OPTIONS, 'cycle_connect_time'):
+                    cycle = reader.get(OPTIONS,
+                            'cycle_connect_time')
+                else:
+                    validated = False
+                    msg = 'VMWare Missing create_snapshot option'
+                    logger.error(msg)
+                    return(validated, msg, [])
             else: 
                 validated = False
                 msg = 'Missing config section'
@@ -171,7 +198,8 @@ class VmApi():
             if validated:
                 msg = 'VMWare Config was validated'
                 logger.info(msg)
-                return(validated, msg, [server, username, password])
+                return(validated, msg, [server, username, password,
+                        snapshot_before_patch, cycle])
             else:
                 msg = 'VMWare Config was not validated'
                 logger.error(msg)
