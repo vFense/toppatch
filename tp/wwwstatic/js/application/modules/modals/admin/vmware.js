@@ -37,8 +37,10 @@ define(
                         $ssInput = $form.find('input[type=checkbox]'),
                         $userInput = $form.find('input[name=vm_user]'),
                         $passInput = $form.find('input[name=vm_password]');
-                    if (!$hostInput.val()) {
-                        $hostInput.parents('.control-group').addClass('error');
+                    if (!$hostInput.val() || !$userInput.val() || !$passInput.val()) {
+                        if (!$hostInput.val()) { $hostInput.parents('.control-group').addClass('error'); } else { $hostInput.parents('.control-group').removeClass('error'); }
+                        if (!$userInput.val()) { $userInput.parents('.control-group').addClass('error'); } else { $userInput.parents('.control-group').removeClass('error'); }
+                        if (!$passInput.val()) { $passInput.parents('.control-group').addClass('error'); } else { $passInput.parents('.control-group').removeClass('error'); }
                         $alert.removeClass('alert-success').addClass('alert-error').html('Please fill the required fields.').show();
                         return false;
                     } else {
