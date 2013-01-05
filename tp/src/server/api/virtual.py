@@ -56,9 +56,7 @@ class CreateVmwareConfigHandler(BaseHandler):
         vm_user = self.get_argument('vm_user', None)
         vm_password = self.get_argument('vm_password', None)
         snapshot = self.get_argument('snapshot', False)
-        #cycle = self.get_argument('cycle', '12h')
-        cycle = '12h'
-        print vm_host, vm_user, vm_password, cycle_validator(cycle)
+        cycle = self.get_argument('cycle', '12h')
         if vm_host and vm_user and vm_password and \
                 cycle_validator(cycle):
             vim = None
