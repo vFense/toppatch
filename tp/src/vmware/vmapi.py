@@ -106,11 +106,17 @@ class VmApi():
                 self.create_snapshot_before_patch = creds[3]
                 self.cycle = creds[4]
             else:
-                self.host, self.username, self.password, \
-                    self.create_snapshot_before_patch, self.cycle = None
+                self.host = None
+                self.username = None
+                self.password = None
+                self.create_snapshot_before_patch = None
+                self.cycle = None
         else:
-            self.host, self.username, self.password, \
-                self.create_snapshot_before_patch, self.cycle = None
+            self.host = None
+            self.username = None
+            self.password = None
+            self.create_snapshot_before_patch = None
+            self.cycle = None
             msg = 'Missing config file %s' % (self.CONFIG)
             self.error = msg
             logger.error(msg)

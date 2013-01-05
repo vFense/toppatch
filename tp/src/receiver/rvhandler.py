@@ -43,17 +43,30 @@ class HandOff():
         self.data = data
         self.valid_json, self.json_object = verify_json_is_valid(self.data)
         self.ip = ip_address
+	self.is_enabled = False
+	self.node = None
         if self.valid_json:
             self.node = node_exists(self.session,
-                node_ip=self.ip)
-            if self.node:
-                if self.node.last_agent_update == None:
-                    self.node.last_agent_update = datetime.now()
-                    self.node.last_node_update = datetime.now()
-                    self.session.commit()
-                    TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
-            else:
-                pass
+                node_id=self.json_object['node_id'])
+        else:
+            logger.info('%s - Json is not valid %s' %\
+                    (self.username, data)
+                    )
+        if self.node:
+            self.is_enabled = self.session.query(SslInfo.enabled).\
+                    filter(SslInfo.node_id == self.node.id).first()
+	if self.is_enabled:
+            logger.info('%s is enabled in RV' % self.node.ip_address)
+        else:
+            logger.warn('%s is disabled in RV' % self.node.ip_address)
+        if self.is_enabled:
+            if self.ip != self.node.ip_address:
+                self.node.ip_address = self.ip
+                self.session.commit()
+            if self.node.last_agent_update == None:
+                self.node.last_agent_update = datetime.now()
+                self.node.last_node_update = datetime.now()
+                self.session.commit()
             if self.json_object[OPERATION] == SYSTEM_INFO:
                 add_system_info(self.session, self.json_object, self.node)
             if self.json_object[OPERATION] == UPDATES_PENDING or \
@@ -71,12 +84,6 @@ class HandOff():
                 self.update_results()
             if self.json_object[OPERATION] == REBOOT:
                 update_reboot_status(self.session, exists)
-            else:
-                pass
-        else:
-            logger.info('%s - Json is not valid %s' %\
-                    (self.username, data)
-                    )
         self.session.close()
 
     def get_data(self, oper):
