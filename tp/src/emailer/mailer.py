@@ -76,7 +76,7 @@ class MailClient():
             self.password = creds[2]
             self.port = creds[3]
             self.from_email = creds[4]
-            self.to_email = creds[5]
+            self.to_email = creds[5].split(",")
             self.is_tls = creds[6]
             self.is_ssl = creds[7]
         else:
