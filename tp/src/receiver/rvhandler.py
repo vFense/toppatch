@@ -53,7 +53,7 @@ class HandOff():
                 self.node = node_exists(self.session,
                     node_id=self.json_object['node_id'])
             else:
-            logger.info('%s - Json does not contain a node_id %s' %\
+                logger.info('%s - Json does not contain a node_id %s' %\
                     (self.username, self.json_object)
         else:
             logger.info('%s - Json is not valid %s' %\
