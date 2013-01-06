@@ -174,7 +174,7 @@ class NodesHandler(BaseHandler):
         elif filter_by_vm:
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
                     join(SystemInfo, NodeStats).\
-                    filter(NodeInfo.vm_name == filter_by_vm).\
+                    filter(NodeInfo.vm_name != None).\
                     limit(queryCount).offset(queryOffset)
         else:
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
