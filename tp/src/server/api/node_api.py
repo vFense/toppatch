@@ -152,11 +152,29 @@ class NodesHandler(BaseHandler):
         queryCount = self.get_argument('count', 10)
         queryOffset = self.get_argument('offset', 0)
         filter_by_tags = self.get_argument('filterby', None)
+        filter_by_os = self.get_argument('by_os', None)
+        filter_by_platform = self.get_argument('by_platform', None)
+        filter_by_vm = self.get_argument('by_vm', None)
         query = None
         if filter_by_tags:
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
                     join(SystemInfo, NodeStats,TagsPerNode, TagInfo).\
                     filter(TagInfo.tag == filter_by_tags).\
+                    limit(queryCount).offset(queryOffset)
+        elif filter_by_os:
+            query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
+                    join(SystemInfo, NodeStats).\
+                    filter(SystemInfo.os_string == filter_by_os).\
+                    limit(queryCount).offset(queryOffset)
+        elif filter_by_platform:
+            query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
+                    join(SystemInfo, NodeStats).\
+                    filter(SystemInfo.os_code == filter_by_platform).\
+                    limit(queryCount).offset(queryOffset)
+        elif filter_by_vm:
+            query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
+                    join(SystemInfo, NodeStats).\
+                    filter(NodeInfo.vm_name == filter_by_vm).\
                     limit(queryCount).offset(queryOffset)
         else:
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
