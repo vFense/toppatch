@@ -155,31 +155,15 @@ class FormHandler(BaseHandler):
         resultjson = []
         node = {}
         result = []
-        try:
-            nodes = self.request.arguments['node']
-        except:
-            nodes = None
-        try:
-            tags = self.request.arguments['tag']
-        except:
-            tags = None
-        try:
-            params = self.get_argument('params')
-        except:
-            params = None
-        try:
-            time = self.get_argument('time')
-            schedule = self.get_argument('schedule')
-            label = self.get_argument('label')
-        except:
-            time = None
-            schedule = None
-        try:
-            throttle = self.get_argument('throttle')
-        except:
-            throttle = None
+        nodes = self.request.arguments['node', None]
+        tags = self.request.arguments['tag', None]
+        params = self.get_argument('params', None)
+        time = self.get_argument('time', None)
+        schedule = self.get_argument('schedule', None)
+        label = self.get_argument('label', None)
+        throttle = self.get_argument('throttle', None)
+        operation = self.get_argument('operation', None)
         if nodes or tags:
-            operation = self.get_argument('operation')
             if time:
                 node['schedule'] = schedule
                 node['time'] = time
@@ -212,7 +196,8 @@ class FormHandler(BaseHandler):
                     sleep(.50)
                     result = operation_runner.json_out
                     print result
-            elif operation == 'reboot':
+            elif operation == 'reboot' or operation == 'restart' or\
+                    operation == 'stop' or operation == 'start':
                 for node_id in nodes:
                     node['operation'] = operation
                     node['node_id'] = node_id
