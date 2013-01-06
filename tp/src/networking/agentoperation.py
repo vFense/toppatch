@@ -195,6 +195,14 @@ class AgentOperation():
     def connection_parser(self, connect, node, oper_type, oper_id):
         completed = False
         if connect:
+            completed = True
+            self.json_out ={
+                     "node_id" : node.id,
+                     "operation_id" : oper_id,
+                     "message" : connect.read_data,
+                     "error" : connect.error,
+                     "pass" : completed
+                     }
             if not connect.error and connect.read_data:
                 response = verify_json_is_valid(connect.read_data)
                 if response[1]['operation'] == 'received':
@@ -220,17 +228,7 @@ class AgentOperation():
                     update_node_stats(self.session, node.id)
                     update_network_stats(self.session)
                     update_tag_stats(self.session)
-            self.json_out ={
-                     "node_id" : node.id,
-                     "operation_id" : oper_id,
-                     "message" : connect.read_data,
-                     "error" : connect.error,
-                     "pass" : completed
-                     }
         else:
-            logger.debug('%s - cannot connect to agent %s, agent down' %\
-                    (self.username, node.ip_address)
-                    )
             self.json_out ={
                      "node_id" : node.id,
                      "operation_id" : oper_id,
@@ -238,6 +236,9 @@ class AgentOperation():
                      "error" : "Agent Down",
                      "pass" : completed
                      }
+            logger.debug('%s - cannot connect to agent %s, agent down' %\
+                    (self.username, node.ip_address)
+                    )
         return self.json_out
 
 
