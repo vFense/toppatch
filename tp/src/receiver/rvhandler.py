@@ -55,6 +55,7 @@ class HandOff():
             else:
                 logger.info('%s - Json does not contain a node_id %s' %\
                     (self.username, self.json_object)
+                    )
         else:
             logger.info('%s - Json is not valid %s' %\
                     (self.username, data)
