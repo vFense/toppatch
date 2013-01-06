@@ -67,28 +67,33 @@ class MailClient():
             self.CONFIG = CONFIG_DIR + CONFIG_FILE
         if os.path.exists(self.CONFIG):
             self.validated, self.error, creds = self._validate_config_file()
-            if self.validated:
-                self.server = creds[0]
-                self.username = creds[1]
-                self.password = creds[2]
-                self.password = creds[2]
-                self.port = creds[3]
-                self.from_email = creds[4]
-                self.to_email = creds[5]
-                self.is_tls = creds[6]
-                self.is_ssl = creds[7]
-                self.connected, self.error, self.logged_in, \
-                        self.mail = self._connect()
-            else:
-                self.error = 
         else:     
             logger.error('Missing config file %s', self.CONFIG)
+        if self.validated:
+            self.server = creds[0]
+            self.username = creds[1]
+            self.password = creds[2]
+            self.port = creds[3]
+            self.from_email = creds[4]
+            self.to_email = creds[5]
+            self.is_tls = creds[6]
+            self.is_ssl = creds[7]
+        else:
+            self.server = None
+            self.username = None
+            self.password = None
+            self.port = None
+            self.from_email = None
+            self.to_email = None
+            self.is_tls = None
+            self.is_ssl = None
 
 
-    def _connect(self):
+    def connect(self):
         connected = False
         logged_in = False
         msg = None
+        mail = None
         try:
             if self.is_ssl:
                 mail = smtplib.SMTP_SSL(self.server, self.port, timeout=5)
@@ -98,7 +103,6 @@ class MailClient():
         except Exception as e:
             logger.error(e)
             msg = e
-            return(connected, msg, logged_in, None)
         if connected:
             try:
                 if self.is_tls:
@@ -108,13 +112,11 @@ class MailClient():
             except Exception as e:
                 logger.error(e)
                 msg = e
-                return(connected, msg, logged_in, None)
-            if logged_in:
-                return(connected, msg, logged_in, mail)
-            else:
-                return(connected, msg, logged_in, None)
-        else:
-            return(connected, msg, logged_in, None)
+        self.connected = connected
+        self.error = msg
+        self.logged_in = logged_in
+        self.mail = mail
+        return(connected, msg, logged_in, mail)
 
 
     def _validate_config_file(self):
