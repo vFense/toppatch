@@ -1506,6 +1506,23 @@ def add_results(session, data, username='system_user'):
         if data['operation'] == 'reboot':
             node.reboot = False
             session.commit()
+        if not 'data' in data:
+            if 'restart' in data['operation'] or \
+                    'stop' in data['operation'] or \
+                    'start' in data['operation']:
+                results = Results(node_id, data['operation_id'],
+                        None, return_bool(data['result']), \
+                        None, data['error']
+                        )
+                try:
+                    session.add(results)
+                    session.commit()
+                    if operation:
+                        operation.results_id = results.id
+                        operation.results_received = datetime.now()
+                    return(results)
+                except Exception as e:
+                    session.rollback()
         for msg in data['data']:
             if 'reboot' in msg:
                 reboot = return_bool(msg['reboot'])
