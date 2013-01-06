@@ -24,7 +24,7 @@ logger = logging.getLogger('rvapi')
 class GetEmailConfigHandler(BaseHandler):
     @authenticated_request
     def get(self):
-        mail = EmailClient()
+        mail = MailClient()
         result = {
             'host': mail.server,
             'username': mail.username,
