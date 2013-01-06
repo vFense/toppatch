@@ -1507,6 +1507,7 @@ def add_results(session, data, username='system_user'):
             node.reboot = False
             session.commit()
         if not 'data' in data:
+            print "I shouldnt be here"
             if 'restart' in data['operation'] or \
                     'stop' in data['operation'] or \
                     'start' in data['operation']:
