@@ -69,27 +69,34 @@ class CreateEmailConfigHandler(BaseHandler):
             mail = MailClient()
             mail.connect()
             if mail.logged_in:
+                message = '%s - Valid Mail Settings' % (username)
+                logger.info(message)
                 result = {
                         'pass': True,
                         'message': 'Valid Mail Settings'
                         }
             elif not mail.logged_in:
                 os.remove(mail.CONFIG)
+                message = '%s - Incorrect Authentication Settings' % (username)
+                logger.error(message)
                 result = {
                         'pass': False,
                         'message': 'Incorrect Authentication Settings'
                         }
             elif not mail.connnected:
+                message = '%s - Invalid Connection Settings' % (username)
+                logger.error(message)
                 os.remove(mail.CONFIG)
                 result = {
                         'pass': False,
                         'message': 'Invalid Connection Settings'
                         }
         else:
-            message = 'Incorrect Parameters Passed'
+            message = '%s - Incorrect Parameters Passed' % (username)
+            logger.error(message)
             result = {
                 'pass': False,
-                'message': message
+                'message': 'Incorrect Parameters Passed'
                 }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
