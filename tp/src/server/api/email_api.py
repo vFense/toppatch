@@ -60,7 +60,7 @@ class CreateEmailConfigHandler(BaseHandler):
         if is_ssl:
             is_ssl = return_bool(is_ssl)
         if mail_host and mail_user and mail_password and \
-                mail_port and from_email and to_email:
+                mail_port and from_email and len(to_email) >0:
             create_mail_config(server=mail_host, username=mail_user,
                     password=mail_password, port=mail_port,
                     is_tls=is_tls, is_ssl=is_ssl,

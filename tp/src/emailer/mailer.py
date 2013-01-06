@@ -26,11 +26,11 @@ def cycle_validator(cycle):
 
 def create_mail_config(server=None,username=None, password=None,
                 port=25, is_tls=False, is_ssl=False,
-                from_email=None, to_email=None
+                from_email=None, to_email=[]
                 ):
     CONFIG = CONFIG_DIR + CONFIG_FILE
     if server and username and password \
-            and port and from_email and to_email:
+            and port and from_email and len(to_email) >0:
         if os.path.exists(CONFIG):
             now = datetime.today()
             right_now = '%s_%s_%s_%s_%s_%s' % \
@@ -38,6 +38,7 @@ def create_mail_config(server=None,username=None, password=None,
                 now.hour, now.minute, now.second)
             BACKUP_CONFIG = CONFIG_DIR + 'mail-%s.config' % (right_now) 
             os.rename(self.CONFIG_FILE, self.BACKUP_CONFIG_FILE)
+        to_email = ','.join(to_email)
         Config = ConfigParser.ConfigParser()
         Config.add_section(HOST_SECTION)
         Config.set(HOST_SECTION, 'server', server)
