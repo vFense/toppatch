@@ -70,7 +70,7 @@ class PatchesHandler(BaseHandler):
         tpid = self.get_argument('id', None)
         queryCount = self.get_argument('count', 10)
         queryOffset = self.get_argument('offset', 0)
-        pstatus = self.get_argument('type', None)
+        pstatus = self.get_argument('status', None)
         severity = self.get_argument('severity', None)
         patches = PatchRetriever(self.session,
             qcount=queryCount, qoffset=queryOffset)
