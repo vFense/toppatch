@@ -84,7 +84,7 @@ class PatchesHandler(BaseHandler):
                         'pass': False,
                         'message': 'Invalid Status'
                         }
-        elif severity
+        elif severity:
             if patch_sev.search(severity):
                 results = patches.get_by_severity(severity)
             else:
