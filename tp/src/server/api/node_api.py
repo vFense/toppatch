@@ -146,6 +146,7 @@ class NodesHandler(BaseHandler):
     @authenticated_request
     def get(self):
         resultjson = []
+        username = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         node_id = self.get_argument('id', None)
