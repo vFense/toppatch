@@ -138,8 +138,7 @@ define(
                     },
                     renderNew: function () {
                         var variables, index,
-                            that = this,
-                            self = this;
+                            that = this;
                         that.widget = "widget" + that.counter;
                         if (that.type === "graph") {
                             that.sizeval = $('input:radio[name=radio]:checked').val();
@@ -156,31 +155,15 @@ define(
                             // Compile the template using underscore
                             that.template = _.template($("#widget_template").html(), variables);
                             // Load the compiled HTML into the Backbone "el"
-                            $("#insert").append(that.template);
+                            that.$el.find("#insert").append(that.template);
                             that.graphData = $('input:radio[name=graphdata]:checked').val();
                             that.graph = "#" + $("#" + that.widget).children().children("div").attr("id");
                             that.counter += 1;
-                            self.displayChart();
-                            self.saveState();
-                            $(".properties").click(function () { self.setProperties(this, 'existing'); });
-                            $('.remove').click(function () { self.hideWidget(this); });
+                            that.displayChart();
+                            that.saveState();
+                            $(".properties").click(function () { that.setProperties(this, 'existing'); });
+                            $('.remove').click(function () { that.hideWidget(this); });
                         } else {
-                            /*
-                             this.sizeval = "3";
-                             this.title = $('input:radio[name=param]:checked');
-                             index =  $("input:radio[name='param']").index(this.title);
-                             this.tempData = this.getOverviewData();
-                             variables = {
-                             widget: this.widget,
-                             span: "span" + this.sizeval,
-                             type: this.classType[index],
-                             title: this.title.val(),
-                             data: this.tempData
-                             };
-                             this.template = _.template($("#text_template").html(), variables);
-                             $("#insert").append(this.template);
-                             this.counter += 1;
-                             */
                             that.sizeval = $('input:radio[name=radio]:checked').val();
                             variables = {
                                 widget: that.widget,
@@ -195,9 +178,9 @@ define(
                             that.graph = "#graph" + that.counter;
                             that.widget = "#" + that.widget;
                             that.template = _.template($("#widget_template").html(), variables);
-                            $("#insert").append(that.template);
+                            that.$el.find("#insert").append(that.template);
                             that.counter += 1;
-                            self.getTags();
+                            that.getTags();
                         }
                     },
                     renderExisting: function () {
@@ -395,9 +378,8 @@ define(
                             that = this,
                             widgets = window.User.get('widgets').graph,
                             settings = window.User.get('widgets');
-                        
                         for (i = 0; i < widgets.length; i += 1) {
-                            if ($('#widget' + (i + 1)).length === 0) {
+                            if (that.$el.find('#widget' + (i + 1)).length === 0) {
                                 variables = {
                                     widget: "widget" + (i + 1),
                                     span: "span" + settings.spans[i],
@@ -408,7 +390,8 @@ define(
                                     graphType: widgets[i]
                                 };
                                 template = _.template($("#widget_template").html(), variables);
-                                $("#insert").append(template);
+                                that.$el.find("#insert").append(template);
+                                that.counter += 1;
                             }
 
                             if (widgets[i] === 'pie') {

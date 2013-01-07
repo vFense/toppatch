@@ -1,0 +1,205 @@
+<article class="row-fluid">
+    <section class="span12 list">
+        <header class="clearfix">
+            <div class="pull-left">&nbsp;</div>
+            <div class="pull-right hidden-print">
+                <button class="btn btn-mini disabled" id="list-export">
+                    <span>Export</span>&nbsp;<i class="icon-download-alt"></i>
+                </button>
+            </div>
+        </header>
+        <div class="accordion items">
+            <% if (data && data.length !== 0) {
+                _.each(data, function (group) { %>
+                    <div class="accordion-group item clearfix">
+                        <div class="accordion-heading row-fluid">
+                            <span class="desc span8">
+                                <a class="accordion-toggle">
+                                    <i class="icon-circle-arrow-down"></i>&nbsp;<%= group.groupname %>
+                                </a>
+                            </span>
+                        </div>
+                        <div class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <div class="span12">
+                                    <button name="showAcl" class="btn btn-link noPadding"><small>Create Node Acl</small></button>
+                                    <div name="aclOptions" class="hide span12">
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Wake on Lan</small>
+                                                <input type="checkbox" name="allow_wol"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Reboot</small>
+                                                <input type="checkbox" name="allow_reboot"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Tag Creation</small>
+                                                <input type="checkbox" name="allow_tag_creation"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Removal</small>
+                                                <input type="checkbox" name="allow_snapshot_removal"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Revert</small>
+                                                <input type="checkbox" name="allow_snapshot_revert"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Uninstall</small>
+                                                <input type="checkbox" name="allow_uninstall"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Creation</small>
+                                                <input type="checkbox" name="allow_snapshot_creation"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Tag Removal</small>
+                                                <input type="checkbox" name="allow_tag_removal"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Install</small>
+                                                <input type="checkbox" name="allow_install"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Schedule</small>
+                                                <input type="checkbox" name="allow_schedule"/>
+                                            </label>
+                                        </div>
+                                        <span class="span11 alignRight">
+                                            <span class="alert fade in hide inline"></span>
+                                            <select name="nodelist" class="btn btn-mini">
+                                                <option value="0">Select one...</option>
+                                                <% if(nodes && nodes.nodes.length != 0) {
+                                                    _.each(nodes.nodes, function (node) { %>
+                                                        <option value="<%= node.id %>"><% print(node.displayname || node.hostname || node.ip); %></option>
+                                                    <% });
+                                                } %>
+                                            </select>
+                                            <button name="submitAclNode" value="<%= group.id %>" class="btn btn-mini btn-primary">Create</button>
+                                            <button name="hideAcl" class="btn btn-mini">Cancel</button>
+                                        </span>
+                                    </div>
+                                    <div class="list">
+                                        <div class="items">
+                                            <% if(group.node_acls.length != 0) { %>
+                                                <% _.each(group.node_acls, function (acl) { %>
+                                                    <div class="item clearfix" name="<%= acl.node_id %>">
+                                                        <span>Node <%= acl.node_id %> — <%= acl.date_created %></span>
+                                                            <span class="pull-right">
+                                                                <button name="removeAclNode" value="<%= group.id %>" class="btn btn-link"><i class="icon-remove" style="color: red;"></i></button>
+                                                            </span>
+                                                    </div>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <div class="item clearfix">
+                                                    No node Acls.
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="span12 noMargin">
+                                    <button name="showAcl" class="btn btn-link noPadding"><small>Create Tag Acl</small></button>
+                                    <div name="aclOptions" class="hide span12">
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Wake on Lan</small>
+                                                <input type="checkbox" name="allow_wol"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Reboot</small>
+                                                <input type="checkbox" name="allow_reboot"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Tag Creation</small>
+                                                <input type="checkbox" name="allow_tag_creation"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Removal</small>
+                                                <input type="checkbox" name="allow_snapshot_removal"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Revert</small>
+                                                <input type="checkbox" name="allow_snapshot_revert"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Uninstall</small>
+                                                <input type="checkbox" name="allow_uninstall"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Snapshot Creation</small>
+                                                <input type="checkbox" name="allow_snapshot_creation"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Tag Removal</small>
+                                                <input type="checkbox" name="allow_tag_removal"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Install</small>
+                                                <input type="checkbox" name="allow_install"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Schedule</small>
+                                                <input type="checkbox" name="allow_schedule"/>
+                                            </label>
+                                        </div>
+                                        <span class="span11 alignRight">
+                                            <span class="alert fade in hide inline"></span>
+                                            <select name="taglist" class="btn btn-mini">
+                                                <option value="0">Select one...</option>
+                                                <% if(tags && tags.length != 0) {
+                                                    _.each(tags, function (tag) { %>
+                                                        <option value="<%= tag.tag_id %>"><%= tag.tag_name %></option>
+                                                    <% });
+                                                } %>
+                                            </select>
+                                            <button name="submitAclTag" value="<%= group.id %>" class="btn btn-mini btn-primary">Create</button>
+                                            <button name="hideAcl" class="btn btn-mini">Cancel</button>
+                                        </span>
+                                    </div>
+                                    <div class="list">
+                                        <div class="items">
+                                            <% if(group.tag_acls.length != 0) { %>
+                                                <% _.each(group.tag_acls, function (acl) { %>
+                                                    <div class="item clearfix" name="<%= acl.tag_id %>">
+                                                        <span>Tag <%= acl.tag_id %> — <%= acl.date_created %></span>
+                                                        <span class="pull-right">
+                                                            <button name="removeAclTag" value="<%= group.id %>" class="btn btn-link"><i class="icon-remove" style="color: red;"></i></button>
+                                                        </span>
+                                                    </div>
+                                                <% }); %>
+                                            <% } else { %>
+                                                <div class="item clearfix">
+                                                    No tag Acls.
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% });
+            } else { %>
+                <div class="item">No groups available.</div>
+            <% } %>
+        </div>
+    </section>
+</article>

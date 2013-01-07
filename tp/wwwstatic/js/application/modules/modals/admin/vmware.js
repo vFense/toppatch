@@ -20,9 +20,9 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
-                    //this.collection = new exports.Collection();
-                    //this.collection.bind('reset', this.render, this);
-                    //this.collection.fetch();
+                    this.collection = new exports.Collection();
+                    this.collection.bind('reset', this.render, this);
+                    this.collection.fetch();
                 },
                 events: {
                     'submit form': 'submit'
@@ -37,12 +37,14 @@ define(
                         $ssInput = $form.find('input[type=checkbox]'),
                         $userInput = $form.find('input[name=vm_user]'),
                         $passInput = $form.find('input[name=vm_password]');
-                    if (!$hostInput.val()) {
-                        $hostInput.parents('.control-group').addClass('error');
+                    if (!$hostInput.val() || !$userInput.val() || !$passInput.val()) {
+                        if (!$hostInput.val()) { $hostInput.parents('.control-group').addClass('error'); } else { $hostInput.parents('.control-group').removeClass('error'); }
+                        if (!$userInput.val()) { $userInput.parents('.control-group').addClass('error'); } else { $userInput.parents('.control-group').removeClass('error'); }
+                        if (!$passInput.val()) { $passInput.parents('.control-group').addClass('error'); } else { $passInput.parents('.control-group').removeClass('error'); }
                         $alert.removeClass('alert-success').addClass('alert-error').html('Please fill the required fields.').show();
                         return false;
                     } else {
-                        url += '?' + $hostInput.serialize() + '&' + $cycleInput.serialize() + 'h';
+                        url += '?' + $hostInput.serialize() + '&' + $cycleInput.serialize();
                         url += '&' + $userInput.serialize() + '&' + $passInput.serialize();
                         url += '&' + $ssInput.attr('name') + '=' + $ssInput.prop('checked');
                         that.$el.find('.control-group').removeClass('error');
@@ -64,12 +66,12 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var template = _.template(this.template);
-                        //data = this.collection.toJSON()[0];
-
+                    var template = _.template(this.template),
+                        data = this.collection.toJSON()[0];
+                    window.console.log(data);
                     this.$el.empty();
 
-                    this.$el.html(template());
+                    this.$el.html(template({data: data}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;

@@ -16,14 +16,16 @@ define(
                 initialize: function () {
                     this.offset   = this.offset || 0;
                     this.getCount = this.getCount  || 10;
-                    this.type = this.type || '';
+                    this.status = this.status || '';
                     this.searchQuery = this.searchQuery || '';
                     this.searchBy = this.searchBy || '';
+                    this.severity = this.severity || '';
 
                     this.query = '?count=' + this.getCount + '&offset=' + this.offset;
-                    this.query += this.type ? '&type=' + this.type : '';
+                    this.query += this.status ? '&status=' + this.status : '';
                     this.query += this.searchQuery ? '&query=' + this.searchQuery : '';
                     this.query += this.searchBy ? '&searchby=' + this.searchBy : '';
+                    this.query += this.severity ? '&severity=' + this.severity : '';
                     this.baseUrl = this.searchQuery ? 'api/package/searchByPatch' : 'api/patches.json';
                 }
             }),
@@ -63,7 +65,7 @@ define(
                     this.updateList();
                 },
                 filterbytype: function (evt) {
-                    this.collection.type = $(evt.target).val() === 'none' ? '' : $(evt.target).val();
+                    this.collection.status = $(evt.target).val() === 'none' ? '' : $(evt.target).val();
                     this.collection.searchBy = '';
                     this.collection.searchQuery = '';
                     this.collection.offset = 0;
@@ -169,7 +171,8 @@ define(
                         payload = {
                             searchQuery: this.collection.searchQuery,
                             searchBy: this.collection.searchBy,
-                            type: this.collection.type,
+                            status: this.collection.status,
+                            severity: this.collection.severity,
                             getCount: +this.collection.getCount,
                             offset: +this.collection.offset,
                             start: +this.collection.offset + 1,
@@ -185,15 +188,17 @@ define(
 
                     temp = payload.offset - payload.getCount;
                     payload.prevLink = '#patches?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
-                    payload.prevLink +=  payload.type ? '&type=' + payload.type : '';
+                    payload.prevLink +=  payload.status ? '&status=' + payload.status : '';
                     payload.prevLink += payload.searchQuery ? '&query=' + payload.searchQuery : '';
                     payload.prevLink += payload.searchBy ? '&searchby=' + payload.searchBy : '';
+                    payload.prevLink += payload.severity ? '&severity=' + payload.severity : '';
 
                     temp = payload.offset + payload.getCount;
                     payload.nextLink = '#patches?count=' + payload.getCount + '&offset=' + temp;
-                    payload.nextLink += payload.type ? '&type=' + payload.type : '';
+                    payload.nextLink += payload.status ? '&status=' + payload.status : '';
                     payload.nextLink += payload.searchQuery ? '&query=' + payload.searchQuery : '';
                     payload.nextLink += payload.searchBy ? '&searchby=' + payload.searchBy : '';
+                    payload.nextLink += payload.severity ? '&severity=' + payload.severity : '';
 
                     this.$el.empty();
 
