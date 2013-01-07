@@ -269,7 +269,7 @@ def add_node_user_acl(session, node_id=None, user_id=None,
 
 def add_node_group_acl(session, node_id=None, group_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
-        allow_schedule=False, wol=False, allow_snapshot_creation=False,
+        allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
         allow_tag_creation=False, allow_tag_removal=False,
         date_created=datetime.now(), date_modified=datetime.now(),
