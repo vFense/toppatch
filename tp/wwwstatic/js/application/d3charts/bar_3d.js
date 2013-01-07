@@ -52,6 +52,9 @@ define(
                         txt.text('');
                         txtRect.style('opacity', '0');
                     }
+                    function MouseClick(d) {
+                        window.location.hash = '#patches?severity=' + d.label;
+                    }
                     svg = d3.select(this)
                         .append("svg:svg")
                         .attr("width", width)
@@ -68,6 +71,7 @@ define(
                         .attr("stroke", "0")
                         .attr("stroke-width", "0")
                         .attr("fill", function (d, index) { return topColor(index); })
+                        .on('click', MouseClick)
                         .on('mouseover', function (d) {
                             textMouseOver(d);
                         })
@@ -88,15 +92,10 @@ define(
                         .attr("width", depth)
                         .attr("stroke", "0")
                         .attr("fill", function (d, index) { return sideColor(index); })
-                        .on('mouseover', function (d, i) {
-                            textMouseOver(d);
-                        })
-                        .on('mousemove', function (d) {
-                            textMouseMove();
-                        })
-                        .on('mouseout', function (d) {
-                            textMouseOut();
-                        });
+                        .on('click', MouseClick)
+                        .on('mouseover', textMouseOver)
+                        .on('mousemove', textMouseMove)
+                        .on('mouseout', textMouseOut);
 
                     rightTopTriangle = svg.selectAll("svg > right_top_triangle")
                         .data(data).enter()
@@ -153,6 +152,7 @@ define(
                         .attr("width", barWidth)
                         .attr("stroke", function (d, index) { return sideColor(index); })//stroke same color as sideRect
                         .attr("fill", function (d, index) { return frontColor(index); })
+                        .on('click', MouseClick)
                         .on('mouseover', textMouseOver)
                         .on('mousemove', textMouseMove)
                         .on('mouseout', textMouseOut);

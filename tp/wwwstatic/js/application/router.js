@@ -99,6 +99,7 @@ define(
                         myView.Collection = myView.Collection.extend({
                             getCount: params.count,
                             offset: params.offset,
+                            by_os: params.by_os,
                             filterby: params.filterby
                         });
                     }
@@ -119,10 +120,11 @@ define(
                     if ($.type(query) === 'string') {
                         var params = app.parseQuery(query);
                         myView.Collection = myView.Collection.extend({
-                            type: params.type,
+                            status: params.status,
                             getCount: params.count,
                             offset: params.offset,
                             searchQuery: params.query,
+                            severity: params.severity,
                             searchBy: params.searchby
                         });
                     }
