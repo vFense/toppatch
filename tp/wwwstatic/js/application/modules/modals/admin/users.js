@@ -58,8 +58,6 @@ define(
                     this.tagCollection.fetch();
                 },
                 events: {
-                    'click #userEdit': 'displayEdit',
-                    'click #doneEdit': 'displayEdit',
                     'click #addUser': 'displayAddUser',
                     'click #cancelNewUser': 'displayAddUser',
                     'click button[name=confirmDelete]': 'confirmDelete',
@@ -77,19 +75,8 @@ define(
                     'click button[name=removeAclNode]': 'removeAcl',
                     'submit form': 'submit'
                 },
-                displayEdit: function (event) {
-                    var $editButton = $('#userEdit'),
-                        $doneButton = $('#doneEdit'),
-                        $alert = this.$el.find('div.alert');
-                    $alert.hide();
-                    $editButton.toggle();
-                    $doneButton.toggle();
-                    $('div[name=edit]').toggle();
-                },
                 displayAddUser: function (event) {
-                    var $addButton = $('#addUser'),
-                        $addUserDiv = this.$el.find('div[name=newUserDiv]');
-                    $addButton.toggle();
+                    var $addUserDiv = this.$el.find('div[name=newUserDiv]');
                     $addUserDiv.toggle();
                 },
                 confirmDelete: function (event) {

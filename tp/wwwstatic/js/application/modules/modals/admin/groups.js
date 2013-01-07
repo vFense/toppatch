@@ -47,13 +47,33 @@ define(
                     this.tagCollection.fetch();
                 },
                 events: {
+                    'click button[name=addGroup]': 'toggleAddGroup',
+                    'click button[name=cancelNewGroup]': 'toggleAddGroup',
+                    'click button[name=submitGroup]': 'submitGroup',
                     'click a.accordion-toggle': 'toggleAccordion',
                     'click button[name=showAcl]': 'toggleAclDiv',
                     'click button[name=hideAcl]': 'toggleAclDiv',
+                    'click button[name=editGlobalAcl]': 'editGlobalAcl',
                     'click button[name=submitAclNode]': 'submitAcl',
                     'click button[name=submitAclTag]': 'submitAcl',
                     'click button[name=removeAclTag]': 'removeAcl',
                     'click button[name=removeAclNode]': 'removeAcl'
+                },
+                toggleAddGroup: function (event) {
+                    var $newGroupDiv = this.$el.find('#newGroupDiv');
+                    $newGroupDiv.toggle();
+                },
+                submitGroup: function (event) {
+                    var $submitButton = $(event.currentTarget),
+                        $item = $submitButton.parents('.item'),
+                        $alert = $submitButton.siblings('.alert'),
+                        groupName = $submitButton.siblings('input').val(),
+                        $permissions = $item.find('input[type=checkbox]'),
+                        acl = { group_name: groupName };
+                    $permissions.each(function () {
+                        acl[this.name] = this.checked;
+                    });
+                    window.console.log(acl);
                 },
                 toggleAccordion: function (event) {
                     var $href = $(event.currentTarget),
@@ -85,6 +105,36 @@ define(
                         $aclDiv.toggle();
 
                     }
+                },
+                editGlobalAcl: function (event) {
+                    var params, that = this,
+                        $submitButton = $(event.currentTarget),
+                        $item = $submitButton.parents('.item'),
+                        $alert = $item.find('.alert'),
+                        $permissions = $item.find('input[type=checkbox]'),
+                        group_id = $submitButton.attr('value'),
+                        url = 'api/acl/modify',
+                        acl_type = 'global_group',
+                        acl_action = 'modify',
+                        acl = { group_id: group_id };
+                    $permissions.each(function () {
+                        acl[this.name] = this.checked;
+                    });
+                    params = {
+                        acl_type: acl_type,
+                        acl_action: acl_action,
+                        acl: JSON.stringify(acl)
+                    };
+                    window.console.log(params);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            $alert.hide();
+                            that.collection.fetch();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                        }
+                    });
                 },
                 submitAcl: function (event) {
                     var params, aclType,
@@ -170,7 +220,6 @@ define(
                         tags = this.tagCollection.toJSON();
 
                     this.$el.empty();
-                    window.console.log(data);
                     this.$el.html(template({data: data, nodes: nodes, tags: tags}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
