@@ -79,7 +79,7 @@ class HandOff():
                 add_system_info(self.session, self.json_object, self.node)
             if self.json_object[OPERATION] == UPDATES_PENDING or \
                     self.json_object[OPERATION] == UPDATES_INSTALLED:
-                self.add_update()
+                self.add_update(self.node)
             if self.json_object[OPERATION] == SOFTWARE_INSTALLED:
                 self.software_update()
             if self.json_object[OPERATION] == UNIX_DEPENDENCIES:
@@ -109,7 +109,8 @@ class HandOff():
         results.run()
 
 
-    def add_update(self):
+    def add_update(self, node):
+        self.node = node
         logger.debug('%s - Adding Software to package table' % \
                 (self.username)
                 )
@@ -118,6 +119,7 @@ class HandOff():
                 (self.username, 'package_per_node table for node', 
                     self.node.ip_address)
                 )
+        self.session.close()
         add_software_per_node(self.session, self.json_object)
         logger.debug('%s - updateing node_stats for %s' % \
                 (self.username, self.node.ip_address)
