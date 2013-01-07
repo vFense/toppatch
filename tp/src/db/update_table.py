@@ -723,7 +723,6 @@ def add_software_per_node(session, data, username='system_user'):
                     session.commit()
                 except:
                     session.rollback()
-    session.close()
 
 
 def add_software_available(session, data, username='system_user'):
@@ -976,7 +975,6 @@ def update_operation_row(session, oper_id, results_recv=None,
     elif operation and oper_recv:
         operation.operation_received = datetime.now()
         session.commit()
-    session.close()
 
 
 def update_node(session, node_id, ipaddress, username='system_user'):
@@ -1053,7 +1051,6 @@ def update_node_stats(session, node_id, username='system_user'):
                        rebootspending, agentsdown, agentsup)
         session.add(add_node_stats)
         session.commit()
-    session.close()
 
 
 def update_network_stats(session, username='system_user'):
@@ -1092,7 +1089,6 @@ def update_network_stats(session, username='system_user'):
                               rebootspending, agentsdown, agentsup)
         session.add(network_sstats_init)
         session.commit()
-    session.close()
 
 
 def update_tag_stats(session, username='system_user'):
@@ -1159,7 +1155,6 @@ def update_tag_stats(session, username='system_user'):
                 if tag_exists:
                     session.delete(tag_exists)
                     session.commit()
-    session.close()
 
 
 def update_reboot_status(session, node_id, oper_type, username='system_user'):
@@ -1238,7 +1233,7 @@ def update_global_user_acl(session, user_id=None, is_admin=False,
 def update_global_group_acl(session, group_id=None, is_admin=False,
         is_global=True, read_only=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
-        allow_wol=False, alow_snapshot_creation=False,
+        allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
         allow_tag_creation=False, allow_tag_removal=False,
         date_modified=datetime.now(), username='system_user'
@@ -1526,11 +1521,9 @@ def add_results(session, data, username='system_user'):
                     if operation:
                         operation.results_id = results.id
                         operation.results_received = datetime.now()
-                    session.close()
                     return(results)
                 except Exception as e:
                     session.rollback()
-                    session.close()
         for msg in data['data']:
             if 'reboot' in msg:
                 reboot = return_bool(msg['reboot'])
@@ -1582,9 +1575,7 @@ def add_results(session, data, username='system_user'):
                 update_node_stats(session, node_id)
                 update_network_stats(session)
                 session.commit()
-                session.close()
                 TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
                 return results
             except:
                 session.rollback()
-                session.close()
