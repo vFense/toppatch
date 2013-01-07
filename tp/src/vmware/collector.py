@@ -30,11 +30,8 @@ def parse_interval(interval):
 
 CONFIG = CONFIG_DIR + CONFIG_FILE
 reader = SafeConfigParser()
-#if os.path.exists(CONFIG):
-#    reader.read(CONFIG)
-#    interval = reader.get(OPTIONS, 'cycle_connect_time')
-#else:
-#    interval = '12h'
+
+
 def get_vm_data(username='system_user'):
     ENGINE = init_engine()
     session = create_session(ENGINE)
@@ -46,9 +43,17 @@ def get_vm_data(username='system_user'):
         vm_nodes = vm.get_all_vms()
         for node in nodes:
             for key, value in vm_nodes.items():
-                if node.host_name == value['host_name'] or \
-                        node.ip_address == value['ip_address']:
-                    node.vm_name = value['vm_name']
+                match = False
+                if value['vm_name'] and value['ip_address'] and value['host_name']:
+                    if re.search(node.ip_address, value['ip_address']):
+                        node.vm_name = value['vm_name']
+                        match = True
+                    elif node.host_name:
+                        if re.search(node.host_name, value['host_name']):
+                            node.vm_name = value['vm_name']
+                            match = True
+                    if not match:
+                        break
                     session.commit()
                     snapshots = session.query(SnapshotsPerNode).\
                         filter(SnapshotsPerNode.node_id == node.id).all()
