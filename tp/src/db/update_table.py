@@ -657,7 +657,6 @@ def add_software_update(session, data, username='system_user'):
                         session.commit()
                     except:
                         session.rollback()
-    session.close()
 
 def add_software_per_node(session, data, username='system_user'):
     """
@@ -724,7 +723,6 @@ def add_software_per_node(session, data, username='system_user'):
                     session.commit()
                 except:
                     session.rollback()
-    session.close()
 
 
 def add_software_available(session, data, username='system_user'):
@@ -977,7 +975,6 @@ def update_operation_row(session, oper_id, results_recv=None,
     elif operation and oper_recv:
         operation.operation_received = datetime.now()
         session.commit()
-    session.close()
 
 
 def update_node(session, node_id, ipaddress, username='system_user'):
@@ -1054,7 +1051,6 @@ def update_node_stats(session, node_id, username='system_user'):
                        rebootspending, agentsdown, agentsup)
         session.add(add_node_stats)
         session.commit()
-    session.close()
 
 
 def update_network_stats(session, username='system_user'):
@@ -1093,7 +1089,6 @@ def update_network_stats(session, username='system_user'):
                               rebootspending, agentsdown, agentsup)
         session.add(network_sstats_init)
         session.commit()
-    session.close()
 
 
 def update_tag_stats(session, username='system_user'):
@@ -1160,7 +1155,6 @@ def update_tag_stats(session, username='system_user'):
                 if tag_exists:
                     session.delete(tag_exists)
                     session.commit()
-    session.close()
 
 
 def update_reboot_status(session, node_id, oper_type, username='system_user'):
