@@ -53,6 +53,7 @@ define(
                     'click a.accordion-toggle': 'toggleAccordion',
                     'click button[name=showAcl]': 'toggleAclDiv',
                     'click button[name=hideAcl]': 'toggleAclDiv',
+                    'click button[name=editGlobalAcl]': 'editGlobalAcl',
                     'click button[name=submitAclNode]': 'submitAcl',
                     'click button[name=submitAclTag]': 'submitAcl',
                     'click button[name=removeAclTag]': 'removeAcl',
@@ -104,6 +105,9 @@ define(
                         $aclDiv.toggle();
 
                     }
+                },
+                editGlobalAcl: function (event) {
+                    window.console.log(event);
                 },
                 submitAcl: function (event) {
                     var params, aclType,
