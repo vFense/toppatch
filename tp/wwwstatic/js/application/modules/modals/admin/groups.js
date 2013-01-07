@@ -47,6 +47,9 @@ define(
                     this.tagCollection.fetch();
                 },
                 events: {
+                    'click button[name=addGroup]': 'toggleAddGroup',
+                    'click button[name=cancelNewGroup]': 'toggleAddGroup',
+                    'click button[name=submitGroup]': 'submitGroup',
                     'click a.accordion-toggle': 'toggleAccordion',
                     'click button[name=showAcl]': 'toggleAclDiv',
                     'click button[name=hideAcl]': 'toggleAclDiv',
@@ -54,6 +57,22 @@ define(
                     'click button[name=submitAclTag]': 'submitAcl',
                     'click button[name=removeAclTag]': 'removeAcl',
                     'click button[name=removeAclNode]': 'removeAcl'
+                },
+                toggleAddGroup: function (event) {
+                    var $newGroupDiv = this.$el.find('#newGroupDiv');
+                    $newGroupDiv.toggle();
+                },
+                submitGroup: function (event) {
+                    var $submitButton = $(event.currentTarget),
+                        $item = $submitButton.parents('.item'),
+                        $alert = $submitButton.siblings('.alert'),
+                        groupName = $submitButton.siblings('input').val(),
+                        $permissions = $item.find('input[type=checkbox]'),
+                        acl = { group_name: groupName };
+                    $permissions.each(function () {
+                        acl[this.name] = this.checked;
+                    });
+                    window.console.log(acl);
                 },
                 toggleAccordion: function (event) {
                     var $href = $(event.currentTarget),
@@ -170,7 +189,6 @@ define(
                         tags = this.tagCollection.toJSON();
 
                     this.$el.empty();
-                    window.console.log(data);
                     this.$el.html(template({data: data, nodes: nodes, tags: tags}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }

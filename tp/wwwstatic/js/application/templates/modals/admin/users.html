@@ -6,28 +6,47 @@
                 <button class="btn btn-mini disabled" id="list-export">
                     <span>Export</span>&nbsp;<i class="icon-download-alt"></i>
                 </button>
-                <button id="userEdit" class="btn btn-mini">
-                    Edit
-                </button>
-                <button id="doneEdit" class="btn btn-mini btn-primary hide">
-                    Done
-                </button>
+                <button id="addUser" class="btn btn-mini">Add new user...</button>
             </div>
         </header>
         <div class="items">
+            <div name="newUserDiv" class="item row-fluid hide">
+                <div>
+                    <div class="span3">
+                        <input id="username" type="text" placeholder="New User" class="input-medium"/>
+                    </div>
+                    <div class="span3">
+                        <input id="password" type="password" placeholder="Temporary Password" class="input-medium"/>
+                    </div>
+                    <div class="span3">
+                        <select class="btn btn-mini" name="groups">
+                            <option value="READ_ONLY">Default</option>
+                            <% if (groups.length !== 0) { %>
+                                <% _.each(groups, function (group) { %>
+                                    <option value="<%= group.groupname %>"><%= group.groupname %></option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="span3 alignRight">
+                        <button id="cancelNewUser" class="btn btn-mini">Cancel</button>
+                        <button id="submitUser" class="btn btn-mini btn-primary">Confirm</button>
+                    </div>
+                </div>
+            </div>
             <% if (data.length !== 0) { %>
                 <% _.each(data, function (user) { %>
                     <div class="accordion-group item row-fluid">
                         <div class="accordion-heading span12">
                             <div class="span9">
-                                <div name="edit" class="hide pull-left">
+                                <div class="pull-left">
                                     <button name="toggleAcl" class="btn btn-link noPadding">
-                                        <i class="icon-circle-arrow-down"></i>
+                                        <i class="icon-circle-arrow-down"></i>&nbsp;
+                                        <span><%= user.username %></span>
                                     </button>
-                                </div>&nbsp;
-                                <span><%= user.username %></span>
+                                </div>
                             </div>
-                            <div name="edit" class="span3 alignRight hide">
+                            <div class="span3 alignRight">
                                 <button name="globalacl" value="<%= user.id %>" class="btn btn-link noPadding">
                                     <i class="icon-pencil" style="color: #daa520;"></i>
                                 </button>
@@ -226,38 +245,7 @@
                     <div class="span9"><em>No users available.</em></div>
                 </div>
             <% } %>
-            <div name="edit" class="item row-fluid hide">
-                <div id="addUser" class="span9">
-                    <button class="btn btn-mini">Add new user...</button>
-                </div>
-                <div class="hide" name="newUserDiv">
-                    <div class="span3">
-                        <input id="username" type="text" placeholder="New User" class="input-medium"/>
-                    </div>
-                    <div class="span3">
-                        <input id="password" type="password" placeholder="Temporary Password" class="input-medium"/>
-                    </div>
-                    <div class="span3">
-                        <select class="btn btn-mini" name="groups">
-                            <option value="READ_ONLY">Default</option>
-                            <% if (groups.length !== 0) { %>
-                                <% _.each(groups, function (group) { %>
-                                    <option value="<%= group.groupname %>"><%= group.groupname %></option>
-                                <% }); %>
-                            <% } %>
-                        </select>
-                    </div>
-                    <div class="span3 alignRight">
-                        <button id="cancelNewUser" class="btn btn-mini">
-                            Cancel
-                        </button>
-                        <button id="submitUser" class="btn btn-mini btn-primary">
-                            Confirm
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div name="edit" class="hide">
+            <div class="hide">
                 <div class="alert alert-block fade in hide">
                     <span class="help-inline">test</span>
                 </div>
