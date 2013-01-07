@@ -70,7 +70,8 @@ class PatchesHandler(BaseHandler):
         tpid = self.get_argument('id', None)
         queryCount = self.get_argument('count', 10)
         queryOffset = self.get_argument('offset', 0)
-        pstatus = self.get_argument('type', None)
+        pstatus = self.get_argument('status', None)
+        severity = self.get_argument('severity', None)
         patches = PatchRetriever(self.session,
             qcount=queryCount, qoffset=queryOffset)
         if tpid:
@@ -78,11 +79,18 @@ class PatchesHandler(BaseHandler):
         elif pstatus:
             if patch_oper.search(pstatus):
                 results = patches.get_by_type(pstatus)
-            elif patch_sev:
-                results = patches.get_by_severity(pstatus)
             else:
-                results = {"pass": False, "message":
-                        "Invalid Status or Severity"
+                results = {
+                        'pass': False,
+                        'message': 'Invalid Status'
+                        }
+        elif severity:
+            if patch_sev.search(severity):
+                results = patches.get_by_severity(severity)
+            else:
+                results = {
+                        'pass': False,
+                        'message': 'Invalid Severity'
                         }
         else:
             results = patches.get_pkg_default()

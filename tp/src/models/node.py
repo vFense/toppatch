@@ -133,9 +133,6 @@ class Operations(Base):
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
-    results_id = Column(INTEGER(unsigned=True),
-        ForeignKey("results.id", use_alter=True,
-        name="fk_operations_result_id"))
     operation_type = Column(VARCHAR(32), nullable=False)
     operation_sent = Column(DATETIME, nullable=True)
     operation_received = Column(DATETIME, nullable=True)
@@ -171,10 +168,9 @@ class Results(Base):
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     operation_id = Column(INTEGER(unsigned=True),
-        ForeignKey("operations.id", use_alter=True,
-        name="fk_result_operations_id"),unique=True)
+        ForeignKey("operations.id"))
     patch_id = Column(VARCHAR(32),
-        ForeignKey("package.toppatch_id"))
+        ForeignKey("package.toppatch_id"), nullable=True)
     result = Column(VARCHAR(16), nullable=True)
     reboot = Column(BOOLEAN, nullable=True)
     error = Column(VARCHAR(64), nullable=True)

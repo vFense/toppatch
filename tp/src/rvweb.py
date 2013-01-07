@@ -32,6 +32,7 @@ from server.api.scheduler_api import *
 from server.api.transactions_api import *
 from server.api.packages_api import *
 from server.api.api import *
+from server.api.email_api import *
 from server.api.virtual import *
 from server.api import *
 from server.account.manager import AccountManager
@@ -73,6 +74,8 @@ class Application(tornado.web.Application):
             (r"/login/oauth/access_token", AccessTokenHandler),
 
             #### API Handlers
+            (r"/api/email/config/create?", CreateEmailConfigHandler),
+            (r"/api/email/config/list?", GetEmailConfigHandler),
             (r"/api/osData/?", OsHandler),
             (r"/api/networkData/?", NetworkHandler),
             (r"/api/summaryData/?", SummaryHandler),
