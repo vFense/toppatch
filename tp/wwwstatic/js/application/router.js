@@ -42,6 +42,7 @@ define(
                 'admin/listblocks': 'modal/admin/listblocks',
                 'admin/syslog'    : 'modal/admin/syslog',
                 'admin/vmware'    : 'modal/admin/vmware',
+                'admin/groups'    : 'modal/admin/groups',
                 'admin/users'     : 'modal/admin/users'
 
                 // Default
@@ -184,6 +185,9 @@ define(
             },
             'modal/admin/vmware': function () {
                 this.openAdminModalWithView('modals/admin/vmware');
+            },
+            'modal/admin/groups': function () {
+                this.openAdminModalWithView('modals/admin/groups');
             },
             'modal/admin/users': function () {
                 this.openAdminModalWithView('modals/admin/users');

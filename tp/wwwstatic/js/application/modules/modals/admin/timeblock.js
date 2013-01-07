@@ -2,17 +2,39 @@ define(
     ['jquery', 'underscore', 'backbone', 'text!templates/modals/admin/timeblock.html', 'jquery.ui.datepicker', 'jquery.ui.slider'],
     function ($, _, Backbone, myTemplate) {
         "use strict";
-        return {
+        var exports = {
+            Collection: Backbone.Collection.extend({
+                baseUrl: 'api/timeblocker/list.json/',
+                filter: '',
+                url: function () {
+                    return this.baseUrl + this.filter;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
+                    this.collection = new exports.Collection();
+                    this.collection.bind('reset', this.render, this);
+                    this.collection.fetch();
                     this.start = '8:00 AM';
                     this.end = '5:00 PM';
                     this.days = '0000000';
                 },
                 events: {
                     'click #dow' : 'highlight',
+                    'click input[name=timeblock]': 'disableTb',
                     'click #add' :   'add'
+                },
+                disableTb: function (event) {
+                    var $checkbox = $(event.currentTarget), params;
+                    window.console.log($checkbox.is(':checked'));
+                    params = {
+                        tbid: $checkbox.val(),
+                        toggle: $checkbox.is(':checked')
+                    };
+                    $.post('/api/timeblocker/toggle', params, function (json) {
+                        window.console.log(json);
+                    });
                 },
                 add: function (evt) {
                     var start_time, end_time, start_date, end_date, params, label, days, offset,
@@ -196,11 +218,12 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var template = _.template(this.template);
+                    var template = _.template(this.template),
+                        data = this.collection.toJSON();
 
                     this.$el.empty();
 
-                    this.$el.html(template());
+                    this.$el.html(template({data: data}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
@@ -214,5 +237,6 @@ define(
                 }
             })
         };
+        return exports;
     }
 );

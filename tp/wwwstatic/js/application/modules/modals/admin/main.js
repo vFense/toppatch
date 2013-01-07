@@ -12,8 +12,8 @@ define(
                             {text: 'Tagging', href: 'admin/managetags'},
                             {text: 'Approve Nodes', href: 'admin/nodes'},
                             {text: 'Time Blocker', href: 'admin/timeblock'},
-                            {text: 'Time Blocks', href: 'admin/listblocks'},
                             {text: 'Users', href: 'admin/users'},
+                            {text: 'Groups', href: 'admin/groups'},
                             {text: 'Syslog', href: 'admin/syslog'},
                             {text: 'VMWare', href: 'admin/vmware'}
                         ]
