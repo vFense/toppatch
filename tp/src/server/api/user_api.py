@@ -158,18 +158,58 @@ class CreateGroupHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         groupname = self.get_argument("groupname", None)
-        if groupname:
+        acl_type = self.get_argument('acl_type', None)
+        acl_action = 'create'
+        acl = self.get_argument('acl', None)
+        if groupname and acl_type and acl:
                 group = create_group(self.session, groupname)
-                result = group
+                group_result = group
         else:
-            result = {"pass" : False,
-                      "message" : "Group %s can't be created, %s, %s %s" %\
+            result = {
+                    'pass' : False,
+                    'message' : 'Group %s can"t be created, %s, %s %s' %\
+                                  (groupname, 'Insufficient arguments',
+                                      'arguments needed are ',
+                                      'groupname')
+                    }
+        if acl and group_result['pass']:
+            valid_json, json_acl = verify_json_is_valid(acl)
+            if acl_type and acl_action and acl and valid_json:
+                json_acl['group_id'] = group_result['id']
+                acl_result = \
+                    acl_modifier(self.session, acl_type, acl_action, json_acl)
+                if group_result['pass'] and acl_result['pass']:
+                    result = {
+                        'pass': True,
+                        'message': 'Group and ACL created Successfully'
+                    }
+                else:
+                    result = {
+                        'pass': False,
+                        'message': 'Group and ACL creation failed'
+                    }
+                    group_deleted = \
+                            delete_group(self.session,
+                                    group_id=group_result['id'])
+        elif acl and not group_result['pass']:
+            result = {
+                    'pass': False,
+                    'message': 'Incorrect arguments passed. %s:%s, %s, %s' %\
+                            ('Arguments needed', 'acl_type', 'acl_action', 
+                                'acl')
+                    }
+            group_deleted = delete_group(self.session,
+                                    group_id=group_result['id'])
+        else:
+            result = {
+                    'pass' : False,
+                    'message' : 'Group %s can"t be created, %s, %s %s' %\
                                   (groupname, 'Insufficient arguments',
                                       'arguments needed are ',
                                       'groupname')
                     }
         self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(result, indent=4))
+        self.write(json.dumps(acl_result, indent=4))
 
 class DeleteGroupHandler(BaseHandler):
     @authenticated_request

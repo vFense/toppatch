@@ -61,7 +61,8 @@ def add_group(session, groupname=None):
                 session.commit()
                 return({
                     'pass': True,
-                    'message': 'Group %s added' % (groupname)
+                    'message': 'Group %s added' % (groupname),
+                    'id': group.id
                     })
             except Exception as e:
                 session.rollback()
