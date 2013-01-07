@@ -107,7 +107,34 @@ define(
                     }
                 },
                 editGlobalAcl: function (event) {
-                    window.console.log(event);
+                    var params, that = this,
+                        $submitButton = $(event.currentTarget),
+                        $item = $submitButton.parents('.item'),
+                        $alert = $item.find('.alert'),
+                        $permissions = $item.find('input[type=checkbox]'),
+                        group_id = $submitButton.attr('value'),
+                        url = 'api/acl/modify',
+                        acl_type = 'global_group',
+                        acl_action = 'modify',
+                        acl = { group_id: group_id };
+                    $permissions.each(function () {
+                        acl[this.name] = this.checked;
+                    });
+                    params = {
+                        acl_type: acl_type,
+                        acl_action: acl_action,
+                        acl: JSON.stringify(acl)
+                    };
+                    window.console.log(params);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            $alert.hide();
+                            that.collection.fetch();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                        }
+                    });
                 },
                 submitAcl: function (event) {
                     var params, aclType,
