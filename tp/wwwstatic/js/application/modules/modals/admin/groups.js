@@ -57,7 +57,19 @@ define(
                     'click button[name=submitAclNode]': 'submitAcl',
                     'click button[name=submitAclTag]': 'submitAcl',
                     'click button[name=removeAclTag]': 'removeAcl',
-                    'click button[name=removeAclNode]': 'removeAcl'
+                    'click button[name=removeAclNode]': 'removeAcl',
+                    'click button[name=toggleDelete]': 'toggleDelete'
+                },
+                toggleDelete: function (event) {
+                    var $button = $(event.currentTarget),
+                        $span = $button.siblings('span');
+                    if ($span.length === 0) {
+                        $span = $button.parent();
+                        $button = $span.siblings('button');
+                    }
+                    window.console.log($span);
+                    $span.toggle();
+                    $button.toggle();
                 },
                 toggleAddGroup: function (event) {
                     var $newGroupDiv = this.$el.find('#newGroupDiv');
