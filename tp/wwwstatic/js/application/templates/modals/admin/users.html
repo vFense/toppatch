@@ -68,6 +68,11 @@
                                     <button name="showAcl" class="btn btn-link noPadding"><small>Create Node Acl</small></button>
                                     <div name="aclOptions" class="hide span12">
                                         <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Read Only</small>
+                                                <input type="checkbox" name="allow_read"/>
+                                            </label>
+                                        </div>
+                                        <div class="span3 noMargin">
                                             <label class="checkbox"><small>Wake on Lan</small>
                                                 <input type="checkbox" name="allow_wol"/>
                                             </label>
@@ -153,6 +158,11 @@
                                 <div class="span12 noMargin">
                                     <button name="showAcl" class="btn btn-link noPadding"><small>Create Tag Acl</small></button>
                                     <div name="aclOptions" class="hide span12">
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Read Only</small>
+                                                <input type="checkbox" name="allow_read"/>
+                                            </label>
+                                        </div>
                                         <div class="span3 noMargin">
                                             <label class="checkbox"><small>Wake on Lan</small>
                                                 <input type="checkbox" name="allow_wol"/>
@@ -260,7 +270,12 @@
             <div class="items alignLeft hide">
                 <div class="item clearfix">
                     <label class="checkbox">Read Only
-                        <input type="checkbox" name="read_only"/>
+                        <input type="checkbox" name="allow_read"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Deny All
+                        <input type="checkbox" name="deny_all"/>
                     </label>
                 </div>
                 <div class="item clearfix">
