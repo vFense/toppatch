@@ -1,0 +1,186 @@
+#!/opt/TopPatch/python/current/bin/python
+import os
+import os.path
+import sys
+import re
+import time
+import shlex
+import signal
+import subprocess
+import logging, logging.config
+
+logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logger = logging.getLogger('rvapi')
+
+PIDFILE = '/opt/TopPatch/var/tmp/process.pid'
+MYSQL_PIDFILE = '/opt/TopPatch/var/tmp/mysql-9006.pid'
+RVLISTENER_PIDFILE = '/opt/TopPatch/var/tmp/rvlistener-9001.pid'
+CSRLISTENER_PIDFILE = '/opt/TopPatch/var/tmp/csrlistener-9002.pid'
+RVWEB_PIDFILE = '/opt/TopPatch/var/tmp/rvweb-9000.pid'
+MYSQL= '/opt/TopPatch/mysql/percona-5.5/support-files/mysql.server'
+PATH='/opt/TopPatch/tp/'
+RVLISTENER = 'src/receiver/rvlistener.py'
+CSRLISTENER = 'src/receiver/csrlistener.py'
+RVWEB = 'src/rvweb.py'
+PROGRAM = 'python'
+
+PIDS = [(MYSQL_PIDFILE, 'RVMySQL'), (RVLISTENER_PIDFILE, 'RVListener'), 
+        (CSRLISTENER_PIDFILE, 'CSRListener'),
+        (RVWEB_PIDFILE, 'RVWeb')]
+
+if not os.path.exists('/opt/TopPatch/var/tmp/'):
+    os.mkdir('/opt/TopPatch/var/tmp/')
+if not os.path.exists('/opt/TopPatch/var/log/'):
+    os.mkdir('/opt/TopPatch/var/log/')
+if not os.path.exists('/opt/TopPatch/var/lib/'):
+    os.mkdir('/opt/TopPatch/var/lib/')
+    os.mkdir('/opt/TopPatch/var/lib/ssl')
+    os.mkdir('/opt/TopPatch/var/lib/ssl/client')
+    os.mkdir('/opt/TopPatch/var/lib/ssl/client/csr')
+    os.mkdir('/opt/TopPatch/var/lib/ssl/client/keys')
+
+SERVICES = [(RVLISTENER, RVLISTENER_PIDFILE, 'RVListener'),
+        (CSRLISTENER, CSRLISTENER_PIDFILE, 'CSRListener'),
+        (RVWEB, RVWEB_PIDFILE, 'RVWeb')]
+
+
+def run(program, *args):
+    try:
+        pid = os.fork()
+        if not pid:
+           a = os.execvp(program, (program,) + args)
+    except OSError, e:
+        sys.stderr.write("fork failed %d (%s)\n" % (e.errno, e.strerror))
+        logger.warning("fork failed %d (%s)\n" % (e.errno, e.strerror))    
+        sys.exit(1)
+    return str(pid)
+
+
+def mysql_start(mysql_server, mysql_pidfile):
+    start_cmd = '%s start' % mysql_server
+    start = shlex.split(start_cmd)
+    subprocess.call(start, stdout=subprocess.PIPE)
+    mysql_pid = open(MYSQL_PIDFILE, 'r',).read()
+    return mysql_pid
+
+
+def mysql_stop(mysql_server):
+    stop_cmd = '%s stop' % mysql_server
+    stop = shlex.split(stop_cmd)
+    subprocess.call(stop, stdout=subprocess.PIPE)
+
+
+def handler(signum, frame):
+    print "returning back to terminal"
+
+
+def TopPatch_start():
+    process_exists = 0
+    for pidfile in PIDS:
+        if os.path.exists(pidfile[0]):
+            pid = open(pidfile[0], 'r').read()
+            ps = subprocess.Popen(['ps', '-fe'], stdout=subprocess.PIPE)
+            for i in ps.stdout.readlines():
+                if re.search(r'[0-9]+', i.split()[1]):
+                    if int(pid) == int(i.split()[1]):
+                        process_exists = process_exists + 1
+                        message = 'RV service %s is already running.' \
+                            % ( pidfile[1] )
+                        sys.stderr.write(message+'\n')
+                        logger.error(message)
+                        sys.exit(1)
+    if process_exists == 0:
+        os.chdir(PATH)
+        print 'TopPatch Server is starting. Please wait....'
+        logger.info('TopPatch Server is starting. Please wait....')
+        mysql_pid = mysql_start(MYSQL, MYSQL_PIDFILE)
+        logger.info("Mysql Server Started")
+        time.sleep(1)
+        for service in SERVICES:
+            pid = run(PROGRAM, service[0])
+            pidfile = open(service[1], 'w')
+            pidfile.write(pid)
+            pidfile.close()
+            time.sleep(1)
+        signal.signal(signal.SIGINT, handler)
+        time.sleep(5)
+        print 'TopPatch Server has been started. Enjoy !!!'
+        logger.info('TopPatch Server has been started. Enjoy !!!')
+
+
+def TopPatch_stop():
+    logger.info('RV Services are going to shutdown now...')
+    for service in SERVICES:
+        if os.path.exists(service[1]):
+            pid = open(service[1], 'r').read()
+            if re.search(r'[0-9]+', pid):
+                try:
+                    os.kill(int(pid), signal.SIGTERM)
+                    os.remove(service[1])
+                except Exception as e:
+                    if e.errno == 3:
+                        os.remove(service[1])
+            time.sleep(2)
+        else:
+            msg = "RV %s is not running. Stopping Failed..." \
+                    % (service[2])
+            sys.stderr.write(msg+'\n')
+            logger.error(msg)
+    if os.path.exists(MYSQL_PIDFILE):
+        mysql_stop(MYSQL)
+    else:
+        msg = "%s is not running. Stopping Failed..." \
+                % ('MySQL Database')
+        sys.stderr.write(msg+'\n')
+        logger.error(msg)
+    print 'TopPatch Server has been stopped now !!!'
+    logger.info('TopPatch Server has been stopped now !!!')
+
+
+def TopPatch_restart():
+    TopPatch_stop()
+    print "\n"	
+    TopPatch_start()
+
+
+def TopPatch_status():
+    process_exists = 0
+    for pidfile in PIDS:
+        if os.path.exists(pidfile[0]):
+            pid = open(pidfile[0], 'r').read()
+            ps = subprocess.Popen(['ps', '-fe'], stdout=subprocess.PIPE)
+            for i in ps.stdout.readlines():
+                if re.search(r'[0-9]+', i.split()[1]):
+                    if int(pid) == int(i.split()[1]):
+                        process_exists = process_exists + 1
+                        message = 'RV service %s is already running.' \
+                            % ( pidfile[1] )
+                        sys.stderr.write(message+'\n')
+                        logger.info(message)
+        else:
+            message = 'RV service %s is not running.' \
+                    % ( pidfile[1] )
+            sys.stderr.write(message+'\n')
+            logger.error(message)
+    sys.exit(0)
+
+
+ACTIONS = sys.argv[1]
+
+if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        if ACTIONS == 'start':
+            TopPatch_start()
+        elif ACTIONS == 'stop':
+            TopPatch_stop()
+        elif ACTIONS == 'restart':
+            TopPatch_restart()
+            logger.info("TopPatch server restarting..")
+        elif ACTIONS == 'status':
+            TopPatch_status()
+        else:
+            print "Unknown command"
+            sys.exit(2)
+        sys.exit(0)
+    else:
+        print "usage: %s start|stop|restart|status" % sys.argv[0]

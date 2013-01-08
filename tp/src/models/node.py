@@ -17,21 +17,25 @@ class NodeInfo(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
-    display_name = Column(VARCHAR(32), nullable=True, unique=True)
-    host_name = Column(VARCHAR(32), nullable=True, unique=True)
-    ip_address = Column(VARCHAR(16), nullable=False, unique=True)
+    display_name = Column(VARCHAR(64), nullable=True, unique=True)
+    host_name = Column(VARCHAR(64), nullable=True, unique=True)
+    computer_name = Column(VARCHAR(64), nullable=True, unique=True)
+    vm_name = Column(VARCHAR(128), nullable=True, unique=True)
+    ip_address = Column(VARCHAR(16), nullable=True, unique=True)
     host_status = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
     agent_status = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
     last_agent_update = Column(DATETIME, nullable=True)
     last_node_update = Column(DATETIME, nullable=True)
     reboot = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
-    def __init__(self, ip_address, host_name, display_name=None,
-                host_status=False, agent_status=False,
-                last_agent_update=None, last_node_update=None,
-                reboot=False
+    def __init__(self, ip_address=None, host_name=None, computer_name=None,
+                display_name=None, vm_name=None, host_status=False,
+                agent_status=False, last_agent_update=None,
+                last_node_update=None, reboot=False
                 ):
         self.display_name = display_name
+        self.computer_name = computer_name
         self.host_name = host_name
+        self.vm_name = vm_name
         self.ip_address = ip_address
         self.host_status = host_status
         self.agent_status = agent_status
@@ -39,12 +43,12 @@ class NodeInfo(Base):
         self.last_node_update = last_node_update
         self.reboot = reboot
     def __repr__(self):
-        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.host_name, self.ip_address, self.display_name,
-                self.host_status, self.agent_status,
-                self.last_agent_update, self.last_node_update,
-                self.reboot
+                self.computer_name, self.vm_name, self.host_status,
+                self.agent_status, self.last_agent_update,
+                self.last_node_update, self.reboot
                 )
 
 class SystemInfo(Base):
@@ -101,16 +105,19 @@ class NetworkInterface(Base):
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
     mac_address = Column(VARCHAR(12), nullable=True, unique=True)
-    ip_address = Column(VARCHAR(16), nullable=False, unique=True)
+    ip_address = Column(VARCHAR(16), nullable=False, unique=False)
     interface = Column(VARCHAR(32), nullable=True, unique=False)
-    def __init__(self, mac_address, ip_address, interface):
+    def __init__(self, node_id=None, mac_address=None,
+            ip_address=None, interface=None):
+        self.node_id = node_id
         self.mac_address = mac_address
         self.ip_address = ip_address
         self.interface = interface
     def __repr__(self):
-        return "<NodeInfo(%s,%s,%s)>" %\
+        return "<NetworkInterface(%s,%s,%s,%s)>" %\
                 (
-                self.mac_address, self.ip_address, self.interface
+                self.node_id, self.mac_address,
+                self.ip_address, self.interface
                 )
 
 class Operations(Base):
@@ -126,9 +133,6 @@ class Operations(Base):
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
-    results_id = Column(INTEGER(unsigned=True),
-        ForeignKey("results.id", use_alter=True,
-        name="fk_operations_result_id"))
     operation_type = Column(VARCHAR(32), nullable=False)
     operation_sent = Column(DATETIME, nullable=True)
     operation_received = Column(DATETIME, nullable=True)
@@ -164,10 +168,9 @@ class Results(Base):
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
     operation_id = Column(INTEGER(unsigned=True),
-        ForeignKey("operations.id", use_alter=True,
-        name="fk_result_operations_id"),unique=True)
+        ForeignKey("operations.id"))
     patch_id = Column(VARCHAR(32),
-        ForeignKey("package.toppatch_id"))
+        ForeignKey("package.toppatch_id"), nullable=True)
     result = Column(VARCHAR(16), nullable=True)
     reboot = Column(BOOLEAN, nullable=True)
     error = Column(VARCHAR(64), nullable=True)

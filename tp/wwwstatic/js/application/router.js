@@ -41,6 +41,8 @@ define(
                 'admin/timeblock' : 'modal/admin/timeblock',
                 'admin/listblocks': 'modal/admin/listblocks',
                 'admin/syslog'    : 'modal/admin/syslog',
+                'admin/vmware'    : 'modal/admin/vmware',
+                'admin/groups'    : 'modal/admin/groups',
                 'admin/users'     : 'modal/admin/users'
 
                 // Default
@@ -98,6 +100,7 @@ define(
                         myView.Collection = myView.Collection.extend({
                             getCount: params.count,
                             offset: params.offset,
+                            by_os: params.by_os,
                             filterby: params.filterby
                         });
                     }
@@ -118,10 +121,11 @@ define(
                     if ($.type(query) === 'string') {
                         var params = app.parseQuery(query);
                         myView.Collection = myView.Collection.extend({
-                            type: params.type,
+                            status: params.status,
                             getCount: params.count,
                             offset: params.offset,
                             searchQuery: params.query,
+                            severity: params.severity,
                             searchBy: params.searchby
                         });
                     }
@@ -178,6 +182,12 @@ define(
             },
             'modal/admin/syslog': function () {
                 this.openAdminModalWithView('modals/admin/syslog');
+            },
+            'modal/admin/vmware': function () {
+                this.openAdminModalWithView('modals/admin/vmware');
+            },
+            'modal/admin/groups': function () {
+                this.openAdminModalWithView('modals/admin/groups');
             },
             'modal/admin/users': function () {
                 this.openAdminModalWithView('modals/admin/users');

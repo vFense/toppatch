@@ -143,23 +143,43 @@ class PatchRetriever():
             for node in pkg_node:
                 if node[0].installed:
                     countInstalled += 1
-                    nodeInstalled.append({'id': node[0].node_id,
-                            'ip': node[1].host_name})
+                    nodeInstalled.append({
+                        'id': node[0].node_id,
+                        'ip': node[1].ip_address,
+                        'hostname': node[1].host_name,
+                        'displayname': node[1].display_name
+                        })
                 elif node[0].pending:
                     countPending += 1
-                    nodePending.append({'id': node[0].node_id,
-                            'ip': node[1].host_name})
+                    nodePending.append({
+                        'id': node[0].node_id,
+                        'ip': node[1].ip_address,
+                        'hostname': node[1].host_name,
+                        'displayname': node[1].display_name
+                        })
                 elif node[0].attempts > 0:
                     countFailed += 1
-                    nodeFailed.append({'id': node[0].node_id,
-                        'ip': node[1].host_name})
+                    nodeFailed.append({
+                        'id': node[0].node_id,
+                        'ip': node[1].ip_address,
+                        'hostname': node[1].host_name,
+                        'displayname': node[1].display_name
+                        })
                     countAvailable += 1
-                    nodeAvailable.append({'id': node[0].node_id,
-                        'ip': node[1].host_name})
+                    nodeAvailable.append({
+                        'id': node[0].node_id,
+                        'ip': node[1].ip_address,
+                        'hostname': node[1].host_name,
+                        'displayname': node[1].display_name
+                        })
                 else:
                     countAvailable += 1
-                    nodeAvailable.append({'id': node[0].node_id,
-                        'ip': node[1].host_name})
+                    nodeAvailable.append({
+                        'id': node[0].node_id,
+                        'ip': node[1].ip_address,
+                        'hostname': node[1].host_name,
+                        'displayname': node[1].display_name
+                        })
                 resultjson = {
                     "name" : pkg.name,
                     "type": "Security Patch",
