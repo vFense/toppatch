@@ -15,7 +15,7 @@ logger = logging.getLogger('rvapi')
 #def list_all_user_permission(session):
 
 class VerifyUser():
-    def __init__(self, session, user_name=None, action=None, node_id=None,
+    def __init__(self, session, user_name=None, action='allow_read', node_id=None,
         host_name=None, display_name=None, ip_address=None, tag_id=None,
         tag_name=None, user_id=None
         ):
@@ -49,7 +49,8 @@ class VerifyUser():
         self.user_for_node_exists = None
         self.user_for_tag_exists = None
         self.global_user_name = None
-        self.operation_call = ['allow_install', 'allow_uninstall',
+        self.operation_call = [
+                'allow_install', 'allow_uninstall', 'allow_read',
                 'allow_reboot', 'allow_wol', 'allow_tag_creation', 
                 'allow_tag_removal', 'allow_snapshot_creation',
                 'allow_snapshot_removal', 'allow_snapshot_revert'
@@ -99,10 +100,11 @@ class VerifyUser():
                 elif len(self.acls) >= 2:
                     print self.acls
                 else:
+                    print self.acls
                     return({
                         'pass': False,
-                        'message': 'ACCESS DENIED FOR %s' % \
-                                (self.user.username)
+                        'message': 'Operation %s denied FOR %s' % \
+                                (self.action, self.user.username)
                         })
             else:
                 return({
@@ -292,11 +294,23 @@ class VerifyUser():
                         ','.join(self.group_names),
                         acl_key, allowed, message)
                         )
+            elif self.user_access.deny_all:
+                if self.user_access.is_global:
+                    allowed = False
+                    message = 'User %s has the deny_all rule set' %\
+                            (self.user.username)
+                    acl.append(self._return_global_json(
+                        self.user.username, 'Global User ACL', 
+                        ','.join(self.group_names),
+                        acl_key, allowed, message)
+                        )
         if self.group_access:
             #Check Global Group Settings
             group_dict = map(lambda gid: gid.__dict__, self.group_access)
+            #print group_dict
+            #print acl_key
             if True in map(lambda gid: gid['is_global'], group_dict) and \
-                    acl_key in map(lambda gid: gid[acl_key], group_dict)\
+                    True in map(lambda gid: gid[acl_key], group_dict)\
                     and False in map(lambda gid: gid['is_admin'], group_dict):
                 allowed = True
                 message = 'User %s has %s globally through a Group ACL' %\
@@ -310,6 +324,16 @@ class VerifyUser():
                     and True in map(lambda gid: gid['is_global'], group_dict):
                 allowed = True
                 message = 'User %s is a global admin in a Group ACL' %\
+                        (self.user.username)
+                acl.append(self._return_global_json(
+                    self.user.username, 'Global Group ACL',
+                    ','.join(self.group_names),
+                    acl_key, allowed, message)
+                    )
+            elif True in map(lambda gid: gid['deny_all'], group_dict)\
+                    and True in map(lambda gid: gid['is_global'], group_dict):
+                allowed = False
+                message = 'User %s has deny all access in a Group ACL' %\
                         (self.user.username)
                 acl.append(self._return_global_json(
                     self.user.username, 'Global Group ACL',

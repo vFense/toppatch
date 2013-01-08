@@ -102,6 +102,7 @@ class CreateUserHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+
 class ModifyUserFromGroupHandler(BaseHandler):
     def post(self):
         user_name = self.get_current_user()
@@ -211,6 +212,7 @@ class CreateGroupHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(acl_result, indent=4))
 
+
 class DeleteGroupHandler(BaseHandler):
     @authenticated_request
     def post(self):
@@ -235,7 +237,6 @@ class DeleteGroupHandler(BaseHandler):
                     }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
-
 
 
 
