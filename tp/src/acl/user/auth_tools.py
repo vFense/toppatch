@@ -44,6 +44,8 @@ class VerifyUser():
         self.tag = None
         self.tags = []
         self.acls = []
+        self.global_acls = None
+        self.node_or_tag_acls = None
         self.user_access = None
         self.group_access = None
         self.user_for_node_exists = None
@@ -56,7 +58,7 @@ class VerifyUser():
                 'allow_snapshot_removal', 'allow_snapshot_revert'
                 ]
 
-    def run(self):
+    def verify(self):
         self._set_sql_objects()
         if self.user:
             if self.node:
@@ -91,14 +93,17 @@ class VerifyUser():
             if self.action in self.operation_call:
                 #This is where all the magic happens
                 if self.user_access or self.group_access:
-                    self.acls = self._verify_global_user_or_group_has_acl()
-                elif self.node or self.tag:
+                    self.global_acls = self._verify_global_user_or_group_has_acl()
+                if self.node or self.tag:
                     self._get_acls_if_exist()
-                    self.acls = self._verify_node_or_tag_has_acl()
-                if len(self.acls) == 1:
-                    return(self.acls[0])
-                elif len(self.acls) >= 2:
-                    print self.acls
+                    self.node_or_tag_acls = self._verify_node_or_tag_has_acl()
+                self.total_acls = {
+                        'global_acls': self.global_acls,
+                        'node_or_tag_acls': self.node_or_tag_acls
+                        }
+                if len(self.global_acls) >=1 or\
+                        len(self.node_or_tag_acls) >=1:
+                    return(self.total_acls)
                 else:
                     print self.acls
                     return({
@@ -207,7 +212,7 @@ class VerifyUser():
                     filter(TagGroupAccess.group_id.in_(self.groups)).all()
             if len(self.tags_for_group_exists) >=1:
                 self.tag_group_dict = map(lambda tags: tag.__dict__,\
-                        self.tag_for_group_exists)
+                        self.tags_for_group_exists)
         #SQLAlchemy Object, if there is an ACL in the TagUserAccess table
         #This is ran if a tag arguement was passed. This will also check
         #if the nodes in the tag that was passed actually have an acl to it.
@@ -284,6 +289,7 @@ class VerifyUser():
                         ','.join(self.group_names),
                         acl_key, allowed, message)
                         )
+
             elif self.user_access.is_admin:
                 if self.user_access.is_global:
                     allowed = True
@@ -294,6 +300,7 @@ class VerifyUser():
                         ','.join(self.group_names),
                         acl_key, allowed, message)
                         )
+
             elif self.user_access.deny_all:
                 if self.user_access.is_global:
                     allowed = False
@@ -304,11 +311,10 @@ class VerifyUser():
                         ','.join(self.group_names),
                         acl_key, allowed, message)
                         )
+
         if self.group_access:
             #Check Global Group Settings
             group_dict = map(lambda gid: gid.__dict__, self.group_access)
-            #print group_dict
-            #print acl_key
             if True in map(lambda gid: gid['is_global'], group_dict) and \
                     True in map(lambda gid: gid[acl_key], group_dict)\
                     and False in map(lambda gid: gid['is_admin'], group_dict):
@@ -320,6 +326,7 @@ class VerifyUser():
                     ','.join(self.group_names),
                     acl_key, allowed, message)
                     )
+
             elif True in map(lambda gid: gid['is_admin'], group_dict)\
                     and True in map(lambda gid: gid['is_global'], group_dict):
                 allowed = True
@@ -330,6 +337,7 @@ class VerifyUser():
                     ','.join(self.group_names),
                     acl_key, allowed, message)
                     )
+
             elif True in map(lambda gid: gid['deny_all'], group_dict)\
                     and True in map(lambda gid: gid['is_global'], group_dict):
                 allowed = False
@@ -340,24 +348,28 @@ class VerifyUser():
                     ','.join(self.group_names),
                     acl_key, allowed, message)
                     )
+
         return(acl)
 
 
     def _verify_node_or_tag_has_acl(self):
         acl_key = self.action
         acl = []
+
         #Check Node User Settings
         if self.user_for_node_exists:
             if self.user_node_dict[acl_key]:
                 allowed = True
                 message = 'ACL for %s exists for node %s' %\
                         (self.user.username, self.node.ip_address)
+
                 acl.append(self._return_node_or_tag_json(
                     self.user.username, 'Node User ACL',len(self.tags), 
                     self.tag_length_of_nodes_that_have_acls,
                     ','.join(self.tag_names), ','.join(self.group_names),
                     acl_key, allowed, message)
                     )
+
             #Check Tag User Settings
         if self.user_for_tag_exists:
             if self.user_tag_dict[acl_key]:
@@ -370,6 +382,7 @@ class VerifyUser():
                     ','.join(self.tag_names), ','.join(self.group_names),
                     acl_key, allowed, message)
                     )
+
         if self.user_for_nodes_if_tag_exists:
             if True in map(lambda uid: uid[acl_key],\
                     self.user_for_nodes_if_tag_exists_dict) and \
@@ -387,6 +400,7 @@ class VerifyUser():
                     ','.join(self.tag_names), ','.join(self.group_names),
                     acl_key, allowed, message)
                     )
+
         if self.tags_for_node_exists:
             if True in map(lambda uid: uid[acl_key],\
                     self.tag_node_dict):
@@ -416,6 +430,7 @@ class VerifyUser():
                         ','.join(self.tag_names), ','.join(self.group_names),
                         acl_key, allowed, message)
                         )
+
             #Check Tag Group Settings
             if self.group_for_tag_exists:
                 if True in map(lambda gid: gid[acl_key], self.group_tag_dict):
@@ -428,6 +443,7 @@ class VerifyUser():
                         ','.join(self.tag_names), ','.join(self.group_names),
                         acl_key, allowed, message)
                         )
+
             if self.group_for_nodes_if_tag_exists:
                 if True in map(lambda uid: uid[acl_key],\
                         self.group_for_nodes_if_tag_exists_dict) and \
@@ -445,9 +461,10 @@ class VerifyUser():
                         ','.join(self.tag_names), ','.join(self.group_names),
                         acl_key, allowed, message)
                         )
-            if self.tag_for_group_exists:
+
+            if self.tags_for_group_exists:
                 if True in map(lambda uid: uid[acl_key],\
-                        self.tag_for_group_exists_dict):
+                        self.tags_for_group_exists_dict):
                     allowed = True
                     message = 'Group ACL for %s exists on a tag'%\
                             (self.user.username,)
