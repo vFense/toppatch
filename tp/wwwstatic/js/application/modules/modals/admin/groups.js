@@ -58,7 +58,8 @@ define(
                     'click button[name=submitAclTag]': 'submitAcl',
                     'click button[name=removeAclTag]': 'removeAcl',
                     'click button[name=removeAclNode]': 'removeAcl',
-                    'click button[name=toggleDelete]': 'toggleDelete'
+                    'click button[name=toggleDelete]': 'toggleDelete',
+                    'click button[name=deleteGroup]': 'deleteGroup'
                 },
                 toggleDelete: function (event) {
                     var $button = $(event.currentTarget),
@@ -67,9 +68,25 @@ define(
                         $span = $button.parent();
                         $button = $span.siblings('button');
                     }
-                    window.console.log($span);
                     $span.toggle();
                     $button.toggle();
+                },
+                deleteGroup: function (event) {
+                    var $button = $(event.currentTarget),
+                        $heading = $button.parents('.accordion-heading'),
+                        //$alert = $heading.find('.alert'),
+                        groupId = $button.attr('value'),
+                        url = 'api/groups/delete',
+                        params = {
+                            groupid: groupId
+                        },
+                        that = this;
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            that.collection.fetch();
+                        }
+                    });
                 },
                 toggleAddGroup: function (event) {
                     var $newGroupDiv = this.$el.find('#newGroupDiv');
