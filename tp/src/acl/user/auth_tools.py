@@ -15,7 +15,7 @@ logger = logging.getLogger('rvapi')
 #def list_all_user_permission(session):
 
 class VerifyUser():
-    def __init__(self, session, user_name=None, action='read_only', node_id=None,
+    def __init__(self, session, user_name=None, action='allow_read', node_id=None,
         host_name=None, display_name=None, ip_address=None, tag_id=None,
         tag_name=None, user_id=None
         ):
@@ -50,7 +50,7 @@ class VerifyUser():
         self.user_for_tag_exists = None
         self.global_user_name = None
         self.operation_call = [
-                'allow_install', 'allow_uninstall', 'read_only'
+                'allow_install', 'allow_uninstall', 'allow_read',
                 'allow_reboot', 'allow_wol', 'allow_tag_creation', 
                 'allow_tag_removal', 'allow_snapshot_creation',
                 'allow_snapshot_removal', 'allow_snapshot_revert'
@@ -100,10 +100,11 @@ class VerifyUser():
                 elif len(self.acls) >= 2:
                     print self.acls
                 else:
+                    print self.acls
                     return({
                         'pass': False,
-                        'message': 'ACCESS DENIED FOR %s' % \
-                                (self.user.username)
+                        'message': 'Operation %s denied FOR %s' % \
+                                (self.action, self.user.username)
                         })
             else:
                 return({
@@ -306,8 +307,10 @@ class VerifyUser():
         if self.group_access:
             #Check Global Group Settings
             group_dict = map(lambda gid: gid.__dict__, self.group_access)
+            #print group_dict
+            #print acl_key
             if True in map(lambda gid: gid['is_global'], group_dict) and \
-                    acl_key in map(lambda gid: gid[acl_key], group_dict)\
+                    True in map(lambda gid: gid[acl_key], group_dict)\
                     and False in map(lambda gid: gid['is_admin'], group_dict):
                 allowed = True
                 message = 'User %s has %s globally through a Group ACL' %\

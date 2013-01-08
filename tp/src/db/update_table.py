@@ -122,11 +122,11 @@ def add_user_to_group(session, user_id=None, group_id=None):
 
 
 def add_global_user_acl(session, user_id=None, is_admin=False,
-        is_global=True, read_only=False, allow_install=False,
+        is_global=True, allow_read=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
         allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, deny_all=False,
         date_created=datetime.now(), date_modified=datetime.now(),
         username='system_user'
         ):
@@ -140,7 +140,7 @@ def add_global_user_acl(session, user_id=None, is_admin=False,
     if user_id and not user_exists:
         try:
             add_acl = GlobalUserAccess(user_id=user_id, is_admin=is_admin,
-                    is_global=is_global, read_only=read_only,
+                    is_global=is_global, allow_read=allow_read,
                     allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
@@ -148,7 +148,7 @@ def add_global_user_acl(session, user_id=None, is_admin=False,
                     allow_snapshot_removal=allow_snapshot_removal,
                     allow_snapshot_revert=allow_snapshot_revert,
                     allow_tag_creation=allow_tag_creation,
-                    allow_tag_removal=allow_tag_removal,
+                    allow_tag_removal=allow_tag_removal, deny_all=deny_all,
                     date_created=date_created, date_modified=date_modified
                     )
             session.add(add_acl)
@@ -173,11 +173,11 @@ def add_global_user_acl(session, user_id=None, is_admin=False,
 
 
 def add_global_group_acl(session, group_id=None, is_admin=False,
-        is_global=True, read_only=False, allow_install=False,
+        is_global=True, allow_read=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
         allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, deny_all=False,
         date_created=datetime.now(), date_modified=datetime.now(),
         username='system_user'
         ):
@@ -191,7 +191,7 @@ def add_global_group_acl(session, group_id=None, is_admin=False,
     if group_id and not group_exists:
         try:
             add_acl = GlobalGroupAccess(group_id=group_id, is_admin=is_admin,
-                    is_global=is_global, read_only=read_only,
+                    is_global=is_global, allow_read=allow_read,
                     allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
@@ -199,7 +199,7 @@ def add_global_group_acl(session, group_id=None, is_admin=False,
                     allow_snapshot_removal=allow_snapshot_removal,
                     allow_snapshot_revert=allow_snapshot_revert,
                     allow_tag_creation=allow_tag_creation,
-                    allow_tag_removal=allow_tag_removal,
+                    allow_tag_removal=allow_tag_removal, deny_all=deny_all,
                     date_created=date_created, date_modified=date_modified
                     )
             session.add(add_acl)
@@ -223,7 +223,7 @@ def add_global_group_acl(session, group_id=None, is_admin=False,
             })
 
 
-def add_node_user_acl(session, node_id=None, user_id=None,
+def add_node_user_acl(session, node_id=None, user_id=None, allow_read=False,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -242,7 +242,7 @@ def add_node_user_acl(session, node_id=None, user_id=None,
     if user_id and node_id and not user_for_node_exists:
         try:
             add_acl = NodeUserAccess(node_id, user_id=user_id,
-                    allow_install=allow_install,
+                    allow_read=allow_read, allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
@@ -268,7 +268,7 @@ def add_node_user_acl(session, node_id=None, user_id=None,
                     })
 
 
-def add_node_group_acl(session, node_id=None, group_id=None,
+def add_node_group_acl(session, node_id=None, group_id=None, allow_read=False,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -287,7 +287,7 @@ def add_node_group_acl(session, node_id=None, group_id=None,
     if node_id and group_id and not group_for_node_exists:
         try:
             add_acl = NodeGroupAccess(node_id, group_id=group_id,
-                    allow_install=allow_install,
+                    allow_read=allow_read, allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
@@ -314,7 +314,7 @@ def add_node_group_acl(session, node_id=None, group_id=None,
 
 
 
-def add_tag_user_acl(session, tag_id=None, user_id=None,
+def add_tag_user_acl(session, tag_id=None, user_id=None, allow_read=False,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -333,7 +333,7 @@ def add_tag_user_acl(session, tag_id=None, user_id=None,
     if user_id and tag_id and not user_for_tag_exists:
         try:
             add_acl = TagUserAccess(tag_id, user_id=user_id,
-                    allow_install=allow_install,
+                    allow_read=allow_read, allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
@@ -359,7 +359,7 @@ def add_tag_user_acl(session, tag_id=None, user_id=None,
                     })
 
 
-def add_tag_group_acl(session, tag_id=None, group_id=None,
+def add_tag_group_acl(session, tag_id=None, group_id=None, allow_read=False,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -378,7 +378,7 @@ def add_tag_group_acl(session, tag_id=None, group_id=None,
     if group_id and tag_id and not group_for_tag_exists:
         try:
             add_acl = TagGroupAccess(tag_id, group_id,
-                    allow_install=allow_install,
+                    allow_read=allow_read, allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
@@ -1179,11 +1179,11 @@ def update_reboot_status(session, node_id, oper_type, username='system_user'):
 
 
 def update_global_user_acl(session, user_id=None, is_admin=False,
-        is_global=True, read_only=False, allow_install=False,
+        is_global=True, allow_read=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
         allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, deny_all=False,
         date_modified=datetime.now(), username='system_user'
         ):
     """
@@ -1201,7 +1201,7 @@ def update_global_user_acl(session, user_id=None, is_admin=False,
             try:
                 user.is_admin = is_admin
                 user.is_global = is_global
-                user.read_only = read_only
+                user.allow_read = allow_read
                 user.allow_install = allow_install
                 user.allow_uninstall = allow_uninstall
                 user.allow_reboot = allow_reboot
@@ -1212,6 +1212,7 @@ def update_global_user_acl(session, user_id=None, is_admin=False,
                 user.allow_snapshot_revert = allow_snapshot_revert
                 user.allow_tag_creation = allow_tag_creation
                 user.allow_tag_removal = allow_tag_removal
+                user.deny_all = deny_all
                 user.date_modified = date_modified
                 session.commit()
                 return({
@@ -1232,11 +1233,11 @@ def update_global_user_acl(session, user_id=None, is_admin=False,
 
 
 def update_global_group_acl(session, group_id=None, is_admin=False,
-        is_global=True, read_only=False, allow_install=False,
+        is_global=True, allow_read=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
         allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, deny_all=False,
         date_modified=datetime.now(), username='system_user'
         ):
     """
@@ -1254,7 +1255,7 @@ def update_global_group_acl(session, group_id=None, is_admin=False,
             try:
                 group.is_admin = is_admin
                 group.is_global = is_global
-                group.read_only = read_only
+                group.allow_read = allow_read
                 group.allow_install = allow_install
                 group.allow_uninstall = allow_uninstall
                 group.allow_reboot = allow_reboot
@@ -1265,6 +1266,7 @@ def update_global_group_acl(session, group_id=None, is_admin=False,
                 group.allow_snapshot_revert = allow_snapshot_revert
                 group.allow_tag_creation = allow_tag_creation
                 group.allow_tag_removal = allow_tag_removal
+                group.deny_all = deny_all
                 group.date_modified = date_modified
                 session.commit()
                 return({
@@ -1289,7 +1291,7 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, allow_read=False,
         date_modified=datetime.now(), username='system_user'
         ):
     """
@@ -1314,6 +1316,7 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
                 user.allow_snapshot_revert = allow_snapshot_revert
                 user.allow_tag_creation = allow_tag_creation
                 user.allow_tag_removal = allow_tag_removal
+                user.allow_read = allow_read
                 user.date_modified = date_modified
                 session.commit()
                 return({
@@ -1340,7 +1343,7 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, allow_read=False,
         date_modified=datetime.now(), username='system_user'
         ):
     """
@@ -1365,6 +1368,7 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
                 group.allow_snapshot_revert = allow_snapshot_revert
                 group.allow_tag_creation = allow_tag_creation
                 group.allow_tag_removal = allow_tag_removal
+                group.allow_read = allow_read
                 group.date_modified = date_modified
                 session.commit()
                 return({
@@ -1391,7 +1395,7 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, allow_read=False,
         date_modified=datetime.now(),
         username='system_user'
         ):
@@ -1418,6 +1422,7 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
                 user.allow_snapshot_revert = allow_snapshot_revert
                 user.allow_tag_creation = allow_tag_creation
                 user.allow_tag_removal = allow_tag_removal
+                user.allow_read = allow_read
                 user.date_modified = date_modified
                 session.commit()
                 return({
@@ -1444,7 +1449,7 @@ def update_tag_group_permissions(session, tag_id=None, group_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, allow_read=False,
         date_modified=datetime.now(), username='system_user'
         ):
     """
@@ -1470,6 +1475,7 @@ def update_tag_group_permissions(session, tag_id=None, group_id=None,
                 group.allow_snapshot_revert = allow_snapshot_revert
                 group.allow_tag_creation = allow_tag_creation
                 group.allow_tag_removal = allow_tag_removal
+                group.allow_read = allow_read
                 group.date_modified = date_modified
                 session.commit()
                 return({

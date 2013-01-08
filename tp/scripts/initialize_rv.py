@@ -18,17 +18,28 @@ acl_admin = {
         'allow_reboot': 'true', 'allow_wol': 'true', 
         'allow_snapshot_creation': 'true', 'allow_snapshot_removal':'true',
         'allow_snapshot_revert': 'true', 'allow_tag_creation': 'true',
-        'allow_tag_removal':'true'
+        'allow_tag_removal':'true', 'allow_read': 'true'
         }
 
-acl_ro = {
+acl_ro2 = {
+        'group_id': '2', 'is_admin': 'false', 'is_global': 'true',
+        'allow_install': 'false', 'allow_uninstall': 'false',
+        'allow_reboot': 'false', 'allow_wol': 'false', 
+        'allow_snapshot_creation': 'false', 'allow_snapshot_removal': 'false',
+        'allow_snapshot_revert': 'false', 'allow_tag_creation': 'false',
+        'allow_tag_removal': 'false', 'allow_read': 'true'
+        }
+
+
+acl_ro3 = {
         'group_id': '3', 'is_admin': 'false', 'is_global': 'true',
         'allow_install': 'false', 'allow_uninstall': 'false',
         'allow_reboot': 'false', 'allow_wol': 'false', 
         'allow_snapshot_creation': 'false', 'allow_snapshot_removal': 'false',
         'allow_snapshot_revert': 'false', 'allow_tag_creation': 'false',
-        'allow_tag_removal': 'false', 'read_only': 'true'
+        'allow_tag_removal': 'false', 'allow_read': 'true'
         }
+
 
 acl_api_rw = {
         'group_id': '4', 'is_admin': 'true', 'is_global': 'true',
@@ -36,14 +47,37 @@ acl_api_rw = {
         'allow_reboot': 'true', 'allow_wol': 'true', 
         'allow_snapshot_creation': 'true', 'allow_snapshot_removal':'true',
         'allow_snapshot_revert': 'true', 'allow_tag_creation': 'true',
-        'allow_tag_removal':'true'
+        'allow_tag_removal':'true', 'allow_read': 'true'
+
         }
 
-acls = [acl_admin, acl_ro, acl_api_rw]
-groups = ['ADMIN', 'READ_ONLY', 'API_RO', 'API_RW']
-users_to_groups = [('admin', 'ADMIN'),
+acl_deny_all = {
+        'group_id': '5', 'is_admin': 'false', 'is_global': 'true',
+        'allow_install': 'false', 'allow_uninstall': 'false',
+        'allow_reboot': 'false', 'allow_wol': 'false', 
+        'allow_snapshot_creation': 'false', 'allow_snapshot_removal': 'false',
+        'allow_snapshot_revert': 'false', 'allow_tag_creation': 'false',
+        'allow_tag_removal': 'false', 'deny_all': 'true', 'allow_read': 'false'
+        }
+
+acl_allow_install = {
+        'group_id': '6', 'is_admin': 'false', 'is_global': 'true',
+        'allow_install': 'true', 'allow_uninstall': 'false',
+        'allow_reboot': 'false', 'allow_wol': 'false', 
+        'allow_snapshot_creation': 'false', 'allow_snapshot_removal': 'false',
+        'allow_snapshot_revert': 'false', 'allow_tag_creation': 'false',
+        'allow_tag_removal': 'false', 'allow_read': 'true'
+        }
+
+acls = [acl_admin, acl_ro2, acl_ro3, acl_api_rw, acl_deny_all, acl_allow_install]
+groups = ['ADMIN', 'READ_ONLY', 'API_RO', 'API_RW', 'DENY_ALL', 'INSTALL_ONLY']
+users_to_groups = [
+        ('admin', 'ADMIN'),
+        ('read_only', 'READ_ONLY'),
         ('monitor', 'API_RO'),
-        ('remote', 'API_RW')
+        ('remote', 'API_RW'),
+        ('limited', 'DENY_ALL'),
+        ('install', 'INSTALL_ONLY'),
         ]
 
 def initialize_db():
@@ -115,13 +149,14 @@ def group_creation(session):
     return(completed)
 
 
-def acl_creation(session):
+def acl_creation_group(session):
     completed = True
     for acl in acls:
         acl_group = acl_modifier(session, 'global_group', 'create', acl)
         if not acl_group['pass']:
             completed = False
     return(completed)
+
 
 def user_creation(session):
     completed = True
@@ -181,8 +216,8 @@ if __name__ == '__main__':
         groups_created = group_creation(session)
         if groups_created:
             print 'RV Groups were created successfully'
-            acls_created = acl_creation(session)
-            if acls_created:
+            group_acls_created = acl_creation_group(session)
+            if group_acls_created:
                 print 'RV ACLs for the user Groups were created successfully'
                 users_created = user_creation(session)
                 if users_created:
