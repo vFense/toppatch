@@ -66,7 +66,7 @@ class HandOff():
         if self.is_enabled:
             logger.info('%s is enabled in RV' % self.node.ip_address)
         else:
-            logger.warn('%s is disabled in RV' % self.node.ip_address)
+            logger.warn('%s is disabled in RV' % self.ip)
         if self.is_enabled:
             if self.ip != self.node.ip_address:
                 self.node.ip_address = self.ip
@@ -98,7 +98,7 @@ class HandOff():
                 self.update_results(self.node)
             if self.json_object[OPERATION] == STOP:
                 self.update_results(self.node)
-        #self.session.close()
+        self.session.close()
 
     def get_data(self, oper):
         lcollect = []
