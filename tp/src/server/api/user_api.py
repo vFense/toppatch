@@ -225,11 +225,11 @@ class DeleteGroupHandler(BaseHandler):
         if groupid:
             group = self.session.query(Group).\
                     filter(Group.id == groupid).first()
-            result = delete_user(self.session, group_id=group.id)
+            result = delete_group(self.session, group_id=group.id)
         elif groupname:
             group = self.session.query(User).\
                     filter(Group.groupname == groupname).first()
-            result = delete_user(self.session, group.id)
+            result = delete_group(self.session, group.id)
         else:
             result = {
                     'pass': False,
