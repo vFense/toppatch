@@ -1353,7 +1353,7 @@ def update_node_group_acl(session, node_id=None, group_id=None,
     session = validate_session(session)
     group = None
     if group_id and node_id:
-        group = session.query(NodeUserAccess).\
+        group = session.query(NodeGroupAccess).\
                 filter(NodeGroupAccess.group_id == group_id).\
                 filter(NodeGroupAccess.node_id == node_id).first()
         if group:
