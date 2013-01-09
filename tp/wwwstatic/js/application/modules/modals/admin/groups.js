@@ -59,7 +59,10 @@ define(
                     'click button[name=removeAclTag]': 'removeAcl',
                     'click button[name=removeAclNode]': 'removeAcl',
                     'click button[name=toggleDelete]': 'toggleDelete',
-                    'click button[name=deleteGroup]': 'deleteGroup'
+                    'click button[name=deleteGroup]': 'deleteGroup',
+                    'click button[name=toggleAclEdit]': 'toggleAclEdit',
+                    'click button[name=editAclTag]': 'editAcl',
+                    'click button[name=editAclNode]': 'editAcl'
                 },
                 toggleDelete: function (event) {
                     var $button = $(event.currentTarget),
@@ -70,6 +73,53 @@ define(
                     }
                     $span.toggle();
                     $button.toggle();
+                },
+                toggleAclEdit: function (event) {
+                    var $item = $(event.currentTarget).closest('.accordion-group'),
+                        $body = $item.find('.accordion-body');
+                    $body.unbind();
+                    $body.collapse('toggle');
+                    $body.on('hidden', function (event) {
+                        event.stopPropagation();
+                    });
+                },
+                editAcl: function (event) {
+                    var acl_type, params,
+                        that = this,
+                        $button = $(event.currentTarget),
+                        $alert = $button.siblings('.alert'),
+                        $body = $button.parents('.accordion-group').first(),
+                        $permissions = $body.find('input[type=checkbox]'),
+                        name = $button.attr('name'),
+                        groupId = $button.attr('value'),
+                        aclId = $body.attr('name'),
+                        acl_action = 'modify',
+                        url = 'api/acl/modify',
+                        acl = { group_id: groupId };
+                    $permissions.each(function () {
+                        acl[this.name] = this.checked;
+                    });
+                    if (name === 'editAclNode') {
+                        acl_type = 'node_group';
+                        acl.node_id = aclId;
+                    } else {
+                        acl_type = 'tag_group';
+                        acl.tag_id = aclId;
+                    }
+                    params = {
+                        acl_type: acl_type,
+                        acl_action: acl_action,
+                        acl: JSON.stringify(acl)
+                    };
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            that.collection.fetch();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').html(json.message).show();
+                        }
+                    });
+                    window.console.log(params);
                 },
                 deleteGroup: function (event) {
                     var $button = $(event.currentTarget),
@@ -124,7 +174,7 @@ define(
                     var $href = $(event.currentTarget),
                         $icon = $href.find('i'),
                         $parent = $href.parents('.accordion-group'),
-                        $body = $parent.find('.accordion-body');
+                        $body = $parent.find('.accordion-body').first();
                     event.preventDefault();
                     $body.unbind();
                     if ($icon.hasClass('icon-circle-arrow-down')) {
@@ -148,7 +198,6 @@ define(
                         $aclDiv = $aclButton.parents('div[name=aclOptions]');
                         $aclDiv.siblings('button').toggle();
                         $aclDiv.toggle();
-
                     }
                 },
                 editGlobalAcl: function (event) {

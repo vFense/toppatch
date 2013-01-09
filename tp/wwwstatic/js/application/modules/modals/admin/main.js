@@ -15,7 +15,7 @@ define(
                             {text: 'Users', href: 'admin/users'},
                             {text: 'Groups', href: 'admin/groups'},
                             {text: 'Syslog', href: 'admin/syslog'},
-                            {text: 'VMWare', href: 'admin/vmware'}
+                            {text: 'VMware', href: 'admin/vmware'}
                         ]
                     });
                 },
