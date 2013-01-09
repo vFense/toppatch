@@ -13,7 +13,8 @@ define(
             var width    = 370,
                 angle = 30,
                 depth = 20,
-                height   = 200 - depth;
+                height   = 200 - depth,
+                severityColors = ['#FFC125', '#FF3030', '#FF6600'];
             function chart(selection) {
                 selection.each(function (data) {
                     var svg, frontRect, sideRect, topRect, rightTopTriangle, leftTopTriangle, botWhiteTriangle, txtMask, txtRect, txt,
@@ -24,7 +25,7 @@ define(
                         barWidth = width / data.length - (width * 0.1);
                     $(this).html("");
                     function topColor(color) {
-                        return colors(color);
+                        return severityColors[color];
                     }
                     function frontColor(color) {
                         return d3.rgb(topColor(color)).darker();
