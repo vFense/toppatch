@@ -12,10 +12,12 @@ session = create_session(Engine)
 #print a.run()
 #a = VerifyUser(session, 'install', action='allow_install')
 #print a.run()
-a = VerifyUser(session, 'install', action='allow_uninstall')
-print a.run()
-a = VerifyUser(session, 'limited', action='allow_reboot')
-print a.run()
+a = VerifyUser(session, 'limited', action='allow_read')
+print a.verify()
+a = VerifyUser(session, 'limited', action='allow_reboot', node_id=1)
+print a.verify()
+
+print a.global_acls
 
 #b = session.query(GlobalGroupAccess).all()
 #for i in b:

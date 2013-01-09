@@ -1287,7 +1287,7 @@ def update_global_group_acl(session, group_id=None, is_admin=False,
 
 
 
-def update_node_user_permissions(session, node_id=None, user_id=None,
+def update_node_user_acl(session, node_id=None, user_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -1339,7 +1339,7 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
                 })
 
 
-def update_node_group_permissions(session, node_id=None, group_id=None,
+def update_node_group_acl(session, node_id=None, group_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -1391,7 +1391,7 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
                 })
 
 
-def update_tag_user_permissions(session, tag_id=None, user_id=None,
+def update_tag_user_acl(session, tag_id=None, user_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -1445,7 +1445,7 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
                 })
 
 
-def update_tag_group_permissions(session, tag_id=None, group_id=None,
+def update_tag_group_acl(session, tag_id=None, group_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
