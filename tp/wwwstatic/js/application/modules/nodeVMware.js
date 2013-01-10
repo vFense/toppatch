@@ -24,12 +24,18 @@ define(
                     this.collection.fetch();
                 },
                 events: {
+                    'click button[name=toggleSnapshot]': 'toggleSnapshot',
                     'click button[name=createSnapshot]': 'createSnapshot'
+                },
+                toggleSnapshot: function (event) {
+                    var $ssdiv = this.$el.find('#newSnapshotDiv');
+                    $ssdiv.toggle();
                 },
                 createSnapshot: function (event) {
                     var params, that = this,
                         $alert = this.$el.find('div.alert'),
-                        url = 'api/vmware/snapshots/create';
+                        url = 'api/vmware/snapshots/create',
+                        $inputs = this.$el.find('#newSnapshotDiv').find('input');
                     params = {
                         vm_name: '',
                         snap_name: '',
@@ -37,12 +43,19 @@ define(
                         quiesce: '',
                         snap_description: ''
                     };
-                    $.post(url, params, function (json) {
+                    $inputs.each(function () {
+                        params[this.name] = this.value;
+                    });
+                    window.console.log(params);
+                    $.post(url, params, function (json, status) {
+                        window.console.log(status);
                         if (json.pass) {
                             that.collection.fetch();
                         } else {
                             $alert.removeClass('alert-success').addClass('alert-error').show().html(json.message);
                         }
+                    }).error(function (error) {
+                        $alert.removeClass('alert-success').addClass('alert-error').show().html('Error code: ' + error.status + ' - ' + error.statusText);
                     });
                 },
                 beforeRender: $.noop,

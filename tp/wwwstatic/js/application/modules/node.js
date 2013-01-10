@@ -257,7 +257,6 @@ define(
                         popover = event.data.popover,
                         operation = popover.$element.attr('id'),
                         $displayNameDiv = $(event.currentTarget).parents('dd');
-                    window.console.log(operation);
                     if (operation === 'editDisplay') {
                         params = {
                             nodeid: node_id,

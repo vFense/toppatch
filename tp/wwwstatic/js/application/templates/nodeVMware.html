@@ -6,12 +6,27 @@
                 <button class="btn btn-mini disabled">
                     <span>Export</span>&nbsp;<i class="icon-download-alt"></i>
                 </button>
-                <button class="btn btn-mini" name="createSnapshot">Create Snapshot</button>
+                <button class="btn btn-mini" name="toggleSnapshot">Create Snapshot</button>
             </div>
         </header>
         <div class="items">
+            <div id="newSnapshotDiv" class="item clearfix hide">
+                <div class="span3 noMargin">
+                    SS Name: <input type="text" placeholder="Snapshot Name" class="input-medium" name="snap_name"/>
+                </div>
+                <div class="span3">
+                    VM Name: <input type="text" placeholder="VM Name" class="input-medium" name="vm_name"/>
+                </div>
+                <div class="span3">
+                    Description: <input type="text" placeholder="Description" class="input-medium" name="snap_description"/>
+                </div>
+                <div class="span3 alignRight">
+                    <button name="toggleSnapshot" class="btn btn-mini">Cancel</button>
+                    <button name="createSnapshot" class="btn btn-mini btn-primary">Create</button>
+                </div>
+            </div>
             <% if (data.length != 0 && data[0].pass) { %>
-                <div class="item">
+                <div class="item clearfix">
                     test snapshot
                 </div>
             <% } else { %>
@@ -19,7 +34,7 @@
                     No snapshots available
                 </div>
             <% } %>
-        </div>
+        </div><br>
         <div class="alert alert-block fade in hide"></div>
     </section>
 </article>
