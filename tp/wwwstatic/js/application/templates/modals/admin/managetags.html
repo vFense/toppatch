@@ -74,7 +74,7 @@
                 <% if (nodelist && nodelist.nodes && nodelist.nodes.length != 0) { %>
                     <% _.each(nodelist.nodes, function (node) { %>
                         <div class="item clearfix">
-                            <label name="<%= node.ip %>" class="checkbox"><%= node.ip %><input name="nodelist" type="checkbox" value="<%= node.id %>"/></label>
+                            <label name="<%= node.ip %>" class="checkbox"><% print(node.displayname || node.hostname || node.ip) %><input name="nodelist" type="checkbox" value="<%= node.id %>"/></label>
                         </div>
                     <% }); %>
                 <% } else { %>

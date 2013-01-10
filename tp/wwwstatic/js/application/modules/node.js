@@ -180,7 +180,7 @@ define(
                                 schedule.attr('checked', false);
                             }
                             if (json.pass) {
-                                that.$el.find('.alert').removeClass('alert-error').addClass('alert-success').show().find('span').html('Operation sent.');
+                                that.$el.find('.alert').first().removeClass('alert-error').addClass('alert-success').show().find('span').html('Operation sent.');
                                 patches.each(function () {
                                     item = $(this).parents('.item');
                                     span = $(this).parents('span');
@@ -204,7 +204,7 @@ define(
                                     $form.find('input:checked').attr('checked', false);
                                 }
                             } else {
-                                that.$el.find('.alert').removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                                that.$el.find('.alert').first().removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                             }
                         });
                     return false;

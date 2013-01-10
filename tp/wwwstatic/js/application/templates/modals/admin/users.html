@@ -142,7 +142,7 @@
                                             <% _.each(user.node_acls, function (acl) { %>
                                                 <div class="accordion-group item clearfix" name="<%= acl.node_id %>">
                                                     <div class="accordion-heading">
-                                                        <span>Node <%= acl.node_id %> — <%= acl.date_created %></span>
+                                                        <span><% print(acl.displayname || acl.hostname || acl.node_id) %> — <%= acl.date_created %></span>
                                                         <span class="pull-right">
                                                             <button name="toggleAclEdit" value="<%= user.id %>" class="btn btn-link noPadding"><i class="icon-pencil" style="color: #daa520"></i></button>&nbsp;
                                                             <button name="removeAclNode" value="<%= user.id %>" class="btn btn-link noPadding"><i class="icon-remove" style="color: red;"></i></button>
@@ -300,7 +300,7 @@
                                                 <% _.each(user.tag_acls, function (acl) { %>
                                                     <div class="accordion-group item clearfix" name="<%= acl.tag_id %>">
                                                         <div class="accordion-heading">
-                                                            <span>Tag <%= acl.tag_id %> — <%= acl.date_created %></span>
+                                                            <span><% print(acl.tag_name || acl.tag_id) %> — <%= acl.date_created %></span>
                                                             <span class="pull-right">
                                                                 <button name="toggleAclEdit" value="<%= user.id %>" class="btn btn-link noPadding"><i class="icon-pencil" style="color: #daa520"></i></button>&nbsp;
                                                                 <button name="removeAclTag" value="<%= user.id %>" class="btn btn-link noPadding"><i class="icon-remove" style="color: red;"></i></button>
@@ -389,10 +389,8 @@
                     <div class="span9"><em>No users available.</em></div>
                 </div>
             <% } %>
-            <div class="hide">
-                <div class="alert alert-block fade in hide">
-                    <span class="help-inline">test</span>
-                </div>
+            <div class="alert alert-block fade in hide">
+                <span class="help-inline">test</span>
             </div>
         </div>
     </section>

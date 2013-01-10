@@ -1,3 +1,25 @@
-<article>
-    <header>VMware list</header>
+<article class="row-fluid">
+    <section class="list">
+        <header class="clearfix">
+            <div class="pull-left">&nbsp;</div>
+            <div class="pull-right hidden-print">
+                <button class="btn btn-mini disabled">
+                    <span>Export</span>&nbsp;<i class="icon-download-alt"></i>
+                </button>
+                <button class="btn btn-mini" name="createSnapshot">Create Snapshot</button>
+            </div>
+        </header>
+        <div class="items">
+            <% if (data.length != 0 && data[0].pass) { %>
+                <div class="item">
+                    test snapshot
+                </div>
+            <% } else { %>
+                <div class="item clearfix">
+                    No snapshots available
+                </div>
+            <% } %>
+        </div>
+        <div class="alert alert-block fade in hide"></div>
+    </section>
 </article>

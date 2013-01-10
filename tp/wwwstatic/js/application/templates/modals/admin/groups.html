@@ -261,7 +261,7 @@
                                                 <% _.each(group.node_acls, function (acl) { %>
                                                     <div class="accordion-group item clearfix" name="<%= acl.node_id %>">
                                                         <div class="accordion-heading">
-                                                            <span>Node <%= acl.node_id %> — <%= acl.date_created %></span>
+                                                            <span><% print(acl.displayname || acl.hostname || acl.node_id) %> — <%= acl.date_created %></span>
                                                             <span class="pull-right">
                                                                 <button name="toggleAclEdit" value="<%= group.id %>" class="btn btn-link noPadding"><i class="icon-pencil" style="color: #daa520"></i></button>&nbsp;
                                                                 <button name="removeAclNode" value="<%= group.id %>" class="btn btn-link noPadding"><i class="icon-remove" style="color: red;"></i></button>
@@ -419,7 +419,7 @@
                                                 <% _.each(group.tag_acls, function (acl) { %>
                                                     <div class="accordion-group item clearfix" name="<%= acl.tag_id %>">
                                                         <div class="accordion-heading">
-                                                            <span>Tag <%= acl.tag_id %> — <%= acl.date_created %></span>
+                                                            <span><% print(acl.tag_name || acl.tag_id) %> — <%= acl.date_created %></span>
                                                             <span class="pull-right">
                                                                 <button name="toggleAclEdit" value="<%= group.id %>" class="btn btn-link noPadding"><i class="icon-pencil" style="color: #daa520"></i></button>&nbsp;
                                                                 <button name="removeAclTag" value="<%= group.id %>" class="btn btn-link noPadding"><i class="icon-remove" style="color: red;"></i></button>

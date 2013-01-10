@@ -1,19 +1,20 @@
 <% if ($.type(model) === 'object') { %>
+<span class="alert fade in hide"></span>
 <article class="accordion">
 <div class="accordion-group">
     <div class="accordion-heading">
         <header>
             <a class="accordion-toggle" href="#">
                 <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Patches Available</strong>
-                        <span class="pull-right">
-                            <select class="btn btn-mini" name="severity">
-                                <option>None</option>
-                                <option>Optional</option>
-                                <option>Recommended</option>
-                                <option>Critical</option>
-                            </select>
-                            <span class="badge badge-inverse"><%= model['patch/need'].length %></span>
-                        </span>
+                <span class="pull-right">
+                    <select class="btn btn-mini" name="severity">
+                        <option>None</option>
+                        <option>Optional</option>
+                        <option>Recommended</option>
+                        <option>Critical</option>
+                    </select>
+                    <span class="badge badge-inverse"><%= model['patch/need'].length %></span>
+                </span>
             </a>
         </header>
     </div>
@@ -48,15 +49,15 @@
                     <% _.each(model['patch/need'], function (patch) { %>
                     <div class="item clearfix" title="<%= patch.name %>">
                         <div class="row-fluid">
-                                    <span class="desc span8">
-                                        <label class="checkbox inline">
-                                            <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                            <%= patch.name %>
-                                        </label>
-                                    </span>
-                                    <span class="span4 alignRight">
-                                        <a href="#patches/<%= patch.id %>">More information</a>
-                                    </span>
+                            <span class="desc span8">
+                                <label class="checkbox inline">
+                                    <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
+                                    <%= patch.name %>
+                                </label>
+                            </span>
+                            <span class="span4 alignRight">
+                                <a href="#patches/<%= patch.id %>">More information</a>
+                            </span>
                         </div>
                     </div>
                     <% }); %>
@@ -147,14 +148,14 @@
         <section class="list accordion-inner" id="pending">
             <div class="items">
                 <% if (model['patch/pend'].length != 0) { %>
-                <% _.each(model['patch/pend'], function (patch, i) { %>
-                <div class="item clearfix" title="<%= patch.name %>">
-                    <div class="row-fluid">
-                        <span class="desc span8"><%= patch.name %></span>
-                        <span class="span4 alignRight"><a href="#patches/<%= patch.id %>">More information</a></span>
+                    <% _.each(model['patch/pend'], function (patch, i) { %>
+                    <div class="item clearfix" title="<%= patch.name %>">
+                        <div class="row-fluid">
+                            <span class="desc span8"><%= patch.name %></span>
+                            <span class="span4 alignRight"><a href="#patches/<%= patch.id %>">More information</a></span>
+                        </div>
                     </div>
-                </div>
-                <% }); %>
+                    <% }); %>
                 <% }  else { %>
                 <div class="item" id="no-pending">
                     <em>No patches to display</em>

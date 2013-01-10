@@ -26,8 +26,7 @@ define(
                 events: {
                     'change select[name=severity]': 'filterBySeverity',
                     'click .toggle-all': 'toggleAll',
-                    'click a.accordion-toggle': 'openAccordion',
-                    'submit form': 'submit'
+                    'click a.accordion-toggle': 'openAccordion'
                 },
                 toggleAll: function (event) {
                     var status = event.target.checked,
@@ -118,71 +117,6 @@ define(
                         $items.append($itemDiv);
                     }
                     $badge.html(counter);
-                },
-                submit: function (evt) {
-                    var item, span, label, checkbox, $scheduleForm, type, patches, url, offset, fields,
-                        $form = $(evt.target),
-                        schedule = $form.find('input[name="schedule"]:checked'),
-                        time = '',
-                        that = this;
-                    if ($form.attr('id') !== 'reboot-form') {
-                        fields = $form.find('input[name="patches"]:checked');
-                        if (!fields.length) {
-                            //alert('Please select at least one patch');
-                            that.$el.find('.alert').removeClass('alert-success').addClass('alert-error').show().find('span').html('Please select at least one patch');
-                            return false;
-                        }
-                    }
-                    if (schedule.length !== 0) {
-                        $scheduleForm = schedule.data('popover').options.content;
-                        time = $scheduleForm.find('input[name=datepicker]').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
-                        label = $scheduleForm.find('input[name=label]').val() || 'Default';
-                        offset = $scheduleForm.find('select[name=offset]').val();
-                    }
-                    type = $form.attr('id');
-                    patches = $form.find('input[name="patches"]:checked');
-                    url = '/submitForm?' + $form.serialize();
-                    url += time ? '&time=' + time + '&label=' + label + '&offset=' + offset : '';
-
-                    $.post(url,
-                        function (json) {
-                            window.console.log(json);
-                            //json.pass = false;
-                            //json.message = 'Operation failed to send';
-                            if (schedule.data('popover')) {
-                                schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
-                                schedule.popover('hide');
-                                schedule.attr('checked', false);
-                            }
-                            if (json.pass) {
-                                that.$el.find('.alert').removeClass('alert-error').addClass('alert-success').show().find('span').html('Operation sent.');
-                                patches.each(function () {
-                                    item = $(this).parents('.item');
-                                    span = $(this).parents('span');
-                                    label = $(this).parent();
-                                    checkbox = $(this);
-
-                                    checkbox.remove();
-                                    var patch = label.html();
-                                    span.html(patch);
-                                    label.remove();
-                                    if (type === 'available' || type === 'failed') {
-                                        item.appendTo($('#pending').children());
-                                        if ($('#no-pending')) {
-                                            $('#no-pending').remove();
-                                        }
-                                    } else {
-                                        item.remove();
-                                    }
-                                });
-                                if ($form.find('input:checked').attr('checked')) {
-                                    $form.find('input:checked').attr('checked', false);
-                                }
-                            } else {
-                                that.$el.find('.alert').removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
-                            }
-                        });
-                    return false;
                 },
                 beforeRender: $.noop,
                 onRender: function () {
