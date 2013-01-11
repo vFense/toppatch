@@ -24,8 +24,11 @@ define(
                     this.collection.fetch();
                 },
                 events: {
-                    'click button[name=toggleSnapshot]': 'toggleSnapshot',
-                    'click button[name=createSnapshot]': 'createSnapshot'
+                    'click button[name=toggleSnapshot]' : 'toggleSnapshot',
+                    'click button[name=createSnapshot]' : 'createSnapshot',
+                    'click button[name=revert]'         : 'revertSnapshot',
+                    'click button[name=remove]'         : 'removeSnapshot',
+                    'click button[name=removeAll]'      : 'removeAll'
                 },
                 toggleSnapshot: function (event) {
                     var $ssdiv = this.$el.find('#newSnapshotDiv');
@@ -35,7 +38,9 @@ define(
                     var params, that = this,
                         $alert = this.$el.find('div.alert'),
                         url = 'api/vmware/snapshots/create',
-                        $inputs = this.$el.find('#newSnapshotDiv').find('input');
+                        $newSnapDiv = this.$el.find('#newSnapshotDiv'),
+                        $inputText = $newSnapDiv.find('input[type=text]'),
+                        $inputCheck = $newSnapDiv.find('input[type=checkbox]');
                     params = {
                         vm_name: '',
                         snap_name: '',
@@ -43,12 +48,15 @@ define(
                         quiesce: '',
                         snap_description: ''
                     };
-                    $inputs.each(function () {
+                    $inputText.each(function () {
                         params[this.name] = this.value;
                     });
+                    $inputCheck.each(function () {
+                        params[this.name] = this.checked;
+                    });
                     window.console.log(params);
-                    $.post(url, params, function (json, status) {
-                        window.console.log(status);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
                         if (json.pass) {
                             that.collection.fetch();
                         } else {
@@ -57,6 +65,23 @@ define(
                     }).error(function (error) {
                         $alert.removeClass('alert-success').addClass('alert-error').show().html('Error code: ' + error.status + ' - ' + error.statusText);
                     });
+                },
+                revertSnapshot: function (event) {
+                    var vmName, $button = $(event.currentTarget),
+                        url = 'api/vmware/snapshots/revert',
+                        snapName = $button.attr('value');
+                    window.console.log(event);
+                },
+                removeSnapshot: function (event) {
+                    var vmName, $button = $(event.currentTarget),
+                        url = 'api/vmware/snapshots/remove',
+                        snapName = $button.attr('value');
+                    window.console.log(event);
+                },
+                removeAll: function (event) {
+                    var vmName,
+                        url = 'api/vmware/snapshots/removeAll';
+                    window.console.log(event);
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
