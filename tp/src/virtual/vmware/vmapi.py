@@ -5,6 +5,7 @@ from ConfigParser import SafeConfigParser
 from pyvisdk import Vim
 from db.client import *
 from db.query_table import *
+from models.virtualization import *
 
 
 CONFIG_DIR = '/opt/TopPatch/tp/src/vmware/'
@@ -79,6 +80,50 @@ def get_snapshost_for_vm(session, node_id=None, username='system_user'):
                 'pass': passed,
                 'message': message
                 })
+
+
+def get_vm_info_from_db(session, node_id=None, username='system_user'):
+    session = validate_session(session)
+    message = None
+    passed = True
+    if node_id:
+        is_vm = session.query(NodeInfo.is_vm).\
+                filter(NodeInfo.id == node_id).first()[0]
+        if is_vm:
+            vm_info = session.query(NodeInfo,\
+                    VirtualMachineInfo, VirtualHostInfo).\
+                filter(NodeInfo.id == node_id).\
+                join(VirtualMachineInfo, VirtualHostInfo).first()
+            if vm_info:
+                snaps = get_snapshost_for_vm(session, node_id=node_id, username=username)
+                if type(snaps) != list:
+                    snaps = []
+                return({
+                    'vm_name': vm_info.VirtualMachineInfo.vm_name,
+                    'tools_status': vm_info.VirtualMachineInfo.tools_status,
+                    'tools_version': vm_info.VirtualMachineInfo.tools_version,
+                    'hyper_visor_name': vm_info.VirtualHostInfo.name,
+                    'hyper_visor_version': vm_info.VirtualHostInfo.version,
+                    'hyper_visor_type': vm_info.VirtualHostInfo.virt_type,
+                    'hyper_visor_ip': vm_info.VirtualHostInfo.ip_address,
+                    'snapshots': snaps
+                    })
+            else:
+                return({
+                    'pass': False,
+                    'message': 'Node doesnt have any vm_information'
+                    })
+
+        else:
+            return({
+                'pass': False,
+                'message': 'Node is not a VM'
+                })
+    else:
+        return({
+            'pass': False,
+            'message': 'Node is not a VM'
+            })
 
 
 class VmApi():

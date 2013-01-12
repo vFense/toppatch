@@ -121,13 +121,14 @@ class Application(tornado.web.Application):
             (r"/api/groups/list?", ListGroupHandler),
             (r"/api/groups/create?", CreateGroupHandler),
             (r"/api/groups/delete?", DeleteGroupHandler),
-            (r"/api/vmware/snapshots/list?", GetNodeSnapshotsHandler),
-            (r"/api/vmware/snapshots/create?", CreateSnapshotHandler),
-            (r"/api/vmware/snapshots/revert?", RevertSnapshotHandler),
-            (r"/api/vmware/snapshots/remove?", RemoveSnapshotHandler),
-            (r"/api/vmware/snapshots/removeAll?", RemoveAllSnapshotsHandler),
+            (r"/api/virtual/node/snapshots/list?", GetNodeSnapshotsHandler),
+            (r"/api/virtual/node/snapshots/create?", CreateSnapshotHandler),
+            (r"/api/virtual/node/snapshots/revert?", RevertSnapshotHandler),
+            (r"/api/virtual/node/snapshots/remove?", RemoveSnapshotHandler),
+            (r"/api/virtual/node/snapshots/removeAll?", RemoveAllSnapshotsHandler),
             (r"/api/vmware/config/create?", CreateVmwareConfigHandler),
             (r"/api/vmware/config/list?", GetVmwareConfigHandler),
+            (r"/api/virtual/node/info?", GetNodeVmInfoHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.
