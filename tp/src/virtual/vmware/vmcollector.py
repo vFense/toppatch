@@ -59,7 +59,7 @@ def get_vm_data(username='system_user'):
                                         == node.id).first()
                         if vm and esx_host:
                             vm.virtual_host_id = esx_host.id
-                            vm.vm_name value['vm_name']
+                            vm.vm_name = value['vm_name']
                             vm.tools_status = value['tools_status']
                             vm.tools_version = value['tools_version']
                             try:
