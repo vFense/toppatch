@@ -156,7 +156,7 @@ class NodesHandler(BaseHandler):
         filter_by_os = self.get_argument('by_os', None)
         filter_by_platform = self.get_argument('by_platform', None)
         filter_by_bit_type = self.get_argument('by_bit_type', None)
-        is_vm = self.get_argument('is_vm', None)
+        is_vm = self.get_argument('is_vm', False)
         query = None
         if filter_by_tags:
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
@@ -181,7 +181,7 @@ class NodesHandler(BaseHandler):
         elif is_vm:
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
                     join(SystemInfo, NodeStats).\
-                    filter(NodeInfo.vm_name != None).\
+                    filter(NodeInfo.is_vm == True).\
                     limit(queryCount).offset(queryOffset)
         else:
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
