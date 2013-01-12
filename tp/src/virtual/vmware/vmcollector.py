@@ -44,17 +44,55 @@ def get_vm_data(username='system_user'):
         for node in nodes:
             for key, value in vm_nodes.items():
                 match = False
+                esx_host = session.query(VirtualHostInfo).\
+                    filter(VirtualHostInfo.ip_address == value['esx_ip']).first()
                 if value['vm_name'] and value['ip_address'] and value['host_name']:
                     if re.search(node.ip_address, value['ip_address']):
-                        node.vm_name = value['vm_name']
                         match = True
                     elif node.host_name:
                         if re.search(node.host_name, value['host_name']):
-                            node.vm_name = value['vm_name']
                             match = True
+                    if match:
+                        vm = session.query(VirtualMachineInfo).\
+                                filter(VirtualMachineInfo.node_id 
+                                        == node.id).first()
+                        if vm and esx_host:
+                            node.vm_id = vm.id
+                            vm.virtual_host_id = esx_host.id
+                            vm.vm_name value['vm_name']
+                            vm.tools_status = value['tools_status']
+                            vm.tools_version = value['tools_version']
+                            try:
+                                session.commit()
+                            except Exception as e:
+                                session.rollback()
+                        if not esx_host:
+                            esx_host = VirtualHostInfo(
+                                    name=value['esx_host'],
+                                    ip_address=value['esx_ip'],
+                                    version=value['esx_version'],
+                                    virt_type=value['esx_name']
+                                    )
+                            try:
+                                session.add(esx_host)
+                                session.commit()
+                            except Exception as e:
+                                session.rollback()
+
+                        if not vm:
+                            try:
+                                vm_info = VirtualMachineInfo(node_id=node.id,
+                                        virtual_host_id=esx_host.id, 
+                                        vm_name=value['vm_name'],
+                                        tools_status=value['tools_status'],
+                                        tools_version=value['tools_version']
+                                        )
+                                session.add(vm_info)
+                                session.commit()
+                            except Exception as e:
+                                session.rollback()
                     if not match:
                         break
-                    session.commit()
                     snapshots = session.query(SnapshotsPerNode).\
                         filter(SnapshotsPerNode.node_id == node.id).all()
                     if len(snapshots) >0:
