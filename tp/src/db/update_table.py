@@ -597,6 +597,7 @@ def add_system_info(session, data, node_info, username='system_user'):
         if operation:
             operation.results_received = datetime.now()
             session.commit()
+        node_info.computer_name = data['computer_name']
         system_info = SystemInfo(node_id, data['os_code'],
             data['os_string'], data['version_major'],
             data['version_minor'], data['version_build'],
