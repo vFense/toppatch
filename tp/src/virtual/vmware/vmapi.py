@@ -626,13 +626,14 @@ class VmApi():
                 if vm.guest.toolsVersionStatus != 'guestToolsNotInstalled' or \
                         vm.guest.toolsVersionStatus != 'guestToolsUnmanaged':
                     esx_host = vm.core.getHostSystem()[0]
-                    esx_net = esx_host.config.network.vnic
-                    esx_ip = None
-                    for network in esx_net:
-                        if 'Management Network' in network.portgroup:
-                            esx_ip = network.spec.ip.ipAddress
+                    #esx_net = esx_host.config.network.vnic
+                    #esx_ip = None
+                    #for network in esx_net:
+                    #    if 'Management Network' in network.portgroup:
+                    #        esx_ip = network.spec.ip.ipAddress
                     vms[vm.name] = {
                             'vm_name': vm.name,
+                            'vm_uuid': vm.name,
                             'ip_address': vm.guest.ipAddress,
                             'host_name': vm.guest.hostName,
                             'tools_status': vm.guest.toolsVersionStatus,
@@ -640,7 +641,6 @@ class VmApi():
                             'snapshots': self.get_all_snapshots(vm_name=vm.name,
                                                 username=username),
                             'esx_host': esx_host.summary.config.name,
-                            'esx_ip': esx_ip,
                             'esx_name': esx_host.summary.config.product.name,
                             'esx_version': esx_host.summary.config.product.version
                             }

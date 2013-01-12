@@ -21,17 +21,17 @@ class VirtualHostInfo(Base):
     ip_address = Column(VARCHAR(16), nullable=True, unique=True)
     version = Column(VARCHAR(64), nullable=True, unique=True)
     virt_type = Column(VARCHAR(64), nullable=True, unique=True)
-    def __init__(self, host_name=None, ip_address=None, version=None,
+    def __init__(self, name=None, ip_address=None, version=None,
                 virt_type=None
                 ):
-        self.host_name = host_name
+        self.name = name
         self.ip_address = ip_address
         self.version = version
         self.virt_type = virt_type
     def __repr__(self):
         return "<VirtualHostInfo(%s,%s,%s,%s)>" %\
                 (
-                self.host_name, self.ip_address, self.version,
+                self.name, self.ip_address, self.version,
                 self.virt_type
                 )
 
@@ -64,7 +64,7 @@ class VirtualMachineInfo(Base):
         self.tools_status = tools_status
         self.tools_version = tools_version
     def __repr__(self):
-        return "<VirtaulMachineInfo(%s,%s,%s,%s,%s)>"%\
+        return "<VirtualMachineInfo(%s,%s,%s,%s,%s)>"%\
                 (
                 self.node_id, self.virtual_host_id, self.vm_name,
                 self.tools_status, self.tools_version

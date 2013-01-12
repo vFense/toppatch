@@ -45,7 +45,7 @@ def get_vm_data(username='system_user'):
             for key, value in vm_nodes.items():
                 match = False
                 esx_host = session.query(VirtualHostInfo).\
-                    filter(VirtualHostInfo.ip_address == value['esx_ip']).first()
+                    filter(VirtualHostInfo.name == value['esx_host']).first()
                 if value['vm_name'] and value['ip_address'] and value['host_name']:
                     if re.search(node.ip_address, value['ip_address']):
                         match = True
@@ -53,11 +53,11 @@ def get_vm_data(username='system_user'):
                         if re.search(node.host_name, value['host_name']):
                             match = True
                     if match:
+                        node.is_vm = True
                         vm = session.query(VirtualMachineInfo).\
                                 filter(VirtualMachineInfo.node_id 
                                         == node.id).first()
                         if vm and esx_host:
-                            node.vm_id = vm.id
                             vm.virtual_host_id = esx_host.id
                             vm.vm_name value['vm_name']
                             vm.tools_status = value['tools_status']
@@ -69,7 +69,6 @@ def get_vm_data(username='system_user'):
                         if not esx_host:
                             esx_host = VirtualHostInfo(
                                     name=value['esx_host'],
-                                    ip_address=value['esx_ip'],
                                     version=value['esx_version'],
                                     virt_type=value['esx_name']
                                     )
@@ -92,7 +91,7 @@ def get_vm_data(username='system_user'):
                             except Exception as e:
                                 session.rollback()
                     if not match:
-                        break
+                        next
                     snapshots = session.query(SnapshotsPerNode).\
                         filter(SnapshotsPerNode.node_id == node.id).all()
                     if len(snapshots) >0:
