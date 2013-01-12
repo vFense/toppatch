@@ -6,6 +6,7 @@ from vmapi import *
 from db.client import *
 from models.node import *
 from models.snapshots import *
+from models.virtualization import *
 
 from apscheduler.scheduler import Scheduler
 
