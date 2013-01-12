@@ -33,7 +33,7 @@ from server.api.transactions_api import *
 from server.api.packages_api import *
 from server.api.api import *
 from server.api.email_api import *
-from server.api.virtual import *
+from server.api.virtual_api import *
 from server.api import *
 from server.account.manager import AccountManager
 from server.oauth.token import TokenManager
