@@ -20,8 +20,8 @@ from utils.common import *
 from node.nodeManager import *
 from logger.rvlogger import RvLogger
 from user.manager import *
-from vmware.vmapi import *
-from vmware.collector import *
+from virtual.vmware.vmapi import *
+from virtual.vmware.vmcollector import *
 
 from jsonpickle import encode
 
