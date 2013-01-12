@@ -22,7 +22,7 @@ logger = logging.getLogger('rvapi')
 
 def add_node(session, client_ip=None, agent_timestamp=None,
         node_timestamp=None, host_name=None, display_name=None,
-        computer_name=None, vm_name=None, username='system_user'):
+        computer_name=None, username='system_user'):
     """Add a node to the database"""
     session = validate_session(session)
     if not host_name and client_ip:
@@ -33,7 +33,7 @@ def add_node(session, client_ip=None, agent_timestamp=None,
     try:
         addnode = NodeInfo(ip_address=client_ip, host_name=host_name,
             display_name=display_name, computer_name=computer_name,
-            vm_name=vm_name, host_status=True, agent_status=True,
+            host_status=True, agent_status=True,
             last_agent_update=agent_timestamp,
             last_node_update=node_timestamp)
         session.add(addnode)
