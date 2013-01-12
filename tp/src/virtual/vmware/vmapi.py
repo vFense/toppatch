@@ -102,6 +102,8 @@ def get_vm_info_from_db(session, node_id=None, username='system_user'):
                     'vm_name': vm_info.VirtualMachineInfo.vm_name,
                     'tools_status': vm_info.VirtualMachineInfo.tools_status,
                     'tools_version': vm_info.VirtualMachineInfo.tools_version,
+                    'uuid': vm_info.VirtualMachineInfo.uuid,
+                    'hyper_visor_name': vm_info.VirtualHostInfo.name,
                     'hyper_visor_name': vm_info.VirtualHostInfo.name,
                     'hyper_visor_version': vm_info.VirtualHostInfo.version,
                     'hyper_visor_type': vm_info.VirtualHostInfo.virt_type,
