@@ -20,35 +20,35 @@ class NodeInfo(Base):
     display_name = Column(VARCHAR(64), nullable=True, unique=True)
     host_name = Column(VARCHAR(64), nullable=True, unique=True)
     computer_name = Column(VARCHAR(64), nullable=True, unique=True)
-    vm_name = Column(VARCHAR(128), nullable=True, unique=True)
     ip_address = Column(VARCHAR(16), nullable=True, unique=True)
     host_status = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
     agent_status = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
     last_agent_update = Column(DATETIME, nullable=True)
     last_node_update = Column(DATETIME, nullable=True)
     reboot = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
+    is_vm = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
     def __init__(self, ip_address=None, host_name=None, computer_name=None,
-                display_name=None, vm_name=None, host_status=False,
+                display_name=None, host_status=False,
                 agent_status=False, last_agent_update=None,
-                last_node_update=None, reboot=False
+                last_node_update=None, reboot=False, is_vm=False
                 ):
         self.display_name = display_name
         self.computer_name = computer_name
         self.host_name = host_name
-        self.vm_name = vm_name
         self.ip_address = ip_address
         self.host_status = host_status
         self.agent_status = agent_status
         self.last_agent_update = last_agent_update
         self.last_node_update = last_node_update
         self.reboot = reboot
+        self.is_vm = is_vm
     def __repr__(self):
         return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.host_name, self.ip_address, self.display_name,
-                self.computer_name, self.vm_name, self.host_status,
+                self.computer_name, self.host_status,
                 self.agent_status, self.last_agent_update,
-                self.last_node_update, self.reboot
+                self.last_node_update, self.reboot, self.is_vm
                 )
 
 class SystemInfo(Base):

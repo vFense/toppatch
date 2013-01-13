@@ -392,7 +392,9 @@ def acl_modifier(session, acl_type, acl_action, acl):
                 if 'node_user' in acl_type:
                     result = update_node_user_acl(session, **acl)
                 if 'node_group' in acl_type:
+                    print acl
                     result = update_node_group_acl(session, **acl)
+                    print result
                 if 'tag_user' in acl_type:
                     result = update_tag_user_acl(session, **acl)
                 if 'tag_group' in acl_type:

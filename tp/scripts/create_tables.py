@@ -11,6 +11,7 @@ from models.ssl import *
 from models.user_acl import *
 from models.scheduler import *
 from models.snapshots import *
+from models.virtualization import *
 from models.tagging import *
 from sqlalchemy import create_engine
 

@@ -22,7 +22,7 @@ logger = logging.getLogger('rvapi')
 
 def add_node(session, client_ip=None, agent_timestamp=None,
         node_timestamp=None, host_name=None, display_name=None,
-        computer_name=None, vm_name=None, username='system_user'):
+        computer_name=None, username='system_user'):
     """Add a node to the database"""
     session = validate_session(session)
     if not host_name and client_ip:
@@ -33,7 +33,7 @@ def add_node(session, client_ip=None, agent_timestamp=None,
     try:
         addnode = NodeInfo(ip_address=client_ip, host_name=host_name,
             display_name=display_name, computer_name=computer_name,
-            vm_name=vm_name, host_status=True, agent_status=True,
+            host_status=True, agent_status=True,
             last_agent_update=agent_timestamp,
             last_node_update=node_timestamp)
         session.add(addnode)
@@ -593,34 +593,68 @@ def add_system_info(session, data, node_info, username='system_user'):
     session = validate_session(session)
     operation = operation_exists(session, data['operation_id'])
     node_id = node_info.id
+
     if node_id:
         if operation:
             operation.results_received = datetime.now()
             session.commit()
-        system_info = SystemInfo(node_id, data['os_code'],
-            data['os_string'], data['version_major'],
-            data['version_minor'], data['version_build'],
-            data['meta'], data['bit_type']
-            )
-        if 'net_info' in data:
-            for network in data['net_info']:
-                net_info = NetworkInterface(node_id=node_id,
-                        mac_address=network['mac'],
-                        ip_address=network['ip'],
-                        interface=network['interface_name']
-                        )
-                try:
-                    session.add(net_info)
-                    session.commit()
-                except Exception as e:
-                    session.rollback()
+        node_info.computer_name = data['computer_name']
+        session.commit()
+        system_info= session.query(SystemInfo).\
+                filter(SystemInfo.node_id == node_id).first()
+
         if system_info:
+            system_info.os_code = data['os_code']
+            system_info.os_string = data['os_string']
+            system_info.version_minor = data['version_minor']
+            system_info.version_build = data['version_build']
+            system_info.meta = data['meta']
+            system_info.bit_type = data['bit_type']
+            try:
+                session.commit()
+            except Exception as e:
+                session.rollback()
+        else:
+            system_info = SystemInfo(node_id, data['os_code'],
+                data['os_string'], data['version_major'],
+                data['version_minor'], data['version_build'],
+                data['meta'], data['bit_type']
+                )
+
             try:
                 session.add(system_info)
                 session.commit()
-                return system_info
+
             except Exception as e:
                 session.rollback()
+
+        if 'net_info' in data:
+            for network in data['net_info']:
+                net_info = session.query(NetworkInterface).\
+                        filter(NetworkInterface.node_id == node_id).\
+                        filter(NetworkInterface.interface == 
+                                network['interface_name']).first()
+
+                if net_info:
+                    net_info.mac_address = network['mac']
+                    net_info.ip_address = network['ip']
+                    session.commit()
+
+                else:
+                    net_info = NetworkInterface(node_id=node_id,
+                            mac_address=network['mac'],
+                            ip_address=network['ip'],
+                            interface=network['interface_name']
+                            )
+
+                    try:
+                        session.add(net_info)
+                        session.commit()
+
+                    except Exception as e:
+                        session.rollback()
+
+        return system_info
 
 
 def add_software_update(session, data, username='system_user'):

@@ -92,6 +92,11 @@ class CreateUserHandler(BaseHandler):
                         fullname=fullname, email=email,
                         groupname=group)
                 result = user_add
+            else:
+                result = {
+                        'pass': False,
+                        'message': 'User %s already exists' % (username)
+                        }
         else:
             result = {"pass" : False,
                       "message" : "User %s can't be created, %s, %s %s" %\
@@ -163,8 +168,16 @@ class CreateGroupHandler(BaseHandler):
         acl_action = 'create'
         acl = self.get_argument('acl', None)
         if groupname and acl_type and acl:
+            group_exists = self.session.query(Group).\
+                    filter(Group.groupname == groupname).first()
+            if not group_exists:
                 group = create_group(self.session, groupname)
                 group_result = group
+            else:
+                group_result = {
+                        'pass': False,
+                        'message': 'Group %s already exists' % (groupname)
+                        }
         else:
             result = {
                     'pass' : False,

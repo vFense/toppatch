@@ -20,8 +20,8 @@ from utils.common import *
 from node.nodeManager import *
 from logger.rvlogger import RvLogger
 from user.manager import *
-from vmware.vmapi import *
-from vmware.collector import *
+from virtual.vmware.vmapi import *
+from virtual.vmware.vmcollector import *
 
 from jsonpickle import encode
 
@@ -269,3 +269,41 @@ class GetNodeSnapshotsHandler(BaseHandler):
                     }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+
+class GetNodeVmInfoHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        username = self.get_current_user()
+        result = None
+        session = self.application.session
+        session = validate_session(session)
+        node_id = self.get_argument('node_id', None)
+        vm_name = self.get_argument('vm_name', None)
+        display_name = self.get_argument('display_name', None)
+        host_name = self.get_argument('host_name', None)
+        if node_id:
+            results = get_vm_info_from_db(session,\
+                    node_id=node_id, username=username)
+        elif vm_name:
+            vm = session.query(VirtualMachineInfo).\
+                    filter(VirtualMachineInfo.vm_name == vm_name).first()
+            results = get_vm_info_from_db(session,\
+                    node_id=vm.node_id, username=username)
+        elif display_name:
+            node = session.query(NodeInfo).\
+                    filter(NodeInfo.display_name == display_name).first()
+            results = get_vm_info_from_db(session,\
+                    node_id=vm.node.id, username=username)
+        elif host_name:
+            node = session.query(NodeInfo).\
+                    filter(NodeInfo.host_name == host_name).first()
+            results = get_vm_info_from_db(session,\
+                    node_id=vm.node.id, username=username)
+        else:
+            results = {
+                'pass': False,
+                'message': 'Invalid Arguments'
+                }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
