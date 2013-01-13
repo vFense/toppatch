@@ -4,6 +4,7 @@ import re
 from db.query_table import get_transactions
 from db.client import validate_session
 from models.node import *
+from models.virtualization import *
 
 
 def retrieve_transactions(session, count=None, offset=None):
