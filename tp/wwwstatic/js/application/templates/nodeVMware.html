@@ -1,0 +1,56 @@
+<article class="row-fluid">
+    <section class="list">
+        <header class="clearfix">
+            <div class="pull-left">&nbsp;</div>
+            <div class="pull-right hidden-print">
+                <button class="btn btn-mini disabled">
+                    <span>Export</span>&nbsp;<i class="icon-download-alt"></i>
+                </button>
+                <button class="btn btn-mini" name="toggleSnapshot">Create Snapshot</button>
+                <button class="btn btn-mini" name="removeAll">Remove All</button>
+            </div>
+        </header>
+        <div class="items">
+            <div id="newSnapshotDiv" class="item clearfix hide">
+                <div class="span3 noMargin">
+                    SS Name: <input type="text" placeholder="Snapshot Name" class="input-medium" name="snap_name"/>
+                </div>
+                <div class="span3">
+                    Description: <input type="text" placeholder="Description" class="input-medium" name="snap_description"/>
+                </div>
+                <div class="span2">
+                    <label class="checkbox">Memory
+                        <input type="checkbox" name="memory"/>
+                    </label>
+                </div>
+                <div class="span2">
+                    <label class="checkbox">Quiesce
+                        <input type="checkbox" name="quiesce"/>
+                    </label>
+                </div>
+                <div class="span2 alignRight">
+                    <button name="toggleSnapshot" class="btn btn-mini">Cancel</button>
+                    <button name="createSnapshot" class="btn btn-mini btn-primary">Create</button>
+                </div>
+            </div>
+            <% if (data.length != 0 && data[0].pass) { %>
+                <div class="item clearfix">
+                    <span class="span9">test snapshot</span>
+                    <span class="span3 alignRight">
+                        <button class="btn btn-link noPadding" name="revert" value="snap_name">
+                            <span class="icon-repeat" style="color: green" title="Revert to Snapshot"></span>
+                        </button>&nbsp;
+                        <button class="btn btn-link noPadding" name="remove" value="snap_name">
+                            <span class="icon-remove" style="color: red" title="Remove Snapshot"></span>
+                        </button>
+                    </span>
+                </div>
+            <% } else { %>
+                <div class="item clearfix">
+                    <span class="span9 ">No snapshots available</span>
+                </div>
+            <% } %>
+        </div><br>
+        <div class="alert alert-block fade in hide"></div>
+    </section>
+</article>

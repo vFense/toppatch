@@ -19,6 +19,10 @@ define(
                 'patches?:query': 'showPatches',
                 'patches/:id'   : 'showPatch',
 
+                'tags'          : 'showTags',
+                'tags?:query'   : 'showTags',
+                'tags/:id'      : 'showTag',
+
                 // MultiPatch Interface
                 'multi'         : 'showMulti',
 
@@ -137,6 +141,33 @@ define(
                 require(['modules/patch'], function (myView) {
                     myView.Collection = myView.Collection.extend({id: id});
                     that.show({hash: '#patches', title: 'Patch Detail', view: new myView.View()});
+                });
+            },
+            showTags: function (query) {
+                var that = this,
+                    params = '',
+                    collection,
+                    view;
+
+                require(['modules/tags'], function (myView) {
+                    if ($.type(query) === 'string') {
+                        params = app.parseQuery(query);
+                    }
+
+                    collection = new myView.Collection({
+                        params: params
+                    });
+
+                    view = new myView.View({collection: collection});
+
+                    that.show({hash: '#tags', title: 'Tags', view: view});
+                });
+            },
+            showTag: function (id) {
+                var that = this;
+                require(['modules/tag'], function (myView) {
+                    myView.Collection = myView.Collection.extend({id: id});
+                    that.show({hash: '#tags', title: 'Tag Detail', view: new myView.View()});
                 });
             },
             showMulti: function () {

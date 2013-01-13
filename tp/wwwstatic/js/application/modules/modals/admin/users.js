@@ -73,6 +73,9 @@ define(
                     'click button[name=submitAclTag]': 'submitAcl',
                     'click button[name=removeAclTag]': 'removeAcl',
                     'click button[name=removeAclNode]': 'removeAcl',
+                    'click button[name=toggleAclEdit]': 'toggleAclEdit',
+                    'click button[name=editAclTag]': 'editAcl',
+                    'click button[name=editAclNode]': 'editAcl',
                     'submit form': 'submit'
                 },
                 displayAddUser: function (event) {
@@ -257,7 +260,7 @@ define(
                     var $href = $(event.currentTarget),
                         $icon = $href.find('i'),
                         $accordionParent = $href.parents('.accordion-group'),
-                        $accordionBody = $accordionParent.find('.accordion-body');
+                        $accordionBody = $accordionParent.find('.accordion-body').first();
                     $accordionBody.unbind();
                     if ($icon.hasClass('icon-circle-arrow-down')) {
                         $icon.attr('class', 'icon-circle-arrow-up');
@@ -358,6 +361,53 @@ define(
                         } /*else {
                             //$alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                         } */
+                    });
+                },
+                toggleAclEdit: function (event) {
+                    var $item = $(event.currentTarget).closest('.accordion-group'),
+                        $body = $item.find('.accordion-body');
+                    $body.unbind();
+                    $body.collapse('toggle');
+                    $body.on('hidden', function (event) {
+                        event.stopPropagation();
+                    });
+                },
+                editAcl: function (event) {
+                    var acl_type, params,
+                        that = this,
+                        $button = $(event.currentTarget),
+                        $alert = $button.siblings('.alert'),
+                        $body = $button.parents('.accordion-group').first(),
+                        $permissions = $body.find('input[type=checkbox]'),
+                        name = $button.attr('name'),
+                        userId = $button.attr('value'),
+                        aclId = $body.attr('name'),
+                        acl_action = 'modify',
+                        url = 'api/acl/modify',
+                        acl = { user_id: userId };
+                    $permissions.each(function () {
+                        acl[this.name] = this.checked;
+                    });
+                    if (name === 'editAclNode') {
+                        acl_type = 'node_user';
+                        acl.node_id = aclId;
+                    } else {
+                        acl_type = 'tag_user';
+                        acl.tag_id = aclId;
+                    }
+                    params = {
+                        acl_type: acl_type,
+                        acl_action: acl_action,
+                        acl: JSON.stringify(acl)
+                    };
+                    window.console.log(params);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            that.collection.fetch();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').html(json.message).show();
+                        }
                     });
                 },
                 submit: function (event) {

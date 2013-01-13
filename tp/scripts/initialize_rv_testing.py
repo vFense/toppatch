@@ -40,6 +40,35 @@ acl_ro3 = {
         'allow_tag_removal': 'false', 'allow_read': 'true'
         }
 
+acl_ro6 = {
+        'user_id': '6', 'is_admin': 'false', 'is_global': 'true',
+        'allow_install': 'false', 'allow_uninstall': 'false',
+        'allow_reboot': 'true', 'allow_wol': 'false', 
+        'allow_snapshot_creation': 'false', 'allow_snapshot_removal': 'false',
+        'allow_snapshot_revert': 'false', 'allow_tag_creation': 'false',
+        'allow_tag_removal': 'false', 'allow_read': 'true'
+        }
+
+
+acl_ri5 = {
+        'user_id': '5', 'is_admin': 'false', 'is_global': 'true',
+        'allow_install': 'false', 'allow_uninstall': 'false',
+        'allow_reboot': 'true', 'allow_wol': 'false', 
+        'allow_snapshot_creation': 'false', 'allow_snapshot_removal': 'false',
+        'allow_snapshot_revert': 'false', 'allow_tag_creation': 'false',
+        'allow_tag_removal': 'false', 'allow_read': 'true'
+        }
+
+
+acl_ni5 = {
+        'user_id': '5', 'node_id': '1',
+        'allow_install': 'true', 'allow_uninstall': 'true',
+        'allow_reboot': 'true', 'allow_wol': 'false', 
+        'allow_snapshot_creation': 'false', 'allow_snapshot_removal': 'false',
+        'allow_snapshot_revert': 'false', 'allow_tag_creation': 'false',
+        'allow_tag_removal': 'false', 'allow_read': 'true'
+        }
+
 
 acl_api_rw = {
         'group_id': '4', 'is_admin': 'true', 'is_global': 'true',
@@ -69,7 +98,8 @@ acl_allow_install = {
         'allow_tag_removal': 'false', 'allow_read': 'true'
         }
 
-acls = [acl_admin, acl_ro2, acl_ro3, acl_api_rw, acl_deny_all, acl_allow_install]
+acls1 = [acl_admin, acl_ro2, acl_ro3, acl_api_rw, acl_deny_all, acl_allow_install]
+acls2 = [ acl_ro6, acl_ri5]
 groups = ['ADMIN', 'READ_ONLY', 'API_RO', 'API_RW', 'DENY_ALL', 'INSTALL_ONLY']
 users_to_groups = [
         ('admin', 'ADMIN'),
@@ -151,9 +181,17 @@ def group_creation(session):
 
 def acl_creation_group(session):
     completed = True
-    for acl in acls:
+    for acl in acls1:
         acl_group = acl_modifier(session, 'global_group', 'create', acl)
         if not acl_group['pass']:
+            completed = False
+    return(completed)
+
+def acl_creation_user(session):
+    completed = True
+    for acl in acls2:
+        acl_user = acl_modifier(session, 'global_user', 'create', acl)
+        if not acl_user['pass']:
             completed = False
     return(completed)
 
@@ -222,7 +260,10 @@ if __name__ == '__main__':
                 users_created = user_creation(session)
                 if users_created:
                     print 'RV default Users were created successfully'
-                    initialized = True
+                    user_acls_created = acl_creation_user(session)
+                    if user_acls_created:
+                        print 'RV ACLs for the users were created successfully'
+                        initialized = True
         if initialized:
             print 'RV environment has been succesfully initialized\n%s' %\
                     ('Please login as user=admin, passwd=toppatch')

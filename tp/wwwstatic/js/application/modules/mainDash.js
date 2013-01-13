@@ -247,7 +247,7 @@ define(
                             async: false,
                             success: function (data) {
                                 that.$el.find(that.graph).empty();
-                                tag_template = _.template($('#tags_template').html(), {data: data});
+                                tag_template = _.template($('#tags_template').html(), {data: data.data});
                                 that.$el.find(that.graph).html(tag_template);
                                 that.saveState();
                             }

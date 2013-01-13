@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'app', 'text!templates/node.html', 'jquery.ui.datepicker' ],
-    function ($, _, Backbone, app, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'modules/tabNavigation', 'modules/nodePatches', 'modules/nodeVMware', 'text!templates/node.html', 'jquery.ui.datepicker' ],
+    function ($, _, Backbone, app, tabNav, patchesView, vmView, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
@@ -23,6 +23,15 @@ define(
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
 
+                    this.id = this.collection.id;
+
+                    this.navigation = new tabNav.View({
+                        tabs: [
+                            {text: 'Patching', href: 'nodes/' + this.id + '/patches'},
+                            {text: 'VMware', href: 'nodes/' + this.id + '/vmware'}
+                        ]
+                    });
+
                     this.tagcollection = new exports.TagCollection();
                     this.tagcollection.bind('reset', this.render, this);
                     this.tagcollection.fetch();
@@ -30,20 +39,19 @@ define(
                 },
                 events: {
                     'click .disabled': function (e) { e.preventDefault(); },
-                    'click .toggle-all': 'toggleAll',
+                    'click li a': 'changeView',
                     'click #addTag': 'showtags',
                     'click #createtag': 'createtag',
                     'click button[name=dependencies]': 'showDependencies',
                     'click input[name=taglist]': 'toggletag',
                     'click #editDisplay': 'showEditOperation',
                     'click #editHost': 'showEditOperation',
-                    'click a.accordion-toggle': 'openAccordion',
-                    'change select[name=severity]': 'filterBySeverity',
+                    'click button[name=showNetworking]': 'showNetworking',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
                 onRender: function () {
-                    var close, that;
+                    var close, that = this;
                     this.$el.find('#addTag').popover({
                         title: 'Tags Available<button type="button" class="btn btn-link noPadding pull-right" id="close"><i class="icon-remove"></i></button>',
                         html: true,
@@ -60,7 +68,6 @@ define(
                             that = $(this);
                             close = $(this).data('popover').tip().find('button[name=close]');
                             close.unbind();
-                            window.console.log(close);
                             close.on('click', function (event) {
                                 $(that).popover('hide');
                             });
@@ -94,7 +101,8 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var template = _.template(this.template),
+                    var $header, $body,
+                        template = _.template(this.template),
                         data = this.collection.toJSON()[0],
                         tagData = this.tagcollection.toJSON();
 
@@ -102,17 +110,39 @@ define(
 
                     this.$el.append(template({model: data, tags: tagData}));
 
+                    $header = this.$el.find('.tab-header');
+                    $header.addClass('tabs').html(this.navigation.render().el);
+
+                    $body = this.$el.find('.tab-body');
+                    patchesView.Collection = patchesView.Collection.extend({id: this.id});
+                    this.patchesView = new patchesView.View({
+                        el: $body
+                    });
+                    this.navigation.setActive('nodes/' + this.id + '/patches');
+
                     this.$el.find("a.disabled").on("click", false);
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 },
-                toggleAll: function (event) {
-                    var status = event.target.checked,
-                        form = $(event.target).parents('form');
-                    $(form).find(":checkbox[name=patches]").each(function () {
-                        $(this).attr("checked", status);
-                    });
+                changeView: function (event) {
+                    event.preventDefault();
+                    var $tab = $(event.currentTarget),
+                        $body = this.$el.find('.tab-body'),
+                        id = this.id;
+                    if ($tab.attr('href') === '#nodes/' + id + '/patches') {
+                        patchesView.Collection = patchesView.Collection.extend({id: id});
+                        this.patchesView = new patchesView.View({
+                            el: $body
+                        });
+                        this.navigation.setActive('nodes/' + id + '/patches');
+                    } else if ($tab.attr('href') === '#nodes/' + id + '/vmware') {
+                        vmView.Collection = vmView.Collection.extend({id: id});
+                        this.vmView = new vmView.View({
+                            el: $body
+                        });
+                        this.navigation.setActive('nodes/' + id + '/vmware');
+                    }
                 },
                 submit: function (evt) {
                     var item, span, label, checkbox, $scheduleForm, type, patches, url, offset, fields,
@@ -150,7 +180,7 @@ define(
                                 schedule.attr('checked', false);
                             }
                             if (json.pass) {
-                                that.$el.find('.alert').removeClass('alert-error').addClass('alert-success').show().find('span').html('Operation sent.');
+                                that.$el.find('.alert').first().removeClass('alert-error').addClass('alert-success').show().find('span').html('Operation sent.');
                                 patches.each(function () {
                                     item = $(this).parents('.item');
                                     span = $(this).parents('span');
@@ -174,7 +204,7 @@ define(
                                     $form.find('input:checked').attr('checked', false);
                                 }
                             } else {
-                                that.$el.find('.alert').removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                                that.$el.find('.alert').first().removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                             }
                         });
                     return false;
@@ -227,7 +257,6 @@ define(
                         popover = event.data.popover,
                         operation = popover.$element.attr('id'),
                         $displayNameDiv = $(event.currentTarget).parents('dd');
-                    window.console.log(operation);
                     if (operation === 'editDisplay') {
                         params = {
                             nodeid: node_id,
@@ -350,88 +379,15 @@ define(
                             });
                     }
                 },
-                openAccordion: function (event) {
-                    event.preventDefault();
-                    if ($(event.target).attr('name') !== 'severity') {
-                        var $href = $(event.currentTarget),
-                            $icon = $href.find('i'),
-                            $parent = $href.parents('.accordion-group'),
-                            $body = $parent.find('.accordion-body'),
-                            $popover = $body.find('input[name=schedule]');
-                        if ($icon.hasClass('icon-circle-arrow-down')) {
-                            $icon.attr('class', 'icon-circle-arrow-up');
-                            $body.collapse('show');
-                            setTimeout(function () {
-                                $body.css('overflow', 'visible');
-                            }, 300);
-                        } else {
-                            if ($popover.data('popover')) {
-                                $popover.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
-                                $popover.popover('hide');
-                                $popover.attr('checked', false);
-                            }
-                            $icon.attr('class', 'icon-circle-arrow-down');
-                            $body.collapse('hide');
-                            $body.css('overflow', 'hidden');
-                        }
+                showNetworking: function (event) {
+                    var $button = $(event.currentTarget),
+                        $hidden = $button.parent().siblings('.hidden');
+                    if ($button.html() === 'Show more') {
+                        $button.html('Show less');
+                    } else {
+                        $button.html('Show more');
                     }
-                },
-                filterBySeverity: function (event) {
-                    var patchName, severity, patchId, $itemDiv, $div, $descSpan, $label, $input, $rightSpan, $href,
-                        option = $(event.currentTarget).val(),
-                        $accordion = $(event.currentTarget).parents('.accordion-group'),
-                        $badge = $(event.currentTarget).siblings('span'),
-                        $items = $accordion.find('.items'),
-                        patchNeed = this.collection.toJSON()[0]['patch/need'],
-                        newElement = function (element) {
-                            return $(document.createElement(element));
-                        },
-                        i = 0,
-                        counter = 0;
-                    $items.empty();
-                    for (i = 0; i < patchNeed.length; i += 1) {
-                        if (option === patchNeed[i].severity) {
-                            patchName = patchNeed[i].name;
-                            severity = patchNeed[i].severity;
-                            patchId = patchNeed[i].id;
-                            $itemDiv = newElement('div').addClass('item clearfix').attr('title', patchName);
-                            $div = newElement('div').addClass('row-fluid');
-                            $descSpan = newElement('span').addClass('desc span8');
-                            $label = newElement('label').addClass('checkbox inline').html(patchName);
-                            $input = newElement('input').attr({type: 'checkbox', name: 'patches', value: patchId, id: patchId});
-                            $rightSpan = newElement('span').addClass('span4 alignRight');
-                            $href = newElement('a').attr('href', '#patches/' + patchId).html('More information');
-                            $rightSpan.append($href);
-                            $descSpan.append($label.prepend($input));
-                            $itemDiv.append($div.append($descSpan, $rightSpan));
-                            $items.append($itemDiv);
-                            counter += 1;
-                        } else if (option === 'None') {
-                            patchName = patchNeed[i].name;
-                            severity = patchNeed[i].severity;
-                            patchId = patchNeed[i].id;
-                            $itemDiv = newElement('div').addClass('item clearfix').attr('title', patchName);
-                            $div = newElement('div').addClass('row-fluid');
-                            $descSpan = newElement('span').addClass('desc span8');
-                            $label = newElement('label').addClass('checkbox inline').html(patchName);
-                            $input = newElement('input').attr({type: 'checkbox', name: 'patches', value: patchId, id: patchId});
-                            $rightSpan = newElement('span').addClass('span4 alignRight');
-                            $href = newElement('a').attr('href', '#patches/' + patchId).html('More information');
-                            $rightSpan.append($href);
-                            $descSpan.append($label.prepend($input));
-                            $itemDiv.append($div.append($descSpan, $rightSpan));
-                            $items.append($itemDiv);
-                            counter += 1;
-                        }
-                    }
-                    if (counter === 0) {
-                        $itemDiv = newElement('div').addClass('item clearfix');
-                        $div = newElement('div').addClass('row-fluid');
-                        $descSpan = newElement('span').addClass('desc span8').html('<em>No patches to display</em>');
-                        $itemDiv.append($div.append($descSpan));
-                        $items.append($itemDiv);
-                    }
-                    $badge.html(counter);
+                    $hidden.toggle();
                 },
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked'),

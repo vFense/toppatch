@@ -14,7 +14,7 @@
             <% if (data.length !== 0) { %>
                 <% _.each(data, function (csr, i) { %>
                     <div class="item row-fluid">
-                        <div class="span9"><%= csr.ip %></div>
+                        <div class="span9"><% print(csr.displayname || csr.hostname || csr.ip) %></div>
                         <div class="span3 alignRight">
                             <input type="checkbox" name="csr" value="<%= csr.node_id %>" <% csr.enabled ? print('checked') : '' %>/>
                         </div>
