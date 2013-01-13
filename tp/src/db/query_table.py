@@ -297,10 +297,8 @@ def get_transactions(session, count=None, offset=0):
     for operation in all_operations:
         all_db[str(operation.id)] = [operation]
     for results in all_results:
-        results_db[str(results.id)] = [results]
-    for operation in all_operations:
-        if operation.results_id:
-            all_db[str(operation.id)].append(results_db[str(operation.results_id)])
+        if results.operation_id:
+            all_db[str(results.operation_id)].append(results)
     unsorted_list = []
     for key, value in all_db.items():
         unsorted_list.append((int(key), value))

@@ -133,27 +133,27 @@ class Operations(Base):
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
+    username = Column(VARCHAR(32), nullable=False)
     operation_type = Column(VARCHAR(32), nullable=False)
     operation_sent = Column(DATETIME, nullable=True)
     operation_received = Column(DATETIME, nullable=True)
-    results_received = Column(DATETIME, nullable=True)
-    def __init__(self, node_id, operation_type, results_id=None,
+    def __init__(self, node_id, operation_type,
                  operation_sent=None, operation_received=None,
-                 results_received=None
-    ):
+                 username=None
+                ):
         self.node_id = node_id
-        self.results_id = results_id
+        self.username = username
         self.operation_type = operation_type
         self.operation_sent = operation_sent
         self.operation_received = operation_received
-        self.results_received = results_received
     def __repr__(self):
-        return "<Operations(%s, %s, %s, %s, %s,%s)>" %\
+        return "<Operations(%s, %s, %s, %s, %s)>" %\
                (
-                   self.node_id, self.results_id, self.operation_type,
-                   self.operation_sent,self.operation_received,
-                   self.results_received
+                   self.node_id, self.operation_type,
+                   self.operation_sent, self.operation_received,
+                   self.username
                )
+               
 
 class Results(Base):
     """
@@ -166,27 +166,30 @@ class Results(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
-    node_id = Column(INTEGER(unsigned=True),ForeignKey("node_info.id"))
+    node_id = Column(INTEGER(unsigned=True),
+            ForeignKey("node_info.id"), nullable=True)
     operation_id = Column(INTEGER(unsigned=True),
-        ForeignKey("operations.id"))
+            ForeignKey("operations.id"))
     patch_id = Column(VARCHAR(32),
-        ForeignKey("package.toppatch_id"), nullable=True)
-    result = Column(VARCHAR(16), nullable=True)
+            ForeignKey("package.toppatch_id"), nullable=True)
+    result = Column(VARCHAR(16), nullable=False)
     reboot = Column(BOOLEAN, nullable=True)
     error = Column(VARCHAR(64), nullable=True)
-    def __init__(self, node_id, operation_id, patch_id,
-                result=None, reboot=None, error=None):
+    results_received = Column(DATETIME, nullable=True)
+    def __init__(self, node_id=None, operation_id=None, patch_id=None,
+                result=None, reboot=None, error=None, results_received=None):
         self.node_id = node_id
         self.operation_id = operation_id
         self.patch_id = patch_id
         self.result = result
         self.reboot = reboot
         self.error = error
+        self.results_received = results_received
     def __repr__(self):
-        return "<Results(%s, %s, %s, %s, %s, %s)>" %\
+        return "<Results(%s, %s, %s, %s, %s, %s, %s)>" %\
                 (
                 self.node_id ,self.operation_id, self.patch_id,
-                self.result, self.reboot, self.error
+                self.result, self.reboot, self.error, self.results_received
                 )
 
 class SoftwareAvailable(Base):
