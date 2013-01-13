@@ -61,6 +61,7 @@ def get_vm_data(username='system_user'):
                         if vm and esx_host:
                             vm.virtual_host_id = esx_host.id
                             vm.vm_name = value['vm_name']
+                            vm.uuid = value['uuid']
                             vm.tools_status = value['tools_status']
                             vm.tools_version = value['tools_version']
                             try:
@@ -84,6 +85,7 @@ def get_vm_data(username='system_user'):
                                 vm_info = VirtualMachineInfo(node_id=node.id,
                                         virtual_host_id=esx_host.id, 
                                         vm_name=value['vm_name'],
+                                        uuid=value['uuid'],
                                         tools_status=value['tools_status'],
                                         tools_version=value['tools_version']
                                         )

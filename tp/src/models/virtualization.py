@@ -52,20 +52,22 @@ class VirtualMachineInfo(Base):
     virtual_host_id = Column(INTEGER(unsigned=True),
             ForeignKey("virtual_host_info.id"), unique=False)
     vm_name = Column(VARCHAR(128), nullable=True, unique=True)
+    uuid = Column(VARCHAR(64), nullable=True, unique=True)
     tools_status = Column(VARCHAR(64), nullable=False)
     tools_version = Column(VARCHAR(64), nullable=False)
     def __init__(
                 self, node_id=None, virtual_host_id=None, vm_name=None,
-                tools_status=None, tools_version=None
+                uuid=None, tools_status=None, tools_version=None
                 ):
         self.node_id = node_id
         self.virtual_host_id = virtual_host_id
         self.vm_name = vm_name
+        self.uuid = uuid
         self.tools_status = tools_status
         self.tools_version = tools_version
     def __repr__(self):
-        return "<VirtualMachineInfo(%s,%s,%s,%s,%s)>"%\
+        return "<VirtualMachineInfo(%s%s,%s,%s,%s,%s)>"%\
                 (
                 self.node_id, self.virtual_host_id, self.vm_name,
-                self.tools_status, self.tools_version
+                self.uuid, self.tools_status, self.tools_version
                 )

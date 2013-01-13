@@ -681,6 +681,7 @@ class VmApi():
                             'vm_uuid': vm.name,
                             'ip_address': vm.guest.ipAddress,
                             'host_name': vm.guest.hostName,
+                            'uuid': vm.config.uuid,
                             'tools_status': vm.guest.toolsVersionStatus,
                             'tools_version': vm.guest.toolsVersion,
                             'snapshots': self.get_all_snapshots(vm_name=vm.name,
