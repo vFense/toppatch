@@ -25,14 +25,14 @@ def retrieve_transactions(session, count=None, offset=None):
                 node = node_info.host_name
             elif node_info.display_name:
                 node = node_info.display_name
-            elif node_info.computer_name:
-                node = node_info.computer_name
             elif node_info.is_vm:
                 vm = session.query(VirtualMachineInfo).\
                         filter(VirtualMachineInfo.node_id == \
                         node_info.id).first()
                 if vm:
                     node = vm.vm_name
+                elif node_info.computer_name:
+                    node = node_info.computer_name
                 elif node_info.ip_address:
                     node = node_info.ip_address
         if trans[1][0].operation_received:
