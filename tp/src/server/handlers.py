@@ -199,8 +199,8 @@ class FormHandler(BaseHandler):
                     operation_runner = AgentOperation(resultjson,
                             username=username)
                     operation_runner.run()
-                    #while not operation_runner.json_out:
-                    #    sleep(.50)
+                    while not operation_runner.json_out:
+                        sleep(.50)
                     result = operation_runner.json_out
             elif operation == 'reboot' or operation == 'restart' or\
                     operation == 'stop' or operation == 'start':
@@ -218,8 +218,8 @@ class FormHandler(BaseHandler):
                             username=username
                             )
                     operation_runner.run()
-                    #while not operation_runner.json_out:
-                    #    sleep(.50)
+                    while not operation_runner.json_out:
+                        sleep(.50)
                     result = operation_runner.json_out
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(result))
@@ -230,8 +230,8 @@ class FormHandler(BaseHandler):
             operation_runner = AgentOperation(resultjson,
                     username=username)
             operation_runner.run()
-            #while not operation_runner.json_out:
-            #    sleep(.50)
+            while not operation_runner.json_out:
+                sleep(.50)
             result = operation_runner.json_out
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(result))
