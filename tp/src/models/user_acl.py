@@ -379,7 +379,7 @@ class NodeGroupAccess(Base):
         self.date_created = date_created
         self.date_modified = date_modified
     def __repr__(self):
-        return "<NodeGroupAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<NodeGroupAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.node_id, self.group_id, self.allow_read,
                 self.allow_install, self.allow_uninstall,

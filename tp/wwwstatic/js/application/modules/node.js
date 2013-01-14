@@ -25,12 +25,7 @@ define(
 
                     this.id = this.collection.id;
 
-                    this.navigation = new tabNav.View({
-                        tabs: [
-                            {text: 'Patching', href: 'nodes/' + this.id + '/patches'},
-                            {text: 'VMware', href: 'nodes/' + this.id + '/vmware'}
-                        ]
-                    });
+
 
                     this.tagcollection = new exports.TagCollection();
                     this.tagcollection.bind('reset', this.render, this);
@@ -106,6 +101,21 @@ define(
                         data = this.collection.toJSON()[0],
                         tagData = this.tagcollection.toJSON();
 
+                    if (data && data.is_vm) {
+                        this.navigation = new tabNav.View({
+                            tabs: [
+                                {text: 'Patching', href: 'nodes/' + this.id + '/patches'},
+                                {text: 'VMware', href: 'nodes/' + this.id + '/vmware'}
+                            ]
+                        });
+                    } else {
+                        this.navigation = new tabNav.View({
+                            tabs: [
+                                {text: 'Patching', href: 'nodes/' + this.id + '/patches'}
+                            ]
+                        });
+                    }
+
                     this.$el.html('');
 
                     this.$el.append(template({model: data, tags: tagData}));
@@ -114,6 +124,7 @@ define(
                     $header.addClass('tabs').html(this.navigation.render().el);
 
                     $body = this.$el.find('.tab-body');
+
                     patchesView.Collection = patchesView.Collection.extend({id: this.id});
                     this.patchesView = new patchesView.View({
                         el: $body

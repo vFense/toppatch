@@ -156,7 +156,7 @@ class NodesHandler(BaseHandler):
         filter_by_os = self.get_argument('by_os', None)
         filter_by_platform = self.get_argument('by_platform', None)
         filter_by_bit_type = self.get_argument('by_bit_type', None)
-        is_vm = self.get_argument('is_vm', None)
+        is_vm = self.get_argument('is_vm', False)
         query = None
         if filter_by_tags:
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
@@ -181,7 +181,7 @@ class NodesHandler(BaseHandler):
         elif is_vm:
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
                     join(SystemInfo, NodeStats).\
-                    filter(NodeInfo.vm_name != None).\
+                    filter(NodeInfo.is_vm == True).\
                     limit(queryCount).offset(queryOffset)
         else:
             query = self.session.query(NodeInfo, SystemInfo, NodeStats).\
@@ -241,8 +241,10 @@ class NodesHandler(BaseHandler):
                 resultjson = {'ip': node_info[0].ip_address,
                               'host/name': node_info[0].host_name,
                               'display/name': node_info[0].display_name,
+                              'computer/name': node_info[0].computer_name,
                               'host/status': node_info[0].host_status,
                               'agent/status': node_info[0].agent_status,
+                              'is_vm': node_info[0].is_vm,
                               'networking': net,
                               'reboot': node_info[0].reboot,
                               'id': node_info[1].node_id,
@@ -263,6 +265,8 @@ class NodesHandler(BaseHandler):
                 resultnode = {'ip': node_info[0].ip_address,
                               'hostname': node_info[0].host_name,
                               'displayname': node_info[0].display_name,
+                              'computer/name': node_info[0].computer_name,
+                              'is_vm': node_info[0].is_vm,
                               'host/status': node_info[0].host_status,
                               'agent/status': node_info[0].agent_status,
                               'reboot': node_info[0].reboot,
