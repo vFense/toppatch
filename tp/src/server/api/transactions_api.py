@@ -39,15 +39,26 @@ class GetTransactionsHandler(BaseHandler):
     def get(self):
         self.session = self.application.session
         self.session = validate_session(self.session)
-        try:
-            queryCount = self.get_argument('count')
-            queryOffset = self.get_argument('offset')
-        except:
-            queryCount = 20
-            queryOffset = 0
+        queryCount = self.get_argument('count', 20)
+        queryOffset = self.get_argument('offset', 0)
         result = retrieve_transactions(self.session, count=queryCount, offset=queryOffset)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+ 
+class SearchTransactionsHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        session = self.application.session
+        session = validate_session(session)
+        query = self.get_argument('query', None)
+        column = self.get_argument('column', None)
+        count = int(self.get_argument('count', 100))
+        offset = int(self.get_argument('offset', 0))
+        result = operation_search(session, query, column, count, offset)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
         
+       
 

@@ -716,13 +716,7 @@ class VmApi():
                                         (username, snap_name, vm_name)
                                 logger.info(message)
                                 passed = True
-                                results = add_results_non_json(session,
-                                        node_id=node.id, oper_id=oper.id,
-                                        result=passed,
-                                        results_received=datetime.now()
-                                        )
-
-                                if removed_children:
+                                if remove_children:
                                     message = '%s - snap %s deleted on %s %s' %\
                                         (username, snap_name, vm_name,
                                             'and all of its children')
@@ -731,6 +725,11 @@ class VmApi():
                                     message = ' %s - snap %s was deleted on %s' %\
                                             (username, snap_name, vm_name)
                                     logger.info(message)
+                                results = add_results_non_json(session,
+                                        node_id=node.id, oper_id=oper.id,
+                                        result=passed,
+                                        results_received=datetime.now()
+                                        )
 
                             except Exception as e:
                                 message = '%s - %s couldnt be deleted on %s'%\
