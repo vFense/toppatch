@@ -200,8 +200,8 @@ class AgentOperation():
             self.json_out ={
                      "node_id" : node.id,
                      "operation_id" : oper_id,
-                     "message" : 'message sent'
-                     "error" : None
+                     "message" : 'message sent',
+                     "error" : None,
                      "pass" : True
                      }
             connect = TcpConnect(node.ip_address,
