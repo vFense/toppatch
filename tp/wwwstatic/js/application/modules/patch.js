@@ -21,7 +21,7 @@ define(
                     this.collection =  new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
-t
+
                     this.tagcollection = new exports.TagCollection();
                     this.tagcollection.bind('reset', this.render, this);
                     this.tagcollection.id = this.collection.id;

@@ -11,7 +11,7 @@ define(
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
-                baseUrl: 'api/vmware/snapshots/list',
+                baseUrl: 'api/virtual/node/info',
                 url: function () {
                     return this.baseUrl + '?node_id=' + this.id;
                 }
@@ -37,12 +37,13 @@ define(
                 createSnapshot: function (event) {
                     var params, that = this,
                         $alert = this.$el.find('div.alert'),
-                        url = 'api/vmware/snapshots/create',
+                        url = 'api/virtual/node/snapshots/create',
                         $newSnapDiv = this.$el.find('#newSnapshotDiv'),
                         $inputText = $newSnapDiv.find('input[type=text]'),
-                        $inputCheck = $newSnapDiv.find('input[type=checkbox]');
+                        $inputCheck = $newSnapDiv.find('input[type=checkbox]'),
+                        vmName = this.vm_name;
                     params = {
-                        vm_name: '',
+                        vm_name: vmName,
                         snap_name: '',
                         memory: '',
                         quiesce: '',
@@ -68,19 +69,35 @@ define(
                 },
                 revertSnapshot: function (event) {
                     var vmName, $button = $(event.currentTarget),
-                        url = 'api/vmware/snapshots/revert',
+                        url = 'api/virtual/node/snapshots/revert',
                         snapName = $button.attr('value');
                     window.console.log(event);
                 },
                 removeSnapshot: function (event) {
-                    var vmName, $button = $(event.currentTarget),
-                        url = 'api/vmware/snapshots/remove',
-                        snapName = $button.attr('value');
-                    window.console.log(event);
+                    var that = this,
+                        vmName = this.vm_name,
+                        $button = $(event.currentTarget),
+                        url = 'api/virtual/node/snapshots/remove',
+                        $alert = this.$el.find('div.alert'),
+                        snapName = $button.attr('value'),
+                        params = {
+                            snap_name: snapName,
+                            vm_name: vmName
+                        };
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            that.collection.fetch();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().html(json.message);
+                        }
+                    }).error(function (error) {
+                        $alert.removeClass('alert-success').addClass('alert-error').show().html('Error code: ' + error.status + ' - ' + error.statusText);
+                    });
                 },
                 removeAll: function (event) {
                     var vmName,
-                        url = 'api/vmware/snapshots/removeAll';
+                        url = 'api/virtual/node/snapshots/removeAll';
                     window.console.log(event);
                 },
                 beforeRender: $.noop,
@@ -89,11 +106,13 @@ define(
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
                     var template = _.template(this.template),
-                        data = this.collection.toJSON();
+                        data = this.collection.toJSON()[0];
+                    this.vm_name = data.vm_name;
+                    data.snapshots.sort(function (a, b) { return parseFloat(a.snap_order) - parseFloat(b.snap_order); });
 
                     this.$el.empty();
 
-                    this.$el.html(template({data: data}));
+                    this.$el.html(template({data: data.snapshots}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;

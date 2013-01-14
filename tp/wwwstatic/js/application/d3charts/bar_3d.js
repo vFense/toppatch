@@ -67,7 +67,7 @@ define(
                         .attr("class", "top_rect")
                         .attr("x", function (d, index) { return x(index) + depth - 0.8; })
                         .attr("y", function (d, index) { return y(d.value) > 15 ? height - y(d.value) : height - y(15); })
-                        .attr("height", function (d) { return y(d.value) > 15 ? y(d.value) : y(15) + 3; })
+                        .attr("height", function (d) { return y(d.value) > 15 ? y(d.value) : y(15) + 5; })
                         .attr("width", barWidth)
                         .attr("stroke", "0")
                         .attr("stroke-width", "0")

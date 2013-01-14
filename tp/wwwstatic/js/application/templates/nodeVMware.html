@@ -33,18 +33,21 @@
                     <button name="createSnapshot" class="btn btn-mini btn-primary">Create</button>
                 </div>
             </div>
-            <% if (data.length != 0 && data[0].pass) { %>
-                <div class="item clearfix">
-                    <span class="span9">test snapshot</span>
-                    <span class="span3 alignRight">
-                        <button class="btn btn-link noPadding" name="revert" value="snap_name">
-                            <span class="icon-repeat" style="color: green" title="Revert to Snapshot"></span>
-                        </button>&nbsp;
-                        <button class="btn btn-link noPadding" name="remove" value="snap_name">
-                            <span class="icon-remove" style="color: red" title="Remove Snapshot"></span>
-                        </button>
-                    </span>
-                </div>
+            <% if (data && data.length != 0) { %>
+                <% _.each(data, function (snapshot) { %>
+                    <div class="item clearfix">
+                        <span class="span9"><%= snapshot.snap_order %> — <%= snapshot.snap_name %></span>
+                        <span class="span3 alignRight">
+                            <span><%= snapshot.date_created %></span>
+                            <button class="btn btn-link noPadding" name="revert" value="<%= snapshot.snap_name %>">
+                                <span class="icon-repeat" style="color: green" title="Revert to Snapshot"></span>
+                            </button>&nbsp;
+                            <button class="btn btn-link noPadding" name="remove" value="<%= snapshot.snap_name %>">
+                                <span class="icon-remove" style="color: red" title="Remove Snapshot"></span>
+                            </button>
+                        </span>
+                    </div>
+                <% }); %>
             <% } else { %>
                 <div class="item clearfix">
                     <span class="span9 ">No snapshots available</span>
