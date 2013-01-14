@@ -64,6 +64,7 @@ class AgentOperation():
         self.username = username
         self.results = {}
         self.json_out = {}
+        self.message_sent = False
         if type(system_list) == list:
             logger.debug('%s - operation received was of type list'%\
                     (self.username)
@@ -113,6 +114,7 @@ class AgentOperation():
                             "error" : "Agent Down",
                             "pass" : False
                             }
+                        return(self.json_out)
                 self.oper_type = jsonobject[OPERATION]
                 self.oper_id = self.create_new_operation(self.node_id,
                         self.oper_type, self.node.ip_address
@@ -129,6 +131,12 @@ class AgentOperation():
                             )
                     self.session.close()
                     self.json_out = time_block_results
+                    add_results_non_json(self.session, node_id=node.id,
+                            oper_id=oper.id, error='Time Block Exists',
+                            reboot=False, result=False,
+                            results_received=datetime.now(),
+                            username=self.username
+                            )
                     return(self.json_out)
                 if not DATA in jsonobject:
                     message = self.operation_creator(data_list=None)
@@ -185,10 +193,35 @@ class AgentOperation():
         connect = None
         if node.agent_status:
             agent_status = True
-            connect = TcpConnect(node.ip_address,
-                    msg, port=port, secure=secure)
             logger.debug('%s - connecting to agent %s on port %s' %\
                     (self.username, node.ip_address, str(port))
+                    )
+            self.message_sent = True
+            self.json_out ={
+                     "node_id" : node.id,
+                     "operation_id" : oper_id,
+                     "message" : 'message sent'
+                     "error" : None
+                     "pass" : True
+                     }
+            connect = TcpConnect(node.ip_address,
+                    msg, port=port, secure=secure)
+        else:
+            self.message_sent = False
+            self.json_out ={
+                     "node_id" : node.id,
+                     "operation_id" : oper_id,
+                     "message" : "Agent Down",
+                     "error" : "Agent Down",
+                     "pass" : False
+                     }
+            logger.debug('%s - cannot connect to agent %s, agent down' %\
+                    (self.username, node.ip_address)
+                    )
+            add_results_non_json(self.session, node_id=node.id,
+                    oper_id=oper.id, error='Agent Down',
+                    reboot=False, result=False,
+                    results_received=datetime.now(), username=self.username
                     )
         self.connection_parser(connect, node, oper_type, oper_id)
 
@@ -196,13 +229,6 @@ class AgentOperation():
         completed = False
         if connect:
             completed = True
-            self.json_out ={
-                     "node_id" : node.id,
-                     "operation_id" : oper_id,
-                     "message" : connect.read_data,
-                     "error" : connect.error,
-                     "pass" : completed
-                     }
             if not connect.error and connect.read_data:
                 response = verify_json_is_valid(connect.read_data)
                 if response[1]['operation'] == 'received':
@@ -228,17 +254,6 @@ class AgentOperation():
                     update_node_stats(self.session, node.id)
                     update_network_stats(self.session)
                     update_tag_stats(self.session)
-        else:
-            self.json_out ={
-                     "node_id" : node.id,
-                     "operation_id" : oper_id,
-                     "message" : "Agent Down",
-                     "error" : "Agent Down",
-                     "pass" : completed
-                     }
-            logger.debug('%s - cannot connect to agent %s, agent down' %\
-                    (self.username, node.ip_address)
-                    )
         return self.json_out
 
 
