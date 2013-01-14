@@ -20,6 +20,44 @@ logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvapi')
 
 
+def add_results_non_json(session, node_id=None, oper_id=None, error=None,
+        toppatch_id=None, reboot=False, result=True,
+        results_received=datetime.now(), username='system_user'):
+    """
+        Add a new entry in the results table in RV
+        arguments below..
+        session == SQLAlchemy Session
+        data == the json message received from the agent
+    """
+    session = validate_session(session)
+    operation = operation_exists(session, oper_id)
+    results = None
+    if result:
+        result = 'pass'
+    else:
+        result = 'fail'
+    if oper_id and node_id and operation:
+        results = Results(node_id=node_id, operation_id=oper_id, 
+                patch_id=toppatch_id,
+                reboot=reboot, result=result, error=error,
+                results_received=results_received
+                )
+    elif oper_id and not node_id and operation:
+        results = Results(operation_id=oper_id,
+                oppatch_id=toppatch_id, reboot=reboot,
+                result=result, error=error,
+                results_received=results_received
+                )
+    if results:
+        try:
+            session.add(results)
+            session.commit()
+            return(results)
+        except Exception as e:
+            session.rollback()
+            return(None)
+
+
 def add_node(session, client_ip=None, agent_timestamp=None,
         node_timestamp=None, host_name=None, display_name=None,
         computer_name=None, username='system_user'):
@@ -560,9 +598,9 @@ def add_cert(session, node_id, cert_id, cert_name,
     except Exception as e:
         session.rollback()
 
-def add_operation(session, node_id, operation, result_id=None,
-        operation_sent=None, operation_received=None, results_received=None,
-        username='system_user'):
+
+def add_operation(session, node_id, operation, operation_sent=None,
+        operation_received=None, username='system_user'):
     """
         Add a new Operation into RV
         arguments below..
@@ -571,10 +609,9 @@ def add_operation(session, node_id, operation, result_id=None,
         operation == reboot|install|uninstall (The operation type)
     """
     session = validate_session(session)
-    add_oper = Operations(node_id, operation, result_id,
-            operation_sent, operation_received, results_received
+    add_oper = Operations(node_id, operation, operation_sent,
+            operation_received, username
             )
-    session = validate_session(session)
     if add_oper:
         session.add(add_oper)
         session.commit()
@@ -595,12 +632,10 @@ def add_system_info(session, data, node_info, username='system_user'):
     node_id = node_info.id
 
     if node_id:
-        if operation:
-            operation.results_received = datetime.now()
+        if 'computer_name' in data:
+            node_info.computer_name = data['computer_name']
             session.commit()
-        node_info.computer_name = data['computer_name']
-        session.commit()
-        system_info= session.query(SystemInfo).\
+        system_info = session.query(SystemInfo).\
                 filter(SystemInfo.node_id == node_id).first()
 
         if system_info:
@@ -670,8 +705,10 @@ def add_software_update(session, data, username='system_user'):
     node_id = data['node_id']
     if node_id:
         if operation:
-            operation.results_received = datetime.now()
-            session.commit()
+            results = add_results_non_json(session, node_id=node_id,
+                oper_id=data['operation_id'],
+                result=True, results_received=datetime.now()
+                )
         for update in data['data']:
             update_exists = package_exists(session, update['toppatch_id'])
             if not update_exists:
@@ -708,8 +745,10 @@ def add_software_per_node(session, data, username='system_user'):
         node = session.query(SystemInfo).\
                 filter(SystemInfo.node_id == node_id).first()
         if operation:
-            operation.results_received = datetime.now()
-            session.commit()
+            results = add_results_non_json(session, node_id=node_id,
+                oper_id=data['operation_id'],
+                result=True, results_received=datetime.now()
+                )
         for addupdate in data['data']:
             update_exists = node_package_exists(session, node_id,
                     addupdate['toppatch_id'])
@@ -775,8 +814,10 @@ def add_software_available(session, data, username='system_user'):
     node_id = data['node_id']
     if node_id:
         if operation:
-            operation.results_received = datetime.now()
-            session.commit()
+            results = add_results_non_json(session, node_id=node_id,
+                oper_id=data['operation_id'],
+                result=True, results_received=datetime.now()
+                )
         for software in data['data']:
             app_exists = software_exists(session, software['name'],
                     software['version'])
@@ -809,8 +850,10 @@ def add_software_installed(session, data, username='system_user'):
     node_id = data['node_id']
     if node_id:
         if operation:
-            operation.results_received = datetime.now()
-            session.commit()
+            results = add_results_non_json(session, node_id=node_id,
+                oper_id=data['operation_id'],
+                result=True, results_received=datetime.now()
+                )
         for software in data['data']:
             app_exists = software_exists(session, software['name'],
                     software['version'])
@@ -994,8 +1037,9 @@ def remove_time_block(session, id=None, label=None,
     return object_deleted
 
 
-def update_operation_row(session, oper_id, results_recv=None,
-            oper_recv=None, username='system_user'):
+def update_operation_row(session, oper_id,
+        oper_recv=None,
+        username='system_user'):
     """
         update an existing operation in the RV database
         arguments below..
@@ -1004,10 +1048,7 @@ def update_operation_row(session, oper_id, results_recv=None,
     """
     session = validate_session(session)
     operation = operation_exists(session, oper_id)
-    if operation and results_recv:
-        operation.results_received = datetime.now()
-        session.commit()
-    elif operation and oper_recv:
+    if operation and oper_recv:
         operation.operation_received = datetime.now()
         session.commit()
 
@@ -1552,24 +1593,19 @@ def add_results(session, data, username='system_user'):
             if 'restart' in data['operation'] or \
                     'stop' in data['operation'] or \
                     'start' in data['operation']:
-                results = Results(node_id, data['operation_id'],
-                        None, return_bool(data['result']), \
-                        None, data['error']
+                results = add_results_non_json(session, node_id=node_id,
+                        oper_id=data['operation_id'],
+                        result=return_bool(data['result']),
+                        error=data['error'],
+                        results_received=datetime.now()
                         )
-                try:
-                    session.add(results)
-                    session.commit()
-                    if operation:
-                        operation.results_id = results.id
-                        operation.results_received = datetime.now()
-                    return(results)
-                except Exception as e:
-                    session.rollback()
+                return(results)
+
         for msg in data['data']:
             if 'reboot' in msg:
                 reboot = return_bool(msg['reboot'])
             else:
-               reboot = None
+               reboot = False
             os_code = session.query(SystemInfo).\
                     filter_by(node_id=node_id).first().os_code
             update_exists = node_package_exists(session, node_id, msg['toppatch_id'])
@@ -1603,20 +1639,14 @@ def add_results(session, data, username='system_user'):
             error = None
             if "error" in msg:
                 error = msg['error']
-            results = Results(node_id, data['operation_id'], \
-                        msg['toppatch_id'], msg['result'], \
-                        reboot, error
-                        )
-            try:
-                session.add(results)
-                session.commit()
-                if operation:
-                    operation.results_id = results.id
-                    operation.results_received = datetime.now()
-                update_node_stats(session, node_id)
-                update_network_stats(session)
-                session.commit()
-                TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
-                return results
-            except:
-                session.rollback()
+            results = add_results_non_json(session, node_id=node_id,
+                    oper_id=data['operation_id'],
+                    toppatch_id=msg['toppatch_id'],
+                    result=msg['result'], reboot=reboot, error=error,
+                    results_received=datetime.now()
+                    )
+            update_node_stats(session, node_id)
+            update_network_stats(session)
+            session.commit()
+            TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
+            return results

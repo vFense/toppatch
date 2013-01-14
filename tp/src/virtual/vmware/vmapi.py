@@ -5,6 +5,7 @@ from ConfigParser import SafeConfigParser
 from pyvisdk import Vim
 from db.client import *
 from db.query_table import *
+from db.update_table import *
 from models.virtualization import *
 
 
@@ -15,6 +16,7 @@ CREDS_SECTION = 'vm_credentials'
 OPTIONS = 'options'
 logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
 logger = logging.getLogger('rvapi')
+ENGINE = init_engine()
 
 def cycle_validator(cycle):
     valid = True
@@ -261,31 +263,50 @@ class VmApi():
     def shutdown_vm(self, vm_name=None, username='system_user'):
         message = None
         passed = None
+        session = create_session(ENGINE)
+        node = session.query(VirtualMachineInfo).\
+                filter(VirtualMachineInfo.vm_name == vm_name).first()
         if not self.vim.loggedin:
             self.vim.relogin()
-        if vm_name:
+        if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
+                oper = add_operation(session, node.id, 'shutdown_vm',
+                        operation_sent=datetime.now(),
+                        operation_received=datetime.now(),
+                        username=username)
                 try:
                     vm.ShutdownGuest()
                     message = '%s - %s is shutting down' % \
                             (username, vm_name)
                     logger.info(message)
                     passed = True
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed,
+                            results_received=datetime.now()
+                            )
+
                 except Exception as e:
                     message = '%s - error during shutdown process:%s on %s'% \
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed, error=e,
+                            results_received=datetime.now()
+                            )
+
             else:
                 message = '%s - VM by the name of %s does not exist' % \
                         (username, vm_name)
                 logger.error(message)
                 passed = False
+
         else:
             message = '%s - insufficient parameters' % (username)
             logger.error(message)
             passed = False
+
         return({
             'pass': passed,
             'message': message
@@ -295,31 +316,51 @@ class VmApi():
     def poweroff_vm(self, vm_name=None, username='system_user'):
         message = None
         passed = None
+        session = create_session(ENGINE)
+        node = session.query(VirtualMachineInfo).\
+                filter(VirtualMachineInfo.vm_name == vm_name).first()
         if not self.vim.loggedin:
             self.vim.relogin()
-        if vm_name:
+        if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
+                oper = add_operation(session, node.id, 'poweroff_vm',
+                        operation_sent=datetime.now(),
+                        operation_received=datetime.now(),
+                        username=username)
                 try:
                     vm.PowerOffVM_Task()
                     message = '%s - %s is powered off' % \
                             (username, vm_name)
                     logger.info(message)
                     passed = True
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=True,
+                            results_received=datetime.now()
+                            )
+
                 except Exception as e:
                     message = '%s - error during poweroff process:%s on %s'% \
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed, error=e,
+                            results_received=datetime.now()
+                            )
+
             else:
                 message = '%s - VM by the name of %s does not exist' % \
                         (username, vm_name)
                 logger.error(message)
                 passed = False
+
         else:
             message = '%s - insufficient parameters' % (username)
             logger.error(message)
             passed = False
+
+        session.close()
         return({
             'pass': passed,
             'message': message
@@ -327,24 +368,41 @@ class VmApi():
 
 
     def poweron_vm(self, vm_name=None, username='system_user'):
+        session = create_session(ENGINE)
         message = None
         passed = None
+        node = session.query(VirtualMachineInfo).\
+                filter(VirtualMachineInfo.vm_name == vm_name).first()
         if not self.vim.loggedin:
             self.vim.relogin()
-        if vm_name:
+        if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
+                oper = add_operation(session, node.id, 'poweron_vm',
+                        operation_sent=datetime.now(),
+                        operation_received=datetime.now(),
+                        username=username)
                 try:
                     vm.PowerOnVM_Task()
                     message = '%s - %s is powered on' % \
                             (username, vm_name)
                     logger.info(message)
                     passed = True
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed,
+                            results_received=datetime.now()
+                            )
+
                 except Exception as e:
                     message = '%s - error during poweron process:%s on %s'% \
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed, error=e,
+                            results_received=datetime.now()
+                            )
+
             else:
                 message = '%s - VM by the name of %s does not exist' % \
                         (username, vm_name)
@@ -354,6 +412,8 @@ class VmApi():
             message = '%s - insufficient parameters' % (username)
             logger.error(message)
             passed = False
+
+        session.close()
         return({
             'pass': passed,
             'message': message
@@ -361,24 +421,41 @@ class VmApi():
 
 
     def reboot_vm(self, vm_name=None, username='system_user'):
+        session = create_session(ENGINE)
         message = None
         passed = None
+        node = session.query(VirtualMachineInfo).\
+                filter(VirtualMachineInfo.vm_name == vm_name).first()
         if not self.vim.loggedin:
             self.vim.relogin()
-        if vm_name:
+        if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
+                oper = add_operation(session, node.id, 'reboot_vm',
+                        operation_sent=datetime.now(),
+                        operation_received=datetime.now(),
+                        username=username)
                 try:
                     vm.RebootGuest()
                     message = '%s - %s is rebooting' % \
                             (username, vm_name)
                     logger.info(message)
                     passed = True
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed,
+                            results_received=datetime.now()
+                            )
+
                 except Exception as e:
                     message = '%s - error during reboot process:%s on %s'% \
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed, error=e,
+                            results_received=datetime.now()
+                            )
+
             else:
                 message = '%s - VM by the name of %s does not exist' % \
                         (username, vm_name)
@@ -388,6 +465,9 @@ class VmApi():
             message = '%s - insufficient parameters' % (username)
             logger.error(message)
             passed = False
+
+        session.close()
+
         return({
             'pass': passed,
             'message': message
@@ -395,33 +475,53 @@ class VmApi():
 
 
     def reset_vm(self, vm_name=None):
+        session = create_session(ENGINE)
         message = None
         passed = None
+        node = session.query(VirtualMachineInfo).\
+                filter(VirtualMachineInfo.vm_name == vm_name).first()
         if not self.vim.loggedin:
             self.vim.relogin()
-        if vm_name:
+        if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
+                oper = add_operation(session, node.id, 'reset_vm',
+                        operation_sent=datetime.now(),
+                        operation_received=datetime.now(),
+                        username=username)
                 try:
                     vm.ResetVM_Task()
                     message = '%s - %s is in the process of a hard reboot'% \
                             (username, vm_name)
                     logger.info(message)
                     passed = True
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed,
+                            results_received=datetime.now()
+                            )
+
                 except Exception as e:
                     message = '%s - error during reboot process:%s on %s'% \
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed, error=e,
+                            results_received=datetime.now()
+                            )
+
             else:
                 message = '%s - VM by the name of %s does not exist' % \
                         (username, vm_name)
                 logger.error(message)
                 passed = False
+
         else:
             message = '%s - insufficient parameters' % (username)
             logger.error(message)
             passed = False
+
+        session.close()
         return({
             'pass': passed,
             'message': message
@@ -433,13 +533,20 @@ class VmApi():
             username='system_user'):
         message = None
         passed = None
+        session = create_session(ENGINE)
+        node = session.query(VirtualMachineInfo).\
+                filter(VirtualMachineInfo.vm_name == vm_name).first()
         if not self.vim.loggedin:
             self.vim.relogin()
-        if vm_name and snap_name:
+        if vm_name and snap_name and node:
             if not snap_description:
                 snap_description = snap_name
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
+                oper = add_operation(session, node.id, 'create_snapshot',
+                        operation_sent=datetime.now(), 
+                        operation_received=datetime.now(),
+                        username=username)
                 try:
                     snap = vm.CreateSnapshot_Task(snap_name, memory,
                             quiesce, snap_description)
@@ -447,20 +554,33 @@ class VmApi():
                             (username, snap_name, vm_name)
                     logger.info(message)
                     passed = True
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed,
+                            results_received=datetime.now()
+                            )
+
                 except Exception as e:
                     message = '%s - error during snapshot creation:%s on %s'% \
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed, error=e,
+                            results_received=datetime.now()
+                            )
+
             else:
                 message = '%s - VM by the name of %s does not exist' % \
                         (username, vm_name)
                 logger.error(message)
                 passed = False
+
         else:
             message = '%s - insufficient parameters' % (username)
             logger.error(message)
             passed = False
+
+        session.close()
         return({
             'pass': passed,
             'message': message
@@ -516,31 +636,51 @@ class VmApi():
     def remove_all_snapshots(self, vm_name=None, username='system_user'):
         message = None
         passed = None
+        session = create_session(ENGINE)
+        node = session.query(VirtualMachineInfo).\
+                filter(VirtualMachineInfo.vm_name == vm_name).first()
         if not self.vim.loggedin:
             self.vim.relogin()
-        if vm_name:
+        if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
+                oper = add_operation(session, node.id, 'remove_all_snapshots',
+                        operation_sent=datetime.now(), 
+                        operation_received=datetime.now(),
+                        username=username)
                 try:
                     task = vm.RemoveAllSnapshots_Task()
                     message = ' %s - All snapshots on %s have been deleted' %\
                         (username, vm_name)
                     logger.info(message)
                     passed = True
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed,
+                            results_received=datetime.now()
+                            )
+
                 except Exception as e:
                     message = '%s - Snapshots werent deleted on %s' % \
                             (username, vm_name)
                     logger.error(message)
                     passed = False
+                    results = add_results_non_json(session, node_id=node.id,
+                            oper_id=oper.id, result=passed, error=e,
+                            results_received=datetime.now()
+                            )
+
             else:
                 message = '%s - VM by the name of %s does not exist' % \
                         (username, vm_name)
                 logger.error(message)
                 passed = False
+
         else:
             message = '%s - insufficient parameters' % (username)
             logger.error(message)
             passed = False
+        
+        session.close()
         if not passed:
             return({
                 'pass': passed,
@@ -552,14 +692,21 @@ class VmApi():
             remove_children=True, username='system_user'):
         message = None
         passed = None
+        session = create_session(ENGINE)
+        node = session.query(VirtualMachineInfo).\
+                filter(VirtualMachineInfo.vm_name == vm_name).first()
         if not self.vim.loggedin:
             self.vim.relogin()
-        if vm_name:
+        if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
                 if len(vm.snapshot) >0:
                     snapshot_list = vm.snapshot.rootSnapshotList[0]
                     i = 1
+                    oper = add_operation(session, node.id, 'remove_snapshot',
+                            operation_sent=datetime.now(), 
+                            operation_received=datetime.now(),
+                            username=username)
                     while snapshot_list:
                         if snap_name == snapshot_list.name:
                             try:
@@ -569,6 +716,12 @@ class VmApi():
                                         (username, snap_name, vm_name)
                                 logger.info(message)
                                 passed = True
+                                results = add_results_non_json(session,
+                                        node_id=node.id, oper_id=oper.id,
+                                        result=passed,
+                                        results_received=datetime.now()
+                                        )
+
                                 if removed_children:
                                     message = '%s - snap %s deleted on %s %s' %\
                                         (username, snap_name, vm_name,
@@ -584,6 +737,11 @@ class VmApi():
                                         (username, snap_name, vm_name)
                                 logger.error(message)
                                 passed = False
+                                results = add_results_non_json(session,
+                                        node_id=node.id, oper_id=oper.id,
+                                        result=passed, error=e,
+                                        results_received=datetime.now()
+                                        )
                         i = i + 1
                         if len(snapshot_list.childSnapshotList) > 0:
                             snapshot_list = snapshot_list.childSnapshotList[0]
@@ -603,6 +761,8 @@ class VmApi():
             message = '%s - insufficient parameters' % (username)
             logger.error(message)
             passed = False
+
+        session.close()
         if not passed:
             return({
                 'pass': passed,
@@ -614,14 +774,21 @@ class VmApi():
                 username='system_user'):
         message = None
         passed = None
+        session = create_session(ENGINE)
+        node = session.query(VirtualMachineInfo).\
+                filter(VirtualMachineInfo.vm_name == vm_name).first()
         if not self.vim.loggedin:
             self.vim.relogin()
-        if vm_name:
+        if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
                 if len(vm.snapshot) >0:
                     snapshot_list = vm.snapshot.rootSnapshotList[0]
                     i = 1
+                    oper = add_operation(session, node.id, 'remove_snapshot',
+                            operation_sent=datetime.now(),
+                            operation_received=datetime.now(),
+                            username=username)
                     while snapshot_list:
                         if snap_name == snapshot_list.name:
                             try:
@@ -630,11 +797,23 @@ class VmApi():
                                         (username, vm_name, snap_name)
                                 logger.info(message)
                                 passed = True
+                                results = add_results_non_json(session,
+                                        node_id=node.id, oper_id=oper.id,
+                                        result=passed,
+                                        results_received=datetime.now()
+                                        )
+
                             except Exception as e:
                                 message = '%s - %s couldnt revert to %s'%\
                                         (username, vm_name, snap_name)
                                 logger.error(message)
                                 passed = False
+                                results = add_results_non_json(session,
+                                        node_id=node.id, oper_id=oper.id,
+                                        result=passed, error=e,
+                                        results_received=datetime.now()
+                                        )
+
                         i = i + 1
                         if len(snapshot_list.childSnapshotList) > 0:
                             snapshot_list = snapshot_list.childSnapshotList[0]
@@ -654,6 +833,8 @@ class VmApi():
             message = '%s - insufficient parameters' % (username)
             logger.error(message)
             passed = False
+
+        session.close()
         if not passed:
             return({
                 'pass': passed,
