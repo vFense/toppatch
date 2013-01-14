@@ -121,18 +121,23 @@ class CreateSnapshotHandler(BaseHandler):
         result = None
         if vm_name and snap_name:
             vm = VmApi()
-            vm.connect()
-            if vm.logged_in:
-                result = vm.create_snapshot(vm_name=vm_name,
-                        snap_name=snap_name, memory=memory,
-                        quiesce=quiesce, snap_description=snap_description,
-                        username=username
-                        )
-                print result
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    result = vm.create_snapshot(vm_name=vm_name,
+                            snap_name=snap_name, memory=memory,
+                            quiesce=quiesce, snap_description=snap_description,
+                            username=username
+                            )
+                else:
+                    result = {
+                            'pass': False,
+                            'message': vm.error
+                            }
             else:
                 result = {
                         'pass': False,
-                        'message': vm.error
+                        'message': 'VMWare Config Does Not Exist'
                         }
         else:
             result = {
@@ -157,15 +162,21 @@ class RevertSnapshotHandler(BaseHandler):
         result = None
         if vm_name and snap_name:
             vm = VmApi()
-            vm.connect()
-            if vm.logged_in:
-                result = vm.revert_to_snapshot(vm_name=vm_name,
-                        snap_name=snap_name, username=username
-                        )
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    result = vm.revert_to_snapshot(vm_name=vm_name,
+                            snap_name=snap_name, username=username
+                            )
+                else:
+                    result = {
+                            'pass': False,
+                            'message': vm.error
+                            }
             else:
                 result = {
                         'pass': False,
-                        'message': vm.error
+                        'message': 'VMWare Config Does Nto Exists'
                         }
         else:
             result = {
@@ -187,16 +198,22 @@ class RemoveSnapshotHandler(BaseHandler):
         result = None
         if vm_name and snap_name and children:
             vm = VmApi()
-            vm.connect()
-            if vm.logged_in:
-                result = vm.remove_snapshot(vm_name=vm_name,
-                        snap_name=snap_name, remove_children=children,
-                        username=username
-                        )
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    result = vm.remove_snapshot(vm_name=vm_name,
+                            snap_name=snap_name, remove_children=children,
+                            username=username
+                            )
+                else:
+                    result = {
+                            'pass': False,
+                            'message': vm.error
+                            }
             else:
                 result = {
                         'pass': False,
-                        'message': vm.error
+                        'message': 'VMWare Config Does Not Exist'
                         }
         else:
             result = {
@@ -216,14 +233,20 @@ class RemoveAllSnapshotsHandler(BaseHandler):
         result = None
         if vm_name:
             vm = VmApi()
-            vm.connect()
-            if vm.logged_in:
-                result = vm.remove_all_snapshots(vm_name=vm_name,
-                        username=username)
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    result = vm.remove_all_snapshots(vm_name=vm_name,
+                            username=username)
+                else:
+                    result = {
+                            'pass': False,
+                            'message': vm.error
+                            }
             else:
                 result = {
                         'pass': False,
-                        'message': vm.error
+                        'message': 'VMWare Config Does Not Exist'
                         }
         else:
             result = {

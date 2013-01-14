@@ -11,7 +11,7 @@ from time import sleep
 
 class RvLogger():
     def __init__(self):
-        self.CONFIG_DIR = '/opt/TopPatch/tp/src/logger/'
+        self.CONFIG_DIR = '/opt/TopPatch/conf/'
         self.CONFIG_FILE = self.CONFIG_DIR+'logging.config'
         self.level = {
                  'CRITICAL': 'CRITICAL',
