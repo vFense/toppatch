@@ -1,5 +1,6 @@
 import tornado.httpserver
 import tornado.web
+import functools
 
 try: import simplejson as json
 except ImportError: import json
@@ -28,6 +29,10 @@ from jsonpickle import encode
 logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
+from redis import Redis
+from rq.queue import Queue
+redis_conn = Redis()
+q = Queue(connection=redis_conn)
 
 class GetVmwareConfigHandler(BaseHandler):
     @authenticated_request
@@ -124,11 +129,18 @@ class CreateSnapshotHandler(BaseHandler):
             if vm.config_exists:
                 vm.connect()
                 if vm.logged_in:
-                    result = vm.create_snapshot(vm_name=vm_name,
-                            snap_name=snap_name, memory=memory,
-                            quiesce=quiesce, snap_description=snap_description,
-                            username=username
-                            )
+                    tornado.ioloop.IOLoop.instance().add_callback(functools.partial(vm.create_snapshot,
+                            **{'vm_name':vm_name,
+                                'snap_name':snap_name,
+                                'memory':memory,
+                                'quiesce':quiesce,
+                                'snap_description':snap_description,
+                                'username':username}
+                            ))
+                    result = {
+                            'pass': True,
+                            'message': 'Create SnapShot Operation In Progress'
+                            }
                 else:
                     result = {
                             'pass': False,
@@ -165,9 +177,16 @@ class RevertSnapshotHandler(BaseHandler):
             if vm.config_exists:
                 vm.connect()
                 if vm.logged_in:
-                    result = vm.revert_to_snapshot(vm_name=vm_name,
-                            snap_name=snap_name, username=username
-                            )
+                    tornado.ioloop.IOLoop.instance().\
+                            add_callback(functools.partial(vm.revert_to_snapshot,
+                            **{'vm_name':vm_name,
+                                'snap_name':snap_name,
+                                'username':username}
+                            ))
+                    result = {
+                            'pass': True,
+                            'message': 'Revert To SnapShot Operation In Progress'
+                            }
                 else:
                     result = {
                             'pass': False,
@@ -201,10 +220,17 @@ class RemoveSnapshotHandler(BaseHandler):
             if vm.config_exists:
                 vm.connect()
                 if vm.logged_in:
-                    result = vm.remove_snapshot(vm_name=vm_name,
-                            snap_name=snap_name, remove_children=children,
-                            username=username
-                            )
+                    tornado.ioloop.IOLoop.instance().\
+                            add_callback(functools.partial(vm.remove_snapshot,
+                            **{'vm_name':vm_name,
+                                'snap_name':snap_name,
+                                'remove_children':children,
+                                'username':username}
+                            ))
+                    result = {
+                            'pass': True,
+                            'message': 'Revert To SnapShot Operation In Progress'
+                            }
                 else:
                     result = {
                             'pass': False,
@@ -236,8 +262,16 @@ class RemoveAllSnapshotsHandler(BaseHandler):
             if vm.config_exists:
                 vm.connect()
                 if vm.logged_in:
-                    result = vm.remove_all_snapshots(vm_name=vm_name,
-                            username=username)
+                    tornado.ioloop.IOLoop.instance().\
+                            add_callback(functools.partial(
+                                vm.remove_all_snapshots,
+                                **{'vm_name':vm_name,
+                                    'username':username}
+                                ))
+                    result = {
+                            'pass': True,
+                            'message': 'Removing All SnapShots In Progress'
+                            }
                 else:
                     result = {
                             'pass': False,
