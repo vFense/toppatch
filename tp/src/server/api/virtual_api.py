@@ -140,7 +140,7 @@ class CreateSnapshotHandler(BaseHandler):
                 else:
                     result = {
                             'pass': False,
-                            'message': vm.error
+                            'message': 'Vcenter is not responding'
                             }
             else:
                 result = {
@@ -186,7 +186,7 @@ class RevertSnapshotHandler(BaseHandler):
                 else:
                     result = {
                             'pass': False,
-                            'message': vm.error
+                            'message': 'Vcenter is not responding'
                             }
             else:
                 result = {
@@ -210,6 +210,8 @@ class RemoveSnapshotHandler(BaseHandler):
         vm_name = self.get_argument('vm_name', None)
         snap_name = self.get_argument('snap_name', None)
         children = self.get_argument('children', True)
+        if type(children) != bool:
+            children = return_bool(children)
         result = None
         if vm_name and snap_name and children:
             vm = VmApi()
@@ -227,10 +229,11 @@ class RemoveSnapshotHandler(BaseHandler):
                             'pass': True,
                             'message': 'Revert To SnapShot Operation In Progress'
                             }
+                    print result
                 else:
                     result = {
                             'pass': False,
-                            'message': vm.error
+                            'message': 'Vcenter is not responding'
                             }
             else:
                 result = {
@@ -240,10 +243,10 @@ class RemoveSnapshotHandler(BaseHandler):
         else:
             result = {
                     'pass': False,
-                    'message': 'Needed arguments: %s\n%s' % \
-                            ('vnname and snapname')
+                    'message': 'Missing Arguments'
                     }
         self.set_header('Content-Type', 'application/json')
+        print result
         self.write(json.dumps(result, indent=4))
 
 
@@ -271,7 +274,7 @@ class RemoveAllSnapshotsHandler(BaseHandler):
                 else:
                     result = {
                             'pass': False,
-                            'message': vm.error
+                            'message': 'Vcenter is not responding'
                             }
             else:
                 result = {
