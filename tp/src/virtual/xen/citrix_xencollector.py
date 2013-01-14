@@ -10,7 +10,7 @@ from models.virtualization import *
 
 from apscheduler.scheduler import Scheduler
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 tconvert = {

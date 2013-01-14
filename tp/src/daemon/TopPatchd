@@ -9,7 +9,7 @@ import signal
 import subprocess
 import logging, logging.config
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 PIDFILE = '/opt/TopPatch/var/tmp/process.pid'

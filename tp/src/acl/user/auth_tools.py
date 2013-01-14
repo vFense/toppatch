@@ -9,7 +9,7 @@ from models.tagging import *
 
 from sqlalchemy import or_
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 #def list_all_user_permission(session):

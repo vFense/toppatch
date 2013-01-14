@@ -13,7 +13,7 @@ HOST_SECTION = 'xen_host'
 CREDS_SECTION = 'xen_credentials'
 OPTIONS = 'options'
 HOSTS = 'hosts'
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 def cycle_validator(cycle):

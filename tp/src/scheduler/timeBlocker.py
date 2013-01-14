@@ -16,7 +16,7 @@ from db.update_table import add_time_block, remove_time_block
 from models.scheduler import *
 
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 def time_block_lister(session):

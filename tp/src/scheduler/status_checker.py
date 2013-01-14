@@ -10,7 +10,7 @@ from db.update_table import *
 
 from apscheduler.scheduler import Scheduler
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 ENGINE = init_engine()

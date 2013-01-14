@@ -162,7 +162,7 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
     def log_request(self, handler):
-        logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+        logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
         log = logging.getLogger('rvweb')
         log_method = log.debug
         if handler.get_status() <= 299:

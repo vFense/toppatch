@@ -8,11 +8,11 @@ from db.client import *
 from db.query_table import *
 
 
-CONFIG_DIR = '/opt/TopPatch/tp/src/emailer/'
+CONFIG_DIR = '/opt/TopPatch/conf/'
 CONFIG_FILE = 'mail.config'
 HOST_SECTION = 'host_config'
 CREDS_SECTION = 'host_credentials'
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 def cycle_validator(cycle):

@@ -9,12 +9,12 @@ from db.update_table import *
 from models.virtualization import *
 
 
-CONFIG_DIR = '/opt/TopPatch/tp/src/vmware/'
+CONFIG_DIR = '/opt/TopPatch/conf/'
 CONFIG_FILE = 'visdk.config'
 HOST_SECTION = 'vm_api_host'
 CREDS_SECTION = 'vm_credentials'
 OPTIONS = 'options'
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 ENGINE = init_engine()
 

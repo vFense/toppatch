@@ -25,7 +25,7 @@ from virtual.vmware.vmcollector import *
 
 from jsonpickle import encode
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 
@@ -113,7 +113,11 @@ class CreateSnapshotHandler(BaseHandler):
         snap_name = self.get_argument('snap_name', None)
         memory = self.get_argument('memory', False)
         quiesce = self.get_argument('quiesce', False)
-        snap_description = self.get_argument('snap_description', None)
+        if memory:
+            memory = return_bool(memory)
+        if quiesce:
+            quiesce = return_bool(quiesce)
+        snap_description = self.get_argument('snap_description', '')
         result = None
         if vm_name and snap_name:
             vm = VmApi()
@@ -124,6 +128,7 @@ class CreateSnapshotHandler(BaseHandler):
                         quiesce=quiesce, snap_description=snap_description,
                         username=username
                         )
+                print result
             else:
                 result = {
                         'pass': False,
@@ -139,6 +144,7 @@ class CreateSnapshotHandler(BaseHandler):
                             )
                     }
         self.set_header('Content-Type', 'application/json')
+        print result
         self.write(json.dumps(result, indent=4))
 
 

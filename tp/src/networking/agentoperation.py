@@ -12,7 +12,7 @@ from models.tagging import *
 #import gevent
 from threading import Thread
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 OPERATION = 'operation'
