@@ -68,10 +68,27 @@ define(
                     });
                 },
                 revertSnapshot: function (event) {
-                    var vmName, $button = $(event.currentTarget),
+                    var that = this,
+                        vmName = this.vm_name,
+                        $button = $(event.currentTarget),
+                        $alert = this.$el.find('div.alert'),
                         url = 'api/virtual/node/snapshots/revert',
-                        snapName = $button.attr('value');
-                    window.console.log(event);
+                        snapName = $button.attr('value'),
+                        params = {
+                            vm_name: vmName,
+                            snap_name: snapName
+                        };
+                    window.console.log(params);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            that.collection.fetch();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().html(json.message);
+                        }
+                    }).error(function (error) {
+                        $alert.removeClass('alert-success').addClass('alert-error').show().html('Error code: ' + error.status + ' - ' + error.statusText);
+                    });
                 },
                 removeSnapshot: function (event) {
                     var that = this,
@@ -96,9 +113,24 @@ define(
                     });
                 },
                 removeAll: function (event) {
-                    var vmName,
+                    var that = this,
+                        $alert = this.$el.find('div.alert'),
+                        vmName = this.vm_name,
+                        params = {
+                            vm_name: vmName
+                        },
                         url = 'api/virtual/node/snapshots/removeAll';
-                    window.console.log(event);
+                    window.console.log(params);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            that.collection.fetch();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().html(json.message);
+                        }
+                    }).error(function (error) {
+                        $alert.removeClass('alert-success').addClass('alert-error').show().html('Error code: ' + error.status + ' - ' + error.statusText);
+                    });
                 },
                 beforeRender: $.noop,
                 onRender: $.noop,
