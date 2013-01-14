@@ -29,10 +29,6 @@ from jsonpickle import encode
 logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
-from redis import Redis
-from rq.queue import Queue
-redis_conn = Redis()
-q = Queue(connection=redis_conn)
 
 class GetVmwareConfigHandler(BaseHandler):
     @authenticated_request
