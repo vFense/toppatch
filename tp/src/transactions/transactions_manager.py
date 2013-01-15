@@ -27,7 +27,7 @@ def retrieve_transactions(session, count=None, offset=None):
             if vm:
                 vm_name = vm.vm_name
         else:
-            vm = None
+            vm_name = None
         if trans[1][0].operation_received:
             operation_received = trans[1][0].operation_received.strftime("%m/%d/%Y %H:%M")
         if len(trans[1]) == 1:
@@ -38,7 +38,7 @@ def retrieve_transactions(session, count=None, offset=None):
                          "operations_received" : operation_received,
                          "node_id" : node_info.id,
                          "node_host_name" : node_info.host_name,
-                         "node_vm_name" : vm,
+                         "node_vm_name" : vm_name,
                          "node_ip_address" : node_info.ip_address,
                          "node_computer_name" : node_info.computer_name,
                          "results_received" : None,
@@ -55,7 +55,7 @@ def retrieve_transactions(session, count=None, offset=None):
                          "operations_received" : operation_received,
                          "node_id" : node_info.id,
                          "node_host_name" : node_info.host_name,
-                         "node_vm_name" : vm,
+                         "node_vm_name" : vm_name,
                          "node_ip_address" : node_info.ip_address,
                          "node_computer_name" : node_info.computer_name,
                          "results_received" : trans[1][1].results_received.strftime("%m/%d/%Y %H:%M"),
