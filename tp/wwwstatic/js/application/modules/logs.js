@@ -12,11 +12,11 @@ define(
                             return $(document.createElement(element));
                         },
                         $legend = newElement('div').addClass('legend row-fluid'),
-                        $operationSpan = newElement('strong').addClass('span1').html('Operation'),
+                        $operationSpan = newElement('strong').addClass('span2').html('Operation'),
                         $nodeSpan = newElement('strong').addClass('span2').html('Node'),
                         $ipSpan = newElement('strong').addClass('span2').html('IP'),
                         $userSpan = newElement('strong').addClass('span2').html('User'),
-                        $errorSpan = newElement('strong').addClass('span3'),
+                        $errorSpan = newElement('strong').addClass('span2').html('Error'),
                         $spanRight = newElement('strong').addClass('span2 inlineBlock alignRight').html('Date');
                     $legend.append($operationSpan, $nodeSpan, $ipSpan, $userSpan, $errorSpan, $spanRight);
                     this.$el.find('header').after($legend);
@@ -28,11 +28,11 @@ define(
                         result = item.get('result'),
 
                         $item       = newElement('div').addClass('item row-fluid'),
-                        $operation  = newElement('div').addClass('span1'),
+                        $operation  = newElement('div').addClass('span2'),
                         $node       = newElement('div').addClass('span2'),
                         $ip         = newElement('div').addClass('span2'),
                         $user       = newElement('div').addClass('span2'),
-                        $error      = newElement('div').addClass('span3').html('&nbsp;'),
+                        $error      = newElement('div').addClass('span2').html('&nbsp;'),
                         $date       = newElement('div').addClass('span2 alignRight');
 
                     $operation.append(item.get('operation').toUpperCase());
