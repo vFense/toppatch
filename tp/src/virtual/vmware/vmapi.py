@@ -609,7 +609,7 @@ class VmApi():
                 except Exception as e:
                     session.rollback()
                 for snap in snapshots:
-                    vm_snap = SnapShotsPerNode(node_id=vmnode.node_id,
+                    vm_snap = SnapshotsPerNode(node_id=vmnode.node_id,
                             name=snap['name'],
                             description=snap['description'],
                             order=snap['order_id'],
