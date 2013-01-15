@@ -227,7 +227,7 @@ class RemoveSnapshotHandler(BaseHandler):
                             ))
                     result = {
                             'pass': True,
-                            'message': 'Revert To SnapShot Operation In Progress'
+                            'message': 'Remove To SnapShot Operation In Progress'
                             }
                     print result
                 else:
