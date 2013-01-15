@@ -130,6 +130,9 @@ class Application(tornado.web.Application):
             (r"/api/vmware/config/create?", CreateVmwareConfigHandler),
             (r"/api/vmware/config/list?", GetVmwareConfigHandler),
             (r"/api/virtual/node/info?", GetNodeVmInfoHandler),
+            (r"/api/virtual/node/poweron?", PowerOnVmHandler),
+            (r"/api/virtual/node/shutdown?", ShutdownVmHandler),
+            (r"/api/virtual/node/reboot?", RebootVmHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.

@@ -611,19 +611,20 @@ class VmApi():
                 except Exception as e:
                     print e, 'failed trying to delete snaps'
                     session.rollback()
-                for snap in snapshots.values():
-                    vm_snap = SnapshotsPerNode(node_id=vmnode.node_id,
-                            name=snap['name'],
-                            description=snap['description'],
-                            order=int(snap['order_id']),
-                            created_time=snap['created'])
-                    try:
-                        session.add(vm_snap)
-                        session.commit()
-                    except Exception as e:
-                        print e, 'failed trying to add snaps'
-                        session.rollback()
-                        snaps_updated = False
+                if not 'pass' in snapshots:
+                    for snap in snapshots.values():
+                        vm_snap = SnapshotsPerNode(node_id=vmnode.node_id,
+                                name=snap['name'],
+                                description=snap['description'],
+                                order=int(snap['order_id']),
+                                created_time=snap['created'])
+                        try:
+                            session.add(vm_snap)
+                            session.commit()
+                        except Exception as e:
+                            print e, 'failed trying to add snaps'
+                            session.rollback()
+                            snaps_updated = False
 
         return(snaps_updated)
 

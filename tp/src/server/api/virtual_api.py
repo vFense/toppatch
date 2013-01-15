@@ -369,3 +369,59 @@ class GetNodeVmInfoHandler(BaseHandler):
                 }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(results, indent=4))
+
+
+
+class PowerOnVmHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        vm_name = self.get_argument('vm_name', None)
+        results = None
+        if vm_name:
+            results = poweron_on(vm_name=vm_name, username=username)
+        else:
+            results = {
+                     'pass': False,
+                     'message': 'Invalid Argument'
+                     }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
+
+
+class ShutdownVmHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        vm_name = self.get_argument('vm_name', None)
+        results = None
+        if vm_name:
+            results = shutdown_vm(vm_name=vm_name, username=username)
+        else:
+            results = {
+                     'pass': False,
+                     'message': 'Invalid Argument'
+                     }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
+
+
+
+class RebootVmHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        vm_name = self.get_argument('vm_name', None)
+        results = None
+        if vm_name:
+            results = reboot_vm(vm_name=vm_name, username=username)
+        else:
+            results = {
+                     'pass': False,
+                     'message': 'Invalid Argument'
+                     }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
+
+
+

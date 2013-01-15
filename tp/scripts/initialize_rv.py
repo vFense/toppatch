@@ -8,7 +8,7 @@ import logging, logging.config
 from db.client import *
 from user.manager import *
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 MYSQL_PATH = '/opt/TopPatch/mysql/current'
 PYTHON_PATH = '/opt/TopPatch/python/current'
