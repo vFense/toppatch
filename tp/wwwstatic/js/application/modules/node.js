@@ -50,6 +50,7 @@ define(
                     'click #editHost': 'showEditOperation',
                     'click button[name=showNetworking]': 'showNetworking',
                     'click button[name=agentOperation]': 'agentOperation',
+                    'click button[name=nodeOperation]': 'nodeOperation',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
@@ -117,6 +118,7 @@ define(
                             ]
                         });
                         vmData = this.vmcollection.toJSON()[0];
+                        this.vm_name = vmData ? vmData.vm_name : null;
                     } else {
                         this.navigation = new tabNav.View({
                             tabs: [
@@ -420,6 +422,7 @@ define(
                             node: nodeId,
                             operation: operation
                         };
+                    window.console.log(params);
                     $.post(url, params, function (json) {
                         window.console.log(json);
                         if (json.pass) {
@@ -428,6 +431,7 @@ define(
                             $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                         }
                     });
+                    /*
                     switch (operation) {
                     case 'start':
                         window.console.log('start here');
@@ -439,7 +443,31 @@ define(
                         window.console.log('restart here');
                         break;
                     }
-                    window.console.log(operation);
+                    */
+                },
+                nodeOperation: function (event) {
+                    var url, $button = $(event.currentTarget),
+                        $alert = this.$el.find('.alert').first(),
+                        operation = $button.data('value'),
+                        vmName = this.vm_name,
+                        params = {
+                            vm_name: vmName
+                        };
+                    window.console.log(params);
+                    if (operation === 'start') {
+                        url = 'api/virtual/node/poweron';
+                    } else if (operation === 'stop') {
+                        url = 'api/virtual/node/shutdown';
+                    } else if (operation === 'restart') {
+                        url = 'api/virtual/node/reboot';
+                    }
+                    $.post(url, params, function (json) {
+                        if (json.pass) {
+                            $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html(json.message);
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                        }
+                    });
                 },
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked'),

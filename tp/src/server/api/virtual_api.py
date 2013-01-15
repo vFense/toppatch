@@ -227,7 +227,7 @@ class RemoveSnapshotHandler(BaseHandler):
                             ))
                     result = {
                             'pass': True,
-                            'message': 'Revert To SnapShot Operation In Progress'
+                            'message': 'Remove To SnapShot Operation In Progress'
                             }
                     print result
                 else:
@@ -369,3 +369,101 @@ class GetNodeVmInfoHandler(BaseHandler):
                 }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(results, indent=4))
+
+
+
+class PowerOnVmHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        vm_name = self.get_argument('vm_name', None)
+        results = None
+        if vm_name:
+            vm = VmApi()
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    results = vm.poweron_on(vm_name=vm_name, username=username)
+                else:
+                    results = {
+                        'pass': False,
+                        'message': 'Vcenter is not accessible'
+                        }
+            else:
+                results = {
+                     'pass': False,
+                     'message': 'VMware is not configured in RV'
+                     }
+        else:
+            results = {
+                     'pass': False,
+                     'message': 'Invalid Argument'
+                     }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
+
+
+class ShutdownVmHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        vm_name = self.get_argument('vm_name', None)
+        results = None
+        if vm_name:
+            vm = VmApi()
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    results = vm.shutdown_vm(vm_name=vm_name, username=username)
+                else:
+                    results = {
+                        'pass': False,
+                        'message': 'Vcenter is not accessible'
+                        }
+            else:
+                results = {
+                     'pass': False,
+                     'message': 'VMware is not configured in RV'
+                     }
+        else:
+            results = {
+                     'pass': False,
+                     'message': 'Invalid Argument'
+                     }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
+
+
+
+class RebootVmHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        vm_name = self.get_argument('vm_name', None)
+        results = None
+        if vm_name:
+            vm = VmApi()
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    results = vm.reboot_vm(vm_name=vm_name, username=username)
+                else:
+                    results = {
+                        'pass': False,
+                        'message': 'Vcenter is not accessible'
+                        }
+            else:
+                results = {
+                     'pass': False,
+                     'message': 'VMware is not configured in RV'
+                     }
+        else:
+            results = {
+                     'pass': False,
+                     'message': 'Invalid Argument'
+                     }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
+
+
+

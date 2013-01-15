@@ -550,11 +550,6 @@ class VmApi():
                 try:
                     snap = vm.CreateSnapshot_Task(snap_name, memory,
                             quiesce, snap_description)
-                    snapshots = self.get_all_snapshots(vm_name=vm_name,
-                            username=username)
-                    snaps_updated = self.update_snapshots_for_vm(session,
-                            vm_name=vm_name, snapshots=snapshots,
-                            username=username)
                     message = '%s - snapshot %s created on %s'% \
                             (username, snap_name, vm_name)
                     logger.info(message)
@@ -563,6 +558,13 @@ class VmApi():
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
+                    snapshots = self.get_all_snapshots(vm_name=vm_name,
+                            username=username)
+                    print snapshots
+                    snaps_updated = self.update_snapshots_for_vm(session,
+                            vm_name=vm_name, snapshots=snapshots,
+                            username=username)
+                    print snaps_updated
 
                 except Exception as e:
                     message = '%s - error during snapshot creation:%s on %s'% \
@@ -591,12 +593,12 @@ class VmApi():
             'message': message
             })
 
-    def update_snapshots_for_vm(self, session, vm_name=None, snapshots=[],
+    def update_snapshots_for_vm(self, session, vm_name=None, snapshots=None,
             username='system_user'):
         session = validate_session(session)
         snaps_deleted = False
         snaps_updated = True
-        if len(snapshots) >0 and vm_name:
+        if snapshots and vm_name:
             vmnode = session.query(VirtualMachineInfo).\
                     filter(VirtualMachineInfo.vm_name == vm_name).first()
             if vmnode:
@@ -607,19 +609,22 @@ class VmApi():
                     session.commit()
                     snaps_deleted = True
                 except Exception as e:
+                    print e, 'failed trying to delete snaps'
                     session.rollback()
-                for snap in snapshots:
-                    vm_snap = SnapshotsPerNode(node_id=vmnode.node_id,
-                            name=snap['name'],
-                            description=snap['description'],
-                            order=snap['order_id'],
-                            created_time=snap['created'])
-                    try:
-                        session.add(vm_snap)
-                        session.commit()
-                    except Exception as e:
-                        session.rollback()
-                        snaps_updated = False
+                if not 'pass' in snapshots:
+                    for snap in snapshots.values():
+                        vm_snap = SnapshotsPerNode(node_id=vmnode.node_id,
+                                name=snap['name'],
+                                description=snap['description'],
+                                order=int(snap['order_id']),
+                                created_time=snap['created'])
+                        try:
+                            session.add(vm_snap)
+                            session.commit()
+                        except Exception as e:
+                            print e, 'failed trying to add snaps'
+                            session.rollback()
+                            snaps_updated = False
 
         return(snaps_updated)
 
