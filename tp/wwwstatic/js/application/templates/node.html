@@ -22,9 +22,18 @@
             <dt>Agent Status:</dt>
             <dd>
                 <% if (model['agent/status']) { %>
-                Running&nbsp;<i style="color: green;" class="icon-ok"></i>
+                Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;<i class="icon-stop-circle"></i> —
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="stop">
+                    <i title="Stop Agent" class="icon-off" style="color: #ff0000;"></i>
+                </button>
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="restart">
+                    <i title="Restart Agent" class="icon-refresh"></i>
+                </button>
                 <% } else { %>
-                Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i>
+                Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i> —
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="start">
+                    <i title="Start Agent" class="icon-play" style="color: green;"></i>
+                </button>
                 <% } %>
             </dd>
             <dt>Host Status:</dt>
@@ -78,6 +87,22 @@
         <% } %>
     </section>
 </article>
+<% if (model.is_vm && vm) { %>
+<article>
+    <header><strong>VMware Information</strong></header>
+    <section class="well well-small noMargin clearfix">
+        <dl>
+            <dt>VM Name:</dt><dd><%= vm.vm_name %></dd>
+            <dt>Hyper Visor IP:</dt><dd><%= vm.hyper_visor_ip || 'Not listed' %></dd>
+            <dt>Hyper Visor Name:</dt><dd><%= vm.hyper_visor_name %></dd>
+            <dt>Hyper Visor Type</dt><dd><%= vm.hyper_visor_type %></dd>
+            <dt>Hyper Visor Version:</dt><dd><%= vm.hyper_visor_version %></dd>
+            <dt>VM Tools Version:</dt><dd><%= vm.tools_version %></dd>
+            <dt>VM Tools status:</dt><dd><%= vm.tools_status %></dd>
+        </dl>
+    </section>
+</article>
+<% } %>
 <article class="alert alert-block fade in hide">
     <span class="help-inline"></span>
 </article><br>
