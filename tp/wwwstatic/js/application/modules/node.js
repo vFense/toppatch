@@ -42,6 +42,7 @@ define(
                     'click #editDisplay': 'showEditOperation',
                     'click #editHost': 'showEditOperation',
                     'click button[name=showNetworking]': 'showNetworking',
+                    'click button[name=agentOperation]': 'agentOperation',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
@@ -399,6 +400,37 @@ define(
                         $button.html('Show more');
                     }
                     $hidden.toggle();
+                },
+                agentOperation: function (event) {
+                    var $button = $(event.currentTarget),
+                        $alert = this.$el.find('.alert').first(),
+                        operation = $button.data('value'),
+                        url = 'submitForm',
+                        nodeId = this.id,
+                        params = {
+                            node: nodeId,
+                            operation: operation
+                        };
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html(json.message);
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                        }
+                    });
+                    switch (operation) {
+                    case 'start':
+                        window.console.log('start here');
+                        break;
+                    case 'stop':
+                        window.console.log('stop here');
+                        break;
+                    case 'restart':
+                        window.console.log('restart here');
+                        break;
+                    }
+                    window.console.log(operation);
                 },
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked'),

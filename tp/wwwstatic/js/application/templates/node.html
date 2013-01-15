@@ -22,9 +22,18 @@
             <dt>Agent Status:</dt>
             <dd>
                 <% if (model['agent/status']) { %>
-                Running&nbsp;<i style="color: green;" class="icon-ok"></i>
+                Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;<i class="icon-stop-circle"></i> —
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="stop">
+                    <i title="Stop Agent" class="icon-off" style="color: #ff0000;"></i>
+                </button>
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="restart">
+                    <i title="Restart Agent" class="icon-refresh"></i>
+                </button>
                 <% } else { %>
-                Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i>
+                Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i> —
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="start">
+                    <i title="Start Agent" class="icon-play" style="color: green;"></i>
+                </button>
                 <% } %>
             </dd>
             <dt>Host Status:</dt>
