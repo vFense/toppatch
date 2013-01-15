@@ -7,6 +7,18 @@ define(
                 baseUrl: 'api/transactions/getTransactions'
             }),
             View: Pager.View.extend({
+                beforeUpdateList: function () {
+                    var newElement = function (element) {
+                            return $(document.createElement(element));
+                        },
+                        $legend = newElement('div').addClass('legend row-fluid'),
+                        $operationSpan = newElement('span').addClass('span2').html('<strong>Operation</strong>'),
+                        $nodeSpan = newElement('span').addClass('span4').html('<strong>Node</strong>'),
+                        $errorSpan = newElement('span').addClass('span4'),
+                        $spanRight = newElement('span').addClass('span2 inlineBlock alignRight').html('<strong>Date</strong>');
+                    $legend.append($operationSpan, $nodeSpan, $errorSpan, $spanRight);
+                    this.$el.find('header').after($legend);
+                },
                 renderModel: function (item) {
                     var newElement = function (element) {
                             return $(document.createElement(element));
@@ -33,6 +45,8 @@ define(
                                 .html('Message').tooltip()
                         );
                     }
+
+                    this.$el.find('.legend').first().hide();
 
                     return $item.append($operation, $node, $error, $date);
                 }
