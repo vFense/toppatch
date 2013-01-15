@@ -49,13 +49,26 @@
                 <% } else if (model['host/status']) { %>
                 <form id="reboot-form">
                     Running &nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
+                    <% if(model.is_vm) { %>  —
+                        <button class="btn btn-link noPadding" name="nodeOperation" data-value="stop">
+                            <i title="Stop VM" class="icon-off" style="color: #ff0000;"></i>
+                        </button>
+                        <button class="btn btn-link noPadding" name="nodeOperation" data-value="restart">
+                            <i title="Restart VM" class="icon-refresh"></i>
+                        </button>
+                    <% } %>
                     <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>&nbsp;
                     Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
                     <input type="hidden" name="operation" value="reboot" />
                     <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
                 <% } else { %>
-                Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>
+                    Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>
+                    <% if(model.is_vm) { %>  —
+                        <button class="btn btn-link noPadding" name="nodeOperation" data-value="start">
+                            <i title="Start VM" class="icon-play" style="color: green;"></i>
+                        </button>
+                    <% } %>
                 <% } %>
             </dd>
         </dl>

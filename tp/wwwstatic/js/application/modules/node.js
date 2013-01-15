@@ -50,6 +50,7 @@ define(
                     'click #editHost': 'showEditOperation',
                     'click button[name=showNetworking]': 'showNetworking',
                     'click button[name=agentOperation]': 'agentOperation',
+                    'click button[name=nodeOperation]': 'nodeOperation',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
@@ -420,6 +421,7 @@ define(
                             node: nodeId,
                             operation: operation
                         };
+                    window.console.log(params);
                     $.post(url, params, function (json) {
                         window.console.log(json);
                         if (json.pass) {
@@ -428,6 +430,7 @@ define(
                             $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                         }
                     });
+                    /*
                     switch (operation) {
                     case 'start':
                         window.console.log('start here');
@@ -439,7 +442,17 @@ define(
                         window.console.log('restart here');
                         break;
                     }
-                    window.console.log(operation);
+                    */
+                },
+                nodeOperation: function (event) {
+                    var $button = $(event.currentTarget),
+                        $alert = this.$el.find('.alert').first(),
+                        operation = $button.data('value'),
+                        nodeId = this.id,
+                        params = {
+                            node: nodeId,
+                            operation: operation
+                        };
                 },
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked'),
