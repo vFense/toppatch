@@ -550,6 +550,11 @@ class VmApi():
                 try:
                     snap = vm.CreateSnapshot_Task(snap_name, memory,
                             quiesce, snap_description)
+                    snapshots = self.get_all_snapshots(vm_name=vm_name,
+                            username=username)
+                    snaps_updated = update_snapshots_for_vm(session,
+                            vm_name=vm_name, snapshots=snapshots,
+                            username=username)
                     message = '%s - snapshot %s created on %s'% \
                             (username, snap_name, vm_name)
                     logger.info(message)
@@ -585,6 +590,38 @@ class VmApi():
             'pass': passed,
             'message': message
             })
+
+    def update_snapshots_for_vm(self, session, vm_name=None, snapshots=[],
+            username='system_user'):
+        session = validate_session(session)
+        snaps_deleted = False
+        snaps_updated = True
+        if len(snapshots) >0 and vm_name:
+            vmnode = session.query(VirtualMachineInfo).\
+                    filter(VirtualMachineInfo.vm_name == vm_name).first()
+            if vmnode:
+                try:
+                    session.query(SnapshotsPerNode).\
+                            filter(SnapshotsPerNode.node_id == \
+                            vmnode.node_id).delete()
+                    session.commit()
+                    snaps_deleted = True
+                except Exception as e:
+                    session.rollback()
+                for snap in snapshots:
+                    vm_snap = SnapShotsPerNode(node_id=vmnode.node_id,
+                            name=snap['name'],
+                            description=snap['description'],
+                            order=snap['order_id'],
+                            created_time=snap['created'])
+                    try:
+                        session.add(vm_snap)
+                        session.commit()
+                    except Exception as e:
+                        session.rollback()
+                        snaps_updated = False
+
+        return(snaps_updated)
 
 
     def get_all_snapshots(self, vm_name=None, username='system_user'):
@@ -658,6 +695,11 @@ class VmApi():
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
+                    snapshots = self.get_all_snapshots(vm_name=vm_name,
+                            username=username)
+                    snaps_updated = update_snapshots_for_vm(session,
+                            vm_name=vm_name, snapshots=snapshots,
+                            username=username)
 
                 except Exception as e:
                     message = '%s - Snapshots werent deleted on %s' % \
@@ -746,6 +788,11 @@ class VmApi():
                             snapshot_list = snapshot_list.childSnapshotList[0]
                         else:
                             snapshot_list = None
+                    snapshots = self.get_all_snapshots(vm_name=vm_name,
+                            username=username)
+                    snaps_updated = update_snapshots_for_vm(session,
+                            vm_name=vm_name, snapshots=snapshots,
+                            username=username)
                 else:
                     message = '%s - Snapshots do not exist for %s' % \
                             (username, vm_name)
@@ -818,6 +865,11 @@ class VmApi():
                             snapshot_list = snapshot_list.childSnapshotList[0]
                         else:
                             snapshot_list = None
+                    snapshots = self.get_all_snapshots(vm_name=vm_name,
+                            username=username)
+                    snaps_updated = update_snapshots_for_vm(session,
+                            vm_name=vm_name, snapshots=snapshots,
+                            username=username)
                 else:
                     message = '%s - Snapshots do not exist for %s' % \
                             (username, vm_name)
