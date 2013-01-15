@@ -558,6 +558,13 @@ class VmApi():
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
+                    snapshots = self.get_all_snapshots(vm_name=vm_name,
+                            username=username)
+                    print snapshots
+                    snaps_updated = self.update_snapshots_for_vm(session,
+                            vm_name=vm_name, snapshots=snapshots,
+                            username=username)
+                    print snaps_updated
 
                 except Exception as e:
                     message = '%s - error during snapshot creation:%s on %s'% \
@@ -585,6 +592,41 @@ class VmApi():
             'pass': passed,
             'message': message
             })
+
+    def update_snapshots_for_vm(self, session, vm_name=None, snapshots=None,
+            username='system_user'):
+        session = validate_session(session)
+        snaps_deleted = False
+        snaps_updated = True
+        if snapshots and vm_name:
+            vmnode = session.query(VirtualMachineInfo).\
+                    filter(VirtualMachineInfo.vm_name == vm_name).first()
+            if vmnode:
+                try:
+                    session.query(SnapshotsPerNode).\
+                            filter(SnapshotsPerNode.node_id == \
+                            vmnode.node_id).delete()
+                    session.commit()
+                    snaps_deleted = True
+                except Exception as e:
+                    print e, 'failed trying to delete snaps'
+                    session.rollback()
+                if not 'pass' in snapshots:
+                    for snap in snapshots.values():
+                        vm_snap = SnapshotsPerNode(node_id=vmnode.node_id,
+                                name=snap['name'],
+                                description=snap['description'],
+                                order=int(snap['order_id']),
+                                created_time=snap['created'])
+                        try:
+                            session.add(vm_snap)
+                            session.commit()
+                        except Exception as e:
+                            print e, 'failed trying to add snaps'
+                            session.rollback()
+                            snaps_updated = False
+
+        return(snaps_updated)
 
 
     def get_all_snapshots(self, vm_name=None, username='system_user'):
@@ -658,6 +700,11 @@ class VmApi():
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
+                    snapshots = self.get_all_snapshots(vm_name=vm_name,
+                            username=username)
+                    snaps_updated = self.update_snapshots_for_vm(session,
+                            vm_name=vm_name, snapshots=snapshots,
+                            username=username)
 
                 except Exception as e:
                     message = '%s - Snapshots werent deleted on %s' % \
@@ -746,6 +793,11 @@ class VmApi():
                             snapshot_list = snapshot_list.childSnapshotList[0]
                         else:
                             snapshot_list = None
+                    snapshots = self.get_all_snapshots(vm_name=vm_name,
+                            username=username)
+                    snaps_updated = self.update_snapshots_for_vm(session,
+                            vm_name=vm_name, snapshots=snapshots,
+                            username=username)
                 else:
                     message = '%s - Snapshots do not exist for %s' % \
                             (username, vm_name)
@@ -818,6 +870,11 @@ class VmApi():
                             snapshot_list = snapshot_list.childSnapshotList[0]
                         else:
                             snapshot_list = None
+                    snapshots = self.get_all_snapshots(vm_name=vm_name,
+                            username=username)
+                    snaps_updated = self.update_snapshots_for_vm(session,
+                            vm_name=vm_name, snapshots=snapshots,
+                            username=username)
                 else:
                     message = '%s - Snapshots do not exist for %s' % \
                             (username, vm_name)

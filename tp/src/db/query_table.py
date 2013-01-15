@@ -304,6 +304,6 @@ def get_transactions(session, count=None, offset=0):
         unsorted_list.append((int(key), value))
     sorted_list = sorted(unsorted_list, key=lambda x: x[0])
     sorted_list.reverse()
-    return(sorted_list, total_count)
+    return(sorted_list, len(sorted_list))
 
 

@@ -111,9 +111,9 @@ class Application(tornado.web.Application):
             (r"/api/node/cleanData?", NodeCleanerHandler),
             (r"/api/ssl/nodeToggler?", NodeTogglerHandler),
             (r"/api/ssl/list.json/?", SslHandler),
-            (r"/api/acl/create?", AclModifierHandler),
-            (r"/api/acl/modify?", AclModifierHandler),
-            (r"/api/acl/delete?", AclModifierHandler),
+            (r"/api/acl/create?", AclCreateHandler),
+            (r"/api/acl/modify?", AclModifyHandler),
+            (r"/api/acl/delete?", AclDeleteHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/users/list?", ListUserHandler),
             (r"/api/users/create?", CreateUserHandler),
@@ -130,6 +130,9 @@ class Application(tornado.web.Application):
             (r"/api/vmware/config/create?", CreateVmwareConfigHandler),
             (r"/api/vmware/config/list?", GetVmwareConfigHandler),
             (r"/api/virtual/node/info?", GetNodeVmInfoHandler),
+            (r"/api/virtual/node/poweron?", PowerOnVmHandler),
+            (r"/api/virtual/node/shutdown?", ShutdownVmHandler),
+            (r"/api/virtual/node/reboot?", RebootVmHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.
