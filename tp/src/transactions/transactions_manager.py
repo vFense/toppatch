@@ -30,6 +30,7 @@ def retrieve_transactions(session, count=None, offset=None):
             vm_name = None
         if trans[1][0].operation_received:
             operation_received = trans[1][0].operation_received.strftime("%m/%d/%Y %H:%M")
+        print trans
         if len(trans[1]) == 1:
             final_msg['data'].append({
                          "operation" : trans[1][0].operation_type,
@@ -48,7 +49,7 @@ def retrieve_transactions(session, count=None, offset=None):
                          "reboot" : None,
                          "error" : None
                          })
-        elif len(trans[1]) == 2:
+        elif len(trans[1]) >= 2:
             final_msg['data'].append({
                          "operation" : trans[1][0].operation_type,
                          "username" : trans[1][0].username,
