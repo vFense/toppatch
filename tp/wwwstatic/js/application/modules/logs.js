@@ -12,11 +12,12 @@ define(
                             return $(document.createElement(element));
                         },
                         $legend = newElement('div').addClass('legend row-fluid'),
-                        $operationSpan = newElement('span').addClass('span2').html('<strong>Operation</strong>'),
-                        $nodeSpan = newElement('span').addClass('span4').html('<strong>Node</strong>'),
-                        $errorSpan = newElement('span').addClass('span4'),
-                        $spanRight = newElement('span').addClass('span2 inlineBlock alignRight').html('<strong>Date</strong>');
-                    $legend.append($operationSpan, $nodeSpan, $errorSpan, $spanRight);
+                        $operationSpan = newElement('strong').addClass('span2').html('Operation'),
+                        $nodeSpan = newElement('strong').addClass('span3').html('Node'),
+                        $userSpan = newElement('strong').addClass('span2').html('User'),
+                        $errorSpan = newElement('strong').addClass('span3'),
+                        $spanRight = newElement('strong').addClass('span2 inlineBlock alignRight').html('Date');
+                    $legend.append($operationSpan, $nodeSpan, $userSpan, $errorSpan, $spanRight);
                     this.$el.find('header').after($legend);
                 },
                 renderModel: function (item) {
@@ -27,12 +28,14 @@ define(
 
                         $item       = newElement('div').addClass('item row-fluid'),
                         $operation  = newElement('div').addClass('span2'),
-                        $node       = newElement('div').addClass('span4'),
-                        $error      = newElement('div').addClass('span4').html('&nbsp;'),
+                        $node       = newElement('div').addClass('span3'),
+                        $user       = newElement('div').addClass('span2'),
+                        $error      = newElement('div').addClass('span3').html('&nbsp;'),
                         $date       = newElement('div').addClass('span2 alignRight');
 
                     $operation.append(item.get('operation').toUpperCase());
                     $node.html(item.get('node_id'));
+                    $user.html(item.get('username'));
                     $date.html(item.get('operation_sent'));
 
                     if (_.isBoolean(result) && !result) {
@@ -48,7 +51,7 @@ define(
 
                     this.$el.find('.legend').first().hide();
 
-                    return $item.append($operation, $node, $error, $date);
+                    return $item.append($operation, $node, $user, $error, $date);
                 }
             })
         };
