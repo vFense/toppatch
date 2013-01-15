@@ -22,7 +22,7 @@
             <dt>Agent Status:</dt>
             <dd>
                 <% if (model['agent/status']) { %>
-                Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;<i class="icon-stop-circle"></i> —
+                Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp; —
                 <button class="btn btn-link noPadding" name="agentOperation" data-value="stop">
                     <i title="Stop Agent" class="icon-off" style="color: #ff0000;"></i>
                 </button>
@@ -48,10 +48,10 @@
                 </form>
                 <% } else if (model['host/status']) { %>
                 <form id="reboot-form">
-                    Running &nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
+                    Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
                     <% if(model.is_vm) { %>  —
                         <button class="btn btn-link noPadding" name="nodeOperation" data-value="stop">
-                            <i title="Stop VM" class="icon-off" style="color: #ff0000;"></i>
+                            <i title="Shut Down VM" class="icon-off" style="color: #ff0000;"></i>
                         </button>
                         <button class="btn btn-link noPadding" name="nodeOperation" data-value="restart">
                             <i title="Restart VM" class="icon-refresh"></i>
@@ -63,10 +63,10 @@
                     <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
                 <% } else { %>
-                    Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>
+                    Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i>
                     <% if(model.is_vm) { %>  —
                         <button class="btn btn-link noPadding" name="nodeOperation" data-value="start">
-                            <i title="Start VM" class="icon-play" style="color: green;"></i>
+                            <i title="Power On VM" class="icon-play" style="color: green;"></i>
                         </button>
                     <% } %>
                 <% } %>
