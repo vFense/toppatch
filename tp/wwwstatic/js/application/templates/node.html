@@ -87,6 +87,22 @@
         <% } %>
     </section>
 </article>
+<% if (model.is_vm && vm) { %>
+<article>
+    <header><strong>VMware Information</strong></header>
+    <section class="well well-small noMargin clearfix">
+        <dl>
+            <dt>VM Name:</dt><dd><%= vm.vm_name %></dd>
+            <dt>Hyper Visor IP:</dt><dd><%= vm.hyper_visor_ip || 'Not listed' %></dd>
+            <dt>Hyper Visor Name:</dt><dd><%= vm.hyper_visor_name %></dd>
+            <dt>Hyper Visor Type</dt><dd><%= vm.hyper_visor_type %></dd>
+            <dt>Hyper Visor Version:</dt><dd><%= vm.hyper_visor_version %></dd>
+            <dt>VM Tools Version:</dt><dd><%= vm.tools_version %></dd>
+            <dt>VM Tools status:</dt><dd><%= vm.tools_status %></dd>
+        </dl>
+    </section>
+</article>
+<% } %>
 <article class="alert alert-block fade in hide">
     <span class="help-inline"></span>
 </article><br>

@@ -15,6 +15,12 @@ define(
                     return this.baseUrl;
                 }
             }),
+            VmCollection: Backbone.Collection.extend({
+                baseUrl: 'api/virtual/node/info',
+                url: function () {
+                    return this.baseUrl + '?node_id=' + this.id;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     _.bindAll(this, 'createtag');
@@ -25,12 +31,13 @@ define(
 
                     this.id = this.collection.id;
 
-
-
                     this.tagcollection = new exports.TagCollection();
                     this.tagcollection.bind('reset', this.render, this);
                     this.tagcollection.fetch();
 
+                    this.vmcollection = new exports.VmCollection();
+                    this.vmcollection.bind('reset', this.render, this);
+                    this.vmcollection.fetch();
                 },
                 events: {
                     'click .disabled': function (e) { e.preventDefault(); },
@@ -97,7 +104,7 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var $header, $body,
+                    var $header, $body, vmData,
                         template = _.template(this.template),
                         data = this.collection.toJSON()[0],
                         tagData = this.tagcollection.toJSON();
@@ -109,17 +116,19 @@ define(
                                 {text: 'VMware', href: 'nodes/' + this.id + '/vmware'}
                             ]
                         });
+                        vmData = this.vmcollection.toJSON()[0];
                     } else {
                         this.navigation = new tabNav.View({
                             tabs: [
                                 {text: 'Patching', href: 'nodes/' + this.id + '/patches'}
                             ]
                         });
+                        vmData = null;
                     }
 
                     this.$el.html('');
 
-                    this.$el.append(template({model: data, tags: tagData}));
+                    this.$el.append(template({model: data, tags: tagData, vm: vmData}));
 
                     $header = this.$el.find('.tab-header');
                     $header.addClass('tabs').html(this.navigation.render().el);
