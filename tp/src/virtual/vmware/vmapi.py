@@ -703,7 +703,7 @@ class VmApi():
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
-                    redis.publish('rv', msg)
+                    redis.publish('rv', message)
                     snapshots = self.get_all_snapshots(vm_name=vm_name,
                             username=username)
                     snaps_updated = self.update_snapshots_for_vm(session,
@@ -711,6 +711,7 @@ class VmApi():
                             username=username)
 
                 except Exception as e:
+                    print e
                     message = '%s - Snapshots werent deleted on %s' % \
                             (username, vm_name)
                     logger.error(message)
