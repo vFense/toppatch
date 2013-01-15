@@ -612,7 +612,7 @@ class VmApi():
                     vm_snap = SnapshotsPerNode(node_id=vmnode.node_id,
                             name=snap['name'],
                             description=snap['description'],
-                            order=snap['order_id'],
+                            order=int(snap['order_id']),
                             created_time=snap['created'])
                     try:
                         session.add(vm_snap)
