@@ -118,6 +118,7 @@ define(
                             ]
                         });
                         vmData = this.vmcollection.toJSON()[0];
+                        this.vm_name = vmData ? vmData.vm_name : null;
                     } else {
                         this.navigation = new tabNav.View({
                             tabs: [
@@ -445,14 +446,28 @@ define(
                     */
                 },
                 nodeOperation: function (event) {
-                    var $button = $(event.currentTarget),
+                    var url, $button = $(event.currentTarget),
                         $alert = this.$el.find('.alert').first(),
                         operation = $button.data('value'),
-                        nodeId = this.id,
+                        vmName = this.vm_name,
                         params = {
-                            node: nodeId,
-                            operation: operation
+                            vm_name: vmName
                         };
+                    window.console.log(params);
+                    if (operation === 'start') {
+                        url = 'api/virtual/node/poweron';
+                    } else if (operation === 'stop') {
+                        url = 'api/virtual/node/shutdown';
+                    } else if (operation === 'restart') {
+                        url = 'api/virtual/node/reboot';
+                    }
+                    $.post(url, params, function (json) {
+                        if (json.pass) {
+                            $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html(json.message);
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                        }
+                    });
                 },
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked'),
