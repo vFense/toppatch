@@ -552,7 +552,7 @@ class VmApi():
                             quiesce, snap_description)
                     snapshots = self.get_all_snapshots(vm_name=vm_name,
                             username=username)
-                    snaps_updated = update_snapshots_for_vm(session,
+                    snaps_updated = self.update_snapshots_for_vm(session,
                             vm_name=vm_name, snapshots=snapshots,
                             username=username)
                     message = '%s - snapshot %s created on %s'% \
@@ -697,7 +697,7 @@ class VmApi():
                             )
                     snapshots = self.get_all_snapshots(vm_name=vm_name,
                             username=username)
-                    snaps_updated = update_snapshots_for_vm(session,
+                    snaps_updated = self.update_snapshots_for_vm(session,
                             vm_name=vm_name, snapshots=snapshots,
                             username=username)
 
@@ -790,7 +790,7 @@ class VmApi():
                             snapshot_list = None
                     snapshots = self.get_all_snapshots(vm_name=vm_name,
                             username=username)
-                    snaps_updated = update_snapshots_for_vm(session,
+                    snaps_updated = self.update_snapshots_for_vm(session,
                             vm_name=vm_name, snapshots=snapshots,
                             username=username)
                 else:
@@ -867,7 +867,7 @@ class VmApi():
                             snapshot_list = None
                     snapshots = self.get_all_snapshots(vm_name=vm_name,
                             username=username)
-                    snaps_updated = update_snapshots_for_vm(session,
+                    snaps_updated = self.update_snapshots_for_vm(session,
                             vm_name=vm_name, snapshots=snapshots,
                             username=username)
                 else:
