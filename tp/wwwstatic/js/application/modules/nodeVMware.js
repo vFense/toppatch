@@ -82,7 +82,7 @@ define(
                     $.post(url, params, function (json) {
                         window.console.log(json);
                         if (json.pass) {
-                            that.collection.fetch();
+                            $alert.removeClass('alert-error').addClass('alert-success').show().html(json.message);
                         } else {
                             $alert.removeClass('alert-success').addClass('alert-error').show().html(json.message);
                         }
@@ -104,7 +104,7 @@ define(
                     $.post(url, params, function (json) {
                         window.console.log(json);
                         if (json.pass) {
-                            that.collection.fetch();
+                            $alert.removeClass('alert-error').addClass('alert-success').show().html(json.message);
                         } else {
                             $alert.removeClass('alert-success').addClass('alert-error').show().html(json.message);
                         }
@@ -124,7 +124,7 @@ define(
                     $.post(url, params, function (json) {
                         window.console.log(json);
                         if (json.pass) {
-                            that.collection.fetch();
+                            $alert.removeClass('alert-error').addClass('alert-success').show().html(json.message);
                         } else {
                             $alert.removeClass('alert-success').addClass('alert-error').show().html(json.message);
                         }
