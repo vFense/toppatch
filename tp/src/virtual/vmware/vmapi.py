@@ -7,7 +7,10 @@ from db.client import *
 from db.query_table import *
 from db.update_table import *
 from models.virtualization import *
+import tornadoredis
 
+redis = tornadoredis.Client()
+redis.connect()
 
 CONFIG_DIR = '/opt/TopPatch/conf/'
 CONFIG_FILE = 'visdk.config'
@@ -553,6 +556,7 @@ class VmApi():
                     message = '%s - snapshot %s created on %s'% \
                             (username, snap_name, vm_name)
                     logger.info(message)
+                    redis.publish('rv', 'snap created')
                     passed = True
                     results = add_results_non_json(session, node_id=node.id,
                             oper_id=oper.id, result=passed,
@@ -560,11 +564,9 @@ class VmApi():
                             )
                     snapshots = self.get_all_snapshots(vm_name=vm_name,
                             username=username)
-                    print snapshots
                     snaps_updated = self.update_snapshots_for_vm(session,
                             vm_name=vm_name, snapshots=snapshots,
                             username=username)
-                    print snaps_updated
 
                 except Exception as e:
                     message = '%s - error during snapshot creation:%s on %s'% \
@@ -625,6 +627,7 @@ class VmApi():
                             print e, 'failed trying to add snaps'
                             session.rollback()
                             snaps_updated = False
+                    redis.publish('rv', 'SnapShots Updated')
 
         return(snaps_updated)
 
@@ -700,6 +703,7 @@ class VmApi():
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
+                    redis.publish('rv', msg)
                     snapshots = self.get_all_snapshots(vm_name=vm_name,
                             username=username)
                     snaps_updated = self.update_snapshots_for_vm(session,
@@ -793,6 +797,7 @@ class VmApi():
                             snapshot_list = snapshot_list.childSnapshotList[0]
                         else:
                             snapshot_list = None
+                    redis.publish('rv', 'snaps deleted')
                     snapshots = self.get_all_snapshots(vm_name=vm_name,
                             username=username)
                     snaps_updated = self.update_snapshots_for_vm(session,
@@ -875,6 +880,7 @@ class VmApi():
                     snaps_updated = self.update_snapshots_for_vm(session,
                             vm_name=vm_name, snapshots=snapshots,
                             username=username)
+                    redis.publish('rv', message)
                 else:
                     message = '%s - Snapshots do not exist for %s' % \
                             (username, vm_name)

@@ -15,7 +15,6 @@ from models.packages import *
 from models.node import *
 from models.ssl import *
 from models.scheduler import *
-from server.handlers import SendToSocket
 from db.client import *
 from utils.common import *
 from node.nodeManager import *

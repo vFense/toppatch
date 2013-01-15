@@ -1648,5 +1648,4 @@ def add_results(session, data, username='system_user'):
             update_node_stats(session, node_id)
             update_network_stats(session)
             session.commit()
-            TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
             return results
