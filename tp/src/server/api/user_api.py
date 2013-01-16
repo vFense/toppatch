@@ -14,7 +14,6 @@ from models.packages import *
 from models.node import *
 from models.ssl import *
 from models.scheduler import *
-from server.handlers import SendToSocket
 from db.client import *
 from scheduler.jobManager import job_lister, remove_job
 from scheduler.timeBlocker import *
@@ -252,15 +251,13 @@ class DeleteGroupHandler(BaseHandler):
         self.write(json.dumps(result, indent=4))
 
 
-
-class AclModifierHandler(BaseHandler):
+class AclHandler(BaseHandler):
     @authenticated_request
-    def post(self):
+    def post(self, acl_action=None):
         user_name = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         acl_type = self.get_argument('acl_type', None)
-        acl_action = self.get_argument('acl_action', None)
         acl = self.get_argument('acl', None)
         result = None
         print acl
@@ -279,4 +276,22 @@ class AclModifierHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+
+
+class AclModifyHandler(AclHandler):
+    @authenticated_request
+    def post(self):
+        super(AclModifyHandler,self).post('modify')
+
+
+class AclCreateHandler(AclHandler):
+    @authenticated_request
+    def post(self):
+        super(AclCreateHandler,self).post(acl_action='create')
+
+
+class AclDeleteHandler(AclHandler):
+    @authenticated_request
+    def post(self):
+        super(AclDeleteHandler,self).post(acl_action='delete')
 

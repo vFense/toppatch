@@ -15,7 +15,6 @@ from models.packages import *
 from models.node import *
 from models.ssl import *
 from models.scheduler import *
-from server.handlers import SendToSocket
 from db.client import *
 from utils.common import *
 from node.nodeManager import *
@@ -379,7 +378,21 @@ class PowerOnVmHandler(BaseHandler):
         vm_name = self.get_argument('vm_name', None)
         results = None
         if vm_name:
-            results = poweron_on(vm_name=vm_name, username=username)
+            vm = VmApi()
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    results = vm.poweron_on(vm_name=vm_name, username=username)
+                else:
+                    results = {
+                        'pass': False,
+                        'message': 'Vcenter is not accessible'
+                        }
+            else:
+                results = {
+                     'pass': False,
+                     'message': 'VMware is not configured in RV'
+                     }
         else:
             results = {
                      'pass': False,
@@ -396,7 +409,21 @@ class ShutdownVmHandler(BaseHandler):
         vm_name = self.get_argument('vm_name', None)
         results = None
         if vm_name:
-            results = shutdown_vm(vm_name=vm_name, username=username)
+            vm = VmApi()
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    results = vm.shutdown_vm(vm_name=vm_name, username=username)
+                else:
+                    results = {
+                        'pass': False,
+                        'message': 'Vcenter is not accessible'
+                        }
+            else:
+                results = {
+                     'pass': False,
+                     'message': 'VMware is not configured in RV'
+                     }
         else:
             results = {
                      'pass': False,
@@ -414,7 +441,21 @@ class RebootVmHandler(BaseHandler):
         vm_name = self.get_argument('vm_name', None)
         results = None
         if vm_name:
-            results = reboot_vm(vm_name=vm_name, username=username)
+            vm = VmApi()
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    results = vm.reboot_vm(vm_name=vm_name, username=username)
+                else:
+                    results = {
+                        'pass': False,
+                        'message': 'Vcenter is not accessible'
+                        }
+            else:
+                results = {
+                     'pass': False,
+                     'message': 'VMware is not configured in RV'
+                     }
         else:
             results = {
                      'pass': False,

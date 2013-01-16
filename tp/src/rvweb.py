@@ -111,9 +111,9 @@ class Application(tornado.web.Application):
             (r"/api/node/cleanData?", NodeCleanerHandler),
             (r"/api/ssl/nodeToggler?", NodeTogglerHandler),
             (r"/api/ssl/list.json/?", SslHandler),
-            (r"/api/acl/create?", AclModifierHandler),
-            (r"/api/acl/modify?", AclModifierHandler),
-            (r"/api/acl/delete?", AclModifierHandler),
+            (r"/api/acl/create?", AclCreateHandler),
+            (r"/api/acl/modify?", AclModifyHandler),
+            (r"/api/acl/delete?", AclDeleteHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/users/list?", ListUserHandler),
             (r"/api/users/create?", CreateUserHandler),
@@ -185,19 +185,6 @@ class Application(tornado.web.Application):
         log_method(log_message)
 
 
-class HelloWorldProtocol(Protocol):
-    def connectionMade(self):
-        SendToSocket("message")
-
-class HelloWorldFactory(Factory):
-    protocol = HelloWorldProtocol
-
-class ThreadClass(threading.Thread):
-    def run(self):
-        reactor.listenTCP(8080, HelloWorldFactory())
-        reactor.run(installSignalHandlers=0)
-
-
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
@@ -207,9 +194,6 @@ if __name__ == '__main__':
             "keyfile": os.path.join("/opt/TopPatch/tp/data/ssl/", "server.key"),
             })
     https_server.listen(options.port)
-    socketListener = ThreadClass()
-    socketListener.daemon = True
-    socketListener.start()
     tornado.ioloop.IOLoop.instance().start()
 
 
