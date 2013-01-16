@@ -7,7 +7,7 @@ define(
                 baseUrl: 'api/transactions/getTransactions'
             }),
             View: Pager.View.extend({
-                beforeUpdateList: function () {
+                onRender: function () {
                     var newElement = function (element) {
                             return $(document.createElement(element));
                         },
@@ -52,27 +52,9 @@ define(
                         );
                     }
 
-                    this.$el.find('.legend').first().hide();
-
                     return $item.append($operation, $node, $ip, $user, $error, $date);
                 },
                 displayName: function (item) {
-                    /*
-                     "username": "admin",
-                     "results_received": null,
-                     "operations_received": null,
-                     "node_id": 1,
-                     "result": null,
-                     "operation": "start",
-                     "node_vm_name": "Zenoss",
-                     "node_ip_address": "10.0.0.103",
-                     "node_host_name": null,
-                     "reboot": null,
-                     "operation_sent": "01/14/2013 22:39",
-                     "patch_id": null,
-                     "error": null,
-                     "node_computer_name": null
-                     */
                     return item.get('node_vm_name') ||
                         item.get('node_display_name') ||
                         item.get('node_computer_name') ||
