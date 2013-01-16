@@ -20,7 +20,7 @@ define(
                         this.myClass = "span";
                         this.tempData = "";
                         this.title = "Default";
-                        this.spanCounter = 12;
+                        this.spanCounter = 0;
                         this.properties = {
                             widgetName: "widget1",
                             currentWidget: "existing",
@@ -364,7 +364,10 @@ define(
                          d3.select(selection).datum(data).call(lineChart);
                     }, */
                     generateWidgets: function () {
-                        var i, variables, template, $rowDiv,
+                        var i, variables, template, $rowDiv, check,
+                            widgetCounter = 0,
+                            rowArray = [],
+                            arrayOfRows = [],
                             that = this,
                             widgets = window.User.get('widgets').graph,
                             settings = window.User.get('widgets'),
@@ -372,27 +375,44 @@ define(
                                 return $(document.createElement(element));
                             };
                         for (i = 0; i < widgets.length; i += 1) {
-                            if (that.spanCounter === 12) {
-                                $rowDiv = newElement('div').addClass('row-fluid clearfix movable');
-                            }
-                            variables = {
-                                widget: "widget" + (i + 1),
-                                span: "span" + settings.spans[i],
-                                graphcontainer: "graphcontainer" + (i + 1),
-                                menu: "menu" + (i + 1),
-                                graph: "graph" + (i + 1),
-                                title: settings.titles[i],
-                                graphType: widgets[i]
-                            };
-                            template = _.template($("#widget_template").html(), variables);
-                            $rowDiv.append(template);
-                            that.spanCounter -= settings.spans[i];
-                            window.console.log(that.spanCounter - settings.spans[i + 1]);
-                            if (that.spanCounter - settings.spans[i + 1] < 0 || isNaN(that.spanCounter - settings.spans[i + 1])) {
-                                that.spanCounter = 12;
-                                that.$el.append($rowDiv);
+                            check = that.spanCounter + settings.spans[i];
+                            if (check < 12) {
+                                rowArray.push(settings.spans[i]);
+                                that.spanCounter += settings.spans[i];
+                                if (check + settings.spans[i + 1] > 12 || isNaN(settings.spans[i + 1])) {
+                                    arrayOfRows.push(rowArray);
+                                }
+                            } else if (check === 12) {
+                                rowArray.push(settings.spans[i]);
+                                that.spanCounter = 0;
+                                arrayOfRows.push(rowArray);
+                                rowArray = [];
+                            } else if (check > 12) {
+                                rowArray = [];
+                                rowArray.push(settings.spans[i]);
+                                arrayOfRows.push(rowArray);
+                                that.spanCounter = 0;
                             }
                         }
+                        _.each(arrayOfRows, function (row) {
+                            $rowDiv = newElement('div').addClass('row-fluid clearfix movable');
+                            _.each(row, function (widget) {
+                                variables = {
+                                    widget: "widget" + (widgetCounter + 1),
+                                    span: "span" + settings.spans[widgetCounter],
+                                    graphcontainer: "graphcontainer" + (widgetCounter + 1),
+                                    menu: "menu" + (widgetCounter + 1),
+                                    graph: "graph" + (widgetCounter + 1),
+                                    title: settings.titles[widgetCounter],
+                                    graphType: widgets[widgetCounter]
+                                };
+                                template = _.template($("#widget_template").html(), variables);
+                                $rowDiv.append(template);
+                                widgetCounter += 1;
+                            });
+                            that.$el.append($rowDiv);
+                            that.counter = widgetCounter  + 1;
+                        });
                         this.populateWidgets();
                     },
                     populateWidgets: function () {
