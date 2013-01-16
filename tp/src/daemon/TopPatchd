@@ -78,6 +78,7 @@ def redis_start(redis_server, redis_pidfile):
     start_cmd = '%s start' % redis_server
     start = shlex.split(start_cmd)
     subprocess.call(start, stdout=subprocess.PIPE)
+    time.sleep(1)
     redis_pid = open(REDIS_PIDFILE, 'r',).read()
     return redis_pid
 
@@ -152,6 +153,13 @@ def TopPatch_stop():
     else:
         msg = "%s is not running. Stopping Failed..." \
                 % ('MySQL Database')
+        sys.stderr.write(msg+'\n')
+        logger.error(msg)
+    if os.path.exists(REDIS_PIDFILE):
+        redis_stop(REDIS)
+    else:
+        msg = "%s is not running. Stopping Failed..." \
+                % ('Redis')
         sys.stderr.write(msg+'\n')
         logger.error(msg)
     print 'TopPatch Server has been stopped now !!!'
