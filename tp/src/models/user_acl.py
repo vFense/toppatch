@@ -18,7 +18,7 @@ class GlobalUserAccess(Base):
     user_id = Column(Integer, ForeignKey('users.id'), unique=True)
     is_admin = Column(BOOLEAN, nullable=False)         # True = Up, False = Down
     is_global = Column(BOOLEAN, nullable=False)         # True = Up, False = Down
-    read_only = Column(BOOLEAN, nullable=False)          # True = Up, False = Down
+    allow_read = Column(BOOLEAN, nullable=False)          # True = Up, False = Down
     allow_install = Column(BOOLEAN, nullable=False)       # True = Up, False = Down
     allow_uninstall = Column(BOOLEAN, nullable=False)      # True = Up, False = Down
     allow_reboot = Column(BOOLEAN, nullable=False)          # True = Up, False = Down
@@ -29,19 +29,21 @@ class GlobalUserAccess(Base):
     allow_snapshot_revert = Column(BOOLEAN, nullable=False) # True = Up, False = Down
     allow_tag_creation = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     allow_tag_removal = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
+    deny_all = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     date_created = Column(DATETIME, nullable=True)
     date_modified = Column(DATETIME, nullable=True)
     def __init__(self, user_id=None, is_admin=False, is_global=True,
-            read_only=False, allow_install=False, allow_uninstall=False,
+            allow_read=False, allow_install=False, allow_uninstall=False,
             allow_reboot=False, allow_schedule=False, allow_wol=False,
             allow_snapshot_creation=False, allow_snapshot_removal=False,
             allow_snapshot_revert=False, allow_tag_creation=False,
-            allow_tag_removal=False, date_created=None, date_modified=None
+            allow_tag_removal=False, deny_all=False, date_created=None,
+            date_modified=None
             ):
         self.user_id = user_id
         self.is_admin = is_admin
         self.is_global = is_global
-        self.read_only = read_only
+        self.allow_read = allow_read
         self.allow_install = allow_install
         self.allow_uninstall = allow_uninstall
         self.allow_reboot = allow_reboot
@@ -52,17 +54,19 @@ class GlobalUserAccess(Base):
         self.allow_snapshot_revert = allow_snapshot_revert
         self.allow_tag_creation = allow_tag_creation
         self.allow_tag_removal = allow_tag_removal
+        self.deny_all = deny_all
         self.date_created = date_created
         self.date_modified = date_modified
     def __repr__(self):
-        return "<GlobalUserAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<GlobalUserAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.user_id, self.is_admin, self.is_global,
-                self.read_only, self.allow_install, self.allow_uninstall,
+                self.allow_read, self.allow_install, self.allow_uninstall,
                 self.allow_reboot, self.allow_schedule, self.allow_wol,
                 self.allow_snapshot_creation, self.allow_snapshot_removal,
                 self.allow_snapshot_revert, self.allow_tag_creation,
-                self.allow_tag_removal, self.date_created, self.date_modified
+                self.allow_tag_removal, self.deny_all, self.date_created,
+                self.date_modified
                 )
 
 
@@ -80,7 +84,7 @@ class GlobalGroupAccess(Base):
     group_id = Column(INTEGER, ForeignKey('groups.id'), unique=True)
     is_admin = Column(BOOLEAN, nullable=False)         # True = Up, False = Down
     is_global = Column(BOOLEAN, nullable=False)         # True = Up, False = Down
-    read_only = Column(BOOLEAN, nullable=False)          # True = Up, False = Down
+    allow_read = Column(BOOLEAN, nullable=False)          # True = Up, False = Down
     allow_install = Column(BOOLEAN, nullable=False)       # True = Up, False = Down
     allow_uninstall = Column(BOOLEAN, nullable=False)      # True = Up, False = Down
     allow_reboot = Column(BOOLEAN, nullable=False)          # True = Up, False = Down
@@ -91,19 +95,21 @@ class GlobalGroupAccess(Base):
     allow_snapshot_revert = Column(BOOLEAN, nullable=False) # True = Up, False = Down
     allow_tag_creation = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     allow_tag_removal = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
+    deny_all = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     date_created = Column(DATETIME, nullable=True)
     date_modified = Column(DATETIME, nullable=True)
     def __init__(self, group_id=None, is_admin=False, is_global=True,
-            read_only=False, allow_install=False, allow_uninstall=False,
+            allow_read=False, allow_install=False, allow_uninstall=False,
             allow_reboot=False, allow_schedule=False, allow_wol=False,
             allow_snapshot_creation=False, allow_snapshot_removal=False,
             allow_snapshot_revert=False, allow_tag_creation=False,
-            allow_tag_removal=False, date_created=None, date_modified=None
+            allow_tag_removal=False, deny_all=False,date_created=None,
+            date_modified=None
             ):
         self.group_id = group_id
         self.is_admin = is_admin
         self.is_global = is_global
-        self.read_only = read_only
+        self.allow_read = allow_read
         self.allow_install = allow_install
         self.allow_uninstall = allow_uninstall
         self.allow_reboot = allow_reboot
@@ -114,17 +120,19 @@ class GlobalGroupAccess(Base):
         self.allow_snapshot_revert = allow_snapshot_revert
         self.allow_tag_creation = allow_tag_creation
         self.allow_tag_removal = allow_tag_removal
+        self.deny_all = deny_all
         self.date_created = date_created
         self.date_modified = date_modified
     def __repr__(self):
-        return "<GlobalGroupAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<GlobalGroupAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.group_id, self.is_admin, self.is_global,
-                self.read_only, self.allow_install, self.allow_uninstall,
+                self.allow_read, self.allow_install, self.allow_uninstall,
                 self.allow_reboot, self.allow_schedule, self.allow_wol,
                 self.allow_snapshot_creation, self.allow_snapshot_removal,
                 self.allow_snapshot_revert, self.allow_tag_creation,
-                self.allow_tag_removal, self.date_created,self.date_modified
+                self.allow_tag_removal, self.deny_all, self.date_created,
+                self.date_modified
                 )
 
 
@@ -143,6 +151,7 @@ class TagUserAccess(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     tag_id = Column(INTEGER(unsigned=True),
             ForeignKey("tag_info.id"))
+    allow_read = Column(BOOLEAN, nullable=False)          # True = Up, False = Down
     allow_install = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     allow_uninstall = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     allow_reboot = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
@@ -155,7 +164,7 @@ class TagUserAccess(Base):
     allow_tag_removal = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     date_created = Column(DATETIME, nullable=True)
     date_modified = Column(DATETIME, nullable=True)
-    def __init__(self, tag_id, user_id, allow_install=False,
+    def __init__(self, tag_id, user_id, allow_read=False, allow_install=False,
             allow_uninstall=False, allow_reboot=False, allow_schedule=False,
             allow_wol=False, allow_snapshot_creation=False,
             allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -164,6 +173,7 @@ class TagUserAccess(Base):
             ):
         self.tag_id = tag_id
         self.user_id = user_id
+        self.allow_read = allow_read
         self.allow_install = allow_install
         self.allow_uninstall = allow_uninstall
         self.allow_reboot = allow_reboot
@@ -177,9 +187,9 @@ class TagUserAccess(Base):
         self.date_created = date_created
         self.date_modified = date_modified
     def __repr__(self):
-        return "<TagUserAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<TagUserAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.tag_id, self.user_id, self.allow_install,
+                self.tag_id, self.user_id, self.allow_read, self.allow_install,
                 self.allow_uninstall, self.allow_reboot,
                 self.allow_schedule, self.allow_wol,
                 self.allow_snapshot_creation,
@@ -204,6 +214,7 @@ class TagGroupAccess(Base):
     tag_id = Column(INTEGER(unsigned=True),
             ForeignKey("tag_info.id"))
     group_id = Column(INTEGER, ForeignKey('groups.id'))
+    allow_read = Column(BOOLEAN, nullable=False)          # True = Up, False = Down
     allow_install = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     allow_uninstall = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     allow_reboot = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
@@ -216,8 +227,9 @@ class TagGroupAccess(Base):
     allow_tag_removal = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     date_created = Column(DATETIME, nullable=True)
     date_modified = Column(DATETIME, nullable=True)
-    def __init__(self, tag_id, group_id=None, allow_install=False,
-            allow_uninstall=False, allow_reboot=False, allow_schedule=False,
+    def __init__(self, tag_id, group_id=None, allow_read=False,
+            allow_install=False, allow_uninstall=False,
+            allow_reboot=False, allow_schedule=False,
             allow_wol=False, allow_snapshot_creation=False,
             allow_snapshot_removal=False, allow_snapshot_revert=False,
             allow_tag_creation=False, allow_tag_removal=False,
@@ -225,6 +237,7 @@ class TagGroupAccess(Base):
             ):
         self.tag_id = tag_id
         self.group_id = group_id
+        self.allow_read = allow_read
         self.allow_install = allow_install
         self.allow_uninstall = allow_uninstall
         self.allow_reboot = allow_reboot
@@ -238,9 +251,9 @@ class TagGroupAccess(Base):
         self.date_created = date_created
         self.date_modified = date_modified
     def __repr__(self):
-        return "<TagGroupAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<TagGroupAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.tag_id, self.group_id, self.allow_install,
+                self.tag_id, self.group_id, self.allow_read, self.allow_install,
                 self.allow_uninstall, self.allow_reboot,
                 self.allow_schedule, self.allow_wol,
                 self.allow_snapshot_creation,
@@ -265,6 +278,7 @@ class NodeUserAccess(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     node_id = Column(INTEGER(unsigned=True),
             ForeignKey("node_info.id"))
+    allow_read = Column(BOOLEAN, nullable=False)          # True = Up, False = Down
     allow_install = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     allow_uninstall = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     allow_reboot = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
@@ -277,7 +291,7 @@ class NodeUserAccess(Base):
     allow_tag_removal = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     date_created = Column(DATETIME, nullable=True)
     date_modified = Column(DATETIME, nullable=True)
-    def __init__(self, node_id, user_id=None, allow_install=False,
+    def __init__(self, node_id, user_id=None, allow_read=False, allow_install=False,
             allow_uninstall=False, allow_reboot=False, allow_schedule=False,
             allow_wol=False, allow_snapshot_creation=False,
             allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -286,6 +300,7 @@ class NodeUserAccess(Base):
             ):
         self.node_id = node_id
         self.user_id = user_id
+        self.allow_read = allow_read
         self.allow_install = allow_install
         self.allow_uninstall = allow_uninstall
         self.allow_reboot = allow_reboot
@@ -299,9 +314,9 @@ class NodeUserAccess(Base):
         self.date_created = date_created
         self.date_modified = date_modified
     def __repr__(self):
-        return "<NodeUserAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<NodeUserAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.node_id, self.user_id, self.allow_install,
+                self.node_id, self.user_id, self.allow_read, self.allow_install,
                 self.allow_uninstall, self.allow_reboot,
                 self.allow_schedule, self.allow_wol,
                 self.allow_snapshot_creation,
@@ -327,6 +342,7 @@ class NodeGroupAccess(Base):
     node_id = Column(INTEGER(unsigned=True),
             ForeignKey("node_info.id"))
     group_id = Column(INTEGER, ForeignKey('groups.id'))
+    allow_read = Column(BOOLEAN, nullable=False)          # True = Up, False = Down
     allow_install = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     allow_uninstall = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     allow_reboot = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
@@ -339,8 +355,9 @@ class NodeGroupAccess(Base):
     allow_tag_removal = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     date_created = Column(DATETIME, nullable=True)
     date_modified = Column(DATETIME, nullable=True)
-    def __init__(self, node_id, group_id=None, allow_install=False,
-            allow_uninstall=False, allow_reboot=False, allow_schedule=False,
+    def __init__(self, node_id, group_id=None, allow_read=False,
+            allow_install=False, allow_uninstall=False,
+            allow_reboot=False, allow_schedule=False,
             allow_wol=False, allow_snapshot_creation=False,
             allow_snapshot_removal=False, allow_snapshot_revert=False,
             allow_tag_creation=False, allow_tag_removal=False,
@@ -348,6 +365,7 @@ class NodeGroupAccess(Base):
             ):
         self.node_id = node_id
         self.group_id = group_id
+        self.allow_read = allow_read
         self.allow_install = allow_install
         self.allow_uninstall = allow_uninstall
         self.allow_reboot = allow_reboot
@@ -363,10 +381,10 @@ class NodeGroupAccess(Base):
     def __repr__(self):
         return "<NodeGroupAccess(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
-                self.node_id, self.group_id, self.allow_install,
-                self.allow_uninstall, self.allow_reboot,
-                self.allow_schedule, self.allow_wol,
-                self.allow_snapshot_creation,
+                self.node_id, self.group_id, self.allow_read,
+                self.allow_install, self.allow_uninstall,
+                self.allow_reboot, self.allow_schedule,
+                self.allow_wol, self.allow_snapshot_creation,
                 self.allow_snapshot_removal,
                 self.allow_snapshot_revert,
                 self.allow_tag_creation, self.allow_tag_removal,

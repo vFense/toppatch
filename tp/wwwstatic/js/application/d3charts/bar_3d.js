@@ -14,7 +14,8 @@ define(
                 barWidth = 70,
                 angle = 30,
                 depth = 20,
-                height   = 200 - depth;
+                height   = 200 - depth,
+                severityColors = ['#FFFF00', '#FF3030', '#FF6600'];//['#FFC125', '#FF3030', '#FF6600'];
             function chart(selection) {
                 selection.each(function (data) {
                     var svg, frontRect, sideRect, topRect, rightTopTriangle, leftTopTriangle, botWhiteTriangle, txtMask, txtRect, txt,
@@ -26,7 +27,7 @@ define(
                     window.console.log(barWidth);
                     $(this).html("");
                     function topColor(color) {
-                        return colors(color);
+                        return severityColors[color];
                     }
                     function frontColor(color) {
                         return d3.rgb(topColor(color)).darker();
@@ -54,6 +55,9 @@ define(
                         txt.text('');
                         txtRect.style('opacity', '0');
                     }
+                    function MouseClick(d) {
+                        window.location.hash = '#patches?severity=' + d.label;
+                    }
                     svg = d3.select(this)
                         .append("svg:svg")
                         .attr("width", width)
@@ -65,11 +69,12 @@ define(
                         .attr("class", "top_rect")
                         .attr("x", function (d, index) { return x(index) + depth - 0.8; })
                         .attr("y", function (d, index) { return y(d.value) > 15 ? height - y(d.value) : height - y(15); })
-                        .attr("height", function (d) { return y(d.value) > 15 ? y(d.value) : y(15) + 3; })
+                        .attr("height", function (d) { return y(d.value) > 15 ? y(d.value) : y(15) + 5; })
                         .attr("width", barWidth)
                         .attr("stroke", "0")
                         .attr("stroke-width", "0")
                         .attr("fill", function (d, index) { return topColor(index); })
+                        .on('click', MouseClick)
                         .on('mouseover', function (d) {
                             textMouseOver(d);
                         })
@@ -90,15 +95,10 @@ define(
                         .attr("width", depth)
                         .attr("stroke", "0")
                         .attr("fill", function (d, index) { return sideColor(index); })
-                        .on('mouseover', function (d, i) {
-                            textMouseOver(d);
-                        })
-                        .on('mousemove', function (d) {
-                            textMouseMove();
-                        })
-                        .on('mouseout', function (d) {
-                            textMouseOut();
-                        });
+                        .on('click', MouseClick)
+                        .on('mouseover', textMouseOver)
+                        .on('mousemove', textMouseMove)
+                        .on('mouseout', textMouseOut);
 
                     rightTopTriangle = svg.selectAll("svg > right_top_triangle")
                         .data(data).enter()
@@ -155,6 +155,7 @@ define(
                         .attr("width", barWidth)
                         .attr("stroke", function (d, index) { return sideColor(index); })//stroke same color as sideRect
                         .attr("fill", function (d, index) { return frontColor(index); })
+                        .on('click', MouseClick)
                         .on('mouseover', textMouseOver)
                         .on('mousemove', textMouseMove)
                         .on('mouseout', textMouseOut);

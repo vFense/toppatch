@@ -10,7 +10,7 @@ from utils.common import verify_json_is_valid
 from networking.agentoperation import AgentOperation
 
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvlistener')
 OPERATION = 'operation'
 OPERATION_ID = 'operation_id'
@@ -23,6 +23,9 @@ SOFTWARE_INSTALLED = 'system_applications'
 UNIX_DEPENDENCIES = 'unix_dependencies'
 SYSTEM_INFO = 'system_info'
 STATUS_UPDATE = 'status'
+RESTART = 'restart'
+START = 'start'
+STOP = 'stop'
 
 
 class HandOff():
@@ -43,40 +46,58 @@ class HandOff():
         self.data = data
         self.valid_json, self.json_object = verify_json_is_valid(self.data)
         self.ip = ip_address
+        self.is_enabled = False
+        self.node = None
         if self.valid_json:
-            self.node = node_exists(self.session,
-                node_ip=self.ip)
-            if self.node:
-                if self.node.last_agent_update == None:
-                    self.node.last_agent_update = datetime.now()
-                    self.node.last_node_update = datetime.now()
-                    self.session.commit()
-                    TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
+            if 'node_id' in self.json_object:
+                self.node = node_exists(self.session,
+                    node_id=self.json_object['node_id'])
             else:
-                pass
-            if self.json_object[OPERATION] == SYSTEM_INFO:
-                add_system_info(self.session, self.json_object, self.node)
-            if self.json_object[OPERATION] == UPDATES_PENDING or \
-                    self.json_object[OPERATION] == UPDATES_INSTALLED:
-                self.add_update()
-            if self.json_object[OPERATION] == SOFTWARE_INSTALLED:
-                self.software_update()
-            if self.json_object[OPERATION] == UNIX_DEPENDENCIES:
-                self.add_dependency()
-            if self.json_object[OPERATION] == STATUS_UPDATE:
-                self.node_update()
-            if self.json_object[OPERATION] == INSTALL:
-                self.update_results()
-            if self.json_object[OPERATION] == UNINSTALL:
-                self.update_results()
-            if self.json_object[OPERATION] == REBOOT:
-                update_reboot_status(self.session, exists)
-            else:
-                pass
+                logger.info('%s - Json does not contain a node_id %s' %\
+                    (self.username, self.json_object)
+                    )
         else:
             logger.info('%s - Json is not valid %s' %\
                     (self.username, data)
                     )
+        if self.node:
+            self.is_enabled = self.session.query(SslInfo.enabled).\
+                    filter(SslInfo.node_id == self.node.id).first()
+        if self.is_enabled:
+            logger.info('%s is enabled in RV' % self.node.ip_address)
+        else:
+            logger.warn('%s is disabled in RV' % self.ip)
+        if self.is_enabled:
+            if self.ip != self.node.ip_address:
+                self.node.ip_address = self.ip
+                self.session.commit()
+            if self.node.last_agent_update == None:
+                self.node.last_agent_update = datetime.now()
+                self.node.last_node_update = datetime.now()
+                self.session.commit()
+            if self.json_object[OPERATION] == SYSTEM_INFO:
+                add_system_info(self.session, self.json_object, self.node)
+            if self.json_object[OPERATION] == UPDATES_PENDING or \
+                    self.json_object[OPERATION] == UPDATES_INSTALLED:
+                self.add_update(self.node)
+            if self.json_object[OPERATION] == SOFTWARE_INSTALLED:
+                self.software_update(self.node)
+            if self.json_object[OPERATION] == UNIX_DEPENDENCIES:
+                self.add_dependency()
+            if self.json_object[OPERATION] == STATUS_UPDATE:
+                self.node_update(self.node)
+            if self.json_object[OPERATION] == INSTALL:
+                self.update_results(self.node)
+            if self.json_object[OPERATION] == UNINSTALL:
+                self.update_results(self.node)
+            if self.json_object[OPERATION] == REBOOT:
+                update_reboot_status(self.session, exists)
+            if self.json_object[OPERATION] == RESTART:
+                self.update_results(self.node)
+            if self.json_object[OPERATION] == START:
+                self.update_results(self.node)
+            if self.json_object[OPERATION] == STOP:
+                self.update_results(self.node)
         self.session.close()
 
     def get_data(self, oper):
@@ -88,7 +109,8 @@ class HandOff():
         results.run()
 
 
-    def add_update(self):
+    def add_update(self, node):
+        self.node = node
         logger.debug('%s - Adding Software to package table' % \
                 (self.username)
                 )
@@ -97,6 +119,7 @@ class HandOff():
                 (self.username, 'package_per_node table for node', 
                     self.node.ip_address)
                 )
+        self.session.close()
         add_software_per_node(self.session, self.json_object)
         logger.debug('%s - updateing node_stats for %s' % \
                 (self.username, self.node.ip_address)
@@ -113,7 +136,8 @@ class HandOff():
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
 
-    def software_update(self):
+    def software_update(self, node):
+        self.node = node
         os_code_exists = self.session.query(SystemInfo).\
                 filter_by(node_id=self.node.id).first()
         if os_code_exists:
@@ -143,7 +167,11 @@ class HandOff():
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
 
-    def update_results(self):
+    def update_results(self, node):
+        self.node = node
+        logger.debug('%s - updateing results for %s' % \
+                (self.username, self.node.ip_address)
+                )
         results = add_results(self.session, self.json_object)
         logger.debug('%s - updateing node_stats for %s' % \
                 (self.username, self.node.ip_address)
@@ -165,7 +193,8 @@ class HandOff():
         TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
 
 
-    def node_update(self):
+    def node_update(self, node):
+        self.node = node
         logger.debug('%s - status updated for node %s' % \
                 (self.username, self.node.ip_address))
         results = update_node(self.session, self.node.id, self.ip)

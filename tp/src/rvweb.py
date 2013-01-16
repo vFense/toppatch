@@ -32,6 +32,8 @@ from server.api.scheduler_api import *
 from server.api.transactions_api import *
 from server.api.packages_api import *
 from server.api.api import *
+from server.api.email_api import *
+from server.api.virtual_api import *
 from server.api import *
 from server.account.manager import AccountManager
 from server.oauth.token import TokenManager
@@ -44,7 +46,7 @@ from twisted.internet import reactor
 from apscheduler.scheduler import Scheduler
 from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
 
-define("port", default=8000, help="run on port", type=int)
+define("port", default=9000, help="run on port", type=int)
 define("debug", default=True, help="enable debugging features", type=bool)
 
 class HeaderModule(tornado.web.UIModule):
@@ -72,6 +74,8 @@ class Application(tornado.web.Application):
             (r"/login/oauth/access_token", AccessTokenHandler),
 
             #### API Handlers
+            (r"/api/email/config/create?", CreateEmailConfigHandler),
+            (r"/api/email/config/list?", GetEmailConfigHandler),
             (r"/api/osData/?", OsHandler),
             (r"/api/networkData/?", NetworkHandler),
             (r"/api/summaryData/?", SummaryHandler),
@@ -97,11 +101,14 @@ class Application(tornado.web.Application):
             (r"/api/tagging/removeTag?", TagRemoveHandler),
             (r"/api/tagging/tagStats?", GetTagStatsHandler),
             (r"/api/transactions/getTransactions?", GetTransactionsHandler),
+            (r"/api/transactions/search?", SearchTransactionsHandler),
             (r"/api/package/getDependecies?", GetDependenciesHandler),
             (r"/api/package/searchByPatch?", SearchPatchHandler),
             (r"/api/package/getTagsByTpId?", GetTagsPerTpIdHandler),
             (r"/api/node/modifyDisplayName?", ModifyDisplayNameHandler),
             (r"/api/node/modifyHostName?", ModifyHostNameHandler),
+            (r"/api/node/delete?", NodeRemoverHandler),
+            (r"/api/node/cleanData?", NodeCleanerHandler),
             (r"/api/ssl/nodeToggler?", NodeTogglerHandler),
             (r"/api/ssl/list.json/?", SslHandler),
             (r"/api/acl/create?", AclModifierHandler),
@@ -115,6 +122,17 @@ class Application(tornado.web.Application):
             (r"/api/groups/list?", ListGroupHandler),
             (r"/api/groups/create?", CreateGroupHandler),
             (r"/api/groups/delete?", DeleteGroupHandler),
+            (r"/api/virtual/node/snapshots/list?", GetNodeSnapshotsHandler),
+            (r"/api/virtual/node/snapshots/create?", CreateSnapshotHandler),
+            (r"/api/virtual/node/snapshots/revert?", RevertSnapshotHandler),
+            (r"/api/virtual/node/snapshots/remove?", RemoveSnapshotHandler),
+            (r"/api/virtual/node/snapshots/removeAll?", RemoveAllSnapshotsHandler),
+            (r"/api/vmware/config/create?", CreateVmwareConfigHandler),
+            (r"/api/vmware/config/list?", GetVmwareConfigHandler),
+            (r"/api/virtual/node/info?", GetNodeVmInfoHandler),
+            (r"/api/virtual/node/poweron?", PowerOnVmHandler),
+            (r"/api/virtual/node/shutdown?", ShutdownVmHandler),
+            (r"/api/virtual/node/reboot?", RebootVmHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.
@@ -148,7 +166,7 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
     def log_request(self, handler):
-        logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+        logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
         log = logging.getLogger('rvweb')
         log_method = log.debug
         if handler.get_status() <= 299:

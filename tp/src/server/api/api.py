@@ -32,7 +32,7 @@ from sqlalchemy.orm import sessionmaker, class_mapper
 
 from jsonpickle import encode
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 class ApiHandler(BaseHandler):

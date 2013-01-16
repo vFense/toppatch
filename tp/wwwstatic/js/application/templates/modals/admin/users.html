@@ -6,28 +6,47 @@
                 <button class="btn btn-mini disabled" id="list-export">
                     <span>Export</span>&nbsp;<i class="icon-download-alt"></i>
                 </button>
-                <button id="userEdit" class="btn btn-mini">
-                    Edit
-                </button>
-                <button id="doneEdit" class="btn btn-mini btn-primary hide">
-                    Done
-                </button>
+                <button id="addUser" class="btn btn-mini">Add new user...</button>
             </div>
         </header>
         <div class="items">
+            <div name="newUserDiv" class="item row-fluid hide">
+                <div>
+                    <div class="span3">
+                        <input id="username" type="text" placeholder="New User" class="input-medium"/>
+                    </div>
+                    <div class="span3">
+                        <input id="password" type="password" placeholder="Temporary Password" class="input-medium"/>
+                    </div>
+                    <div class="span3">
+                        <select class="btn btn-mini" name="groups">
+                            <option value="READ_ONLY">Default</option>
+                            <% if (groups.length !== 0) { %>
+                                <% _.each(groups, function (group) { %>
+                                    <option value="<%= group.groupname %>"><%= group.groupname %></option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="span3 alignRight">
+                        <button id="cancelNewUser" class="btn btn-mini">Cancel</button>
+                        <button id="submitUser" class="btn btn-mini btn-primary">Confirm</button>
+                    </div>
+                </div>
+            </div>
             <% if (data.length !== 0) { %>
                 <% _.each(data, function (user) { %>
                     <div class="accordion-group item row-fluid">
                         <div class="accordion-heading span12">
                             <div class="span9">
-                                <div name="edit" class="hide pull-left">
+                                <div class="pull-left">
                                     <button name="toggleAcl" class="btn btn-link noPadding">
-                                        <i class="icon-circle-arrow-down"></i>
+                                        <i class="icon-circle-arrow-down"></i>&nbsp;
+                                        <span><%= user.username %></span>
                                     </button>
-                                </div>&nbsp;
-                                <span><%= user.username %></span>
+                                </div>
                             </div>
-                            <div name="edit" class="span3 alignRight hide">
+                            <div class="span3 alignRight">
                                 <button name="globalacl" value="<%= user.id %>" class="btn btn-link noPadding">
                                     <i class="icon-pencil" style="color: #daa520;"></i>
                                 </button>
@@ -48,6 +67,11 @@
                                 <div class="span12">
                                     <button name="showAcl" class="btn btn-link noPadding"><small>Create Node Acl</small></button>
                                     <div name="aclOptions" class="hide span12">
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Read Only</small>
+                                                <input type="checkbox" name="allow_read"/>
+                                            </label>
+                                        </div>
                                         <div class="span3 noMargin">
                                             <label class="checkbox"><small>Wake on Lan</small>
                                                 <input type="checkbox" name="allow_wol"/>
@@ -113,14 +137,81 @@
                                         </span>
                                     </div>
                                     <div class="list">
-                                        <div class="items">
+                                        <div class="accordion items">
                                         <% if(user.node_acls.length != 0) { %>
                                             <% _.each(user.node_acls, function (acl) { %>
-                                                <div class="item clearfix" name="<%= acl.node_id %>">
-                                                    <span>Node <%= acl.node_id %> — <%= acl.date_created %></span>
-                                                    <span class="pull-right">
-                                                        <button name="removeAclNode" value="<%= user.id %>" class="btn btn-link"><i class="icon-remove" style="color: red;"></i></button>
-                                                    </span>
+                                                <div class="accordion-group item clearfix" name="<%= acl.node_id %>">
+                                                    <div class="accordion-heading">
+                                                        <span><% print(acl.displayname || acl.hostname || acl.node_id) %> — <%= acl.date_created %></span>
+                                                        <span class="pull-right">
+                                                            <button name="toggleAclEdit" value="<%= user.id %>" class="btn btn-link noPadding"><i class="icon-pencil" style="color: #daa520"></i></button>&nbsp;
+                                                            <button name="removeAclNode" value="<%= user.id %>" class="btn btn-link noPadding"><i class="icon-remove" style="color: red;"></i></button>
+                                                        </span>
+                                                    </div>
+                                                    <div class="accordion-body collapse">
+                                                        <div class="accordion-inner">
+                                                            <div class="span3 noMargin">
+                                                                <label class="checkbox"><small>Read Only</small>
+                                                                    <input type="checkbox" name="allow_read" <% if (acl.allow_read) { print('CHECKED'); } %>/>
+                                                                </label>
+                                                            </div>
+                                                            <div class="span3 noMargin">
+                                                                <label class="checkbox"><small>Wake on Lan</small>
+                                                                    <input type="checkbox" name="allow_wol" <% if (acl.allow_wol) { print('CHECKED'); } %>/>
+                                                                </label>
+                                                            </div>
+                                                            <div class="span3 noMargin">
+                                                                <label class="checkbox"><small>Reboot</small>
+                                                                    <input type="checkbox" name="allow_reboot" <% if (acl.allow_reboot) { print('CHECKED'); } %>/>
+                                                                </label>
+                                                            </div>
+                                                            <div class="span3 noMargin">
+                                                                <label class="checkbox"><small>Tag Creation</small>
+                                                                    <input type="checkbox" name="allow_tag_creation" <% if (acl.allow_tag_creation) { print('CHECKED'); } %>/>
+                                                                </label>
+                                                            </div>
+                                                            <div class="span3 noMargin">
+                                                                <label class="checkbox"><small>Snapshot Removal</small>
+                                                                    <input type="checkbox" name="allow_snapshot_removal" <% if (acl.allow_snapshot_removal) { print('CHECKED'); } %>/>
+                                                                </label>
+                                                            </div>
+                                                            <div class="span3 noMargin">
+                                                                <label class="checkbox"><small>Snapshot Revert</small>
+                                                                    <input type="checkbox" name="allow_snapshot_revert" <% if (acl.allow_snapshot_revert) { print('CHECKED'); } %>/>
+                                                                </label>
+                                                            </div>
+                                                            <div class="span3 noMargin">
+                                                                <label class="checkbox"><small>Uninstall</small>
+                                                                    <input type="checkbox" name="allow_uninstall" <% if (acl.allow_uninstall) { print('CHECKED'); } %>/>
+                                                                </label>
+                                                            </div>
+                                                            <div class="span3 noMargin">
+                                                                <label class="checkbox"><small>Snapshot Creation</small>
+                                                                    <input type="checkbox" name="allow_snapshot_creation" <% if (acl.allow_snapshot_creation) { print('CHECKED'); } %>/>
+                                                                </label>
+                                                            </div>
+                                                            <div class="span3 noMargin">
+                                                                <label class="checkbox"><small>Tag Removal</small>
+                                                                    <input type="checkbox" name="allow_tag_removal" <% if (acl.allow_tag_removal) { print('CHECKED'); } %>/>
+                                                                </label>
+                                                            </div>
+                                                            <div class="span3 noMargin">
+                                                                <label class="checkbox"><small>Install</small>
+                                                                    <input type="checkbox" name="allow_install" <% if (acl.allow_install) { print('CHECKED'); } %>/>
+                                                                </label>
+                                                            </div>
+                                                            <div class="span3 noMargin">
+                                                                <label class="checkbox"><small>Schedule</small>
+                                                                    <input type="checkbox" name="allow_schedule"<% if (acl.allow_schedule) { print('CHECKED'); } %>/>
+                                                                </label>
+                                                            </div>
+                                                            <span class="span11 alignRight">
+                                                                <span class="alert fade in hide inline"></span>
+                                                                <button name="editAclNode" value="<%= user.id %>" class="btn btn-mini btn-primary">Edit</button>
+                                                                <button name="toggleAclEdit" class="btn btn-mini">Cancel</button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             <% }); %>
                                         <% } else { %>
@@ -134,6 +225,11 @@
                                 <div class="span12 noMargin">
                                     <button name="showAcl" class="btn btn-link noPadding"><small>Create Tag Acl</small></button>
                                     <div name="aclOptions" class="hide span12">
+                                        <div class="span3 noMargin">
+                                            <label class="checkbox"><small>Read Only</small>
+                                                <input type="checkbox" name="allow_read"/>
+                                            </label>
+                                        </div>
                                         <div class="span3 noMargin">
                                             <label class="checkbox"><small>Wake on Lan</small>
                                                 <input type="checkbox" name="allow_wol"/>
@@ -199,14 +295,81 @@
                                         </span>
                                     </div>
                                     <div class="list">
-                                        <div class="items">
+                                        <div class="accordion items">
                                             <% if(user.tag_acls.length != 0) { %>
                                                 <% _.each(user.tag_acls, function (acl) { %>
-                                                    <div class="item clearfix" name="<%= acl.tag_id %>">
-                                                        <span>Tag <%= acl.tag_id %> — <%= acl.date_created %></span>
-                                                        <span class="pull-right">
-                                                            <button name="removeAclTag" value="<%= user.id %>" class="btn btn-link"><i class="icon-remove" style="color: red;"></i></button>
-                                                        </span>
+                                                    <div class="accordion-group item clearfix" name="<%= acl.tag_id %>">
+                                                        <div class="accordion-heading">
+                                                            <span><% print(acl.tag_name || acl.tag_id) %> — <%= acl.date_created %></span>
+                                                            <span class="pull-right">
+                                                                <button name="toggleAclEdit" value="<%= user.id %>" class="btn btn-link noPadding"><i class="icon-pencil" style="color: #daa520"></i></button>&nbsp;
+                                                                <button name="removeAclTag" value="<%= user.id %>" class="btn btn-link noPadding"><i class="icon-remove" style="color: red;"></i></button>
+                                                            </span>
+                                                        </div>
+                                                        <div class="accordion-body collapse">
+                                                            <div class="accordion-inner">
+                                                                <div class="span3 noMargin">
+                                                                    <label class="checkbox"><small>Read Only</small>
+                                                                        <input type="checkbox" name="allow_read" <% if (acl.allow_read) { print('CHECKED'); } %>/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="span3 noMargin">
+                                                                    <label class="checkbox"><small>Wake on Lan</small>
+                                                                        <input type="checkbox" name="allow_wol" <% if (acl.allow_wol) { print('CHECKED'); } %>/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="span3 noMargin">
+                                                                    <label class="checkbox"><small>Reboot</small>
+                                                                        <input type="checkbox" name="allow_reboot" <% if (acl.allow_reboot) { print('CHECKED'); } %>/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="span3 noMargin">
+                                                                    <label class="checkbox"><small>Tag Creation</small>
+                                                                        <input type="checkbox" name="allow_tag_creation" <% if (acl.allow_tag_creation) { print('CHECKED'); } %>/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="span3 noMargin">
+                                                                    <label class="checkbox"><small>Snapshot Removal</small>
+                                                                        <input type="checkbox" name="allow_snapshot_removal" <% if (acl.allow_snapshot_removal) { print('CHECKED'); } %>/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="span3 noMargin">
+                                                                    <label class="checkbox"><small>Snapshot Revert</small>
+                                                                        <input type="checkbox" name="allow_snapshot_revert" <% if (acl.allow_snapshot_revert) { print('CHECKED'); } %>/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="span3 noMargin">
+                                                                    <label class="checkbox"><small>Uninstall</small>
+                                                                        <input type="checkbox" name="allow_uninstall" <% if (acl.allow_uninstall) { print('CHECKED'); } %>/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="span3 noMargin">
+                                                                    <label class="checkbox"><small>Snapshot Creation</small>
+                                                                        <input type="checkbox" name="allow_snapshot_creation" <% if (acl.allow_snapshot_creation) { print('CHECKED'); } %>/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="span3 noMargin">
+                                                                    <label class="checkbox"><small>Tag Removal</small>
+                                                                        <input type="checkbox" name="allow_tag_removal" <% if (acl.allow_tag_removal) { print('CHECKED'); } %>/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="span3 noMargin">
+                                                                    <label class="checkbox"><small>Install</small>
+                                                                        <input type="checkbox" name="allow_install" <% if (acl.allow_install) { print('CHECKED'); } %>/>
+                                                                    </label>
+                                                                </div>
+                                                                <div class="span3 noMargin">
+                                                                    <label class="checkbox"><small>Schedule</small>
+                                                                        <input type="checkbox" name="allow_schedule"<% if (acl.allow_schedule) { print('CHECKED'); } %>/>
+                                                                    </label>
+                                                                </div>
+                                                                <span class="span11 alignRight">
+                                                                    <span class="alert fade in hide inline"></span>
+                                                                    <button name="editAclTag" value="<%= user.id %>" class="btn btn-mini btn-primary">Edit</button>
+                                                                    <button name="toggleAclEdit" class="btn btn-mini">Cancel</button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 <% }); %>
                                             <% } else { %>
@@ -226,41 +389,8 @@
                     <div class="span9"><em>No users available.</em></div>
                 </div>
             <% } %>
-            <div name="edit" class="item row-fluid hide">
-                <div id="addUser" class="span9">
-                    <button class="btn btn-mini">Add new user...</button>
-                </div>
-                <div class="hide" name="newUserDiv">
-                    <div class="span3">
-                        <input id="username" type="text" placeholder="New User" class="input-medium"/>
-                    </div>
-                    <div class="span3">
-                        <input id="password" type="password" placeholder="Temporary Password" class="input-medium"/>
-                    </div>
-                    <div class="span3">
-                        <select class="btn btn-mini" name="groups">
-                            <option value="READ_ONLY">Default</option>
-                            <% if (groups.length !== 0) { %>
-                                <% _.each(groups, function (group) { %>
-                                    <option value="<%= group.groupname %>"><%= group.groupname %></option>
-                                <% }); %>
-                            <% } %>
-                        </select>
-                    </div>
-                    <div class="span3 alignRight">
-                        <button id="cancelNewUser" class="btn btn-mini">
-                            Cancel
-                        </button>
-                        <button id="submitUser" class="btn btn-mini btn-primary">
-                            Confirm
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div name="edit" class="hide">
-                <div class="alert alert-block fade in hide">
-                    <span class="help-inline">test</span>
-                </div>
+            <div class="alert alert-block fade in hide">
+                <span class="help-inline">test</span>
             </div>
         </div>
     </section>
@@ -272,7 +402,12 @@
             <div class="items alignLeft hide">
                 <div class="item clearfix">
                     <label class="checkbox">Read Only
-                        <input type="checkbox" name="read_only"/>
+                        <input type="checkbox" name="allow_read"/>
+                    </label>
+                </div>
+                <div class="item clearfix">
+                    <label class="checkbox">Deny All
+                        <input type="checkbox" name="deny_all"/>
                     </label>
                 </div>
                 <div class="item clearfix">

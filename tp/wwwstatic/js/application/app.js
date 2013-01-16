@@ -187,6 +187,7 @@ define(
                 { name: 'Dashboard', href: '#dashboard' },
                 { name: 'Nodes', href: '#nodes' },
                 { name: 'Patches', href: '#patches' },
+                { name: 'Tags', href: '#tags' },
                 { name: 'Multi-Patcher', href: '#multi' },
                 { name: 'Schedules', href: '#schedule' },
                 { name: 'Logs', href:'#logs'}

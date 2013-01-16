@@ -19,6 +19,10 @@ define(
                 'patches?:query': 'showPatches',
                 'patches/:id'   : 'showPatch',
 
+                'tags'          : 'showTags',
+                'tags?:query'   : 'showTags',
+                'tags/:id'      : 'showTag',
+
                 // MultiPatch Interface
                 'multi'         : 'showMulti',
 
@@ -41,6 +45,8 @@ define(
                 'admin/timeblock' : 'modal/admin/timeblock',
                 'admin/listblocks': 'modal/admin/listblocks',
                 'admin/syslog'    : 'modal/admin/syslog',
+                'admin/vmware'    : 'modal/admin/vmware',
+                'admin/groups'    : 'modal/admin/groups',
                 'admin/users'     : 'modal/admin/users'
 
                 // Default
@@ -98,6 +104,7 @@ define(
                         myView.Collection = myView.Collection.extend({
                             getCount: params.count,
                             offset: params.offset,
+                            by_os: params.by_os,
                             filterby: params.filterby
                         });
                     }
@@ -108,6 +115,7 @@ define(
                 var that = this;
                 require(['modules/node'], function (myView) {
                     myView.Collection = myView.Collection.extend({id: id});
+                    myView.VmCollection = myView.VmCollection.extend({id: id});
                     var view = new myView.View();
                     that.show({hash: '#nodes', title: 'Nodes', view: view});
                 });
@@ -118,10 +126,11 @@ define(
                     if ($.type(query) === 'string') {
                         var params = app.parseQuery(query);
                         myView.Collection = myView.Collection.extend({
-                            type: params.type,
+                            status: params.status,
                             getCount: params.count,
                             offset: params.offset,
                             searchQuery: params.query,
+                            severity: params.severity,
                             searchBy: params.searchby
                         });
                     }
@@ -133,6 +142,33 @@ define(
                 require(['modules/patch'], function (myView) {
                     myView.Collection = myView.Collection.extend({id: id});
                     that.show({hash: '#patches', title: 'Patch Detail', view: new myView.View()});
+                });
+            },
+            showTags: function (query) {
+                var that = this,
+                    params = '',
+                    collection,
+                    view;
+
+                require(['modules/tags'], function (myView) {
+                    if ($.type(query) === 'string') {
+                        params = app.parseQuery(query);
+                    }
+
+                    collection = new myView.Collection({
+                        params: params
+                    });
+
+                    view = new myView.View({collection: collection});
+
+                    that.show({hash: '#tags', title: 'Tags', view: view});
+                });
+            },
+            showTag: function (id) {
+                var that = this;
+                require(['modules/tag'], function (myView) {
+                    myView.Collection = myView.Collection.extend({id: id});
+                    that.show({hash: '#tags', title: 'Tag Detail', view: new myView.View()});
                 });
             },
             showMulti: function () {
@@ -178,6 +214,12 @@ define(
             },
             'modal/admin/syslog': function () {
                 this.openAdminModalWithView('modals/admin/syslog');
+            },
+            'modal/admin/vmware': function () {
+                this.openAdminModalWithView('modals/admin/vmware');
+            },
+            'modal/admin/groups': function () {
+                this.openAdminModalWithView('modals/admin/groups');
             },
             'modal/admin/users': function () {
                 this.openAdminModalWithView('modals/admin/users');

@@ -12,7 +12,7 @@ from models.tagging import *
 #import gevent
 from threading import Thread
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 OPERATION = 'operation'
@@ -26,9 +26,14 @@ UPDATESPENDING = 'updates_pending'
 SYSTEMINFO = 'system_info'
 SYSTEMAPPLICATIONS = 'system_applications'
 UNIX_DEPENDENCIES = 'unix_dependencies'
+START = 'start'
+STOP = 'stop'
+RESTART = 'restart'
 DATA = 'data'
 SCHEDULE = 'schedule'
 TIME = 'time'
+AGENT_MANAGED_PORT = 9005
+AGENT_PORT = 9003
 ALLOWED_OPERATIONS = [SYSTEMINFO, UPDATESINSTALLED,
                       UPDATESPENDING, SYSTEMAPPLICATIONS,
                       UNIX_DEPENDENCIES]
@@ -59,6 +64,7 @@ class AgentOperation():
         self.username = username
         self.results = {}
         self.json_out = {}
+        self.message_sent = False
         if type(system_list) == list:
             logger.debug('%s - operation received was of type list'%\
                     (self.username)
@@ -98,19 +104,20 @@ class AgentOperation():
                 json_valid = True
                 jsonobject = node
             if json_valid:
-                node_id = jsonobject['node_id']
-                node = node_exists(self.session, node_id=node_id)
-                if not node.agent_status:
+                self.node_id = jsonobject['node_id']
+                self.node = node_exists(self.session, node_id=self.node_id)
+                if not self.node.agent_status:
                     if len(self.system_list) > 1:
                         self.json_out ={
-                            "node_id" : node_id,
+                            "node_id" : self.node_id,
                             "message" : "Agent Down",
                             "error" : "Agent Down",
                             "pass" : False
                             }
-                oper_type = jsonobject[OPERATION]
-                oper_id = self.create_new_operation(node_id, oper_type,
-                        node.ip_address
+                        return(self.json_out)
+                self.oper_type = jsonobject[OPERATION]
+                self.oper_id = self.create_new_operation(self.node_id,
+                        self.oper_type, self.node.ip_address
                         )
                 start_date = datetime.now()
                 time_block_exists, time_block, time_block_results = \
@@ -118,100 +125,135 @@ class AgentOperation():
                                 start_date=start_date.date(),
                                 start_time=start_date.time()
                                 )
-                if oper_type in SCHEDULED_OPERATIONS and time_block_exists:
+                if self.oper_type in SCHEDULED_OPERATIONS and time_block_exists:
                     logger.debug('%s - TimeBlock exists on %s for operation %s' %\
-                            (self.username, node.ip_address, oper_type)
+                            (self.username, self.node.ip_address, self.oper_type)
                             )
                     self.session.close()
                     self.json_out = time_block_results
+                    add_results_non_json(self.session, node_id=node.id,
+                            oper_id=oper.id, error='Time Block Exists',
+                            reboot=False, result=False,
+                            results_received=datetime.now(),
+                            username=self.username
+                            )
                     return(self.json_out)
                 if not DATA in jsonobject:
-                    message = Thread(target=self.create_sof_operation,
-                            args=(node_id, node.ip_address, oper_type,
-                                oper_id)).start()
+                    message = self.operation_creator(data_list=None)
+                    if RESTART in self.oper_type or STOP in self.oper_type \
+                            or START in self.oper_type:
+                        connection = Thread(target=self.connect,
+                                args=(message, self.oper_type,
+                                    self.oper_id, AGENT_MANAGED_PORT)).start()
+                    else:
+                        connection = Thread(target=self.connect,
+                                args=(message, self.oper_type,
+                                    self.oper_id, AGENT_PORT)).start()
                 elif DATA in jsonobject:
                     if type(jsonobject[DATA]) == list:
                         data = jsonobject[DATA]
-                        message = Thread(target=self.create_sof_operation, 
-                                args=(node_id, node.ip_address, oper_type,
-                                    oper_id, data)).start()
+                        message = self.operation_creator(data_list=data)
+                        connection = Thread(target=self.connect,
+                                args=(message, self.oper_type,
+                                    self.oper_id, AGENT_PORT)).start()
                     else:
                         raise("You must pass an array")
         self.session.close()
         
-    def create_sof_operation(self, node_id, node_ip, oper_type, \
-            oper_id, data_list=None):
+    def operation_creator(self, data_list=None):
         """
         Build a valid Json object and than encode it. Once the 
         encoding is complete, we will than pass this message to
         the TcpConnect class.
         """
-        jsonobject = None
+        self.json_to_be_sent = None
         if data_list == None:
-            jsonobject = {
-                        "operation" : oper_type,
-                        "operation_id" : oper_id
+            self.json_to_be_sent = {
+                        "operation" : self.oper_type,
+                        "operation_id" : self.oper_id
                      }
         else:
-            jsonobject = {
-                        "operation" : oper_type,
-                        "operation_id" : oper_id,
+            self.json_to_be_sent = {
+                        "operation" : self.oper_type,
+                        "operation_id" : self.oper_id,
                         "data" : data_list
                      }
-        msg = encode(jsonobject) 
+        msg = encode(self.json_to_be_sent) 
         msg = msg + '<EOF>'
         logger.debug('%s - messaged to be sent %s' %\
                 (self.username, msg)
                 )
+        return(msg)
+
+    def connect(self, msg, oper_type, oper_id, port=9003, secure=True):
+        node = node_exists(self.session, node_id=self.node_id)
         response = None
         completed = False
-        node = node_exists(self.session, node_id=node_id)
+        agent_status = None
+        connect = None
         if node.agent_status:
-            connect = TcpConnect(node_ip, msg)
-            logger.debug('%s - connecting to agent %s' %\
-                    (self.username, node_ip)
+            agent_status = True
+            logger.debug('%s - connecting to agent %s on port %s' %\
+                    (self.username, node.ip_address, str(port))
                     )
+            self.message_sent = True
+            self.json_out ={
+                     "node_id" : node.id,
+                     "operation_id" : oper_id,
+                     "message" : 'message sent',
+                     "error" : None,
+                     "pass" : True
+                     }
+            connect = TcpConnect(node.ip_address,
+                    msg, port=port, secure=secure)
+        else:
+            self.message_sent = False
+            self.json_out ={
+                     "node_id" : node.id,
+                     "operation_id" : oper_id,
+                     "message" : "Agent Down",
+                     "error" : "Agent Down",
+                     "pass" : False
+                     }
+            logger.debug('%s - cannot connect to agent %s, agent down' %\
+                    (self.username, node.ip_address)
+                    )
+            add_results_non_json(self.session, node_id=node.id,
+                    oper_id=oper.id, error='Agent Down',
+                    reboot=False, result=False,
+                    results_received=datetime.now(), username=self.username
+                    )
+        self.connection_parser(connect, node, oper_type, oper_id)
+
+    def connection_parser(self, connect, node, oper_type, oper_id):
+        completed = False
+        if connect:
+            completed = True
             if not connect.error and connect.read_data:
                 response = verify_json_is_valid(connect.read_data)
                 if response[1]['operation'] == 'received':
                     logger.info('%s - operation received from agent %s' %\
-                        (self.username, node_ip)
+                        (self.username, node.ip_address)
                         )
                     completed = True
-                    update_operation_row(self.session, oper_id, oper_recv=True,
+                    update_operation_row(self.session,
+                            oper_id, oper_recv=True,
                             username=self.username)
                     if oper_type == 'reboot':
-                        update_reboot_status(self.session, node_id, oper_type,
+                        update_reboot_status(self.session,
+                                node.id, oper_type,
                                 username=self.username)
-                    if 'data' in jsonobject:
-                        for patch in jsonobject['data']:
+                    if 'data' in self.json_to_be_sent:
+                        for patch in self.json_to_be_sent['data']:
                             if oper_type == 'install':
                                 patcher = self.session.query(PackagePerNode).\
                                     filter_by(toppatch_id=patch).\
-                                    filter_by(node_id=node_id)
+                                    filter_by(node_id=node.id)
                                 patcher.update({"pending" : True})
                                 self.session.commit()
-                    update_node_stats(self.session, node_id)
+                    update_node_stats(self.session, node.id)
                     update_network_stats(self.session)
                     update_tag_stats(self.session)
-            self.json_out ={
-                     "node_id" : node_id,
-                     "operation_id" : oper_id,
-                     "message" : connect.read_data,
-                     "error" : connect.error,
-                     "pass" : completed
-                     }
-        else:
-            logger.debug('%s - cannot connect to agent %s, agent down' %\
-                    (self.username, node_ip)
-                    )
-            self.json_out ={
-                     "node_id" : node_id,
-                     "operation_id" : oper_id,
-                     "message" : "Agent Down",
-                     "error" : "Agent Down",
-                     "pass" : completed
-                     }
         return self.json_out
 
 

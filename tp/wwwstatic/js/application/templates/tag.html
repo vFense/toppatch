@@ -1,0 +1,23 @@
+<% if(data) { %>
+<article>
+    <header><strong>Tag Details</strong></header>
+    <section class="well well-small noMargin clearfix">
+        <dl>
+            <dt>Tag Name:</dt><dd><%= data.tag_name %></dd>
+            <dt>Agents Up:</dt><dd><%= data.agents_up %></dd>
+            <dt>Agents Down:</dt>
+                <dd><%= data.agents_down %>
+                    <% if(data.agents_down) { %>
+                        &nbsp;<span class="icon-warning-sign" style="color: red"></span>
+                    <% } %>
+                </dd>
+            <dt>Reboots Pending:</dt>
+                <dd><%= data.reboots_pending %>
+                    <% if(data.reboots_pending) { %>
+                        &nbsp;<span class="icon-warning-sign" style="color: orange"></span>
+                    <% } %>
+                </dd>
+        </dl>
+    </section>
+</article>
+<% } %>

@@ -72,7 +72,7 @@
                 </span>
             </div>
             <div class="items">
-                <% if (data.length !== 0) { %>
+                <% if (data && data.length !== 0) { %>
                     <% _.each(data, function (tag) { %>
                         <div class="item">
                             <a href="#nodes?filterby=<%= tag.tag_name %>">

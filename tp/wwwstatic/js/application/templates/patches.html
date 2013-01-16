@@ -15,11 +15,11 @@
                 </div>
                 <div class="pull-right"><small>Filter By:</small>
                     <select name="filter" class="btn btn-mini">
-                        <option value="none" <% if(type == '') { print('selected'); } %> >None</option>
-                        <option value="available" <% if(type == 'available') { print('selected'); } %> >Available</option>
-                        <option value="pending" <% if(type == 'pending') { print('selected'); } %> >Pending</option>
-                        <option value="failed" <% if(type == 'failed') { print('selected'); } %> >Failed</option>
-                        <option value="installed" <% if(type == 'installed') { print('selected'); } %> >Installed</option>
+                        <option value="none" <% if(status == '') { print('selected'); } %> >None</option>
+                        <option value="available" <% if(status == 'available') { print('selected'); } %> >Available</option>
+                        <option value="pending" <% if(status == 'pending') { print('selected'); } %> >Pending</option>
+                        <option value="failed" <% if(status == 'failed') { print('selected'); } %> >Failed</option>
+                        <option value="installed" <% if(status == 'installed') { print('selected'); } %> >Installed</option>
                     </select>
                     <!--
                     <button class="btn btn-mini disabled">

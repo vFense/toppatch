@@ -42,3 +42,7 @@ a = AgentOperation(tag_list)
 a.run()
 print a.results
 """
+oper_list = ['{"node_id" : "2", "operation" : "restart"}']
+a = AgentOperation(oper_list)
+a.run()
+print a.results

@@ -11,7 +11,7 @@ from db.update_table import *
 from utils.common import *
 
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 
@@ -68,7 +68,7 @@ def create_user(session, username=None, password=None,
                 filter(User.username == username).first()
         if not user_exists:
             user = None
-            user_hash = Crypto.hash_scrypt(password)
+            user_hash = Crypto.hash_bcrypt(password)
             try:
                 user = User(username, user_hash, fullname, email)
                 session.add(user)
@@ -106,6 +106,21 @@ def create_user(session, username=None, password=None,
                     'message': 'User %s already exists'%\
                         (username)
                     })
+
+
+def authenticate_account(session, username, password):
+    """ Checks if the username and password are correct.
+    Returns True if it is, False otherwise.
+    """
+    authenticated = False
+    session = validate_session(session)
+    account = session.query(User).filter(User.username == username).first()
+    if account:
+    	authenticated = Crypto.verify_bcrypt_hash(password, account.hash)
+    else:
+        authenticated = False
+    print "AUTHENTICATED", authenticated
+    return authenticated
 
 def delete_user(session, user_id, username='system_user'):
     session = validate_session(session)
@@ -377,7 +392,9 @@ def acl_modifier(session, acl_type, acl_action, acl):
                 if 'node_user' in acl_type:
                     result = update_node_user_acl(session, **acl)
                 if 'node_group' in acl_type:
+                    print acl
                     result = update_node_group_acl(session, **acl)
+                    print result
                 if 'tag_user' in acl_type:
                     result = update_tag_user_acl(session, **acl)
                 if 'tag_group' in acl_type:

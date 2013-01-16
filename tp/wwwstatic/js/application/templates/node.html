@@ -22,9 +22,18 @@
             <dt>Agent Status:</dt>
             <dd>
                 <% if (model['agent/status']) { %>
-                Running&nbsp;<i style="color: green;" class="icon-ok"></i>
+                Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp; —
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="stop">
+                    <i title="Stop Agent" class="icon-off" style="color: #ff0000;"></i>
+                </button>
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="restart">
+                    <i title="Restart Agent" class="icon-refresh"></i>
+                </button>
                 <% } else { %>
-                Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i>
+                Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i> —
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="start">
+                    <i title="Start Agent" class="icon-play" style="color: green;"></i>
+                </button>
                 <% } %>
             </dd>
             <dt>Host Status:</dt>
@@ -39,14 +48,27 @@
                 </form>
                 <% } else if (model['host/status']) { %>
                 <form id="reboot-form">
-                    Running &nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
+                    Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
+                    <% if(model.is_vm) { %>  —
+                        <button class="btn btn-link noPadding" name="nodeOperation" data-value="stop">
+                            <i title="Shut Down VM" class="icon-off" style="color: #ff0000;"></i>
+                        </button>
+                        <button class="btn btn-link noPadding" name="nodeOperation" data-value="restart">
+                            <i title="Restart VM" class="icon-refresh"></i>
+                        </button>
+                    <% } %>
                     <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>&nbsp;
                     Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
                     <input type="hidden" name="operation" value="reboot" />
                     <input type="hidden" name="node" value="<%=  model.id  %>"/>
                 </form>
                 <% } else { %>
-                Stopped &nbsp;<i style="color: red;" class="icon-warning-sign"></i>
+                    Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i>
+                    <% if(model.is_vm) { %>  —
+                        <button class="btn btn-link noPadding" name="nodeOperation" data-value="start">
+                            <i title="Power On VM" class="icon-play" style="color: green;"></i>
+                        </button>
+                    <% } %>
                 <% } %>
             </dd>
         </dl>
@@ -57,242 +79,51 @@
     <section class="well well-small noMargin clearfix">
         <% if (model.networking.length !== 0) { %>
             <dl>
-            <% _.each(model.networking, function (interface) { %>
-                <dt><%= interface.interface_name %>:</dt>
-                <dd>IP Address - <%= interface.ip %><br>
-                    MAC Address - <%= interface.mac %></dd>
+            <% _.each(model.networking, function (interface, i) { %>
+                <% if (i <= 2) { %>
+                    <dt><%= interface.interface_name %>:</dt>
+                    <dd>IP Address - <%= interface.ip %><br>
+                        MAC Address - <%= interface.mac.substring(0,2) + ":" + interface.mac.substring(2,4) + ":" + interface.mac.substring(4,6) + ":" + interface.mac.substring(6,8) + ":" + interface.mac.substring(8,10) + ":" + interface.mac.substring(10, 12) %></dd>
+                <% } else { %>
+                    <dt class="hidden" style="display: none"><%= interface.interface_name %>:</dt>
+                    <dd class="hidden" style="display: none">IP Address - <%= interface.ip %><br>
+                        MAC Address - <%= interface.mac.substring(0,2) + ":" + interface.mac.substring(2,4) + ":" + interface.mac.substring(4,6) + ":" + interface.mac.substring(6,8) + ":" + interface.mac.substring(8,10) + ":" + interface.mac.substring(10, 12) %></dd>
+                <% } %>
             <% }); %>
+            <% if (model.networking.length > 2) { %>
+                <dt>&nbsp;</dt>
+                <dd><button name="showNetworking" class="btn btn-link noPadding">Show more</button></dd>
+            <% } %>
             </dl>
         <% } else { %>
             <span><em>No interfaces available.</em></span>
         <% } %>
     </section>
 </article>
+<% if (model.is_vm && vm) { %>
+<article>
+    <header><strong>VMware Information</strong></header>
+    <section class="well well-small noMargin clearfix">
+        <dl>
+            <dt>VM Name:</dt><dd><%= vm.vm_name %></dd>
+            <dt>Hyper Visor IP:</dt><dd><%= vm.hyper_visor_ip || 'Not listed' %></dd>
+            <dt>Hyper Visor Name:</dt><dd><%= vm.hyper_visor_name %></dd>
+            <dt>Hyper Visor Type</dt><dd><%= vm.hyper_visor_type %></dd>
+            <dt>Hyper Visor Version:</dt><dd><%= vm.hyper_visor_version %></dd>
+            <dt>VM Tools Version:</dt><dd><%= vm.tools_version %></dd>
+            <dt>VM Tools status:</dt><dd><%= vm.tools_status %></dd>
+        </dl>
+    </section>
+</article>
+<% } %>
 <article class="alert alert-block fade in hide">
     <span class="help-inline"></span>
-</article>
-<article class="accordion">
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <header>
-                <a class="accordion-toggle" href="#">
-                    <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Patches Available</strong>
-                    <span class="pull-right">
-                        <select class="btn btn-mini" name="severity">
-                            <option>None</option>
-                            <option>Optional</option>
-                            <option>Recommended</option>
-                            <option>Critical</option>
-                        </select>
-                        <span class="badge badge-inverse"><%= model['patch/need'].length %></span>
-                    </span>
-                </a>
-            </header>
-        </div>
-        <div class="accordion-body collapse">
-            <section class="list accordion-inner">
-                <% if (model['patch/need'].length != 0) { %>
-                <form action="/submitForm" method="post" class="form-inline" id="available">
-                    <header class="clearfix">
-                        <label class="checkbox inline">
-                            <input type="checkbox" class="toggle-all">Select / Deselect All
-                        </label>
-                        <div class="pull-right noMargin">
-                            <label class="checkbox inline"><small>Schedule this patch</small></label>
-                            <input type="checkbox" name="schedule" value="once"/>&nbsp;
-                            <select type="button" class="btn btn-mini" name="operation">
-                                <option value="install">Install</option>
-                                <option value="hide">Hide</option>
-                            </select>
-                            <select type="button" class="btn btn-mini" name="throttle">
-                                <option>idle</option>
-                                <option value="below_normal">below normal</option>
-                                <option>normal</option>
-                                <option value="above_normal">above normal</option>
-                                <option>high</option>
-                                <!--<option value="real_time">real time</option>-->
-                            </select>
-                            <input type="submit" class="btn btn-mini btn-primary" value="Submit">
-                        </div>
-                        <input type="hidden" value="<% print(model.id); %>" name="node">
-                    </header>
-                    <div class="items">
-                        <% _.each(model['patch/need'], function (patch) { %>
-                        <div class="item clearfix" title="<%= patch.name %>">
-                            <div class="row-fluid">
-                                <span class="desc span8">
-                                    <label class="checkbox inline">
-                                        <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                        <%= patch.name %>
-                                    </label>
-                                </span>
-                                <span class="span4 alignRight">
-                                    <a href="#patches/<%= patch.id %>">More information</a>
-                                </span>
-                            </div>
-                        </div>
-                        <% }); %>
-                    </div>
-                </form>
-                <% }  else { %>
-                <div class="items">
-                    <div class="item">
-                        <em>No patches to display</em>
-                    </div>
-                </div>
-                <% } %>
-            </section>
-        </div>
-    </div>
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <header>
-                <a class="accordion-toggle" href="#">
-                    <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Patches Done</strong>
-                    <span class="badge badge-inverse pull-right"><%= model['patch/done'].length %></span>
-                </a>
-            </header>
-        </div>
-        <div class="accordion-body collapse">
-            <section class="list accordion-inner">
-                <% if (model['patch/done'].length != 0) { %>
-                <form action="/submitForm" method="post" class="form-inline" id="done">
-                    <header class="clearfix">
-                        <label class="checkbox inline">
-                            <input type="checkbox" class="toggle-all">Select / Deselect All
-                        </label>
-                        <div class="pull-right noMargin">
-                            <select type="button" class="btn btn-mini" name="operation">
-                                <option value="uninstall">Uninstall</option>
-                                <option value="hide">hide</option>
-                            </select>
-                            <input type="submit" class="btn btn-mini btn-primary" value="Submit">
-                        </div>
-                        <input type="hidden" value="<% print(model.id); %>" name="node">
-                    </header>
-                    <div class="items">
-                        <% _.each(model['patch/done'], function (patch) { %>
-                        <div class="item clearfix" title="<%= patch.name %>">
-                            <div class="row-fluid">
-                        <span class="desc span8">
-                            <label class="checkbox inline">
-                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                <%= patch.name %>
-                            </label>
-                        </span>
-                        <span class="span4 alignRight">
-                            <% if (model.os_code && model.os_code == 'linux') { %>
-                            <!--
-                                <button type="button" class="btn btn-link" name="dependencies" value="<%= patch.id %>">
-                                    <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;
-                                    <small>Dependencies</small>&nbsp;
-                                </button>&nbsp;
-                            -->
-                            <% } %>
-                            <a href="#patches/<%= patch.id %>">More information</a>
-                        </span>
-                            </div>
-                        </div>
-                        <% }); %>
-                    </div>
-                </form>
-                <% }  else { %>
-                <div class="items">
-                    <div class="item">
-                        <em>No patches to display</em>
-                    </div>
-                </div>
-                <% } %>
-            </section>
-        </div>
-    </div>
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <header>
-                <a class="accordion-toggle" href="#">
-                    <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Patches Pending</strong>
-                    <span class="badge badge-inverse pull-right"><%= model['patch/pend'].length %></span>
-                </a>
-            </header>
-        </div>
-        <div class="accordion-body collapse">
-            <section class="list accordion-inner" id="pending">
-                <div class="items">
-                    <% if (model['patch/pend'].length != 0) { %>
-                    <% _.each(model['patch/pend'], function (patch, i) { %>
-                    <div class="item clearfix" title="<%= patch.name %>">
-                        <div class="row-fluid">
-                            <span class="desc span8"><%= patch.name %></span>
-                            <span class="span4 alignRight"><a href="#patches/<%= patch.id %>">More information</a></span>
-                        </div>
-                    </div>
-                    <% }); %>
-                    <% }  else { %>
-                    <div class="item" id="no-pending">
-                        <em>No patches to display</em>
-                    </div>
-                    <% } %>
-                </div>
-            </section>
-        </div>
-    </div>
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <header>
-                <a class="accordion-toggle" href="#">
-                    <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Patches Failed</strong>
-                    <span class="badge badge-inverse pull-right"><%= model['patch/fail'].length %></span>
-                </a>
-            </header>
-        </div>
-        <div class="accordion-body collapse">
-            <section class="list accordion-inner">
-                <% if (model['patch/fail'].length != 0) { %>
-                <form action="/submitForm" method="post" class="form-inline" id="failed">
-                    <header class="clearfix">
-                        <label class="checkbox inline">
-                            <input type="checkbox" class="toggle-all">Select / Deselect All
-                        </label>
-                        <div class="pull-right noMargin">
-                            <select type="button" class="btn btn-mini" name="operation">
-                                <option value="install">Reinstall</option>
-                                <option value="hide">hide</option>
-                            </select>
-                            <input type="submit" class="btn btn-mini btn-primary" value="Submit">
-                        </div>
-                        <input type="hidden" value="<% print(model.id); %>" name="node">
-                    </header>
-                    <% _.each(model['patch/fail'], function (patch) { %>
-                    <div class="items">
-                        <div class="item clearfix" title="<%= patch.name %>">
-                            <div class="row-fluid">
-                        <span class="desc span8">
-                            <label class="checkbox inline">
-                                <input type="checkbox" id="<%= patch.id %>" name="patches" value="<%= patch.id %>">
-                                <%= patch.name %>
-                            </label>
-                        </span>
-                        <span class="span4 alignRight">
-                            <a href="#patches/<%= patch.id %>">More information</a>
-                        </span>
-                            </div>
-                        </div>
-                    </div>
-                    <% }); %>
-                </form>
-                <% }  else { %>
-                <div class="items">
-                    <div class="item">
-                        <em>No patches to display</em>
-                    </div>
-                </div>
-                <% } %>
-            </section>
-        </div>
-    </div>
-</article>
+</article><br>
+<div class="tab-header">
+</div>
+<div class="tab-body">
 
-
+</div>
 
 <style>
     div.ui-datepicker{

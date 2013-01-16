@@ -8,6 +8,7 @@ from models.node import *
 from models.tagging import *
 from models.scheduler import *
 from models.ssl import *
+from models.snapshots import *
 from utils.common import *
 from db.client import *
 
@@ -67,6 +68,14 @@ def node_exists(session, node_ip=None, node_id=None):
             session.query(NodeInfo).filter_by(id=node_id)
     node_exists = node.first()
     return(node_exists)
+
+
+def snapshots_exist(session, node_id=None):
+    session = validate_session(session)
+    if node_id:
+        snapshots = session.query(SnapshotsPerNode).\
+            filter(SnapshotsPerNode.node_id == node_id).all()
+    return(snapshots)
 
 
 def operation_exists(session, oper_id):
@@ -288,15 +297,13 @@ def get_transactions(session, count=None, offset=0):
     for operation in all_operations:
         all_db[str(operation.id)] = [operation]
     for results in all_results:
-        results_db[str(results.id)] = [results]
-    for operation in all_operations:
-        if operation.results_id:
-            all_db[str(operation.id)].append(results_db[str(operation.results_id)])
+        if results.operation_id:
+            all_db[str(results.operation_id)].append(results)
     unsorted_list = []
     for key, value in all_db.items():
         unsorted_list.append((int(key), value))
     sorted_list = sorted(unsorted_list, key=lambda x: x[0])
     sorted_list.reverse()
-    return(sorted_list, total_count)
+    return(sorted_list, len(sorted_list))
 
 

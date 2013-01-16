@@ -30,7 +30,7 @@ from sqlalchemy.orm import sessionmaker, class_mapper
 
 from jsonpickle import encode
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 
@@ -185,14 +185,21 @@ class GetTagStatsHandler(BaseHandler):
     def get(self):
         self.session = self.application.session
         self.session = validate_session(self.session)
-        tag_id = None
-        tag_name = None
-        try:
-            tag_id = self.get_argument('tagid')
-            tag_name = self.get_argument('tagname')
-        except Exception as e:
-            pass
+        tag_id = self.get_argument('tagid', None)
+        tag_name = self.get_argument('tagname', None)
         result = get_tag_stats(self.session, tagid=tag_id, tagname=tag_name)
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
+class GetNodeStatsHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        self.session = self.application.session
+        self.session = validate_session(self.session)
+        nodeid = self.get_argument('nodeid')
+        nodename = self.get_argument('nodename')
+        result = get_node_stats(self.session, tagid=tag_id, tagname=tag_name)
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 

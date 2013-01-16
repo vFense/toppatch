@@ -8,5 +8,8 @@
 .profile
 .ssh
 *.pyc
+*.tmp
+*.tmp.*
 *.log
+*.log.*
 .DS_Store

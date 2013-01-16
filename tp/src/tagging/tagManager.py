@@ -55,16 +55,20 @@ def get_tag_stats(session, tagid=None, tagname=None):
         return a list of tag_statistics in json
     """
     update_tag_stats(session)
+    result = {}
     list_of_tags = []
     tag_stats = []
+    count = None
     if tagid:
-        tag_stats = session.query(TagStats, TagInfo).\
+        tag_stats = session.query(TagStats, TagInfo).join(TagInfo).\
                 filter(TagInfo.id == tagid).all()
     elif tagname:
         tag_stats = session.query(TagStats, TagInfo).join(TagInfo).\
                 filter(TagInfo.tag == tagname).all()
     else:
-        tag_stats = session.query(TagStats, TagInfo).join(TagInfo).all()
+        tag_stats = session.query(TagStats, TagInfo).join(TagInfo)
+        count = tag_stats.count()
+        tag_stats = tag_stats.all()
     if len(tag_stats) > 0:
         for tags in tag_stats:
             tag = {
@@ -79,7 +83,12 @@ def get_tag_stats(session, tagid=None, tagname=None):
                     "patches_pending" : int(tags[0].patches_pending)
                 }
             list_of_tags.append(tag)
-    return list_of_tags
+    if count:
+        result['data'] = list_of_tags
+        result['count'] = count
+        return result
+    else:
+        return list_of_tags
 
 
 def tag_adder(session, msg, username=None):
