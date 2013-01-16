@@ -11,7 +11,7 @@ from db.update_table import *
 from utils.common import *
 
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 

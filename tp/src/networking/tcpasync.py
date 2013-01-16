@@ -7,7 +7,7 @@ import select
 import logging
 import logging.config
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 class TcpConnect():

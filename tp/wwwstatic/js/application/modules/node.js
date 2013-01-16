@@ -15,6 +15,12 @@ define(
                     return this.baseUrl;
                 }
             }),
+            VmCollection: Backbone.Collection.extend({
+                baseUrl: 'api/virtual/node/info',
+                url: function () {
+                    return this.baseUrl + '?node_id=' + this.id;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     _.bindAll(this, 'createtag');
@@ -25,12 +31,13 @@ define(
 
                     this.id = this.collection.id;
 
-
-
                     this.tagcollection = new exports.TagCollection();
                     this.tagcollection.bind('reset', this.render, this);
                     this.tagcollection.fetch();
 
+                    this.vmcollection = new exports.VmCollection();
+                    this.vmcollection.bind('reset', this.render, this);
+                    this.vmcollection.fetch();
                 },
                 events: {
                     'click .disabled': function (e) { e.preventDefault(); },
@@ -42,6 +49,8 @@ define(
                     'click #editDisplay': 'showEditOperation',
                     'click #editHost': 'showEditOperation',
                     'click button[name=showNetworking]': 'showNetworking',
+                    'click button[name=agentOperation]': 'agentOperation',
+                    'click button[name=nodeOperation]': 'nodeOperation',
                     'submit form': 'submit'
                 },
                 beforeRender: $.noop,
@@ -96,7 +105,7 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var $header, $body,
+                    var $header, $body, vmData,
                         template = _.template(this.template),
                         data = this.collection.toJSON()[0],
                         tagData = this.tagcollection.toJSON();
@@ -108,17 +117,20 @@ define(
                                 {text: 'VMware', href: 'nodes/' + this.id + '/vmware'}
                             ]
                         });
+                        vmData = this.vmcollection.toJSON()[0];
+                        this.vm_name = vmData ? vmData.vm_name : null;
                     } else {
                         this.navigation = new tabNav.View({
                             tabs: [
                                 {text: 'Patching', href: 'nodes/' + this.id + '/patches'}
                             ]
                         });
+                        vmData = null;
                     }
 
                     this.$el.html('');
 
-                    this.$el.append(template({model: data, tags: tagData}));
+                    this.$el.append(template({model: data, tags: tagData, vm: vmData}));
 
                     $header = this.$el.find('.tab-header');
                     $header.addClass('tabs').html(this.navigation.render().el);
@@ -399,6 +411,63 @@ define(
                         $button.html('Show more');
                     }
                     $hidden.toggle();
+                },
+                agentOperation: function (event) {
+                    var $button = $(event.currentTarget),
+                        $alert = this.$el.find('.alert').first(),
+                        operation = $button.data('value'),
+                        url = 'submitForm',
+                        nodeId = this.id,
+                        params = {
+                            node: nodeId,
+                            operation: operation
+                        };
+                    window.console.log(params);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html(json.message);
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                        }
+                    });
+                    /*
+                    switch (operation) {
+                    case 'start':
+                        window.console.log('start here');
+                        break;
+                    case 'stop':
+                        window.console.log('stop here');
+                        break;
+                    case 'restart':
+                        window.console.log('restart here');
+                        break;
+                    }
+                    */
+                },
+                nodeOperation: function (event) {
+                    var url, $button = $(event.currentTarget),
+                        $alert = this.$el.find('.alert').first(),
+                        operation = $button.data('value'),
+                        vmName = this.vm_name,
+                        params = {
+                            vm_name: vmName
+                        };
+                    window.console.log(params);
+                    if (operation === 'start') {
+                        url = 'api/virtual/node/poweron';
+                    } else if (operation === 'stop') {
+                        url = 'api/virtual/node/shutdown';
+                    } else if (operation === 'restart') {
+                        url = 'api/virtual/node/reboot';
+                    }
+                    $.post(url, params, function (json) {
+                        if (json.pass) {
+                            $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html(json.message);
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                        }
+                    });
                 },
                 beforeClose: function () {
                     var schedule = this.$el.find('input[name="schedule"]:checked'),

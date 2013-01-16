@@ -1,5 +1,6 @@
 import tornado.httpserver
 import tornado.web
+import functools
 
 try: import simplejson as json
 except ImportError: import json
@@ -25,7 +26,7 @@ from virtual.vmware.vmcollector import *
 
 from jsonpickle import encode
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 
@@ -113,21 +114,38 @@ class CreateSnapshotHandler(BaseHandler):
         snap_name = self.get_argument('snap_name', None)
         memory = self.get_argument('memory', False)
         quiesce = self.get_argument('quiesce', False)
-        snap_description = self.get_argument('snap_description', None)
+        if memory:
+            memory = return_bool(memory)
+        if quiesce:
+            quiesce = return_bool(quiesce)
+        snap_description = self.get_argument('snap_description', '')
         result = None
         if vm_name and snap_name:
             vm = VmApi()
-            vm.connect()
-            if vm.logged_in:
-                result = vm.create_snapshot(vm_name=vm_name,
-                        snap_name=snap_name, memory=memory,
-                        quiesce=quiesce, snap_description=snap_description,
-                        username=username
-                        )
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    tornado.ioloop.IOLoop.instance().add_callback(functools.partial(vm.create_snapshot,
+                            **{'vm_name':vm_name,
+                                'snap_name':snap_name,
+                                'memory':memory,
+                                'quiesce':quiesce,
+                                'snap_description':snap_description,
+                                'username':username}
+                            ))
+                    result = {
+                            'pass': True,
+                            'message': 'Create SnapShot Operation In Progress'
+                            }
+                else:
+                    result = {
+                            'pass': False,
+                            'message': 'Vcenter is not responding'
+                            }
             else:
                 result = {
                         'pass': False,
-                        'message': vm.error
+                        'message': 'VMWare Config Does Not Exist'
                         }
         else:
             result = {
@@ -139,6 +157,7 @@ class CreateSnapshotHandler(BaseHandler):
                             )
                     }
         self.set_header('Content-Type', 'application/json')
+        print result
         self.write(json.dumps(result, indent=4))
 
 
@@ -151,15 +170,28 @@ class RevertSnapshotHandler(BaseHandler):
         result = None
         if vm_name and snap_name:
             vm = VmApi()
-            vm.connect()
-            if vm.logged_in:
-                result = vm.revert_to_snapshot(vm_name=vm_name,
-                        snap_name=snap_name, username=username
-                        )
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    tornado.ioloop.IOLoop.instance().\
+                            add_callback(functools.partial(vm.revert_to_snapshot,
+                            **{'vm_name':vm_name,
+                                'snap_name':snap_name,
+                                'username':username}
+                            ))
+                    result = {
+                            'pass': True,
+                            'message': 'Revert To SnapShot Operation In Progress'
+                            }
+                else:
+                    result = {
+                            'pass': False,
+                            'message': 'Vcenter is not responding'
+                            }
             else:
                 result = {
                         'pass': False,
-                        'message': vm.error
+                        'message': 'VMWare Config Does Nto Exists'
                         }
         else:
             result = {
@@ -178,27 +210,43 @@ class RemoveSnapshotHandler(BaseHandler):
         vm_name = self.get_argument('vm_name', None)
         snap_name = self.get_argument('snap_name', None)
         children = self.get_argument('children', True)
+        if type(children) != bool:
+            children = return_bool(children)
         result = None
         if vm_name and snap_name and children:
             vm = VmApi()
-            vm.connect()
-            if vm.logged_in:
-                result = vm.remove_snapshot(vm_name=vm_name,
-                        snap_name=snap_name, remove_children=children,
-                        username=username
-                        )
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    tornado.ioloop.IOLoop.instance().\
+                            add_callback(functools.partial(vm.remove_snapshot,
+                            **{'vm_name':vm_name,
+                                'snap_name':snap_name,
+                                'remove_children':children,
+                                'username':username}
+                            ))
+                    result = {
+                            'pass': True,
+                            'message': 'Remove To SnapShot Operation In Progress'
+                            }
+                    print result
+                else:
+                    result = {
+                            'pass': False,
+                            'message': 'Vcenter is not responding'
+                            }
             else:
                 result = {
                         'pass': False,
-                        'message': vm.error
+                        'message': 'VMWare Config Does Not Exist'
                         }
         else:
             result = {
                     'pass': False,
-                    'message': 'Needed arguments: %s\n%s' % \
-                            ('vnname and snapname')
+                    'message': 'Missing Arguments'
                     }
         self.set_header('Content-Type', 'application/json')
+        print result
         self.write(json.dumps(result, indent=4))
 
 
@@ -210,14 +258,28 @@ class RemoveAllSnapshotsHandler(BaseHandler):
         result = None
         if vm_name:
             vm = VmApi()
-            vm.connect()
-            if vm.logged_in:
-                result = vm.remove_all_snapshots(vm_name=vm_name,
-                        username=username)
+            if vm.config_exists:
+                vm.connect()
+                if vm.logged_in:
+                    tornado.ioloop.IOLoop.instance().\
+                            add_callback(functools.partial(
+                                vm.remove_all_snapshots,
+                                **{'vm_name':vm_name,
+                                    'username':username}
+                                ))
+                    result = {
+                            'pass': True,
+                            'message': 'Removing All SnapShots In Progress'
+                            }
+                else:
+                    result = {
+                            'pass': False,
+                            'message': 'Vcenter is not responding'
+                            }
             else:
                 result = {
                         'pass': False,
-                        'message': vm.error
+                        'message': 'VMWare Config Does Not Exist'
                         }
         else:
             result = {
@@ -307,3 +369,59 @@ class GetNodeVmInfoHandler(BaseHandler):
                 }
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(results, indent=4))
+
+
+
+class PowerOnVmHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        vm_name = self.get_argument('vm_name', None)
+        results = None
+        if vm_name:
+            results = poweron_on(vm_name=vm_name, username=username)
+        else:
+            results = {
+                     'pass': False,
+                     'message': 'Invalid Argument'
+                     }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
+
+
+class ShutdownVmHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        vm_name = self.get_argument('vm_name', None)
+        results = None
+        if vm_name:
+            results = shutdown_vm(vm_name=vm_name, username=username)
+        else:
+            results = {
+                     'pass': False,
+                     'message': 'Invalid Argument'
+                     }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
+
+
+
+class RebootVmHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        vm_name = self.get_argument('vm_name', None)
+        results = None
+        if vm_name:
+            results = reboot_vm(vm_name=vm_name, username=username)
+        else:
+            results = {
+                     'pass': False,
+                     'message': 'Invalid Argument'
+                     }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(results, indent=4))
+
+
+

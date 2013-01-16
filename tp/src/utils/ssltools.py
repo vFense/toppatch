@@ -32,7 +32,7 @@ EXTENSION = {
             }
 
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 def load_private_key(privkey=CA_PKEY):

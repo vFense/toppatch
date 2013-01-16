@@ -11,6 +11,7 @@ define(
         "use strict";
         return function () {
             var width    = 370,
+                barWidth = 70,
                 angle = 30,
                 depth = 20,
                 height   = 200 - depth,
@@ -22,7 +23,7 @@ define(
                         colors = d3.scale.category20(),
                         x = d3.scale.linear().domain([0, data.length]).range([15, width]),
                         y = d3.scale.linear().domain([0, d3.max(data, function (datum) { return datum.value; })]).rangeRound([0, height]),
-                        barWidth = width / data.length - (width * 0.1);
+                        barWidth = width / data.length - (width * 0.15);
                     $(this).html("");
                     function topColor(color) {
                         return severityColors[color];
@@ -197,6 +198,16 @@ define(
 
                 });
             }
+            chart.barWidth = function (value) {
+                if (!arguments.length) { return barWidth; }
+                barWidth = value;
+                return chart;
+            };
+            chart.width = function (value) {
+                if (!arguments.length) { return width; }
+                width = value;
+                return chart;
+            };
             return chart;
         };
     }

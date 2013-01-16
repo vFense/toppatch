@@ -101,6 +101,7 @@ class Application(tornado.web.Application):
             (r"/api/tagging/removeTag?", TagRemoveHandler),
             (r"/api/tagging/tagStats?", GetTagStatsHandler),
             (r"/api/transactions/getTransactions?", GetTransactionsHandler),
+            (r"/api/transactions/search?", SearchTransactionsHandler),
             (r"/api/package/getDependecies?", GetDependenciesHandler),
             (r"/api/package/searchByPatch?", SearchPatchHandler),
             (r"/api/package/getTagsByTpId?", GetTagsPerTpIdHandler),
@@ -129,6 +130,9 @@ class Application(tornado.web.Application):
             (r"/api/vmware/config/create?", CreateVmwareConfigHandler),
             (r"/api/vmware/config/list?", GetVmwareConfigHandler),
             (r"/api/virtual/node/info?", GetNodeVmInfoHandler),
+            (r"/api/virtual/node/poweron?", PowerOnVmHandler),
+            (r"/api/virtual/node/shutdown?", ShutdownVmHandler),
+            (r"/api/virtual/node/reboot?", RebootVmHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.
@@ -162,7 +166,7 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
     def log_request(self, handler):
-        logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+        logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
         log = logging.getLogger('rvweb')
         log_method = log.debug
         if handler.get_status() <= 299:

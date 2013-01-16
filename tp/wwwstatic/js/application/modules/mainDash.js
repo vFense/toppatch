@@ -10,8 +10,7 @@ define(
                         this.widget = "widget1";
                         this.type = "graph";
                         this.current = "new";
-                        this.sizeval = "3";
-                        this.classType = ["info", "success", "warning", "error"];
+                        this.sizeval = 3;
                         this.counter = 4;
                         this.graphType = 'pie';
                         this.graph = '#graph1';
@@ -21,6 +20,7 @@ define(
                         this.myClass = "span";
                         this.tempData = "";
                         this.title = "Default";
+                        this.spanCounter = 0;
                         this.properties = {
                             widgetName: "widget1",
                             currentWidget: "existing",
@@ -96,7 +96,6 @@ define(
                                 $('#graphSettings').show();
                             }
                             $('#title').val(title).attr("placeholder", title);
-                            //widgetview.graphSetting();
                         } else if (param === "new") {
                             if ($('#widget5').length !== 0) {
                                 window.console.log('too many widgets');
@@ -137,11 +136,15 @@ define(
                         } */
                     },
                     renderNew: function () {
-                        var variables, index,
+                        var variables, $rowDiv,
+                            newElement = function (element) {
+                                return $(document.createElement(element));
+                            },
                             that = this;
                         that.widget = "widget" + that.counter;
+                        $rowDiv = newElement('div').addClass('row-fluid clearfix movable');
                         if (that.type === "graph") {
-                            that.sizeval = $('input:radio[name=radio]:checked').val();
+                            that.sizeval = parseInt($('input:radio[name=radio]:checked').val(), 10);
                             that.graphType = $('input:radio[name=graph]:checked').val();
                             variables = {
                                 widget: that.widget,
@@ -152,10 +155,9 @@ define(
                                 title: that.title,
                                 graphType: that.graphType
                             };
-                            // Compile the template using underscore
                             that.template = _.template($("#widget_template").html(), variables);
-                            // Load the compiled HTML into the Backbone "el"
-                            that.$el.find("#insert").append(that.template);
+                            $rowDiv.append(that.template);
+                            that.$el.append($rowDiv);
                             that.graphData = $('input:radio[name=graphdata]:checked').val();
                             that.graph = "#" + $("#" + that.widget).children().children("div").attr("id");
                             that.counter += 1;
@@ -164,7 +166,7 @@ define(
                             $(".properties").click(function () { that.setProperties(this, 'existing'); });
                             $('.remove').click(function () { that.hideWidget(this); });
                         } else {
-                            that.sizeval = $('input:radio[name=radio]:checked').val();
+                            that.sizeval = parseInt($('input:radio[name=radio]:checked').val(), 10);
                             variables = {
                                 widget: that.widget,
                                 span: "span" + that.sizeval,
@@ -178,7 +180,8 @@ define(
                             that.graph = "#graph" + that.counter;
                             that.widget = "#" + that.widget;
                             that.template = _.template($("#widget_template").html(), variables);
-                            that.$el.find("#insert").append(that.template);
+                            $rowDiv.append(that.template);
+                            that.$el.append($rowDiv);
                             that.counter += 1;
                             that.getTags();
                         }
@@ -192,7 +195,7 @@ define(
                         that.title = window.User.get('properties').widgetTitle;//properties.get('widgetTitle');
                         if (that.type === "graph") {
                             that.myClass = $(that.widget).attr("class");
-                            that.sizeval = $('input:radio[name=radio]:checked').val();
+                            that.sizeval = parseInt($('input:radio[name=radio]:checked').val(), 10);
                             that.graphType = $('input:radio[name=graph]:checked').val();
                             that.graphData = $('input:radio[name=graphdata]:checked').val();
                             $(that.widget + '-title').html(that.title);
@@ -200,30 +203,12 @@ define(
                             self.displayChart();
                             self.saveState();
                         } else {
-                            that.sizeval = $('input:radio[name=radio]:checked').val();
+                            that.sizeval = parseInt($('input:radio[name=radio]:checked').val(), 10);
                             that.graphType = 'tag';
                             that.myClass = $(that.widget).attr("class");
                             $(that.widget + '-title').html(that.title);
                             $(that.widget).removeClass(that.myClass).addClass("span" + that.sizeval + " widget editable");
                             self.getTags();
-                            //text widget block
-                            /*
-                             parent = $(this.widget).parent();
-                             this.title = $('input:radio[name=param]:checked');
-                             index =  $("input:radio[name='param']").index(this.title);
-                             this.tempData = this.getOverviewData();
-                             this.sizeval = "3";
-                             variables = {
-                             widget: this.widget,
-                             span: "span" + this.sizeval,
-                             title: this.title.val(),
-                             type: this.classType[index],
-                             data: this.tempData
-                             };
-                             this.template = _.template($("#text_template").html(), variables);
-                             $(this.widget).remove();
-                             $(parent).append(this.template);
-                             */
                         }
                     },
                     saveState: function () {
@@ -256,8 +241,13 @@ define(
                     beforeRender: $.noop,
                     onRender: function () {
                         var that = this;
+                        this.generateWidgets();
+
                         $(document).find("#restore").click(function () { $(".widget").show(); });
                         $(document).find('#addwidget').click(function () { that.setProperties(this, 'new'); });
+
+                        this.$el.find('.remove').click(function () { that.hideWidget(this); });
+                        this.$el.find(".properties").click(function () { that.setProperties(this, 'existing'); });
 
                         this.$el.find(".movable").sortable({
                             containment: 'body',
@@ -281,7 +271,6 @@ define(
                             axis: 'y',
                             distance: 20
                         }).disableSelection();
-                        this.populateWidgets();
                     },
                     render: function () {
                         if (this.beforeRender !== $.noop) { this.beforeRender(); }
@@ -293,9 +282,10 @@ define(
                         this.$el.empty();
 
                         this.overview = new Overview.View({
-                            el: $('<div>').addClass('row-fluid clearfix movable').attr('id', 'overview')
+                            el: $('<div>').addClass('row-fluid clearfix').attr('id', 'overview')
                         });
                         this.$el.append(that.overview.render().$el);
+                        this.$el.append('<br>');
 
                         variables = window.User.get('widgets');
 
@@ -346,7 +336,7 @@ define(
                         this.$el.find(selection).attr('class', 'bar graph');
                         d3.json("../api/severity.json", function (json) {
                             var barWidth = (width / json.length) - 10,
-                                graphBar = app.chart.bar_3d();//app.chart.bar().barWidth(barWidth);
+                                graphBar = app.chart.bar_3d().width(width);//app.chart.bar().barWidth(barWidth);
                             d3.select(selection).datum(json).call(graphBar);
                         });
                     },
@@ -373,27 +363,73 @@ define(
                          //title = properties.get('widgetTitle') === 'Default' ? "Line Graph" : properties.get('widgetTitle'),
                          d3.select(selection).datum(data).call(lineChart);
                     }, */
+                    calculateRows: function () {
+                        var i, check,
+                            that = this,
+                            rowArray = [],
+                            arrayOfRows = [],
+                            settings = window.User.get('widgets'),
+                            widgets = settings.graph;
+                        for (i = 0; i < widgets.length; i += 1) {
+                            check = that.spanCounter + settings.spans[i];
+                            if (check < 12) {
+                                rowArray.push(settings.spans[i]);
+                                that.spanCounter += settings.spans[i];
+                                if (check + settings.spans[i + 1] > 12 || isNaN(settings.spans[i + 1])) {
+                                    arrayOfRows.push(rowArray);
+                                }
+                            } else if (check === 12) {
+                                rowArray.push(settings.spans[i]);
+                                that.spanCounter = 0;
+                                arrayOfRows.push(rowArray);
+                                rowArray = [];
+                            } else if (check > 12) {
+                                rowArray = [];
+                                rowArray.push(settings.spans[i]);
+                                arrayOfRows.push(rowArray);
+                                that.spanCounter = 0;
+                            }
+                        }
+                        return arrayOfRows;
+                    },
+                    generateWidgets: function () {
+                        var variables, template, $rowDiv, arrayOfRows,
+                            that = this,
+                            widgetCounter = 0,
+                            widgets = window.User.get('widgets').graph,
+                            settings = window.User.get('widgets'),
+                            newElement = function (element) {
+                                return $(document.createElement(element));
+                            };
+                        arrayOfRows = this.calculateRows();
+                        _.each(arrayOfRows, function (row) {
+                            $rowDiv = newElement('div').addClass('row-fluid clearfix movable');
+                            _.each(row, function (widget) {
+                                variables = {
+                                    widget: "widget" + (widgetCounter + 1),
+                                    span: "span" + settings.spans[widgetCounter],
+                                    graphcontainer: "graphcontainer" + (widgetCounter + 1),
+                                    menu: "menu" + (widgetCounter + 1),
+                                    graph: "graph" + (widgetCounter + 1),
+                                    title: settings.titles[widgetCounter],
+                                    graphType: widgets[widgetCounter]
+                                };
+                                template = _.template($("#widget_template").html(), variables);
+                                $rowDiv.append(template);
+                                widgetCounter += 1;
+                            });
+                            that.$el.append($rowDiv);
+                            that.counter = widgetCounter  + 1;
+                        });
+                        this.populateWidgets();
+                    },
                     populateWidgets: function () {
-                        var i, variables, template,
+                        var i,
                             that = this,
                             widgets = window.User.get('widgets').graph,
                             settings = window.User.get('widgets');
-                        for (i = 0; i < widgets.length; i += 1) {
-                            if (that.$el.find('#widget' + (i + 1)).length === 0) {
-                                variables = {
-                                    widget: "widget" + (i + 1),
-                                    span: "span" + settings.spans[i],
-                                    graphcontainer: "graphcontainer" + (i + 1),
-                                    menu: "menu" + (i + 1),
-                                    graph: "graph" + (i + 1),
-                                    title: settings.titles[i],
-                                    graphType: widgets[i]
-                                };
-                                template = _.template($("#widget_template").html(), variables);
-                                that.$el.find("#insert").append(template);
-                                that.counter += 1;
-                            }
 
+                        for (i = 0; i < widgets.length; i += 1) {
                             if (widgets[i] === 'pie') {
                                 that.pieGraph('#graph' + (i + 1));
                             } else if (widgets[i] === 'bar') {
@@ -412,8 +448,6 @@ define(
                              lineGraph('#graph' + (i + 1));
                              }*/
                         }
-                        that.$el.find(".properties").click(function () { that.setProperties(this, 'existing'); });
-                        that.$el.find('.remove').click(function () { that.hideWidget(this); });
                     }
                 })
             };

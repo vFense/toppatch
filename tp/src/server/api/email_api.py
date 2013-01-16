@@ -17,7 +17,7 @@ from emailer.mailer import *
 
 from jsonpickle import encode
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 

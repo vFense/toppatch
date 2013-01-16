@@ -3,7 +3,7 @@
         <form>
             <section class="row-fluid">
                 <div class="control-group span6">
-                    <label class="control-label">VMWare Host:</label>
+                    <label class="control-label">VMware Host:</label>
                     <div class="controls">
                         <input type="text" name="vm_host" value="<%= data.host %>"/>
                     </div>
@@ -35,12 +35,7 @@
                 </div>
             </section>
             <section class="row-fluid">
-                <div class="span6">
-                    <label class="control-label checkbox">
-                        Automatic Snapshots<input type="checkbox" name="snapshot"  <% if(data.snapshots_before_patch) { print('CHECKED'); } %>/>
-                    </label>
-                </div>
-                <div class="span4">
+                <div class="span10">
                     <div class="alert alert-block fade in hide"></div>
                 </div>
             </section>

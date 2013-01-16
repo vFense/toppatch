@@ -10,7 +10,7 @@ from utils.common import verify_json_is_valid
 from networking.agentoperation import AgentOperation
 
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvlistener')
 OPERATION = 'operation'
 OPERATION_ID = 'operation_id'

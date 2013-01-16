@@ -7,7 +7,7 @@ from utils.common import *
 from models.node import *
 from models.packages import *
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 def change_display_name(session, nodeid=None, displayname=None, username='system_user'):

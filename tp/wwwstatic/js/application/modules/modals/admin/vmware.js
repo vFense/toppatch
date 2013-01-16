@@ -49,13 +49,14 @@ define(
                         url += '&' + $ssInput.attr('name') + '=' + $ssInput.prop('checked');
                         that.$el.find('.control-group').removeClass('error');
                     }
+                    $alert.removeClass('alert-success alert-error').addClass('alert-info').html('Submitting...');
                     window.console.log(url);
                     $.post(url, function (json) {
                         window.console.log(json);
                         if (!json.pass) {
-                            $alert.removeClass('alert-success').addClass('alert-error').html(json.message);
+                            $alert.removeClass('alert-success alert-info').addClass('alert-error').html(json.message);
                         } else {
-                            $alert.removeClass('alert-error').addClass('alert-success').html(json.message);
+                            $alert.removeClass('alert-error alert-info').addClass('alert-success').html(json.message);
                         }
                         $alert.show();
                     });
