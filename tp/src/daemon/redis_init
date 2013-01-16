@@ -7,7 +7,7 @@ REDISPORT=6379
 EXEC=/opt/TopPatch/bin/redis-server
 CLIEXEC=/opt/TopPatch/bin/redis-cli
 
-PIDFILE=/opt/TopPatch/var/tmp/redis.pid
+PIDFILE=/opt/TopPatch/var/tmp/redis-6379.pid
 CONF="/opt/TopPatch/conf/redis.conf"
 
 case "$1" in
