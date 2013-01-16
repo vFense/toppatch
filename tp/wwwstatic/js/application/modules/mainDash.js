@@ -336,7 +336,7 @@ define(
                         this.$el.find(selection).attr('class', 'bar graph');
                         d3.json("../api/severity.json", function (json) {
                             var barWidth = (width / json.length) - 10,
-                                graphBar = app.chart.bar_3d();//app.chart.bar().barWidth(barWidth);
+                                graphBar = app.chart.bar_3d().width(width);//app.chart.bar().barWidth(barWidth);
                             d3.select(selection).datum(json).call(graphBar);
                         });
                     },
@@ -363,17 +363,13 @@ define(
                          //title = properties.get('widgetTitle') === 'Default' ? "Line Graph" : properties.get('widgetTitle'),
                          d3.select(selection).datum(data).call(lineChart);
                     }, */
-                    generateWidgets: function () {
-                        var i, variables, template, $rowDiv, check,
-                            widgetCounter = 0,
+                    calculateRows: function () {
+                        var i, check,
+                            that = this,
                             rowArray = [],
                             arrayOfRows = [],
-                            that = this,
-                            widgets = window.User.get('widgets').graph,
                             settings = window.User.get('widgets'),
-                            newElement = function (element) {
-                                return $(document.createElement(element));
-                            };
+                            widgets = settings.graph;
                         for (i = 0; i < widgets.length; i += 1) {
                             check = that.spanCounter + settings.spans[i];
                             if (check < 12) {
@@ -394,6 +390,18 @@ define(
                                 that.spanCounter = 0;
                             }
                         }
+                        return arrayOfRows;
+                    },
+                    generateWidgets: function () {
+                        var variables, template, $rowDiv, arrayOfRows,
+                            that = this,
+                            widgetCounter = 0,
+                            widgets = window.User.get('widgets').graph,
+                            settings = window.User.get('widgets'),
+                            newElement = function (element) {
+                                return $(document.createElement(element));
+                            };
+                        arrayOfRows = this.calculateRows();
                         _.each(arrayOfRows, function (row) {
                             $rowDiv = newElement('div').addClass('row-fluid clearfix movable');
                             _.each(row, function (widget) {
