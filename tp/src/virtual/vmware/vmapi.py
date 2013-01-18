@@ -922,10 +922,14 @@ class VmApi():
                     #for network in esx_net:
                     #    if 'Management Network' in network.portgroup:
                     #        esx_ip = network.spec.ip.ipAddress
+                    ip_list = []
+                    ipaddress_list = vm.guest.net
+                    for ip in ipaddress_list:
+                        ip_list.append(ip.ipAddress[0])
                     vms[vm.name] = {
                             'vm_name': vm.name,
                             'vm_uuid': vm.name,
-                            'ip_address': vm.guest.ipAddress,
+                            'ip_address': ip_list,
                             'host_name': vm.guest.hostName,
                             'uuid': vm.config.uuid,
                             'tools_status': vm.guest.toolsVersionStatus,
