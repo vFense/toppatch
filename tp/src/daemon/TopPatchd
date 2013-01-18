@@ -33,6 +33,8 @@ PIDS = [(MYSQL_PIDFILE, 'RVMySQL'), (RVLISTENER_PIDFILE, 'RVListener'),
 
 if not os.path.exists('/opt/TopPatch/var/tmp/'):
     os.mkdir('/opt/TopPatch/var/tmp/')
+if not os.path.exists('/opt/TopPatch/var/redis/'):
+    os.mkdir('/opt/TopPatch/var/redis/')
 if not os.path.exists('/opt/TopPatch/var/log/'):
     os.mkdir('/opt/TopPatch/var/log/')
 if not os.path.exists('/opt/TopPatch/var/lib/'):
