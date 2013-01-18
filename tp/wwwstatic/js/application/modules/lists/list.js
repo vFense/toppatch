@@ -121,8 +121,8 @@ define(
                         this.updateList({name: 'fetch'});
                     });
 
-                    this.listenTo(this.collection, 'error', function (collection, xhr, options) {
-                        this.updateList({name: 'error', response: xhr});
+                    this.listenTo(this.collection, 'error', function (collection, response, options) {
+                        this.updateList({name: 'error', response: response});
                     });
                 },
 
