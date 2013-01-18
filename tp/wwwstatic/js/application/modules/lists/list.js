@@ -19,23 +19,23 @@ define(
                     return '?' + $.param(this.params).trim();
                 },
 
-                verboseFetch: function (callBacks) {
+                verboseFetch: function (callbacks) {
                     var that = this;
 
-                    callBacks = callBacks || {};
+                    callbacks = callbacks || {};
 
                     // Add fetch event
                     this.trigger('fetch');
 
                     // Trigger error event unless other function is provided
-                    if (!callBacks || !callBacks.error || _.isFunction(callBacks.error)) {
-                        callBacks.error = function (collection, xhr, options) {
+                    if (!callbacks || !callbacks.error || _.isFunction(callbacks.error)) {
+                        callbacks.error = function (collection, xhr, options) {
                             that.trigger('error', collection, xhr, options);
                         };
                     }
 
                     // Call original fetch method
-                    this.fetch(callBacks);
+                    this.fetch(callbacks);
                 },
 
                 parse: function (response) {
