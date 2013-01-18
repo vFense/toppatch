@@ -360,6 +360,12 @@ BODY > HEADER #primaryNav {
   -o-animation-duration: 0.5s;
   animation-duration: 0.5s;
 }
+.cssanimations .halfTime {
+  -webkit-animation-duration: 2s;
+  -moz-animation-duration: 2s;
+  -o-animation-duration: 2s;
+  animation-duration: 2s;
+}
 .cssanimations .reverse {
   -webkit-animation-direction: reverse;
   -moz-animation-direction: reverse;

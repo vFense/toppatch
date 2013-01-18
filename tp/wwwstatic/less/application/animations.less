@@ -31,6 +31,7 @@
     }
 }
 
+// Animation styles
 .cssanimations {
     // Restrict animation styles to browsers that support it
     // cssanimations class is appended to the <html> element by Modernizr.js
@@ -48,8 +49,14 @@
         .animation-timing-function(linear);
     }
 
+    // http://en.wikipedia.org/wiki/Double-time
     .doubleTime {
         .animation-duration(@animationTime/2);
+    }
+
+    // http://en.wikipedia.org/wiki/Half_time_(music)
+    .halfTime {
+        .animation-duration(@animationTime*2);
     }
 
     .reverse {
