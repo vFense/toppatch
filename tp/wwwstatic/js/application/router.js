@@ -52,38 +52,6 @@ define(
                 // Default
                 // '*other'        : 'defaultAction'
             },
-            /*
-            route: function (route, name, callback) {
-                var that = this,
-                    modals = app.views.modals,
-                    adminRoutePattern = /^admin$|\/\w/; // expect 'admin' or 'admin/foo'
-
-                // before route event
-                that.trigger.apply(this, ["beforeRoute"].concat(route, name));
-
-                // Override the route method
-                that.constructor.__super__.route.call(that, route, name, function () {
-                    // Track current and previous routes
-                    that.updateFragments();
-
-                    // close any open modals
-                    // Do not close admin panel if next route uses admin panel
-                    if (!adminRoutePattern.test(this.currentFragment)) {
-                        if (modals.admin instanceof Backbone.View && modals.admin.isOpen()) {
-                            modals.admin.close();
-                        }
-                    }
-
-                    // run callback
-                    // If there is an error here, check the spelling
-                    // of the function in routes
-                    callback.apply(that, arguments);
-
-                    // after route event
-                    that.trigger.apply(that, ["afterRoute"].concat(route, name));
-                });
-            },
-            */
             navigate: function (fragment, options) {
                 this.updateFragments();
                 this.constructor.__super__.navigate.call(this, fragment, options);
