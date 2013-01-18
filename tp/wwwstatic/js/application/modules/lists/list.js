@@ -29,8 +29,8 @@ define(
 
                     // Trigger error event unless other function is provided
                     if (!callbacks || !callbacks.error || _.isFunction(callbacks.error)) {
-                        callbacks.error = function (collection, xhr, options) {
-                            that.trigger('error', collection, xhr, options);
+                        callbacks.error = function (collection, response, options) {
+                            that.trigger('error', collection, response, options);
                         };
                     }
 
