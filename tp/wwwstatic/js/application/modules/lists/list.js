@@ -34,6 +34,13 @@ define(
                         };
                     }
 
+                    // Trigger success event unless other function is provided
+                    if (!callbacks || !callbacks.success || _.isFunction(callbacks.success)) {
+                        callbacks.success = function (collection, response, options) {
+                            that.trigger('success', collection, response, options);
+                        };
+                    }
+
                     // Call original fetch method
                     this.fetch(callbacks);
                 },
