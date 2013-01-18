@@ -113,17 +113,17 @@ define(
                         this.collection =  new exports.Collection();
                     }
 
-                    this.collection.bind('reset', function () {
+                    this.listenTo(this.collection, 'reset', function () {
                         this.updateList({name: 'reset'});
-                    }, this);
+                    });
 
-                    this.collection.bind('fetch', function () {
+                    this.listenTo(this.collection, 'fetch', function () {
                         this.updateList({name: 'fetch'});
-                    }, this);
+                    });
 
-                    this.collection.bind('error', function (collection, xhr, options) {
+                    this.listenTo(this.collection, 'error', function (collection, xhr, options) {
                         this.updateList({name: 'error', response: xhr});
-                    }, this);
+                    });
                 },
 
                 events: {
