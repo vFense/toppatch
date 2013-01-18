@@ -89,12 +89,28 @@ define(
                 this.constructor.__super__.navigate.call(this, fragment, options);
             },
             initialize: function () {
+                var that = this,
+                    modals = app.views.modals,
+                    adminRoutePattern = /^admin$|\/\w/; // expect 'admin' or 'admin/foo';
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
                 this.viewTarget = '#dashboard-view';
                 this.viewManager = new app.ViewManager({'selector': this.viewTarget});
                 this.currentFragment = '';
                 this.lastFragment = '';
+
+                this.on("route", function () {
+                    // Track current and previous routes
+                    that.updateFragments();
+
+                    // close any open modals
+                    // Do not close admin panel if next route uses admin panel
+                    if (!adminRoutePattern.test(this.currentFragment)) {
+                        if (modals.admin instanceof Backbone.View && modals.admin.isOpen()) {
+                            modals.admin.close();
+                        }
+                    }
+                });
             },
             showDashboard: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
