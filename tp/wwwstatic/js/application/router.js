@@ -52,6 +52,7 @@ define(
                 // Default
                 // '*other'        : 'defaultAction'
             },
+            /*
             route: function (route, name, callback) {
                 var that = this,
                     modals = app.views.modals,
@@ -82,6 +83,7 @@ define(
                     that.trigger.apply(that, ["afterRoute"].concat(route, name));
                 });
             },
+            */
             navigate: function (fragment, options) {
                 this.updateFragments();
                 this.constructor.__super__.navigate.call(this, fragment, options);
