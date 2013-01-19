@@ -68,7 +68,7 @@ define(
                     ws.onmessage = function (evt) {
                         window.console.log(['websocket', 'message', evt]);
                         var $alert = this.$el.find('.alert');
-                        $alert.removeClass('alert-success alert-error').addClass('alert-info').html('message here');
+                        //$alert.removeClass('alert-success alert-error').addClass('alert-info').html('message here');
                         window.console.log($alert);
                     };
                     ws.onclose = function (evt) {
