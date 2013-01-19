@@ -14,7 +14,7 @@ from server.decorators import authenticated_request
 from jsonpickle import encode
 import tornadoredis
 import tornado.gen
-import tornado.ioloop
+from tornado import ioloop
 
 LISTENERS = []
 
