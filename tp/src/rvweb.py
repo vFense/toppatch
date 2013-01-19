@@ -110,6 +110,7 @@ class Application(tornado.web.Application):
             (r"/api/node/modifyHostName?", ModifyHostNameHandler),
             (r"/api/node/delete?", NodeRemoverHandler),
             (r"/api/node/cleanData?", NodeCleanerHandler),
+            (r"/api/node/wol?", NodeWolHandler),
             (r"/api/ssl/nodeToggler?", NodeTogglerHandler),
             (r"/api/ssl/list.json/?", SslHandler),
             (r"/api/acl/create?", AclCreateHandler),

@@ -24,6 +24,7 @@ from packages.pkgManager import *
 from node.nodeManager import *
 from transactions.transactions_manager import *
 from logger.rvlogger import RvLogger
+from wol.wol import *
 from sqlalchemy import distinct, func
 from sqlalchemy.orm import sessionmaker, class_mapper
 
@@ -282,6 +283,28 @@ class NodesHandler(BaseHandler):
         self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
+
+
+
+class NodeWolHandler(BaseHandler):
+    @authenticated_request
+    def post(self):
+        username = self.get_current_user()
+        session = self.application.session
+        session = validate_session(session)
+        list_of_nodes = self.get_arguments('nodes')
+        if (list_of_nodes) >0:
+            result = wake_up_nodes(session,
+                    node_list=list_of_nodes
+                    )
+        else:
+            result = {
+                'pass': False,
+                'message': 'Incorrect argument passed. %s' %
+                    ('Arguments needed are: nodeid')
+                }
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
 
 
 
