@@ -218,11 +218,15 @@ def get_and_parse_tag_packages(session, node_ids, status):
            join(pkg_sub_query).all()
     if len(pkg_query) >0:
         for pkg in pkg_query:
+            if not pkg.Package.date_pub:
+                date_pub = None
+            else:
+                date_pub = pkg.Package.date_pub.strftime('%m/%d/%Y %H:%M')
             packages.append({
                     'id': pkg.toppatch_id,
                     'description': pkg.Package.description,
                     'severity': pkg.Package.severity,
-                    'date_pub': pkg.Package.date_pub.strftime('%m/%d/%Y %H:%M'),
+                    'date_pub': date_pub,
                     'name': pkg.Package.name,
                     'kb': pkg.Package.kb,
                     'file_size': pkg.Package.file_size
@@ -241,10 +245,12 @@ def get_all_data_for_tag(session, tag_name=None, tag_id=None):
     elif tag_id:
         tag = session.query(TagInfo).filter(TagInfo.id == tag_id).first()
     if tag:
+        print tag.tag
         nodes_in_tag = session.query(TagsPerNode).\
                 filter(TagsPerNode.tag_id == tag.id).all()
         if len(nodes_in_tag) >0:
-            list_of_node_ids = map(lambda node: node.id, nodes_in_tag)
+            print nodes_in_tag
+            list_of_node_ids = map(lambda node: node.node_id, nodes_in_tag)
             list_of_nodes = session.query(NodeInfo, SystemInfo).\
                     join(SystemInfo).\
                     filter(NodeInfo.id.in_(list_of_node_ids)).all()
