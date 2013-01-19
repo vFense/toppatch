@@ -84,6 +84,7 @@ class Application(tornado.web.Application):
             (r"/api/logger/modifyLogging?", LoggingModifyerHandler),
             (r"/api/logger/getParams?", LoggingListerHandler),
             (r"/api/nodes.json/?", NodesHandler),
+            (r"/api/tags.json/?", TagsHandler),
             (r"/api/patches.json/?", PatchesHandler),
             (r"/api/severity.json/?", SeverityHandler),
             (r"/api/scheduler/list.json/?", SchedulerListerHandler),

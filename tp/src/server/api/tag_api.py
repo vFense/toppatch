@@ -117,5 +117,24 @@ class TagRemoveHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+class TagsHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        username = self.get_current_user()
+        session = self.application.session
+        session = validate_session(session)
+        tag_name = self.get_argument('tag_name', None)
+        tag_id = self.get_argument('tag_id', None)
+        result = None
+        if tag_name:
+            result = get_all_data_for_tag(session, tag_name=tag_name)
+        elif tag_id:
+            result = get_all_data_for_tag(session, tag_id=tag_id)
+        else:
+            result = {
+                    'pass': False,
+                    'message': 'Invalid Arguments'
+                    }
 
-
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))

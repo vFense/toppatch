@@ -7,7 +7,7 @@ try: import simplejson as json
 except ImportError: import json
 from models.node import NodeInfo
 from db.client import *
-from datetime import datetime
+import datetime
 from user.manager import *
 from networking.agentoperation import AgentOperation
 from scheduler.jobManager import job_scheduler, job_lister
