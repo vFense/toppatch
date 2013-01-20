@@ -87,6 +87,8 @@ define(
                         this.collection =  new exports.Collection();
                     }
 
+                    _.bindAll(this, 'fetchSuccess');
+                    _.bindAll(this, 'fetchError');
                 },
 
                 events: {
