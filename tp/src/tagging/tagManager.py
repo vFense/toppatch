@@ -225,6 +225,7 @@ def get_and_parse_tag_packages(session, node_ids, status):
             packages.append({
                     'id': pkg.toppatch_id,
                     'description': pkg.Package.description,
+                    #'description': pkg.Package.description.decode('utf-8', 'ignore'),
                     'severity': pkg.Package.severity,
                     'date_pub': date_pub,
                     'name': pkg.Package.name,
@@ -245,11 +246,9 @@ def get_all_data_for_tag(session, tag_name=None, tag_id=None):
     elif tag_id:
         tag = session.query(TagInfo).filter(TagInfo.id == tag_id).first()
     if tag:
-        print tag.tag
         nodes_in_tag = session.query(TagsPerNode).\
                 filter(TagsPerNode.tag_id == tag.id).all()
         if len(nodes_in_tag) >0:
-            print nodes_in_tag
             list_of_node_ids = map(lambda node: node.node_id, nodes_in_tag)
             list_of_nodes = session.query(NodeInfo, SystemInfo).\
                     join(SystemInfo).\
