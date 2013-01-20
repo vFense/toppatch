@@ -22,9 +22,7 @@ class Worker(Thread):
             while not self.tasks.empty() and \
                     not self.process_queue.full():
                 self.process_queue.put(self.tasks.get_nowait())
-                self.logger.debug("IM HERE IN THE 1st WHILE LOOP")
             while not self.process_queue.empty():
-                self.logger.debug("IM HERE IN THE 2nd WHILE LOOP")
                 func, args = self.process_queue.get_nowait()
                 try:
                     func(*args)
