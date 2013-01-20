@@ -16,6 +16,7 @@ class Worker(Thread):
         self.daemon = True
         self.run_forver = True
         self.start()
+
     
     def run(self):
         while self.run_forver == True:
@@ -28,6 +29,8 @@ class Worker(Thread):
                     func(*args)
                 except Exception, e:
                     self.logger(e)
+                if not self.tasks.empty():
+                    self.process_queue.put(self.tasks.get_nowait())
                 self.process_queue.task_done()
             sleep(randint(1, 10))
 
