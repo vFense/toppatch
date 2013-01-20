@@ -216,7 +216,6 @@ define(
                 },
 
                 fetchSuccess: function (collection, response, options) {
-                    console.log(this);
                     this.hideLoading().updateList();
                     return this;
                 },
