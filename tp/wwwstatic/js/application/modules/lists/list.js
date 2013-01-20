@@ -233,6 +233,8 @@ define(
                     );
                     return this;
                 },
+
+                // Need to remove this function, or modify it to be more generic.
                 updateURL: function () {
                     // Update the URL, but do not cause a route event
                     app.router.navigate('logs' + this.collection.query());
