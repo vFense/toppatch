@@ -204,6 +204,18 @@ define(
                     return this;
                 },
 
+                showLoading: function () {
+                    var $el = this.$el,
+                        $items = $el.find('.items');
+                    this._pinwheel = new app.pinwheel();
+                    $items.empty().append(this._pinwheel.el);
+                    return this;
+                },
+
+                hideLoading: function () {
+                    if (this._pinwheel) { this._pinwheel.remove(); }
+                    return this;
+                },
                 updateURL: function () {
                     // Update the URL, but do not cause a route event
                     app.router.navigate('logs' + this.collection.query());
