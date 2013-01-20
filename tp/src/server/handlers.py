@@ -7,6 +7,7 @@ try: import simplejson as json
 except ImportError: import json
 from models.node import NodeInfo
 from db.client import *
+from datetime import datetime, timedelta
 from user.manager import *
 from networking.agentoperation import AgentOperation
 from scheduler.jobManager import job_scheduler, job_lister
@@ -14,7 +15,7 @@ from server.decorators import authenticated_request
 from jsonpickle import encode
 import tornadoredis
 import tornado.gen
-import tornado.ioloop
+from tornado import ioloop
 
 LISTENERS = []
 
@@ -122,11 +123,11 @@ class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
         def check():
             if self.client.connection.in_progress:
                 print 'Connection still in progress'
-                ioloop.IOLoop.instance().add_timeout(datetime.timedelta(0.00001), check)
+                ioloop.IOLoop.instance().add_timeout(timedelta(0.00001), check)
             else:
                 print 'Disconnecting'
                 self.client.disconnect()
-        ioloop.IOLoop.instance().add_timeout(datetime.timedelta(0.00001), check)
+        ioloop.IOLoop.instance().add_timeout(timedelta(0.00001), check)
         self.client.disconnect()
 
 

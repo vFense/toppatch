@@ -5,6 +5,9 @@ from db.update_table import *
 from utils.common import *
 
 from models.account import *
+from models.tagging import *
+from models.packages import *
+from models.node import *
 
 
 def tag_lister(session):
@@ -182,4 +185,96 @@ def tag_remove(session, msg, username=None):
             update_tag_stats(session)
             return tagged
 
- 
+
+def get_and_parse_tag_packages(session, node_ids, status):
+    packages = []
+    if 'available' in status:
+        pkg_sub_query = session.query(PackagePerNode).\
+                filter(PackagePerNode.installed == False).\
+                filter(PackagePerNode.node_id.in_(node_ids)).\
+                group_by(PackagePerNode.toppatch_id).subquery()
+
+    elif 'installed' in status:
+        pkg_sub_query = session.query(PackagePerNode).\
+                filter(PackagePerNode.installed == True).\
+                filter(PackagePerNode.node_id.in_(node_ids)).\
+                group_by(PackagePerNode.toppatch_id).subquery()
+
+    elif 'pending' in status:
+        pkg_sub_query = session.query(PackagePerNode).\
+                filter(PackagePerNode.installed == False).\
+                filter(PackagePerNode.pending == True).\
+                filter(PackagePerNode.node_id.in_(node_ids)).\
+                group_by(PackagePerNode.toppatch_id).subquery()
+
+    elif 'failed' in status:
+        pkg_sub_query = session.query(PackagePerNode).\
+                filter(PackagePerNode.installed == False).\
+                filter(PackagePerNode.attempts > 0).\
+                filter(PackagePerNode.node_id.in_(node_ids)).\
+                group_by(PackagePerNode.toppatch_id).subquery()
+
+    pkg_query = session.query(Package, pkg_sub_query).\
+           join(pkg_sub_query).all()
+    if len(pkg_query) >0:
+        for pkg in pkg_query:
+            if not pkg.Package.date_pub:
+                date_pub = None
+            else:
+                date_pub = pkg.Package.date_pub.strftime('%m/%d/%Y %H:%M')
+            packages.append({
+                    'id': pkg.toppatch_id,
+                    'description': pkg.Package.description,
+                    'severity': pkg.Package.severity,
+                    'date_pub': date_pub,
+                    'name': pkg.Package.name,
+                    'kb': pkg.Package.kb,
+                    'file_size': pkg.Package.file_size
+                    })
+    return(len(packages), packages)
+
+
+def get_all_data_for_tag(session, tag_name=None, tag_id=None):
+    tag = None
+    nodes = []
+    packages = []
+    status = ['available', 'installed', 'pending', 'failed']
+    tag_data = {}
+    if tag_name:
+        tag = session.query(TagInfo).filter(TagInfo.tag == tag_name).first()
+    elif tag_id:
+        tag = session.query(TagInfo).filter(TagInfo.id == tag_id).first()
+    if tag:
+        print tag.tag
+        nodes_in_tag = session.query(TagsPerNode).\
+                filter(TagsPerNode.tag_id == tag.id).all()
+        if len(nodes_in_tag) >0:
+            print nodes_in_tag
+            list_of_node_ids = map(lambda node: node.node_id, nodes_in_tag)
+            list_of_nodes = session.query(NodeInfo, SystemInfo).\
+                    join(SystemInfo).\
+                    filter(NodeInfo.id.in_(list_of_node_ids)).all()
+            for node in list_of_nodes:
+                nodes.append({
+                    'id': node[0].id,
+                    'display_name': node[0].display_name,
+                    'host_name': node[0].host_name,
+                    'computer_name': node[0].computer_name,
+                    'ip_address': node[0].ip_address,
+                    'is_vm': node[0].is_vm,
+                    'host_status': node[0].host_status,
+                    'agent_status': node[0].agent_status,
+                    'os_code': node[1].os_code,
+                    'os_string': node[1].os_string,
+                    'bit_type': node[1].bit_type,
+                    'meta': node[1].meta,
+                    })
+            tag_data['node_count'] = len(nodes)
+            tag_data['nodes'] = nodes
+            for i in status:
+                pkg_data = get_and_parse_tag_packages(session, list_of_node_ids, i)
+                tag_data['packages_'+i+'_count'] = pkg_data[0]
+                tag_data['packages_'+i] = pkg_data[1]
+    return tag_data
+
+
