@@ -161,7 +161,7 @@ define(
                 beforeUpdateList: $.noop,
                 afterUpdateList: $.noop,
 
-                updateList: function (event) {
+                updateList: function () {
                     if (this.beforeUpdateList !== $.noop) { this.beforeUpdateList(); }
 
                     var that = this,
@@ -173,28 +173,14 @@ define(
                     // empty item list
                     $items.empty();
 
-                    if (event.name === 'reset') {
-                        if (models.length > 0) {
-                            _.each(models, function (model) {
-                                $items.append(that.renderModel(model));
-                            });
-                        } else {
-                            $items.html(
-                                _.clone($item).empty().html(
-                                    'No data available'
-                                )
-                            );
-                        }
-                    } else if (event.name === 'fetch') {
-                        $items.empty().html(
+                    if (models.length > 0) {
+                        _.each(models, function (model) {
+                            $items.append(that.renderModel(model));
+                        });
+                    } else {
+                        $items.html(
                             _.clone($item).empty().html(
-                                'Loading...'
-                            )
-                        );
-                    } else if (event.name === 'error') {
-                        $items.empty().html(
-                            _.clone($item).html(
-                                ['Error', event.response.status, '-', event.response.statusText].join(' ')
+                                'No data available'
                             )
                         );
                     }
