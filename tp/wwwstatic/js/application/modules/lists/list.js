@@ -87,8 +87,9 @@ define(
                         this.collection =  new exports.Collection();
                     }
 
-                    _.bindAll(this, 'fetchSuccess');
-                    _.bindAll(this, 'fetchError');
+                    this.listenTo(this.collection, 'request', this.showLoading);
+                    this.listenTo(this.collection, 'sync', this.fetchSuccess);
+                    this.listenTo(this.collection, 'error', this.fetchError);
                 },
 
                 events: {
@@ -118,7 +119,7 @@ define(
                         this._baseItem = _.clone($items.find('.item')).empty();
                     }
 
-                    this.fetchCollection();
+                    this.collection.fetch();
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
@@ -202,16 +203,6 @@ define(
 
                 hideLoading: function () {
                     if (this._pinwheel) { this._pinwheel.remove(); }
-                    return this;
-                },
-
-                fetchCollection: function () {
-                    console.log(this);
-                    this.collection.fetch({
-                        success: this.fetchSuccess,
-                        error: this.fetchError
-                    });
-                    this.showLoading();
                     return this;
                 },
 
