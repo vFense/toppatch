@@ -218,7 +218,7 @@ define(
                     this.hideLoading();
                     $items.html(
                         _.clone($item).empty().html(
-                            $.toJSON(response)
+                            response.statusText
                         )
                     );
                     return this;
