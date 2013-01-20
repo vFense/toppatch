@@ -49,7 +49,7 @@ define(
                         this.setFooterContent('reset');
                     });
 
-                    this.listenTo(this.collection, 'fetch', function () {
+                    this.listenTo(this.collection, 'request', function () {
                         this.togglePagerButtons(true);
                         this.setFooterContent('fetch');
                     });
