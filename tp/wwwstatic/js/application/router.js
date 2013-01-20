@@ -52,16 +52,22 @@ define(
                 // Default
                 // '*other'        : 'defaultAction'
             },
-            route: function (route, name, callback) {
+            navigate: function (fragment, options) {
+                this.updateFragments();
+                this.constructor.__super__.navigate.call(this, fragment, options);
+            },
+            initialize: function () {
                 var that = this,
                     modals = app.views.modals,
-                    adminRoutePattern = /^admin$|\/\w/; // expect 'admin' or 'admin/foo'
+                    adminRoutePattern = /^admin$|\/\w/; // expect 'admin' or 'admin/foo';
+                // Create a new ViewManager with #dashboard-view as its target element
+                // All views sent to the ViewManager will render in the target element
+                this.viewTarget = '#dashboard-view';
+                this.viewManager = new app.ViewManager({'selector': this.viewTarget});
+                this.currentFragment = '';
+                this.lastFragment = '';
 
-                // before route event
-                that.trigger.apply(this, ["beforeRoute"].concat(route, name));
-
-                // Override the route method
-                that.constructor.__super__.route.call(that, route, name, function () {
+                this.on("route", function () {
                     // Track current and previous routes
                     that.updateFragments();
 
@@ -72,27 +78,7 @@ define(
                             modals.admin.close();
                         }
                     }
-
-                    // run callback
-                    // If there is an error here, check the spelling
-                    // of the function in routes
-                    callback.apply(that, arguments);
-
-                    // after route event
-                    that.trigger.apply(that, ["afterRoute"].concat(route, name));
                 });
-            },
-            navigate: function (fragment, options) {
-                this.updateFragments();
-                this.constructor.__super__.navigate.call(this, fragment, options);
-            },
-            initialize: function () {
-                // Create a new ViewManager with #dashboard-view as its target element
-                // All views sent to the ViewManager will render in the target element
-                this.viewTarget = '#dashboard-view';
-                this.viewManager = new app.ViewManager({'selector': this.viewTarget});
-                this.currentFragment = '';
-                this.lastFragment = '';
             },
             showDashboard: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
@@ -286,9 +272,8 @@ define(
                             adminView = modal.getContentView();
                             if (!adminView || !adminView instanceof admin.View) {
                                 adminView = new admin.View();
+                                modal.openWithView(adminView);
                             }
-
-                            modal.openWithView(adminView);
 
                             // Set content view of the admin view
                             adminView.setContentView(new content.View());
