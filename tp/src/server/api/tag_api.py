@@ -137,4 +137,5 @@ class TagsHandler(BaseHandler):
                     }
 
         self.set_header('Content-Type', 'application/json')
+        print result
         self.write(json.dumps(result, indent=4))
