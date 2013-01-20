@@ -19,32 +19,6 @@ define(
                     return '?' + $.param(this.params).trim();
                 },
 
-                verboseFetch: function (callbacks) {
-                    var that = this;
-
-                    callbacks = callbacks || {};
-
-                    // Add fetch event
-                    this.trigger('fetch');
-
-                    // Trigger error event unless other function is provided
-                    if (!callbacks || !callbacks.error || _.isFunction(callbacks.error)) {
-                        callbacks.error = function (collection, response, options) {
-                            that.trigger('error', collection, response, options);
-                        };
-                    }
-
-                    // Trigger success event unless other function is provided
-                    if (!callbacks || !callbacks.success || _.isFunction(callbacks.success)) {
-                        callbacks.success = function (collection, response, options) {
-                            that.trigger('success', collection, response, options);
-                        };
-                    }
-
-                    // Call original fetch method
-                    this.fetch(callbacks);
-                },
-
                 parse: function (response) {
                     this.recordCount = parseInt(response.count, 10) || 0;
                     return response.data || response;
@@ -113,17 +87,6 @@ define(
                         this.collection =  new exports.Collection();
                     }
 
-                    this.listenTo(this.collection, 'reset', function () {
-                        this.updateList({name: 'reset'});
-                    });
-
-                    this.listenTo(this.collection, 'fetch', function () {
-                        this.updateList({name: 'fetch'});
-                    });
-
-                    this.listenTo(this.collection, 'error', function (collection, response, options) {
-                        this.updateList({name: 'error', response: response});
-                    });
                 },
 
                 events: {
