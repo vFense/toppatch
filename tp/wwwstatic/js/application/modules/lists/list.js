@@ -116,7 +116,7 @@ define(
                         this._baseItem = _.clone($items.find('.item')).empty();
                     }
 
-                    this.collection.verboseFetch();
+                    this.fetchCollection();
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
@@ -214,6 +214,35 @@ define(
 
                 hideLoading: function () {
                     if (this._pinwheel) { this._pinwheel.remove(); }
+                    return this;
+                },
+
+                fetchCollection: function () {
+                    console.log(this);
+                    this.collection.fetch({
+                        success: this.fetchSuccess,
+                        error: this.fetchError
+                    });
+                    this.showLoading();
+                    return this;
+                },
+
+                fetchSuccess: function (collection, response, options) {
+                    console.log(this);
+                    this.hideLoading().updateList();
+                    return this;
+                },
+
+                fetchError: function (collection, response, options) {
+                    var $el = this.$el,
+                        $items = $el.find('.items'),
+                        $item = this._baseItem;
+                    this.hideLoading();
+                    $items.html(
+                        _.clone($item).empty().html(
+                            $.toJSON(response)
+                        )
+                    );
                     return this;
                 },
                 updateURL: function () {
