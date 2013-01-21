@@ -7,7 +7,10 @@ from db.client import *
 from db.query_table import *
 from db.update_table import *
 from models.virtualization import *
+import tornadoredis
 
+redis = tornadoredis.Client()
+redis.connect()
 
 CONFIG_DIR = '/opt/TopPatch/conf/'
 CONFIG_FILE = 'visdk.config'
@@ -271,7 +274,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'shutdown_vm',
+                oper = add_operation(session, node.node_id, 'shutdown_vm',
                         operation_sent=datetime.now(),
                         operation_received=datetime.now(),
                         username=username)
@@ -281,7 +284,7 @@ class VmApi():
                             (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
@@ -291,7 +294,7 @@ class VmApi():
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -324,7 +327,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'poweroff_vm',
+                oper = add_operation(session, node.node_id, 'poweroff_vm',
                         operation_sent=datetime.now(),
                         operation_received=datetime.now(),
                         username=username)
@@ -334,7 +337,7 @@ class VmApi():
                             (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=True,
                             results_received=datetime.now()
                             )
@@ -344,7 +347,7 @@ class VmApi():
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -378,7 +381,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'poweron_vm',
+                oper = add_operation(session, node.node_id, 'poweron_vm',
                         operation_sent=datetime.now(),
                         operation_received=datetime.now(),
                         username=username)
@@ -388,7 +391,7 @@ class VmApi():
                             (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
@@ -398,7 +401,7 @@ class VmApi():
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -431,7 +434,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'reboot_vm',
+                oper = add_operation(session, node.node_id, 'reboot_vm',
                         operation_sent=datetime.now(),
                         operation_received=datetime.now(),
                         username=username)
@@ -441,7 +444,7 @@ class VmApi():
                             (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
@@ -451,7 +454,7 @@ class VmApi():
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -485,7 +488,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'reset_vm',
+                oper = add_operation(session, node.node_id, 'reset_vm',
                         operation_sent=datetime.now(),
                         operation_received=datetime.now(),
                         username=username)
@@ -495,7 +498,7 @@ class VmApi():
                             (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
@@ -505,7 +508,7 @@ class VmApi():
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -543,7 +546,7 @@ class VmApi():
                 snap_description = snap_name
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'create_snapshot',
+                oper = add_operation(session, node.node_id, 'create_snapshot',
                         operation_sent=datetime.now(), 
                         operation_received=datetime.now(),
                         username=username)
@@ -553,25 +556,24 @@ class VmApi():
                     message = '%s - snapshot %s created on %s'% \
                             (username, snap_name, vm_name)
                     logger.info(message)
+                    redis.publish('rv', 'snap created')
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
                     snapshots = self.get_all_snapshots(vm_name=vm_name,
                             username=username)
-                    print snapshots
                     snaps_updated = self.update_snapshots_for_vm(session,
                             vm_name=vm_name, snapshots=snapshots,
                             username=username)
-                    print snaps_updated
 
                 except Exception as e:
                     message = '%s - error during snapshot creation:%s on %s'% \
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -625,6 +627,7 @@ class VmApi():
                             print e, 'failed trying to add snaps'
                             session.rollback()
                             snaps_updated = False
+                    redis.publish('rv', 'SnapShots Updated')
 
         return(snaps_updated)
 
@@ -686,7 +689,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'remove_all_snapshots',
+                oper = add_operation(session, node.node_id, 'remove_all_snapshots',
                         operation_sent=datetime.now(), 
                         operation_received=datetime.now(),
                         username=username)
@@ -696,10 +699,11 @@ class VmApi():
                         (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
+                    redis.publish('rv', message)
                     snapshots = self.get_all_snapshots(vm_name=vm_name,
                             username=username)
                     snaps_updated = self.update_snapshots_for_vm(session,
@@ -707,11 +711,12 @@ class VmApi():
                             username=username)
 
                 except Exception as e:
+                    print e
                     message = '%s - Snapshots werent deleted on %s' % \
                             (username, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -750,7 +755,7 @@ class VmApi():
                 if len(vm.snapshot) >0:
                     snapshot_list = vm.snapshot.rootSnapshotList[0]
                     i = 1
-                    oper = add_operation(session, node.id, 'remove_snapshot',
+                    oper = add_operation(session, node.node_id, 'remove_snapshot',
                             operation_sent=datetime.now(), 
                             operation_received=datetime.now(),
                             username=username)
@@ -773,7 +778,7 @@ class VmApi():
                                             (username, snap_name, vm_name)
                                     logger.info(message)
                                 results = add_results_non_json(session,
-                                        node_id=node.id, oper_id=oper.id,
+                                        node_id=node.node_id, oper_id=oper.id,
                                         result=passed,
                                         results_received=datetime.now()
                                         )
@@ -784,7 +789,7 @@ class VmApi():
                                 logger.error(message)
                                 passed = False
                                 results = add_results_non_json(session,
-                                        node_id=node.id, oper_id=oper.id,
+                                        node_id=node.node_id, oper_id=oper.id,
                                         result=passed, error=e,
                                         results_received=datetime.now()
                                         )
@@ -793,6 +798,7 @@ class VmApi():
                             snapshot_list = snapshot_list.childSnapshotList[0]
                         else:
                             snapshot_list = None
+                    redis.publish('rv', 'snaps deleted')
                     snapshots = self.get_all_snapshots(vm_name=vm_name,
                             username=username)
                     snaps_updated = self.update_snapshots_for_vm(session,
@@ -836,7 +842,7 @@ class VmApi():
                 if len(vm.snapshot) >0:
                     snapshot_list = vm.snapshot.rootSnapshotList[0]
                     i = 1
-                    oper = add_operation(session, node.id, 'remove_snapshot',
+                    oper = add_operation(session, node.node_id, 'remove_snapshot',
                             operation_sent=datetime.now(),
                             operation_received=datetime.now(),
                             username=username)
@@ -849,7 +855,7 @@ class VmApi():
                                 logger.info(message)
                                 passed = True
                                 results = add_results_non_json(session,
-                                        node_id=node.id, oper_id=oper.id,
+                                        node_id=node.node_id, oper_id=oper.id,
                                         result=passed,
                                         results_received=datetime.now()
                                         )
@@ -860,7 +866,7 @@ class VmApi():
                                 logger.error(message)
                                 passed = False
                                 results = add_results_non_json(session,
-                                        node_id=node.id, oper_id=oper.id,
+                                        node_id=node.node_id, oper_id=oper.id,
                                         result=passed, error=e,
                                         results_received=datetime.now()
                                         )
@@ -875,6 +881,7 @@ class VmApi():
                     snaps_updated = self.update_snapshots_for_vm(session,
                             vm_name=vm_name, snapshots=snapshots,
                             username=username)
+                    redis.publish('rv', message)
                 else:
                     message = '%s - Snapshots do not exist for %s' % \
                             (username, vm_name)
@@ -915,10 +922,15 @@ class VmApi():
                     #for network in esx_net:
                     #    if 'Management Network' in network.portgroup:
                     #        esx_ip = network.spec.ip.ipAddress
+                    ip_list = []
+                    ipaddress_list = vm.guest.net
+                    for ip in ipaddress_list:
+                        if len(ip.ipAddress) >0:
+                            ip_list.append(ip.ipAddress[0])
                     vms[vm.name] = {
                             'vm_name': vm.name,
                             'vm_uuid': vm.name,
-                            'ip_address': vm.guest.ipAddress,
+                            'ip_address': ip_list,
                             'host_name': vm.guest.hostName,
                             'uuid': vm.config.uuid,
                             'tools_status': vm.guest.toolsVersionStatus,

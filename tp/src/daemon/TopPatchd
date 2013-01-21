@@ -14,10 +14,12 @@ logger = logging.getLogger('rvapi')
 
 PIDFILE = '/opt/TopPatch/var/tmp/process.pid'
 MYSQL_PIDFILE = '/opt/TopPatch/var/tmp/mysql-9006.pid'
+REDIS_PIDFILE = '/opt/TopPatch/var/tmp/redis-6379.pid'
 RVLISTENER_PIDFILE = '/opt/TopPatch/var/tmp/rvlistener-9001.pid'
 CSRLISTENER_PIDFILE = '/opt/TopPatch/var/tmp/csrlistener-9002.pid'
 RVWEB_PIDFILE = '/opt/TopPatch/var/tmp/rvweb-9000.pid'
 MYSQL= '/opt/TopPatch/mysql/percona-5.5/support-files/mysql.server'
+REDIS= '/opt/TopPatch/tp/src/daemon/redis_init'
 PATH='/opt/TopPatch/tp/'
 RVLISTENER = 'src/receiver/rvlistener.py'
 CSRLISTENER = 'src/receiver/csrlistener.py'
@@ -26,10 +28,13 @@ PROGRAM = 'python'
 
 PIDS = [(MYSQL_PIDFILE, 'RVMySQL'), (RVLISTENER_PIDFILE, 'RVListener'), 
         (CSRLISTENER_PIDFILE, 'CSRListener'),
-        (RVWEB_PIDFILE, 'RVWeb')]
+        (RVWEB_PIDFILE, 'RVWeb'),
+        (REDIS_PIDFILE, 'RVRedis')]
 
 if not os.path.exists('/opt/TopPatch/var/tmp/'):
     os.mkdir('/opt/TopPatch/var/tmp/')
+if not os.path.exists('/opt/TopPatch/var/redis/'):
+    os.mkdir('/opt/TopPatch/var/redis/')
 if not os.path.exists('/opt/TopPatch/var/log/'):
     os.mkdir('/opt/TopPatch/var/log/')
 if not os.path.exists('/opt/TopPatch/var/lib/'):
@@ -39,7 +44,8 @@ if not os.path.exists('/opt/TopPatch/var/lib/'):
     os.mkdir('/opt/TopPatch/var/lib/ssl/client/csr')
     os.mkdir('/opt/TopPatch/var/lib/ssl/client/keys')
 
-SERVICES = [(RVLISTENER, RVLISTENER_PIDFILE, 'RVListener'),
+SERVICES = [
+        (RVLISTENER, RVLISTENER_PIDFILE, 'RVListener'),
         (CSRLISTENER, CSRLISTENER_PIDFILE, 'CSRListener'),
         (RVWEB, RVWEB_PIDFILE, 'RVWeb')]
 
@@ -70,6 +76,22 @@ def mysql_stop(mysql_server):
     subprocess.call(stop, stdout=subprocess.PIPE)
 
 
+def redis_start(redis_server, redis_pidfile):
+    start_cmd = '%s start' % redis_server
+    start = shlex.split(start_cmd)
+    subprocess.call(start, stdout=subprocess.PIPE)
+    time.sleep(1)
+    redis_pid = open(REDIS_PIDFILE, 'r',).read()
+    return redis_pid
+
+
+def redis_stop(redis_server):
+    stop_cmd = '%s stop' % redis_server
+    stop = shlex.split(stop_cmd)
+    subprocess.call(stop, stdout=subprocess.PIPE)
+
+
+
 def handler(signum, frame):
     print "returning back to terminal"
 
@@ -93,6 +115,8 @@ def TopPatch_start():
         os.chdir(PATH)
         print 'TopPatch Server is starting. Please wait....'
         logger.info('TopPatch Server is starting. Please wait....')
+        redis_pid = redis_start(REDIS, REDIS_PIDFILE)
+        logger.info("Redis Server Started")
         mysql_pid = mysql_start(MYSQL, MYSQL_PIDFILE)
         logger.info("Mysql Server Started")
         time.sleep(1)
@@ -101,9 +125,9 @@ def TopPatch_start():
             pidfile = open(service[1], 'w')
             pidfile.write(pid)
             pidfile.close()
+            logger.info("%s Server Started" % (service[2]))
             time.sleep(1)
         signal.signal(signal.SIGINT, handler)
-        time.sleep(5)
         print 'TopPatch Server has been started. Enjoy !!!'
         logger.info('TopPatch Server has been started. Enjoy !!!')
 
@@ -131,6 +155,13 @@ def TopPatch_stop():
     else:
         msg = "%s is not running. Stopping Failed..." \
                 % ('MySQL Database')
+        sys.stderr.write(msg+'\n')
+        logger.error(msg)
+    if os.path.exists(REDIS_PIDFILE):
+        redis_stop(REDIS)
+    else:
+        msg = "%s is not running. Stopping Failed..." \
+                % ('Redis')
         sys.stderr.write(msg+'\n')
         logger.error(msg)
     print 'TopPatch Server has been stopped now !!!'

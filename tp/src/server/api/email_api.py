@@ -10,7 +10,6 @@ import os
 from models.application import *
 from server.decorators import authenticated_request
 from server.handlers import BaseHandler, LoginHandler
-from server.handlers import SendToSocket
 from db.client import *
 from utils.common import *
 from emailer.mailer import *
