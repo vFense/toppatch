@@ -61,6 +61,9 @@ define(
                     modals = app.views.modals,
                     adminPattern = /^admin$|\/\w/,
                     adminRoute = false,
+                    hashPattern = /[\w\d_\-]+[\?\/]{0,}/,
+                    hash;
+
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
                 this.viewTarget = '#dashboard-view';
@@ -79,6 +82,10 @@ define(
                         if (modals.admin instanceof Backbone.View && modals.admin.isOpen()) {
                             modals.admin.close();
                         }
+
+                        hash = hashPattern.exec(that.currentFragment) || '';
+
+                        app.vent.trigger('navigation:' + that.viewTarget, '#' + hash);
                     }
                 });
             },
@@ -239,8 +246,8 @@ define(
                         view: null
                     }, options);
 
-                app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
                 app.vent.trigger('domchange:title', settings.title);
+                //app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
 
                 if ($.type(settings.view) === 'string') {
                     require([settings.view], function (myView) {
