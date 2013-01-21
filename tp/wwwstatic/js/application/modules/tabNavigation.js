@@ -40,6 +40,10 @@ define(
 
             renderTab: function (model) {
                 if (!(model.get('view') instanceof Backbone.View)) {
+                    // Circular reference.
+                    // Need to remove.
+                    // Potential memory leak.
+                    // See tabButton.js
                     model.set('view', new button.View({
                         model: model
                     }));

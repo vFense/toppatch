@@ -11,6 +11,10 @@ define(
                 baseHref: '#',
                 showIcon: false,
                 active: false,
+                // view = circular reference.
+                // Need to remove.
+                // Potential memory leak
+                // See tabNavigation.js
                 view: null
             }
         });
