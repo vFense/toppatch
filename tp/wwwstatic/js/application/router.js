@@ -246,8 +246,8 @@ define(
                         view: null
                     }, options);
 
-                app.vent.trigger('domchange:title', settings.title);
                 //app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
+                //app.vent.trigger('domchange:title', settings.title);
 
                 if ($.type(settings.view) === 'string') {
                     require([settings.view], function (myView) {
