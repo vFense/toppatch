@@ -306,5 +306,3 @@ class NodeWolHandler(BaseHandler):
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
-
-

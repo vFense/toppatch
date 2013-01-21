@@ -274,7 +274,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'shutdown_vm',
+                oper = add_operation(session, node.node_id, 'shutdown_vm',
                         operation_sent=datetime.now(),
                         operation_received=datetime.now(),
                         username=username)
@@ -284,7 +284,7 @@ class VmApi():
                             (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
@@ -294,7 +294,7 @@ class VmApi():
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -327,7 +327,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'poweroff_vm',
+                oper = add_operation(session, node.node_id, 'poweroff_vm',
                         operation_sent=datetime.now(),
                         operation_received=datetime.now(),
                         username=username)
@@ -337,7 +337,7 @@ class VmApi():
                             (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=True,
                             results_received=datetime.now()
                             )
@@ -347,7 +347,7 @@ class VmApi():
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -381,7 +381,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'poweron_vm',
+                oper = add_operation(session, node.node_id, 'poweron_vm',
                         operation_sent=datetime.now(),
                         operation_received=datetime.now(),
                         username=username)
@@ -391,7 +391,7 @@ class VmApi():
                             (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
@@ -401,7 +401,7 @@ class VmApi():
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -434,7 +434,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'reboot_vm',
+                oper = add_operation(session, node.node_id, 'reboot_vm',
                         operation_sent=datetime.now(),
                         operation_received=datetime.now(),
                         username=username)
@@ -444,7 +444,7 @@ class VmApi():
                             (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
@@ -454,7 +454,7 @@ class VmApi():
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -488,7 +488,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'reset_vm',
+                oper = add_operation(session, node.node_id, 'reset_vm',
                         operation_sent=datetime.now(),
                         operation_received=datetime.now(),
                         username=username)
@@ -498,7 +498,7 @@ class VmApi():
                             (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
@@ -508,7 +508,7 @@ class VmApi():
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -546,7 +546,7 @@ class VmApi():
                 snap_description = snap_name
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'create_snapshot',
+                oper = add_operation(session, node.node_id, 'create_snapshot',
                         operation_sent=datetime.now(), 
                         operation_received=datetime.now(),
                         username=username)
@@ -558,7 +558,7 @@ class VmApi():
                     logger.info(message)
                     redis.publish('rv', 'snap created')
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
@@ -573,7 +573,7 @@ class VmApi():
                             (username, e, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -689,7 +689,7 @@ class VmApi():
         if vm_name and node:
             vm = self.vim.getVirtualMachine(vm_name)
             if vm:
-                oper = add_operation(session, node.id, 'remove_all_snapshots',
+                oper = add_operation(session, node.node_id, 'remove_all_snapshots',
                         operation_sent=datetime.now(), 
                         operation_received=datetime.now(),
                         username=username)
@@ -699,7 +699,7 @@ class VmApi():
                         (username, vm_name)
                     logger.info(message)
                     passed = True
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed,
                             results_received=datetime.now()
                             )
@@ -716,7 +716,7 @@ class VmApi():
                             (username, vm_name)
                     logger.error(message)
                     passed = False
-                    results = add_results_non_json(session, node_id=node.id,
+                    results = add_results_non_json(session, node_id=node.node_id,
                             oper_id=oper.id, result=passed, error=e,
                             results_received=datetime.now()
                             )
@@ -755,7 +755,7 @@ class VmApi():
                 if len(vm.snapshot) >0:
                     snapshot_list = vm.snapshot.rootSnapshotList[0]
                     i = 1
-                    oper = add_operation(session, node.id, 'remove_snapshot',
+                    oper = add_operation(session, node.node_id, 'remove_snapshot',
                             operation_sent=datetime.now(), 
                             operation_received=datetime.now(),
                             username=username)
@@ -778,7 +778,7 @@ class VmApi():
                                             (username, snap_name, vm_name)
                                     logger.info(message)
                                 results = add_results_non_json(session,
-                                        node_id=node.id, oper_id=oper.id,
+                                        node_id=node.node_id, oper_id=oper.id,
                                         result=passed,
                                         results_received=datetime.now()
                                         )
@@ -789,7 +789,7 @@ class VmApi():
                                 logger.error(message)
                                 passed = False
                                 results = add_results_non_json(session,
-                                        node_id=node.id, oper_id=oper.id,
+                                        node_id=node.node_id, oper_id=oper.id,
                                         result=passed, error=e,
                                         results_received=datetime.now()
                                         )
@@ -842,7 +842,7 @@ class VmApi():
                 if len(vm.snapshot) >0:
                     snapshot_list = vm.snapshot.rootSnapshotList[0]
                     i = 1
-                    oper = add_operation(session, node.id, 'remove_snapshot',
+                    oper = add_operation(session, node.node_id, 'remove_snapshot',
                             operation_sent=datetime.now(),
                             operation_received=datetime.now(),
                             username=username)
@@ -855,7 +855,7 @@ class VmApi():
                                 logger.info(message)
                                 passed = True
                                 results = add_results_non_json(session,
-                                        node_id=node.id, oper_id=oper.id,
+                                        node_id=node.node_id, oper_id=oper.id,
                                         result=passed,
                                         results_received=datetime.now()
                                         )
@@ -866,7 +866,7 @@ class VmApi():
                                 logger.error(message)
                                 passed = False
                                 results = add_results_non_json(session,
-                                        node_id=node.id, oper_id=oper.id,
+                                        node_id=node.node_id, oper_id=oper.id,
                                         result=passed, error=e,
                                         results_received=datetime.now()
                                         )

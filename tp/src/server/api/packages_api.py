@@ -71,13 +71,17 @@ class PatchesHandler(BaseHandler):
         queryOffset = self.get_argument('offset', 0)
         pstatus = self.get_argument('status', None)
         severity = self.get_argument('severity', None)
+        nodeid = self.get_argument('nodeid', None)
         patches = PatchRetriever(self.session,
             qcount=queryCount, qoffset=queryOffset)
         if tpid:
             results = patches.get_by_toppatch_id(tpid)
         elif pstatus:
             if patch_oper.search(pstatus):
-                results = patches.get_by_type(pstatus)
+                if nodeid:
+                    results = patches.get_by_type(pstatus, nodeid)
+                else:
+                    results = patches.get_by_type(pstatus)
             else:
                 results = {
                         'pass': False,
@@ -85,7 +89,10 @@ class PatchesHandler(BaseHandler):
                         }
         elif severity:
             if patch_sev.search(severity):
-                results = patches.get_by_severity(severity)
+                if nodeid:
+                    results = patches.get_by_severity(severity, nodeid)
+                else:
+                    results = patches.get_by_severity(severity)
             else:
                 results = {
                         'pass': False,
