@@ -248,6 +248,8 @@ define(
                 } else if (settings.view instanceof Backbone.View) {
                     that.viewManager.showView(settings.view);
                 }
+
+                return this;
             },
 
             openAdminModalWithView: function (view) {
