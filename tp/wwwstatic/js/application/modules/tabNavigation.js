@@ -53,7 +53,23 @@ define(
             setActive: function (hrefTarget) {
                 if (this.lastTarget !== hrefTarget) {
                     this.lastTarget = hrefTarget;
-                    _.each(this.collection.models, function (model) {
+
+                    var that = this,
+                        affectIndex = _.difference(
+                            _.reduce(this.collection.models, function (memo, val, key) {
+                                if (val.get('active')) {
+                                    memo.push(key);
+                                }
+                                if (val.get('href') === hrefTarget) {
+                                    memo.push(key);
+                                }
+                                return memo;
+                            }, []),
+                            this.collection.models
+                        );
+
+                    _.each(affectIndex, function (key) {
+                        var model = that.collection.models[key];
                         model.set('active', model.get('href') === hrefTarget);
                     });
                 }
