@@ -59,7 +59,8 @@ define(
             initialize: function () {
                 var that = this,
                     modals = app.views.modals,
-                    adminRoutePattern = /^admin$|\/\w/; // expect 'admin' or 'admin/foo';
+                    adminPattern = /^admin$|\/\w/,
+                    adminRoute = false,
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
                 this.viewTarget = '#dashboard-view';
@@ -71,9 +72,10 @@ define(
                     // Track current and previous routes
                     that.updateFragments();
 
-                    // close any open modals
-                    // Do not close admin panel if next route uses admin panel
-                    if (!adminRoutePattern.test(this.currentFragment)) {
+                    adminRoute = adminPattern.test(that.currentFragment);
+
+                    if (!adminRoute) {
+                        // close any open modals
                         if (modals.admin instanceof Backbone.View && modals.admin.isOpen()) {
                             modals.admin.close();
                         }
