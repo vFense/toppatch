@@ -83,7 +83,7 @@ define(
                             modals.admin.close();
                         }
 
-                        hash = hashPattern.exec(that.currentFragment) || '';
+                        hash = hashPattern.exec(that.currentFragment) || 'dashboard';
 
                         app.vent.trigger('navigation:' + that.viewTarget, '#' + hash);
 
