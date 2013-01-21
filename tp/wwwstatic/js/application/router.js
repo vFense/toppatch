@@ -167,7 +167,8 @@ define(
             showTag: function (id) {
                 var that = this;
                 require(['modules/tag'], function (myView) {
-                    myView.Collection = myView.Collection.extend({id: id});
+                    myView.StatsCollection = myView.StatsCollection.extend({id: id});
+                    myView.PatchCollection = myView.PatchCollection.extend({id: id});
                     that.show({hash: '#tags', title: 'Tag Detail', view: new myView.View()});
                 });
             },
