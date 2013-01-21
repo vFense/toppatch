@@ -283,7 +283,7 @@ def get_transactions(session, count=None, offset=0):
     if count and offset:
         all_operations = session.query(Operations).\
                 order_by(Operations.operation_sent.desc()).\
-                limit(count).offset(offset)
+                limit(count).offset(offset).all()
         total_count = session.query(Operations).\
                 order_by(Operations.operation_sent.desc()).count()
     else:
@@ -297,13 +297,13 @@ def get_transactions(session, count=None, offset=0):
     for operation in all_operations:
         all_db[str(operation.id)] = [operation]
     for results in all_results:
-        if results.operation_id:
+        if results.operation_id in all_db:
             all_db[str(results.operation_id)].append(results)
     unsorted_list = []
     for key, value in all_db.items():
         unsorted_list.append((int(key), value))
     sorted_list = sorted(unsorted_list, key=lambda x: x[0])
     sorted_list.reverse()
-    return(sorted_list, len(sorted_list))
+    return(sorted_list, total_count)
 
 

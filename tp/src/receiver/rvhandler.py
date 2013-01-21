@@ -8,7 +8,10 @@ from db.query_table import *
 from db.client import *
 from utils.common import verify_json_is_valid
 from networking.agentoperation import AgentOperation
+import tornadoredis
 
+redis = tornadoredis.Client()
+redis.connect()
 
 logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvlistener')
@@ -133,7 +136,7 @@ class HandOff():
                 (self.username)
                 )
         update_tag_stats(self.session)
-        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
+        redis.publish('rv', 'stats updated')
 
 
     def software_update(self, node):
@@ -164,7 +167,7 @@ class HandOff():
                 (self.username)
                 )
         update_tag_stats(self.session)
-        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
+        redis.publish('rv', 'stats updated')
 
 
     def update_results(self, node):
@@ -185,12 +188,12 @@ class HandOff():
                 (self.username)
                 )
         update_tag_stats(self.session)
-        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
+        redis.publish('rv', 'stats updated')
 
 
     def update_dependency(self):
         results = add_dependency(self.session, self.json_object)
-        TcpConnect("127.0.0.1", "Connected", port=8080, secure=False)
+        redis.publish('rv', 'stats updated')
 
 
     def node_update(self, node):

@@ -48,7 +48,7 @@ def get_vm_data(username='system_user'):
                 esx_host = session.query(VirtualHostInfo).\
                     filter(VirtualHostInfo.name == value['esx_host']).first()
                 if value['vm_name'] and value['ip_address'] and value['host_name']:
-                    if re.search(node.ip_address, value['ip_address']):
+                    if node.ip_address in value['ip_address']:
                         match = True
                     elif node.host_name:
                         if re.search(node.host_name, value['host_name']):

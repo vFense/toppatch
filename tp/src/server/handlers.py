@@ -7,11 +7,15 @@ try: import simplejson as json
 except ImportError: import json
 from models.node import NodeInfo
 from db.client import *
+from datetime import datetime, timedelta
 from user.manager import *
 from networking.agentoperation import AgentOperation
 from scheduler.jobManager import job_scheduler, job_lister
 from server.decorators import authenticated_request
 from jsonpickle import encode
+import tornadoredis
+import tornado.gen
+from tornado import ioloop
 
 LISTENERS = []
 
@@ -95,22 +99,37 @@ class testHandler(BaseHandler):
     def get(self):
         self.render('../data/templates/websocket-test.html')
 
-def SendToSocket(message):
-    for socket in LISTENERS:
-        socket.write_message(message)
 
 class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
-    @authenticated_request
-    def open(self):
-        LISTENERS.append(self)
-        print 'new connection'
+    def __init__(self, *args, **kwargs):
+        super(WebsocketHandler, self).__init__(*args, **kwargs)
+        self.listen()
 
-    def on_message(self, message):
-        print 'message received %s' % message
+    @tornado.gen.engine
+    def listen(self):
+        self.client = tornadoredis.Client()
+        self.client.connect()
+        yield tornado.gen.Task(self.client.subscribe, 'rv')
+        self.client.listen(self.on_message)
+
+    def on_message(self, msg):
+        if msg.kind == 'message':
+            self.write_message(str(msg.body))
+            print "message written", msg.body
 
     def on_close(self):
-        print 'connection closed...'
-        LISTENERS.remove(self)
+        print 'closed baby'
+        self.client.unsubscribe('rv')
+        def check():
+            if self.client.connection.in_progress:
+                print 'Connection still in progress'
+                ioloop.IOLoop.instance().add_timeout(timedelta(0.00001), check)
+            else:
+                print 'Disconnecting'
+                self.client.disconnect()
+        ioloop.IOLoop.instance().add_timeout(timedelta(0.00001), check)
+        self.client.disconnect()
+
 
 
 class LogoutHandler(BaseHandler):
