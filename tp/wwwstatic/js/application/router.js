@@ -86,6 +86,8 @@ define(
                         hash = hashPattern.exec(that.currentFragment) || '';
 
                         app.vent.trigger('navigation:' + that.viewTarget, '#' + hash);
+
+                        that.showLoading();
                     }
                 });
             },
@@ -258,6 +260,12 @@ define(
                     that.viewManager.showView(settings.view);
                 }
 
+                return this;
+            },
+
+            showLoading: function () {
+                this._pinwheel = new app.pinwheel();
+                this.viewManager.showView(this._pinwheel);
                 return this;
             },
 
