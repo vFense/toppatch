@@ -90,7 +90,7 @@
                         MAC Address - <%= interface.mac.substring(0,2) + ":" + interface.mac.substring(2,4) + ":" + interface.mac.substring(4,6) + ":" + interface.mac.substring(6,8) + ":" + interface.mac.substring(8,10) + ":" + interface.mac.substring(10, 12) %></dd>
                 <% } %>
             <% }); %>
-            <% if (model.networking.length > 2) { %>
+            <% if (model.networking.length > 3) { %>
                 <dt>&nbsp;</dt>
                 <dd><button name="showNetworking" class="btn btn-link noPadding">Show more</button></dd>
             <% } %>

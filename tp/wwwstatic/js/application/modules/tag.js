@@ -32,16 +32,19 @@ define(
                     this.patchcollection = new exports.PatchCollection();
                     this.patchcollection.bind('reset', this.render, this);
                     this.patchcollection.fetch();
+                    $.ajaxSetup({ traditional: true });
                 },
                 events: {
-                    'click a.accordion-toggle': 'toggleAccordion',
-                    'click .toggle-all': 'toggleAllInputs',
-                    'submit form': 'submitOperation'
+                    'click a.accordion-toggle'  : 'toggleAccordion',
+                    'click .toggle-all'         : 'toggleAllInputs',
+                    'click button[name=reboot]' : 'rebootNodes',
+                    'submit form'               : 'submitOperation'
                 },
                 toggleAllInputs: function (event) {
                     var status = event.target.checked,
-                        form = $(event.target).parents('form');
-                    $(form).find(":checkbox[name=patches]").each(function () {
+                        group = $(event.target).parents('.accordion-group'),
+                        items = group.find('.items');
+                    $(items).find("input[type=checkbox]").each(function () {
                         $(this).attr("checked", status);
                     });
                 },
@@ -69,11 +72,46 @@ define(
                         $body.css('overflow', 'hidden');
                     }
                 },
+                rebootNodes: function (event) {
+                    var $scheduleForm, $button = $(event.currentTarget),
+                        $group = $button.parents('.accordion-group'),
+                        $nodes = $group.find('input[name=node]:checked'),
+                        $schedule = $group.find('input[name=schedule]'),
+                        tag = $group.find('input[name=tag]').val(),
+                        $alert = this.$el.find('.alert').first(),
+                        that = this,
+                        url = 'submitForm',
+                        operation = 'reboot',
+                        params = {
+                            tag: tag,
+                            operation: operation,
+                            node: []
+                        };
+                    if ($schedule.is(':checked')) {
+                        $scheduleForm = $schedule.data('popover').options.content;
+                        params.time = $scheduleForm.find('input[name=datepicker]').val() + ' ' + $scheduleForm.find('select[name=hours]').val() + ':' + $scheduleForm.find('select[name=minutes]').val() + ' ' + $scheduleForm.find('select[name=ampm]').val();
+                        params.label = $scheduleForm.find('input[name=label]').val() || 'Default';
+                        params.offset = $scheduleForm.find('select[name=offset]').val();
+                    }
+                    $nodes.each(function () {
+                        params.node.push(this.value);
+                    });
+                    window.console.log(params);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            that.PatchCollection.fetch();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').html(json.message).show();
+                        }
+                    });
+                },
                 submitOperation: function (event) {
-                    var $scheduleForm, patches,
+                    var $scheduleForm,
                         that = this,
                         $form = $(event.target),
                         $schedule = $form.find('input[name=schedule]'),
+                        patches = $form.find('input[name="patches"]:checked'),
                         tag = $form.find('input[name=tag]').val(),
                         throttle = $form.find('select[name=throttle]').val(),
                         operation = $form.find('select[name=operation]').val(),
@@ -92,7 +130,6 @@ define(
                         params.label = $scheduleForm.find('input[name=label]').val() || 'Default';
                         params.offset = $scheduleForm.find('select[name=offset]').val();
                     }
-                    patches = $form.find('input[name="patches"]:checked');
                     patches.each(function () {
                         params.patches.push(this.value);
                     });
