@@ -129,7 +129,7 @@ class AgentOperation():
                     logger.debug('%s - TimeBlock exists on %s for operation %s' %\
                             (self.username, self.node.ip_address, self.oper_type)
                             )
-                    self.session.close()
+                    #self.session.close()
                     self.json_out = time_block_results
                     add_results_non_json(self.session, node_id=node.id,
                             oper_id=oper.id, error='Time Block Exists',
@@ -158,7 +158,7 @@ class AgentOperation():
                                     self.oper_id, AGENT_PORT)).start()
                     else:
                         raise("You must pass an array")
-        self.session.close()
+        #self.session.close()
         
     def operation_creator(self, data_list=None):
         """
