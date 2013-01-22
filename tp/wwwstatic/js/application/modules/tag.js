@@ -93,18 +93,22 @@ define(
                         params.label = $scheduleForm.find('input[name=label]').val() || 'Default';
                         params.offset = $scheduleForm.find('select[name=offset]').val();
                     }
-                    $nodes.each(function () {
-                        params.node.push(this.value);
-                    });
-                    window.console.log(params);
-                    $.post(url, params, function (json) {
-                        window.console.log(json);
-                        if (json.pass) {
-                            that.PatchCollection.fetch();
-                        } else {
-                            $alert.removeClass('alert-success').addClass('alert-error').html(json.message).show();
-                        }
-                    });
+                    if ($nodes.length) {
+                        $nodes.each(function () {
+                            params.node.push(this.value);
+                        });
+                        window.console.log(params);
+                        $.post(url, params, function (json) {
+                            window.console.log(json);
+                            if (json.pass) {
+                                that.PatchCollection.fetch();
+                            } else {
+                                $alert.removeClass('alert-success').addClass('alert-error').html(json.message).show();
+                            }
+                        });
+                    } else {
+                        $alert.removeClass('alert-success').addClass('alert-error').html('Please select a node.').show();
+                    }
                 },
                 submitOperation: function (event) {
                     var $scheduleForm,
@@ -130,25 +134,29 @@ define(
                         params.label = $scheduleForm.find('input[name=label]').val() || 'Default';
                         params.offset = $scheduleForm.find('select[name=offset]').val();
                     }
-                    patches.each(function () {
-                        params.patches.push(this.value);
-                    });
-                    window.console.log(params);
-                    $.post(url, params, function (json) {
-                        window.console.log(json);
-                        /*
-                        if (schedule.data('popover')) {
-                            schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
-                            schedule.popover('hide');
-                            schedule.attr('checked', false);
-                        }
-                        */
-                        if (json.pass) {
-                            that.PatchCollection.fetch();
-                        } else {
-                            that.$el.find('.alert').first().removeClass('alert-success').addClass('alert-error').html(json.message).show();
-                        }
-                    });
+                    if (patches.length) {
+                        patches.each(function () {
+                            params.patches.push(this.value);
+                        });
+                        window.console.log(params);
+                        $.post(url, params, function (json) {
+                            window.console.log(json);
+                            /*
+                            if (schedule.data('popover')) {
+                                schedule.data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
+                                schedule.popover('hide');
+                                schedule.attr('checked', false);
+                            }
+                            */
+                            if (json.pass) {
+                                that.PatchCollection.fetch();
+                            } else {
+                                that.$el.find('.alert').first().removeClass('alert-success').addClass('alert-error').html(json.message).show();
+                            }
+                        });
+                    } else {
+                        that.$el.find('.alert').first().removeClass('alert-success').addClass('alert-error').html('Please select a patch.').show();
+                    }
                     return false;
                 },
                 beforeRender: $.noop,

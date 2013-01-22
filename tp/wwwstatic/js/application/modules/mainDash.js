@@ -227,7 +227,7 @@ define(
                         var that = this,
                             url = 'api/tagging/tagStats',
                             tag_template;
-                        $.get(url, {}, function (data) {\
+                        $.get(url, {}, function (data) {
                             that.$el.find(selection).empty();
                             tag_template = _.template($('#tags_template').html(), {data: data.data || data});
                             that.$el.find(selection).html(tag_template);
