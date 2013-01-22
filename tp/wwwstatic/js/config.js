@@ -28,6 +28,8 @@ require.config({
         // ---------------------------------------------------------------------
         'text'              : 'libs/require/plugins/text',
         'bootstrap-modal'   : 'libs/backbone/plugins/bootstrap-modal',
+        'Rickshaw'          : 'libs/rickshaw/rickshaw',
+        'nvd3'              : 'libs/nvd3/nv.d3',
 
         // jQuery.ui Library
         // ---------------------------------------------------------------------
@@ -67,6 +69,14 @@ require.config({
         },
         'd3': {
             exports: 'd3'
+        },
+        'Rickshaw': {
+            deps: ['d3'],
+            exports: 'Rickshaw'
+        },
+        'nvd3': {
+            deps: ['d3'],
+            exports: 'nv'
         },
 
         // jQuery.ui modules ----

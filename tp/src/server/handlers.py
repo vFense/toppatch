@@ -175,6 +175,7 @@ class FormHandler(BaseHandler):
         node = {}
         result = []
         nodes = self.get_arguments('node')
+        print self.request.arguments
         if len(nodes) <1:
             nodes = None
         tags = self.get_arguments('tag')

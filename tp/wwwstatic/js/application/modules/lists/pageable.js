@@ -44,20 +44,20 @@ define(
                     // In this case, list.View
                     list.View.prototype.initialize.call(this, options);
 
-                    this.collection.bind('reset', function () {
+                    this.listenTo(this.collection, 'reset', function () {
                         this.togglePagerButtons();
                         this.setFooterContent('reset');
-                    }, this);
+                    });
 
-                    this.collection.bind('fetch', function () {
+                    this.listenTo(this.collection, 'fetch', function () {
                         this.togglePagerButtons(true);
                         this.setFooterContent('fetch');
-                    }, this);
+                    });
 
-                    this.collection.bind('error', function (collection, xhr, options) {
+                    this.listenTo(this.collection, 'error', function (collection, response, options) {
                         this.togglePagerButtons(true);
                         this.setFooterContent('error');
-                    }, this);
+                    });
                 },
 
                 events: {
