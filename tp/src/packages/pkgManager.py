@@ -542,7 +542,7 @@ class PatchRetriever():
                 "date" : str(date_pub),
                 "date_installed" : str(date_installed),
                 "name" : name,
-                "description" : description.decode('raw_unicode_escape'),
+                "description" : description,
                 "severity" : severity,
                 "nodes/need": available,
                 "nodes/done": installed,
