@@ -11,7 +11,8 @@ define(
                 icon: '',
                 baseHref: '#',
                 showIcon: false,
-                active: false
+                active: false,
+                view: null
             }
         });
 
