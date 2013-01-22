@@ -19,23 +19,30 @@ define(
                     return '?' + $.param(this.params).trim();
                 },
 
-                verboseFetch: function (callBacks) {
+                verboseFetch: function (callbacks) {
                     var that = this;
 
-                    callBacks = callBacks || {};
+                    callbacks = callbacks || {};
 
                     // Add fetch event
                     this.trigger('fetch');
 
                     // Trigger error event unless other function is provided
-                    if (!callBacks || !callBacks.error || _.isFunction(callBacks.error)) {
-                        callBacks.error = function (collection, xhr, options) {
-                            that.trigger('error', collection, xhr, options);
+                    if (!callbacks || !callbacks.error || _.isFunction(callbacks.error)) {
+                        callbacks.error = function (collection, response, options) {
+                            that.trigger('error', collection, response, options);
+                        };
+                    }
+
+                    // Trigger success event unless other function is provided
+                    if (!callbacks || !callbacks.success || _.isFunction(callbacks.success)) {
+                        callbacks.success = function (collection, response, options) {
+                            that.trigger('success', collection, response, options);
                         };
                     }
 
                     // Call original fetch method
-                    this.fetch(callBacks);
+                    this.fetch(callbacks);
                 },
 
                 parse: function (response) {
@@ -106,17 +113,17 @@ define(
                         this.collection =  new exports.Collection();
                     }
 
-                    this.collection.bind('reset', function () {
+                    this.listenTo(this.collection, 'reset', function () {
                         this.updateList({name: 'reset'});
-                    }, this);
+                    });
 
-                    this.collection.bind('fetch', function () {
+                    this.listenTo(this.collection, 'fetch', function () {
                         this.updateList({name: 'fetch'});
-                    }, this);
+                    });
 
-                    this.collection.bind('error', function (collection, xhr, options) {
-                        this.updateList({name: 'error', response: xhr});
-                    }, this);
+                    this.listenTo(this.collection, 'error', function (collection, response, options) {
+                        this.updateList({name: 'error', response: response});
+                    });
                 },
 
                 events: {

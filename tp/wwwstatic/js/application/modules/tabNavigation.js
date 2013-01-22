@@ -14,7 +14,8 @@ define(
 
             initialize: function (args) {
                 _.extend(this, args);
-                this.collection =  new exports.Collection(this.tabs);
+                this.collection = new exports.Collection(this.tabs);
+                this.lastTarget = '';
             },
 
             beforeRender: $.noop,
@@ -38,16 +39,25 @@ define(
             },
 
             renderTab: function (model) {
-                var tabView = new button.View({
-                    model: model
-                });
-                this.$el.append(tabView.render().el);
+                if (!(model.get('view') instanceof Backbone.View)) {
+                    model.set('view', new button.View({
+                        model: model
+                    }));
+                }
+
+                this.$el.append(model.get('view').render().el);
+
+                return this;
             },
 
             setActive: function (hrefTarget) {
-                _.each(this.collection.models, function (model) {
-                    model.set('active', model.get('href') === hrefTarget);
-                });
+                if (this.lastTarget !== hrefTarget) {
+                    this.lastTarget = hrefTarget;
+                    _.each(this.collection.models, function (model) {
+                        model.set('active', model.get('href') === hrefTarget);
+                    });
+                }
+                return this;
             }
         });
 
