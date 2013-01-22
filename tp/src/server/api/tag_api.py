@@ -41,6 +41,7 @@ class TagListerByTagHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         result = tag_lister(self.session)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -51,6 +52,7 @@ class TagListerByNodeHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         result = tag_list_by_nodes(self.session)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -67,6 +69,7 @@ class TagAddHandler(BaseHandler):
         except Exception as e:
             self.write("Wrong argument passed %s, the argument needed is operation" % (e))
         result = tag_adder(self.session, tag, username=username)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -82,6 +85,7 @@ class TagAddPerNodeHandler(BaseHandler):
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
         result = tag_add_per_node(self.session, self.msg, username=username)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -98,6 +102,7 @@ class TagRemovePerNodeHandler(BaseHandler):
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
         result = tag_remove_per_node(self.session, self.msg,
                 username=username)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -114,6 +119,7 @@ class TagRemoveHandler(BaseHandler):
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is tag" % (e))
         result = tag_remove(self.session, tag, username=username)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -137,5 +143,5 @@ class TagsHandler(BaseHandler):
                     }
 
         self.set_header('Content-Type', 'application/json')
-        print result
+        session.close()
         self.write(json.dumps(result, indent=4, encoding='utf8'))

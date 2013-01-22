@@ -101,6 +101,7 @@ class CreateVmwareConfigHandler(BaseHandler):
                 'pass': passed,
                 'message': message
                 }
+        session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -328,6 +329,7 @@ class GetNodeSnapshotsHandler(BaseHandler):
                     'message': 'Optional arguments: %s\n' % \
                             ('nodeid or vmname or displayname or hostname')
                     }
+        session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -366,6 +368,7 @@ class GetNodeVmInfoHandler(BaseHandler):
                 'pass': False,
                 'message': 'Invalid Arguments'
                 }
+        session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(results, indent=4))
 

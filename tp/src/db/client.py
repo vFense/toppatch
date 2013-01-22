@@ -4,7 +4,6 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from apscheduler.scheduler import Scheduler
 from models.node import NodeInfo
 
-
 def init_engine():
     """
         initialize the SQLAlchemy Engine to communicate with 

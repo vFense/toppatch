@@ -39,6 +39,7 @@ class ListUserHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         result = list_user(self.session)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -64,6 +65,7 @@ class DeleteUserHandler(BaseHandler):
                     'pass': False,
                     'message': 'Incorrect arguments passed. username or userid'
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -103,6 +105,7 @@ class CreateUserHandler(BaseHandler):
                                       'arguments needed are ',
                                       'username, password, group')
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -142,6 +145,7 @@ class ModifyUserFromGroupHandler(BaseHandler):
                     'pass': False,
                     'message': 'Incorrect Parameters were passed'
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -152,6 +156,7 @@ class ListGroupHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         result = list_groups(self.session)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -221,6 +226,7 @@ class CreateGroupHandler(BaseHandler):
                                       'arguments needed are ',
                                       'groupname')
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(acl_result, indent=4))
 
@@ -247,6 +253,7 @@ class DeleteGroupHandler(BaseHandler):
                     'pass': False,
                     'message': 'Incorrect arguments passed. groupname or groupid'
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -273,6 +280,7 @@ class AclHandler(BaseHandler):
                             ('Arguments needed', 'acl_type', 'acl_action', 
                                 'acl')
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
