@@ -58,9 +58,9 @@
                                             <input type="checkbox" name="node" value="<%= node.id %>">
                                             <%= node.display_name || node.computer_name || node.host_name || node.ip_address %>&nbsp;
                                             <% if (node.agent_status && node.host_status) { %>
-                                                <i class="icon-ok" style="color: green;"></i>
+                                                <i class="icon-ok" style="color: green;" title="Node is running."></i>
                                             <% } else { %>
-                                                <i class="icon-warning-sign" style="color: red;"></i>
+                                                <i class="icon-warning-sign" style="color: red;" title="Node or Agent is down."></i>
                                             <% } %>
                                         </label>
                                     </span>
