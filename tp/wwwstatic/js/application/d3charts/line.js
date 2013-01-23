@@ -22,12 +22,14 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                 // generate chart here; `d` is the data and `this` is the element
                 var k, xAxis, yAxisLeft, line, graph, point, txt, txtMask, txtRect, txtMiddle, txtBottom,
                     that = this;
+                window.console.log(height);
                 function textMouseOver(d, i) {
                     var mousePos = d3.mouse(that), textLength,
                         date = new Date(d.x),
                         dateString = date.toDateString() + ' ' + date.toTimeString().split(' ')[0];//Wed Jan 23 2013 00:28:12
+                    window.console.log(mousePos);
                     mousePos[0] = mousePos[0] - 20;
-                    mousePos[1] = mousePos[1] - 80;
+                    mousePos[1] = mousePos[1] > (height / 2) ? mousePos[1] - 80 : mousePos[1] - 20;
                     txt.text("Total Patches: " + (d.count + i + 1));
                     txtMiddle.text(d.patch_name);
                     txtBottom.text(dateString);
@@ -56,9 +58,9 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     return d.y;
                 });
                 x.domain([val_array[0].x, val_array[val_array.length - 1].x]).range([0, 0.7 * width]);
-                y.domain([0, max]).range([height, 0]);
+                y.domain([0, max]).range([(0.8 * height), 0]);
                 xAxis = d3.svg.axis().scale(x).tickSize(1).tickFormat(function (d, i) {
-                    return new Date(d).toDateString().substring(4);
+                    return new Date(d).toDateString().substring(4, 10);
                 });
                 yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
                 line = d3.svg.line()
@@ -68,14 +70,14 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     .append("svg:svg")
                     .data([val_array])
                     .attr("width", width)
-                    .attr("height", height + margin[0] + margin[2])
+                    .attr("height", height)// + margin[0] + margin[2])
                     .style('overflow', 'visible')
                     .append("svg:g")
-                    .attr("transform", "translate(" + margin[3] + "," + margin[0] + ")");
+                    .attr("transform", "translate(" + 35 + "," + 15 + ")");
 
                 graph.append("svg:g")
                     .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height + ")")
+                    .attr("transform", "translate(0," + (0.8 * height) + ")")
                     .style('font-size', 9)
                     .call(xAxis);
                 graph.append("svg:g")

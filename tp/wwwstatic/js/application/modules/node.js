@@ -163,9 +163,13 @@ define(
                 },
                 lineGraph: function () {
                     var data = [],
-                        graph = '#nodeGraph',
-                        lineChart = app.chart.line().width(900),
+                        graphId = '#nodeGraph',
+                        $graphDiv = this.$el.find(graphId),
+                        width = $graphDiv.width(),
+                        height = $graphDiv.parent().height(),
+                        lineChart = app.chart.line().width(width).height(height),
                         variable = this.graphcollection.toJSON()[0];
+                    window.console.log(height);
                     if (variable) {
                         variable.data.sort(function (a, b) {
                             var keyA = new Date(a.date_installed),
@@ -183,7 +187,7 @@ define(
                                 count: variable.count - variable.data.length
                             });
                         });
-                        d3.select(graph).datum(data).call(lineChart);
+                        d3.select(graphId).datum(data).call(lineChart);
                     }
                 },
                 startWebSocket: function (event) {
