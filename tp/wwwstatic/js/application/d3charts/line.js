@@ -20,16 +20,18 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
         function chart(selection) {
             selection.each(function (data) {
                 // generate chart here; `d` is the data and `this` is the element
-                var k, xAxis, yAxisLeft, line, graph, point, txt, txtMask, txtRect,
+                var k, xAxis, yAxisLeft, line, graph, point, txt, txtMask, txtRect, txtMiddle, txtBottom,
                     that = this;
                 function textMouseOver(d, i) {
                     var mousePos = d3.mouse(that), textLength,
                         date = new Date(d.x),
                         dateString = date.toDateString() + ' ' + date.toTimeString().split(' ')[0];//Wed Jan 23 2013 00:28:12
-                    mousePos[0] = mousePos[0] - 80;
+                    mousePos[0] = mousePos[0] - 20;
                     mousePos[1] = mousePos[1] - 80;
-                    txt.text(dateString + " - Patches: " + (d.count + i + 1));
-                    textLength = txt.style('width');
+                    txt.text("Total Patches: " + (d.count + i + 1));
+                    txtMiddle.text(d.patch_name);
+                    txtBottom.text(dateString);
+                    textLength = parseFloat(txtMiddle.style('width')) > parseFloat(txtBottom.style('width')) ? txtMiddle.style('width') : txtBottom.style('width');
                     txtMask.attr({transform: 'translate(' + mousePos + ')'});
                     txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
                 }
@@ -42,10 +44,13 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                 }
                 function textMouseOut() {
                     txt.text('');
+                    txtMiddle.text('');
+                    txtBottom.text('');
+                    txtMask.attr({transform: 'translate(0,0)'});
                     txtRect.style('opacity', '0');
                 }
                 for (k = 0; k < data.length; k += 1) {
-                    val_array[k] = { x: data[k].label, y: data[k].value, count: data[k].count };
+                    val_array[k] = { x: data[k].label, y: data[k].value, count: data[k].count, patch_name: data[k].patch_name };
                 }
                 max = d3.max(val_array, function (d) {
                     return d.y;
@@ -124,13 +129,23 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                 txtMask = graph.append('g').attr({width: '100px'});
 
                 txtRect = txtMask.append('rect')
-                    .attr({width: '100px', height: '30px', fill: 'lightblue', stroke: 'black', 'rx': '6', 'ry': '6'})
+                    .attr({width: '100px', height: '60px', fill: 'lightblue', stroke: 'black', 'rx': '6', 'ry': '6'})
                     .style('opacity', '0');
 
                 txt = txtMask.append('text')
                     .attr({fill: 'black', dy: '18px', width: '100px'})
                     .style('font-size', '1.3em')
                     .style('text-wrap', 'normal')
+                    .text("");
+                txtMiddle = txtMask.append('text')
+                    .attr({fill: 'black', dy: '36px', width: '100px'})
+                    .style('font-size', '1.3em')
+                    .style('overflow', 'hidden')
+                    .text("");
+                txtBottom = txtMask.append('text')
+                    .attr({fill: 'black', dy: '54px', width: '100px'})
+                    .style('font-size', '1.3em')
+                    .style('overflow', 'hidden')
                     .text("");
             });
         }
