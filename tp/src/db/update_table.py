@@ -675,29 +675,69 @@ def add_system_info(session, data, node_info, username='system_user'):
             except Exception as e:
                 session.rollback()
 
-        if 'net_info' in data:
-            for network in data['net_info']:
-                net_info = session.query(NetworkInterface).\
-                        filter(NetworkInterface.node_id == node_id).\
-                        filter(NetworkInterface.interface == 
-                                network['interface_name']).first()
+        if 'hardware' in data:
+            for key, values in data['hardware'].items():
+                if 'nic' in key:
+                    for network in values:
+                        net_info = session.query(NetworkInterface).\
+                            filter(NetworkInterface.node_id == node_id).\
+                            filter(NetworkInterface.interface == 
+                                    network['name']).first()
 
-                if net_info:
-                    net_info.mac_address = network['mac']
-                    net_info.ip_address = network['ip']
-                    session.commit()
+                        if net_info:
+                            net_info.mac_address = network['mac']
+                            net_info.ip_address = network['ip']
+                            session.commit()
 
-                else:
-                    net_info = NetworkInterface(node_id=node_id,
-                            mac_address=network['mac'],
-                            ip_address=network['ip'],
-                            interface=network['interface_name']
-                            )
+                        else:
+                            net_info = NetworkInterface(node_id=node_id,
+                                mac_address=network['mac'],
+                                ip_address=network['ip'],
+                                interface=network['name']
+                                )
+                            session.add(net_info)
+                if 'storage' in key:
+                    for storage in values:
+                        storage_info = session.query(StorageInfo).\
+                                filter(StorageInfo.node_id == node_id.\
+                                filter(StorageInfo.name == storage['name'].\
+                                first()
 
+                        if storage_info:
+                            storage_info.free_size_kb = storage['free_size_kb']
+                            storage_info.size_kb = storage['size_kb']
+                            session.commit()
+
+                        else:
+                            storage_info = StorageInfo(node_id=node_id,
+                                free_size_kb=storage['free_size_kb'],
+                                size_kb=storage['size_kb'],
+                                file_system=storage['file_system'],
+                                name=storage_info['name']
+                                )
+                            session.add(storage_info)
+                if 'cpu' in key:
+                    for cpu in values:
+                        cpu_info = session.query(CpuInfo).\
+                                filter(CpuInfo.node_id == node_id.\
+                                filter(CpuInfo.name == cpu['cpu_id'].\
+                                first()
+
+                        if cpu_info:
+                            cpu_info.speed_mhz = cpu['speed_mhz']
+                            cpu_info.cores = cpu['cores']
+                            cpu_info.cache_kb = cpu['cache_kb']
+                            session.commit()
+
+                        else:
+                            cpu_info = CpuInfo(node_id=node_id,
+                                cores=cpu['cores'],
+                                speed_mhz=cpu['speed_mhz'],
+                                bit_type=cpu['bit_type'],
+                                cache_kb=cpu['cache_kb'],
+                                name=cpu['name']
                     try:
-                        session.add(net_info)
                         session.commit()
-
                     except Exception as e:
                         session.rollback()
 
