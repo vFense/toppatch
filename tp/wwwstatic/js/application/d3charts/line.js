@@ -49,9 +49,9 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     txtMask.attr({transform: 'translate(0,0)'});
                     txtRect.style('opacity', '0');
                 }
-                for (k = 0; k < data.length; k += 1) {
-                    val_array[k] = { x: data[k].label, y: data[k].value, count: data[k].count, patch_name: data[k].patch_name };
-                }
+                _.each(data, function (object) {
+                    val_array.push({ x: object.label || 0, y: object.value, count: object.count, patch_name: object.patch_name });
+                });
                 max = d3.max(val_array, function (d) {
                     return d.y;
                 });
