@@ -32,6 +32,8 @@ define(['jquery', 'd3'], function ($, d3) {
                     .attr("id", "master"),
                 // The pie sectors container
                     arcGroup = svg.append("svg:g")
+                    .style('width', width)
+                    .style('height', height)
                     .attr("class", "arcGroup")
                     .attr("filter", "url(#shadow)")
                     .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")"),
@@ -81,7 +83,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     txt.text(d.data.label + ": " + d.data.value + ' nodes.');
                     textLength = txt.style('width');
                     txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                    txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                    txtRect.attr({width: parseFloat(textLength) + 20}).style('opacity', '0.3');
                 }
                 function textMouseMove() {
                     var mousePos = d3.mouse(that);
@@ -91,6 +93,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     txtRect.style('opacity', '0.3');
                 }
                 function textMouseOut() {
+                    txtMask.attr({transform: 'translate(' + width + ', ' + height + ')'});
                     txt.text('');
                     txtRect.style('opacity', '0');
                 }
