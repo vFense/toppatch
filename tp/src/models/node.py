@@ -153,7 +153,37 @@ class Operations(Base):
                    self.operation_sent, self.operation_received,
                    self.username
                )
-               
+       
+
+        
+
+class PatchResults(Base):
+    """
+    Represents one row from the hosts table.
+    """
+    __tablename__ = "patch_results"
+    __visit_name__ = "column"
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    results_id = Column(INTEGER(unsigned=True),
+            ForeignKey("results.id"))
+    patch_id = Column(VARCHAR(32),
+            ForeignKey("package.toppatch_id"), nullable=True)
+    reboot = Column(BOOLEAN, nullable=True)
+    def __init__(self, results_id=None, patch_id=None, reboot=False):
+        self.patch_id = patch_id
+        self.results_id = results_id
+        self.reboot = reboot
+    def __repr__(self):
+        return "<PatchResults(%s, %s, %s)>" %\
+                (
+                self.results_id, self.patch_id, self.reboot
+                )
+
+
 
 class Results(Base):
     """
@@ -170,26 +200,21 @@ class Results(Base):
             ForeignKey("node_info.id"), nullable=True)
     operation_id = Column(INTEGER(unsigned=True),
             ForeignKey("operations.id"))
-    patch_id = Column(VARCHAR(32),
-            ForeignKey("package.toppatch_id"), nullable=True)
-    result = Column(VARCHAR(16), nullable=False)
-    reboot = Column(BOOLEAN, nullable=True)
+    succeeded = Column(BOOLEAN, nullable=False)
     error = Column(VARCHAR(64), nullable=True)
     results_received = Column(DATETIME, nullable=True)
-    def __init__(self, node_id=None, operation_id=None, patch_id=None,
-                result=None, reboot=None, error=None, results_received=None):
+    def __init__(self, node_id=None, operation_id=None, 
+                succeeded=False, error=None, results_received=None):
         self.node_id = node_id
         self.operation_id = operation_id
-        self.patch_id = patch_id
-        self.result = result
-        self.reboot = reboot
+        self.succeeded = succeeded
         self.error = error
         self.results_received = results_received
     def __repr__(self):
-        return "<Results(%s, %s, %s, %s, %s, %s, %s)>" %\
+        return "<Results(%s, %s, %s, %s, %s)>" %\
                 (
-                self.node_id ,self.operation_id, self.patch_id,
-                self.result, self.reboot, self.error, self.results_received
+                self.node_id, self.operation_id, self.succeeded,
+                self.error, self.results_received
                 )
 
 class SoftwareAvailable(Base):

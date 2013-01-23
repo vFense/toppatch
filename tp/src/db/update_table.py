@@ -21,7 +21,7 @@ logger = logging.getLogger('rvapi')
 
 
 def add_results_non_json(session, node_id=None, oper_id=None, error=None,
-        toppatch_id=None, reboot=False, result=True,
+        toppatch_id=None, reboot=False, result=False,
         results_received=datetime.now(), username='system_user'):
     """
         Add a new entry in the results table in RV
@@ -32,28 +32,40 @@ def add_results_non_json(session, node_id=None, oper_id=None, error=None,
     session = validate_session(session)
     operation = operation_exists(session, oper_id)
     results = None
-    if result:
-        result = 'pass'
-    else:
-        result = 'fail'
+    if result and type(result) != bool:
+        if 'success' in result:
+            result = True
+        elif 'failed' in result:
+            result = False
+    print result
     if oper_id and node_id and operation:
         results = Results(node_id=node_id, operation_id=oper_id, 
-                patch_id=toppatch_id,
-                reboot=reboot, result=result, error=error,
+                succeeded=result, error=error,
                 results_received=results_received
                 )
     elif oper_id and not node_id and operation:
         results = Results(operation_id=oper_id,
-                oppatch_id=toppatch_id, reboot=reboot,
-                result=result, error=error,
+                succeeded=result, error=error,
                 results_received=results_received
                 )
     if results:
         try:
             session.add(results)
             session.commit()
+            if toppatch_id:
+                patch_results = PatchResults(
+                        results_id=results.id,
+                        patch_id=toppatch_id, reboot=reboot
+                        )
+                try:
+                    session.add(patch_results)
+                    session.commit()
+                except Exception as e:
+                    print e
+                    session.rollback()
             return(results)
         except Exception as e:
+            print e
             session.rollback()
             return(None)
 
@@ -1589,7 +1601,6 @@ def add_results(session, data, username='system_user'):
             node.reboot = False
             session.commit()
         if not 'data' in data:
-            print "I shouldnt be here"
             if 'restart' in data['operation'] or \
                     'stop' in data['operation'] or \
                     'start' in data['operation']:
@@ -1636,16 +1647,19 @@ def add_results(session, data, username='system_user'):
                         if node.reboot == False:
                             node.reboot = reboot
                 session.commit()
-            error = None
-            if "error" in msg:
-                error = msg['error']
-            results = add_results_non_json(session, node_id=node_id,
-                    oper_id=data['operation_id'],
-                    toppatch_id=msg['toppatch_id'],
-                    result=msg['result'], reboot=reboot, error=error,
-                    results_received=datetime.now()
-                    )
-            update_node_stats(session, node_id)
-            update_network_stats(session)
-            session.commit()
-            return results
+                error = None
+                if "error" in msg:
+                    error = msg['error']
+                results = add_results_non_json(
+                        session, node_id=node_id,
+                        oper_id=data['operation_id'],
+                        toppatch_id=msg['toppatch_id'],
+                        result=msg['result'],
+                        reboot=reboot, error=error,
+                        results_received=datetime.now()
+                        )
+                update_node_stats(session, node_id)
+                update_network_stats(session)
+                update_tag_stats(session)
+                session.commit()
+        return results
