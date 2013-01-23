@@ -51,6 +51,7 @@ class ModifyDisplayNameHandler(BaseHandler):
                     "pass" : False,
                     "message" : "Insufficient arguments"
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -71,6 +72,7 @@ class ModifyHostNameHandler(BaseHandler):
                     "pass" : False,
                     "message" : "Insufficient arguments"
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -92,6 +94,7 @@ class NodeCleanerHandler(BaseHandler):
                 'message': 'Incorrect argument passed. %s' %
                     ('Arguments needed are: nodeid')
                 }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -113,6 +116,7 @@ class NodeRemoverHandler(BaseHandler):
                 'message': 'Incorrect argument passed. %s' %
                     ('Arguments needed are: nodeid')
                 }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -138,6 +142,7 @@ class NodeTogglerHandler(BaseHandler):
                          'nodeid and toggle'
                          )
                 })
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -303,6 +308,7 @@ class NodeWolHandler(BaseHandler):
                 'message': 'Incorrect argument passed. %s' %
                     ('Arguments needed are: nodeid')
                 }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 

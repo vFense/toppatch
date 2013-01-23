@@ -137,6 +137,7 @@ class AgentOperation():
                             results_received=datetime.now(),
                             username=self.username
                             )
+                    self.session.close()
                     return(self.json_out)
                 if not DATA in jsonobject:
                     message = self.operation_creator(data_list=None)
@@ -158,7 +159,6 @@ class AgentOperation():
                                     self.oper_id, AGENT_PORT)).start()
                     else:
                         raise("You must pass an array")
-        #self.session.close()
         
     def operation_creator(self, data_list=None):
         """
@@ -254,6 +254,7 @@ class AgentOperation():
                     update_node_stats(self.session, node.id)
                     update_network_stats(self.session)
                     update_tag_stats(self.session)
+        self.session.close()
         return self.json_out
 
 
