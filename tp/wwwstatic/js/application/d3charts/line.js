@@ -22,12 +22,10 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                 // generate chart here; `d` is the data and `this` is the element
                 var k, xAxis, yAxisLeft, line, graph, point, txt, txtMask, txtRect, txtMiddle, txtBottom,
                     that = this;
-                window.console.log(height);
                 function textMouseOver(d, i) {
                     var mousePos = d3.mouse(that), textLength,
                         date = new Date(d.x),
                         dateString = date.toDateString() + ' ' + date.toTimeString().split(' ')[0];//Wed Jan 23 2013 00:28:12
-                    window.console.log(mousePos);
                     mousePos[0] = mousePos[0] - 20;
                     mousePos[1] = mousePos[1] > (height / 2) ? mousePos[1] - 80 : mousePos[1] - 20;
                     txt.text("Total Patches: " + (d.count + i + 1));

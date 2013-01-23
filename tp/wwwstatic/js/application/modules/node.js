@@ -169,7 +169,6 @@ define(
                         height = $graphDiv.parent().height(),
                         lineChart = app.chart.line().width(width).height(height),
                         variable = this.graphcollection.toJSON()[0];
-                    window.console.log(height);
                     if (variable) {
                         variable.data.sort(function (a, b) {
                             var keyA = new Date(a.date_installed),
