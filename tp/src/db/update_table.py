@@ -681,7 +681,7 @@ def add_system_info(session, data, node_info, username='system_user'):
                     for network in values:
                         net_info = session.query(NetworkInterface).\
                             filter(NetworkInterface.node_id == node_id).\
-                            filter(NetworkInterface.interface == 
+                            filter(NetworkInterface.interface == \
                                     network['name']).first()
 
                         if net_info:
@@ -699,8 +699,8 @@ def add_system_info(session, data, node_info, username='system_user'):
                 if 'storage' in key:
                     for storage in values:
                         storage_info = session.query(StorageInfo).\
-                                filter(StorageInfo.node_id == node_id.\
-                                filter(StorageInfo.name == storage['name'].\
+                                filter(StorageInfo.node_id == node_id).\
+                                filter(StorageInfo.name == storage['name']).\
                                 first()
 
                         if storage_info:
@@ -719,9 +719,8 @@ def add_system_info(session, data, node_info, username='system_user'):
                 if 'cpu' in key:
                     for cpu in values:
                         cpu_info = session.query(CpuInfo).\
-                                filter(CpuInfo.node_id == node_id.\
-                                filter(CpuInfo.name == cpu['cpu_id'].\
-                                first()
+                                filter(CpuInfo.node_id == node_id).first()
+                                #filter(CpuInfo.name == cpu['cpu_id']).\
 
                         if cpu_info:
                             cpu_info.speed_mhz = cpu['speed_mhz']
@@ -733,15 +732,16 @@ def add_system_info(session, data, node_info, username='system_user'):
                             cpu_info = CpuInfo(node_id=node_id,
                                 cores=cpu['cores'],
                                 speed_mhz=cpu['speed_mhz'],
-                                bit_type=cpu['bit_type'],
+                                #bit_type=cpu['bit_type'],
                                 cache_kb=cpu['cache_kb'],
                                 name=cpu['name']
+                                )
                             session.add(cpu_info)
                 if 'display' in key:
                     for video in values:
                         video_info = session.query(DisplayInfo).\
-                                filter(DisplayInfo.node_id == node_id.\
-                                filter(DisplayInfo.name == video['name'].\
+                                filter(DisplayInfo.node_id == node_id).\
+                                filter(DisplayInfo.name == video['name']).\
                                 first()
                         if video_info:
                             video_info.speed_mhz = video['speed_mhz']
@@ -755,18 +755,19 @@ def add_system_info(session, data, node_info, username='system_user'):
                                 name=video['name']
                                 )
                             session.add(video_info)
-                 if 'memory' in key:
-                     mem_info = session.query(MemoryInfo).\
-                                filter(MemoryInfo.node_id == node_id.\
+                if 'memory' in key:
+                    mem_info = session.query(MemoryInfo).\
+                                filter(MemoryInfo.node_id == node_id).\
                                 first()
-                        if mem_info:
-                            mem_info.total_memory = values
-                            session.commit()
-                        else:
-                            mem_info = MemoryInfo(node_id=node_id,
+                    if mem_info:
+                        mem_info.total_memory = values
+                        session.commit()
+                    else:
+                        mem_info = MemoryInfo(
+                                node_id=node_id,
                                 total_memory=values
                                 )
-                            session.add(mem_info)
+                        session.add(mem_info)
 
                 try:
                     session.commit()
