@@ -736,10 +736,42 @@ def add_system_info(session, data, node_info, username='system_user'):
                                 bit_type=cpu['bit_type'],
                                 cache_kb=cpu['cache_kb'],
                                 name=cpu['name']
-                    try:
-                        session.commit()
-                    except Exception as e:
-                        session.rollback()
+                            session.add(cpu_info)
+                if 'display' in key:
+                    for video in values:
+                        video_info = session.query(DisplayInfo).\
+                                filter(DisplayInfo.node_id == node_id.\
+                                filter(DisplayInfo.name == video['name'].\
+                                first()
+                        if video_info:
+                            video_info.speed_mhz = video['speed_mhz']
+                            video_info.ram_kb = video['ram_kb']
+                            video_info.name = video['name']
+                            session.commit()
+                        else:
+                            video_info = DisplayInfo(node_id=node_id,
+                                speed_mhz=video['speed_mhz'],
+                                ram_kb=video['ram_kb'],
+                                name=video['name']
+                                )
+                            session.add(video_info)
+                 if 'memory' in key:
+                     mem_info = session.query(MemoryInfo).\
+                                filter(MemoryInfo.node_id == node_id.\
+                                first()
+                        if mem_info:
+                            mem_info.total_memory = values
+                            session.commit()
+                        else:
+                            mem_info = MemoryInfo(node_id=node_id,
+                                total_memory=values
+                                )
+                            session.add(mem_info)
+
+                try:
+                    session.commit()
+                except Exception as e:
+                    session.rollback()
 
         return system_info
 
