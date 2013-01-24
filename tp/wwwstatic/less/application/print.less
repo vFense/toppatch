@@ -19,4 +19,9 @@
     h2, h3 { page-break-after: avoid; }
     .visible-print { display: inherit !important; } // Use inherit to restore previous behavior
     .hidden-print { display: none !important; }
+@media print {
+    #pageHeader {
+        border-bottom: @em*( 1px )/@baseFontSize solid #E0E0E0;
+    }
+    }
 }
