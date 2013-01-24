@@ -14,12 +14,12 @@ class Worker(Thread):
         self.tasks = tasks
         self.process_queue = Queue.Queue(number_of_threads)
         self.daemon = True
-        self.run_forver = True
+        self.run_forever = True
         self.start()
 
     
     def run(self):
-        while self.run_forver == True:
+        while self.run_forever:
             while not self.tasks.empty() and \
                     not self.process_queue.full():
                 self.process_queue.put(self.tasks.get_nowait())

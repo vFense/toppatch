@@ -772,6 +772,7 @@ def add_system_info(session, data, node_info, username='system_user'):
                 try:
                     session.commit()
                 except Exception as e:
+                    print e
                     session.rollback()
 
         return system_info

@@ -309,6 +309,7 @@ class VmApi():
             message = '%s - insufficient parameters' % (username)
             logger.error(message)
             passed = False
+        session.close()
 
         return({
             'pass': passed,
@@ -628,6 +629,7 @@ class VmApi():
                             session.rollback()
                             snaps_updated = False
                     redis.publish('rv', 'SnapShots Updated')
+        session.close()
 
         return(snaps_updated)
 
