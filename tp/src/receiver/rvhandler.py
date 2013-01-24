@@ -102,7 +102,6 @@ class HandOff():
             if self.json_object[OPERATION] == STOP:
                 self.update_results(self.node)
         self.session.close()
-        self.session.remove()
 
     def get_data(self, oper):
         lcollect = []
