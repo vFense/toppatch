@@ -34,6 +34,7 @@ BODY {
   font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
   min-width: 67.14285714285714em;
   padding-top: 1em;
+  padding-bottom: 2.857142857142857em;
 }
 BODY > FOOTER {
   background-color: #F8F8F8;
@@ -46,6 +47,13 @@ BODY > FOOTER .logo-text {
   height: 2.5714285714285716em;
   padding-top: 0.14285714285714285em;
   padding-bottom: 0.14285714285714285em;
+}
+#pageFooter {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2000;
 }
 .brand {
   color: #001678 !important;
@@ -134,12 +142,12 @@ select:required.invalid:focus {
 }
 .point {
   fill: #339cff;
-  stroke-width: 1px;
+  stroke-width: 2px;
   stroke: #ffffff;
 }
 .point.max {
   fill: #c80000;
-  stroke-width: 1px;
+  stroke-width: 2px;
 }
 .chart {
   display: block;
@@ -760,6 +768,9 @@ BODY > HEADER #primaryNav {
   font-size: 12px;
   border-top: 0.08333333333333333em solid #e6e6e6;
   padding: 0.16666666666666666em 0.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .list .items .item:first-child {
   border-top: none !important;
@@ -781,11 +792,6 @@ BODY > HEADER #primaryNav {
 }
 .list .items .item.linked A STRONG {
   color: #0088cc;
-}
-.list .items .item .desc {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .list .items .item .btn-link {
   border: 0;
@@ -1058,13 +1064,6 @@ NOSCRIPT IMG.brand {
   display: none !important;
 }
 @media print {
-  * {
-    color: black !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-    filter: none !important;
-    -ms-filter: none !important;
-  }
   pre,
   blockquote {
     border: 1px solid #999;
@@ -1079,9 +1078,6 @@ NOSCRIPT IMG.brand {
   }
   img {
     max-width: 100% !important;
-  }
-  @page  {
-    margin: 0.5cm;
   }
   p,
   h2,
@@ -1098,5 +1094,16 @@ NOSCRIPT IMG.brand {
   }
   .hidden-print {
     display: none !important;
+  }
+}
+@media print {
+  body {
+    padding-bottom: 0;
+  }
+  #pageHeader {
+    border-bottom: 0.07142857142857142em solid #e0e0e0;
+  }
+  #pageFooter {
+    position: relative;
   }
 }
