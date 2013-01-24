@@ -16,7 +16,7 @@ valid_pkg_columns = {
 is_os = {
         "is_linux" : PackagePerNode.is_linux, 
         "is_windows" : PackagePerNode.is_windows,
-        "is_mac" : PackagePerNode.is_mac,
+        "is_darwin" : PackagePerNode.is_darwin,
         "is_unix" : PackagePerNode.is_unix,
         "is_bsd" : PackagePerNode.is_bsd
         }
