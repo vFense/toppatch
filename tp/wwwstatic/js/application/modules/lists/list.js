@@ -225,8 +225,8 @@ define(
                 },
 
                 updateURL: function () {
-                    var pattern = /[\w\d_\-]+(\?\/){0,}/,
-                        hash = pattern.exec(app.router.getCurrentFragment())[0] || '';
+                    var pattern = /^[\w\d_\-\+%]+[\?\/]{0}/,
+                        hash = pattern.exec(app.router.getCurrentFragment()) || '';
 
                     // Update the URL, but do not cause a route event
                     app.router.navigate(hash + this.collection.query());

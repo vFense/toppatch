@@ -61,7 +61,7 @@ define(
                     modals = app.views.modals,
                     adminPattern = /^admin($|[\/\?][\w\d_\-\+%]+)/,
                     adminRoute = false,
-                    hashPattern = /[\w\d_\-]+[\?\/]{0,}/,
+                    hashPattern = /^[\w\d_\-\+%]+[\?\/]{0}/,
                     hash;
 
                 // Create a new ViewManager with #dashboard-view as its target element
