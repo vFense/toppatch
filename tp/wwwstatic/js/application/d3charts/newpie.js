@@ -35,7 +35,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     .style('width', width)
                     .style('height', height)
                     .attr("class", "arcGroup")
-                    .attr("filter", "url(#shadow)")
+                    //.attr("filter", "url(#shadow)")
                     .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")"),
                 // Header text
                     //header = svg.append("text").text("Parent")

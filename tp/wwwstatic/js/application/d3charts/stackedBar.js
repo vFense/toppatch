@@ -67,7 +67,9 @@ define(
                         temp.push({ x: 0, y: dat.value, y0: y0[i], label: dat.label });
                         return temp;
                     });
+                    window.console.log(data_array);
                     stacked = d3.layout.stack()(data_array);
+                    window.console.log(stacked);
                     x.domain(stacked[0].map(function (d) { return d.x; }));
                     y.domain([0, d3.max(stacked[stacked.length - 1], function (d) { return d.y0 + d.y; })]);
                     line = d3.svg.line()
