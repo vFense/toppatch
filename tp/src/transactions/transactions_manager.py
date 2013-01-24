@@ -44,9 +44,9 @@ def retrieve_transactions(session, count=None, offset=None):
                          "node_ip_address" : node_info.ip_address,
                          "node_computer_name" : node_info.computer_name,
                          "results_received" : None,
-                         "patch_id" : None,
-                         "result" : None,
-                         "reboot" : None,
+                         #"patch_id" : None,
+                         #"succeeded" : None,
+                         #"reboot" : None,
                          "error" : None
                          })
         elif len(trans[1]) >= 2:
@@ -62,9 +62,9 @@ def retrieve_transactions(session, count=None, offset=None):
                          "node_ip_address" : node_info.ip_address,
                          "node_computer_name" : node_info.computer_name,
                          "results_received" : trans[1][1].results_received.strftime("%m/%d/%Y %H:%M"),
-                         "patch_id" : trans[1][1].patch_id,
-                         "result" : trans[1][1].result,
-                         "reboot" : trans[1][1].reboot,
+                         #"patch_id" : trans[1][1].patch_id,
+                         "result" : trans[1][1].succeeded,
+                         #"reboot" : trans[1][1].reboot,
                          "error" : trans[1][1].error,
                          })
     return final_msg

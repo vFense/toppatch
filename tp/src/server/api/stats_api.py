@@ -187,6 +187,7 @@ class GetTagStatsHandler(BaseHandler):
         tag_id = self.get_argument('tagid', None)
         tag_name = self.get_argument('tagname', None)
         result = get_tag_stats(self.session, tagid=tag_id, tagname=tag_name)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -199,6 +200,95 @@ class GetNodeStatsHandler(BaseHandler):
         nodeid = self.get_argument('nodeid')
         nodename = self.get_argument('nodename')
         result = get_node_stats(self.session, tagid=tag_id, tagname=tag_name)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
+class BasePackageSeverityOverTimeHandler(BaseHandler):
+    @authenticated_request
+    def get(self):
+        session = self.application.session
+        session = validate_session(session)
+        nodeid = self.get_argument('nodeid', None)
+        tagid = self.get_argument('tagid', None)
+        installed = self.get_argument('installed', True)
+        self.data = []
+        if type(installed) != bool:
+            installed = return_bool(installed)
+        if not nodeid:
+            date_installed = session.query(PackagePerNode.date_installed).\
+                    filter(PackagePerNode.installed == installed).\
+                    group_by(PackagePerNode.date_installed).all()
+            for date1 in date_installed:
+                pkg_query = session.query(PackagePerNode, Package).\
+                        filter(PackagePerNode.installed == installed,\
+                        PackagePerNode.date_installed == date1[0]).\
+                        join(Package)
+                self._parse_data(pkg_query, date1)
+        elif tagid:
+            node_ids = map(lambda x: x[0], s.query(TagsPerNode.node_id).\
+                    filter(TagsPerNode.tag_id == 1).all())
+            date_installed = session.query(PackagePerNode.date_installed).\
+                    filter(PackagePerNode.installed == installed).\
+                    filter(PackagePerNode.node_id.in_(node_ids)).\
+                    group_by(PackagePerNode.date_installed).all()
+            for date1 in date_installed:
+                pkg_query = session.query(PackagePerNode, Package).\
+                        filter(PackagePerNode.installed == True,\
+                        PackagePerNode.date_installed == date1[0],\
+                        PackagePerNode.node_id.in_(node_ids)).\
+                        join(Package)
+                self._parse_data(pkg_query, date1)
+        else:
+            date_installed = session.query(PackagePerNode.date_installed).\
+                    filter(PackagePerNode.installed == installed).\
+                    filter(PackagePerNode.node_id == nodeid).\
+                    group_by(PackagePerNode.date_installed).all()
+            for date1 in date_installed:
+                pkg_query = session.query(PackagePerNode, Package).\
+                        filter(PackagePerNode.installed == installed,\
+                        PackagePerNode.node_id == nodeid,\
+                        PackagePerNode.date_installed == date1[0]).\
+                        join(Package)
+                self._parse_data(pkg_query, date1)
+        session.close()
+        result = self.data
+        self.set_header('Content-Type', 'application/json')
+        self.write(json.dumps(result, indent=4))
+
+
+    def _parse_data(self, pkg_query, date1):
+        installed_count = pkg_query.count()
+        critical_count = pkg_query.\
+                filter(Package.severity == 'Critical').count()
+        recommended_count = pkg_query.\
+                filter(Package.severity == 'Recommended').count()
+        optional_count = pkg_query.\
+                filter(Package.severity == 'Optional').count()
+        self.data.append({
+                'date': str(date1[0]),
+                'total': installed_count,
+                'critical': critical_count,
+                'recommended': recommended_count,
+                'optional': optional_count
+                })
+
+
+class GetTagPackageSeverityOverTimeHandler(BasePackageSeverityOverTimeHandler):
+    @authenticated_request
+    def post(self):
+        super(GetNodePackageSeverityOverTimeHandler,self).post()
+
+
+class GetNodePackageSeverityOverTimeHandler(BasePackageSeverityOverTimeHandler):
+    @authenticated_request
+    def post(self):
+        super(GetNodePackageSeverityOverTimeHandler,self).post()
+
+
+class GetPackageSeverityOverTimeHandler(BasePackageSeverityOverTimeHandler):
+    @authenticated_request
+    def post(self):
+        super(GetNodePackageSeverityOverTimeHandler,self).post()
+
 

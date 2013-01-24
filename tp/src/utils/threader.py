@@ -8,18 +8,18 @@ logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 
 class Worker(Thread):
     """Thread executing tasks from a given tasks queue"""
-    def __init__(self, tasks, number_of_threads, logger):
-        self.logger = logger
+    def __init__(self, tasks, number_of_threads, log_name='rvlistener'):
+        self.logger = logging.getLogger(log_name)
         Thread.__init__(self)
         self.tasks = tasks
         self.process_queue = Queue.Queue(number_of_threads)
         self.daemon = True
-        self.run_forver = True
+        self.run_forever = True
         self.start()
 
     
     def run(self):
-        while self.run_forver == True:
+        while self.run_forever:
             while not self.tasks.empty() and \
                     not self.process_queue.full():
                 self.process_queue.put(self.tasks.get_nowait())
@@ -27,8 +27,9 @@ class Worker(Thread):
                 func, args = self.process_queue.get_nowait()
                 try:
                     func(*args)
-                except Exception, e:
-                    self.logger(e)
+                except Exception as e:
+                    print e
+                    self.logger.error(e)
                 if not self.tasks.empty():
                     self.process_queue.put(self.tasks.get_nowait())
                 self.process_queue.task_done()
@@ -41,7 +42,7 @@ class OperationQueue():
         self.logger = logging.getLogger(log_name)
         self.number_of_threads = number_of_threads
         self.queue = Queue.Queue()
-        Worker(self.queue, self.number_of_threads, self.logger)
+        Worker(self.queue, self.number_of_threads, log_name)
         self.op_in_progress = False
 
     def put(self, operation):

@@ -21,7 +21,7 @@ logger = logging.getLogger('rvapi')
 
 
 def add_results_non_json(session, node_id=None, oper_id=None, error=None,
-        toppatch_id=None, reboot=False, result=True,
+        toppatch_id=None, reboot=False, result=False,
         results_received=datetime.now(), username='system_user'):
     """
         Add a new entry in the results table in RV
@@ -32,28 +32,40 @@ def add_results_non_json(session, node_id=None, oper_id=None, error=None,
     session = validate_session(session)
     operation = operation_exists(session, oper_id)
     results = None
-    if result:
-        result = 'pass'
-    else:
-        result = 'fail'
+    if result and type(result) != bool:
+        if 'success' in result:
+            result = True
+        elif 'failed' in result:
+            result = False
+    print result
     if oper_id and node_id and operation:
         results = Results(node_id=node_id, operation_id=oper_id, 
-                patch_id=toppatch_id,
-                reboot=reboot, result=result, error=error,
+                succeeded=result, error=error,
                 results_received=results_received
                 )
     elif oper_id and not node_id and operation:
         results = Results(operation_id=oper_id,
-                oppatch_id=toppatch_id, reboot=reboot,
-                result=result, error=error,
+                succeeded=result, error=error,
                 results_received=results_received
                 )
     if results:
         try:
             session.add(results)
             session.commit()
+            if toppatch_id:
+                patch_results = PatchResults(
+                        results_id=results.id,
+                        patch_id=toppatch_id, reboot=reboot
+                        )
+                try:
+                    session.add(patch_results)
+                    session.commit()
+                except Exception as e:
+                    print e
+                    session.rollback()
             return(results)
         except Exception as e:
+            print e
             session.rollback()
             return(None)
 
@@ -663,31 +675,105 @@ def add_system_info(session, data, node_info, username='system_user'):
             except Exception as e:
                 session.rollback()
 
-        if 'net_info' in data:
-            for network in data['net_info']:
-                net_info = session.query(NetworkInterface).\
-                        filter(NetworkInterface.node_id == node_id).\
-                        filter(NetworkInterface.interface == 
-                                network['interface_name']).first()
+        if 'hardware' in data:
+            for key, values in data['hardware'].items():
+                if 'nic' in key:
+                    for network in values:
+                        net_info = session.query(NetworkInterface).\
+                            filter(NetworkInterface.node_id == node_id).\
+                            filter(NetworkInterface.interface == \
+                                    network['name']).first()
 
-                if net_info:
-                    net_info.mac_address = network['mac']
-                    net_info.ip_address = network['ip']
-                    session.commit()
+                        if net_info:
+                            net_info.mac_address = network['mac']
+                            net_info.ip_address = network['ip']
+                            session.commit()
 
-                else:
-                    net_info = NetworkInterface(node_id=node_id,
-                            mac_address=network['mac'],
-                            ip_address=network['ip'],
-                            interface=network['interface_name']
-                            )
+                        else:
+                            net_info = NetworkInterface(node_id=node_id,
+                                mac_address=network['mac'],
+                                ip_address=network['ip'],
+                                interface=network['name']
+                                )
+                            session.add(net_info)
+                if 'storage' in key:
+                    for storage in values:
+                        storage_info = session.query(StorageInfo).\
+                                filter(StorageInfo.node_id == node_id).\
+                                filter(StorageInfo.name == storage['name']).\
+                                first()
 
-                    try:
-                        session.add(net_info)
+                        if storage_info:
+                            storage_info.free_size_kb = storage['free_size_kb']
+                            storage_info.size_kb = storage['size_kb']
+                            session.commit()
+
+                        else:
+                            storage_info = StorageInfo(node_id=node_id,
+                                free_size_kb=storage['free_size_kb'],
+                                size_kb=storage['size_kb'],
+                                file_system=storage['file_system'],
+                                name=storage_info['name']
+                                )
+                            session.add(storage_info)
+                if 'cpu' in key:
+                    for cpu in values:
+                        cpu_info = session.query(CpuInfo).\
+                                filter(CpuInfo.node_id == node_id).first()
+                                #filter(CpuInfo.name == cpu['cpu_id']).\
+
+                        if cpu_info:
+                            cpu_info.speed_mhz = cpu['speed_mhz']
+                            cpu_info.cores = cpu['cores']
+                            cpu_info.cache_kb = cpu['cache_kb']
+                            session.commit()
+
+                        else:
+                            cpu_info = CpuInfo(node_id=node_id,
+                                cores=cpu['cores'],
+                                speed_mhz=cpu['speed_mhz'],
+                                #bit_type=cpu['bit_type'],
+                                cache_kb=cpu['cache_kb'],
+                                name=cpu['name']
+                                )
+                            session.add(cpu_info)
+                if 'display' in key:
+                    for video in values:
+                        video_info = session.query(DisplayInfo).\
+                                filter(DisplayInfo.node_id == node_id).\
+                                filter(DisplayInfo.name == video['name']).\
+                                first()
+                        if video_info:
+                            video_info.speed_mhz = video['speed_mhz']
+                            video_info.ram_kb = video['ram_kb']
+                            video_info.name = video['name']
+                            session.commit()
+                        else:
+                            video_info = DisplayInfo(node_id=node_id,
+                                speed_mhz=video['speed_mhz'],
+                                ram_kb=video['ram_kb'],
+                                name=video['name']
+                                )
+                            session.add(video_info)
+                if 'memory' in key:
+                    mem_info = session.query(MemoryInfo).\
+                                filter(MemoryInfo.node_id == node_id).\
+                                first()
+                    if mem_info:
+                        mem_info.total_memory = values
                         session.commit()
+                    else:
+                        mem_info = MemoryInfo(
+                                node_id=node_id,
+                                total_memory=values
+                                )
+                        session.add(mem_info)
 
-                    except Exception as e:
-                        session.rollback()
+                try:
+                    session.commit()
+                except Exception as e:
+                    print e
+                    session.rollback()
 
         return system_info
 
@@ -1589,7 +1675,6 @@ def add_results(session, data, username='system_user'):
             node.reboot = False
             session.commit()
         if not 'data' in data:
-            print "I shouldnt be here"
             if 'restart' in data['operation'] or \
                     'stop' in data['operation'] or \
                     'start' in data['operation']:
@@ -1636,16 +1721,19 @@ def add_results(session, data, username='system_user'):
                         if node.reboot == False:
                             node.reboot = reboot
                 session.commit()
-            error = None
-            if "error" in msg:
-                error = msg['error']
-            results = add_results_non_json(session, node_id=node_id,
-                    oper_id=data['operation_id'],
-                    toppatch_id=msg['toppatch_id'],
-                    result=msg['result'], reboot=reboot, error=error,
-                    results_received=datetime.now()
-                    )
-            update_node_stats(session, node_id)
-            update_network_stats(session)
-            session.commit()
-            return results
+                error = None
+                if "error" in msg:
+                    error = msg['error']
+                results = add_results_non_json(
+                        session, node_id=node_id,
+                        oper_id=data['operation_id'],
+                        toppatch_id=msg['toppatch_id'],
+                        result=msg['result'],
+                        reboot=reboot, error=error,
+                        results_received=datetime.now()
+                        )
+                update_node_stats(session, node_id)
+                update_network_stats(session)
+                update_tag_stats(session)
+                session.commit()
+        return results
