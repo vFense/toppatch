@@ -676,8 +676,10 @@ def add_system_info(session, data, node_info, username='system_user'):
                 session.rollback()
 
         if 'hardware' in data:
+            print data
             for key, values in data['hardware'].items():
                 if 'nic' in key:
+                    print key, values
                     for network in values:
                         net_info = session.query(NetworkInterface).\
                             filter(NetworkInterface.node_id == node_id).\
@@ -686,13 +688,13 @@ def add_system_info(session, data, node_info, username='system_user'):
 
                         if net_info:
                             net_info.mac_address = network['mac']
-                            net_info.ip_address = network['ip']
+                            net_info.ip_address = network['ip_address']
                             session.commit()
 
                         else:
                             net_info = NetworkInterface(node_id=node_id,
                                 mac_address=network['mac'],
-                                ip_address=network['ip'],
+                                ip_address=network['ip_address'],
                                 interface=network['name']
                                 )
                             session.add(net_info)
@@ -719,8 +721,8 @@ def add_system_info(session, data, node_info, username='system_user'):
                 if 'cpu' in key:
                     for cpu in values:
                         cpu_info = session.query(CpuInfo).\
-                                filter(CpuInfo.node_id == node_id).first()
-                                #filter(CpuInfo.name == cpu['cpu_id']).\
+                                filter(CpuInfo.node_id == node_id).\
+                                filter(CpuInfo.name == cpu['cpu_id']).first()
 
                         if cpu_info:
                             cpu_info.speed_mhz = cpu['speed_mhz']
@@ -732,7 +734,7 @@ def add_system_info(session, data, node_info, username='system_user'):
                             cpu_info = CpuInfo(node_id=node_id,
                                 cores=cpu['cores'],
                                 speed_mhz=cpu['speed_mhz'],
-                                #bit_type=cpu['bit_type'],
+                                bit_type=cpu['bit_type'],
                                 cache_kb=cpu['cache_kb'],
                                 name=cpu['name']
                                 )
@@ -772,7 +774,7 @@ def add_system_info(session, data, node_info, username='system_user'):
                 try:
                     session.commit()
                 except Exception as e:
-                    print e
+                    print e, 'BAM'
                     session.rollback()
 
         return system_info
