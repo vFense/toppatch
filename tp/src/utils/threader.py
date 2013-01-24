@@ -28,8 +28,8 @@ class Worker(Thread):
                 try:
                     func(*args)
                 except Exception as e:
-                    print type(self.logger)
-                    self.logger(e)
+                    print e
+                    self.logger.error(e)
                 if not self.tasks.empty():
                     self.process_queue.put(self.tasks.get_nowait())
                 self.process_queue.task_done()
