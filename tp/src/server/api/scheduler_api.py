@@ -41,6 +41,7 @@ class SchedulerListerHandler(BaseHandler):
         self.session = validate_session(self.session)
         self.sched = self.application.scheduler
         result = job_lister(self.session, self.sched)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -52,6 +53,7 @@ class TimeBlockerListerHandler(BaseHandler):
         self.session = validate_session(self.session)
         self.sched = self.application.scheduler
         result = time_block_lister(self.session)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -69,6 +71,7 @@ class SchedulerAddHandler(BaseHandler):
             self.write("Wrong argument passed"+
             " %s, the arguement needed is operation" % (e))
         result = job_scheduler(self.msg, self.sched, username=username)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -87,6 +90,7 @@ class SchedulerRemoveHandler(BaseHandler):
             self.write("Wrong arguement passed"+
             " %s, the argument needed is jobname" % (e))
         result = remove_job(self.sched, jobname, username=username)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -103,6 +107,7 @@ class TimeBlockerAddHandler(BaseHandler):
             self.write("Wrong arguement passed"+
             "%s, the argument needed is operation" % (e))
         result = time_block_adder(self.session, self.msg, username=username)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -130,6 +135,7 @@ class TimeBlockerRemoverHandler(BaseHandler):
                     start_date, start_time)
         except Exception as e:
             pass
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -202,6 +208,7 @@ class TimeBlockerTogglerHandler(BaseHandler):
             result = {'pass' : False,
                       'message' : 'TimeBlock %s was not disabled or enabled' % (tbid)
                      }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 

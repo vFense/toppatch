@@ -41,6 +41,7 @@ class GetTransactionsHandler(BaseHandler):
         queryCount = self.get_argument('count', 20)
         queryOffset = self.get_argument('offset', 0)
         result = retrieve_transactions(self.session, count=queryCount, offset=queryOffset)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -55,6 +56,7 @@ class SearchTransactionsHandler(BaseHandler):
         count = int(self.get_argument('count', 100))
         offset = int(self.get_argument('offset', 0))
         result = operation_search(session, query, column, count, offset)
+        session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 

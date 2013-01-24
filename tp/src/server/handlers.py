@@ -115,17 +115,13 @@ class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
     def on_message(self, msg):
         if msg.kind == 'message':
             self.write_message(str(msg.body))
-            print "message written", msg.body
 
     def on_close(self):
-        print 'closed baby'
         self.client.unsubscribe('rv')
         def check():
             if self.client.connection.in_progress:
-                print 'Connection still in progress'
                 ioloop.IOLoop.instance().add_timeout(timedelta(0.00001), check)
             else:
-                print 'Disconnecting'
                 self.client.disconnect()
         ioloop.IOLoop.instance().add_timeout(timedelta(0.00001), check)
         self.client.disconnect()
@@ -175,6 +171,7 @@ class FormHandler(BaseHandler):
         node = {}
         result = []
         nodes = self.get_arguments('node')
+        print self.request.arguments
         if len(nodes) <1:
             nodes = None
         tags = self.get_arguments('tag')

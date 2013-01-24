@@ -183,7 +183,7 @@ define(
                             $rowDiv.append(that.template);
                             that.$el.append($rowDiv);
                             that.counter += 1;
-                            that.getTags();
+                            that.getTags(that.graph);
                         }
                     },
                     renderExisting: function () {
@@ -208,7 +208,7 @@ define(
                             that.myClass = $(that.widget).attr("class");
                             $(that.widget + '-title').html(that.title);
                             $(that.widget).removeClass(that.myClass).addClass("span" + that.sizeval + " widget editable");
-                            self.getTags();
+                            self.getTags(that.graph);
                         }
                     },
                     saveState: function () {
@@ -223,19 +223,15 @@ define(
                         window.User.set('widgets', widgets);
                         localStorage.setItem(userName, JSON.stringify(window.User));
                     },
-                    getTags: function () {
+                    getTags: function (selection) {
                         var that = this,
+                            url = 'api/tagging/tagStats',
                             tag_template;
-                        $.ajax({
-                            url: 'api/tagging/tagStats',
-                            dataType: 'json',
-                            async: false,
-                            success: function (data) {
-                                that.$el.find(that.graph).empty();
-                                tag_template = _.template($('#tags_template').html(), {data: data.data || data});
-                                that.$el.find(that.graph).html(tag_template);
-                                that.saveState();
-                            }
+                        $.get(url, {}, function (data) {
+                            that.$el.find(selection).empty();
+                            tag_template = _.template($('#tags_template').html(), {data: data.data || data});
+                            that.$el.find(selection).html(tag_template);
+                            that.saveState();
                         });
                     },
                     beforeRender: $.noop,
@@ -441,7 +437,7 @@ define(
                                 that.sizeval = settings.spans[i];
                                 that.title = settings.titles[i];
                                 that.graphType = widgets[i];
-                                that.getTags();
+                                that.getTags('#graph' + (i + 1));
                             }/*else if (widgets[i] === 'line') {
                              lineGraph('#graph' + (i + 1));
                              }*/

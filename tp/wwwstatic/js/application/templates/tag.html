@@ -28,6 +28,61 @@
         <div class="accordion-heading">
             <header>
                 <a class="accordion-toggle" href="#">
+                    <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Nodes in Tag</strong>
+                <span class="pull-right">
+                    <span class="badge badge-inverse"><%= patches.node_count %></span>
+                </span>
+                </a>
+            </header>
+        </div>
+        <div class="accordion-body collapse">
+            <section class="list accordion-inner">
+                <header class="clearfix">
+                    <label class="checkbox inline">
+                        <input type="checkbox" class="toggle-all">Select / Deselect All
+                    </label>
+                    <div class="pull-right noMargin">
+                        <label class="checkbox inline"><small>Schedule Reboot</small></label>
+                        <input type="checkbox" name="schedule" value="once"/>&nbsp;
+                        <button name="reboot" class="btn btn-mini btn-primary">Reboot</button>
+                    </div>
+                    <input type="hidden" value="<% print(data.tag_id); %>" name="tag">
+                </header>
+                <div class="items">
+                    <% if (patches.nodes.length !== 0) {
+                        _.each(patches.nodes, function (node) { %>
+                            <div class="item clearfix">
+                                <div class="row-fluid">
+                                    <span class="desc span8">
+                                        <label class="checkbox inline">
+                                            <input type="checkbox" name="node" value="<%= node.id %>">
+                                            <%= node.display_name || node.computer_name || node.host_name || node.ip_address %>&nbsp;
+                                            <% if (node.agent_status && node.host_status) { %>
+                                                <i class="icon-ok" style="color: green;" title="Node is running."></i>
+                                            <% } else { %>
+                                                <i class="icon-warning-sign" style="color: red;" title="Node or Agent is down."></i>
+                                            <% } %>
+                                        </label>
+                                    </span>
+                                    <span class="span4 alignRight">
+                                        <a href="#nodes/<%= node.id %>">More information</a>
+                                    </span>
+                                </div>
+                            </div>
+                        <% });
+                     }  else { %>
+                        <div class="item clearfix">
+                            <em>Tag is empty</em>
+                        </div>
+                    <% } %>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <header>
+                <a class="accordion-toggle" href="#">
                     <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Patches Available</strong>
                 <span class="pull-right">
                     <span class="badge badge-inverse"><%= patches.packages_available_count %></span>

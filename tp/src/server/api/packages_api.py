@@ -51,6 +51,7 @@ class SearchPatchHandler(BaseHandler):
         except Exception as e:
             pass
         result = basic_package_search(self.session, query, column, count=count, offset=offset, output=output)
+        self.session.close()
         if 'json' in output:
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(result, indent=4))
@@ -100,6 +101,7 @@ class PatchesHandler(BaseHandler):
                         }
         else:
             results = patches.get_pkg_default()
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(results, indent=4))
 
@@ -117,6 +119,7 @@ class SeverityHandler(BaseHandler):
                     group_by(PackagePerNode.toppatch_id).join(PackagePerNode).count()
             result_json = { 'label' : str(sev.severity), 'value' : count }
             result.append(result_json)
+        session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -134,6 +137,7 @@ class GetTagsPerTpIdHandler(BaseHandler):
                 'pass': False,
                 'message': 'please pass tpid'
                 })
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -149,6 +153,7 @@ class GetDependenciesHandler(BaseHandler):
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
         result = retrieve_dependencies(self.session, pkg_id)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 

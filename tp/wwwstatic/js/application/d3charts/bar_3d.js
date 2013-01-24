@@ -182,7 +182,7 @@ define(
                         .attr("style", "font-size: 10")
                         .attr('transform', 'translate(15, 5)')
                         .attr("class", "yAxis")
-                        .text(function (datum) { return datum.label });
+                        .text(function (datum) { return datum.label; });
 
                     txtMask = svg.append('g').attr({width: '100px', height: '30px'});
 

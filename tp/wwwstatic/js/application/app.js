@@ -68,41 +68,34 @@ define(
         // WebSockets
         _.extend(app, {
             startWs: function () {
-                var ws = new WebSocket("wss://" + window.location.host + "/ws");
+                var i, ws = new window.WebSocket("wss://" + window.location.host + "/ws");
                 ws.onmessage = function (evt) {
                     window.console.log(['websocket', 'message', evt]);
-                    $.ajax({
-                        url: '/api/networkData',
-                        dataType: 'json',
-                        async: false,
-                        success: function (json) {
-                            window.console.log(json);
-                            for (var i = 0; i < json.length; i++) {
-                                if(json[i].key == 'installed') {
-                                    $('.success').children('dd').children().html(json[i].data);
+                    $.get('/api/networkData', {}, function (json) {
+                        if (json.length) {
+                            _.each(json, function (status) {
+                                if (status.key === 'installed') {
+                                    $('.success').children('dd').children().html(status.data);
+                                } else if (status.key === 'available') {
+                                    $('.warning').children('dd').children().html(status.data);
+                                } else if (status.key === 'pending') {
+                                    $('.info').children('dd').children().html(status.data);
+                                } else if (status.key === 'failed') {
+                                    $('.error').children('dd').children().html(status.data);
                                 }
-                                if(json[i].key == 'available') {
-                                    $('.info').children('dd').children().html(json[i].data);
-                                }
-                                if(json[i].key == 'pending') {
-                                    $('.warning').children('dd').children().html(json[i].data);
-                                }
-                                if(json[i].key == 'failed') {
-                                    $('.error').children('dd').children().html(json[i].data);
-                                }
-                            }
+                            });
                         }
                     });
                 };
-                ws.onclose = function(evt) {
+                ws.onclose = function (evt) {
                     window.console.log(['websocket', 'closed', evt]);
                 };
-                ws.onopen = function(evt) {
+                ws.onopen = function (evt) {
                     window.console.log(['websocket', 'opened', evt]);
                 };
-                ws.onerror = function(evt) {
+                ws.onerror = function (evt) {
                     window.console.log(['websocket', 'error', evt]);
-                }
+                };
             },
             chart: {
                 partition: charts.partition,
@@ -164,13 +157,13 @@ define(
                         "key": "Completed Patches",
                         "link": "installed",
                         "data": overviewInstalled.data,
-                        "format": [{"rule": "gt", "value": -1, "style": "info", "stop": true}]
+                        "format": [{"rule": "gt", "value": -1, "style": "success", "stop": true}]
                     },
                     {
                         "key": "Pending Patches",
                         "link": "pending",
                         "data": overviewPending.data,
-                        "format": [{"rule": "gt", "value": -1, "style": "success", "stop": true}]
+                        "format": [{"rule": "gt", "value": -1, "style": "info", "stop": true}]
                     },
                     {
                         "key": "Available Patches",
@@ -193,7 +186,7 @@ define(
                 { name: 'Tags', href: '#tags' },
                 { name: 'Multi-Patcher', href: '#multi' },
                 { name: 'Schedules', href: '#schedule' },
-                { name: 'Logs', href:'#logs'}
+                { name: 'Logs', href: '#logs'}
             ]
         });
 
@@ -205,12 +198,12 @@ define(
                 hasPermission: function (need) {
                     var permission = this.permission;
                     switch (need) {
-                        case "admin":
-                            return permission === "admin";
-                        case "read_write":
-                            return permission === "admin" || permission === "read_write";
-                        default:
-                            return true;
+                    case "admin":
+                        return permission === "admin";
+                    case "read_write":
+                        return permission === "admin" || permission === "read_write";
+                    default:
+                        return true;
                     }
                 }
             }

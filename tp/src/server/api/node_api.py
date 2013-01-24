@@ -51,6 +51,7 @@ class ModifyDisplayNameHandler(BaseHandler):
                     "pass" : False,
                     "message" : "Insufficient arguments"
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -71,6 +72,7 @@ class ModifyHostNameHandler(BaseHandler):
                     "pass" : False,
                     "message" : "Insufficient arguments"
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -92,6 +94,7 @@ class NodeCleanerHandler(BaseHandler):
                 'message': 'Incorrect argument passed. %s' %
                     ('Arguments needed are: nodeid')
                 }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -113,6 +116,7 @@ class NodeRemoverHandler(BaseHandler):
                 'message': 'Incorrect argument passed. %s' %
                     ('Arguments needed are: nodeid')
                 }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -138,6 +142,7 @@ class NodeTogglerHandler(BaseHandler):
                          'nodeid and toggle'
                          )
                 })
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -152,6 +157,7 @@ class NodesHandler(BaseHandler):
         node_id = self.get_argument('id', None)
         queryCount = self.get_argument('count', 10)
         queryOffset = self.get_argument('offset', 0)
+        total_count = self.session.query(NodeInfo).count()
         filter_by_tags = self.get_argument('filterby', None)
         filter_by_os = self.get_argument('by_os', None)
         filter_by_platform = self.get_argument('by_platform', None)
@@ -278,8 +284,7 @@ class NodesHandler(BaseHandler):
                               'patch/pend': node_info[2].patches_pending
                                }
                 data.append(resultnode)
-            count = query.count()
-            resultjson = {"count": count, "nodes": data}
+            resultjson = {"count": total_count, "nodes": data}
         self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
@@ -303,6 +308,7 @@ class NodeWolHandler(BaseHandler):
                 'message': 'Incorrect argument passed. %s' %
                     ('Arguments needed are: nodeid')
                 }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
