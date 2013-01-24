@@ -1,15 +1,15 @@
 <% if ($.type(model) === 'object') { %>
 <style type="text/css">
     .well DIV DL DT {
-        width: 40%;
+        width: 45%;
     }
     .well DIV DL DD {
-        width: 55%;
+        width: 50%;
     }
 </style>
-<article>
+<article class="row-fluid">
     <header><strong>Node Details</strong></header>
-    <section class="well well-small row-fluid noMargin clearfix">
+    <section class="well well-small noMargin clearfix">
         <div class="span4">
             <dl>
                 <dt>Node IP:</dt><dd><% print(model.ip || '<em>Not listed</em>'); %></dd>
@@ -26,7 +26,7 @@
                     <% } else { %>
                         <em id="notag">No tags applied</em>
                     <% } %>
-                    </div>&nbsp;<a href="#" id="addTag" data-placement="bottom"><i style="color: green;" class="icon-plus" ></i></a>
+                    </div>&nbsp;<a href="#" id="addTag" data-placement="right"><i style="color: green;" class="icon-plus" ></i></a>
                 </dd>
                 <dt>Agent Status:</dt>
                 <dd>
@@ -50,12 +50,12 @@
                     <% if (model.reboot) { %>
                     <form id="reboot-form" class="noMargin">
                         Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;
-                        <input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/>
                         Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
+                        <input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/>
                         <input type="hidden" name="operation" value="reboot" />
                         <input type="hidden" name="node" value="<%=  model.id  %>"/>
                     </form>
-                    <% } else if (model['host/status']) { %>
+                    <% } else if (!model['host/status']) { %>
                     <form id="reboot-form">
                         Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
                         <% if(model.is_vm) { %>  —
@@ -65,9 +65,9 @@
                             <button class="btn btn-link noPadding" name="nodeOperation" data-value="restart">
                                 <i title="Restart VM" class="icon-refresh"></i>
                             </button>
-                        <% } %>
-                        <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>&nbsp;
+                        <% } %><br>
                         Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
+                        <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>&nbsp;
                         <input type="hidden" name="operation" value="reboot" />
                         <input type="hidden" name="node" value="<%=  model.id  %>"/>
                     </form>
@@ -120,7 +120,7 @@
     </section>
 </article>
 <% if (model.is_vm && vm) { %>
-<article>
+<article  class="row-fluid">
     <header><strong>VMware Information</strong></header>
     <section class="well well-small noMargin clearfix">
         <dl>
@@ -194,7 +194,7 @@
         <input type="text" name="datepicker" class="input-medium"/>
         <label>Time:</label>
         <div class="inline">
-            <select name="hours" id="hours" class="span1">
+            <select name="hours" id="hours" class="input-mini">
                 <option>01</option>
                 <option>02</option>
                 <option>03</option>
@@ -208,13 +208,13 @@
                 <option>11</option>
                 <option>12</option>
             </select>
-            <select name="minutes" class="span1">
+            <select name="minutes" class="input-mini">
                 <option>00</option>
                 <option>15</option>
                 <option>30</option>
                 <option>45</option>
             </select>
-            <select name="ampm" class="span1">
+            <select name="ampm" class="input-mini">
                 <option>AM</option>
                 <option>PM</option>
             </select>

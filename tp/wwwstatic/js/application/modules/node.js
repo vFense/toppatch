@@ -70,6 +70,7 @@ define(
                     var close, that = this;
                     this.lineGraph();
                     this.$el.find('#addTag').popover({
+                        placement: 'right',
                         title: 'Tags Available<button type="button" class="btn btn-link noPadding pull-right" id="close"><i class="icon-remove"></i></button>',
                         html: true,
                         trigger: 'click',
