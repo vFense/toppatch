@@ -266,7 +266,7 @@ define(
             },
 
             showLoading: function () {
-                this._pinwheel = new app.pinwheel();
+                this._pinwheel = this._pinwheel || new app.pinwheel();
                 this.viewManager.showView(this._pinwheel);
                 return this;
             },

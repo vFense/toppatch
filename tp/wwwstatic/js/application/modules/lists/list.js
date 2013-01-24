@@ -196,7 +196,7 @@ define(
                 showLoading: function () {
                     var $el = this.$el,
                         $items = $el.find('.items');
-                    this._pinwheel = new app.pinwheel();
+                    this._pinwheel = this._pinwheel || new app.pinwheel();
                     $items.empty().append(this._pinwheel.el);
                     return this;
                 },
