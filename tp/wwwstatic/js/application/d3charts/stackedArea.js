@@ -137,7 +137,6 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     .attr("class", "y axis")
                     .attr("transform", "translate(-1.2,0)")
                     .call(yAxisLeft);
-                //console.log(val_array);
                 point = svg.selectAll('.point')
                     .data(function (d) { return d.values; }).enter()
                     .append("svg:circle")
@@ -146,7 +145,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     .attr("cx", function (d) {
                         return x(new Date(d.x).getTime());
                     }).attr("cy", function (d) {
-                        return y(d.y0);
+                        return y(d.totalToDate);
                     }).on('mouseover', function (d, i) {
                         textMouseOver(d, i);
                         return d3.select(this).attr('r', 8);
