@@ -847,14 +847,14 @@ def add_system_info(session, data, node_info, username='system_user'):
                                 first()
 
                         if storage_info:
-                            storage_info.free_size_kb = int(storage['free_size_kb'])
-                            storage_info.size_kb = int(storage['size_kb'])
+                            storage_info.free_size_kb = storage['free_size_kb']
+                            storage_info.size_kb = storage['size_kb']
                             session.commit()
 
                         else:
                             storage_info = StorageInfo(node_id=node_id,
-                                free_size_kb=int(storage['free_size_kb']),
-                                size_kb=int(storage['size_kb']),
+                                free_size_kb=storage['free_size_kb'],
+                                size_kb=storage['size_kb'],
                                 file_system=storage['file_system'],
                                 name=storage['name']
                                 )
@@ -867,16 +867,16 @@ def add_system_info(session, data, node_info, username='system_user'):
 
                         if cpu_info:
                             cpu_info.speed_mhz = cpu['speed_mhz']
-                            cpu_info.cores = int(cpu['cores'])
-                            cpu_info.cache_kb = int(cpu['cache_kb'])
+                            cpu_info.cores = cpu['cores']
+                            cpu_info.cache_kb = cpu['cache_kb']
                             session.commit()
 
                         else:
                             cpu_info = CpuInfo(node_id=node_id,
-                                cores=int(cpu['cores']),
+                                cores=cpu['cores'],
                                 speed_mhz=cpu['speed_mhz'],
-                                bit_type=int(cpu['bit_type']),
-                                cache_kb=int(cpu['cache_kb']),
+                                bit_type=cpu['bit_type'],
+                                cache_kb=cpu['cache_kb'],
                                 name=cpu['name']
                                 )
                             session.add(cpu_info)
@@ -888,13 +888,13 @@ def add_system_info(session, data, node_info, username='system_user'):
                                 first()
                         if video_info:
                             video_info.speed_mhz = video['speed_mhz']
-                            video_info.ram_kb = int(video['ram_kb'])
+                            video_info.ram_kb = video['ram_kb']
                             video_info.name = video['name']
                             session.commit()
                         else:
                             video_info = DisplayInfo(node_id=node_id,
                                 speed_mhz=video['speed_mhz'],
-                                ram_kb=int(video['ram_kb']),
+                                ram_kb=video['ram_kb'],
                                 name=video['name']
                                 )
                             session.add(video_info)
@@ -903,7 +903,7 @@ def add_system_info(session, data, node_info, username='system_user'):
                                 filter(MemoryInfo.node_id == node_id).\
                                 first()
                     if mem_info:
-                        mem_info.total_memory = int(values)
+                        mem_info.total_memory = values
                         session.commit()
                     else:
                         mem_info = MemoryInfo(
