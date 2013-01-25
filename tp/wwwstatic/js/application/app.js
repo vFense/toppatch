@@ -102,7 +102,8 @@ define(
                 generateTable: charts.generateTable,
                 line: charts.line,
                 newpie: charts.newpie,
-                bar_3d: charts.bar_3d
+                bar_3d: charts.bar_3d,
+                stackedArea: charts.stackedArea
             },
             getUserSettings: function () {
                 var userSettings, userName,

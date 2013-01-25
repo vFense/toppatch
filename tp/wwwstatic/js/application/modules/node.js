@@ -22,9 +22,10 @@ define(
                 }
             }),
             GraphCollection: Backbone.Collection.extend({
-                baseUrl: 'api/patches.json',
+                baseUrl: 'api/node/graphs/severity',
+                installed: 'true',
                 url: function () {
-                    return this.baseUrl + '?nodeid=' + this.id + '&status=installed&count=50&offset=0';
+                    return this.baseUrl + '?nodeid=' + this.id + '&installed=' + this.installed;
                 }
             }),
             View: Backbone.View.extend({
@@ -68,7 +69,7 @@ define(
                 beforeRender: $.noop,
                 onRender: function () {
                     var close, that = this;
-                    this.lineGraph();
+                    this.stackedAreaGraph();
                     this.$el.find('#addTag').popover({
                         placement: 'right',
                         title: 'Tags Available<button type="button" class="btn btn-link noPadding pull-right" id="close"><i class="icon-remove"></i></button>',
@@ -78,7 +79,7 @@ define(
                     });
                     this.$el.find('a[name=editPopover]').each(function () {
                         $(this).popover({
-                            title: '&nbsp;<button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
+                            title: 'Edit&nbsp;<button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
                             html: true,
                             trigger: 'click',
                             content: $('#display-name').clone()
@@ -162,16 +163,16 @@ define(
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 },
-                lineGraph: function () {
+                stackedAreaGraph: function () {
                     var data = [],
                         graphId = '#nodeGraph',
                         $graphDiv = this.$el.find(graphId),
                         width = $graphDiv.width(),
                         height = $graphDiv.parent().height(),
-                        lineChart = app.chart.line().width(width).height(height),
-                        variable = this.graphcollection.toJSON()[0];
-                    if (variable) {
-                        variable.data.sort(function (a, b) {
+                        stackedChart = app.chart.stackedArea().width(width).height(height),
+                        variable = this.graphcollection.toJSON();
+                    if (variable.length) {
+                        /*variable.data.sort(function (a, b) {
                             var keyA = new Date(a.date_installed),
                                 keyB = new Date(b.date_installed);
                             // Compare the 2 dates
@@ -186,8 +187,8 @@ define(
                                 patch_name: patch.name,
                                 count: variable.count - variable.data.length
                             });
-                        });
-                        d3.select(graphId).datum(data).call(lineChart);
+                        });*/
+                        d3.select(graphId).datum(variable).call(stackedChart);
                     }
                 },
                 startWebSocket: function (event) {

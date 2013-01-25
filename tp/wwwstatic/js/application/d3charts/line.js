@@ -61,27 +61,10 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                 x.domain([val_array[0].x, val_array[val_array.length - 1].x]).range([0, 0.7 * width]);
                 y.domain([0, max]).range([(0.8 * height), 0]);
 
-                area = d3.svg.area()
+                /*area = d3.svg.area()
                     .x(function (d) { return x(d.x); })
                     .y0(0.795 * height)
-                    .y1(function (d) { return y(d.y); });
-
-                stack = d3.layout.stack()
-                    .values(function (d) { window.console.log(d); return d.y; });
-                window.console.log(color.domain());
-
-                //patches = stack(color.domain().map(function (name) {
-
-                    //window.console.log(name);
-                    //return name;
-                    /*
-                    return {
-                        name: name,
-                        values: '' data.map(function (d) {
-                            return {date: d.x, y: d.y};
-                        })
-                    };*/
-                //}));
+                    .y1(function (d) { return y(d.y); });*/
 
                 xAxis = d3.svg.axis().scale(x).tickSize(1).tickFormat(function (d, i) {
                     return new Date(d).toDateString().substring(4, 10);
@@ -101,10 +84,10 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     .attr("transform", "translate(" + 35 + "," + 15 + ")");
 
                 graph.append("svg:path")
-                    .attr("fill", "steelblue")
+                    .attr("fill", "none")
                     .attr("stroke", "steelblue")
                     .attr("stroke-width", "2")
-                    .attr("d", area);//line(val_array));
+                    .attr("d", line(val_array));//area));
                 graph.append("svg:g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + (0.8 * height) + ")")
