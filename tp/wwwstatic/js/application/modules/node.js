@@ -1,6 +1,6 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'app', 'modules/tabNavigation', 'modules/nodePatches', 'modules/nodeVMware', 'text!templates/node.html', 'jquery.ui.datepicker' ],
-    function ($, _, Backbone, app, tabNav, patchesView, vmView, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'd3', 'app', 'modules/tabNavigation', 'modules/nodePatches', 'modules/nodeVMware', 'text!templates/node.html', 'jquery.ui.datepicker' ],
+    function ($, _, Backbone, d3, app, tabNav, patchesView, vmView, myTemplate) {
         "use strict";
         var exports = {
             Collection: Backbone.Collection.extend({
@@ -21,6 +21,13 @@ define(
                     return this.baseUrl + '?node_id=' + this.id;
                 }
             }),
+            GraphCollection: Backbone.Collection.extend({
+                baseUrl: 'api/node/graphs/severity',
+                installed: 'true',
+                url: function () {
+                    return this.baseUrl + '?nodeid=' + this.id + '&installed=' + this.installed;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     _.bindAll(this, 'createtag');
@@ -38,6 +45,10 @@ define(
                     this.vmcollection = new exports.VmCollection();
                     this.vmcollection.bind('reset', this.render, this);
                     this.vmcollection.fetch();
+
+                    this.graphcollection = new exports.GraphCollection();
+                    this.graphcollection.bind('reset', this.render, this);
+                    this.graphcollection.fetch();
 
                     this.startWebSocket();
                 },
@@ -58,7 +69,9 @@ define(
                 beforeRender: $.noop,
                 onRender: function () {
                     var close, that = this;
+                    this.stackedAreaGraph();
                     this.$el.find('#addTag').popover({
+                        placement: 'right',
                         title: 'Tags Available<button type="button" class="btn btn-link noPadding pull-right" id="close"><i class="icon-remove"></i></button>',
                         html: true,
                         trigger: 'click',
@@ -66,7 +79,7 @@ define(
                     });
                     this.$el.find('a[name=editPopover]').each(function () {
                         $(this).popover({
-                            title: '&nbsp;<button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
+                            title: 'Edit&nbsp;<button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
                             html: true,
                             trigger: 'click',
                             content: $('#display-name').clone()
@@ -149,6 +162,34 @@ define(
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
+                },
+                stackedAreaGraph: function () {
+                    var data = [],
+                        graphId = '#nodeGraph',
+                        $graphDiv = this.$el.find(graphId),
+                        width = $graphDiv.width(),
+                        height = $graphDiv.parent().height(),
+                        stackedChart = app.chart.stackedArea().width(width).height(height),
+                        variable = this.graphcollection.toJSON();
+                    if (variable.length) {
+                        /*variable.data.sort(function (a, b) {
+                            var keyA = new Date(a.date_installed),
+                                keyB = new Date(b.date_installed);
+                            // Compare the 2 dates
+                            if (keyA < keyB) { return -1; }
+                            if (keyA > keyB) { return 1; }
+                            return 0;
+                        });
+                        _.each(variable.data, function (patch, i) {
+                            data.push({
+                                label: new Date(patch.date_installed).getTime(),
+                                value: i + 1,
+                                patch_name: patch.name,
+                                count: variable.count - variable.data.length
+                            });
+                        });*/
+                        d3.select(graphId).datum(variable).call(stackedChart);
+                    }
                 },
                 startWebSocket: function (event) {
                     var ws = new window.WebSocket("wss://" + window.location.host + "/ws");

@@ -68,26 +68,19 @@ define(
                 var i, ws = new window.WebSocket("wss://" + window.location.host + "/ws");
                 ws.onmessage = function (evt) {
                     window.console.log(['websocket', 'message', evt]);
-                    $.ajax({
-                        url: '/api/networkData',
-                        dataType: 'json',
-                        async: false,
-                        success: function (json) {
-                            window.console.log(json);
-                            for (i = 0; i < json.length; i += 1) {
-                                if (json[i].key === 'installed') {
-                                    $('.success').children('dd').children().html(json[i].data);
+                    $.get('/api/networkData', {}, function (json) {
+                        if (json.length) {
+                            _.each(json, function (status) {
+                                if (status.key === 'installed') {
+                                    $('.success').children('dd').children().html(status.data);
+                                } else if (status.key === 'available') {
+                                    $('.warning').children('dd').children().html(status.data);
+                                } else if (status.key === 'pending') {
+                                    $('.info').children('dd').children().html(status.data);
+                                } else if (status.key === 'failed') {
+                                    $('.error').children('dd').children().html(status.data);
                                 }
-                                if (json[i].key === 'available') {
-                                    $('.warning').children('dd').children().html(json[i].data);
-                                }
-                                if (json[i].key === 'pending') {
-                                    $('.info').children('dd').children().html(json[i].data);
-                                }
-                                if (json[i].key === 'failed') {
-                                    $('.error').children('dd').children().html(json[i].data);
-                                }
-                            }
+                            });
                         }
                     });
                 };
@@ -109,7 +102,8 @@ define(
                 generateTable: charts.generateTable,
                 line: charts.line,
                 newpie: charts.newpie,
-                bar_3d: charts.bar_3d
+                bar_3d: charts.bar_3d,
+                stackedArea: charts.stackedArea
             },
             getUserSettings: function () {
                 var userSettings, userName,

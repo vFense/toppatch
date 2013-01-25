@@ -134,12 +134,12 @@ select:required.invalid:focus {
 }
 .point {
   fill: #339cff;
-  stroke-width: 2px;
+  stroke-width: 1px;
   stroke: #ffffff;
 }
 .point.max {
   fill: #c80000;
-  stroke-width: 2px;
+  stroke-width: 1px;
 }
 .chart {
   display: block;
