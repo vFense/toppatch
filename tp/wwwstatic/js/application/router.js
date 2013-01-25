@@ -88,6 +88,10 @@ define(
                         app.vent.trigger('navigation:' + that.viewTarget, '#' + hash);
 
                         that.showLoading();
+                    } else if (that.lastFragment === '') {
+                        app.vent.trigger('navigation:' + that.viewTarget, '#' + 'dashboard');
+
+                        that.showLoading().showDashboard();
                     }
                 });
             },

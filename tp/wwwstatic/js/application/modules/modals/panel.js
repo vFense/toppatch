@@ -142,12 +142,6 @@ define(
                     var router = app.router,
                         last;
                     if (!this.isOpen()) {
-                        // If we are routed here from a bookmark,
-                        // render the dashboard behind the modal.
-                        if (!router.viewManager.get('currentView')) {
-                            router.showDashboard();
-                        }
-
                         // Save last fragment and go back to it on 'close'
                         last = router.getLastFragment();
                         if (last === '' || /^admin($|[\/])/.test(last)) {
