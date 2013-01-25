@@ -78,7 +78,7 @@ define(
                     adminRoute = adminPattern.test(that.currentFragment);
 
                     if (!adminRoute) {
-                        // close any open modals
+                        // close any open admin modals
                         if (modals.admin instanceof Backbone.View && modals.admin.isOpen()) {
                             modals.admin.close();
                         }
