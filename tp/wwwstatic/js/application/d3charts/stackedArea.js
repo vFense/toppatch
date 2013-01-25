@@ -17,7 +17,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
         function chart(selection) {
             selection.each(function (data) {
                 // generate chart here; `d` is the data and `this` is the element
-                var svg, xAxis, yAxisLeft, line, graph, point, area, stack, key,
+                var svg, xAxis, xAxisText, yAxisLeft, yAxisLeftText, line, graph, point, area, stack, key,
                     txtTop, txtMask, txtRect, txtMiddleTop, txtMiddle, txtMiddleBottom, txtBottom, txtBottomTop,
                     layers = [{name: 'optional'}, {name: 'recommended'}, {name: 'critical'}],
                     color = d3.scale.category20(),
@@ -89,7 +89,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                 _.each(data, function (d) {
                     maxY += d.total;
                 });
-                x.range([0, 0.7 * width]).domain(d3.extent(data, function (d) {
+                x.range([10, 0.7 * width]).domain(d3.extent(data, function (d) {
                     var tempDate;
                     tempDate = d.date === 'None' ? '0' : d.date;
                     return new Date(tempDate).getTime();
@@ -116,7 +116,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     .append("svg:svg")
                     .data([stack[2]])
                     .attr("width", width)
-                    .attr("height", height)// + margin[0] + margin[2])
+                    .attr("height", height + 10)// + margin[0] + margin[2])
                     .style('overflow', 'visible')
                     .append("svg:g")
                     .attr("transform", "translate(" + 35 + "," + 15 + ")");
@@ -128,6 +128,22 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     .attr("fill", function (d, i) { return severityColors[i]; })
                     .attr("d", function (d) { return area(d.values); });
 
+                yAxisLeftText = svg.append("text")
+                    .attr("text-anchor", "end")
+                    .attr("dy", ".75em")
+                    .style("font-size", "10px")
+                    .style("font-weight", "bold")
+                    .attr("transform", "translate(" + "-35" + "," + height / 3.5 + ") rotate(-90)")
+                    .text('Packages');
+
+                xAxisText = svg.append("text")
+                    .attr("text-anchor", "end")
+                    .attr("dy", ".75em")
+                    .style("font-size", "10px")
+                    .style("font-weight", "bold")
+                    .attr("transform", "translate(" + width / 2 + "," + 0.89 * height + ")")
+                    .text('Packages installed over time');
+
                 svg.append("svg:g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + (0.8 * height) + ")")
@@ -135,7 +151,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     .call(xAxis);
                 svg.append("svg:g")
                     .attr("class", "y axis")
-                    .attr("transform", "translate(-1.2,0)")
+                    .attr("transform", "translate(9,0)")
                     .call(yAxisLeft);
                 point = svg.selectAll('.point')
                     .data(function (d) { return d.values; }).enter()
