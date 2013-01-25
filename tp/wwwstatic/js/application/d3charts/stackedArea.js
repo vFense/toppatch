@@ -89,7 +89,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                 _.each(data, function (d) {
                     maxY += d.total;
                 });
-                x.range([0, 0.7 * width]).domain(d3.extent(data, function (d) {
+                x.range([10, 0.7 * width]).domain(d3.extent(data, function (d) {
                     var tempDate;
                     tempDate = d.date === 'None' ? '0' : d.date;
                     return new Date(tempDate).getTime();
@@ -133,7 +133,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     .attr("dy", ".75em")
                     .style("font-size", "10px")
                     .style("font-weight", "bold")
-                    .attr("transform", "translate(" + "-30" + "," + height / 3.5 + ") rotate(-90)")
+                    .attr("transform", "translate(" + "-35" + "," + height / 3.5 + ") rotate(-90)")
                     .text('Packages');
 
                 xAxisText = svg.append("text")
@@ -141,7 +141,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     .attr("dy", ".75em")
                     .style("font-size", "10px")
                     .style("font-weight", "bold")
-                    .attr("transform", "translate(" + width / 2 + "," + 0.88 * height + ")")
+                    .attr("transform", "translate(" + width / 2 + "," + 0.89 * height + ")")
                     .text('Packages installed over time');
 
                 svg.append("svg:g")
@@ -151,7 +151,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     .call(xAxis);
                 svg.append("svg:g")
                     .attr("class", "y axis")
-                    .attr("transform", "translate(-1.2,0)")
+                    .attr("transform", "translate(9,0)")
                     .call(yAxisLeft);
                 point = svg.selectAll('.point')
                     .data(function (d) { return d.values; }).enter()
