@@ -59,7 +59,7 @@ define(
             initialize: function () {
                 var that = this,
                     modals = app.views.modals,
-                    adminPattern = /^admin($|[\/\?][\w\d_\-\+%]+)/,
+                    adminPattern = /^admin($|[\/\?])/,
                     adminRoute = false,
                     hashPattern = /^[\w\d_\-\+%]+[\?\/]{0}/,
                     hash;

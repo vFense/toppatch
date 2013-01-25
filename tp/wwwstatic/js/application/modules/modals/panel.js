@@ -150,7 +150,7 @@ define(
 
                         // Save last fragment and go back to it on 'close'
                         last = router.getLastFragment();
-                        if (last === '' || /^admin$|\/\w/.test(last)) {
+                        if (last === '' || /^admin($|[\/])/.test(last)) {
                             this._lastURL = "dashboard";
                         } else {
                             this._lastURL = last;
