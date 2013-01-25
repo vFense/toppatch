@@ -77,21 +77,19 @@ define(
 
                     adminRoute = adminPattern.test(that.currentFragment);
 
-                    if (!adminRoute) {
+                    if (adminRoute) {
+                        if (that.lastFragment === '') {
+                            app.vent.trigger('navigation:' + that.viewTarget, '#' + 'dashboard');
+                            that.showLoading().showDashboard();
+                        }
+                    } else {
                         // close any open admin modals
                         if (modals.admin instanceof Backbone.View && modals.admin.isOpen()) {
                             modals.admin.close();
                         }
-
                         hash = hashPattern.exec(that.currentFragment) || 'dashboard';
-
                         app.vent.trigger('navigation:' + that.viewTarget, '#' + hash);
-
                         that.showLoading();
-                    } else if (that.lastFragment === '') {
-                        app.vent.trigger('navigation:' + that.viewTarget, '#' + 'dashboard');
-
-                        that.showLoading().showDashboard();
                     }
                 });
             },
