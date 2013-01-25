@@ -283,7 +283,7 @@ define(
                     require(
                         ['modals/panel', 'modals/admin/main', view],
                         function (panel, admin, content) {
-                            if (!modal || !modal instanceof panel.View || !modal.isOpen()) {
+                            if (!modal || !modal instanceof panel.View) {
                                 app.views.modals.admin = modal = new panel.View({
                                     span: 'span9'
                                 });
@@ -293,7 +293,12 @@ define(
                             adminView = modal.getContentView();
                             if (!adminView || !adminView instanceof admin.View) {
                                 adminView = new admin.View();
+                            }
+
+                            if (!modal.isOpen()) {
                                 modal.openWithView(adminView);
+                            } else {
+                                modal.setContentView(adminView);
                             }
 
                             // Set content view of the admin view
