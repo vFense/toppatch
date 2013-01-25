@@ -56,7 +56,7 @@
                         <input type="hidden" name="operation" value="reboot" />
                         <input type="hidden" name="node" value="<%=  model.id  %>"/>
                     </form>
-                    <% } else if (!model['host/status']) { %>
+                    <% } else if (model['host/status']) { %>
                     <form id="reboot-form">
                         Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
                         <% if(model.is_vm) { %>  —
