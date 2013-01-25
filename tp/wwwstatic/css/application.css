@@ -53,7 +53,7 @@ BODY > FOOTER .logo-text {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 2000;
+  z-index: 1035;
 }
 .brand {
   color: #001678 !important;
