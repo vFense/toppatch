@@ -122,7 +122,8 @@ class HandOff():
                 (self.username, 'package_per_node table for node', 
                     self.node.ip_address)
                 )
-        self.session.close()
+        #self.session.close()
+        print "IM HERE GOING TO UPDATE THE PACKAGES PER NODE TABLE"
         add_software_per_node(self.session, self.json_object)
         logger.debug('%s - updateing node_stats for %s' % \
                 (self.username, self.node.ip_address)

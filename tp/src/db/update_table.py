@@ -968,6 +968,7 @@ def add_software_per_node(session, data, username='system_user'):
         received by rvlistener.
     """
     session = validate_session(session)
+    session.commit()
     operation = operation_exists(session, data['operation_id'])
     node_id = data['node_id']
     if node_id:
@@ -998,7 +999,7 @@ def add_software_per_node(session, data, username='system_user'):
                         addupdate['toppatch_id'], date_installed,
                         hidden, installed=installed, is_windows=True
                         )
-                elif node.os_code == "mac":
+                elif node.os_code == "darwin":
                     node_update = PackagePerNode(node_id,
                         addupdate['toppatch_id'], date_installed,
                         hidden, installed=installed, is_mac=True
@@ -1016,7 +1017,7 @@ def add_software_per_node(session, data, username='system_user'):
                 try:
                     session.add(node_update)
                     session.commit()
-                except:
+                except Exception as e:
                     session.rollback()
             else:
                 try:
@@ -1024,7 +1025,7 @@ def add_software_per_node(session, data, username='system_user'):
                     update_exists.hidden = hidden
                     update_exists.date_installed = date_installed
                     session.commit()
-                except:
+                except Exception as e:
                     session.rollback()
         update_node_stats(session, node_id)
         update_tag_stats(session, node_id)
