@@ -928,10 +928,10 @@ class VmApi():
                     ipaddress_list = vm.guest.net
                     for ip in ipaddress_list:
                         if len(ip.ipAddress) >0:
-                            if len(ip.ipAddress[0]) <=15:
-                            	ip_list.append(ip.ipAddress[0])
-                            if len(ip.ipAddress[1]) <=15:
-                            	ip_list.append(ip.ipAddress[1])
+                            for ip in ip.ipAddress:
+                                if len(ip) <=15:
+                            	    ip_list.append(ip)
+
                     vms[vm.name] = {
                             'vm_name': vm.name,
                             'vm_uuid': vm.name,
