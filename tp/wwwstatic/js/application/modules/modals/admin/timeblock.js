@@ -177,8 +177,10 @@ define(
                             endMinutes = endMinutes < 10 ? '0' + endMinutes : endMinutes;
                             startHours = Math.floor(ui.values[0] / 60);
                             endHours = Math.floor(ui.values[1] / 60);
-                            startTime = startHours > 12 ? (startHours - 12) + ':' + startMinutes + ' PM' : startHours + ':' + startMinutes + ' AM';
-                            endTime = endHours > 12 ? (endHours - 12) + ':' + endMinutes + ' PM' : endHours + ':' + endMinutes + ' AM';
+                            startTime = startHours > 12 ? String(startHours - 12) : String(startHours);
+                            startTime = startHours >= 12 ? startTime + ':' + startMinutes + ' PM' : startTime + ':' + startMinutes + ' AM';
+                            endTime = endHours > 12 ? String(endHours - 12) : String(endHours);
+                            endTime = endHours >= 12 ? endTime + ':' + endMinutes + ' PM' : endTime + ':' + endMinutes + ' AM';
                             $(event.target).siblings('label').html('Time Range: ' + startTime + ' to ' + endTime);
                             that.start = startTime;
                             that.end = endTime;

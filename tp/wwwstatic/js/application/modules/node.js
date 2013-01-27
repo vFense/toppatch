@@ -49,8 +49,6 @@ define(
                     this.graphcollection = new exports.GraphCollection();
                     this.graphcollection.bind('reset', this.render, this);
                     this.graphcollection.fetch();
-
-                    this.startWebSocket();
                 },
                 events: {
                     'click .disabled': function (e) { e.preventDefault(); },
@@ -190,24 +188,6 @@ define(
                         });*/
                         d3.select(graphId).datum(variable).call(stackedChart);
                     }
-                },
-                startWebSocket: function (event) {
-                    var ws = new window.WebSocket("wss://" + window.location.host + "/ws");
-                    ws.onmessage = function (evt) {
-                        window.console.log(['websocket', 'message', evt]);
-                        var $alert = this.$el.find('.alert').first();
-                        //$alert.removeClass('alert-success alert-error').addClass('alert-info').html('message here');
-                        window.console.log($alert);
-                    };
-                    ws.onclose = function (evt) {
-                        window.console.log(['websocket', 'closed', evt]);
-                    };
-                    ws.onopen = function (evt) {
-                        window.console.log(['websocket', 'opened', evt]);
-                    };
-                    ws.onerror = function (evt) {
-                        window.console.log(['websocket', 'error', evt]);
-                    };
                 },
                 changeView: function (event) {
                     event.preventDefault();

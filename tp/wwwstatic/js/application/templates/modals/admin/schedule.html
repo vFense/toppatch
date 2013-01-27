@@ -1,0 +1,70 @@
+<article>
+    <form>
+        <section class="row-fluid">
+        <div class="span10">
+            <label class="control-label">Severity:</label>
+            <select name="severity">
+                <option value="-1">Select one</option>
+                <option value="any">Any</option>
+                <option value="optional">Optional</option>
+                <option value="recommended">Recommended</option>
+                <option value="critical">Critical</option>
+            </select>
+        </div>
+        </section>
+        <section class="row-fluid">
+            <div class="span6">
+                <label class="control-label">Month:</label>
+                <select name="month">
+                    <option value="-1">Select one</option>
+                    <option value="0">Any</option>
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <div class="span4">
+                <label class="control-label">Day of Week:</label>
+                <select name="dow">
+                    <option value="-1">Select one</option>
+                    <option value="0">Any</option>
+                    <option value="0">Monday</option>
+                    <option value="1">Tuesday</option>
+                    <option value="2">Wednesday</option>
+                    <option value="3">Thursday</option>
+                    <option value="4">Friday</option>
+                    <option value="5">Saturday</option>
+                    <option value="6">Sunday</option>
+                </select>
+            </div>
+        </section>
+        <section class="row-fluid">
+            <div class="span10">
+                <label class="control-label">Time:</label>
+                <div id="slider-range"></div>
+            </div>
+        </section>
+        <section class="row-fluid">
+            <div class="span10">
+                <div class="alert alert-block fade in hide">
+                    <span class="help-inline"></span>
+                </div>
+            </div>
+        </section>
+        <section class="row-fluid">
+            <div class="span6"></div>
+            <div class="span4 alignRight">
+                <input type="submit" value="Save" class="btn btn-primary" name="submit"/>
+            </div>
+        </section>
+    </form>
+</article>

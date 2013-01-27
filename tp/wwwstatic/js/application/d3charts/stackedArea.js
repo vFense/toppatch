@@ -55,7 +55,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     txtMiddleBottom.text('');
                     txtBottomTop.text('');
                     txtBottom.text('');
-                    txtMask.attr({transform: 'translate(0,0)'});
+                    txtMask.attr({transform: 'translate(-200,-200)'});
                     txtRect.style('opacity', '0');
                 }
                 _.each(layers, function (layer) {
@@ -175,7 +175,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                 /*point.append("svg:title")
                  .text(function (d, i) { return new Date(d.x) + "- Total Patches: " + (d.count + i + 1); });*/
 
-                txtMask = svg.append('g').attr({width: '100px'});
+                txtMask = svg.append('g').attr({width: '100px', transform: 'translate(-200,-200)'});
 
                 txtRect = txtMask.append('rect')
                     .attr({width: '100px', height: '115px', fill: 'lightblue', stroke: 'black', 'rx': '6', 'ry': '6'})
