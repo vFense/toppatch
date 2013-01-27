@@ -225,6 +225,7 @@ class SchedulerAddRecurrentJobHandler(BaseHandler):
         start_date = self.get_argument('start_date', None)
         year = self.get_argument('year', None)
         month = self.get_argument('month', None)
+        week = self.get_argument('week', None)
         day = self.get_argument('day', None)
         day_of_week = self.get_argument('day_of_week', None)
         hour = self.get_argument('hour', None)
