@@ -135,6 +135,17 @@ def get_patches_and_install(severity=None,
                 filter(PackagePerNode.installed == False).\
                 join(PackagePerNode).all()
 
+    elif len(node_ids) <1 and len(tag_ids) <1 and not severity:
+        patches = session.query(PackagePerNode).\
+                filter(PackagePerNode.installed == False).\
+                join(PackagePerNode).all()
+
+    elif len(node_ids) <1 and len(tag_ids) <1 and severity:
+        patches = session.query(Package, PackagePerNode).\
+                filter(PackagePerNode.installed == False).\
+                filter(Package.severity == severity).\
+                join(PackagePerNode).all()
+
     if patches:
         for pkg in patches:
             data.append(pkg.Package.toppatch_id)
