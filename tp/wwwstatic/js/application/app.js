@@ -125,9 +125,9 @@ define(
                                         copyFooter: true
                                     },
                                     widgets: {
-                                        'graph': ['pie', 'bar', 'tag'],
+                                        'graph': ['pie', 'bar', 'area'],
                                         'spans': [6, 6, 12],
-                                        'titles': ['Nodes in Network by OS', 'Updates by Severity', 'Tag Stats']
+                                        'titles': ['Nodes in Network by OS', 'Updates by Severity', 'Packages Installed in Network']
                                     }
                                 }
                             });

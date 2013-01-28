@@ -131,9 +131,9 @@ define(
                             this.stackedGraph(this.graph);
                         } else if (this.graphType === "summary") {
                             this.interactiveGraph(this.graph);
-                        } /* else if (that.graphType === "line") {
-                            lineGraph(that.graph);
-                        } */
+                        } else if (this.graphType === "area") {
+                            this.stackedAreaGraph(this.graph);
+                        }
                     },
                     renderNew: function () {
                         var variables, $rowDiv,
@@ -342,6 +342,16 @@ define(
                         d3.json("../api/summaryData", function (json) {
                             d3.select(selection).datum(json).call(interGraph);
                         });
+                    },
+                    stackedAreaGraph: function (selection) {
+                        var span = this.$el.find(selection).parents('article').attr('class').split(' ')[0],
+                            width = this.emToPx(parseFloat(this.getStyleWidth('.' + span))),
+                            stackedChart = app.chart.stackedArea().width(width);
+                        this.$el.find(selection).attr('class', 'area graph');
+                        d3.json("../api/node/graphs/severity?installed=true", function (json) {
+                            console.log(json);
+                            d3.select(selection).datum([json]).call(stackedChart);
+                        });
                     },/*
                     lineGraph: function (selection) {
                          var data = [
@@ -434,15 +444,15 @@ define(
                                 that.interactiveGraph('#graph' + (i + 1));
                             } else if (widgets[i] === 'stacked') {
                                 that.stackedGraph('#graph' + (i + 1));
+                            } else if (widgets[i] === 'area') {
+                                that.stackedAreaGraph('#graph' + (i + 1));
                             } else if (widgets[i] === 'tag') {
                                 that.graph = '#graph' + (i + 1);
                                 that.sizeval = settings.spans[i];
                                 that.title = settings.titles[i];
                                 that.graphType = widgets[i];
                                 that.getTags('#graph' + (i + 1));
-                            }/*else if (widgets[i] === 'line') {
-                             lineGraph('#graph' + (i + 1));
-                             }*/
+                            }
                         }
                     }
                 })

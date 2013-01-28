@@ -158,6 +158,7 @@ define(
                 require(['modules/tag'], function (myView) {
                     myView.StatsCollection = myView.StatsCollection.extend({id: id});
                     myView.PatchCollection = myView.PatchCollection.extend({id: id});
+                    myView.GraphCollection = myView.GraphCollection.extend({id: id});
                     that.show({hash: '#tags', title: 'Tag Detail', view: new myView.View()});
                 });
             },

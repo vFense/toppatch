@@ -29,24 +29,17 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     var mousePos = d3.mouse(that), textLength,
                         date = new Date(d.x),
                         dateString = date.toDateString() + ' ' + date.toTimeString().split(' ')[0];//Wed Jan 23 2013 00:28:12
-                    mousePos[0] = mousePos[0] - 20;
-                    mousePos[1] = mousePos[1] > (height / 2) ? mousePos[1] - 80 : mousePos[1] - 20;
+                    mousePos[0] = mousePos[0] > (width / 2) ? mousePos[0] - 200 : mousePos[0] - 20;
+                    mousePos[1] = mousePos[1] > (height / 2) ? mousePos[1] - 90 : mousePos[1] - 20;
                     txtTop.text("Patches installed: " + (d.total));
                     txtMiddleTop.text('Total Patches: ' + d.totalToDate);
                     txtMiddle.text('Critical: ' + d.critical);
                     txtMiddleBottom.text('Recommended: ' + d.recommended);
                     txtBottomTop.text('Optional: ' + d.optional);
                     txtBottom.text(dateString);
-                    textLength = parseFloat(txtMiddle.style('width')) > parseFloat(txtBottom.style('width')) ? txtMiddle.style('width') : txtBottom.style('width');
+                    textLength = parseFloat(txtTop.style('width')) > parseFloat(txtBottom.style('width')) ? txtTop.style('width') : txtBottom.style('width');
                     txtMask.attr({transform: 'translate(' + mousePos + ')'});
                     txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
-                }
-                function textMouseMove() {
-                    var mousePos = d3.mouse(that);
-                    mousePos[0] = mousePos[0] - 10;
-                    mousePos[1] = mousePos[1] - 38;
-                    txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                    txtRect.style('opacity', '0.3');
                 }
                 function textMouseOut() {
                     txtTop.text('');
@@ -59,6 +52,9 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     txtRect.style('opacity', '0');
                 }
                 if (data.length) {
+                    $(this).html("");
+                    height = height < 150 ? 150 : height;
+                    height = height > 190 ? 190 : height;
                     recommended = data[0].recommended;
                     optional = data[0].optional;
                     critical = data[0].critical;
