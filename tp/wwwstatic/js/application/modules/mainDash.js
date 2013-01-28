@@ -349,7 +349,6 @@ define(
                             stackedChart = app.chart.stackedArea().width(width);
                         this.$el.find(selection).attr('class', 'area graph');
                         d3.json("../api/node/graphs/severity?installed=true", function (json) {
-                            console.log(json);
                             d3.select(selection).datum([json]).call(stackedChart);
                         });
                     },/*

@@ -17,9 +17,8 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
         function chart(selection) {
             selection.each(function (data) {
                 // generate chart here; `d` is the data and `this` is the element
-                var svg, xAxis, xAxisText, yAxisLeft, yAxisLeftText, line, graph, point, area, stack, key,
+                var svg, xAxis, xAxisText, yAxisLeft, yAxisLeftText, line, graph, point, area, stack, key, legend, legendData,
                     txtTop, txtMask, txtRect, txtMiddleTop, txtMiddle, txtMiddleBottom, txtBottom, txtBottomTop,
-                    recommended, optional, critical,
                     layers = [{name: 'optional'}, {name: 'recommended'}, {name: 'critical'}],
                     color = d3.scale.category20(),
                     maxX = data.length - 1,
@@ -55,9 +54,11 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     $(this).html("");
                     height = height < 150 ? 150 : height;
                     height = height > 190 ? 190 : height;
-                    recommended = data[0].recommended;
-                    optional = data[0].optional;
-                    critical = data[0].critical;
+                    legendData = [
+                        {title: 'Optional', value: data[0].optional},
+                        {title: 'Recommended', value: data[0].recommended},
+                        {title: 'Critical', value: data[0].critical}
+                    ];
                     data = data[0].dates;
                     _.each(layers, function (layer) {
                         var tempDate,
@@ -175,6 +176,40 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
 
                     /*point.append("svg:title")
                      .text(function (d, i) { return new Date(d.x) + "- Total Patches: " + (d.count + i + 1); });*/
+
+                    legend = svg.selectAll(".legend")
+                        .data(legendData)
+                        .enter().append("g")
+                        .attr("class", "legend")
+                        /*
+                        .attr("x", width - 500)
+                        .attr("y", function (d, i) {
+                            var heights = [0, 10, 20];
+                            return heights[i];
+                        });
+                        */
+                        .attr("transform", function (d, i) {
+                            var heights = [0, 20, 40];
+                            return "translate(-45, " + heights[i] + ")";
+                        });
+
+                    legend.append("rect")
+                        .attr("x", width - 18)
+                        .attr("width", 18)
+                        .attr("height", 18)
+                        .style("fill", function (d, i) { return severityColors[i]; })
+                        .append("title").text(function (d, i) { return d.title + ": " + (d.value || 0); });
+                    if (width > 500) {
+                        legend.append("text")
+                            .attr("x", width - 24)
+                            .attr("y", 9)
+                            .attr("dy", ".75em")
+                            .style("font-size", "10px")
+                            .style('font-weight', "bold")
+                            .style("text-anchor", "end")
+                            .text(function (d) { return d.title + ": " + (d.value || 0); });
+                    }
+
 
                     txtMask = svg.append('g').attr({width: '100px', transform: 'translate(-200,-200)'});
 
