@@ -29,14 +29,26 @@ define(
                 },
                 submit: function (event) {
                     var $form = $(event.target),
+                        params = {},
                         that = this,
                         url = '',
                         $alert = this.$el.find('.alert'),
-                        jobname = $form.find('input[name=jobname]'),
-                        operation = $form.find('select[name=operation]'),
-                        severity = $form.find('select[name=severity]'),
-                        start_date = $form.find('input[name=start_date]');
-                    console.log($form);
+                        $inputs = $form.find('input, select'),
+                        invalid = false;
+                    $inputs.each(function () {
+                        if (this.name !== 'start_date') {
+                            if (this.value === '-1' || !this.value) {
+                                $(this).parents('.control-group').addClass('error');
+                                $alert.removeClass('alert-success alert-info').addClass('alert-error').html('Please fill the required fields.').show();
+                                invalid = true;
+                            } else {
+                                $(this).parents('.control-group').removeClass('error');
+                                params[this.name] = this.value;
+                            }
+                        }
+                    });
+                    window.console.log(params);
+                    if (invalid) { return false; }
                     //$alert.removeClass('alert-success alert-error').addClass('alert-info').html('Submitting...');
                     /*$.post(url, function (json) {
                         window.console.log(json);
@@ -55,6 +67,7 @@ define(
                         that = this,
                         $slide = $el.find('#slider-range'),
                         $dateInput = $el.find('input[name=start_date]');
+                    $el.find('label').show();
                     $slide.slider({
                         min: 0,
                         max: 1439,

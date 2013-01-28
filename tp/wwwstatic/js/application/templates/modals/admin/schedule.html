@@ -1,7 +1,7 @@
 <article>
     <form>
         <section class="row-fluid">
-            <div class="span6">
+            <div class="control-group span6">
                 <label class="control-label">Operation:</label>
                 <select name="operation">
                     <option value="-1">Select one</option>
@@ -9,13 +9,13 @@
                     <option value="Reboot">Reboot</option>
                 </select>
             </div>
-            <div class="span4">
+            <div class="control-group span4">
                 <label class="control-label">Job Name:</label>
                 <input type="text" name="jobname" placeholder="Required"/>
             </div>
         </section>
         <section class="row-fluid">
-            <div class="span6">
+            <div class="control-group span6">
                 <label class="control-label">Severity:</label>
                 <select name="severity">
                     <option value="-1">Select one</option>
@@ -25,13 +25,13 @@
                     <option value="critical">Critical</option>
                 </select>
             </div>
-            <div class="span4">
+            <div class="control-group span4">
                 <label class="control-label">Start Date:</label>
                 <input type="text" name="start_date" placeholder="Optional"/>
             </div>
         </section>
         <section class="row-fluid">
-            <div class="span6">
+            <div class="control-group span6">
                 <label class="control-label">Month:</label>
                 <select name="month">
                     <option value="-1">Select one</option>
@@ -50,9 +50,9 @@
                     <option value="12">December</option>
                 </select>
             </div>
-            <div class="span4">
+            <div class="control-group span4">
                 <label class="control-label">Day of Week:</label>
-                <select name="dow">
+                <select name="day_of_week">
                     <option value="-1">Select one</option>
                     <option value="0">Any</option>
                     <option value="0">Monday</option>
@@ -66,9 +66,9 @@
             </div>
         </section>
         <section class="row-fluid">
-            <div class="span10">
+            <div class="control-group span10">
                 <label class="control-label">Time: 00:00 AM</label>
-                <div id="slider-range"></div>
+                <div id="slider-range"></div><br>
             </div>
         </section>
         <section class="row-fluid">
@@ -81,7 +81,7 @@
         <section class="row-fluid">
             <div class="span6"></div>
             <div class="span4 alignRight">
-                <input type="submit" value="Save" class="btn btn-primary" name="submit"/>
+                <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </section>
     </form>
