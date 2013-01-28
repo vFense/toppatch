@@ -48,6 +48,9 @@ BODY > FOOTER .logo-text {
   padding-top: 0.14285714285714285em;
   padding-bottom: 0.14285714285714285em;
 }
+.loading_indicator .brand {
+  font-size: 20px;
+}
 #pageFooter {
   position: fixed;
   bottom: 0;
