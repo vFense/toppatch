@@ -32,7 +32,17 @@ define(
                     events: {
                         'click #type1': 'graphSetting',
                         'click #type2': 'textSetting',
+                        'click input[name=graph]': 'selectGraphType',
                         'click #apply': 'createWidget'
+                    },
+                    selectGraphType: function () {
+                        var type = this.$el.find('input[name=graph]:checked').val(),
+                            areaSettings = this.$el.find('#areaSettings');
+                        if (type === 'area') {
+                            areaSettings.show();
+                        } else {
+                            areaSettings.hide();
+                        }
                     },
                     textSetting: function () {
                         $("#graphSettings").hide();
@@ -55,7 +65,7 @@ define(
                                 title = $("#" + widgetName + "-title").html(),
                                 span = $("#" + widgetName).attr('class').split(' ')[0].match(/\d+$/)[0],
                                 graphType = $("#" + widgetName).find('.graph').attr('class').split(' ')[0],
-                                graph = $('input:radio[name=graph]'),
+                                graph = $('select[name=graph] option[value=' + graphType + ']'),
                                 size = $('input:radio[name=radio]'),
                                 widgetType = $("#" + widgetName).find('.graph').attr('value');
                             this.properties.widgetName = widgetName;
@@ -86,18 +96,15 @@ define(
                                         $(this).attr('checked', false);
                                     }
                                 });
-                                graph.each(function () {
-                                    if ($(this).val() === graphType) {
-                                        $(this).attr('checked', true);
-                                    } else {
-                                        $(this).attr('checked', false);
-                                    }
-                                });
+                                graph.attr('selected', 'selected');
                                 $('#graphSettings').show();
+                            }
+                            if (graphType === 'area') {
+                                this.selectGraphType();
                             }
                             $('#title').val(title).attr("placeholder", title);
                         } else if (param === "new") {
-                            if ($('#widget5').length !== 0) {
+                            if ($('#widget6').length !== 0) {
                                 window.console.log('too many widgets');
                                 setTimeout(function () { $('#widgetProperties').modal('hide'); }, 50);
                             }
@@ -131,8 +138,10 @@ define(
                             this.stackedGraph(this.graph);
                         } else if (this.graphType === "summary") {
                             this.interactiveGraph(this.graph);
-                        } else if (this.graphType === "area") {
-                            this.stackedAreaGraph(this.graph);
+                        } else if (this.graphType === "area_1") {
+                            this.stackedAreaGraph(this.graph, true);
+                        } else if (this.graphType === 'area_2') {
+                            this.stackedAreaGraph(this.graph, false);
                         }
                     },
                     renderNew: function () {
@@ -145,7 +154,7 @@ define(
                         $rowDiv = newElement('div').addClass('row-fluid clearfix movable');
                         if (that.type === "graph") {
                             that.sizeval = parseInt($('input:radio[name=radio]:checked').val(), 10);
-                            that.graphType = $('input:radio[name=graph]:checked').val();
+                            that.graphType = $('select[name=graph] option:selected').val();
                             variables = {
                                 widget: that.widget,
                                 span: "span" + that.sizeval,
@@ -196,7 +205,7 @@ define(
                         if (that.type === "graph") {
                             that.myClass = $(that.widget).attr("class");
                             that.sizeval = parseInt($('input:radio[name=radio]:checked').val(), 10);
-                            that.graphType = $('input:radio[name=graph]:checked').val();
+                            that.graphType = $('select[name=graph] option:selected').val();
                             that.graphData = $('input:radio[name=graphdata]:checked').val();
                             $(that.widget + '-title').html(that.title);
                             $(that.widget).removeClass(that.myClass).addClass("span" + that.sizeval + " widget editable");
@@ -343,12 +352,16 @@ define(
                             d3.select(selection).datum(json).call(interGraph);
                         });
                     },
-                    stackedAreaGraph: function (selection) {
+                    stackedAreaGraph: function (selection, installed) {
                         var span = this.$el.find(selection).parents('article').attr('class').split(' ')[0],
                             width = this.emToPx(parseFloat(this.getStyleWidth('.' + span))),
                             stackedChart = app.chart.stackedArea().width(width);
-                        this.$el.find(selection).attr('class', 'area graph');
-                        d3.json("../api/node/graphs/severity?installed=true", function (json) {
+                        if (installed) {
+                            this.$el.find(selection).attr('class', 'area_1 graph');
+                        } else {
+                            this.$el.find(selection).attr('class', 'area_2 graph');
+                        }
+                        d3.json("../api/node/graphs/severity?installed=" + installed, function (json) {
                             d3.select(selection).datum([json]).call(stackedChart);
                         });
                     },/*
@@ -443,8 +456,10 @@ define(
                                 that.interactiveGraph('#graph' + (i + 1));
                             } else if (widgets[i] === 'stacked') {
                                 that.stackedGraph('#graph' + (i + 1));
-                            } else if (widgets[i] === 'area') {
-                                that.stackedAreaGraph('#graph' + (i + 1));
+                            } else if (widgets[i] === 'area_1') {
+                                that.stackedAreaGraph('#graph' + (i + 1), true);
+                            } else if (widgets[i] === 'area_2') {
+                                that.stackedAreaGraph('#graph' + (i + 1), false);
                             } else if (widgets[i] === 'tag') {
                                 that.graph = '#graph' + (i + 1);
                                 that.sizeval = settings.spans[i];

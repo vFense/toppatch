@@ -50,7 +50,13 @@
             <div id="graphSettings" class="hide">
                 <h4>Choose type of graph</h4>
                 <div id="graphType" class="radio-graph">
-                    <label for="graphtype1" class="radio inline">
+                    <select name="graph" class="span4">
+                        <option value="pie">Nodes By Os</option>
+                        <option value="bar">Updates by Severity</option>
+                        <option value="area_1">Packages Installed in Network</option>
+                        <option value="area_2">Packages Available in Network</option>
+                    </select>
+                    <!--<label for="graphtype1" class="radio inline">
                         <input type="radio" name="graph" id="graphtype1"  value="pie" />Pie Graph
                     </label>
                     <label for="graphtype2" class="radio inline">
@@ -61,21 +67,19 @@
                     </label>
                     <label for="graphtype6" class="radio inline">
                         <input type="radio" name="graph" id="graphtype6" value="area"/>Area Graph
-                    </label>
-                </div>
-                <!--
-                <div id="dataToGraph" class="hide">
+                    </label>-->
+                </div><!--
+                <div id="areaSettings" class="hide">
                     <h4>Choose type of Data</h4>
                     <div id="graphdata">
                         <label for="graphdata1" class="radio inline">
-                            <input type="radio" name="graphdata" id="graphdata1"  value="os" checked="checked"/>OS in Network
+                            <input type="radio" name="graphdata" id="graphdata1"  value="0" checked="checked"/>Available Packages
                         </label>
                         <label for="graphdata2" class="radio inline">
-                            <input type="radio" name="graphdata" id="graphdata2" value="node"/>Nodes by OS
+                            <input type="radio" name="graphdata" id="graphdata2" value="1"/>Installed Packages
                         </label>
                     </div>
-                </div>
-                -->
+                </div>-->
             </div>
         </form>
     </div>
