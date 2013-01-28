@@ -4,8 +4,8 @@ define(
         "use strict";
         var PageHeader = {};
         PageHeader.View = Backbone.View.extend({
-            el: $('<header>')
-                .attr('id', 'pageHeader'),
+            tagName: 'header',
+            id: 'pageHeader',
             template: headerTemplate,
             initialize: function () {
                 this.model = window.User;
