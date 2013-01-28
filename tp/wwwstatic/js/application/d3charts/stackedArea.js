@@ -29,7 +29,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     var mousePos = d3.mouse(that), textLength;
                     mousePos[0] = mousePos[0] > (width / 2) ? mousePos[0] - 200 : mousePos[0] - 20;
                     mousePos[1] = mousePos[1] > (height / 2) ? mousePos[1] - 90 : mousePos[1] - 20;
-                    txtTop.text("Patches installed: " + (d.total));
+                    txtTop.text("Patches: " + (d.total));
                     txtMiddleTop.text('Total Patches: ' + d.totalToDate);
                     txtMiddle.text('Critical: ' + d.critical);
                     txtMiddleBottom.text('Recommended: ' + d.recommended);
