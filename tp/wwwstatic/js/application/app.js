@@ -127,7 +127,7 @@ define(
                                     widgets: {
                                         'graph': ['pie', 'bar', 'tag'],
                                         'spans': [6, 6, 12],
-                                        'titles': ['Nodes in Network by OS', 'Patches by Severity', 'Tag Stats']
+                                        'titles': ['Nodes in Network by OS', 'Updates by Severity', 'Tag Stats']
                                     }
                                 }
                             });
@@ -152,25 +152,25 @@ define(
             data: {
                 overviewData: [
                     {
-                        "key": "Completed Patches",
+                        "key": "Applications Installed",
                         "link": "installed",
                         "data": overviewInstalled.data,
                         "format": [{"rule": "gt", "value": -1, "style": "success", "stop": true}]
                     },
                     {
-                        "key": "Pending Patches",
+                        "key": "Updates Pending",
                         "link": "pending",
                         "data": overviewPending.data,
                         "format": [{"rule": "gt", "value": -1, "style": "info", "stop": true}]
                     },
                     {
-                        "key": "Available Patches",
+                        "key": "Updates Available",
                         "link": "available",
                         "data": overviewAvailable.data,
                         "format": [{"rule": "gt", "value": -1, "style": "warning", "stop": true}]
                     },
                     {
-                        "key": "Failed Patches",
+                        "key": "Updates Failed",
                         "link": "failed",
                         "data": overviewFailed.data,
                         "format": [{"rule": "gt", "value": -1, "style": "error", "stop": true}]
