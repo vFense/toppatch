@@ -211,8 +211,7 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
         session = validate_session(session)
         nodeid = self.get_argument('nodeid', None)
         tagid = self.get_argument('tagid', None)
-        installed = self.get_argument('installed', False)
-        available = self.get_argument('available', False)
+        installed = self.get_argument('installed', True)
         self.data = []
         self.total_critical = None
         self.total_recommended = None
@@ -252,7 +251,7 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
                             == date1[0]).join(Package)
                         self._parse_data(pkg_query, date1)
 
-            elif available:
+            else:
                 date_available = session.query(func.date(Package.date_pub)).\
                         filter(PackagePerNode.installed == False).\
                         group_by(func.date(Package.date_pub)).all()
@@ -301,7 +300,7 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
                             join(Package)
                     self._parse_data(pkg_query, date1)
 
-            elif available:
+            else:
                 date_available = session.query(func.date(Package.date_pub)).\
                             filter(PackagePerNode.installed == False).\
                             filter(PackagePerNode.node_id.in_(node_ids)).\
@@ -348,7 +347,7 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
                             join(Package)
                     self._parse_data(pkg_query, date1)
 
-            elif available:
+            else:
                 date_available = session.query(func.date(Package.date_pub)).\
                         filter(PackagePerNode.installed == False).\
                         filter(PackagePerNode.node_id == nodeid).\
