@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from models.base import Base
 from sqlalchemy import String, Column, Integer, Text, ForeignKey, schema, types, create_engine
-from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN, CHAR, DATETIME, TEXT, TINYINT, VARCHAR
+from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN, CHAR, DATETIME, TEXT, TINYINT, VARCHAR, FLOAT
 from sqlalchemy.orm import relationship, backref
 
 
@@ -91,6 +91,134 @@ class SystemInfo(Base):
                 self.version_build, self.meta, self.bit_type
                 )
 
+
+class MemoryInfo(Base):
+    """
+    Represents one row from the hosts table.
+    """
+    __tablename__ = "memory_info"
+    __visit_name__ = "column"
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    node_id = Column(INTEGER(unsigned=True),
+        ForeignKey("node_info.id"))
+    total_memory = Column(VARCHAR(32), nullable=True)
+    def __init__(self, node_id=None, total_memory=None):
+        self.node_id = node_id
+        self.total_memory = total_memory
+    def __repr__(self):
+        return "<MemoryInfo(%s,%s>" %\
+                (
+                self.node_id, self.total_memory
+                )
+
+
+
+class StorageInfo(Base):
+    """
+    Represents one row from the hosts table.
+    """
+    __tablename__ = "storage_info"
+    __visit_name__ = "column"
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    node_id = Column(INTEGER(unsigned=True),
+        ForeignKey("node_info.id"))
+    free_size_kb = Column(VARCHAR(32), nullable=True)
+    size_kb = Column(VARCHAR(32), nullable=True)
+    file_system = Column(VARCHAR(64), nullable=True)
+    name = Column(VARCHAR(256), nullable=True, unique=False)
+    def __init__(self, node_id=None, free_size_kb=None,
+            size_kb=None, file_system=None, name=None):
+        self.node_id = node_id
+        self.free_size_kb = free_size_kb
+        self.size_kb = size_kb
+        self.file_system = file_system
+        self.name = name
+    def __repr__(self):
+        return "<StorageInfo(%s,%s,%s,%s,%s>" %\
+                (
+                self.node_id, self.free_size_kb,
+                self.size_kb, self.file_system,
+                self.name
+                )
+
+
+class DisplayInfo(Base):
+    """
+    Represents one row from the hosts table.
+    """
+    __tablename__ = "display_info"
+    __visit_name__ = "column"
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    node_id = Column(INTEGER(unsigned=True),
+        ForeignKey("node_info.id"))
+    speed_mhz = Column(VARCHAR(20), nullable=True)
+    ram_kb = Column(VARCHAR(32), nullable=True)
+    name = Column(VARCHAR(256), nullable=True, unique=False)
+    def __init__(self, node_id=None,
+            speed_mhz=None, ram_kb=None,
+            name=None):
+        self.node_id = node_id
+        self.speed_mhz = speed_mhz
+        self.ram_kb = ram_kb
+        self.name = name
+    def __repr__(self):
+        return "<DisplayInfo(%s,%s,%s,%s>" %\
+                (
+                self.node_id, self.speed_mhz,
+                self.ram_kb, self.name
+                )
+
+
+class CpuInfo(Base):
+    """
+    Represents one row from the hosts table.
+    """
+    __tablename__ = "cpu_info"
+    __visit_name__ = "column"
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    node_id = Column(INTEGER(unsigned=True),
+        ForeignKey("node_info.id"))
+    cores = Column(VARCHAR(10), nullable=True)
+    cpu_id = Column(VARCHAR(10), nullable=True)
+    speed_mhz = Column(VARCHAR(32), nullable=True)
+    bit_type = Column(VARCHAR(12), nullable=True)
+    cache_kb = Column(VARCHAR(32), nullable=True)
+    name = Column(VARCHAR(256), nullable=True, unique=False)
+    def __init__(self, node_id=None, cores=None, cpu_id=None,
+            speed_mhz=None, bit_type=None, cache_kb=None,
+            name=None):
+        self.node_id = node_id
+        self.cores = cores
+        self.cpu_id = cpu_id
+        self.speed_mhz = speed_mhz
+        self.bit_type = bit_type
+        self.cache_kb = cache_kb
+        self.name = name
+    def __repr__(self):
+        return "<CpuInfo(%s,%s,%s,%s,%s,%s,%s>" %\
+                (
+                self.node_id, self.cores, self.cpu_id,
+                self.speed_mhz, self.bit_type, self.cache_kb,
+                self.name
+                )
+
+
 class NetworkInterface(Base):
     """
     Represents one row from the hosts table.
@@ -153,7 +281,37 @@ class Operations(Base):
                    self.operation_sent, self.operation_received,
                    self.username
                )
-               
+       
+
+        
+
+class PatchResults(Base):
+    """
+    Represents one row from the hosts table.
+    """
+    __tablename__ = "patch_results"
+    __visit_name__ = "column"
+    __table_args__ = {
+        'mysql_engine': 'InnoDB',
+        'mysql_charset': 'utf8'
+    }
+    id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
+    results_id = Column(INTEGER(unsigned=True),
+            ForeignKey("results.id"))
+    patch_id = Column(VARCHAR(32),
+            ForeignKey("package.toppatch_id"), nullable=True)
+    reboot = Column(BOOLEAN, nullable=True)
+    def __init__(self, results_id=None, patch_id=None, reboot=False):
+        self.patch_id = patch_id
+        self.results_id = results_id
+        self.reboot = reboot
+    def __repr__(self):
+        return "<PatchResults(%s, %s, %s)>" %\
+                (
+                self.results_id, self.patch_id, self.reboot
+                )
+
+
 
 class Results(Base):
     """
@@ -170,26 +328,21 @@ class Results(Base):
             ForeignKey("node_info.id"), nullable=True)
     operation_id = Column(INTEGER(unsigned=True),
             ForeignKey("operations.id"))
-    patch_id = Column(VARCHAR(32),
-            ForeignKey("package.toppatch_id"), nullable=True)
-    result = Column(VARCHAR(16), nullable=False)
-    reboot = Column(BOOLEAN, nullable=True)
+    succeeded = Column(BOOLEAN, nullable=False)
     error = Column(VARCHAR(64), nullable=True)
     results_received = Column(DATETIME, nullable=True)
-    def __init__(self, node_id=None, operation_id=None, patch_id=None,
-                result=None, reboot=None, error=None, results_received=None):
+    def __init__(self, node_id=None, operation_id=None, 
+                succeeded=False, error=None, results_received=None):
         self.node_id = node_id
         self.operation_id = operation_id
-        self.patch_id = patch_id
-        self.result = result
-        self.reboot = reboot
+        self.succeeded = succeeded
         self.error = error
         self.results_received = results_received
     def __repr__(self):
-        return "<Results(%s, %s, %s, %s, %s, %s, %s)>" %\
+        return "<Results(%s, %s, %s, %s, %s)>" %\
                 (
-                self.node_id ,self.operation_id, self.patch_id,
-                self.result, self.reboot, self.error, self.results_received
+                self.node_id, self.operation_id, self.succeeded,
+                self.error, self.results_received
                 )
 
 class SoftwareAvailable(Base):

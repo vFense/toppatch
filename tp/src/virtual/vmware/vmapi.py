@@ -309,6 +309,7 @@ class VmApi():
             message = '%s - insufficient parameters' % (username)
             logger.error(message)
             passed = False
+        session.close()
 
         return({
             'pass': passed,
@@ -628,6 +629,7 @@ class VmApi():
                             session.rollback()
                             snaps_updated = False
                     redis.publish('rv', 'SnapShots Updated')
+        session.close()
 
         return(snaps_updated)
 
@@ -926,7 +928,10 @@ class VmApi():
                     ipaddress_list = vm.guest.net
                     for ip in ipaddress_list:
                         if len(ip.ipAddress) >0:
-                            ip_list.append(ip.ipAddress[0])
+                            for ip in ip.ipAddress:
+                                if len(ip) <=15:
+                            	    ip_list.append(ip)
+
                     vms[vm.name] = {
                             'vm_name': vm.name,
                             'vm_uuid': vm.name,

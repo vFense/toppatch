@@ -20,8 +20,10 @@ define(
                     this.searchQuery = this.searchQuery || '';
                     this.searchBy = this.searchBy || '';
                     this.severity = this.severity || '';
+                    this.date = this.date || '';
 
                     this.query = '?count=' + this.getCount + '&offset=' + this.offset;
+                    this.query += this.date ? '&date=' + this.date + '&installed=true' : '';
                     this.query += this.status ? '&status=' + this.status : '';
                     this.query += this.searchQuery ? '&query=' + this.searchQuery : '';
                     this.query += this.searchBy ? '&searchby=' + this.searchBy : '';

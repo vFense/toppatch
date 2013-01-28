@@ -105,7 +105,8 @@ define(
                 generateTable: charts.generateTable,
                 line: charts.line,
                 newpie: charts.newpie,
-                bar_3d: charts.bar_3d
+                bar_3d: charts.bar_3d,
+                stackedArea: charts.stackedArea
             },
             getUserSettings: function () {
                 var userSettings, userName,
@@ -127,9 +128,9 @@ define(
                                         copyFooter: true
                                     },
                                     widgets: {
-                                        'graph': ['pie', 'bar', 'tag'],
-                                        'spans': [6, 6, 12],
-                                        'titles': ['Nodes in Network by OS', 'Patches by Severity', 'Tag Stats']
+                                        'graph': ['pie', 'bar', 'tag', 'area_1', 'area_2'],
+                                        'spans': [4, 4, 4, 12, 12],
+                                        'titles': ['Nodes in Network by OS', 'Updates by Severity', 'Tags', 'Packages Installed in Network', 'Packages Available in Network']
                                     }
                                 }
                             });
@@ -154,25 +155,25 @@ define(
             data: {
                 overviewData: [
                     {
-                        "key": "Completed Patches",
+                        "key": "Applications Installed",
                         "link": "installed",
                         "data": overviewInstalled.data,
                         "format": [{"rule": "gt", "value": -1, "style": "success", "stop": true}]
                     },
                     {
-                        "key": "Pending Patches",
+                        "key": "Operations Pending",
                         "link": "pending",
                         "data": overviewPending.data,
                         "format": [{"rule": "gt", "value": -1, "style": "info", "stop": true}]
                     },
                     {
-                        "key": "Available Patches",
+                        "key": "Updates Available",
                         "link": "available",
                         "data": overviewAvailable.data,
                         "format": [{"rule": "gt", "value": -1, "style": "warning", "stop": true}]
                     },
                     {
-                        "key": "Failed Patches",
+                        "key": "Updates Failed",
                         "link": "failed",
                         "data": overviewFailed.data,
                         "format": [{"rule": "gt", "value": -1, "style": "error", "stop": true}]

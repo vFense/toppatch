@@ -42,7 +42,7 @@ class Package(Base):
         self.date_pub = date_pub
         self.file_size = file_size
     def __repr__(self):
-        return "<LinuxPackage(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<LinuxPackage(%r,%r,%r,%r,%r,%r,%r,%r,%r,%r)>" %\
                (
                    self.toppatch_id, self.version, self.vendor_id,
                    self.kb, self.name, self.description, self.support_url,
@@ -67,7 +67,7 @@ class PackagePerNode(Base):
         ForeignKey("package.toppatch_id"))
     is_linux = Column(BOOLEAN, nullable=True)
     is_windows = Column(BOOLEAN, nullable=True)
-    is_mac = Column(BOOLEAN, nullable=True)
+    is_darwin = Column(BOOLEAN, nullable=True)
     is_bsd = Column(BOOLEAN, nullable=True)
     is_unix = Column(BOOLEAN, nullable=True)
     hidden = Column(BOOLEAN)
@@ -78,13 +78,13 @@ class PackagePerNode(Base):
     def __init__(self, node_id, toppatch_id, date_installed=None,
                  hidden=False, installed=False, attempts=0,
                  pending=False, is_linux=False, is_windows=False,
-                 is_mac=False, is_bsd=False, is_unix=False
+                 is_darwin=False, is_bsd=False, is_unix=False
                 ):
         self.node_id = node_id
         self.toppatch_id = toppatch_id
         self.is_linux = is_linux
         self.is_windows = is_windows
-        self.is_mac = is_mac
+        self.is_darwin = is_darwin
         self.is_bsd = is_bsd
         self.is_unix = is_unix
         self.hidden = hidden
@@ -96,7 +96,7 @@ class PackagePerNode(Base):
         return "<PackagePerNode(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                (
                    self.node_id, self.toppatch_id, self.is_linux,
-                   self.is_windows, self.is_mac, self.is_bsd, self.is_unix,
+                   self.is_windows, self.is_darwin, self.is_bsd, self.is_unix,
                    self.hidden, self.installed, self.date_installed,
                    self.attempts,self.pending
                    )

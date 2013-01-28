@@ -11,8 +11,8 @@ def init_engine():
     """
     db = create_engine(
             'mysql://root:topmiamipatch@127.0.0.1:9006/toppatch_server?charset=utf8',
-            encoding='utf-8', pool_size=0, pool_recycle=3600,
-            pool_reset_on_return='rollback'
+            encoding='utf-8', pool_size=0, max_overflow=50, pool_recycle=3600,
+            pool_reset_on_return='rollback', pool_timeout=120
             )
     return db
 

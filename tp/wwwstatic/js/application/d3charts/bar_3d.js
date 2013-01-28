@@ -15,7 +15,7 @@ define(
                 angle = 30,
                 depth = 20,
                 height   = 200 - depth,
-                severityColors = ['#FFFF00', '#FF3030', '#FF6600'];//['#FFC125', '#FF3030', '#FF6600'];
+                severityColors = ['#FFFF00', '#FF6600', '#FF3030'];//['#FFC125', '#FF3030', '#FF6600'];
             function chart(selection) {
                 selection.each(function (data) {
                     var svg, frontRect, sideRect, topRect, rightTopTriangle, leftTopTriangle, botWhiteTriangle, txtMask, txtRect, txt,
@@ -67,8 +67,8 @@ define(
                         .append("svg:rect")
                         .attr("class", "top_rect")
                         .attr("x", function (d, index) { return x(index) + depth - 0.8; })
-                        .attr("y", function (d, index) { return y(d.value) > 15 ? height - y(d.value) : height - y(15); })
-                        .attr("height", function (d) { return y(d.value) > 15 ? y(d.value) : y(15) + 5; })
+                        .attr("y", function (d, index) { return y(d.value) > 20 ? height - y(d.value) : height - y(20); })
+                        .attr("height", function (d) { return y(d.value) > 20 ? y(d.value) : y(20) + 5; })
                         .attr("width", barWidth)
                         .attr("stroke", "0")
                         .attr("stroke-width", "0")
@@ -89,8 +89,8 @@ define(
                         .append("svg:rect")
                         .attr("class", "side_rect")
                         .attr("x", function (d, index) { return x(index) + barWidth; })
-                        .attr("y", function (d, index) { return y(d.value) > 15 ? height - y(d.value) + depth : height - y(15) + depth; })
-                        .attr("height", function (d) { return y(d.value) > 15 ? y(d.value) : y(15); })
+                        .attr("y", function (d, index) { return y(d.value) > 20 ? height - y(d.value) + depth : height - y(20) + depth; })
+                        .attr("height", function (d) { return y(d.value) > 20 ? y(d.value) : y(20); })
                         .attr("width", depth)
                         .attr("stroke", "0")
                         .attr("fill", function (d, index) { return sideColor(index); })
@@ -106,10 +106,10 @@ define(
                         .attr("fill", function (d, index) { return sideColor(index); })
                         .attr("d", function (d, index) {
                             var startX = x(index) + barWidth,
-                                startY = y(d.value) > 15 ? height - y(d.value) + depth : height - y(15) + depth,
+                                startY = y(d.value) > 20 ? height - y(d.value) + depth : height - y(20) + depth,
                                 M = startX + ' ' + startY,
                                 H = x(index) + barWidth + depth,
-                                V = y(d.value) > 15 ? height - y(d.value) : height - y(15),
+                                V = y(d.value) > 20 ? height - y(d.value) : height - y(20),
                                 triangle = 'M ' + M + ' ' + ' H ' + H + ' ' + ' V ' + V + ' ' + ' L ' + M;
                             return triangle;
                         });
@@ -121,10 +121,10 @@ define(
                         .attr("fill", function (d, index) { return topColor(index); })
                         .attr("d", function (d, index) {
                             var startX = x(index) - 0.7,
-                                startY = y(d.value) > 15 ? height - y(d.value) + depth : height - y(15) + depth,
+                                startY = y(d.value) > 20 ? height - y(d.value) + depth : height - y(20) + depth,
                                 M = startX + ' ' + startY,
                                 H = x(index) + depth - 0.1,
-                                V = y(d.value) > 15 ? height - y(d.value) : height - y(15),
+                                V = y(d.value) > 20 ? height - y(d.value) : height - y(20),
                                 triangle = 'M ' + M + ' ' + ' H ' + H + ' ' + ' V ' + V + ' ' + ' L ' + M;
                             return triangle;
                         });
@@ -149,8 +149,8 @@ define(
                         .append("svg:rect")
                         .attr("class", "front_rect")
                         .attr("x", function (d, index) { return x(index); })
-                        .attr("y", function (d) { return y(d.value) > 15 ? height - y(d.value) + depth : height - y(15) + depth; })
-                        .attr("height", function (d) { return y(d.value) > 15 ? y(d.value) : y(15); })
+                        .attr("y", function (d) { return y(d.value) > 20 ? height - y(d.value) + depth : height - y(20) + depth; })
+                        .attr("height", function (d) { return y(d.value) > 20 ? y(d.value) : y(20); })
                         .attr("width", barWidth)
                         .attr("stroke", function (d, index) { return sideColor(index); })//stroke same color as sideRect
                         .attr("fill", function (d, index) { return frontColor(index); })
@@ -164,7 +164,7 @@ define(
                         .enter()
                         .append("svg:text")
                         .attr("x", function (datum, index) { return x(index) + barWidth / 2; })
-                        .attr("y", function (datum) { return y(datum.value) > 15 ? height - y(datum.value) : height - y(15); })
+                        .attr("y", function (datum) { return y(datum.value) > 20 ? height - y(datum.value) : height - y(20); })
                         .attr("dy", "33")
                         .attr("text-anchor", "middle")
                         .attr("style", "font-size: 10")

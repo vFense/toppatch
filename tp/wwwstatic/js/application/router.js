@@ -47,7 +47,8 @@ define(
                 'admin/syslog'    : 'modal/admin/syslog',
                 'admin/vmware'    : 'modal/admin/vmware',
                 'admin/groups'    : 'modal/admin/groups',
-                'admin/users'     : 'modal/admin/users'
+                'admin/users'     : 'modal/admin/users',
+                'admin/schedule'  : 'modal/admin/schedule'
 
                 // Default
                 // '*other'        : 'defaultAction'
@@ -132,7 +133,8 @@ define(
                             offset: params.offset,
                             searchQuery: params.query,
                             severity: params.severity,
-                            searchBy: params.searchby
+                            searchBy: params.searchby,
+                            date: params.date
                         });
                     }
                     that.show({hash: '#patches', title: 'Patches', view: new myView.View()});
@@ -170,6 +172,7 @@ define(
                 require(['modules/tag'], function (myView) {
                     myView.StatsCollection = myView.StatsCollection.extend({id: id});
                     myView.PatchCollection = myView.PatchCollection.extend({id: id});
+                    myView.GraphCollection = myView.GraphCollection.extend({id: id});
                     that.show({hash: '#tags', title: 'Tag Detail', view: new myView.View()});
                 });
             },
@@ -225,6 +228,9 @@ define(
             },
             'modal/admin/users': function () {
                 this.openAdminModalWithView('modals/admin/users');
+            },
+            'modal/admin/schedule': function () {
+                this.openAdminModalWithView('modals/admin/schedule');
             },
             /*
             defaultAction: function () {
