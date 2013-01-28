@@ -4,6 +4,7 @@ from models.packages import *
 from models.node import *
 from utils.common import *
 from db.client import validate_session
+from sqlalchemy import func
 
 
 valid_pkg_columns = {
@@ -21,7 +22,9 @@ is_os = {
         "is_bsd" : PackagePerNode.is_bsd
         }
 
-def basic_package_search(session, query, column, count=0, offset=0, output="json"):
+def basic_package_search(session, query, column, count=0, offset=0,
+        by_date=None, installed=None, nodeid=None, tagid=None,
+        output="json"):
     """
         This search function, gives you the ability to search by column.
         Search by column ( description|name|kb|severity )
@@ -34,44 +37,58 @@ def basic_package_search(session, query, column, count=0, offset=0, output="json
         output == json|csv
     """
     session = validate_session(session)
-    query = re.sub(r'^|$', '%', query)
+    if query:
+        query = re.sub(r'^|$', '%', query)
     data = []
     csv_out = ""
     json_out = {}
     total_count = 0
+    found_packages = None
     if column in valid_pkg_columns:
-        found_packages = session.query(Package).\
+        found_packages = session.query(Package, PackagePerNode).\
                 filter(valid_pkg_columns[column].like(query)).\
+                join(PackagePerNode).\
                 order_by(Package.toppatch_id.desc()).limit(count).\
-                offset(offset)
+                offset(offset).all()
         total_count = session.query(Package).\
                 filter(valid_pkg_columns[column].like(query)).\
                 order_by(Package.toppatch_id.desc()).count()
+    elif by_date and not column and installed and not nodeid and not tagid:
+        found_packages = session.query(Package, PackagePerNode).\
+                filter(func.date(PackagePerNode.date_installed) ==
+                        by_date.date()).join(PackagePerNode).\
+                order_by(Package.toppatch_id.desc()).limit(count).\
+                offset(offset).all()
+        total_count = session.query(PackagePerNode).\
+                filter(func.date(PackagePerNode.date_installed) ==
+                        by_date.date()).\
+                order_by(PackagePerNode.toppatch_id.desc()).count()
+    if found_packages:
         for pkg in found_packages:
             nodes_done = session.query(PackagePerNode).\
-                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.toppatch_id == pkg.Package.toppatch_id).\
                     filter(PackagePerNode.installed == True).count()
             nodes_needed = session.query(PackagePerNode).\
-                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.toppatch_id == pkg.Package.toppatch_id).\
                     filter(PackagePerNode.installed == False).count()
             nodes_pending = session.query(PackagePerNode).\
-                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.toppatch_id == pkg.Package.toppatch_id).\
                     filter(PackagePerNode.pending == True).count()
             nodes_failed = session.query(PackagePerNode).\
-                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.toppatch_id == pkg.Package.toppatch_id).\
                     filter(PackagePerNode.attempts >= 1).count()
             if "json" in output:
                 data.append({
-                        "id" : pkg.toppatch_id,
-                        "date" : str(pkg.date_pub),
-                        "description" : pkg.description,
-                        "name" : pkg.name,
-                        "severity" : pkg.severity,
+                        "id" : pkg.Package.toppatch_id,
+                        "date" : str(pkg.Package.date_pub),
+                        "description" : pkg.Package.description,
+                        "name" : pkg.Package.name,
+                        "severity" : pkg.Package.severity,
                         "nodes/need" : nodes_needed,
                         "nodes/fail" : nodes_failed,
                         "nodes/pend" : nodes_pending,
                         "nodes/done" : nodes_done,
-                        "vendor" : {"name" : pkg.vendor_id, "patchID" : ""}
+                        "vendor" : {"name" : pkg.Package.vendor_id, "patchID" : ""}
                             })
             elif "csv" in output:
                 csv_out = csv_out + '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (pkg.name,

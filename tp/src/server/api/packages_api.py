@@ -39,18 +39,23 @@ class SearchPatchHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         output = 'json'
-        try:
-            query = self.get_argument('query')
-            column = self.get_argument('searchby')
-            count = self.get_argument('count')
-            offset = self.get_argument('offset')
-        except Exception as e:
-            self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
-        try:
-            output = self.get_argument('output')
-        except Exception as e:
-            pass
-        result = basic_package_search(self.session, query, column, count=count, offset=offset, output=output)
+        query = self.get_argument('query', None)
+        column = self.get_argument('searchby', None)
+        count = self.get_argument('count', 10)
+        offset = self.get_argument('offset', 0)
+        by_date = self.get_argument('date', None)
+        output = self.get_argument('output', 'json')
+        installed = self.get_argument('installed', None)
+        nodeid = self.get_argument('nodeid', None)
+        tagid = self.get_argument('tagid', None)
+        if installed and type(installed) != bool:
+            installed = return_bool(installed)
+        if by_date:
+            by_date = date_parser(by_date, by_year=True)
+        result = basic_package_search(self.session, query, column,
+                count=count, offset=offset, by_date=by_date,
+                installed=installed, nodeid=nodeid,
+                tagid=tagid, output=output)
         self.session.close()
         if 'json' in output:
             self.set_header('Content-Type', 'application/json')
