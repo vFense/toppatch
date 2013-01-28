@@ -15,7 +15,7 @@ define(
                 angle = 30,
                 depth = 20,
                 height   = 200 - depth,
-                severityColors = ['#FFFF00', '#FF3030', '#FF6600'];//['#FFC125', '#FF3030', '#FF6600'];
+                severityColors = ['#FF3030', '#FFFF00', '#FF6600'];//['#FFC125', '#FF3030', '#FF6600'];
             function chart(selection) {
                 selection.each(function (data) {
                     var svg, frontRect, sideRect, topRect, rightTopTriangle, leftTopTriangle, botWhiteTriangle, txtMask, txtRect, txt,
