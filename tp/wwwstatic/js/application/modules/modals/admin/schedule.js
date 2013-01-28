@@ -44,7 +44,7 @@ define(
                         that = this,
                         url = 'api/scheduler/recurrent/add',
                         $alert = this.$el.find('.alert'),
-                        $inputs = $form.find('input, select'),
+                        $inputs = $form.find('input, select:not(:hidden)'),
                         invalid = false,
                         params = {
                             minutes: this.minutes,

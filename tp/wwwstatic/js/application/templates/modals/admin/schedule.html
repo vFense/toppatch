@@ -71,6 +71,28 @@
             </div>
         </section>
         <section class="row-fluid">
+            <div class="control-group span6">
+                <label class="control-label">Day:</label>
+                <select name="day">
+                    <option value="-1">Select one</option>
+                    <option value="any">Any</option>
+                    <% for (var i = 0; i <= 31; i++) { %>
+                        <option value="<%= i %>"><%= i %></option>
+                    <% } %>
+                </select>
+            </div>
+            <div class="control-group span4">
+                <label class="control-label">Week:</label>
+                <select name="week">
+                    <option value="-1">Select one</option>
+                    <option value="any">Any</option>
+                    <% for (var i = 0; i <= 53; i++) { %>
+                        <option value="<%= i %>"><%= i %></option>
+                    <% } %>
+                </select>
+            </div>
+        </section>
+        <section class="row-fluid">
             <div class="control-group span10">
                 <label class="control-label">Time: 00:00 AM</label>
                 <div id="slider-range"></div><br>
