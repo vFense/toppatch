@@ -17,7 +17,8 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
         function chart(selection) {
             selection.each(function (data) {
                 // generate chart here; `d` is the data and `this` is the element
-                var svg, xAxis, xAxisText, yAxisLeft, yAxisLeftText, line, graph, point, area, stack, key, legend, legendData,
+                var svg, xAxis, xAxisText, yAxisLeft, yAxisLeftText, xAxisWidth, xAxisElement,
+                    line, graph, point, area, stack, key, legend, legendData,
                     txtTop, txtMask, txtRect, txtMiddleTop, txtMiddle, txtMiddleBottom, txtBottom, txtBottomTop,
                     layers = [{name: 'optional'}, {name: 'recommended'}, {name: 'critical'}],
                     color = d3.scale.category20(),
@@ -107,7 +108,6 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     xAxis = d3.svg.axis().scale(x).tickSize(1).tickFormat(function (d) {
                         return new Date(d).toDateString().substring(4, 10);
                     });
-
                     yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
 
                     line = d3.svg.line()
@@ -137,19 +137,21 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                         .attr("transform", "translate(" + "-35" + "," + height / 3.5 + ") rotate(-90)")
                         .text('Packages');
 
+                    xAxisElement = svg.append("svg:g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + (0.8 * height) + ")")
+                        .style('font-size', 9)
+                        .call(xAxis);
+
                     xAxisText = svg.append("text")
                         .attr("text-anchor", "end")
                         .attr("dy", ".75em")
                         .style("font-size", "10px")
                         .style("font-weight", "bold")
-                        .attr("transform", "translate(" + width / 2 + "," + 0.89 * height + ")")
-                        .text('Packages installed over time');
+                        .attr("transform", "translate(" + width / 2.5 + "," + 0.89 * height + ")")
+                        .text('Packages over time');
 
-                    svg.append("svg:g")
-                        .attr("class", "x axis")
-                        .attr("transform", "translate(0," + (0.8 * height) + ")")
-                        .style('font-size', 9)
-                        .call(xAxis);
+
                     svg.append("svg:g")
                         .attr("class", "y axis")
                         .attr("transform", "translate(9,0)")
