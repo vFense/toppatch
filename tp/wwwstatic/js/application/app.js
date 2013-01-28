@@ -126,7 +126,7 @@ define(
                                     },
                                     widgets: {
                                         'graph': ['pie', 'bar', 'tag', 'area_1', 'area_2'],
-                                        'spans': [4, 4, 4, 6, 6],
+                                        'spans': [4, 4, 4, 12, 12],
                                         'titles': ['Nodes in Network by OS', 'Updates by Severity', 'Tags', 'Packages Installed in Network', 'Packages Available in Network']
                                     }
                                 }
