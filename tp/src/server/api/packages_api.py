@@ -117,7 +117,7 @@ class SeverityHandler(BaseHandler):
         result = []
         session = self.application.session
         session = validate_session(session)
-        for sev in session.query(Package.severity).distinct().all():
+        for sev in session.query(Package.severity).distinct().order_by(Package.severity).all():
             count = session.query(Package, PackagePerNode).\
                     filter(Package.severity == sev.severity).\
                     filter(PackagePerNode.installed == False).\
