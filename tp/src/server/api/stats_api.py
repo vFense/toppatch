@@ -211,84 +211,157 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
         session = validate_session(session)
         nodeid = self.get_argument('nodeid', None)
         tagid = self.get_argument('tagid', None)
-        installed = self.get_argument('installed', True)
-        available = self.get_argument('installed', False)
+        installed = self.get_argument('installed', False)
+        available = self.get_argument('available', False)
         self.data = []
         self.total_critical = None
         self.total_recommended = None
         self.total_optional = None
+        date_installed = None
+        date_available = None
         if type(installed) != bool:
             installed = return_bool(installed)
+
         if not nodeid:
             self.total_critical = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Critical').\
+                    filter(PackagePerNode.installed == installed).\
+                    group_by(PackagePerNode.toppatch_id).\
                     join(PackagePerNode).count()
             self.total_recommended = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Recommended').\
+                    filter(PackagePerNode.installed == installed).\
+                    group_by(PackagePerNode.toppatch_id).\
                     join(PackagePerNode).count()
             self.total_optional = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Optional').\
-                    join(PackagePerNode).count()
-            date_installed = session.query(func.date(PackagePerNode.date_installed)).\
                     filter(PackagePerNode.installed == installed).\
-                    group_by(func.date(PackagePerNode.date_installed)).all()
-            for date1 in date_installed:
-                if date1[0]:
-                    pkg_query = session.query(PackagePerNode, Package).\
+                    group_by(PackagePerNode.toppatch_id).\
+                    join(PackagePerNode).count()
+
+            if installed:
+                date_installed = session.query(func.date(PackagePerNode.date_installed)).\
                         filter(PackagePerNode.installed == installed).\
-                        filter(func.date(PackagePerNode.date_installed) \
-                        == date1[0]).join(Package)
-                    self._parse_data(pkg_query, date1)
+                        group_by(func.date(PackagePerNode.date_installed)).all()
+
+                for date1 in date_installed:
+                    if date1[0]:
+                        pkg_query = session.query(PackagePerNode, Package).\
+                            filter(PackagePerNode.installed == installed).\
+                            filter(func.date(PackagePerNode.date_installed) \
+                            == date1[0]).join(Package)
+                        self._parse_data(pkg_query, date1)
+
+            elif available:
+                date_available = session.query(func.date(Package.date_pub)).\
+                        filter(PackagePerNode.installed == False).\
+                        group_by(func.date(Package.date_pub)).all()
+
+                for date1 in date_available:
+                    if date1[0]:
+                        pkg_query = session.query(Package, PackagePerNode).\
+                            filter(PackagePerNode.installed == False).\
+                            filter(func.date(Package.date_pub) \
+                            == date1[0]).join(PackagePerNode)
+                        self._parse_data(pkg_query, date1)
+
         elif tagid:
             node_ids = map(lambda x: x[0], s.query(TagsPerNode.node_id).\
                     filter(TagsPerNode.tag_id == 1).all())
             self.total_critical = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Critical').\
+                    filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id.in_(node_ids)).\
+                    group_by(PackagePerNode.toppatch_id).\
                     join(PackagePerNode).count()
             self.total_recommeneded = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Recommended').\
+                    filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id.in_(node_ids)).\
+                    group_by(PackagePerNode.toppatch_id).\
                     join(PackagePerNode).count()
             self.total_optional = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Optional').\
+                    filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id.in_(node_ids)).\
+                    group_by(PackagePerNode.toppatch_id).\
                     join(PackagePerNode).count()
-            date_installed = session.query(func.date(PackagePerNode.date_installed)).\
+
+            if installed:
+                date_installed = session.query(func.date(PackagePerNode.date_installed)).\
                             filter(PackagePerNode.installed == installed).\
                             filter(PackagePerNode.node_id.in_(node_ids)).\
                             group_by(func.date(PackagePerNode.date_installed)).all()
-            for date1 in date_installed:
-                pkg_query = session.query(PackagePerNode, Package).\
-                        filter(PackagePerNode.installed == True,\
-                        func.date(PackagePerNode.date_installed) == date1[0],\
-                        PackagePerNode.node_id.in_(node_ids)).\
-                        join(Package)
-                self._parse_data(pkg_query, date1)
+
+                for date1 in date_installed:
+                    pkg_query = session.query(PackagePerNode, Package).\
+                            filter(PackagePerNode.installed == True,\
+                            func.date(PackagePerNode.date_installed) == date1[0],\
+                            PackagePerNode.node_id.in_(node_ids)).\
+                            join(Package)
+                    self._parse_data(pkg_query, date1)
+
+            elif available:
+                date_available = session.query(func.date(Package.date_pub)).\
+                            filter(PackagePerNode.installed == False).\
+                            filter(PackagePerNode.node_id.in_(node_ids)).\
+                            group_by(func.date(PackagePerNode.date_installed)).all()
+
+                for date1 in date_available:
+                    pkg_query = session.query(Package, PackagePerNode).\
+                            filter(PackagePerNode.installed == False,\
+                            func.date(Package.date_pub) == date1[0],\
+                            PackagePerNode.node_id.in_(node_ids)).\
+                            join(PackagePerNode)
+                    self._parse_data(pkg_query, date1)
+
         else:
             self.total_critical = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Critical').\
+                    filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id == nodeid).\
+                    group_by(PackagePerNode.toppatch_id).\
                     join(PackagePerNode).count()
             self.total_recommeneded = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Recommended').\
+                    filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id == nodeid).\
+                    group_by(PackagePerNode.toppatch_id).\
                     join(PackagePerNode).count()
             self.total_optional = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Optional').\
-                    filter(PackagePerNode.node_id == nodeid).\
-                    join(PackagePerNode).count()
-            date_installed = session.query(func.date(PackagePerNode.date_installed)).\
                     filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id == nodeid).\
-                    group_by(func.date(PackagePerNode.date_installed)).all()
-            for date1 in date_installed:
-                pkg_query = session.query(PackagePerNode, Package).\
-                        filter(PackagePerNode.installed == installed,\
-                        PackagePerNode.node_id == nodeid,\
-                        func.date(PackagePerNode.date_installed) == date1[0]).\
-                        join(Package)
-                self._parse_data(pkg_query, date1)
+                    group_by(PackagePerNode.toppatch_id).\
+                    join(PackagePerNode).count()
+
+            if installed:
+                date_installed = session.query(func.date(PackagePerNode.date_installed)).\
+                        filter(PackagePerNode.installed == installed).\
+                        filter(PackagePerNode.node_id == nodeid).\
+                        group_by(func.date(PackagePerNode.date_installed)).all()
+                for date1 in date_installed:
+                    pkg_query = session.query(PackagePerNode, Package).\
+                            filter(PackagePerNode.installed == installed,\
+                            PackagePerNode.node_id == nodeid,\
+                            func.date(PackagePerNode.date_installed) == date1[0]).\
+                            join(Package)
+                    self._parse_data(pkg_query, date1)
+
+            elif available:
+                date_available = session.query(func.date(Package.date_pub)).\
+                        filter(PackagePerNode.installed == False).\
+                        filter(PackagePerNode.node_id == nodeid).\
+                        group_by(func.date(Package.date_pub)).all()
+
+                for date1 in date_available:
+                    pkg_query = session.query(Package, PackagePerNode).\
+                            filter(PackagePerNode.installed == False,\
+                            PackagePerNode.node_id == nodeid,\
+                            func.date(Package.date_pub) == date1[0]).\
+                            join(PackagePerNode)
+                    self._parse_data(pkg_query, date1)
+
         results = {
                 'optional': self.total_optional,
                 'recommended': self.total_recommended,
