@@ -630,6 +630,149 @@ def add_operation(session, node_id, operation, operation_sent=None,
         return add_oper
 
 
+def update_node_stats(session, node_id, username='system_user'):
+    """
+        update the stats of the node in the node_stats table in RV
+        arguments below..
+        session == SQLAlchemy Session
+        node_id == the id of the node
+    """
+    session = validate_session(session)
+    rebootspending = session.query(NodeInfo).\
+            filter(NodeInfo.reboot == True).\
+            filter(NodeInfo.id == node_id).count()
+    agentsdown = session.query(NodeInfo).\
+            filter(NodeInfo.agent_status == False).\
+            filter(NodeInfo.id == node_id).count()
+    agentsup = session.query(NodeInfo).\
+            filter(NodeInfo.agent_status == True).\
+            filter(NodeInfo.id == node_id).count()
+    nodeupdates = session.query(PackagePerNode).filter_by(node_id=node_id)
+    patchesinstalled = nodeupdates.filter_by(installed=True).count()
+    patchesuninstalled = nodeupdates.filter_by(installed=False).count()
+    patchespending = nodeupdates.filter_by(pending=True).count()
+    nodestats = session.query(NodeStats).filter_by(node_id=node_id)
+    node_exist = nodestats.first()
+    if node_exist:
+        nodestats.update({"patches_installed" : patchesinstalled,
+                         "patches_available" : patchesuninstalled,
+                         "patches_pending" : patchespending,
+                         "reboots_pending" : rebootspending,
+                         "agents_down" : agentsdown,
+                         "agents_up" : agentsup})
+        session.commit()
+    else:
+        add_node_stats = NodeStats(node_id, patchesinstalled,
+                       patchesuninstalled, patchespending, 0,
+                       rebootspending, agentsdown, agentsup)
+        session.add(add_node_stats)
+        session.commit()
+
+
+def update_network_stats(session, username='system_user'):
+    """
+        update the global stats in network_stats table in RV
+        arguments below..
+        session == SQLAlchemy Session
+    """
+    session = validate_session(session)
+    rebootspending = session.query(NodeInfo).\
+            filter(NodeInfo.reboot == True).count()
+    agentsdown = session.query(NodeInfo).\
+            filter(NodeInfo.agent_status == False).count()
+    agentsup = session.query(NodeInfo).\
+            filter(NodeInfo.agent_status == True).count()
+    stats = session.query(PackagePerNode)
+    totalinstalled = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(installed=True).count()
+    totalnotinstalled = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(installed=False).count()
+    totalpending = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(pending=True).count()
+    networkstats = session.query(NetworkStats)
+    networkstatsexists = networkstats.filter_by(id=1).first()
+    if networkstatsexists:
+        networkstats.update({"patches_installed" : totalinstalled,
+                             "patches_available" : totalnotinstalled,
+                             "patches_pending" : totalpending,
+                             "reboots_pending" : rebootspending,
+                             "agents_down" : agentsdown,
+                             "agents_up" : agentsup})
+        session.commit()
+    else:
+        network_sstats_init = NetworkStats(totalinstalled,
+                              totalnotinstalled, totalpending, 0,
+                              rebootspending, agentsdown, agentsup)
+        session.add(network_sstats_init)
+        session.commit()
+
+
+def update_tag_stats(session, username='system_user'):
+    """
+        update the global tag stats in tag_stats table in RV
+        arguments below..
+        session == SQLAlchemy Session
+    """
+    session = validate_session(session)
+    tags = session.query(TagInfo).all()
+    if len(tags) > 0:
+        for tag in tags:
+            nodes = session.query(TagsPerNode).\
+                filter(TagsPerNode.tag_id == tag.id).all()
+            patchesinstalled = 0
+            patchesuninstalled = 0
+            patchespending = 0
+            rebootspending = 0
+            agentsdown = 0
+            agentsup = 0
+            if len(nodes) > 0:
+                for node in nodes:
+                    nodeupdates = session.query(PackagePerNode).\
+                            filter_by(node_id=node.node_id)
+                    patchesinstalled = patchesinstalled + nodeupdates.\
+                            filter_by(installed=True).count()
+                    patchesuninstalled = patchesuninstalled + nodeupdates.\
+                            filter_by(installed=False).count()
+                    patchespending = patchespending + nodeupdates.\
+                            filter_by(pending=True).count()
+                    rebootspending = rebootspending + \
+                            session.query(NodeInfo).\
+                            filter(NodeInfo.id == node.node_id).\
+                            filter(NodeInfo.reboot == True).count()
+                    agentsdown = agentsdown + \
+                            session.query(NodeInfo).\
+                            filter(NodeInfo.id == node.node_id).\
+                            filter(NodeInfo.agent_status == False).count()
+                    agentsup = agentsup + \
+                            session.query(NodeInfo).\
+                            filter(NodeInfo.id == node.node_id).\
+                            filter(NodeInfo.agent_status == True).count()
+                tag_stats = session.query(TagStats).\
+                    filter_by(tag_id=tag.id)
+                tag_exists = tag_stats.first()
+                if tag_exists:
+                    tag_stats.update({"patches_installed" : patchesinstalled,
+                                     "patches_available" : patchesuninstalled,
+                                     "patches_pending" : patchespending,
+                                     "patches_pending" : patchespending,
+                                     "reboots_pending" : rebootspending,
+                                     "agents_down" : agentsdown,
+                                     "agents_up" : agentsup})
+                    session.commit()
+                else:
+                    add_tag_stats = TagStats(tag.id, patchesinstalled,
+                                   patchesuninstalled, patchespending, 0,
+                                   rebootspending, agentsdown, agentsup)
+                    session.add(add_tag_stats)
+                    session.commit()
+            else:
+                tag_exists = session.query(TagStats).\
+                    filter_by(tag_id=tag.id).first()
+                if tag_exists:
+                    session.delete(tag_exists)
+                    session.commit()
+
+
 def add_system_info(session, data, node_info, username='system_user'):
     """
         Add the system information of an existing node
@@ -686,13 +829,13 @@ def add_system_info(session, data, node_info, username='system_user'):
 
                         if net_info:
                             net_info.mac_address = network['mac']
-                            net_info.ip_address = network['ip']
+                            net_info.ip_address = network['ip_address']
                             session.commit()
 
                         else:
                             net_info = NetworkInterface(node_id=node_id,
                                 mac_address=network['mac'],
-                                ip_address=network['ip'],
+                                ip_address=network['ip_address'],
                                 interface=network['name']
                                 )
                             session.add(net_info)
@@ -713,14 +856,14 @@ def add_system_info(session, data, node_info, username='system_user'):
                                 free_size_kb=storage['free_size_kb'],
                                 size_kb=storage['size_kb'],
                                 file_system=storage['file_system'],
-                                name=storage_info['name']
+                                name=storage['name']
                                 )
                             session.add(storage_info)
                 if 'cpu' in key:
                     for cpu in values:
                         cpu_info = session.query(CpuInfo).\
-                                filter(CpuInfo.node_id == node_id).first()
-                                #filter(CpuInfo.name == cpu['cpu_id']).\
+                                filter(CpuInfo.node_id == node_id).\
+                                filter(CpuInfo.name == cpu['cpu_id']).first()
 
                         if cpu_info:
                             cpu_info.speed_mhz = cpu['speed_mhz']
@@ -732,7 +875,7 @@ def add_system_info(session, data, node_info, username='system_user'):
                             cpu_info = CpuInfo(node_id=node_id,
                                 cores=cpu['cores'],
                                 speed_mhz=cpu['speed_mhz'],
-                                #bit_type=cpu['bit_type'],
+                                bit_type=cpu['bit_type'],
                                 cache_kb=cpu['cache_kb'],
                                 name=cpu['name']
                                 )
@@ -772,7 +915,7 @@ def add_system_info(session, data, node_info, username='system_user'):
                 try:
                     session.commit()
                 except Exception as e:
-                    print e
+                    print e, 'BAM'
                     session.rollback()
 
         return system_info
@@ -825,6 +968,7 @@ def add_software_per_node(session, data, username='system_user'):
         received by rvlistener.
     """
     session = validate_session(session)
+    session.commit()
     operation = operation_exists(session, data['operation_id'])
     node_id = data['node_id']
     if node_id:
@@ -855,10 +999,10 @@ def add_software_per_node(session, data, username='system_user'):
                         addupdate['toppatch_id'], date_installed,
                         hidden, installed=installed, is_windows=True
                         )
-                elif node.os_code == "mac":
+                elif node.os_code == "darwin":
                     node_update = PackagePerNode(node_id,
                         addupdate['toppatch_id'], date_installed,
-                        hidden, installed=installed, is_mac=True
+                        hidden, installed=installed, is_darwin=True
                         )
                 elif node.os_code == "bsd":
                     node_update = PackagePerNode(node_id,
@@ -873,7 +1017,7 @@ def add_software_per_node(session, data, username='system_user'):
                 try:
                     session.add(node_update)
                     session.commit()
-                except:
+                except Exception as e:
                     session.rollback()
             else:
                 try:
@@ -881,8 +1025,11 @@ def add_software_per_node(session, data, username='system_user'):
                     update_exists.hidden = hidden
                     update_exists.date_installed = date_installed
                     session.commit()
-                except:
+                except Exception as e:
                     session.rollback()
+        update_node_stats(session, node_id)
+        update_tag_stats(session, node_id)
+        update_network_stats(session, node_id)
 
 
 def add_software_available(session, data, username='system_user'):
@@ -1174,150 +1321,6 @@ def update_node(session, node_id, ipaddress, username='system_user'):
                 i.pending=False
         session.commit()
     return node
-
-
-def update_node_stats(session, node_id, username='system_user'):
-    """
-        update the stats of the node in the node_stats table in RV
-        arguments below..
-        session == SQLAlchemy Session
-        node_id == the id of the node
-    """
-    session = validate_session(session)
-    rebootspending = session.query(NodeInfo).\
-            filter(NodeInfo.reboot == True).\
-            filter(NodeInfo.id == node_id).count()
-    agentsdown = session.query(NodeInfo).\
-            filter(NodeInfo.agent_status == False).\
-            filter(NodeInfo.id == node_id).count()
-    agentsup = session.query(NodeInfo).\
-            filter(NodeInfo.agent_status == True).\
-            filter(NodeInfo.id == node_id).count()
-    nodeupdates = session.query(PackagePerNode).filter_by(node_id=node_id)
-    patchesinstalled = nodeupdates.filter_by(installed=True).count()
-    patchesuninstalled = nodeupdates.filter_by(installed=False).count()
-    patchespending = nodeupdates.filter_by(pending=True).count()
-    nodestats = session.query(NodeStats).filter_by(node_id=node_id)
-    node_exist = nodestats.first()
-    if node_exist:
-        nodestats.update({"patches_installed" : patchesinstalled,
-                         "patches_available" : patchesuninstalled,
-                         "patches_pending" : patchespending,
-                         "reboots_pending" : rebootspending,
-                         "agents_down" : agentsdown,
-                         "agents_up" : agentsup})
-        session.commit()
-    else:
-        add_node_stats = NodeStats(node_id, patchesinstalled,
-                       patchesuninstalled, patchespending, 0,
-                       rebootspending, agentsdown, agentsup)
-        session.add(add_node_stats)
-        session.commit()
-
-
-def update_network_stats(session, username='system_user'):
-    """
-        update the global stats in network_stats table in RV
-        arguments below..
-        session == SQLAlchemy Session
-    """
-    session = validate_session(session)
-    rebootspending = session.query(NodeInfo).\
-            filter(NodeInfo.reboot == True).count()
-    agentsdown = session.query(NodeInfo).\
-            filter(NodeInfo.agent_status == False).count()
-    agentsup = session.query(NodeInfo).\
-            filter(NodeInfo.agent_status == True).count()
-    stats = session.query(PackagePerNode)
-    totalinstalled = stats.group_by(PackagePerNode.toppatch_id).\
-            filter_by(installed=True).count()
-    totalnotinstalled = stats.group_by(PackagePerNode.toppatch_id).\
-            filter_by(installed=False).count()
-    totalpending = stats.group_by(PackagePerNode.toppatch_id).\
-            filter_by(pending=True).count()
-    networkstats = session.query(NetworkStats)
-    networkstatsexists = networkstats.filter_by(id=1).first()
-    if networkstatsexists:
-        networkstats.update({"patches_installed" : totalinstalled,
-                             "patches_available" : totalnotinstalled,
-                             "patches_pending" : totalpending,
-                             "reboots_pending" : rebootspending,
-                             "agents_down" : agentsdown,
-                             "agents_up" : agentsup})
-        session.commit()
-    else:
-        network_sstats_init = NetworkStats(totalinstalled,
-                              totalnotinstalled, totalpending, 0,
-                              rebootspending, agentsdown, agentsup)
-        session.add(network_sstats_init)
-        session.commit()
-
-
-def update_tag_stats(session, username='system_user'):
-    """
-        update the global tag stats in tag_stats table in RV
-        arguments below..
-        session == SQLAlchemy Session
-    """
-    session = validate_session(session)
-    tags = session.query(TagInfo).all()
-    if len(tags) > 0:
-        for tag in tags:
-            nodes = session.query(TagsPerNode).\
-                filter(TagsPerNode.tag_id == tag.id).all()
-            patchesinstalled = 0
-            patchesuninstalled = 0
-            patchespending = 0
-            rebootspending = 0
-            agentsdown = 0
-            agentsup = 0
-            if len(nodes) > 0:
-                for node in nodes:
-                    nodeupdates = session.query(PackagePerNode).\
-                            filter_by(node_id=node.node_id)
-                    patchesinstalled = patchesinstalled + nodeupdates.\
-                            filter_by(installed=True).count()
-                    patchesuninstalled = patchesuninstalled + nodeupdates.\
-                            filter_by(installed=False).count()
-                    patchespending = patchespending + nodeupdates.\
-                            filter_by(pending=True).count()
-                    rebootspending = rebootspending + \
-                            session.query(NodeInfo).\
-                            filter(NodeInfo.id == node.node_id).\
-                            filter(NodeInfo.reboot == True).count()
-                    agentsdown = agentsdown + \
-                            session.query(NodeInfo).\
-                            filter(NodeInfo.id == node.node_id).\
-                            filter(NodeInfo.agent_status == False).count()
-                    agentsup = agentsup + \
-                            session.query(NodeInfo).\
-                            filter(NodeInfo.id == node.node_id).\
-                            filter(NodeInfo.agent_status == True).count()
-                tag_stats = session.query(TagStats).\
-                    filter_by(tag_id=tag.id)
-                tag_exists = tag_stats.first()
-                if tag_exists:
-                    tag_stats.update({"patches_installed" : patchesinstalled,
-                                     "patches_available" : patchesuninstalled,
-                                     "patches_pending" : patchespending,
-                                     "patches_pending" : patchespending,
-                                     "reboots_pending" : rebootspending,
-                                     "agents_down" : agentsdown,
-                                     "agents_up" : agentsup})
-                    session.commit()
-                else:
-                    add_tag_stats = TagStats(tag.id, patchesinstalled,
-                                   patchesuninstalled, patchespending, 0,
-                                   rebootspending, agentsdown, agentsup)
-                    session.add(add_tag_stats)
-                    session.commit()
-            else:
-                tag_exists = session.query(TagStats).\
-                    filter_by(tag_id=tag.id).first()
-                if tag_exists:
-                    session.delete(tag_exists)
-                    session.commit()
-
 
 def update_reboot_status(session, node_id, oper_type, username='system_user'):
     """

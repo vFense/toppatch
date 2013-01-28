@@ -42,7 +42,7 @@ class Package(Base):
         self.date_pub = date_pub
         self.file_size = file_size
     def __repr__(self):
-        return "<LinuxPackage(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<LinuxPackage(%r,%r,%r,%r,%r,%r,%r,%r,%r,%r)>" %\
                (
                    self.toppatch_id, self.version, self.vendor_id,
                    self.kb, self.name, self.description, self.support_url,

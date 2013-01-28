@@ -79,7 +79,10 @@ class CreateVmwareConfigHandler(BaseHandler):
             if logged_in:
                 create_vm_config(vm_host, vm_user, vm_password,
                         create_snapshot=snapshot, cycle=cycle)
-                get_vm_data(username=username)
+                #tornado.ioloop.IOLoop.instance().\
+                #        add_callback(functools.partial(
+                #            get_vm_data, username
+                #            ))
                 sched = self.application.scheduler
                 try:
                     sched.unschedule_func(get_vm_data)
@@ -87,12 +90,22 @@ class CreateVmwareConfigHandler(BaseHandler):
                 except Exception as e:
                     print e
                     logger.info(e)
-                sched.add_interval_job(get_vm_data,
-                        args=[username],
-                        name='vmware collector',
-                        jobstore='toppatch',
-                        **parse_interval(cycle)
-                        )
+                tornado.ioloop.IOLoop.instance().\
+                        add_callback(functools.partial(
+                            sched.add_interval_job,
+                            get_vm_data,
+                            args=[username],
+                            name='vmware collector',
+                            jobstore='toppatch',
+                            **parse_interval(cycle)
+                            ))
+
+                #sched.add_interval_job(get_vm_data,
+                #        args=[username],
+                #        name='vmware collector',
+                #        jobstore='toppatch',
+                #        **parse_interval(cycle)
+                #        )
         else:
             message = 'Invalid cycle: %s\n Valid cycle examples:%s' %\
                     (cycle, '12h or 3h 30m')

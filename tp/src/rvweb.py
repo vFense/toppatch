@@ -90,6 +90,7 @@ class Application(tornado.web.Application):
             (r"/api/severity.json/?", SeverityHandler),
             (r"/api/scheduler/list.json/?", SchedulerListerHandler),
             (r"/api/scheduler/add?", SchedulerAddHandler),
+            (r"/api/scheduler/recurrent/add?", SchedulerAddRecurrentJobHandler),
             (r"/api/scheduler/remove?", SchedulerRemoveHandler),
             (r"/api/timeblocker/list.json/?", TimeBlockerListerHandler),
             (r"/api/timeblocker/add?", TimeBlockerAddHandler),

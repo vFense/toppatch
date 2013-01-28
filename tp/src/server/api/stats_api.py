@@ -213,9 +213,21 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
         tagid = self.get_argument('tagid', None)
         installed = self.get_argument('installed', True)
         self.data = []
+        self.total_critical = None
+        self.total_recommended = None
+        self.total_optional = None
         if type(installed) != bool:
             installed = return_bool(installed)
         if not nodeid:
+            self.total_critical = session.query(Package, PackagePerNode).\
+                    filter(Package.severity == 'Critical').\
+                    join(PackagePerNode).count()
+            self.total_recommended = session.query(Package, PackagePerNode).\
+                    filter(Package.severity == 'Recommended').\
+                    join(PackagePerNode).count()
+            self.total_optional = session.query(Package, PackagePerNode).\
+                    filter(Package.severity == 'Optional').\
+                    join(PackagePerNode).count()
             date_installed = session.query(PackagePerNode.date_installed).\
                     filter(PackagePerNode.installed == installed).\
                     group_by(PackagePerNode.date_installed).all()
@@ -228,6 +240,18 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
         elif tagid:
             node_ids = map(lambda x: x[0], s.query(TagsPerNode.node_id).\
                     filter(TagsPerNode.tag_id == 1).all())
+            self.total_critical = session.query(Package, PackagePerNode).\
+                    filter(Package.severity == 'Critical').\
+                    filter(PackagePerNode.node_id.in_(node_ids)).\
+                    join(PackagePerNode).count()
+            self.total_recommeneded = session.query(Package, PackagePerNode).\
+                    filter(Package.severity == 'Recommended').\
+                    filter(PackagePerNode.node_id.in_(node_ids)).\
+                    join(PackagePerNode).count()
+            self.total_optional = session.query(Package, PackagePerNode).\
+                    filter(Package.severity == 'Optional').\
+                    filter(PackagePerNode.node_id.in_(node_ids)).\
+                    join(PackagePerNode).count()
             date_installed = session.query(PackagePerNode.date_installed).\
                     filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id.in_(node_ids)).\
@@ -240,6 +264,18 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
                         join(Package)
                 self._parse_data(pkg_query, date1)
         else:
+            self.total_critical = session.query(Package, PackagePerNode).\
+                    filter(Package.severity == 'Critical').\
+                    filter(PackagePerNode.node_id == nodeid).\
+                    join(PackagePerNode).count()
+            self.total_recommeneded = session.query(Package, PackagePerNode).\
+                    filter(Package.severity == 'Recommended').\
+                    filter(PackagePerNode.node_id == nodeid).\
+                    join(PackagePerNode).count()
+            self.total_optional = session.query(Package, PackagePerNode).\
+                    filter(Package.severity == 'Optional').\
+                    filter(PackagePerNode.node_id == nodeid).\
+                    join(PackagePerNode).count()
             date_installed = session.query(PackagePerNode.date_installed).\
                     filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id == nodeid).\
@@ -251,10 +287,15 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
                         PackagePerNode.date_installed == date1[0]).\
                         join(Package)
                 self._parse_data(pkg_query, date1)
+        results = {
+                'optional': self.total_optional,
+                'recommended': self.total_recommended,
+                'critical': self.total_critical,
+                'dates': self.data
+                }
         session.close()
-        result = self.data
         self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(result, indent=4))
+        self.write(json.dumps(results, indent=4))
 
 
     def _parse_data(self, pkg_query, date1):

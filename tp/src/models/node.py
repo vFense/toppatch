@@ -105,7 +105,7 @@ class MemoryInfo(Base):
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
-    total_memory = Column(INTEGER)
+    total_memory = Column(VARCHAR(32), nullable=True)
     def __init__(self, node_id=None, total_memory=None):
         self.node_id = node_id
         self.total_memory = total_memory
@@ -130,9 +130,9 @@ class StorageInfo(Base):
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
-    free_size_kb = Column(INTEGER)
-    size_kb = Column(INTEGER)
-    file_system = Column(VARCHAR(20))
+    free_size_kb = Column(VARCHAR(32), nullable=True)
+    size_kb = Column(VARCHAR(32), nullable=True)
+    file_system = Column(VARCHAR(64), nullable=True)
     name = Column(VARCHAR(256), nullable=True, unique=False)
     def __init__(self, node_id=None, free_size_kb=None,
             size_kb=None, file_system=None, name=None):
@@ -163,12 +163,12 @@ class DisplayInfo(Base):
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
-    speed_mhz = Column(VARCHAR(20))
-    ram_kb = Column(INTEGER)
+    speed_mhz = Column(VARCHAR(20), nullable=True)
+    ram_kb = Column(VARCHAR(32), nullable=True)
     name = Column(VARCHAR(256), nullable=True, unique=False)
-    def __init__(self, node_id=None, cores=None,
-            speed_mhz=None, bit_type=None,
-            cache_kb=None, name=None):
+    def __init__(self, node_id=None,
+            speed_mhz=None, ram_kb=None,
+            name=None):
         self.node_id = node_id
         self.speed_mhz = speed_mhz
         self.ram_kb = ram_kb
@@ -194,11 +194,11 @@ class CpuInfo(Base):
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     node_id = Column(INTEGER(unsigned=True),
         ForeignKey("node_info.id"))
-    cores = Column(INTEGER)
-    cpu_id = Column(INTEGER)
-    speed_mhz = Column(VARCHAR(20))
-    bit_type = Column(INTEGER)
-    cache_kb = Column(INTEGER)
+    cores = Column(VARCHAR(10), nullable=True)
+    cpu_id = Column(VARCHAR(10), nullable=True)
+    speed_mhz = Column(VARCHAR(32), nullable=True)
+    bit_type = Column(VARCHAR(12), nullable=True)
+    cache_kb = Column(VARCHAR(32), nullable=True)
     name = Column(VARCHAR(256), nullable=True, unique=False)
     def __init__(self, node_id=None, cores=None, cpu_id=None,
             speed_mhz=None, bit_type=None, cache_kb=None,

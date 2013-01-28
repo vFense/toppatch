@@ -18,13 +18,11 @@ def authenticated_request(method):
 
         # Check if an access token is legit.
         if access_token is not "Invalid":
-            print "1st if"
 
             return method(self, *args, **kwargs)
 
         # If the access token is not provided, assumes is the main ui client.
         if not self.current_user:
-            print "2nd if"
             if self.request.method in ("GET", "HEAD"):
                 url = self.get_login_url()
                 if "?" not in url:
