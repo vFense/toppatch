@@ -158,7 +158,7 @@ define(
                         "format": [{"rule": "gt", "value": -1, "style": "success", "stop": true}]
                     },
                     {
-                        "key": "Updates Pending",
+                        "key": "Operations Pending",
                         "link": "pending",
                         "data": overviewPending.data,
                         "format": [{"rule": "gt", "value": -1, "style": "info", "stop": true}]
