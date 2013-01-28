@@ -6,8 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 define(
-    ['jquery', 'underscore', 'backbone', 'text!templates/tag.html', 'jquery.ui.datepicker'],
-    function ($, _, Backbone, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'd3', 'app', 'text!templates/tag.html', 'jquery.ui.datepicker'],
+    function ($, _, Backbone, d3, app, myTemplate) {
         "use strict";
         var exports = {
             StatsCollection: Backbone.Collection.extend({
@@ -22,6 +22,13 @@ define(
                     return this.baseUrl + '?tag_id=' + this.id;
                 }
             }),
+            GraphCollection: Backbone.Collection.extend({
+                baseUrl: 'api/node/graphs/severity',
+                installed: 'true',
+                url: function () {
+                    return this.baseUrl + '?tagid=' + this.id + '&installed=' + this.installed;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
@@ -32,6 +39,11 @@ define(
                     this.patchcollection = new exports.PatchCollection();
                     this.patchcollection.bind('reset', this.render, this);
                     this.patchcollection.fetch();
+
+                    this.graphcollection = new exports.GraphCollection();
+                    this.graphcollection.bind('reset', this.render, this);
+                    this.graphcollection.fetch();
+
                     $.ajaxSetup({ traditional: true });
                 },
                 events: {
@@ -39,6 +51,17 @@ define(
                     'click .toggle-all'         : 'toggleAllInputs',
                     'click button[name=reboot]' : 'rebootNodes',
                     'submit form'               : 'submitOperation'
+                },
+                stackedAreaGraph: function (event) {
+                    var data = this.graphcollection.toJSON(),
+                        graphId = '#nodeGraph',
+                        $graphDiv = this.$el.find(graphId),
+                        width = $graphDiv.width(),
+                        height = $graphDiv.parent().height(),
+                        stackedChart = app.chart.stackedArea().width(width).height(height);
+                    if (data.length) {
+                        d3.select(graphId).datum(data).call(stackedChart);
+                    }
                 },
                 toggleAllInputs: function (event) {
                     var status = event.target.checked,
@@ -162,6 +185,7 @@ define(
                 beforeRender: $.noop,
                 onRender: function () {
                     var $el = this.$el;
+                    this.stackedAreaGraph();
                     $el.find('input[name=schedule]').each(function () {
                         $(this).popover({
                             placement: 'top',
