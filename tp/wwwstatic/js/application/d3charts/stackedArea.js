@@ -12,7 +12,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
             height    = 280,
             x = d3.scale.linear(),
             y = d3.scale.linear(),
-            severityColors = ['#FFFF00', '#FF6600', '#FF3030'];
+            severityColors = ['#EAEA4B', '#FF6600', '#FF3030'];//FFFF00
 
         function chart(selection) {
             selection.each(function (data) {
