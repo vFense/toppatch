@@ -16,7 +16,7 @@ from models.node import *
 from models.ssl import *
 from models.scheduler import *
 from db.client import *
-from scheduler.jobManager import job_lister, remove_job
+from scheduler.jobManager import job_lister, remove_job, add_recurrent
 from scheduler.timeBlocker import *
 from tagging.tagManager import *
 from search.search import *
