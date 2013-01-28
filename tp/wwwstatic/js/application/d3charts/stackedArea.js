@@ -25,9 +25,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     maxY = 0,
                     that = this;
                 function textMouseOver(d, i) {
-                    var mousePos = d3.mouse(that), textLength,
-                        date = new Date(d.x),
-                        dateString = date.toDateString() + ' ' + date.toTimeString().split(' ')[0];//Wed Jan 23 2013 00:28:12
+                    var mousePos = d3.mouse(that), textLength;
                     mousePos[0] = mousePos[0] > (width / 2) ? mousePos[0] - 200 : mousePos[0] - 20;
                     mousePos[1] = mousePos[1] > (height / 2) ? mousePos[1] - 90 : mousePos[1] - 20;
                     txtTop.text("Patches installed: " + (d.total));
@@ -35,8 +33,8 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     txtMiddle.text('Critical: ' + d.critical);
                     txtMiddleBottom.text('Recommended: ' + d.recommended);
                     txtBottomTop.text('Optional: ' + d.optional);
-                    txtBottom.text(dateString);
-                    textLength = parseFloat(txtTop.style('width')) > parseFloat(txtBottom.style('width')) ? txtTop.style('width') : txtBottom.style('width');
+                    txtBottom.text(d.dateString);
+                    textLength = parseFloat(txtTop.style('width')); //> parseFloat(txtBottom.style('width')) ? txtTop.style('width') : txtBottom.style('width');
                     txtMask.attr({transform: 'translate(' + mousePos + ')'});
                     txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
                 }
