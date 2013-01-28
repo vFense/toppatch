@@ -170,22 +170,6 @@ define(
                         stackedChart = app.chart.stackedArea().width(width).height(height),
                         variable = this.graphcollection.toJSON();
                     if (variable.length) {
-                        /*variable.data.sort(function (a, b) {
-                            var keyA = new Date(a.date_installed),
-                                keyB = new Date(b.date_installed);
-                            // Compare the 2 dates
-                            if (keyA < keyB) { return -1; }
-                            if (keyA > keyB) { return 1; }
-                            return 0;
-                        });
-                        _.each(variable.data, function (patch, i) {
-                            data.push({
-                                label: new Date(patch.date_installed).getTime(),
-                                value: i + 1,
-                                patch_name: patch.name,
-                                count: variable.count - variable.data.length
-                            });
-                        });*/
                         d3.select(graphId).datum(variable).call(stackedChart);
                     }
                 },

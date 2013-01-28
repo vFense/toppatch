@@ -21,10 +21,14 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     txtTop, txtMask, txtRect, txtMiddleTop, txtMiddle, txtMiddleBottom, txtBottom, txtBottomTop,
                     layers = [{name: 'optional'}, {name: 'recommended'}, {name: 'critical'}],
                     color = d3.scale.category20(),
-                    maxY = 0,
                     maxX = data.length - 1,
+                    recommended = data[0].recommended,
+                    optional = data[0].optional,
+                    critical = data[0].critical,
+                    data = data[0].dates,
+                    maxY = 0,
                     that = this;
-
+                window.console.log(data);
                 function textMouseOver(d, i) {
                     var mousePos = d3.mouse(that), textLength,
                         date = new Date(d.x),
