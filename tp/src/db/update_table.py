@@ -1002,7 +1002,7 @@ def add_software_per_node(session, data, username='system_user'):
                 elif node.os_code == "darwin":
                     node_update = PackagePerNode(node_id,
                         addupdate['toppatch_id'], date_installed,
-                        hidden, installed=installed, is_mac=True
+                        hidden, installed=installed, is_darwin=True
                         )
                 elif node.os_code == "bsd":
                     node_update = PackagePerNode(node_id,
