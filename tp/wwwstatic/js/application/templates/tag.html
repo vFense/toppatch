@@ -4,7 +4,12 @@
     <section class="well well-small noMargin clearfix">
         <dl>
             <dt>Tag Name:</dt><dd><%= data.tag_name %></dd>
-            <dt>Agents Up:</dt><dd><%= data.agents_up %></dd>
+            <dt>Agents Up:</dt>
+                <dd><%= data.agents_up %>
+                    <% if(data.agents_up) { %>
+                        &nbsp;<span class="icon-ok" style="color: green"></span>
+                    <% } %>
+                </dd>
             <dt>Agents Down:</dt>
                 <dd><%= data.agents_down %>
                     <% if(data.agents_down) { %>
