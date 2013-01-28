@@ -1,16 +1,34 @@
 <article>
     <form>
         <section class="row-fluid">
-        <div class="span10">
-            <label class="control-label">Severity:</label>
-            <select name="severity">
-                <option value="-1">Select one</option>
-                <option value="any">Any</option>
-                <option value="optional">Optional</option>
-                <option value="recommended">Recommended</option>
-                <option value="critical">Critical</option>
-            </select>
-        </div>
+            <div class="span6">
+                <label class="control-label">Operation:</label>
+                <select name="operation">
+                    <option value="-1">Select one</option>
+                    <option value="Install">Install</option>
+                    <option value="Reboot">Reboot</option>
+                </select>
+            </div>
+            <div class="span4">
+                <label class="control-label">Job Name:</label>
+                <input type="text" name="jobname" placeholder="Required"/>
+            </div>
+        </section>
+        <section class="row-fluid">
+            <div class="span6">
+                <label class="control-label">Severity:</label>
+                <select name="severity">
+                    <option value="-1">Select one</option>
+                    <option value="any">Any</option>
+                    <option value="optional">Optional</option>
+                    <option value="recommended">Recommended</option>
+                    <option value="critical">Critical</option>
+                </select>
+            </div>
+            <div class="span4">
+                <label class="control-label">Start Date:</label>
+                <input type="text" name="start_date" placeholder="Optional"/>
+            </div>
         </section>
         <section class="row-fluid">
             <div class="span6">
@@ -49,7 +67,7 @@
         </section>
         <section class="row-fluid">
             <div class="span10">
-                <label class="control-label">Time:</label>
+                <label class="control-label">Time: 00:00 AM</label>
                 <div id="slider-range"></div>
             </div>
         </section>

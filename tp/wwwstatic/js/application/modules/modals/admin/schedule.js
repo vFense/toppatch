@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 define(
-    ['jquery', 'underscore', 'backbone', 'text!templates/modals/admin/schedule.html', 'jquery.ui.slider'],
+    ['jquery', 'underscore', 'backbone', 'text!templates/modals/admin/schedule.html', 'jquery.ui.datepicker', 'jquery.ui.slider'],
     function ($, _, Backbone, myTemplate) {
         "use strict";
         var exports = {
@@ -31,7 +31,11 @@ define(
                     var $form = $(event.target),
                         that = this,
                         url = '',
-                        $alert = this.$el.find('.alert');
+                        $alert = this.$el.find('.alert'),
+                        jobname = $form.find('input[name=jobname]'),
+                        operation = $form.find('select[name=operation]'),
+                        severity = $form.find('select[name=severity]'),
+                        start_date = $form.find('input[name=start_date]');
                     console.log($form);
                     //$alert.removeClass('alert-success alert-error').addClass('alert-info').html('Submitting...');
                     /*$.post(url, function (json) {
@@ -49,7 +53,8 @@ define(
                 onRender: function () {
                     var $el = this.$el,
                         that = this,
-                        $slide = $el.find('#slider-range');
+                        $slide = $el.find('#slider-range'),
+                        $dateInput = $el.find('input[name=start_date]');
                     $slide.slider({
                         min: 0,
                         max: 1439,
@@ -65,7 +70,8 @@ define(
                             that.time = startTime;
                         }
                     });
-                },//$.noop,
+                    $dateInput.datepicker();
+                },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
