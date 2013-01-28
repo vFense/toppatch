@@ -796,6 +796,12 @@ BODY > HEADER #primaryNav {
 .list .items .item.linked A STRONG {
   color: #0088cc;
 }
+.list .items .item SPAN,
+.list .items .item .desc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .list .items .item .btn-link {
   border: 0;
   border: none;
