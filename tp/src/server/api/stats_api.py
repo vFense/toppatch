@@ -222,12 +222,15 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
         if not nodeid:
             self.total_critical = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Critical').\
+                    filter(PackagePerNode.installed == installed).\
                     join(PackagePerNode).count()
             self.total_recommended = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Recommended').\
+                    filter(PackagePerNode.installed == installed).\
                     join(PackagePerNode).count()
             self.total_optional = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Optional').\
+                    filter(PackagePerNode.installed == installed).\
                     join(PackagePerNode).count()
             date_installed = session.query(func.date(PackagePerNode.date_installed)).\
                     filter(PackagePerNode.installed == installed).\
@@ -244,14 +247,17 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
                     filter(TagsPerNode.tag_id == 1).all())
             self.total_critical = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Critical').\
+                    filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id.in_(node_ids)).\
                     join(PackagePerNode).count()
             self.total_recommeneded = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Recommended').\
+                    filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id.in_(node_ids)).\
                     join(PackagePerNode).count()
             self.total_optional = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Optional').\
+                    filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id.in_(node_ids)).\
                     join(PackagePerNode).count()
             date_installed = session.query(func.date(PackagePerNode.date_installed)).\
@@ -268,14 +274,17 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
         else:
             self.total_critical = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Critical').\
+                    filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id == nodeid).\
                     join(PackagePerNode).count()
             self.total_recommeneded = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Recommended').\
+                    filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id == nodeid).\
                     join(PackagePerNode).count()
             self.total_optional = session.query(Package, PackagePerNode).\
                     filter(Package.severity == 'Optional').\
+                    filter(PackagePerNode.installed == installed).\
                     filter(PackagePerNode.node_id == nodeid).\
                     join(PackagePerNode).count()
             date_installed = session.query(func.date(PackagePerNode.date_installed)).\
