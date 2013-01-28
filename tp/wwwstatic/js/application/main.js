@@ -44,8 +44,8 @@ require(
         });
 
         // When the above Deferred object is resolved, start the router
-        deferred.done(function () {
-            require(['router'], function (Router) {
+        require(['router'], function (Router) {
+            deferred.done(function () {
                 Router.initialize();
             });
         });
