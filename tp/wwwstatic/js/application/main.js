@@ -12,8 +12,8 @@ require(
 
         // Deferred object resolved after header and footer render.
         deferred = new $.Deferred();
-        // Load and render page base page elements
-        // Insert nav bar to header.
+
+        // Load and render header and footer elements
         require(
             ['modules/pageHeader', 'modules/pageFooter', 'modules/navBar'],
             function (PageHeader, PageFooter, NavBar) {
