@@ -198,7 +198,7 @@ def add_recurrent(sched, node_ids=[], tag_ids=[],
                     hour=hour, minute=minute, second=second,
                     start_date=start_date,
                     args=[severity, tag_ids, node_ids, operation],
-                    name=name, jobstore="toppatch",
+                    name=name, jobstore="toppatch"
                     )
             succeeded = True
         except Exception as e:
@@ -212,7 +212,7 @@ def add_recurrent(sched, node_ids=[], tag_ids=[],
                     hour=hour, minute=minute, second=second,
                     start_date=start_date,
                     args=[node_ids, tag_ids, operation],
-                    name=name, jobstore="toppatch",
+                    name=name, jobstore="toppatch"
                     )
             succeeded = True
         except Exception as e:
