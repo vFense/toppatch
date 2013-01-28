@@ -3,15 +3,10 @@ require(
     function ($, Backbone, app) {
         "use strict";
 
-        var User = {},
-            userSettings,
-            userName,
-            deferred;
+        // Deferred object resolved after header and footer render.
+        var deferred = new $.Deferred();
 
         app.getUserSettings();
-
-        // Deferred object resolved after header and footer render.
-        deferred = new $.Deferred();
 
         // Load and render header and footer elements
         require(
