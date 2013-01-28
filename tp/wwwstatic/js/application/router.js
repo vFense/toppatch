@@ -120,7 +120,8 @@ define(
                             offset: params.offset,
                             searchQuery: params.query,
                             severity: params.severity,
-                            searchBy: params.searchby
+                            searchBy: params.searchby,
+                            date: params.date
                         });
                     }
                     that.show({hash: '#patches', title: 'Patches', view: new myView.View()});

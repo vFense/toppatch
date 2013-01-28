@@ -73,6 +73,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                                     totalToDate += date.total;
                                     if (key === 'critical') {
                                         layer.values.push({
+                                            dateString: tempDate,
                                             x: new Date(tempDate).getTime(),
                                             y: total,
                                             total: date.total,
@@ -171,7 +172,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                             textMouseOut(d);
                             return d3.select(this).attr('r', 4);
                         }).on('click', function (d, i) {
-                            window.console.log(d, i);
+                            window.location.hash = '#patches?date=' + d.dateString;
                         });
 
                     /*point.append("svg:title")
@@ -181,13 +182,6 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                         .data(legendData)
                         .enter().append("g")
                         .attr("class", "legend")
-                        /*
-                        .attr("x", width - 500)
-                        .attr("y", function (d, i) {
-                            var heights = [0, 10, 20];
-                            return heights[i];
-                        });
-                        */
                         .attr("transform", function (d, i) {
                             var heights = [0, 20, 40];
                             return "translate(-45, " + heights[i] + ")";

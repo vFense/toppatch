@@ -27,7 +27,17 @@ define(
                     //this.collection.fetch();
                 },
                 events: {
-                    'submit form': 'submit'
+                    'change select[name=operation]':    'hideSeverity',
+                    'submit form':                      'submit'
+                },
+                hideSeverity: function (event) {
+                    var option = $(event.currentTarget).val(),
+                        $severity = this.$el.find('select[name=severity]').parents('.control-group');
+                    if (option === 'reboot') {
+                        $severity.hide();
+                    } else {
+                        $severity.show();
+                    }
                 },
                 submit: function (event) {
                     var $form = $(event.target),

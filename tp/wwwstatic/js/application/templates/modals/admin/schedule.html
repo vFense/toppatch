@@ -10,17 +10,11 @@
                 <label class="control-label">Operation:</label>
                 <select name="operation">
                     <option value="-1">Select one</option>
-                    <option value="Install">Install</option>
-                    <option value="Reboot">Reboot</option>
+                    <option value="install">Install</option>
+                    <option value="reboot">Reboot</option>
                 </select>
             </div>
-            <div class="control-group span4">
-                <label class="control-label">Job Name:</label>
-                <input type="text" name="jobname" placeholder="Required"/>
-            </div>
-        </section>
-        <section class="row-fluid">
-            <div class="control-group span6">
+            <div class="control-group span4 hide">
                 <label class="control-label">Severity:</label>
                 <select name="severity">
                     <option value="-1">Select one</option>
@@ -29,6 +23,12 @@
                     <option value="recommended">Recommended</option>
                     <option value="critical">Critical</option>
                 </select>
+            </div>
+        </section>
+        <section class="row-fluid">
+            <div class="control-group span6">
+                <label class="control-label">Job Name:</label>
+                <input type="text" name="jobname" placeholder="Required"/>
             </div>
             <div class="control-group span4">
                 <label class="control-label">Start Date:</label>
