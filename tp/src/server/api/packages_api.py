@@ -117,13 +117,22 @@ class SeverityHandler(BaseHandler):
         result = []
         session = self.application.session
         session = validate_session(session)
+        optional = None
+        recommended = None
+        critical = None
         for sev in session.query(Package.severity).distinct().order_by(Package.severity).all():
             count = session.query(Package, PackagePerNode).\
                     filter(Package.severity == sev.severity).\
                     filter(PackagePerNode.installed == False).\
                     group_by(PackagePerNode.toppatch_id).join(PackagePerNode).count()
             result_json = { 'label' : str(sev.severity), 'value' : count }
-            result.append(result_json)
+            if 'Critical' in sev.severity:
+                critical = result_json
+            elif 'Optional' in sev.severity:
+                optional = result_json
+            elif 'Recommended' in sev.severity:
+                recommended = result_json
+        result = [optional, recommended, critical]
         session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
