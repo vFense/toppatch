@@ -20,6 +20,8 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
+                    this.minutes = '0';
+                    this.hours = '0';
                     //this.collection = new exports.Collection();
                     //this.collection.bind('reset', this.render, this);
                     //this.collection.fetch();
@@ -30,15 +32,34 @@ define(
                 submit: function (event) {
                     var $form = $(event.target),
                         that = this,
-                        url = '',
+                        url = 'api/scheduler/recurrent/add',
                         $alert = this.$el.find('.alert'),
-                        jobname = $form.find('input[name=jobname]'),
-                        operation = $form.find('select[name=operation]'),
-                        severity = $form.find('select[name=severity]'),
-                        start_date = $form.find('input[name=start_date]');
-                    console.log($form);
-                    //$alert.removeClass('alert-success alert-error').addClass('alert-info').html('Submitting...');
-                    /*$.post(url, function (json) {
+                        $inputs = $form.find('input, select'),
+                        invalid = false,
+                        params = {
+                            minutes: this.minutes,
+                            hours: this.hours
+                        };
+                    $inputs.each(function () {
+                        if (this.name !== 'start_date') {
+                            if (this.value === '-1' || !this.value) {
+                                $(this).parents('.control-group').addClass('error');
+                                invalid = true;
+                            } else {
+                                $(this).parents('.control-group').removeClass('error');
+                                if (this.value !== 'any') {
+                                    params[this.name] = this.value;
+                                }
+                            }
+                        }
+                    });
+                    window.console.log(params);
+                    if (invalid) {
+                        $alert.removeClass('alert-success alert-info').addClass('alert-error').html('Please fill the required fields.').show();
+                        return false;
+                    }
+                    $alert.removeClass('alert-success alert-error').addClass('alert-info').html('Submitting...');
+                    $.post(url, params, function (json) {
                         window.console.log(json);
                         if (!json.pass) {
                             $alert.removeClass('alert-success alert-info').addClass('alert-error').html(json.message);
@@ -46,7 +67,7 @@ define(
                             $alert.removeClass('alert-error alert-info').addClass('alert-success').html(json.message);
                         }
                         $alert.show();
-                    });*/
+                    });
                     return false;
                 },
                 beforeRender: $.noop,
@@ -55,19 +76,21 @@ define(
                         that = this,
                         $slide = $el.find('#slider-range'),
                         $dateInput = $el.find('input[name=start_date]');
+                    $el.find('label').show();
                     $slide.slider({
                         min: 0,
                         max: 1439,
                         slide: function (event, ui) {
                             var hours, minutes, startTime;
                             minutes = ui.value % 60;
+                            that.minutes = minutes;
                             minutes = minutes < 10 ? '0' + minutes : minutes;
                             hours = Math.floor(ui.value / 60);
+                            that.hours = hours;
                             hours = hours < 10 ? '0' + hours : hours;
                             startTime = hours > 12 ? String(hours - 12) : String(hours);
                             startTime = hours >= 12 ? startTime + ':' + minutes + ' PM' : startTime + ':' + minutes + ' AM';
                             $(event.target).siblings('label').html('Time: ' + startTime);
-                            that.time = startTime;
                         }
                     });
                     $dateInput.datepicker();
