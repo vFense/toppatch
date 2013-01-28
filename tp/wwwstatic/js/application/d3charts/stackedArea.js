@@ -190,23 +190,25 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                         */
                         .attr("transform", function (d, i) {
                             var heights = [0, 20, 40];
-                            return "translate(-40, " + heights[i] + ")";
+                            return "translate(-45, " + heights[i] + ")";
                         });
 
                     legend.append("rect")
                         .attr("x", width - 18)
                         .attr("width", 18)
                         .attr("height", 18)
-                        .style("fill", function (d, i) { return severityColors[i]; });
-
-                    legend.append("text")
-                        .attr("x", width - 24)
-                        .attr("y", 9)
-                        .attr("dy", ".75em")
-                        .style("font-size", "10px")
-                        .style('font-weight', "bold")
-                        .style("text-anchor", "end")
-                        .text(function (d) { return d.title + ": " + (d.value || 0); });
+                        .style("fill", function (d, i) { return severityColors[i]; })
+                        .append("title").text(function (d, i) { return d.title + ": " + (d.value || 0); });
+                    if (width > 500) {
+                        legend.append("text")
+                            .attr("x", width - 24)
+                            .attr("y", 9)
+                            .attr("dy", ".75em")
+                            .style("font-size", "10px")
+                            .style('font-weight', "bold")
+                            .style("text-anchor", "end")
+                            .text(function (d) { return d.title + ": " + (d.value || 0); });
+                    }
 
 
                     txtMask = svg.append('g').attr({width: '100px', transform: 'translate(-200,-200)'});
