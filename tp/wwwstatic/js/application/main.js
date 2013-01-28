@@ -19,9 +19,7 @@ require(
             function (PageHeader, PageFooter, NavBar) {
                 var pageHeader = new PageHeader.View(),
                     pageFooter = new PageFooter.View(),
-                    navBar = new NavBar.View({
-                        el: $('<ul>').addClass('nav')
-                    });
+                    navBar = new NavBar.View();
 
                 // Prepend header to body
                 // Append footer to body

@@ -7,6 +7,8 @@ define(
                 model: navButton.Model
             }),
             View: Backbone.View.extend({
+                tagName: 'ul',
+                className: 'nav',
                 initialize: function () {
                     this.collection =  new exports.Collection(app.locations);
                     this.vent = app.vent;
