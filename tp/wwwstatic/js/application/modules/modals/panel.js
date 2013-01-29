@@ -17,7 +17,7 @@ define(
                 span: '', // Leave blank for default bootstrap width
 
                 // White list of variables that are allowed to be set during init
-                _allowed: [],
+                _allowed: ['animate', 'keyboard', 'backdrop', 'span'],
 
                 events: {
                     'click .confirm': function (event) {
@@ -33,12 +33,6 @@ define(
                 },
 
                 initialize: function (options) {
-                    this._allowed = _.union(
-                        this._allowed,
-                        ['animate', 'keyboard', 'backdrop'], // Bootstrap-Modal options
-                        ['span'] // Modal options
-                    );
-
                     _.extend(this, _.pick(options, this._allowed));
                 },
 
