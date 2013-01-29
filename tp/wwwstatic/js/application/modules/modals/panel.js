@@ -42,8 +42,7 @@ define(
                     _.extend(this, _.pick(options, this._allowed));
                 },
 
-                beforeRender: function () {
-                },
+                beforeRender: $.noop,
                 onRender: function () {
                     var $el = this.$el,
                         that = this;
