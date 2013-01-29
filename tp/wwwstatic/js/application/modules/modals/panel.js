@@ -151,9 +151,9 @@ define(
                             keyboard: this.keyboard,
                             backdrop: this.backdrop
                         });
-                    }
 
-                    this._opened = true;
+                        this._opened = true;
+                    }
 
                     return this;
                 },
