@@ -34,6 +34,8 @@ define(
 
                 initialize: function (options) {
                     _.extend(this, _.pick(options, this._allowed));
+
+                    this.render();
                 },
 
                 beforeRender: $.noop,
