@@ -35,6 +35,7 @@ define(
                     this.$el.append(buttonView.render().el);
                 },
                 setActive: function (hrefTarget) {
+                    // Optimization needed. See tabNavigation.js
                     _.each(this.collection.models, function (model) {
                         model.set('active', model.get('href') === hrefTarget);
                     });
