@@ -6,7 +6,6 @@ define(
             View: Backbone.View.extend({
                 className: 'modal',
                 _lastURL: '',
-                _rendered: false,
                 _opened: false,
 
                 // Variables that affect bootstrap-modal functionality
@@ -44,7 +43,6 @@ define(
                 },
 
                 beforeRender: function () {
-                    this._rendered = false;
                 },
                 onRender: function () {
                     var $el = this.$el,
@@ -71,8 +69,6 @@ define(
                             that.close();
                         }
                     });
-
-                    this._rendered = true;
                 },
 
                 // Set up the modal DOM, but do not show it in browser
