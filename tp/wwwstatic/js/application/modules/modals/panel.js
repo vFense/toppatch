@@ -48,7 +48,6 @@ define(
                     }
 
                     // bind to all bootstrap events
-                    // set value of '_opened' variable
                     $el.bind({
                         show: function () {
                             that.trigger('show');
