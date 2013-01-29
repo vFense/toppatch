@@ -140,7 +140,6 @@ define(
                             this._lastURL = last;
                         }
 
-                        this.render();
                         this.delegateEvents();
 
                         if (this._contentView) {
