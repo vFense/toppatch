@@ -7,6 +7,7 @@ define(
                 className: 'modal',
                 _lastURL: '',
                 _opened: false,
+                template: null,
 
                 // Variables that affect bootstrap-modal functionality
                 animate: false,
@@ -71,28 +72,28 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var $el = this.$el;
+                    var $el = this.$el,
+                        $body = $el.find('.modal-body');
 
-                    $el.empty();
-
-                    if (this._contentView) {
-                        $el.append(this._contentView.el);
-                    } else {
-                        $el.append(
-                            '<div class="modal-body">' +
-                                '\t<div class="row-fluid">' +
-                                '\t\t<div class="span10">No Content...</div>' +
-                                '\t\t<div class="btn span2 close_modal">Close</div>' +
-                                '\t</div>' +
-                                '</div>'
-                        );
+                    if ($body.length === 0) {
+                        this.layout();
                     }
 
-                    this.setSpan();
+                    if (this._contentView) {
+                        this._contentView.$el.appendTo($el.find('.modal-body').empty() || $el);
+                    }
 
                     if (this.onRender !== $.noop) { this.onRender(); }
 
                     return this;
+                },
+
+                layout: function () {
+                    this.$el.empty();
+
+                    if (this.template) {
+                        this.$el.html(_.template(this.template));
+                    }
                 },
 
                 openWithView: function (view) {
@@ -104,6 +105,8 @@ define(
                 },
 
                 setContentView: function (view) {
+                    var that = this;
+
                     // Close the last content view if any.
                     if (this._contentView) {
                         this._contentView.close();
@@ -116,6 +119,15 @@ define(
 
                         this._contentView.render();
                         this._contentView.delegateEvents();
+                    } else if ($.type(view) === 'string') {
+                        require([view], function (load) {
+                            that._contentView = new load.View();
+
+                            that.render();
+
+                            that._contentView.render();
+                            that._contentView.delegateEvents();
+                        });
                     }
 
                     return this;
@@ -131,17 +143,7 @@ define(
 
                 // Show the modal in browser
                 open: function () {
-                    var router = app.router,
-                        last;
                     if (!this.isOpen()) {
-                        // Save last fragment and go back to it on 'close'
-                        last = router.getLastFragment();
-                        if (last === '' || /^admin($|[\/])/.test(last)) {
-                            this._lastURL = "dashboard";
-                        } else {
-                            this._lastURL = last;
-                        }
-
                         this.delegateEvents();
 
                         if (this._contentView) {
@@ -191,14 +193,11 @@ define(
                 },
 
                 beforeClose: function () {
-                    if (this.isOpen()) { this.hide(); }
-                    if (this._contentView) { this._contentView.close(); }
-                    if (this._lastURL !== '') {
-                        app.router.navigate(this._lastURL);
-                    } else {
-                        app.router.navigate("dashboard", {trigger: true});
+                    if (this.isOpen()) {
+                        this.hide();
+                        this._opened = false;
                     }
-                    this._opened = false;
+                    if (this._contentView) { this._contentView.close(); }
                 }
             })
         };
