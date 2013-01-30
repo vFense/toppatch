@@ -455,7 +455,7 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
         #row_data['total'] = sum(map(lambda x: x[0], row_pkg))
         row_data['total'] = optional + recommended + critical
         self.total = self.total + row_data['total']
-        row_data['accumalated_total'] = self.total
+        row_data['accumulated_total'] = self.total
         row_data['date'] = str(date1)
         row_data['optional'] = optional
         row_data['critical'] = critical
@@ -465,9 +465,9 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
         self.optional += row_data['optional']
         self.recommended += row_data['recommended']
         self.critical += row_data['critical']
-        row_data['accumalated_optional'] = self.optional
-        row_data['accumalated_recommended'] = self.recommended
-        row_data['accumalated_critical'] = self.critical
+        row_data['accumulated_optional'] = self.optional
+        row_data['accumulated_recommended'] = self.recommended
+        row_data['accumulated_critical'] = self.critical
         self.data.append(row_data)
 
 
