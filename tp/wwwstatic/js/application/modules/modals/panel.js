@@ -39,31 +39,7 @@ define(
                 },
 
                 beforeRender: $.noop,
-                onRender: function () {
-                    var $el = this.$el,
-                        that = this;
-
-                    if (this.animate) {
-                        $el.addClass('fade');
-                    }
-
-                    // bind to all bootstrap events
-                    $el.bind({
-                        show: function () {
-                            that.trigger('show');
-                        },
-                        shown: function () {
-                            that.trigger('shown');
-                        },
-                        hide: function () {
-                            that.trigger('hide');
-                        },
-                        hidden: function () {
-                            that.trigger('hidden');
-                            that.close();
-                        }
-                    });
-                },
+                onRender: $.noop,
 
                 // Set up the modal DOM, but do not show it in browser
                 render: function () {
