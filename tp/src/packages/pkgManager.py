@@ -191,6 +191,7 @@ class PatchRetriever():
                     "severity" : pkg.severity,
                     "size" : pkg.file_size,
                     "description" : pkg.description,
+                    "version" : pkg.version,
                     "date" : str(pkg.date_pub),
                     "available": {'count' :countAvailable,
                         'nodes': nodeAvailable},
@@ -252,7 +253,8 @@ class PatchRetriever():
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
                             installed, pending, failed,
-                            node_pkg[1].date_installed)
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version)
                     data.append(result)
             resultjson = {"count": count, "data": data}
 
@@ -289,7 +291,8 @@ class PatchRetriever():
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
                             installed, pending, failed,
-                            node_pkg[1].date_installed)
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version)
                     data.append(result)
             resultjson = {"count": count, "data": data}
 
@@ -330,7 +333,9 @@ class PatchRetriever():
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
                             installed, pending, failed,
-                            node_pkg[1].date_installed)
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version
+                            )
                     data.append(result)
             resultjson = {"count": count, "data": data}
 
@@ -375,7 +380,8 @@ class PatchRetriever():
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
                             installed, pending, failed,
-                            node_pkg[1].date_installed)
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version)
                     data.append(result)
             resultjson = {"count": count, "data": data}
         else:
@@ -430,7 +436,8 @@ class PatchRetriever():
                         node_pkg[1].name, node_pkg[1].description,\
                         node_pkg[1].severity, avail,\
                         installed, pending, failed,\
-                        node_pkg[0].date_installed)
+                        node_pkg[0].date_installed,\
+                        node_pkg[1].version)
                 data.append(result)
         resultjson = {"count": count, "data": data}
         return(resultjson)
@@ -478,7 +485,8 @@ class PatchRetriever():
                 result = self._json_results(pkg.vendor_id, pkg.toppatch_id,
                         pkg.date_pub, pkg.name, pkg.description, pkg.severity,
                         countAvailable, countInstalled, countPending,
-                        countFailed, node_pkg.date_installed)
+                        countFailed, node_pkg.date_installed,
+                        pkg.version)
                 data.append(result)
 
         resultjson = {"count": count, "data": data}
@@ -531,7 +539,7 @@ class PatchRetriever():
 
     def _json_results(self, vendor, toppatch_id, date_pub, name,
                 description, severity, available=0, installed=0,
-                pending=0, failed=0, date_installed=None):
+                pending=0, failed=0, date_installed=None, version=None):
         data = {"vendor" :
                {    
                 "patchID" : '',         #forcing empty string in patchID
@@ -544,6 +552,7 @@ class PatchRetriever():
                 "name" : name,
                 "description" : description,
                 "severity" : severity,
+                "version" : version,
                 "nodes/need": available,
                 "nodes/done": installed,
                 "nodes/pend": pending,
