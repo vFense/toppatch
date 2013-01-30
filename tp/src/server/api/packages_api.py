@@ -120,19 +120,40 @@ class SeverityHandler(BaseHandler):
         optional = None
         recommended = None
         critical = None
-        for sev in session.query(Package.severity).distinct().order_by(Package.severity).all():
-            count = session.query(Package, PackagePerNode).\
-                    filter(Package.severity == sev.severity).\
+        tp_ids = map(lambda x: x[0],
+                session.query(Package.toppatch_id).\
                     filter(PackagePerNode.installed == False).\
-                    group_by(PackagePerNode.toppatch_id).join(PackagePerNode).count()
-            result_json = { 'label' : str(sev.severity), 'value' : count }
-            if 'Critical' in sev.severity:
-                critical = result_json
-            elif 'Optional' in sev.severity:
-                optional = result_json
-            elif 'Recommended' in sev.severity:
-                recommended = result_json
-        result = [optional, recommended, critical]
+                    group_by(Package.toppatch_id).\
+                    join(PackagePerNode).all())
+        severities = \
+                session.query(func.count(Package.severity),
+                    Package.severity).group_by(Package.severity).\
+                    filter(PackagePerNode.installed == False).\
+                    join(PackagePerNode).all()
+                    #filter(PackagePerNode.toppatch_id.in_(tp_ids)).\
+        optional = len(session.query(PackagePerNode).\
+            filter(Package.severity == 'Optional').\
+            filter(PackagePerNode.installed == False).\
+            group_by(PackagePerNode.toppatch_id).\
+            join(Package).all())
+        recommended = len(session.query(PackagePerNode).\
+            filter(Package.severity == 'Recommended').\
+            filter(PackagePerNode.installed == False).\
+            group_by(PackagePerNode.toppatch_id).\
+            join(Package).all())
+        critical = len(session.query(PackagePerNode).\
+            filter(Package.severity == 'Critical').\
+            filter(PackagePerNode.installed == False).\
+            group_by(PackagePerNode.toppatch_id).\
+            join(Package).all())
+        severities = [ (optional, 'Optional'), (recommended, 'Recommended'),
+                (critical, 'Critical') ]
+        for sev in severities:
+            result.append(
+                    { 
+                        'label' : sev[1],
+                        'value' : sev[0]
+                    })
         session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))

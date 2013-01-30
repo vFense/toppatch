@@ -393,44 +393,44 @@ class PatchRetriever():
         data = []
         resultjson = {}
         if nodeid:
-            count = self.session.query(Package, PackagePerNode).\
+            count = self.session.query(PackagePerNode,Package).\
                 filter(Package.severity == psev,
                     PackagePerNode.installed == installed,\
                     PackagePerNode.node_id == nodeid).\
                 group_by(PackagePerNode.toppatch_id).\
-                join(PackagePerNode).count()
-            node_packages = self.session.query(Package, PackagePerNode).\
+                join(Package).count()
+            node_packages = self.session.query(PackagePerNode, Package).\
                 filter(Package.severity == psev,
                     PackagePerNode.installed == installed,\
                     PackagePerNode.node_id == nodeid).\
                     group_by(PackagePerNode.toppatch_id).\
-                    join(PackagePerNode).limit(self.qcount).\
+                    join(Package).limit(self.qcount).\
                     offset(self.qoffset).all()
         else:
-            count = self.session.query(Package, PackagePerNode).\
+            count = self.session.query(PackagePerNode).\
+                filter(Package.severity == psev).\
+                filter(PackagePerNode.installed == installed).\
+                    group_by(PackagePerNode.toppatch_id).\
+                    join(Package).count()
+            node_packages = self.session.query(PackagePerNode, Package).\
                 filter(Package.severity == psev,
                     PackagePerNode.installed == installed).\
                     group_by(PackagePerNode.toppatch_id).\
-                    join(PackagePerNode).count()
-            node_packages = self.session.query(Package, PackagePerNode).\
-                filter(Package.severity == psev,
-                    PackagePerNode.installed == installed).\
-                    group_by(PackagePerNode.toppatch_id).\
-                    join(PackagePerNode).limit(self.qcount).\
+                    join(Package).limit(self.qcount).\
                     offset(self.qoffset).all()
         for node_pkg in node_packages:
             avail, installed, pending, failed = \
-                    self._get_counts_by_tpid(node_pkg[0])
+                    self._get_counts_by_tpid(node_pkg[1])
             pkg1 = self.session.query(Package).\
                     filter(Package.toppatch_id ==\
-                    node_pkg[0].toppatch_id).first()
+                    node_pkg[1].toppatch_id).first()
             if pkg1:
-                result = self._json_results(node_pkg[0].vendor_id,
-                        node_pkg[0].toppatch_id, node_pkg[0].date_pub,\
-                        node_pkg[0].name, node_pkg[0].description,\
-                        node_pkg[0].severity, avail,\
+                result = self._json_results(node_pkg[1].vendor_id,
+                        node_pkg[1].toppatch_id, node_pkg[1].date_pub,\
+                        node_pkg[1].name, node_pkg[1].description,\
+                        node_pkg[1].severity, avail,\
                         installed, pending, failed,\
-                        node_pkg[1].date_installed)
+                        node_pkg[0].date_installed)
                 data.append(result)
         resultjson = {"count": count, "data": data}
         return(resultjson)
