@@ -72,15 +72,15 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                                         layer.values.push({
                                             dateString: tempDate,
                                             x: new Date(tempDate).getTime(),
-                                            y: date['accumulated_' + key] || date['accumalated_' + key],
+                                            y: date['accumulated_' + key],
                                             total: date.total,
-                                            accumulated_total: date.accumulated_total || date.accumalated_total,
+                                            accumulated_total: date.accumulated_total,
                                             optional: date.optional,
                                             critical: date.critical,
                                             recommended: date.recommended
                                         });
                                     } else {
-                                        layer.values.push({ x: new Date(tempDate).getTime(), y: date['accumulated_' + key] || date['accumalated_' + key] });
+                                        layer.values.push({ x: new Date(tempDate).getTime(), y: date['accumulated_' + key]});
                                     }
                                 }
                             }
