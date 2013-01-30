@@ -304,31 +304,6 @@ define(
                             }
                         );
                     }
-                    require(
-                        ['modals/panel', 'modals/admin/main', view],
-                        function (panel, admin, content) {
-                            if (!modal || !modal instanceof panel.View) {
-                                app.views.modals.admin = modal = new panel.View({
-                                    span: 'span9'
-                                });
-                            }
-
-                            // Get/Set content view of the modal panel
-                            adminView = modal.getContentView();
-                            if (!adminView || !adminView instanceof admin.View) {
-                                adminView = new admin.View();
-                            }
-
-                            if (!modal.isOpen()) {
-                                modal.openWithView(adminView);
-                            } else {
-                                modal.setContentView(adminView);
-                            }
-
-                            // Set content view of the admin view
-                            adminView.setContentView(new content.View());
-                        }
-                    );
                 } else {
                     that.navigate("dashboard");
                 }
