@@ -41,7 +41,7 @@ define(
                         _.extend(this, _.pick(options, this._allowed));
                     }
 
-                    this.render();
+                    this.render().setSpan();
 
                     if (this.animate) {
                         $el.addClass('fade');
