@@ -87,8 +87,6 @@ define(
 
                 this.on("route", function () {
                     // Track current and previous routes
-                    that.updateFragments();
-
                     if (that.adminRoute()) {
                         if (that.lastFragment === '') {
                             app.vent.trigger('navigation:' + that.viewTarget, '#' + 'dashboard');
