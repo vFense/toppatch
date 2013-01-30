@@ -60,8 +60,6 @@ define(
             initialize: function () {
                 var that = this,
                     modals = app.views.modals,
-                    adminPattern = /^admin($|[\/\?])/,
-                    adminRoute = false,
                     hashPattern = /^[\w\d_\-\+%]+[\?\/]{0}/,
                     hash;
 
@@ -76,9 +74,7 @@ define(
                     // Track current and previous routes
                     that.updateFragments();
 
-                    adminRoute = adminPattern.test(that.currentFragment);
-
-                    if (adminRoute) {
+                    if (that.adminRoute()) {
                         if (that.lastFragment === '') {
                             app.vent.trigger('navigation:' + that.viewTarget, '#' + 'dashboard');
                             that.showLoading().showDashboard();
@@ -93,6 +89,11 @@ define(
                         that.showLoading();
                     }
                 });
+            },
+            adminRoute: function (route) {
+                var adminPattern = /^admin($|[\/\?])/;
+                route = route || this.currentFragment;
+                return adminPattern.test(route);
             },
             showDashboard: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
