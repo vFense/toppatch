@@ -62,7 +62,8 @@ define(
                 return params;
             },
             pinwheel: pinwheel.View,
-            __subClass: subClasser
+            inherit: subClasser.inherit,
+            createChild: subClasser.createChild
         });
 
         // WebSockets
