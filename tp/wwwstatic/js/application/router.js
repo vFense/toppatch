@@ -292,15 +292,19 @@ define(
 
 
                     if (modal) {
-                        modal.setContentView(view);
+                        if (modal.isOpen()) {
+                            modal.setContentView(view);
+                        } else {
+                            modal.openWithView(view);
+                        }
                     } else {
                         require(
-                            ['modals/admin/main', view],
-                            function (admin, content) {
+                            ['modals/admin/main'],
+                            function (admin) {
                                 app.views.modals.admin = modal = new admin.View({
                                     span: 'span9'
                                 });
-                                modal.openWithView(new content.View());
+                                modal.openWithView(view);
                             }
                         );
                     }

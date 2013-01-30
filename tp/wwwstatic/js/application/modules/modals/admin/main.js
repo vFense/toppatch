@@ -23,15 +23,6 @@ define(
                 View.__super__.initialize.apply(this, arguments);
                 this.$el.find('.modal-header').addClass('tabs').html(this.navigation.render().el);
                 this.navigation.setActive(app.router.getCurrentFragment());
-
-                var that = this,
-                    router = app.router;
-                this.listenTo(router, 'route', function () {
-                    if (router.adminRoute()) {
-                        this.navigation.setActive(router.getCurrentFragment());
-                        this.showLoading();
-                    }
-                });
             },
             showLoading: function () {
                 this._pinwheel = this._pinwheel || new app.pinwheel();
@@ -41,7 +32,8 @@ define(
                 return this;
             },
             open: function () {
-                var router = app.router,
+                var that = this,
+                    router = app.router,
                     last;
 
                 // Save last fragment and go back to it on 'close'
@@ -52,13 +44,19 @@ define(
                     this._lastURL = last;
                 }
 
+                this.showLoading();
+
+                this.listenTo(router, 'route', function () {
+                    if (router.adminRoute()) {
+                        that.navigation.setActive(router.getCurrentFragment());
+                        that.showLoading();
+                    }
+                });
+
                 View.__super__.open.apply(this, arguments);
             },
             beforeClose: function () {
                 View.__super__.beforeClose.apply(this, arguments);
-                if (this.navigation) {
-                    this.navigation.close();
-                }
                 if (this._lastURL !== '') {
                     app.router.navigate(this._lastURL);
                 } else {
