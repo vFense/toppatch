@@ -60,8 +60,9 @@ define(
             initialize: function () {
                 var that = this,
                     modals = app.views.modals,
-                    hashPattern = /^[\w\d_\-\+%]+[\?\/]{0}/,
                     hash;
+
+                this.hashPattern = /^[\w\d_\-\+%]+[\?\/]{0}/;
 
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
@@ -84,7 +85,7 @@ define(
                         if (modals.admin instanceof Backbone.View && modals.admin.isOpen()) {
                             modals.admin.close();
                         }
-                        hash = hashPattern.exec(that.currentFragment) || 'dashboard';
+                        hash = that.hashPattern.exec(that.currentFragment) || 'dashboard';
                         app.vent.trigger('navigation:' + that.viewTarget, '#' + hash);
                         that.showLoading();
                     }
