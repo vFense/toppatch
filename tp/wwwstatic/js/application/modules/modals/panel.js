@@ -33,9 +33,33 @@ define(
                 },
 
                 initialize: function (options) {
+                    var $el = this.$el,
+                        that = this;
+
                     _.extend(this, _.pick(options, this._allowed));
 
                     this.render();
+
+                    if (this.animate) {
+                        $el.addClass('fade');
+                    }
+
+                    // bind to all bootstrap events
+                    $el.bind({
+                        show: function () {
+                            that.trigger('show');
+                        },
+                        shown: function () {
+                            that.trigger('shown');
+                        },
+                        hide: function () {
+                            that.trigger('hide');
+                        },
+                        hidden: function () {
+                            that.trigger('hidden');
+                            that.close();
+                        }
+                    });
                 },
 
                 beforeRender: $.noop,
