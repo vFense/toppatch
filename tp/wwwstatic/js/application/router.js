@@ -103,11 +103,6 @@ define(
                     }
                 });
             },
-            adminRoute: function (route) {
-                var adminPattern = /^admin($|[\/\?])/;
-                route = route || this.currentFragment;
-                return adminPattern.test(route);
-            },
             showDashboard: function () {
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
             },
@@ -323,6 +318,12 @@ define(
                 } else {
                     that.navigate("dashboard");
                 }
+            },
+
+            adminRoute: function (route) {
+                var adminPattern = /^admin($|[\/\?])/;
+                route = route || this.currentFragment;
+                return adminPattern.test(route);
             },
 
             // Getters/Setters
