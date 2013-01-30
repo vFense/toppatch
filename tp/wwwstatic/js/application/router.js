@@ -56,6 +56,7 @@ define(
             navigate: function (fragment, options) {
                 this.updateFragments();
                 this.constructor.__super__.navigate.call(this, fragment, options);
+                return this;
             },
             initialize: function () {
                 var that = this,
