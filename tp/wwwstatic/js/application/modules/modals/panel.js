@@ -36,7 +36,9 @@ define(
                     var $el = this.$el,
                         that = this;
 
-                    _.extend(this, _.pick(options, this._allowed));
+                    if (options) {
+                        _.extend(this, _.pick(options, this._allowed));
+                    }
 
                     this.render();
 
