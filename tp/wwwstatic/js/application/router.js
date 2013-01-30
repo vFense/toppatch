@@ -290,6 +290,20 @@ define(
                 if (app.user.hasPermission('admin')) {
                     modal = app.views.modals.admin;
 
+
+                    if (modal) {
+                        modal.setContentView(view);
+                    } else {
+                        require(
+                            ['modals/admin/main', view],
+                            function (admin, content) {
+                                app.views.modals.admin = modal = new admin.View({
+                                    span: 'span9'
+                                });
+                                modal.openWithView(new content.View());
+                            }
+                        );
+                    }
                     require(
                         ['modals/panel', 'modals/admin/main', view],
                         function (panel, admin, content) {
