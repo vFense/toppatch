@@ -58,6 +58,19 @@ define(
                 this.constructor.__super__.navigate.call(this, fragment, options);
                 return this;
             },
+            route: function (route, name, callback) {
+                if (!_.isRegExp(route)) { route = this._routeToRegExp(route); }
+                if (!callback) { callback = this[name]; }
+                Backbone.history.route(route, _.bind(function (fragment) {
+                    var args = this._extractParameters(route, fragment);
+                    this.updateFragments();
+                    if (callback) { callback.apply(this, args); }
+                    this.trigger.apply(this, ['route:' + name].concat(args));
+                    this.trigger('route', name, args);
+                    Backbone.history.trigger('route', this, name, args);
+                }, this));
+                return this;
+            },
             initialize: function () {
                 var that = this,
                     modals = app.views.modals,
