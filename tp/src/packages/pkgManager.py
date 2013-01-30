@@ -191,6 +191,7 @@ class PatchRetriever():
                     "severity" : pkg.severity,
                     "size" : pkg.file_size,
                     "description" : pkg.description,
+                    "version" : pkg.version,
                     "date" : str(pkg.date_pub),
                     "available": {'count' :countAvailable,
                         'nodes': nodeAvailable},
@@ -252,7 +253,8 @@ class PatchRetriever():
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
                             installed, pending, failed,
-                            node_pkg[1].date_installed)
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version)
                     data.append(result)
             resultjson = {"count": count, "data": data}
 
@@ -289,7 +291,8 @@ class PatchRetriever():
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
                             installed, pending, failed,
-                            node_pkg[1].date_installed)
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version)
                     data.append(result)
             resultjson = {"count": count, "data": data}
 
@@ -330,7 +333,9 @@ class PatchRetriever():
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
                             installed, pending, failed,
-                            node_pkg[1].date_installed)
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version
+                            )
                     data.append(result)
             resultjson = {"count": count, "data": data}
 
@@ -375,7 +380,8 @@ class PatchRetriever():
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
                             installed, pending, failed,
-                            node_pkg[1].date_installed)
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version)
                     data.append(result)
             resultjson = {"count": count, "data": data}
         else:
@@ -393,44 +399,45 @@ class PatchRetriever():
         data = []
         resultjson = {}
         if nodeid:
-            count = self.session.query(Package, PackagePerNode).\
+            count = self.session.query(PackagePerNode,Package).\
                 filter(Package.severity == psev,
                     PackagePerNode.installed == installed,\
                     PackagePerNode.node_id == nodeid).\
                 group_by(PackagePerNode.toppatch_id).\
-                join(PackagePerNode).count()
-            node_packages = self.session.query(Package, PackagePerNode).\
+                join(Package).count()
+            node_packages = self.session.query(PackagePerNode, Package).\
                 filter(Package.severity == psev,
                     PackagePerNode.installed == installed,\
                     PackagePerNode.node_id == nodeid).\
                     group_by(PackagePerNode.toppatch_id).\
-                    join(PackagePerNode).limit(self.qcount).\
+                    join(Package).limit(self.qcount).\
                     offset(self.qoffset).all()
         else:
-            count = self.session.query(Package, PackagePerNode).\
+            count = self.session.query(PackagePerNode).\
+                filter(Package.severity == psev).\
+                filter(PackagePerNode.installed == installed).\
+                    group_by(PackagePerNode.toppatch_id).\
+                    join(Package).count()
+            node_packages = self.session.query(PackagePerNode, Package).\
                 filter(Package.severity == psev,
                     PackagePerNode.installed == installed).\
                     group_by(PackagePerNode.toppatch_id).\
-                    join(PackagePerNode).count()
-            node_packages = self.session.query(Package, PackagePerNode).\
-                filter(Package.severity == psev,
-                    PackagePerNode.installed == installed).\
-                    group_by(PackagePerNode.toppatch_id).\
-                    join(PackagePerNode).limit(self.qcount).\
+                    join(Package).limit(self.qcount).\
                     offset(self.qoffset).all()
         for node_pkg in node_packages:
             avail, installed, pending, failed = \
-                    self._get_counts_by_tpid(node_pkg[0])
+                    self._get_counts_by_tpid(node_pkg[1])
             pkg1 = self.session.query(Package).\
                     filter(Package.toppatch_id ==\
-                    node_pkg[0].toppatch_id).first()
+                    node_pkg[1].toppatch_id).first()
             if pkg1:
-                result = self._json_results(node_pkg[0].vendor_id,
-                        node_pkg[0].toppatch_id, node_pkg[0].date_pub,\
-                        node_pkg[0].name, node_pkg[0].description,\
-                        node_pkg[0].severity, avail,\
+                result = self._json_results(node_pkg[1].vendor_id,
+                        node_pkg[1].toppatch_id, node_pkg[1].date_pub,\
+                        node_pkg[1].name, node_pkg[1].description,\
+                        node_pkg[1].severity, avail,\
                         installed, pending, failed,\
-                        node_pkg[1].date_installed)
+                        node_pkg[0].date_installed,\
+                        node_pkg[1].version)
                 data.append(result)
         resultjson = {"count": count, "data": data}
         return(resultjson)
@@ -478,7 +485,8 @@ class PatchRetriever():
                 result = self._json_results(pkg.vendor_id, pkg.toppatch_id,
                         pkg.date_pub, pkg.name, pkg.description, pkg.severity,
                         countAvailable, countInstalled, countPending,
-                        countFailed, node_pkg.date_installed)
+                        countFailed, node_pkg.date_installed,
+                        pkg.version)
                 data.append(result)
 
         resultjson = {"count": count, "data": data}
@@ -531,7 +539,7 @@ class PatchRetriever():
 
     def _json_results(self, vendor, toppatch_id, date_pub, name,
                 description, severity, available=0, installed=0,
-                pending=0, failed=0, date_installed=None):
+                pending=0, failed=0, date_installed=None, version=None):
         data = {"vendor" :
                {    
                 "patchID" : '',         #forcing empty string in patchID
@@ -544,6 +552,7 @@ class PatchRetriever():
                 "name" : name,
                 "description" : description,
                 "severity" : severity,
+                "version" : version,
                 "nodes/need": available,
                 "nodes/done": installed,
                 "nodes/pend": pending,

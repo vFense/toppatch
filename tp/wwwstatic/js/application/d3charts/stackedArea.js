@@ -17,7 +17,8 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
         function chart(selection) {
             selection.each(function (data) {
                 // generate chart here; `d` is the data and `this` is the element
-                var svg, xAxis, xAxisText, yAxisLeft, yAxisLeftText, line, graph, point, area, stack, key, legend, legendData,
+                var svg, xAxis, xAxisText, yAxisLeft, yAxisLeftText, xAxisWidth, xAxisElement,
+                    line, graph, point, area, stack, key, legend, legendData,
                     txtTop, txtMask, txtRect, txtMiddleTop, txtMiddle, txtMiddleBottom, txtBottom, txtBottomTop,
                     layers = [{name: 'optional'}, {name: 'recommended'}, {name: 'critical'}],
                     color = d3.scale.category20(),
@@ -28,15 +29,15 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     var mousePos = d3.mouse(that), textLength;
                     mousePos[0] = mousePos[0] > (width / 2) ? mousePos[0] - 200 : mousePos[0] - 20;
                     mousePos[1] = mousePos[1] > (height / 2) ? mousePos[1] - 90 : mousePos[1] - 20;
-                    txtTop.text("Patches installed: " + (d.total));
-                    txtMiddleTop.text('Total Patches: ' + d.totalToDate);
+                    txtTop.text('Total Patches: ' + d.accumulated_total);
+                    txtMiddleTop.text("Patches: " + d.total);
                     txtMiddle.text('Critical: ' + d.critical);
                     txtMiddleBottom.text('Recommended: ' + d.recommended);
                     txtBottomTop.text('Optional: ' + d.optional);
                     txtBottom.text(d.dateString);
                     textLength = parseFloat(txtTop.style('width')); //> parseFloat(txtBottom.style('width')) ? txtTop.style('width') : txtBottom.style('width');
                     txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                    txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                    txtRect.attr({width: parseFloat(textLength) + 15}).style('opacity', '0.3');
                 }
                 function textMouseOut() {
                     txtTop.text('');
@@ -67,21 +68,19 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                             for (key in date) {
                                 if (date.hasOwnProperty(key) && key === layer.name) {
                                     tempDate = date.date === 'None' ? '0' : date.date;
-                                    total += date[key];
-                                    totalToDate += date.total;
                                     if (key === 'critical') {
                                         layer.values.push({
                                             dateString: tempDate,
                                             x: new Date(tempDate).getTime(),
-                                            y: total,
+                                            y: date['accumulated_' + key],
                                             total: date.total,
-                                            totalToDate: totalToDate,
+                                            accumulated_total: date.accumulated_total,
                                             optional: date.optional,
                                             critical: date.critical,
                                             recommended: date.recommended
                                         });
                                     } else {
-                                        layer.values.push({ x: new Date(tempDate).getTime(), y: total });
+                                        layer.values.push({ x: new Date(tempDate).getTime(), y: date['accumulated_' + key]});
                                     }
                                 }
                             }
@@ -107,7 +106,6 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     xAxis = d3.svg.axis().scale(x).tickSize(1).tickFormat(function (d) {
                         return new Date(d).toDateString().substring(4, 10);
                     });
-
                     yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
 
                     line = d3.svg.line()
@@ -137,19 +135,21 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                         .attr("transform", "translate(" + "-35" + "," + height / 3.5 + ") rotate(-90)")
                         .text('Packages');
 
+                    xAxisElement = svg.append("svg:g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + (0.8 * height) + ")")
+                        .style('font-size', 9)
+                        .call(xAxis);
+
                     xAxisText = svg.append("text")
                         .attr("text-anchor", "end")
                         .attr("dy", ".75em")
                         .style("font-size", "10px")
                         .style("font-weight", "bold")
-                        .attr("transform", "translate(" + width / 2 + "," + 0.89 * height + ")")
-                        .text('Packages installed over time');
+                        .attr("transform", "translate(" + width / 2.5 + "," + 0.89 * height + ")")
+                        .text('Packages over time');
 
-                    svg.append("svg:g")
-                        .attr("class", "x axis")
-                        .attr("transform", "translate(0," + (0.8 * height) + ")")
-                        .style('font-size', 9)
-                        .call(xAxis);
+
                     svg.append("svg:g")
                         .attr("class", "y axis")
                         .attr("transform", "translate(9,0)")
@@ -162,7 +162,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                         .attr("cx", function (d) {
                             return x(new Date(d.x).getTime());
                         }).attr("cy", function (d) {
-                            return y(d.totalToDate);
+                            return y(d.accumulated_total);
                         }).on('mouseover', function (d, i) {
                             textMouseOver(d, i);
                             return d3.select(this).attr('r', 8);
