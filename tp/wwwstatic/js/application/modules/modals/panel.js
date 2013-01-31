@@ -30,6 +30,10 @@ define(
                         event.preventDefault();
                         event.stopPropagation();
                         this.hide();
+                    },
+                    'hidden': function (e) {
+                        this._opened = false;
+                        this.close();
                     }
                 },
 
@@ -134,12 +138,6 @@ define(
                         if (this._contentView) {
                             this._contentView.delegateEvents();
                         }
-
-                        this.listenTo($el, 'hidden', function () {
-                            that.trigger('hidden');
-                            that._opened = false;
-                            that.close();
-                        });
 
                         // Set bootstrap modal options
                         $el.modal({
