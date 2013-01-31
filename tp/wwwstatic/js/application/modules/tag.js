@@ -52,6 +52,12 @@ define(
                     'click button[name=reboot]' : 'rebootNodes',
                     'submit form'               : 'submitOperation'
                 },
+                showLoading: function (el) {
+                    var $el = this.$el,
+                        $div = $el.find(el);
+                    this._pinwheel = new app.pinwheel();
+                    $div.empty().append(this._pinwheel.el);
+                },
                 stackedAreaGraph: function (event) {
                     var data = this.graphcollection.toJSON(),
                         graphId = '#nodeGraph',
@@ -59,6 +65,7 @@ define(
                         width = $graphDiv.width(),
                         height = $graphDiv.parent().height(),
                         stackedChart = app.chart.stackedArea().width(width).height(height);
+                    this.showLoading(graphId);
                     if (data.length) {
                         d3.select(graphId).datum(data).call(stackedChart);
                     }
@@ -217,11 +224,12 @@ define(
                     var template = _.template(this.template),
                         data = this.statscollection.toJSON()[0],
                         patches = this.patchcollection.toJSON()[0];
-                    window.console.log(patches);
 
                     this.$el.empty();
 
                     this.$el.append(template({data: data, patches: patches}));
+                    console.log(patches);
+                    if (!patches) { console.log(this.$el.find('#loading')[0]); this.showLoading('#loading'); }
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;

@@ -35,6 +35,12 @@ define(
                         'click input[name=graph]': 'selectGraphType',
                         'click #apply': 'createWidget'
                     },
+                    showLoading: function (el) {
+                        var $el = this.$el,
+                            $div = $el.find(el);
+                        this._pinwheel = new app.pinwheel();
+                        $div.empty().append(this._pinwheel.el);
+                    },
                     selectGraphType: function () {
                         var type = this.$el.find('input[name=graph]:checked').val(),
                             areaSettings = this.$el.find('#areaSettings');
@@ -440,30 +446,32 @@ define(
                         this.populateWidgets();
                     },
                     populateWidgets: function () {
-                        var i,
+                        var i, graphDiv,
                             that = this,
                             widgets = window.User.get('widgets').graph,
                             settings = window.User.get('widgets');
 
                         for (i = 0; i < widgets.length; i += 1) {
+                            graphDiv =  '#graph' + (i + 1);
+                            that.showLoading(graphDiv);
                             if (widgets[i] === 'pie') {
-                                that.pieGraph('#graph' + (i + 1));
+                                that.pieGraph(graphDiv);
                             } else if (widgets[i] === 'bar') {
-                                that.barGraph('#graph' + (i + 1));
+                                that.barGraph(graphDiv);
                             } else if (widgets[i] === 'summary') {
                                 that.interactiveGraph('#graph' + (i + 1));
                             } else if (widgets[i] === 'stacked') {
-                                that.stackedGraph('#graph' + (i + 1));
+                                that.stackedGraph(graphDiv);
                             } else if (widgets[i] === 'area_1') {
-                                that.stackedAreaGraph('#graph' + (i + 1), true);
+                                that.stackedAreaGraph(graphDiv, true);
                             } else if (widgets[i] === 'area_2') {
-                                that.stackedAreaGraph('#graph' + (i + 1), false);
+                                that.stackedAreaGraph(graphDiv, false);
                             } else if (widgets[i] === 'tag') {
                                 that.graph = '#graph' + (i + 1);
                                 that.sizeval = settings.spans[i];
                                 that.title = settings.titles[i];
                                 that.graphType = widgets[i];
-                                that.getTags('#graph' + (i + 1));
+                                that.getTags(graphDiv);
                             }
                         }
                     }
