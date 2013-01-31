@@ -137,6 +137,7 @@ define(
 
                         this.listenTo($el, 'hidden', function () {
                             that.trigger('hidden');
+                            that._opened = false;
                             that.close();
                         });
 
@@ -185,7 +186,6 @@ define(
                 beforeClose: function () {
                     if (this.isOpen()) {
                         this.hide();
-                        this._opened = false;
                     }
                     if (this._contentView) { this._contentView.close(); }
                 }
