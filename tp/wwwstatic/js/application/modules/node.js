@@ -155,22 +155,28 @@ define(
                         el: $body
                     });
                     this.navigation.setActive('nodes/' + this.id + '/patches');
-
+                    this.showLoading('.tab-body');
                     this.$el.find("a.disabled").on("click", false);
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 },
+                showLoading: function (el) {
+                    var $el = this.$el,
+                        $div = $el.find(el);
+                    this._pinwheel = new app.pinwheel();
+                    $div.empty().append(this._pinwheel.el);
+                },
                 stackedAreaGraph: function () {
-                    var data = [],
-                        graphId = '#nodeGraph',
+                    var graphId = '#nodeGraph',
                         $graphDiv = this.$el.find(graphId),
                         width = $graphDiv.width(),
                         height = $graphDiv.parent().height(),
                         stackedChart = app.chart.stackedArea().width(width).height(height),
-                        variable = this.graphcollection.toJSON();
-                    if (variable.length) {
-                        d3.select(graphId).datum(variable).call(stackedChart);
+                        data = this.graphcollection.toJSON();
+                    this.showLoading(graphId);
+                    if (data.length) {
+                        d3.select(graphId).datum(data).call(stackedChart);
                     }
                 },
                 changeView: function (event) {
@@ -178,6 +184,7 @@ define(
                     var $tab = $(event.currentTarget),
                         $body = this.$el.find('.tab-body'),
                         id = this.id;
+                    this.showLoading('.tab-body');
                     if ($tab.attr('href') === '#nodes/' + id + '/patches') {
                         patchesView.Collection = patchesView.Collection.extend({id: id});
                         this.patchesView = new patchesView.View({
