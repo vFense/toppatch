@@ -29,7 +29,7 @@ define(
                     'click .close_modal': function (event) {
                         event.preventDefault();
                         event.stopPropagation();
-                        this.close();
+                        this.hide();
                     }
                 },
 
