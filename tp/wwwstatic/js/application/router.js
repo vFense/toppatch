@@ -54,8 +54,8 @@ define(
                 // '*other'        : 'defaultAction'
             },
             navigate: function (fragment, options) {
-                this.updateFragments();
                 this.constructor.__super__.navigate.call(this, fragment, options);
+                this.updateFragments();
                 return this;
             },
             route: function (route, name, callback) {
