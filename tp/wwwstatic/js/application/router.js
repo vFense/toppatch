@@ -95,7 +95,7 @@ define(
                     } else {
                         // close any open admin modals
                         if (modals.admin instanceof Backbone.View && modals.admin.isOpen()) {
-                            modals.admin.close();
+                            modals.admin.hide();
                         }
                         hash = that.hashPattern.exec(that.currentFragment) || 'dashboard';
                         app.vent.trigger('navigation:' + that.viewTarget, '#' + hash);
@@ -296,7 +296,6 @@ define(
                 // Check for proper admin permissions
                 if (app.user.hasPermission('admin')) {
                     modal = app.views.modals.admin;
-
 
                     if (modal) {
                         if (modal.isOpen()) {
