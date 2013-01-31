@@ -46,14 +46,6 @@ define(
                     if (this.animate) {
                         $el.addClass('fade');
                     }
-
-                    // bind to all bootstrap events
-                    $el.bind({
-                        hidden: function () {
-                            that.trigger('hidden');
-                            that.close();
-                        }
-                    });
                 },
 
                 beforeRender: $.noop,
@@ -134,6 +126,8 @@ define(
 
                 // Show the modal in browser
                 open: function () {
+                    var that = this,
+                        $el = this.$el;
                     if (!this.isOpen()) {
                         this.delegateEvents();
 
@@ -141,8 +135,13 @@ define(
                             this._contentView.delegateEvents();
                         }
 
+                        this.listenTo($el, 'hidden', function () {
+                            that.trigger('hidden');
+                            that.close();
+                        });
+
                         // Set bootstrap modal options
-                        this.$el.modal({
+                        $el.modal({
                             keyboard: this.keyboard,
                             backdrop: this.backdrop
                         });
