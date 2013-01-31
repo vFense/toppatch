@@ -56,11 +56,28 @@ define(
             navigate: function (fragment, options) {
                 this.updateFragments();
                 this.constructor.__super__.navigate.call(this, fragment, options);
+                return this;
+            },
+            route: function (route, name, callback) {
+                if (!_.isRegExp(route)) { route = this._routeToRegExp(route); }
+                if (!callback) { callback = this[name]; }
+                Backbone.history.route(route, _.bind(function (fragment) {
+                    var args = this._extractParameters(route, fragment);
+                    this.updateFragments();
+                    if (callback) { callback.apply(this, args); }
+                    this.trigger.apply(this, ['route:' + name].concat(args));
+                    this.trigger('route', name, args);
+                    Backbone.history.trigger('route', this, name, args);
+                }, this));
+                return this;
             },
             initialize: function () {
                 var that = this,
                     modals = app.views.modals,
-                    adminRoutePattern = /^admin$|\/\w/; // expect 'admin' or 'admin/foo';
+                    hash;
+
+                this.hashPattern = /^[\w\d_\-\+%]+[\?\/]{0}/;
+
                 // Create a new ViewManager with #dashboard-view as its target element
                 // All views sent to the ViewManager will render in the target element
                 this.viewTarget = '#dashboard-view';
@@ -70,14 +87,19 @@ define(
 
                 this.on("route", function () {
                     // Track current and previous routes
-                    that.updateFragments();
-
-                    // close any open modals
-                    // Do not close admin panel if next route uses admin panel
-                    if (!adminRoutePattern.test(this.currentFragment)) {
+                    if (that.adminRoute()) {
+                        if (that.lastFragment === '') {
+                            app.vent.trigger('navigation:' + that.viewTarget, '#' + 'dashboard');
+                            that.showLoading().showDashboard();
+                        }
+                    } else {
+                        // close any open admin modals
                         if (modals.admin instanceof Backbone.View && modals.admin.isOpen()) {
                             modals.admin.close();
                         }
+                        hash = that.hashPattern.exec(that.currentFragment) || 'dashboard';
+                        app.vent.trigger('navigation:' + that.viewTarget, '#' + hash);
+                        that.showLoading();
                     }
                 });
             },
@@ -245,8 +267,8 @@ define(
                         view: null
                     }, options);
 
-                app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
-                app.vent.trigger('domchange:title', settings.title);
+                //app.vent.trigger('navigation:' + this.viewTarget, settings.hash);
+                //app.vent.trigger('domchange:title', settings.title);
 
                 if ($.type(settings.view) === 'string') {
                     require([settings.view], function (myView) {
@@ -256,6 +278,14 @@ define(
                 } else if (settings.view instanceof Backbone.View) {
                     that.viewManager.showView(settings.view);
                 }
+
+                return this;
+            },
+
+            showLoading: function () {
+                this._pinwheel = this._pinwheel || new app.pinwheel();
+                this.viewManager.showView(this._pinwheel);
+                return this;
             },
 
             openAdminModalWithView: function (view) {
@@ -267,29 +297,33 @@ define(
                 if (app.user.hasPermission('admin')) {
                     modal = app.views.modals.admin;
 
-                    require(
-                        ['modals/panel', 'modals/admin/main', view],
-                        function (panel, admin, content) {
-                            if (!modal || !modal instanceof panel.View || !modal.isOpen()) {
-                                app.views.modals.admin = modal = new panel.View({
+
+                    if (modal) {
+                        if (modal.isOpen()) {
+                            modal.setContentView(view);
+                        } else {
+                            modal.openWithView(view);
+                        }
+                    } else {
+                        require(
+                            ['modals/admin/main'],
+                            function (admin) {
+                                app.views.modals.admin = modal = new admin.View({
                                     span: 'span9'
                                 });
+                                modal.openWithView(view);
                             }
-
-                            // Get/Set content view of the modal panel
-                            adminView = modal.getContentView();
-                            if (!adminView || !adminView instanceof admin.View) {
-                                adminView = new admin.View();
-                                modal.openWithView(adminView);
-                            }
-
-                            // Set content view of the admin view
-                            adminView.setContentView(new content.View());
-                        }
-                    );
+                        );
+                    }
                 } else {
                     that.navigate("dashboard");
                 }
+            },
+
+            adminRoute: function (route) {
+                var adminPattern = /^admin($|[\/\?])/;
+                route = route || this.currentFragment;
+                return adminPattern.test(route);
             },
 
             // Getters/Setters

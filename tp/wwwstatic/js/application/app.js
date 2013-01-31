@@ -6,6 +6,7 @@ define(
         'utilities/vent',
         'utilities/viewManager',
         'utilities/subClasser',
+        'utilities/pinwheel',
         'd3charts/loadAll'
     ],
     function (
@@ -15,6 +16,7 @@ define(
         vent,
         ViewManager,
         subClasser,
+        pinwheel,
         charts
     ) {
         "use strict";
@@ -59,7 +61,9 @@ define(
                 });
                 return params;
             },
-            __subClass: subClasser
+            pinwheel: pinwheel.View,
+            inherit: subClasser.inherit,
+            createChild: subClasser.createChild
         });
 
         // WebSockets

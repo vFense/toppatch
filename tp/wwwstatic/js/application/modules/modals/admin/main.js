@@ -1,94 +1,70 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'app', 'modules/tabNavigation', 'text!templates/modals/admin/main.html'],
-    function ($, _, Backbone, app, tabNav, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'modals/panel', 'modules/tabNavigation', 'text!templates/modals/admin/main.html'],
+    function ($, _, Backbone, app, panel, tabs, myTemplate) {
         "use strict";
-        return {
-            View: Backbone.View.extend({
-                className: 'admin-main-view',
-                initialize: function () {
-                    this.template = myTemplate;
-                    this.navigation = new tabNav.View({
-                        tabs: [
-                            {text: 'Tags', href: 'admin/managetags'},
-                            {text: 'Accept Nodes', href: 'admin/nodes'},
-                            {text: 'TimeBlocks', href: 'admin/timeblock'},
-                            {text: 'Users', href: 'admin/users'},
-                            {text: 'Groups', href: 'admin/groups'},
-                            {text: 'Syslog', href: 'admin/syslog'},
-                            {text: 'VMware', href: 'admin/vmware'},
-                            {text: 'Schedule', href: 'admin/schedule'}
-                        ]
-                    });
-                },
+        var exports = {},
+            View = exports.View = app.createChild(panel.View);
 
-                beforeRender: function () {
-                    this.rendered = false;
-                },
-                onRender: function () {
-                    // update the active tab
-                    this.navigation.setActive(app.router.getCurrentFragment());
-
-                    this.rendered = true;
-                },
-                render: function () {
-                    if (this.beforeRender !== $.noop) { this.beforeRender(); }
-
-                    var template = _.template(this.template),
-                        $el = this.$el,
-                        $header,
-                        $content,
-                        $footer;
-
-                    $el.empty();
-                    $el.html(template({}));
-
-                    $header = $el.find('.modal-header');
-                    $content = $el.find('.modal-body');
-                    $footer = $el.find('.modal-footer .content');
-
-                    $header.addClass('tabs').html(this.navigation.render().el);
-
-                    if (this._contentView) {
-                        $content.empty().html(this._contentView.el);
-                    }
-
-                    if (this.onRender !== $.noop) { this.onRender(); }
-
-                    return this;
-                },
-
-                setContentView: function (view) {
-                    // Close the last content view if any.
-                    if (this._contentView) {
-                        this._contentView.close();
-                    }
-
-                    if (view instanceof Backbone.View) {
-                        this._contentView = view;
-                        this._contentView.render();
-                        this._contentView.delegateEvents();
-                    } else {
-                        this._contentView = null;
-                    }
-
-                    this.render();
-
-                    return this;
-                },
-
-                getContentView: function () {
-                    return this._contentView;
-                },
-
-                beforeClose: function () {
-                    if (this.navigation) {
-                        this.navigation.close();
-                    }
-                    if (this._contentView) {
-                        this._contentView.close();
-                    }
+        _.extend(View.prototype, {
+            template: myTemplate,
+            navigation: new tabs.View({
+                tabs: [
+                    {text: 'Tags', href: 'admin/managetags'},
+                    {text: 'Accept Nodes', href: 'admin/nodes'},
+                    {text: 'TimeBlocks', href: 'admin/timeblock'},
+                    {text: 'Users', href: 'admin/users'},
+                    {text: 'Groups', href: 'admin/groups'},
+                    {text: 'Syslog', href: 'admin/syslog'},
+                    {text: 'VMware', href: 'admin/vmware'},
+                    {text: 'Schedule', href: 'admin/schedule'}
+                ]
+            }),
+            initialize: function (options) {
+                View.__super__.initialize.apply(this, arguments);
+                this.$el.find('.modal-header').addClass('tabs').html(this.navigation.render().el);
+                this.navigation.setActive(app.router.getCurrentFragment());
+            },
+            showLoading: function () {
+                this._pinwheel = this._pinwheel || new app.pinwheel();
+                if (!(this._contentView instanceof app.pinwheel)) {
+                    this.setContentView(this._pinwheel);
                 }
-            })
-        };
+                return this;
+            },
+            open: function () {
+                var that = this,
+                    router = app.router,
+                    last;
+
+                // Save last fragment and go back to it on 'close'
+                last = router.getLastFragment();
+                if (last === '' || /^admin($|[\/])/.test(last)) {
+                    this._lastURL = "dashboard";
+                } else {
+                    this._lastURL = last;
+                }
+
+                this.showLoading();
+
+                this.listenTo(router, 'route', function () {
+                    if (router.adminRoute()) {
+                        that.navigation.setActive(router.getCurrentFragment());
+                        that.showLoading();
+                    }
+                });
+
+                View.__super__.open.apply(this, arguments);
+            },
+            beforeClose: function () {
+                View.__super__.beforeClose.apply(this, arguments);
+                if (this._lastURL !== '') {
+                    app.router.navigate(this._lastURL);
+                } else {
+                    app.router.navigate("dashboard", {trigger: true});
+                }
+            }
+        });
+
+        return exports;
     }
 );

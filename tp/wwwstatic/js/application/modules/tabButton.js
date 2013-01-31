@@ -3,7 +3,6 @@ define(
     function ($, _, Backbone) {
         "use strict";
         var exports = {};
-
         exports.Model = Backbone.Model.extend({
             defaults: {
                 text: 'tabN',
@@ -12,10 +11,13 @@ define(
                 baseHref: '#',
                 showIcon: false,
                 active: false,
+                // view = circular reference.
+                // Need to remove.
+                // Potential memory leak
+                // See tabNavigation.js
                 view: null
             }
         });
-
         exports.View = Backbone.View.extend({
             tagName: "li",
             className: "",
@@ -24,10 +26,10 @@ define(
 
                 this.content = $(document.createElement('a'));
 
-                this.model.bind('change:icon', this.setIcon, this);
-                this.model.bind('change:text', this.setText, this);
-                this.model.bind('change:href', this.setHref, this);
-                this.model.bind('change:active', this.setActive, this);
+                this.listenTo(this.model,   'change:icon', this.setIcon);
+                this.listenTo(this.model,   'change:text', this.setText);
+                this.listenTo(this.model,   'change:href', this.setHref);
+                this.listenTo(this.model, 'change:active', this.setActive);
             },
             render: function () {
                 var $el = this.$el;
@@ -73,7 +75,6 @@ define(
                 return this;
             }
         });
-
         return exports;
     }
 );

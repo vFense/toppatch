@@ -296,8 +296,6 @@ define(
 
                         this.$el.append(tmpl(variables));
 
-                        app.vent.trigger('domchange:title', 'Dashboard');
-
                         if (this.onRender !== $.noop) { this.onRender(); }
                         return this;
                     },

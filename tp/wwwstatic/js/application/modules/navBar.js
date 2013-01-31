@@ -7,6 +7,8 @@ define(
                 model: navButton.Model
             }),
             View: Backbone.View.extend({
+                tagName: 'ul',
+                className: 'nav',
                 initialize: function () {
                     this.collection =  new exports.Collection(app.locations);
                     this.vent = app.vent;
@@ -33,6 +35,7 @@ define(
                     this.$el.append(buttonView.render().el);
                 },
                 setActive: function (hrefTarget) {
+                    // Optimization needed. See tabNavigation.js
                     _.each(this.collection.models, function (model) {
                         model.set('active', model.get('href') === hrefTarget);
                     });

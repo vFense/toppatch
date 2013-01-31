@@ -21,7 +21,20 @@
 <body>
 <!--[if lt IE 7]<section class="container"><div class="alert alert-error chromeframe" id="ie-warning"><a class="close" data-dismiss="alert">×</a><strong>Top Patch does not support your browser.</strong> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</div></section><![endif]-->
 <!-- main -->
-<section class="container" id="dashboard-view" role="main">&nbsp;</section>
+<section class="container" id="dashboard-view" role="main">
+    <div class="loading_indicator">
+        <div class="pinwheel">
+            <div class="pinwheel animated infinite linear spin">
+                <div class="pinwheel animated infinite linear spin reverse doubleTime">
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+        <div class="brand alignCenter">
+            R<small>emediation</small>V<small>ault</small>
+        </div>
+    </div>
+</section>
 <!--/main -->
 <noscript>
     <div class="title">JavaScript is required.</div>
@@ -48,16 +61,6 @@
         </div>
         <nav class="row-handle">&nbsp;</nav>
     </article>
-</script>
-<script type="text/template" id="text_template">
-    <dl id="<%= widget %>" class="<%= span %> <%= type %>">
-        <dt id="<%= widget %>-title">
-            <%= title %>
-        </dt>
-        <dd>
-            <%= data %>
-        </dd>
-    </dl>
 </script>
 <script type="text/template" id="tags_template">
     <article>
