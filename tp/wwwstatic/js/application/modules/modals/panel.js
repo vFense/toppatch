@@ -49,15 +49,6 @@ define(
 
                     // bind to all bootstrap events
                     $el.bind({
-                        show: function () {
-                            that.trigger('show');
-                        },
-                        shown: function () {
-                            that.trigger('shown');
-                        },
-                        hide: function () {
-                            that.trigger('hide');
-                        },
                         hidden: function () {
                             that.trigger('hidden');
                             that.close();
