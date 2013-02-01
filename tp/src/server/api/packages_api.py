@@ -14,7 +14,6 @@ from models.packages import *
 from models.node import *
 from models.ssl import *
 from models.scheduler import *
-from server.handlers import SendToSocket
 from db.client import *
 from scheduler.jobManager import job_lister, remove_job
 from scheduler.timeBlocker import *
@@ -30,7 +29,7 @@ from sqlalchemy.orm import sessionmaker, class_mapper
 
 from jsonpickle import encode
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 
@@ -40,18 +39,24 @@ class SearchPatchHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         output = 'json'
-        try:
-            query = self.get_argument('query')
-            column = self.get_argument('searchby')
-            count = self.get_argument('count')
-            offset = self.get_argument('offset')
-        except Exception as e:
-            self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
-        try:
-            output = self.get_argument('output')
-        except Exception as e:
-            pass
-        result = basic_package_search(self.session, query, column, count=count, offset=offset, output=output)
+        query = self.get_argument('query', None)
+        column = self.get_argument('searchby', None)
+        count = self.get_argument('count', 10)
+        offset = self.get_argument('offset', 0)
+        by_date = self.get_argument('date', None)
+        output = self.get_argument('output', 'json')
+        installed = self.get_argument('installed', None)
+        nodeid = self.get_argument('nodeid', None)
+        tagid = self.get_argument('tagid', None)
+        if installed and type(installed) != bool:
+            installed = return_bool(installed)
+        if by_date:
+            by_date = date_parser(by_date, by_year=True)
+        result = basic_package_search(self.session, query, column,
+                count=count, offset=offset, by_date=by_date,
+                installed=installed, nodeid=nodeid,
+                tagid=tagid, output=output)
+        self.session.close()
         if 'json' in output:
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(result, indent=4))
@@ -70,22 +75,38 @@ class PatchesHandler(BaseHandler):
         tpid = self.get_argument('id', None)
         queryCount = self.get_argument('count', 10)
         queryOffset = self.get_argument('offset', 0)
-        pstatus = self.get_argument('type', None)
+        pstatus = self.get_argument('status', None)
+        severity = self.get_argument('severity', None)
+        nodeid = self.get_argument('nodeid', None)
         patches = PatchRetriever(self.session,
             qcount=queryCount, qoffset=queryOffset)
         if tpid:
             results = patches.get_by_toppatch_id(tpid)
         elif pstatus:
             if patch_oper.search(pstatus):
-                results = patches.get_by_type(pstatus)
-            elif patch_sev:
-                results = patches.get_by_severity(pstatus)
+                if nodeid:
+                    results = patches.get_by_type(pstatus, nodeid)
+                else:
+                    results = patches.get_by_type(pstatus)
             else:
-                results = {"pass": False, "message":
-                        "Invalid Status or Severity"
+                results = {
+                        'pass': False,
+                        'message': 'Invalid Status'
+                        }
+        elif severity:
+            if patch_sev.search(severity):
+                if nodeid:
+                    results = patches.get_by_severity(severity, nodeid)
+                else:
+                    results = patches.get_by_severity(severity)
+            else:
+                results = {
+                        'pass': False,
+                        'message': 'Invalid Severity'
                         }
         else:
             results = patches.get_pkg_default()
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(results, indent=4))
 
@@ -96,13 +117,44 @@ class SeverityHandler(BaseHandler):
         result = []
         session = self.application.session
         session = validate_session(session)
-        for sev in session.query(Package.severity).distinct().all():
-            count = session.query(Package, PackagePerNode).\
-                    filter(Package.severity == sev.severity).\
+        optional = None
+        recommended = None
+        critical = None
+        tp_ids = map(lambda x: x[0],
+                session.query(Package.toppatch_id).\
                     filter(PackagePerNode.installed == False).\
-                    group_by(PackagePerNode.toppatch_id).join(PackagePerNode).count()
-            result_json = { 'label' : str(sev.severity), 'value' : count }
-            result.append(result_json)
+                    group_by(Package.toppatch_id).\
+                    join(PackagePerNode).all())
+        severities = \
+                session.query(func.count(Package.severity),
+                    Package.severity).group_by(Package.severity).\
+                    filter(PackagePerNode.installed == False).\
+                    join(PackagePerNode).all()
+                    #filter(PackagePerNode.toppatch_id.in_(tp_ids)).\
+        optional = len(session.query(PackagePerNode).\
+            filter(Package.severity == 'Optional').\
+            filter(PackagePerNode.installed == False).\
+            group_by(PackagePerNode.toppatch_id).\
+            join(Package).all())
+        recommended = len(session.query(PackagePerNode).\
+            filter(Package.severity == 'Recommended').\
+            filter(PackagePerNode.installed == False).\
+            group_by(PackagePerNode.toppatch_id).\
+            join(Package).all())
+        critical = len(session.query(PackagePerNode).\
+            filter(Package.severity == 'Critical').\
+            filter(PackagePerNode.installed == False).\
+            group_by(PackagePerNode.toppatch_id).\
+            join(Package).all())
+        severities = [ (optional, 'Optional'), (recommended, 'Recommended'),
+                (critical, 'Critical') ]
+        for sev in severities:
+            result.append(
+                    { 
+                        'label' : sev[1],
+                        'value' : sev[0]
+                    })
+        session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -120,6 +172,7 @@ class GetTagsPerTpIdHandler(BaseHandler):
                 'pass': False,
                 'message': 'please pass tpid'
                 })
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -135,6 +188,7 @@ class GetDependenciesHandler(BaseHandler):
         except Exception as e:
             self.write("Wrong arguement passed %s, the argument needed is toppatch_id" % (e))
         result = retrieve_dependencies(self.session, pkg_id)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 

@@ -57,12 +57,16 @@ def verify_json_is_valid(data):
     return(verified, json_data)
 
 
-def date_parser(unformatted_date):
+def date_parser(unformatted_date, by_year=False):
     if unformatted_date != "":
         if type(unformatted_date) == unicode:
             unformatted_date.encode('utf-8')
-        month, day, year = re.split(r'-|/', unformatted_date)
-        month, day, year  = int(month), int(day), int(year)
+        if by_year:
+            year, month, day = re.split(r'-|/', unformatted_date)
+            year, month, day  = int(year), int(month), int(day)
+        else:
+            month, day, year = re.split(r'-|/', unformatted_date)
+            month, day, year  = int(month), int(day), int(year)
         formatted_date = datetime(year, month, day)
     else:
         formatted_date = None

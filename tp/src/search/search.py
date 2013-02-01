@@ -4,6 +4,7 @@ from models.packages import *
 from models.node import *
 from utils.common import *
 from db.client import validate_session
+from sqlalchemy import func
 
 
 valid_pkg_columns = {
@@ -16,12 +17,14 @@ valid_pkg_columns = {
 is_os = {
         "is_linux" : PackagePerNode.is_linux, 
         "is_windows" : PackagePerNode.is_windows,
-        "is_mac" : PackagePerNode.is_mac,
+        "is_darwin" : PackagePerNode.is_darwin,
         "is_unix" : PackagePerNode.is_unix,
         "is_bsd" : PackagePerNode.is_bsd
         }
 
-def basic_package_search(session, query, column, count=0, offset=0, output="json"):
+def basic_package_search(session, query, column, count=0, offset=0,
+        by_date=None, installed=None, nodeid=None, tagid=None,
+        output="json"):
     """
         This search function, gives you the ability to search by column.
         Search by column ( description|name|kb|severity )
@@ -34,44 +37,58 @@ def basic_package_search(session, query, column, count=0, offset=0, output="json
         output == json|csv
     """
     session = validate_session(session)
-    query = re.sub(r'^|$', '%', query)
+    if query:
+        query = re.sub(r'^|$', '%', query)
     data = []
     csv_out = ""
     json_out = {}
     total_count = 0
+    found_packages = None
     if column in valid_pkg_columns:
-        found_packages = session.query(Package).\
+        found_packages = session.query(Package, PackagePerNode).\
                 filter(valid_pkg_columns[column].like(query)).\
+                join(PackagePerNode).\
                 order_by(Package.toppatch_id.desc()).limit(count).\
-                offset(offset)
+                offset(offset).all()
         total_count = session.query(Package).\
                 filter(valid_pkg_columns[column].like(query)).\
                 order_by(Package.toppatch_id.desc()).count()
+    elif by_date and not column and installed and not nodeid and not tagid:
+        found_packages = session.query(Package, PackagePerNode).\
+                filter(func.date(PackagePerNode.date_installed) ==
+                        by_date.date()).join(PackagePerNode).\
+                order_by(Package.toppatch_id.desc()).limit(count).\
+                offset(offset).all()
+        total_count = session.query(PackagePerNode).\
+                filter(func.date(PackagePerNode.date_installed) ==
+                        by_date.date()).\
+                order_by(PackagePerNode.toppatch_id.desc()).count()
+    if found_packages:
         for pkg in found_packages:
             nodes_done = session.query(PackagePerNode).\
-                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.toppatch_id == pkg.Package.toppatch_id).\
                     filter(PackagePerNode.installed == True).count()
             nodes_needed = session.query(PackagePerNode).\
-                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.toppatch_id == pkg.Package.toppatch_id).\
                     filter(PackagePerNode.installed == False).count()
             nodes_pending = session.query(PackagePerNode).\
-                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.toppatch_id == pkg.Package.toppatch_id).\
                     filter(PackagePerNode.pending == True).count()
             nodes_failed = session.query(PackagePerNode).\
-                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).\
+                    filter(PackagePerNode.toppatch_id == pkg.Package.toppatch_id).\
                     filter(PackagePerNode.attempts >= 1).count()
             if "json" in output:
                 data.append({
-                        "id" : pkg.toppatch_id,
-                        "date" : str(pkg.date_pub),
-                        "description" : pkg.description,
-                        "name" : pkg.name,
-                        "severity" : pkg.severity,
+                        "id" : pkg.Package.toppatch_id,
+                        "date" : str(pkg.Package.date_pub),
+                        "description" : pkg.Package.description,
+                        "name" : pkg.Package.name,
+                        "severity" : pkg.Package.severity,
                         "nodes/need" : nodes_needed,
                         "nodes/fail" : nodes_failed,
                         "nodes/pend" : nodes_pending,
                         "nodes/done" : nodes_done,
-                        "vendor" : {"name" : pkg.vendor_id, "patchID" : ""}
+                        "vendor" : {"name" : pkg.Package.vendor_id, "patchID" : ""}
                             })
             elif "csv" in output:
                 csv_out = csv_out + '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' % (pkg.name,
@@ -98,3 +115,124 @@ def basic_package_search(session, query, column, count=0, offset=0, output="json
         if column in valid_pkg_columns:
             output = session.query(Package).filter(valid_pkg_columns[description].like(query)).all()
 """
+
+def operation_results_comparer(oper, result):
+    if oper.operation_sent:
+        operation_sent = \
+                oper.operation_sent.strftime("%m/%d/%Y %H:%M")
+    else:
+        operation_sent = None
+    if oper.operation_received:
+        operation_received = \
+                oper.operation_received.strftime("%m/%d/%Y %H:%M")
+    else:
+        operation_received = None
+    if result:
+        if result.results_received:
+            results_received = \
+                    result.results_received.strftime("%m/%d/%Y %H:%M")
+        else:
+            results_received = None
+        reboot = result.reboot
+        results = result.result
+        error = result.error
+    else:
+        reboot = None
+        results = None
+        results_received = None
+        error = None
+    return({
+            'operation_id': oper.id,
+            'operation_type': oper.operation_type,
+            'operation_sent': operation_sent,
+            'operation_received': operation_received,
+            'results_received': results_received,
+            'error': error,
+            'reboot': reboot,
+            'results': results
+            })
+
+
+def operation_search(session, query=None, column='operation_id', count=100, offset=0):
+    """
+        This search function, gives you the ability to search by column.
+        Search by column ( description|name|kb|severity )
+        query == ssh
+        column == description
+        session == SqlAlchemy session object
+        count == How many results do you want in return ( default == all )
+        offset == if you want to return only a certain amount of results
+        based on a count and an offset
+        output == json|csv
+    """
+    column_type = {
+            'operation_type': Operations.operation_type,
+            'operation_id': Operations.id,
+            'node_id': Operations.node_id,
+            'error': Results.error,
+            }
+    output = []
+    tcount = 0 
+    session = validate_session(session)
+    if column in column_type and query:
+        if 'operation_id' in column:
+            if type(query) != int:
+                return({
+                    'pass': False,
+                    'message': 'Invalid Operation Id'
+                    })
+            else:
+                operation = session.query(Operations).\
+                        filter(column_type[column] == query).first()
+                if operation:
+                    tcount = 1
+                    result = session.query(Results).\
+                            filter(Results.operation_id == operation.id).first()
+                output.append(operation_results_comparer(operation, result))
+
+
+        elif 'operation_type' in column:
+            operations = session.query(Operations).\
+                    filter(column_type[column] == query).\
+                    order_by(Operations.operation_sent.desc()).\
+                    limit(count).offset(offset).all()
+            if operations >0:
+                tcount = len(operations)
+                for oper in operations:
+                    result = session.query(Results).\
+                            filter(Results.operation_id == oper.id).first()
+                    output.append(operation_results_comparer(oper, result))
+
+        elif 'node_id' in column:
+            if type(query) != int:
+                return({
+                    'pass': False,
+                    'message': 'Invalid Operation Id'
+                    })
+            else:
+                operations = session.query(Operations).\
+                        filter(column_type[column] == query).\
+                        order_by(Operations.operation_sent.desc()).\
+                        limit(count).offset(offset).all()
+                if operations >0:
+                    tcount = len(operations)
+                    for oper in operations:
+                        result = session.query(Results).\
+                                filter(Results.id == oper.id).first()
+                        output.append(operation_results_comparer(oper, result))
+
+        elif 'error' in column:
+            operations = session.query(Results).\
+                    filter(column_type[column] == query).join(Operations).\
+                    order_by(Operations.operation_sent.desc()).\
+                    limit(count).offset(offset).all()
+            if len(operations) >0:
+                tcount = len(operations)
+                for oper in operations:
+                    output.append(operation_results_comparer(oper[0][0], oper[0][1]))
+    json_out = {
+        'count': tcount,
+        'operations': output
+        }
+
+    return(json_out)

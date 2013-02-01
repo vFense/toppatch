@@ -4,8 +4,8 @@ define(
         "use strict";
         var PageFooter = {};
         PageFooter.View = Backbone.View.extend({
-            el: $('<footer>')
-                .attr('id', 'pageFooter'),
+            tagName: 'footer',
+            id: 'pageFooter',
             template: footerTemplate,
             initialize: function () {
                 this.model = window.User;

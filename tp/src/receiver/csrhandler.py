@@ -10,7 +10,7 @@ from utils.common import verify_json_is_valid
 from utils.ssltools import *
 from networking.tcpasync import TcpConnect
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('csrlistener')
 
 

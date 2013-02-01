@@ -191,6 +191,7 @@ class PatchRetriever():
                     "severity" : pkg.severity,
                     "size" : pkg.file_size,
                     "description" : pkg.description,
+                    "version" : pkg.version,
                     "date" : str(pkg.date_pub),
                     "available": {'count' :countAvailable,
                         'nodes': nodeAvailable},
@@ -208,7 +209,7 @@ class PatchRetriever():
         return(resultjson)
 
 
-    def get_by_type(self, pstatus):
+    def get_by_type(self, pstatus, nodeid=None):
         """
            retrieve package by package status
            pstatus == installed|available|failed|pending
@@ -216,16 +217,31 @@ class PatchRetriever():
         data = []
         resultjson = {}
         if pstatus == 'available':
-            count = self.session.query(PackagePerNode).\
+            if nodeid:
+                count = self.session.query(PackagePerNode).\
+                        group_by(PackagePerNode.toppatch_id).\
+                        filter(PackagePerNode.installed == False,
+                            PackagePerNode.node_id == nodeid,
+                            PackagePerNode.pending == False).count()
+                node_packages = self.session.query(Package, PackagePerNode).\
+                    filter(PackagePerNode.installed == False,\
+                        PackagePerNode.pending == False,\
+                        PackagePerNode.node_id == nodeid).\
+                        group_by(PackagePerNode.toppatch_id).\
+                        join(PackagePerNode).\
+                        limit(self.qcount).offset(self.qoffset).all()
+            else:
+                count = self.session.query(PackagePerNode).\
                     group_by(PackagePerNode.toppatch_id).\
                     filter(PackagePerNode.installed == False,
-                            PackagePerNode.pending == False).count()
-            for node_pkg in self.session.query(Package, PackagePerNode).\
+                        PackagePerNode.pending == False).count()
+                node_packages = self.session.query(Package, PackagePerNode).\
                     filter(PackagePerNode.installed == False,\
-                    PackagePerNode.pending == False).\
-                    group_by(PackagePerNode.toppatch_id).\
-                    join(PackagePerNode).\
-                    limit(self.qcount).offset(self.qoffset).all():
+                        PackagePerNode.pending == False).\
+                        group_by(PackagePerNode.toppatch_id).\
+                        join(PackagePerNode).\
+                        limit(self.qcount).offset(self.qoffset).all()
+            for node_pkg in node_packages:
                 avail, installed, pending, failed = \
                         self._get_counts_by_tpid(node_pkg[0])
                 pkg1 = self.session.query(Package).\
@@ -236,19 +252,34 @@ class PatchRetriever():
                             node_pkg[0].toppatch_id, node_pkg[0].date_pub,\
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
-                            installed, pending, failed)
+                            installed, pending, failed,
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version)
                     data.append(result)
             resultjson = {"count": count, "data": data}
 
         elif pstatus == 'installed':
-            count = self.session.query(PackagePerNode).\
+            if nodeid:
+                count = self.session.query(PackagePerNode).\
+                    group_by(PackagePerNode.toppatch_id).\
+                    filter(PackagePerNode.installed == True,\
+                        PackagePerNode.node_id == nodeid).count()
+                node_packages = self.session.query(Package, PackagePerNode).\
+                    filter(PackagePerNode.installed == True,\
+                        PackagePerNode.node_id == nodeid).\
+                        group_by(PackagePerNode.toppatch_id).\
+                        join(PackagePerNode).\
+                        limit(self.qcount).offset(self.qoffset).all()
+            else:
+                count = self.session.query(PackagePerNode).\
                     group_by(PackagePerNode.toppatch_id).\
                     filter(PackagePerNode.installed == True).count()
-            for node_pkg in self.session.query(Package, PackagePerNode).\
+                node_packages = self.session.query(Package, PackagePerNode).\
                     filter(PackagePerNode.installed == True).\
                     group_by(PackagePerNode.toppatch_id).\
                     join(PackagePerNode).\
-                    limit(self.qcount).offset(self.qoffset).all():
+                    limit(self.qcount).offset(self.qoffset).all()
+            for node_pkg in node_packages:
                 avail, installed, pending, failed = \
                         self._get_counts_by_tpid(node_pkg[0])
                 pkg1 = self.session.query(Package).\
@@ -259,21 +290,38 @@ class PatchRetriever():
                             node_pkg[0].toppatch_id, node_pkg[0].date_pub,\
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
-                            installed, pending, failed)
+                            installed, pending, failed,
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version)
                     data.append(result)
             resultjson = {"count": count, "data": data}
 
         elif pstatus == 'pending':
-            count = self.session.query(PackagePerNode).\
+            if nodeid:
+                count = self.session.query(PackagePerNode).\
+                    group_by(PackagePerNode.toppatch_id).\
+                    filter(PackagePerNode.installed == False,\
+                        PackagePerNode.node_id == nodeid,\
+                        PackagePerNode.pending == True).count()
+                node_packages = self.session.query(Package, PackagePerNode).\
+                    filter(PackagePerNode.installed == False,\
+                        PackagePerNode.pending == True,\
+                        PackagePerNode.node_id == nodeid).\
+                        group_by(PackagePerNode.toppatch_id).\
+                        join(PackagePerNode).\
+                        limit(self.qcount).offset(self.qoffset).all()
+            else:
+                count = self.session.query(PackagePerNode).\
                     group_by(PackagePerNode.toppatch_id).\
                     filter(PackagePerNode.installed == False,\
                     PackagePerNode.pending == True).count()
-            for node_pkg in self.session.query(Package, PackagePerNode).\
+                node_packages = self.session.query(Package, PackagePerNode).\
                     filter(PackagePerNode.installed == False,\
-                    PackagePerNode.pending == True).\
-                    group_by(PackagePerNode.toppatch_id).\
-                    join(PackagePerNode).\
-                    limit(self.qcount).offset(self.qoffset).all():
+                        PackagePerNode.pending == True).\
+                        group_by(PackagePerNode.toppatch_id).\
+                        join(PackagePerNode).\
+                        limit(self.qcount).offset(self.qoffset).all()
+            for node_pkg in node_packages:
                 avail, installed, pending, failed = \
                         self._get_counts_by_tpid(node_pkg[0])
                 pkg1 = self.session.query(Package).\
@@ -284,23 +332,43 @@ class PatchRetriever():
                             node_pkg[0].toppatch_id, node_pkg[0].date_pub,\
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
-                            installed, pending, failed)
+                            installed, pending, failed,
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version
+                            )
                     data.append(result)
             resultjson = {"count": count, "data": data}
 
         elif pstatus == 'failed':
-            count = self.session.query(PackagePerNode).\
+            if nodeid:
+                count = self.session.query(PackagePerNode).\
                     group_by(PackagePerNode.toppatch_id).\
                     filter(PackagePerNode.installed == False,\
-                    PackagePerNode.pending == False,
-                    PackagePerNode.attempts > 0).count()
-            for node_pkg in self.session.query(Package, PackagePerNode).\
+                        PackagePerNode.pending == False,
+                        PackagePerNode.node_id == nodeid,
+                        PackagePerNode.attempts > 0).count()
+                node_packages = self.session.query(Package, PackagePerNode).\
                     filter(PackagePerNode.installed == False,\
-                    PackagePerNode.pending == False,\
-                    PackagePerNode.attempts > 0).\
+                        PackagePerNode.pending == False,\
+                        PackagePerNode.node_id == nodeid,\
+                        PackagePerNode.attempts > 0).\
+                        group_by(PackagePerNode.toppatch_id).\
+                        join(PackagePerNode).\
+                        limit(self.qcount).offset(self.qoffset).all()
+            else:
+                count = self.session.query(PackagePerNode).\
                     group_by(PackagePerNode.toppatch_id).\
-                    join(PackagePerNode).\
-                    limit(self.qcount).offset(self.qoffset).all():
+                    filter(PackagePerNode.installed == False,\
+                        PackagePerNode.pending == False,
+                        PackagePerNode.attempts > 0).count()
+                node_packages = self.session.query(Package, PackagePerNode).\
+                    filter(PackagePerNode.installed == False,\
+                        PackagePerNode.pending == False,\
+                        PackagePerNode.attempts > 0).\
+                        group_by(PackagePerNode.toppatch_id).\
+                        join(PackagePerNode).\
+                        limit(self.qcount).offset(self.qoffset).all()
+            for node_pkg in node_packages:
                 avail, installed, pending, failed = \
                         self._get_counts_by_tpid(node_pkg[0])
                 pkg1 = self.session.query(Package).\
@@ -311,7 +379,9 @@ class PatchRetriever():
                             node_pkg[0].toppatch_id, node_pkg[0].date_pub,\
                             node_pkg[0].name, node_pkg[0].description,\
                             node_pkg[0].severity, avail,\
-                            installed, pending, failed)
+                            installed, pending, failed,
+                            node_pkg[1].date_installed,
+                            node_pkg[0].version)
                     data.append(result)
             resultjson = {"count": count, "data": data}
         else:
@@ -321,41 +391,59 @@ class PatchRetriever():
         return(resultjson)
 
 
-    def get_by_severity(self, psev):
+    def get_by_severity(self, psev, nodeid=None, installed=False):
         """
            retrieve package by package severity
            psev == Critical|Recommended|Optional
         """
         data = []
         resultjson = {}
-        count = self.session.query(Package, PackagePerNode).\
+        if nodeid:
+            count = self.session.query(PackagePerNode,Package).\
                 filter(Package.severity == psev,
-                        PackagePerNode.installed == False).\
+                    PackagePerNode.installed == installed,\
+                    PackagePerNode.node_id == nodeid).\
                 group_by(PackagePerNode.toppatch_id).\
-                join(PackagePerNode).count()
-        for node_pkg in self.session.query(Package, PackagePerNode).\
-             filter(Package.severity == psev,
-                 PackagePerNode.installed == False).\
-             group_by(PackagePerNode.toppatch_id).\
-             join(PackagePerNode).limit(self.qcount).\
-             offset(self.qoffset).all():
+                join(Package).count()
+            node_packages = self.session.query(PackagePerNode, Package).\
+                filter(Package.severity == psev,
+                    PackagePerNode.installed == installed,\
+                    PackagePerNode.node_id == nodeid).\
+                    group_by(PackagePerNode.toppatch_id).\
+                    join(Package).limit(self.qcount).\
+                    offset(self.qoffset).all()
+        else:
+            count = self.session.query(PackagePerNode).\
+                filter(Package.severity == psev).\
+                filter(PackagePerNode.installed == installed).\
+                    group_by(PackagePerNode.toppatch_id).\
+                    join(Package).count()
+            node_packages = self.session.query(PackagePerNode, Package).\
+                filter(Package.severity == psev,
+                    PackagePerNode.installed == installed).\
+                    group_by(PackagePerNode.toppatch_id).\
+                    join(Package).limit(self.qcount).\
+                    offset(self.qoffset).all()
+        for node_pkg in node_packages:
             avail, installed, pending, failed = \
-                    self._get_counts_by_tpid(node_pkg[0])
+                    self._get_counts_by_tpid(node_pkg[1])
             pkg1 = self.session.query(Package).\
                     filter(Package.toppatch_id ==\
-                    node_pkg[0].toppatch_id).first()
+                    node_pkg[1].toppatch_id).first()
             if pkg1:
-                result = self._json_results(node_pkg[0].vendor_id,
-                        node_pkg[0].toppatch_id, node_pkg[0].date_pub,\
-                        node_pkg[0].name, node_pkg[0].description,\
-                        node_pkg[0].severity, avail,\
-                        installed, pending, failed)
+                result = self._json_results(node_pkg[1].vendor_id,
+                        node_pkg[1].toppatch_id, node_pkg[1].date_pub,\
+                        node_pkg[1].name, node_pkg[1].description,\
+                        node_pkg[1].severity, avail,\
+                        installed, pending, failed,\
+                        node_pkg[0].date_installed,\
+                        node_pkg[1].version)
                 data.append(result)
         resultjson = {"count": count, "data": data}
         return(resultjson)
 
 
-    def get_pkg_default(self):
+    def get_pkg_default(self, nodeid=None):
         """
            retrieve all packages
         """
@@ -372,8 +460,14 @@ class PatchRetriever():
             countInstalled = 0
             countFailed = 0
             countPending = 0
-            for node_pkg in self.session.query(PackagePerNode).\
-                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).all():
+            if nodeid:
+                node_packages = self.session.query(PackagePerNode).\
+                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id, 
+                            PackagePerNode.node_id == nodeid).all()
+            else:
+                node_packages = self.session.query(PackagePerNode).\
+                    filter(PackagePerNode.toppatch_id == pkg.toppatch_id).all()
+            for node_pkg in node_packages:
                 if node_pkg.installed:
                     countInstalled += 1
                     nodeInstalled.append(node_pkg.node_id)
@@ -391,28 +485,51 @@ class PatchRetriever():
                 result = self._json_results(pkg.vendor_id, pkg.toppatch_id,
                         pkg.date_pub, pkg.name, pkg.description, pkg.severity,
                         countAvailable, countInstalled, countPending,
-                        countFailed)
+                        countFailed, node_pkg.date_installed,
+                        pkg.version)
                 data.append(result)
 
         resultjson = {"count": count, "data": data}
         return(resultjson)
 
 
-    def _get_counts_by_tpid(self, node_pkg):
-        available = self.session.query(PackagePerNode).\
+    def _get_counts_by_tpid(self, node_pkg, nodeid=None):
+        if nodeid:
+            available = self.session.query(PackagePerNode).\
+                  filter(PackagePerNode.toppatch_id == \
+                  node_pkg.toppatch_id, PackagePerNode.\
+                  installed == False, PackagePerNode.pending == \
+                  False, PackagePerNode.node_id == nodeid).count()
+            installed = self.session.query(PackagePerNode).\
+                  filter(PackagePerNode.toppatch_id == \
+                  node_pkg.toppatch_id, PackagePerNode.installed == \
+                  True, PackagePerNode.node_id == nodeid).count()
+            pending = self.session.query(PackagePerNode).\
+                  filter(PackagePerNode.toppatch_id == \
+                  node_pkg.toppatch_id, PackagePerNode.installed == \
+                  False, PackagePerNode.pending == True,\
+                  PackagePerNode.node_id == nodeid).count()
+            failed = self.session.query(PackagePerNode).\
+                  filter(PackagePerNode.toppatch_id == \
+                  node_pkg.toppatch_id, PackagePerNode.installed == \
+                  False, PackagePerNode.pending == False, \
+                  PackagePerNode.node_id == nodeid,\
+                  PackagePerNode.attempts > 0).count()
+        else:
+            available = self.session.query(PackagePerNode).\
                   filter(PackagePerNode.toppatch_id == \
                   node_pkg.toppatch_id, PackagePerNode.\
                   installed == False, PackagePerNode.pending == \
                   False).count()
-        installed = self.session.query(PackagePerNode).\
+            installed = self.session.query(PackagePerNode).\
                   filter(PackagePerNode.toppatch_id == \
                   node_pkg.toppatch_id, PackagePerNode.installed == \
                   True).count()
-        pending = self.session.query(PackagePerNode).\
+            pending = self.session.query(PackagePerNode).\
                   filter(PackagePerNode.toppatch_id == \
                   node_pkg.toppatch_id, PackagePerNode.installed == \
                   False, PackagePerNode.pending == True).count()
-        failed = self.session.query(PackagePerNode).\
+            failed = self.session.query(PackagePerNode).\
                   filter(PackagePerNode.toppatch_id == \
                   node_pkg.toppatch_id, PackagePerNode.installed == \
                   False, PackagePerNode.pending == False, \
@@ -422,7 +539,7 @@ class PatchRetriever():
 
     def _json_results(self, vendor, toppatch_id, date_pub, name,
                 description, severity, available=0, installed=0,
-                pending=0, failed=0):
+                pending=0, failed=0, date_installed=None, version=None):
         data = {"vendor" :
                {    
                 "patchID" : '',         #forcing empty string in patchID
@@ -431,9 +548,11 @@ class PatchRetriever():
                 "type": "Security Patch",             #forcing Patch into type
                 "id": toppatch_id,
                 "date" : str(date_pub),
+                "date_installed" : str(date_installed),
                 "name" : name,
-                "description" : description.decode('raw_unicode_escape'),
+                "description" : description,
                 "severity" : severity,
+                "version" : version,
                 "nodes/need": available,
                 "nodes/done": installed,
                 "nodes/pend": pending,

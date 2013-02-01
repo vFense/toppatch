@@ -7,11 +7,15 @@ try: import simplejson as json
 except ImportError: import json
 from models.node import NodeInfo
 from db.client import *
+from datetime import datetime, timedelta
 from user.manager import *
 from networking.agentoperation import AgentOperation
 from scheduler.jobManager import job_scheduler, job_lister
 from server.decorators import authenticated_request
 from jsonpickle import encode
+import tornadoredis
+import tornado.gen
+from tornado import ioloop
 
 LISTENERS = []
 
@@ -37,9 +41,9 @@ class LoginHandler(BaseHandler):
         session = self.application.session
         session = validate_session(session)
         username = self.get_argument("name", None);
-	username = username.encode('utf8')
+        username = username.encode('utf8')
         password = self.get_argument("password", None);
-	password = password.encode('utf8')
+        password = password.encode('utf8')
         if username is not None and password is not None:
 	    authenticated = authenticate_account(session, username, password)
             if authenticated:
@@ -95,22 +99,33 @@ class testHandler(BaseHandler):
     def get(self):
         self.render('../data/templates/websocket-test.html')
 
-def SendToSocket(message):
-    for socket in LISTENERS:
-        socket.write_message(message)
 
 class WebsocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
-    @authenticated_request
-    def open(self):
-        LISTENERS.append(self)
-        print 'new connection'
+    def __init__(self, *args, **kwargs):
+        super(WebsocketHandler, self).__init__(*args, **kwargs)
+        self.listen()
 
-    def on_message(self, message):
-        print 'message received %s' % message
+    @tornado.gen.engine
+    def listen(self):
+        self.client = tornadoredis.Client()
+        self.client.connect()
+        yield tornado.gen.Task(self.client.subscribe, 'rv')
+        self.client.listen(self.on_message)
+
+    def on_message(self, msg):
+        if msg.kind == 'message':
+            self.write_message(str(msg.body))
 
     def on_close(self):
-        print 'connection closed...'
-        LISTENERS.remove(self)
+        self.client.unsubscribe('rv')
+        def check():
+            if self.client.connection.in_progress:
+                ioloop.IOLoop.instance().add_timeout(timedelta(0.00001), check)
+            else:
+                self.client.disconnect()
+        ioloop.IOLoop.instance().add_timeout(timedelta(0.00001), check)
+        self.client.disconnect()
+
 
 
 class LogoutHandler(BaseHandler):
@@ -155,31 +170,23 @@ class FormHandler(BaseHandler):
         resultjson = []
         node = {}
         result = []
-        try:
-            nodes = self.request.arguments['node']
-        except:
+        nodes = self.get_arguments('node')
+        print self.request.arguments
+        if len(nodes) <1:
             nodes = None
-        try:
-            tags = self.request.arguments['tag']
-        except:
+        tags = self.get_arguments('tag')
+        if len(tags) <1:
             tags = None
-        try:
-            params = self.get_argument('params')
-        except:
-            params = None
-        try:
-            time = self.get_argument('time')
-            schedule = self.get_argument('schedule')
-            label = self.get_argument('label')
-        except:
-            time = None
-            schedule = None
-        try:
-            throttle = self.get_argument('throttle')
-        except:
-            throttle = None
+        params = self.get_argument('params', None)
+        time = self.get_argument('time', None)
+        schedule = self.get_argument('schedule', None)
+        label = self.get_argument('label', None)
+        throttle = self.get_argument('throttle', None)
+        operation = self.get_argument('operation', None)
+        patches = self.get_arguments('patches')
+        if len(patches) <1:
+            patches = None
         if nodes or tags:
-            operation = self.get_argument('operation')
             if time:
                 node['schedule'] = schedule
                 node['time'] = time
@@ -187,18 +194,17 @@ class FormHandler(BaseHandler):
             if throttle:
                 node['cpu_throttle'] = throttle
             if operation == 'install' or operation == 'uninstall':
-                patches = self.request.arguments['patches']
                 if nodes:
                     for node_id in nodes:
-                        node['node_id'] = node_id
+                        node['node_id'] = node_id.encode('utf8')
                         node['operation'] = operation
-                        node['data'] = list(patches)
+                        node['data'] = patches
                         resultjson.append(encode(node))
                 elif tags:
                     for tag_id in tags:
-                        node['tag_id'] = tag_id
+                        node['tag_id'] = tag_id.encode('utf8')
                         node['operation'] = operation
-                        node['data'] = list(patches)
+                        node['data'] = patches
                         resultjson.append(encode(node))
                 if time:
                     result = job_scheduler(resultjson,
@@ -209,13 +215,14 @@ class FormHandler(BaseHandler):
                     operation_runner = AgentOperation(resultjson,
                             username=username)
                     operation_runner.run()
-                    sleep(.50)
+                    while not operation_runner.json_out:
+                        sleep(.50)
                     result = operation_runner.json_out
-                    print result
-            elif operation == 'reboot':
+            elif operation == 'reboot' or operation == 'restart' or\
+                    operation == 'stop' or operation == 'start':
                 for node_id in nodes:
                     node['operation'] = operation
-                    node['node_id'] = node_id
+                    node['node_id'] = node_id.encode('utf8')
                     resultjson.append(encode(node))
                 if time:
                     result = job_scheduler(resultjson,
@@ -227,9 +234,9 @@ class FormHandler(BaseHandler):
                             username=username
                             )
                     operation_runner.run()
-                    sleep(.50)
+                    while not operation_runner.json_out:
+                        sleep(.50)
                     result = operation_runner.json_out
-                    print result
             self.set_header('Content-Type', 'application/json')
             self.write(json.dumps(result))
             print json.dumps(result)
@@ -239,8 +246,12 @@ class FormHandler(BaseHandler):
             operation_runner = AgentOperation(resultjson,
                     username=username)
             operation_runner.run()
+            while not operation_runner.json_out:
+                sleep(.50)
+            result = operation_runner.json_out
             self.set_header('Content-Type', 'application/json')
-            self.write(json.dumps(resultjson))
+            self.write(json.dumps(result))
+            print json.dumps(result)
 
 
 class AdminHandler(BaseHandler):

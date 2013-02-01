@@ -9,6 +9,7 @@ BODY {
     //background-color: @TP_White;
     min-width: @gridRowWidth;
     padding-top: 1em;
+    padding-bottom: @em*( @pageFooterHeight )/@baseFontSize;
 
     > FOOTER {
         background-color: #F8F8F8;
@@ -24,6 +25,20 @@ BODY {
             padding-bottom: @em*( (@pageFooterHeight - @imageHeight)/2 )/@baseFontSize;
         }
     }
+}
+
+.loading_indicator {
+    .brand {
+        font-size: 20px;
+    }
+}
+
+#pageFooter {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: @zindexModalBackdrop - 5;
 }
 
 .brand {

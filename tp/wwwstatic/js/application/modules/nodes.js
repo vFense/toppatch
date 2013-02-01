@@ -17,10 +17,12 @@ define(
                     this.offset   = this.offset || 0;
                     this.getCount = this.getCount  || 10;
                     this.filterby = this.filterby || '';
+                    this.by_os = this.by_os || '';
                     this.query    = '?' +
                         'count=' + this.getCount +
                         '&offset=' + this.offset;
                     this.query += this.filterby ? '&filterby=' + this.filterby : '';
+                    this.query += this.by_os ? '&by_os=' + this.by_os : '';
                 }
             }),
             TagCollection: Backbone.Collection.extend({
@@ -68,16 +70,20 @@ define(
                             recordCount: this.collection.recordCount,
                             data: data,
                             tagdata: tagdata,
+                            by_os: this.collection.by_os,
+                            severity: this.collection.severity,
                             filter: this.collection.filterby
                         },
                         temp;
                     temp = payload.offset - payload.getCount;
                     payload.prevLink = '#nodes?count=' + payload.getCount + '&offset=' + (temp < 0 ? 0 : temp);
                     payload.prevLink += payload.filter ? '&filterby=' + payload.filter : '';
+                    payload.prevLink += payload.by_os ? '&by_os=' + payload.by_os : '';
 
                     temp = payload.offset + payload.getCount;
                     payload.nextLink = '#nodes?count=' + payload.getCount + '&offset=' + temp;
                     payload.nextLink += payload.filter ? '&filterby=' + payload.filter : '';
+                    payload.nextLink += payload.by_os ? '&by_os=' + payload.by_os : '';
 
                     this.$el.empty();
 

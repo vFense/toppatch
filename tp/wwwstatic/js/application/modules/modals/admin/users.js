@@ -58,8 +58,6 @@ define(
                     this.tagCollection.fetch();
                 },
                 events: {
-                    'click #userEdit': 'displayEdit',
-                    'click #doneEdit': 'displayEdit',
                     'click #addUser': 'displayAddUser',
                     'click #cancelNewUser': 'displayAddUser',
                     'click button[name=confirmDelete]': 'confirmDelete',
@@ -73,21 +71,15 @@ define(
                     'click button[name=hideAcl]': 'toggleAclDiv',
                     'click button[name=submitAclNode]': 'submitAcl',
                     'click button[name=submitAclTag]': 'submitAcl',
+                    'click button[name=removeAclTag]': 'removeAcl',
+                    'click button[name=removeAclNode]': 'removeAcl',
+                    'click button[name=toggleAclEdit]': 'toggleAclEdit',
+                    'click button[name=editAclTag]': 'editAcl',
+                    'click button[name=editAclNode]': 'editAcl',
                     'submit form': 'submit'
                 },
-                displayEdit: function (event) {
-                    var $editButton = $('#userEdit'),
-                        $doneButton = $('#doneEdit'),
-                        $alert = this.$el.find('div.alert');
-                    $alert.hide();
-                    $editButton.toggle();
-                    $doneButton.toggle();
-                    $('div[name=edit]').toggle();
-                },
                 displayAddUser: function (event) {
-                    var $addButton = $('#addUser'),
-                        $addUserDiv = this.$el.find('div[name=newUserDiv]');
-                    $addButton.toggle();
+                    var $addUserDiv = this.$el.find('div[name=newUserDiv]');
                     $addUserDiv.toggle();
                 },
                 confirmDelete: function (event) {
@@ -268,7 +260,7 @@ define(
                     var $href = $(event.currentTarget),
                         $icon = $href.find('i'),
                         $accordionParent = $href.parents('.accordion-group'),
-                        $accordionBody = $accordionParent.find('.accordion-body');
+                        $accordionBody = $accordionParent.find('.accordion-body').first();
                     $accordionBody.unbind();
                     if ($icon.hasClass('icon-circle-arrow-down')) {
                         $icon.attr('class', 'icon-circle-arrow-up');
@@ -336,6 +328,87 @@ define(
                     } else {
                         $alert.removeClass('alert-success').addClass('alert-error').show().html('Please select an option.');
                     }
+                },
+                removeAcl: function (event) {
+                    var acl_type, params,
+                        $button = $(event.currentTarget),
+                        //$aclOptionsDiv = $button.parents('div[name=aclOptions]'),
+                        //$alert = $aclOptionsDiv.find('.alert'),
+                        that = this,
+                        type = $button.attr('name'),
+                        userId = $button.attr('value'),
+                        aclId = $button.parents('.item').attr('name'),
+                        acl = { user_id : userId },
+                        acl_action = 'delete',
+                        url = 'api/acl/delete';
+                    if (type === 'removeAclNode') {
+                        acl.node_id = aclId;
+                        acl_type = 'node_user';
+                    } else {
+                        acl.tag_id = aclId;
+                        acl_type = 'tag_user';
+                    }
+                    params = {
+                        acl_type: acl_type,
+                        acl_action: acl_action,
+                        acl: JSON.stringify(acl)
+                    };
+                    window.console.log(params);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            that.collection.fetch();
+                        } /*else {
+                            //$alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                        } */
+                    });
+                },
+                toggleAclEdit: function (event) {
+                    var $item = $(event.currentTarget).closest('.accordion-group'),
+                        $body = $item.find('.accordion-body');
+                    $body.unbind();
+                    $body.collapse('toggle');
+                    $body.on('hidden', function (event) {
+                        event.stopPropagation();
+                    });
+                },
+                editAcl: function (event) {
+                    var acl_type, params,
+                        that = this,
+                        $button = $(event.currentTarget),
+                        $alert = $button.siblings('.alert'),
+                        $body = $button.parents('.accordion-group').first(),
+                        $permissions = $body.find('input[type=checkbox]'),
+                        name = $button.attr('name'),
+                        userId = $button.attr('value'),
+                        aclId = $body.attr('name'),
+                        acl_action = 'modify',
+                        url = 'api/acl/modify',
+                        acl = { user_id: userId };
+                    $permissions.each(function () {
+                        acl[this.name] = this.checked;
+                    });
+                    if (name === 'editAclNode') {
+                        acl_type = 'node_user';
+                        acl.node_id = aclId;
+                    } else {
+                        acl_type = 'tag_user';
+                        acl.tag_id = aclId;
+                    }
+                    params = {
+                        acl_type: acl_type,
+                        acl_action: acl_action,
+                        acl: JSON.stringify(acl)
+                    };
+                    window.console.log(params);
+                    $.post(url, params, function (json) {
+                        window.console.log(json);
+                        if (json.pass) {
+                            that.collection.fetch();
+                        } else {
+                            $alert.removeClass('alert-success').addClass('alert-error').html(json.message).show();
+                        }
+                    });
                 },
                 submit: function (event) {
                     var $form = $(event.target);

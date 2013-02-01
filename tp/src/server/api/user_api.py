@@ -14,7 +14,6 @@ from models.packages import *
 from models.node import *
 from models.ssl import *
 from models.scheduler import *
-from server.handlers import SendToSocket
 from db.client import *
 from scheduler.jobManager import job_lister, remove_job
 from scheduler.timeBlocker import *
@@ -31,7 +30,7 @@ from sqlalchemy.orm import sessionmaker, class_mapper
 
 from jsonpickle import encode
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 class ListUserHandler(BaseHandler):
@@ -40,6 +39,7 @@ class ListUserHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         result = list_user(self.session)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -65,6 +65,7 @@ class DeleteUserHandler(BaseHandler):
                     'pass': False,
                     'message': 'Incorrect arguments passed. username or userid'
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -92,6 +93,11 @@ class CreateUserHandler(BaseHandler):
                         fullname=fullname, email=email,
                         groupname=group)
                 result = user_add
+            else:
+                result = {
+                        'pass': False,
+                        'message': 'User %s already exists' % (username)
+                        }
         else:
             result = {"pass" : False,
                       "message" : "User %s can't be created, %s, %s %s" %\
@@ -99,8 +105,10 @@ class CreateUserHandler(BaseHandler):
                                       'arguments needed are ',
                                       'username, password, group')
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
+
 
 class ModifyUserFromGroupHandler(BaseHandler):
     def post(self):
@@ -137,6 +145,7 @@ class ModifyUserFromGroupHandler(BaseHandler):
                     'pass': False,
                     'message': 'Incorrect Parameters were passed'
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -147,6 +156,7 @@ class ListGroupHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         result = list_groups(self.session)
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -158,18 +168,68 @@ class CreateGroupHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         groupname = self.get_argument("groupname", None)
-        if groupname:
+        acl_type = self.get_argument('acl_type', None)
+        acl_action = 'create'
+        acl = self.get_argument('acl', None)
+        if groupname and acl_type and acl:
+            group_exists = self.session.query(Group).\
+                    filter(Group.groupname == groupname).first()
+            if not group_exists:
                 group = create_group(self.session, groupname)
-                result = group
+                group_result = group
+            else:
+                group_result = {
+                        'pass': False,
+                        'message': 'Group %s already exists' % (groupname)
+                        }
         else:
-            result = {"pass" : False,
-                      "message" : "Group %s can't be created, %s, %s %s" %\
+            result = {
+                    'pass' : False,
+                    'message' : 'Group %s can"t be created, %s, %s %s' %\
                                   (groupname, 'Insufficient arguments',
                                       'arguments needed are ',
                                       'groupname')
                     }
+        if acl and group_result['pass']:
+            valid_json, json_acl = verify_json_is_valid(acl)
+            if acl_type and acl_action and acl and valid_json:
+                json_acl['group_id'] = group_result['id']
+                acl_result = \
+                    acl_modifier(self.session, acl_type, acl_action, json_acl)
+                if group_result['pass'] and acl_result['pass']:
+                    result = {
+                        'pass': True,
+                        'message': 'Group and ACL created Successfully'
+                    }
+                else:
+                    result = {
+                        'pass': False,
+                        'message': 'Group and ACL creation failed'
+                    }
+                    group_deleted = \
+                            delete_group(self.session,
+                                    group_id=group_result['id'])
+        elif acl and not group_result['pass']:
+            result = {
+                    'pass': False,
+                    'message': 'Incorrect arguments passed. %s:%s, %s, %s' %\
+                            ('Arguments needed', 'acl_type', 'acl_action', 
+                                'acl')
+                    }
+            group_deleted = delete_group(self.session,
+                                    group_id=group_result['id'])
+        else:
+            result = {
+                    'pass' : False,
+                    'message' : 'Group %s can"t be created, %s, %s %s' %\
+                                  (groupname, 'Insufficient arguments',
+                                      'arguments needed are ',
+                                      'groupname')
+                    }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
-        self.write(json.dumps(result, indent=4))
+        self.write(json.dumps(acl_result, indent=4))
+
 
 class DeleteGroupHandler(BaseHandler):
     @authenticated_request
@@ -183,30 +243,28 @@ class DeleteGroupHandler(BaseHandler):
         if groupid:
             group = self.session.query(Group).\
                     filter(Group.id == groupid).first()
-            result = delete_user(self.session, group_id=group.id)
+            result = delete_group(self.session, group_id=group.id)
         elif groupname:
             group = self.session.query(User).\
                     filter(Group.groupname == groupname).first()
-            result = delete_user(self.session, group.id)
+            result = delete_group(self.session, group.id)
         else:
             result = {
                     'pass': False,
                     'message': 'Incorrect arguments passed. groupname or groupid'
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
 
-
-
-class AclModifierHandler(BaseHandler):
+class AclHandler(BaseHandler):
     @authenticated_request
-    def post(self):
+    def post(self, acl_action=None):
         user_name = self.get_current_user()
         self.session = self.application.session
         self.session = validate_session(self.session)
         acl_type = self.get_argument('acl_type', None)
-        acl_action = self.get_argument('acl_action', None)
         acl = self.get_argument('acl', None)
         result = None
         print acl
@@ -222,7 +280,26 @@ class AclModifierHandler(BaseHandler):
                             ('Arguments needed', 'acl_type', 'acl_action', 
                                 'acl')
                     }
+        self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
+
+
+class AclModifyHandler(AclHandler):
+    @authenticated_request
+    def post(self):
+        super(AclModifyHandler,self).post('modify')
+
+
+class AclCreateHandler(AclHandler):
+    @authenticated_request
+    def post(self):
+        super(AclCreateHandler,self).post(acl_action='create')
+
+
+class AclDeleteHandler(AclHandler):
+    @authenticated_request
+    def post(self):
+        super(AclDeleteHandler,self).post(acl_action='delete')
 

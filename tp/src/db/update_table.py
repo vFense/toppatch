@@ -16,13 +16,63 @@ from db.query_table import *
 from networking.tcpasync import TcpConnect
 from sqlalchemy import or_
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
+
+
+def add_results_non_json(session, node_id=None, oper_id=None, error=None,
+        toppatch_id=None, reboot=False, result=False,
+        results_received=datetime.now(), username='system_user'):
+    """
+        Add a new entry in the results table in RV
+        arguments below..
+        session == SQLAlchemy Session
+        data == the json message received from the agent
+    """
+    session = validate_session(session)
+    operation = operation_exists(session, oper_id)
+    results = None
+    if result and type(result) != bool:
+        if 'success' in result:
+            result = True
+        elif 'failed' in result:
+            result = False
+    print result
+    if oper_id and node_id and operation:
+        results = Results(node_id=node_id, operation_id=oper_id, 
+                succeeded=result, error=error,
+                results_received=results_received
+                )
+    elif oper_id and not node_id and operation:
+        results = Results(operation_id=oper_id,
+                succeeded=result, error=error,
+                results_received=results_received
+                )
+    if results:
+        try:
+            session.add(results)
+            session.commit()
+            if toppatch_id:
+                patch_results = PatchResults(
+                        results_id=results.id,
+                        patch_id=toppatch_id, reboot=reboot
+                        )
+                try:
+                    session.add(patch_results)
+                    session.commit()
+                except Exception as e:
+                    print e
+                    session.rollback()
+            return(results)
+        except Exception as e:
+            print e
+            session.rollback()
+            return(None)
 
 
 def add_node(session, client_ip=None, agent_timestamp=None,
         node_timestamp=None, host_name=None, display_name=None,
-        computer_name=None, vm_name=None, username='system_user'):
+        computer_name=None, username='system_user'):
     """Add a node to the database"""
     session = validate_session(session)
     if not host_name and client_ip:
@@ -33,7 +83,7 @@ def add_node(session, client_ip=None, agent_timestamp=None,
     try:
         addnode = NodeInfo(ip_address=client_ip, host_name=host_name,
             display_name=display_name, computer_name=computer_name,
-            vm_name=vm_name, host_status=True, agent_status=True,
+            host_status=True, agent_status=True,
             last_agent_update=agent_timestamp,
             last_node_update=node_timestamp)
         session.add(addnode)
@@ -61,7 +111,8 @@ def add_group(session, groupname=None):
                 session.commit()
                 return({
                     'pass': True,
-                    'message': 'Group %s added' % (groupname)
+                    'message': 'Group %s added' % (groupname),
+                    'id': group.id
                     })
             except Exception as e:
                 session.rollback()
@@ -121,11 +172,11 @@ def add_user_to_group(session, user_id=None, group_id=None):
 
 
 def add_global_user_acl(session, user_id=None, is_admin=False,
-        is_global=True, read_only=False, allow_install=False,
+        is_global=True, allow_read=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
         allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, deny_all=False,
         date_created=datetime.now(), date_modified=datetime.now(),
         username='system_user'
         ):
@@ -139,7 +190,7 @@ def add_global_user_acl(session, user_id=None, is_admin=False,
     if user_id and not user_exists:
         try:
             add_acl = GlobalUserAccess(user_id=user_id, is_admin=is_admin,
-                    is_global=is_global, read_only=read_only,
+                    is_global=is_global, allow_read=allow_read,
                     allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
@@ -147,7 +198,7 @@ def add_global_user_acl(session, user_id=None, is_admin=False,
                     allow_snapshot_removal=allow_snapshot_removal,
                     allow_snapshot_revert=allow_snapshot_revert,
                     allow_tag_creation=allow_tag_creation,
-                    allow_tag_removal=allow_tag_removal,
+                    allow_tag_removal=allow_tag_removal, deny_all=deny_all,
                     date_created=date_created, date_modified=date_modified
                     )
             session.add(add_acl)
@@ -172,11 +223,11 @@ def add_global_user_acl(session, user_id=None, is_admin=False,
 
 
 def add_global_group_acl(session, group_id=None, is_admin=False,
-        is_global=True, read_only=False, allow_install=False,
+        is_global=True, allow_read=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
         allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, deny_all=False,
         date_created=datetime.now(), date_modified=datetime.now(),
         username='system_user'
         ):
@@ -190,7 +241,7 @@ def add_global_group_acl(session, group_id=None, is_admin=False,
     if group_id and not group_exists:
         try:
             add_acl = GlobalGroupAccess(group_id=group_id, is_admin=is_admin,
-                    is_global=is_global, read_only=read_only,
+                    is_global=is_global, allow_read=allow_read,
                     allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
@@ -198,7 +249,7 @@ def add_global_group_acl(session, group_id=None, is_admin=False,
                     allow_snapshot_removal=allow_snapshot_removal,
                     allow_snapshot_revert=allow_snapshot_revert,
                     allow_tag_creation=allow_tag_creation,
-                    allow_tag_removal=allow_tag_removal,
+                    allow_tag_removal=allow_tag_removal, deny_all=deny_all,
                     date_created=date_created, date_modified=date_modified
                     )
             session.add(add_acl)
@@ -222,7 +273,7 @@ def add_global_group_acl(session, group_id=None, is_admin=False,
             })
 
 
-def add_node_user_acl(session, node_id=None, user_id=None,
+def add_node_user_acl(session, node_id=None, user_id=None, allow_read=False,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -241,7 +292,7 @@ def add_node_user_acl(session, node_id=None, user_id=None,
     if user_id and node_id and not user_for_node_exists:
         try:
             add_acl = NodeUserAccess(node_id, user_id=user_id,
-                    allow_install=allow_install,
+                    allow_read=allow_read, allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
@@ -267,9 +318,9 @@ def add_node_user_acl(session, node_id=None, user_id=None,
                     })
 
 
-def add_node_group_acl(session, node_id=None, group_id=None,
+def add_node_group_acl(session, node_id=None, group_id=None, allow_read=False,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
-        allow_schedule=False, wol=False, allow_snapshot_creation=False,
+        allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
         allow_tag_creation=False, allow_tag_removal=False,
         date_created=datetime.now(), date_modified=datetime.now(),
@@ -286,7 +337,7 @@ def add_node_group_acl(session, node_id=None, group_id=None,
     if node_id and group_id and not group_for_node_exists:
         try:
             add_acl = NodeGroupAccess(node_id, group_id=group_id,
-                    allow_install=allow_install,
+                    allow_read=allow_read, allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
@@ -313,7 +364,7 @@ def add_node_group_acl(session, node_id=None, group_id=None,
 
 
 
-def add_tag_user_acl(session, tag_id=None, user_id=None,
+def add_tag_user_acl(session, tag_id=None, user_id=None, allow_read=False,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -332,7 +383,7 @@ def add_tag_user_acl(session, tag_id=None, user_id=None,
     if user_id and tag_id and not user_for_tag_exists:
         try:
             add_acl = TagUserAccess(tag_id, user_id=user_id,
-                    allow_install=allow_install,
+                    allow_read=allow_read, allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
@@ -358,7 +409,7 @@ def add_tag_user_acl(session, tag_id=None, user_id=None,
                     })
 
 
-def add_tag_group_acl(session, tag_id=None, group_id=None,
+def add_tag_group_acl(session, tag_id=None, group_id=None, allow_read=False,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
@@ -377,7 +428,7 @@ def add_tag_group_acl(session, tag_id=None, group_id=None,
     if group_id and tag_id and not group_for_tag_exists:
         try:
             add_acl = TagGroupAccess(tag_id, group_id,
-                    allow_install=allow_install,
+                    allow_read=allow_read, allow_install=allow_install,
                     allow_uninstall=allow_uninstall, allow_reboot=allow_reboot,
                     allow_schedule=allow_schedule, allow_wol=allow_wol,
                     allow_snapshot_creation=allow_snapshot_creation,
@@ -559,9 +610,9 @@ def add_cert(session, node_id, cert_id, cert_name,
     except Exception as e:
         session.rollback()
 
-def add_operation(session, node_id, operation, result_id=None,
-        operation_sent=None, operation_received=None, results_received=None,
-        username='system_user'):
+
+def add_operation(session, node_id, operation, operation_sent=None,
+        operation_received=None, username='system_user'):
     """
         Add a new Operation into RV
         arguments below..
@@ -570,14 +621,156 @@ def add_operation(session, node_id, operation, result_id=None,
         operation == reboot|install|uninstall (The operation type)
     """
     session = validate_session(session)
-    add_oper = Operations(node_id, operation, result_id,
-            operation_sent, operation_received, results_received
+    add_oper = Operations(node_id, operation, operation_sent,
+            operation_received, username
             )
-    session = validate_session(session)
     if add_oper:
         session.add(add_oper)
         session.commit()
         return add_oper
+
+
+def update_node_stats(session, node_id, username='system_user'):
+    """
+        update the stats of the node in the node_stats table in RV
+        arguments below..
+        session == SQLAlchemy Session
+        node_id == the id of the node
+    """
+    session = validate_session(session)
+    rebootspending = session.query(NodeInfo).\
+            filter(NodeInfo.reboot == True).\
+            filter(NodeInfo.id == node_id).count()
+    agentsdown = session.query(NodeInfo).\
+            filter(NodeInfo.agent_status == False).\
+            filter(NodeInfo.id == node_id).count()
+    agentsup = session.query(NodeInfo).\
+            filter(NodeInfo.agent_status == True).\
+            filter(NodeInfo.id == node_id).count()
+    nodeupdates = session.query(PackagePerNode).filter_by(node_id=node_id)
+    patchesinstalled = nodeupdates.filter_by(installed=True).count()
+    patchesuninstalled = nodeupdates.filter_by(installed=False).count()
+    patchespending = nodeupdates.filter_by(pending=True).count()
+    nodestats = session.query(NodeStats).filter_by(node_id=node_id)
+    node_exist = nodestats.first()
+    if node_exist:
+        nodestats.update({"patches_installed" : patchesinstalled,
+                         "patches_available" : patchesuninstalled,
+                         "patches_pending" : patchespending,
+                         "reboots_pending" : rebootspending,
+                         "agents_down" : agentsdown,
+                         "agents_up" : agentsup})
+        session.commit()
+    else:
+        add_node_stats = NodeStats(node_id, patchesinstalled,
+                       patchesuninstalled, patchespending, 0,
+                       rebootspending, agentsdown, agentsup)
+        session.add(add_node_stats)
+        session.commit()
+
+
+def update_network_stats(session, username='system_user'):
+    """
+        update the global stats in network_stats table in RV
+        arguments below..
+        session == SQLAlchemy Session
+    """
+    session = validate_session(session)
+    rebootspending = session.query(NodeInfo).\
+            filter(NodeInfo.reboot == True).count()
+    agentsdown = session.query(NodeInfo).\
+            filter(NodeInfo.agent_status == False).count()
+    agentsup = session.query(NodeInfo).\
+            filter(NodeInfo.agent_status == True).count()
+    stats = session.query(PackagePerNode)
+    totalinstalled = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(installed=True).count()
+    totalnotinstalled = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(installed=False).count()
+    totalpending = stats.group_by(PackagePerNode.toppatch_id).\
+            filter_by(pending=True).count()
+    networkstats = session.query(NetworkStats)
+    networkstatsexists = networkstats.filter_by(id=1).first()
+    if networkstatsexists:
+        networkstats.update({"patches_installed" : totalinstalled,
+                             "patches_available" : totalnotinstalled,
+                             "patches_pending" : totalpending,
+                             "reboots_pending" : rebootspending,
+                             "agents_down" : agentsdown,
+                             "agents_up" : agentsup})
+        session.commit()
+    else:
+        network_sstats_init = NetworkStats(totalinstalled,
+                              totalnotinstalled, totalpending, 0,
+                              rebootspending, agentsdown, agentsup)
+        session.add(network_sstats_init)
+        session.commit()
+
+
+def update_tag_stats(session, username='system_user'):
+    """
+        update the global tag stats in tag_stats table in RV
+        arguments below..
+        session == SQLAlchemy Session
+    """
+    session = validate_session(session)
+    tags = session.query(TagInfo).all()
+    if len(tags) > 0:
+        for tag in tags:
+            nodes = session.query(TagsPerNode).\
+                filter(TagsPerNode.tag_id == tag.id).all()
+            patchesinstalled = 0
+            patchesuninstalled = 0
+            patchespending = 0
+            rebootspending = 0
+            agentsdown = 0
+            agentsup = 0
+            if len(nodes) > 0:
+                for node in nodes:
+                    nodeupdates = session.query(PackagePerNode).\
+                            filter_by(node_id=node.node_id)
+                    patchesinstalled = patchesinstalled + nodeupdates.\
+                            filter_by(installed=True).count()
+                    patchesuninstalled = patchesuninstalled + nodeupdates.\
+                            filter_by(installed=False).count()
+                    patchespending = patchespending + nodeupdates.\
+                            filter_by(pending=True).count()
+                    rebootspending = rebootspending + \
+                            session.query(NodeInfo).\
+                            filter(NodeInfo.id == node.node_id).\
+                            filter(NodeInfo.reboot == True).count()
+                    agentsdown = agentsdown + \
+                            session.query(NodeInfo).\
+                            filter(NodeInfo.id == node.node_id).\
+                            filter(NodeInfo.agent_status == False).count()
+                    agentsup = agentsup + \
+                            session.query(NodeInfo).\
+                            filter(NodeInfo.id == node.node_id).\
+                            filter(NodeInfo.agent_status == True).count()
+                tag_stats = session.query(TagStats).\
+                    filter_by(tag_id=tag.id)
+                tag_exists = tag_stats.first()
+                if tag_exists:
+                    tag_stats.update({"patches_installed" : patchesinstalled,
+                                     "patches_available" : patchesuninstalled,
+                                     "patches_pending" : patchespending,
+                                     "patches_pending" : patchespending,
+                                     "reboots_pending" : rebootspending,
+                                     "agents_down" : agentsdown,
+                                     "agents_up" : agentsup})
+                    session.commit()
+                else:
+                    add_tag_stats = TagStats(tag.id, patchesinstalled,
+                                   patchesuninstalled, patchespending, 0,
+                                   rebootspending, agentsdown, agentsup)
+                    session.add(add_tag_stats)
+                    session.commit()
+            else:
+                tag_exists = session.query(TagStats).\
+                    filter_by(tag_id=tag.id).first()
+                if tag_exists:
+                    session.delete(tag_exists)
+                    session.commit()
 
 
 def add_system_info(session, data, node_info, username='system_user'):
@@ -592,34 +785,140 @@ def add_system_info(session, data, node_info, username='system_user'):
     session = validate_session(session)
     operation = operation_exists(session, data['operation_id'])
     node_id = node_info.id
+
     if node_id:
-        if operation:
-            operation.results_received = datetime.now()
+        if 'computer_name' in data:
+            node_info.computer_name = data['computer_name']
             session.commit()
-        system_info = SystemInfo(node_id, data['os_code'],
-            data['os_string'], data['version_major'],
-            data['version_minor'], data['version_build'],
-            data['meta'], data['bit_type']
-            )
-        if 'net_info' in data:
-            for network in data['net_info']:
-                net_info = NetworkInterface(node_id=node_id,
-                        mac_address=network['mac'],
-                        ip_address=network['ip'],
-                        interface=network['interface_name']
-                        )
-                try:
-                    session.add(net_info)
-                    session.commit()
-                except Exception as e:
-                    session.rollback()
+        system_info = session.query(SystemInfo).\
+                filter(SystemInfo.node_id == node_id).first()
+
         if system_info:
+            system_info.os_code = data['os_code']
+            system_info.os_string = data['os_string']
+            system_info.version_minor = data['version_minor']
+            system_info.version_build = data['version_build']
+            system_info.meta = data['meta']
+            system_info.bit_type = data['bit_type']
+            try:
+                session.commit()
+            except Exception as e:
+                session.rollback()
+        else:
+            system_info = SystemInfo(node_id, data['os_code'],
+                data['os_string'], data['version_major'],
+                data['version_minor'], data['version_build'],
+                data['meta'], data['bit_type']
+                )
+
             try:
                 session.add(system_info)
                 session.commit()
-                return system_info
+
             except Exception as e:
                 session.rollback()
+
+        if 'hardware' in data:
+            for key, values in data['hardware'].items():
+                if 'nic' in key:
+                    for network in values:
+                        net_info = session.query(NetworkInterface).\
+                            filter(NetworkInterface.node_id == node_id).\
+                            filter(NetworkInterface.interface == \
+                                    network['name']).first()
+
+                        if net_info:
+                            net_info.mac_address = network['mac']
+                            net_info.ip_address = network['ip_address']
+                            session.commit()
+
+                        else:
+                            net_info = NetworkInterface(node_id=node_id,
+                                mac_address=network['mac'],
+                                ip_address=network['ip_address'],
+                                interface=network['name']
+                                )
+                            session.add(net_info)
+                if 'storage' in key:
+                    for storage in values:
+                        storage_info = session.query(StorageInfo).\
+                                filter(StorageInfo.node_id == node_id).\
+                                filter(StorageInfo.name == storage['name']).\
+                                first()
+
+                        if storage_info:
+                            storage_info.free_size_kb = storage['free_size_kb']
+                            storage_info.size_kb = storage['size_kb']
+                            session.commit()
+
+                        else:
+                            storage_info = StorageInfo(node_id=node_id,
+                                free_size_kb=storage['free_size_kb'],
+                                size_kb=storage['size_kb'],
+                                file_system=storage['file_system'],
+                                name=storage['name']
+                                )
+                            session.add(storage_info)
+                if 'cpu' in key:
+                    for cpu in values:
+                        cpu_info = session.query(CpuInfo).\
+                                filter(CpuInfo.node_id == node_id).\
+                                filter(CpuInfo.name == cpu['cpu_id']).first()
+
+                        if cpu_info:
+                            cpu_info.speed_mhz = cpu['speed_mhz']
+                            cpu_info.cores = cpu['cores']
+                            cpu_info.cache_kb = cpu['cache_kb']
+                            session.commit()
+
+                        else:
+                            cpu_info = CpuInfo(node_id=node_id,
+                                cores=cpu['cores'],
+                                speed_mhz=cpu['speed_mhz'],
+                                bit_type=cpu['bit_type'],
+                                cache_kb=cpu['cache_kb'],
+                                name=cpu['name']
+                                )
+                            session.add(cpu_info)
+                if 'display' in key:
+                    for video in values:
+                        video_info = session.query(DisplayInfo).\
+                                filter(DisplayInfo.node_id == node_id).\
+                                filter(DisplayInfo.name == video['name']).\
+                                first()
+                        if video_info:
+                            video_info.speed_mhz = video['speed_mhz']
+                            video_info.ram_kb = video['ram_kb']
+                            video_info.name = video['name']
+                            session.commit()
+                        else:
+                            video_info = DisplayInfo(node_id=node_id,
+                                speed_mhz=video['speed_mhz'],
+                                ram_kb=video['ram_kb'],
+                                name=video['name']
+                                )
+                            session.add(video_info)
+                if 'memory' in key:
+                    mem_info = session.query(MemoryInfo).\
+                                filter(MemoryInfo.node_id == node_id).\
+                                first()
+                    if mem_info:
+                        mem_info.total_memory = values
+                        session.commit()
+                    else:
+                        mem_info = MemoryInfo(
+                                node_id=node_id,
+                                total_memory=values
+                                )
+                        session.add(mem_info)
+
+                try:
+                    session.commit()
+                except Exception as e:
+                    print e, 'BAM'
+                    session.rollback()
+
+        return system_info
 
 
 def add_software_update(session, data, username='system_user'):
@@ -635,8 +934,10 @@ def add_software_update(session, data, username='system_user'):
     node_id = data['node_id']
     if node_id:
         if operation:
-            operation.results_received = datetime.now()
-            session.commit()
+            results = add_results_non_json(session, node_id=node_id,
+                oper_id=data['operation_id'],
+                result=True, results_received=datetime.now()
+                )
         for update in data['data']:
             update_exists = package_exists(session, update['toppatch_id'])
             if not update_exists:
@@ -645,8 +946,8 @@ def add_software_update(session, data, username='system_user'):
                 if not 'version' in update:
                     update['version'] = None
                 app_update = Package(update['toppatch_id'],
-                        update['kb'], update['version'],
-                        update['vendor_id'],update['name'],
+                        update['version'], update['kb'],
+                        update['vendor_id'], update['name'],
                         update['description'], update['support_url'],
                         update['severity'], date_parser(update['date_published']),
                         update['file_size']
@@ -667,14 +968,17 @@ def add_software_per_node(session, data, username='system_user'):
         received by rvlistener.
     """
     session = validate_session(session)
+    session.commit()
     operation = operation_exists(session, data['operation_id'])
     node_id = data['node_id']
     if node_id:
         node = session.query(SystemInfo).\
                 filter(SystemInfo.node_id == node_id).first()
         if operation:
-            operation.results_received = datetime.now()
-            session.commit()
+            results = add_results_non_json(session, node_id=node_id,
+                oper_id=data['operation_id'],
+                result=True, results_received=datetime.now()
+                )
         for addupdate in data['data']:
             update_exists = node_package_exists(session, node_id,
                     addupdate['toppatch_id'])
@@ -695,10 +999,10 @@ def add_software_per_node(session, data, username='system_user'):
                         addupdate['toppatch_id'], date_installed,
                         hidden, installed=installed, is_windows=True
                         )
-                elif node.os_code == "mac":
+                elif node.os_code == "darwin":
                     node_update = PackagePerNode(node_id,
                         addupdate['toppatch_id'], date_installed,
-                        hidden, installed=installed, is_mac=True
+                        hidden, installed=installed, is_darwin=True
                         )
                 elif node.os_code == "bsd":
                     node_update = PackagePerNode(node_id,
@@ -713,7 +1017,7 @@ def add_software_per_node(session, data, username='system_user'):
                 try:
                     session.add(node_update)
                     session.commit()
-                except:
+                except Exception as e:
                     session.rollback()
             else:
                 try:
@@ -721,8 +1025,11 @@ def add_software_per_node(session, data, username='system_user'):
                     update_exists.hidden = hidden
                     update_exists.date_installed = date_installed
                     session.commit()
-                except:
+                except Exception as e:
                     session.rollback()
+        update_node_stats(session, node_id)
+        update_tag_stats(session, node_id)
+        update_network_stats(session, node_id)
 
 
 def add_software_available(session, data, username='system_user'):
@@ -740,8 +1047,10 @@ def add_software_available(session, data, username='system_user'):
     node_id = data['node_id']
     if node_id:
         if operation:
-            operation.results_received = datetime.now()
-            session.commit()
+            results = add_results_non_json(session, node_id=node_id,
+                oper_id=data['operation_id'],
+                result=True, results_received=datetime.now()
+                )
         for software in data['data']:
             app_exists = software_exists(session, software['name'],
                     software['version'])
@@ -774,8 +1083,10 @@ def add_software_installed(session, data, username='system_user'):
     node_id = data['node_id']
     if node_id:
         if operation:
-            operation.results_received = datetime.now()
-            session.commit()
+            results = add_results_non_json(session, node_id=node_id,
+                oper_id=data['operation_id'],
+                result=True, results_received=datetime.now()
+                )
         for software in data['data']:
             app_exists = software_exists(session, software['name'],
                     software['version'])
@@ -959,8 +1270,9 @@ def remove_time_block(session, id=None, label=None,
     return object_deleted
 
 
-def update_operation_row(session, oper_id, results_recv=None,
-            oper_recv=None, username='system_user'):
+def update_operation_row(session, oper_id,
+        oper_recv=None,
+        username='system_user'):
     """
         update an existing operation in the RV database
         arguments below..
@@ -969,10 +1281,7 @@ def update_operation_row(session, oper_id, results_recv=None,
     """
     session = validate_session(session)
     operation = operation_exists(session, oper_id)
-    if operation and results_recv:
-        operation.results_received = datetime.now()
-        session.commit()
-    elif operation and oper_recv:
+    if operation and oper_recv:
         operation.operation_received = datetime.now()
         session.commit()
 
@@ -1013,150 +1322,6 @@ def update_node(session, node_id, ipaddress, username='system_user'):
         session.commit()
     return node
 
-
-def update_node_stats(session, node_id, username='system_user'):
-    """
-        update the stats of the node in the node_stats table in RV
-        arguments below..
-        session == SQLAlchemy Session
-        node_id == the id of the node
-    """
-    session = validate_session(session)
-    rebootspending = session.query(NodeInfo).\
-            filter(NodeInfo.reboot == True).\
-            filter(NodeInfo.id == node_id).count()
-    agentsdown = session.query(NodeInfo).\
-            filter(NodeInfo.agent_status == False).\
-            filter(NodeInfo.id == node_id).count()
-    agentsup = session.query(NodeInfo).\
-            filter(NodeInfo.agent_status == True).\
-            filter(NodeInfo.id == node_id).count()
-    nodeupdates = session.query(PackagePerNode).filter_by(node_id=node_id)
-    patchesinstalled = nodeupdates.filter_by(installed=True).count()
-    patchesuninstalled = nodeupdates.filter_by(installed=False).count()
-    patchespending = nodeupdates.filter_by(pending=True).count()
-    nodestats = session.query(NodeStats).filter_by(node_id=node_id)
-    node_exist = nodestats.first()
-    if node_exist:
-        nodestats.update({"patches_installed" : patchesinstalled,
-                         "patches_available" : patchesuninstalled,
-                         "patches_pending" : patchespending,
-                         "reboots_pending" : rebootspending,
-                         "agents_down" : agentsdown,
-                         "agents_up" : agentsup})
-        session.commit()
-    else:
-        add_node_stats = NodeStats(node_id, patchesinstalled,
-                       patchesuninstalled, patchespending, 0,
-                       rebootspending, agentsdown, agentsup)
-        session.add(add_node_stats)
-        session.commit()
-
-
-def update_network_stats(session, username='system_user'):
-    """
-        update the global stats in network_stats table in RV
-        arguments below..
-        session == SQLAlchemy Session
-    """
-    session = validate_session(session)
-    rebootspending = session.query(NodeInfo).\
-            filter(NodeInfo.reboot == True).count()
-    agentsdown = session.query(NodeInfo).\
-            filter(NodeInfo.agent_status == False).count()
-    agentsup = session.query(NodeInfo).\
-            filter(NodeInfo.agent_status == True).count()
-    stats = session.query(PackagePerNode)
-    totalinstalled = stats.group_by(PackagePerNode.toppatch_id).\
-            filter_by(installed=True).count()
-    totalnotinstalled = stats.group_by(PackagePerNode.toppatch_id).\
-            filter_by(installed=False).count()
-    totalpending = stats.group_by(PackagePerNode.toppatch_id).\
-            filter_by(pending=True).count()
-    networkstats = session.query(NetworkStats)
-    networkstatsexists = networkstats.filter_by(id=1).first()
-    if networkstatsexists:
-        networkstats.update({"patches_installed" : totalinstalled,
-                             "patches_available" : totalnotinstalled,
-                             "patches_pending" : totalpending,
-                             "reboots_pending" : rebootspending,
-                             "agents_down" : agentsdown,
-                             "agents_up" : agentsup})
-        session.commit()
-    else:
-        network_sstats_init = NetworkStats(totalinstalled,
-                              totalnotinstalled, totalpending, 0,
-                              rebootspending, agentsdown, agentsup)
-        session.add(network_sstats_init)
-        session.commit()
-
-
-def update_tag_stats(session, username='system_user'):
-    """
-        update the global tag stats in tag_stats table in RV
-        arguments below..
-        session == SQLAlchemy Session
-    """
-    session = validate_session(session)
-    tags = session.query(TagInfo).all()
-    if len(tags) > 0:
-        for tag in tags:
-            nodes = session.query(TagsPerNode).\
-                filter(TagsPerNode.tag_id == tag.id).all()
-            patchesinstalled = 0
-            patchesuninstalled = 0
-            patchespending = 0
-            rebootspending = 0
-            agentsdown = 0
-            agentsup = 0
-            if len(nodes) > 0:
-                for node in nodes:
-                    nodeupdates = session.query(PackagePerNode).\
-                            filter_by(node_id=node.node_id)
-                    patchesinstalled = patchesinstalled + nodeupdates.\
-                            filter_by(installed=True).count()
-                    patchesuninstalled = patchesuninstalled + nodeupdates.\
-                            filter_by(installed=False).count()
-                    patchespending = patchespending + nodeupdates.\
-                            filter_by(pending=True).count()
-                    rebootspending = rebootspending + \
-                            session.query(NodeInfo).\
-                            filter(NodeInfo.id == node.node_id).\
-                            filter(NodeInfo.reboot == True).count()
-                    agentsdown = agentsdown + \
-                            session.query(NodeInfo).\
-                            filter(NodeInfo.id == node.node_id).\
-                            filter(NodeInfo.agent_status == False).count()
-                    agentsup = agentsup + \
-                            session.query(NodeInfo).\
-                            filter(NodeInfo.id == node.node_id).\
-                            filter(NodeInfo.agent_status == True).count()
-                tag_stats = session.query(TagStats).\
-                    filter_by(tag_id=tag.id)
-                tag_exists = tag_stats.first()
-                if tag_exists:
-                    tag_stats.update({"patches_installed" : patchesinstalled,
-                                     "patches_available" : patchesuninstalled,
-                                     "patches_pending" : patchespending,
-                                     "patches_pending" : patchespending,
-                                     "reboots_pending" : rebootspending,
-                                     "agents_down" : agentsdown,
-                                     "agents_up" : agentsup})
-                    session.commit()
-                else:
-                    add_tag_stats = TagStats(tag.id, patchesinstalled,
-                                   patchesuninstalled, patchespending, 0,
-                                   rebootspending, agentsdown, agentsup)
-                    session.add(add_tag_stats)
-                    session.commit()
-            else:
-                tag_exists = session.query(TagStats).\
-                    filter_by(tag_id=tag.id).first()
-                if tag_exists:
-                    session.delete(tag_exists)
-                    session.commit()
-
-
 def update_reboot_status(session, node_id, oper_type, username='system_user'):
     """
         update the reboot status on a node in the node_info table in RV
@@ -1178,11 +1343,11 @@ def update_reboot_status(session, node_id, oper_type, username='system_user'):
 
 
 def update_global_user_acl(session, user_id=None, is_admin=False,
-        is_global=True, read_only=False, allow_install=False,
+        is_global=True, allow_read=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
         allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, deny_all=False,
         date_modified=datetime.now(), username='system_user'
         ):
     """
@@ -1200,7 +1365,7 @@ def update_global_user_acl(session, user_id=None, is_admin=False,
             try:
                 user.is_admin = is_admin
                 user.is_global = is_global
-                user.read_only = read_only
+                user.allow_read = allow_read
                 user.allow_install = allow_install
                 user.allow_uninstall = allow_uninstall
                 user.allow_reboot = allow_reboot
@@ -1211,6 +1376,7 @@ def update_global_user_acl(session, user_id=None, is_admin=False,
                 user.allow_snapshot_revert = allow_snapshot_revert
                 user.allow_tag_creation = allow_tag_creation
                 user.allow_tag_removal = allow_tag_removal
+                user.deny_all = deny_all
                 user.date_modified = date_modified
                 session.commit()
                 return({
@@ -1231,11 +1397,11 @@ def update_global_user_acl(session, user_id=None, is_admin=False,
 
 
 def update_global_group_acl(session, group_id=None, is_admin=False,
-        is_global=True, read_only=False, allow_install=False,
+        is_global=True, allow_read=False, allow_install=False,
         allow_uninstall=False, allow_reboot=False, allow_schedule=False,
-        allow_wol=False, alow_snapshot_creation=False,
+        allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, deny_all=False,
         date_modified=datetime.now(), username='system_user'
         ):
     """
@@ -1253,7 +1419,7 @@ def update_global_group_acl(session, group_id=None, is_admin=False,
             try:
                 group.is_admin = is_admin
                 group.is_global = is_global
-                group.read_only = read_only
+                group.allow_read = allow_read
                 group.allow_install = allow_install
                 group.allow_uninstall = allow_uninstall
                 group.allow_reboot = allow_reboot
@@ -1264,6 +1430,7 @@ def update_global_group_acl(session, group_id=None, is_admin=False,
                 group.allow_snapshot_revert = allow_snapshot_revert
                 group.allow_tag_creation = allow_tag_creation
                 group.allow_tag_removal = allow_tag_removal
+                group.deny_all = deny_all
                 group.date_modified = date_modified
                 session.commit()
                 return({
@@ -1284,11 +1451,11 @@ def update_global_group_acl(session, group_id=None, is_admin=False,
 
 
 
-def update_node_user_permissions(session, node_id=None, user_id=None,
+def update_node_user_acl(session, node_id=None, user_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, allow_read=False,
         date_modified=datetime.now(), username='system_user'
         ):
     """
@@ -1313,6 +1480,7 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
                 user.allow_snapshot_revert = allow_snapshot_revert
                 user.allow_tag_creation = allow_tag_creation
                 user.allow_tag_removal = allow_tag_removal
+                user.allow_read = allow_read
                 user.date_modified = date_modified
                 session.commit()
                 return({
@@ -1335,11 +1503,11 @@ def update_node_user_permissions(session, node_id=None, user_id=None,
                 })
 
 
-def update_node_group_permissions(session, node_id=None, group_id=None,
+def update_node_group_acl(session, node_id=None, group_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, allow_read=False,
         date_modified=datetime.now(), username='system_user'
         ):
     """
@@ -1349,7 +1517,7 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
     session = validate_session(session)
     group = None
     if group_id and node_id:
-        group = session.query(NodeUserAccess).\
+        group = session.query(NodeGroupAccess).\
                 filter(NodeGroupAccess.group_id == group_id).\
                 filter(NodeGroupAccess.node_id == node_id).first()
         if group:
@@ -1364,6 +1532,7 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
                 group.allow_snapshot_revert = allow_snapshot_revert
                 group.allow_tag_creation = allow_tag_creation
                 group.allow_tag_removal = allow_tag_removal
+                group.allow_read = allow_read
                 group.date_modified = date_modified
                 session.commit()
                 return({
@@ -1386,11 +1555,11 @@ def update_node_group_permissions(session, node_id=None, group_id=None,
                 })
 
 
-def update_tag_user_permissions(session, tag_id=None, user_id=None,
+def update_tag_user_acl(session, tag_id=None, user_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, allow_read=False,
         date_modified=datetime.now(),
         username='system_user'
         ):
@@ -1417,6 +1586,7 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
                 user.allow_snapshot_revert = allow_snapshot_revert
                 user.allow_tag_creation = allow_tag_creation
                 user.allow_tag_removal = allow_tag_removal
+                user.allow_read = allow_read
                 user.date_modified = date_modified
                 session.commit()
                 return({
@@ -1439,11 +1609,11 @@ def update_tag_user_permissions(session, tag_id=None, user_id=None,
                 })
 
 
-def update_tag_group_permissions(session, tag_id=None, group_id=None,
+def update_tag_group_acl(session, tag_id=None, group_id=None,
         allow_install=False, allow_uninstall=False, allow_reboot=False,
         allow_schedule=False, allow_wol=False, allow_snapshot_creation=False,
         allow_snapshot_removal=False, allow_snapshot_revert=False,
-        allow_tag_creation=False, allow_tag_removal=False,
+        allow_tag_creation=False, allow_tag_removal=False, allow_read=False,
         date_modified=datetime.now(), username='system_user'
         ):
     """
@@ -1469,6 +1639,7 @@ def update_tag_group_permissions(session, tag_id=None, group_id=None,
                 group.allow_snapshot_revert = allow_snapshot_revert
                 group.allow_tag_creation = allow_tag_creation
                 group.allow_tag_removal = allow_tag_removal
+                group.allow_read = allow_read
                 group.date_modified = date_modified
                 session.commit()
                 return({
@@ -1506,11 +1677,23 @@ def add_results(session, data, username='system_user'):
         if data['operation'] == 'reboot':
             node.reboot = False
             session.commit()
+        if not 'data' in data:
+            if 'restart' in data['operation'] or \
+                    'stop' in data['operation'] or \
+                    'start' in data['operation']:
+                results = add_results_non_json(session, node_id=node_id,
+                        oper_id=data['operation_id'],
+                        result=return_bool(data['result']),
+                        error=data['error'],
+                        results_received=datetime.now()
+                        )
+                return(results)
+
         for msg in data['data']:
             if 'reboot' in msg:
                 reboot = return_bool(msg['reboot'])
             else:
-               reboot = None
+               reboot = False
             os_code = session.query(SystemInfo).\
                     filter_by(node_id=node_id).first().os_code
             update_exists = node_package_exists(session, node_id, msg['toppatch_id'])
@@ -1541,23 +1724,19 @@ def add_results(session, data, username='system_user'):
                         if node.reboot == False:
                             node.reboot = reboot
                 session.commit()
-            error = None
-            if "error" in msg:
-                error = msg['error']
-            results = Results(node_id, data['operation_id'], \
-                        msg['toppatch_id'], msg['result'], \
-                        reboot, error
+                error = None
+                if "error" in msg:
+                    error = msg['error']
+                results = add_results_non_json(
+                        session, node_id=node_id,
+                        oper_id=data['operation_id'],
+                        toppatch_id=msg['toppatch_id'],
+                        result=msg['result'],
+                        reboot=reboot, error=error,
+                        results_received=datetime.now()
                         )
-            try:
-                session.add(results)
-                session.commit()
-                if operation:
-                    operation.results_id = results.id
-                    operation.results_received = datetime.now()
                 update_node_stats(session, node_id)
                 update_network_stats(session)
+                update_tag_stats(session)
                 session.commit()
-                TcpConnect("127.0.0.1", "FUCK YOU", port=8080, secure=False)
-                return results
-            except:
-                session.rollback()
+        return results

@@ -10,7 +10,7 @@ from csrhandler import CsrHandOff
 import logging
 import logging.config
 
-logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('csrlistener')
 ENGINE = init_engine()
 c = ENGINE.connect()

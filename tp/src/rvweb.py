@@ -32,7 +32,8 @@ from server.api.scheduler_api import *
 from server.api.transactions_api import *
 from server.api.packages_api import *
 from server.api.api import *
-from server.api.virtual import *
+from server.api.email_api import *
+from server.api.virtual_api import *
 from server.api import *
 from server.account.manager import AccountManager
 from server.oauth.token import TokenManager
@@ -73,18 +74,23 @@ class Application(tornado.web.Application):
             (r"/login/oauth/access_token", AccessTokenHandler),
 
             #### API Handlers
+            (r"/api/email/config/create?", CreateEmailConfigHandler),
+            (r"/api/email/config/list?", GetEmailConfigHandler),
             (r"/api/osData/?", OsHandler),
             (r"/api/networkData/?", NetworkHandler),
             (r"/api/summaryData/?", SummaryHandler),
+            (r"/api/global/graphs/severity?", GetPackageSeverityOverTimeHandler),
             #(r"/api/patchData/?", PatchHandler),
             (r"/api/graphData/?", GraphHandler),
             (r"/api/logger/modifyLogging?", LoggingModifyerHandler),
             (r"/api/logger/getParams?", LoggingListerHandler),
             (r"/api/nodes.json/?", NodesHandler),
+            (r"/api/tags.json/?", TagsHandler),
             (r"/api/patches.json/?", PatchesHandler),
             (r"/api/severity.json/?", SeverityHandler),
             (r"/api/scheduler/list.json/?", SchedulerListerHandler),
             (r"/api/scheduler/add?", SchedulerAddHandler),
+            (r"/api/scheduler/recurrent/add?", SchedulerAddRecurrentJobHandler),
             (r"/api/scheduler/remove?", SchedulerRemoveHandler),
             (r"/api/timeblocker/list.json/?", TimeBlockerListerHandler),
             (r"/api/timeblocker/add?", TimeBlockerAddHandler),
@@ -97,7 +103,9 @@ class Application(tornado.web.Application):
             (r"/api/tagging/removeTagPerNode?", TagRemovePerNodeHandler),
             (r"/api/tagging/removeTag?", TagRemoveHandler),
             (r"/api/tagging/tagStats?", GetTagStatsHandler),
+            (r"/api/tagging/graphs/severity?", GetTagPackageSeverityOverTimeHandler),
             (r"/api/transactions/getTransactions?", GetTransactionsHandler),
+            (r"/api/transactions/search?", SearchTransactionsHandler),
             (r"/api/package/getDependecies?", GetDependenciesHandler),
             (r"/api/package/searchByPatch?", SearchPatchHandler),
             (r"/api/package/getTagsByTpId?", GetTagsPerTpIdHandler),
@@ -105,11 +113,13 @@ class Application(tornado.web.Application):
             (r"/api/node/modifyHostName?", ModifyHostNameHandler),
             (r"/api/node/delete?", NodeRemoverHandler),
             (r"/api/node/cleanData?", NodeCleanerHandler),
+            (r"/api/node/wol?", NodeWolHandler),
+            (r"/api/node/graphs/severity?", GetNodePackageSeverityOverTimeHandler),
             (r"/api/ssl/nodeToggler?", NodeTogglerHandler),
             (r"/api/ssl/list.json/?", SslHandler),
-            (r"/api/acl/create?", AclModifierHandler),
-            (r"/api/acl/modify?", AclModifierHandler),
-            (r"/api/acl/delete?", AclModifierHandler),
+            (r"/api/acl/create?", AclCreateHandler),
+            (r"/api/acl/modify?", AclModifyHandler),
+            (r"/api/acl/delete?", AclDeleteHandler),
             (r"/api/userInfo/?", UserHandler),
             (r"/api/users/list?", ListUserHandler),
             (r"/api/users/create?", CreateUserHandler),
@@ -118,12 +128,17 @@ class Application(tornado.web.Application):
             (r"/api/groups/list?", ListGroupHandler),
             (r"/api/groups/create?", CreateGroupHandler),
             (r"/api/groups/delete?", DeleteGroupHandler),
-            (r"/api/vmware/snapshots/list?", GetNodeSnapshotsHandler),
-            (r"/api/vmware/snapshots/create?", CreateSnapshotHandler),
-            (r"/api/vmware/snapshots/revert?", RevertSnapshotHandler),
-            (r"/api/vmware/snapshots/remove?", RemoveSnapshotHandler),
-            (r"/api/vmware/snapshots/removeAll?", RemoveAllSnapshotsHandler),
-            (r"/api/vmware/createConfig?", CreateVmwareConfigHandler),
+            (r"/api/virtual/node/snapshots/list?", GetNodeSnapshotsHandler),
+            (r"/api/virtual/node/snapshots/create?", CreateSnapshotHandler),
+            (r"/api/virtual/node/snapshots/revert?", RevertSnapshotHandler),
+            (r"/api/virtual/node/snapshots/remove?", RemoveSnapshotHandler),
+            (r"/api/virtual/node/snapshots/removeAll?", RemoveAllSnapshotsHandler),
+            (r"/api/vmware/config/create?", CreateVmwareConfigHandler),
+            (r"/api/vmware/config/list?", GetVmwareConfigHandler),
+            (r"/api/virtual/node/info?", GetNodeVmInfoHandler),
+            (r"/api/virtual/node/poweron?", PowerOnVmHandler),
+            (r"/api/virtual/node/shutdown?", ShutdownVmHandler),
+            (r"/api/virtual/node/reboot?", RebootVmHandler),
             (r"/api/vendors/?", ApiHandler),                # Returns all vendors
             (r"/api/vendors/?(\w+)/?", ApiHandler),         # Returns vendor with products and respected vulnerabilities.
             (r"/api/vendors/?(\w+)/?(\w+)/?", ApiHandler),  # Returns specific product from respected vendor with vulnerabilities.
@@ -157,7 +172,7 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, template_path=template_path, static_path=static_path, debug=debug, **settings)
 
     def log_request(self, handler):
-        logging.config.fileConfig('/opt/TopPatch/tp/src/logger/logging.config')
+        logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
         log = logging.getLogger('rvweb')
         log_method = log.debug
         if handler.get_status() <= 299:
@@ -176,19 +191,6 @@ class Application(tornado.web.Application):
         log_method(log_message)
 
 
-class HelloWorldProtocol(Protocol):
-    def connectionMade(self):
-        SendToSocket("message")
-
-class HelloWorldFactory(Factory):
-    protocol = HelloWorldProtocol
-
-class ThreadClass(threading.Thread):
-    def run(self):
-        reactor.listenTCP(8080, HelloWorldFactory())
-        reactor.run(installSignalHandlers=0)
-
-
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
@@ -198,9 +200,6 @@ if __name__ == '__main__':
             "keyfile": os.path.join("/opt/TopPatch/tp/data/ssl/", "server.key"),
             })
     https_server.listen(options.port)
-    socketListener = ThreadClass()
-    socketListener.daemon = True
-    socketListener.start()
     tornado.ioloop.IOLoop.instance().start()
 
 

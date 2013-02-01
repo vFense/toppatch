@@ -32,8 +32,10 @@ define(['jquery', 'd3'], function ($, d3) {
                     .attr("id", "master"),
                 // The pie sectors container
                     arcGroup = svg.append("svg:g")
+                    .style('width', width)
+                    .style('height', height)
                     .attr("class", "arcGroup")
-                    .attr("filter", "url(#shadow)")
+                    //.attr("filter", "url(#shadow)")
                     .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")"),
                 // Header text
                     //header = svg.append("text").text("Parent")
@@ -68,7 +70,7 @@ define(['jquery', 'd3'], function ($, d3) {
                 }
                 // Helper function to extract color from data object
                 function getColor(data, index) {
-                    return index <= 2 ? d3.rgb(severityColors[index]).brighter() : colors(index);
+                    return colors(index);//index <= 2 ? d3.rgb(severityColors[index]).brighter() : colors(index);
                 }
                 // Helper function to extract a darker version of the color
                 function getDarkerColor(data, index) {
@@ -81,7 +83,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     txt.text(d.data.label + ": " + d.data.value + ' nodes.');
                     textLength = txt.style('width');
                     txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                    txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                    txtRect.attr({width: parseFloat(textLength) + 20}).style('opacity', '0.3');
                 }
                 function textMouseMove() {
                     var mousePos = d3.mouse(that);
@@ -91,6 +93,7 @@ define(['jquery', 'd3'], function ($, d3) {
                     txtRect.style('opacity', '0.3');
                 }
                 function textMouseOut() {
+                    txtMask.attr({transform: 'translate(' + width + ', ' + height + ')'});
                     txt.text('');
                     txtRect.style('opacity', '0');
                 }
@@ -147,7 +150,7 @@ define(['jquery', 'd3'], function ($, d3) {
 
                 // Mouse interaction handling
                 paths.on("click", function (d) {
-                    window.location.hash = '#patches?type=' + d.data.label;
+                    window.location.hash = '#nodes?by_os=' + d.data.label;
                 })
                     .on("mouseover", function (d) {
                         var ang;
