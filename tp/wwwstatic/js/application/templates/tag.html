@@ -100,9 +100,15 @@
             <header>
                 <a class="accordion-toggle" href="#">
                     <i class="icon-circle-arrow-down"></i>&nbsp;<strong>Patches Available</strong>
-                <span class="pull-right">
-                    <span class="badge badge-inverse"><%= patches.packages_available_count %></span>
-                </span>
+                    <span class="pull-right">
+                        <select class="btn btn-mini" name="severityFilter">
+                            <option>None</option>
+                            <option>Optional</option>
+                            <option>Recommended</option>
+                            <option>Critical</option>
+                        </select>
+                        <span class="badge badge-inverse"><%= patches.packages_available_count %></span>
+                    </span>
                 </a>
             </header>
         </div>
