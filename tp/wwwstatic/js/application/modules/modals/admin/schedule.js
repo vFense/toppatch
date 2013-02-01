@@ -17,6 +17,19 @@ define(
                     return this.baseUrl + this.filter;
                 }
             }),
+            NodeCollection: Backbone.Collection.extend({
+                baseUrl: 'api/nodes.json',
+                filter: '',
+                url: function () {
+                    return this.baseUrl + this.filter;
+                }
+            }),
+            TagCollection: Backbone.Collection.extend({
+                baseUrl: 'api/tagging/listByTag.json',
+                url: function () {
+                    return this.baseUrl;
+                }
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
@@ -25,6 +38,14 @@ define(
                     //this.collection = new exports.Collection();
                     //this.collection.bind('reset', this.render, this);
                     //this.collection.fetch();
+
+                    this.nodecollection = new exports.NodeCollection();
+                    this.nodecollection.bind('reset', this.render, this);
+                    this.nodecollection.fetch();
+
+                    this.tagcollection = new exports.TagCollection();
+                    this.tagcollection.bind('reset', this.render, this);
+                    this.tagcollection.fetch();
                 },
                 events: {
                     'change select[name=operation]':    'hideSeverity',
@@ -108,11 +129,16 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var template = _.template(this.template);
-                        //data = this.collection.toJSON()[0];
+                    var template = _.template(this.template),
+                        tags = this.tagcollection.toJSON(),
+                        nodes = this.nodecollection.toJSON(),
+                        data = {
+                            tags: tags,
+                            nodes: nodes[0]
+                        };
                     this.$el.empty();
 
-                    this.$el.html(template({}));
+                    this.$el.html(template({data: data}));
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
