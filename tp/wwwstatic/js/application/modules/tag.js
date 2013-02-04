@@ -66,7 +66,7 @@ define(
                         id = this.id,
                         installedGraph = '#installedGraph',
                         availableGraph = '#availableGraph',
-                        $graphDiv = this.$el.find(graphId),
+                        $graphDiv = this.$el.find(installedGraph),
                         width = $graphDiv.width(),
                         height = $graphDiv.parent().height(),
                         stackedChart = app.chart.stackedArea().width(width).height(height);
@@ -264,7 +264,6 @@ define(
                 beforeRender: $.noop,
                 onRender: function () {
                     var $el = this.$el;
-                    this.stackedAreaGraph();
                     $el.find('input[name=schedule]').each(function () {
                         $(this).popover({
                             placement: 'top',
@@ -300,7 +299,13 @@ define(
                     this.$el.empty();
 
                     this.$el.append(template({data: data, patches: patches}));
-                    if (!patches) { this.showLoading('#loading'); }
+                    if (!patches) {
+                        this.showLoading('#loading');
+                        this.showLoading('#installedGraph');
+                        this.showLoading('#availableGraph');
+                    } else {
+                        this.stackedAreaGraph();
+                    }
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
