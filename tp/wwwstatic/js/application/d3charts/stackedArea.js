@@ -12,6 +12,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
             height    = 280,
             x = d3.scale.linear(),
             y = d3.scale.linear(),
+            title = 'Packages over time',
             severityColors = ['#EAEA4B', '#FF6600', '#FF3030'];//FFFF00
 
         function chart(selection) {
@@ -53,6 +54,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     $(this).html("");
                     height = height < 150 ? 150 : height;
                     height = height > 190 ? 190 : height;
+                    width = width < 300 ? 400 : width;
                     legendData = [
                         {title: 'Optional', value: data[0].optional},
                         {title: 'Recommended', value: data[0].recommended},
@@ -103,14 +105,11 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                     stack = d3.layout.stack()
                         .values(function (d) { return d.values; })(layers);
 
-                    xAxis = d3.svg.axis().scale(x).tickSize(1).tickFormat(function (d) {
+                    xAxis = d3.svg.axis().scale(x).ticks(8).tickSize(1).tickFormat(function (d) {
                         return new Date(d).toDateString().substring(4, 10);
                     });
                     yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
 
-                    line = d3.svg.line()
-                        .x(function (d, i) { return x(d.x); })
-                        .y(function (d) { return y(d.y); });
                     svg = d3.select(this)
                         .append("svg:svg")
                         .data([stack[2]])
@@ -142,12 +141,13 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                         .call(xAxis);
 
                     xAxisText = svg.append("text")
-                        .attr("text-anchor", "end")
+                        .attr("text-anchor", "middle")
                         .attr("dy", ".75em")
+                        .attr("x", width / 2.5)
+                        .attr("y", 0.89 * height)
                         .style("font-size", "10px")
                         .style("font-weight", "bold")
-                        .attr("transform", "translate(" + width / 2.5 + "," + 0.89 * height + ")")
-                        .text('Packages over time');
+                        .text(title);
 
 
                     svg.append("svg:g")
@@ -250,6 +250,11 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
         chart.height = function (value) {
             if (!arguments.length) { return height; }
             height = value;
+            return chart;
+        };
+        chart.title = function (value) {
+            if (!arguments.length) { return title; }
+            title = value;
             return chart;
         };
 

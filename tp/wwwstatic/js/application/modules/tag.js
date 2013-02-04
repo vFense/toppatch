@@ -21,14 +21,14 @@ define(
                 url: function () {
                     return this.baseUrl + '?tag_id=' + this.id;
                 }
-            }),
+            }),/*
             GraphCollection: Backbone.Collection.extend({
                 baseUrl: 'api/node/graphs/severity',
                 installed: 'true',
                 url: function () {
                     return this.baseUrl + '?tagid=' + this.id + '&installed=' + this.installed;
                 }
-            }),
+            }),*/
             View: Backbone.View.extend({
                 initialize: function () {
                     this.template = myTemplate;
@@ -36,13 +36,15 @@ define(
                     this.statscollection.bind('reset', this.render, this);
                     this.statscollection.fetch();
 
+                    this.id = this.statscollection.id;
+
                     this.patchcollection = new exports.PatchCollection();
                     this.patchcollection.bind('reset', this.render, this);
                     this.patchcollection.fetch();
 
-                    this.graphcollection = new exports.GraphCollection();
+                    /*this.graphcollection = new exports.GraphCollection();
                     this.graphcollection.bind('reset', this.render, this);
-                    this.graphcollection.fetch();
+                    this.graphcollection.fetch();*/
 
                     $.ajaxSetup({ traditional: true });
                 },
@@ -60,16 +62,25 @@ define(
                     $div.empty().append(this._pinwheel.el);
                 },
                 stackedAreaGraph: function (event) {
-                    var data = this.graphcollection.toJSON(),
-                        graphId = '#nodeGraph',
+                    var //data = this.graphcollection.toJSON(),
+                        id = this.id,
+                        installedGraph = '#installedGraph',
+                        availableGraph = '#availableGraph',
                         $graphDiv = this.$el.find(graphId),
                         width = $graphDiv.width(),
                         height = $graphDiv.parent().height(),
                         stackedChart = app.chart.stackedArea().width(width).height(height);
-                    this.showLoading(graphId);
+                    this.showLoading(installedGraph);
+                    this.showLoading(availableGraph);
+                    d3.json("../api/node/graphs/severity?tagid=" + id + "&installed=true", function (json) {
+                        d3.select(installedGraph).datum([json]).call(stackedChart.title('Installed packages over time'));
+                    });
+                    d3.json("../api/node/graphs/severity?tagid=" + id + "&installed=false", function (json) {
+                        d3.select(availableGraph).datum([json]).call(stackedChart.title('Available packages over time'));
+                    });/*
                     if (data.length) {
                         d3.select(graphId).datum(data).call(stackedChart);
-                    }
+                    }*/
                 },
                 toggleAllInputs: function (event) {
                     var status = event.target.checked,

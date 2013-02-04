@@ -10,90 +10,85 @@
 <article class="row-fluid">
     <header><strong>Node Details</strong></header>
     <section class="well well-small noMargin clearfix">
-        <div class="span4">
-            <dl>
-                <dt>Node IP:</dt><dd><% print(model.ip || '<em>Not listed</em>'); %></dd>
-                <dt>Display Name:</dt><dd><% model['display/name'] ? print('<span>' + model['display/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editDisplay" data-placement="right" name="editPopover"><i class="icon-pencil" style="color: #daa520"></i></a></dd>
-                <dt>Hostname:</dt><dd><% model['host/name'] ? print('<span>' + model['host/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editHost" data-placement="right" name="editPopover"><i class="icon-pencil" style="color: #daa520"></i></a></dd>
-                <dt>Computer Name:</dt><dd><% model['computer/name'] ? print('<span>' + model['computer/name'] +'</span>') : print('<em>Not listed</em>'); %></dd>
-                <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
-                <dt>Tags applied:</dt>
-                <dd>
-                    <div id="taglist" class="pull-left">
-                    <% if (model.tags.length != 0) { %>
-                        <% _.each(model.tags, function (tag) { %>
-                            <span style="margin-right: 3px" class="label label-info" id="<% print(tag.replace(' ', '')) %>"><%= tag %></span>
-                        <% }); %>
-                    <% } else { %>
-                        <em id="notag">No tags applied</em>
+        <dl>
+            <dt>Node IP:</dt><dd><% print(model.ip || '<em>Not listed</em>'); %></dd>
+            <dt>Display Name:</dt><dd><% model['display/name'] ? print('<span>' + model['display/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editDisplay" data-placement="right" name="editPopover"><i class="icon-pencil" style="color: #daa520"></i></a></dd>
+            <dt>Hostname:</dt><dd><% model['host/name'] ? print('<span>' + model['host/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editHost" data-placement="right" name="editPopover"><i class="icon-pencil" style="color: #daa520"></i></a></dd>
+            <dt>Computer Name:</dt><dd><% model['computer/name'] ? print('<span>' + model['computer/name'] +'</span>') : print('<em>Not listed</em>'); %></dd>
+            <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
+            <dt>Tags applied:</dt>
+            <dd>
+                <div id="taglist" class="pull-left">
+                <% if (model.tags.length != 0) { %>
+                    <% _.each(model.tags, function (tag) { %>
+                        <span style="margin-right: 3px" class="label label-info" id="<% print(tag.replace(' ', '')) %>"><%= tag %></span>
+                    <% }); %>
+                <% } else { %>
+                    <em id="notag">No tags applied</em>
+                <% } %>
+                </div>&nbsp;<a href="#" id="addTag" data-placement="right"><i style="color: green;" class="icon-plus" ></i></a>
+            </dd>
+            <dt>Agent Status:</dt>
+            <dd>
+                <% if (model['agent/status']) { %>
+                Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp; —
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="stop">
+                    <i title="Stop Agent" class="icon-off" style="color: #ff0000;"></i>
+                </button>
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="restart">
+                    <i title="Restart Agent" class="icon-refresh"></i>
+                </button>
+                <% } else { %>
+                Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i> —
+                <button class="btn btn-link noPadding" name="agentOperation" data-value="start">
+                    <i title="Start Agent" class="icon-play" style="color: green;"></i>
+                </button>
+                <% } %>
+            </dd>
+            <dt>Host Status:</dt>
+            <dd>
+                <% if (model.reboot) { %>
+                <form id="reboot-form" class="noMargin">
+                    Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;
+                    Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
+                    <input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/>
+                    <input type="hidden" name="operation" value="reboot" />
+                    <input type="hidden" name="node" value="<%=  model.id  %>"/>
+                </form>
+                <% } else if (model['host/status']) { %>
+                <form id="reboot-form">
+                    Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
+                    <% if(model.is_vm) { %>  —
+                        <button class="btn btn-link noPadding" name="nodeOperation" data-value="stop">
+                            <i title="Shut Down VM" class="icon-off" style="color: #ff0000;"></i>
+                        </button>
+                        <button class="btn btn-link noPadding" name="nodeOperation" data-value="restart">
+                            <i title="Restart VM" class="icon-refresh"></i>
+                        </button>
+                    <% } %><br>
+                    Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
+                    <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>&nbsp;
+                    <input type="hidden" name="operation" value="reboot" />
+                    <input type="hidden" name="node" value="<%=  model.id  %>"/>
+                </form>
+                <% } else { %>
+                    Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i>
+                    <% if(model.is_vm) { %>  —
+                        <button class="btn btn-link noPadding" name="nodeOperation" data-value="start">
+                            <i title="Power On VM" class="icon-play" style="color: green;"></i>
+                        </button>
                     <% } %>
-                    </div>&nbsp;<a href="#" id="addTag" data-placement="right"><i style="color: green;" class="icon-plus" ></i></a>
-                </dd>
-                <dt>Agent Status:</dt>
-                <dd>
-                    <% if (model['agent/status']) { %>
-                    Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp; —
-                    <button class="btn btn-link noPadding" name="agentOperation" data-value="stop">
-                        <i title="Stop Agent" class="icon-off" style="color: #ff0000;"></i>
-                    </button>
-                    <button class="btn btn-link noPadding" name="agentOperation" data-value="restart">
-                        <i title="Restart Agent" class="icon-refresh"></i>
-                    </button>
-                    <% } else { %>
-                    Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i> —
-                    <button class="btn btn-link noPadding" name="agentOperation" data-value="start">
-                        <i title="Start Agent" class="icon-play" style="color: green;"></i>
-                    </button>
-                    <% } %>
-                </dd>
-                <dt>Host Status:</dt>
-                <dd>
-                    <% if (model.reboot) { %>
-                    <form id="reboot-form" class="noMargin">
-                        Reboot required <i style="color: orange;" class="icon-warning-sign"></i>&nbsp;
-                        Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
-                        <input type="submit" value="Reboot" id="reboot-button" style="color: black;" class="btn btn-mini btn-warning"/>
-                        <input type="hidden" name="operation" value="reboot" />
-                        <input type="hidden" name="node" value="<%=  model.id  %>"/>
-                    </form>
-                    <% } else if (model['host/status']) { %>
-                    <form id="reboot-form">
-                        Running&nbsp;<i style="color: green;" class="icon-ok"></i>&nbsp;
-                        <% if(model.is_vm) { %>  —
-                            <button class="btn btn-link noPadding" name="nodeOperation" data-value="stop">
-                                <i title="Shut Down VM" class="icon-off" style="color: #ff0000;"></i>
-                            </button>
-                            <button class="btn btn-link noPadding" name="nodeOperation" data-value="restart">
-                                <i title="Restart VM" class="icon-refresh"></i>
-                            </button>
-                        <% } %><br>
-                        Schedule reboot&nbsp;<input type="checkbox" name="schedule" value="once" data-placement="right"/>
-                        <input type="submit" value="Reboot" id="reboot-button" class="btn btn-mini btn-primary"/>&nbsp;
-                        <input type="hidden" name="operation" value="reboot" />
-                        <input type="hidden" name="node" value="<%=  model.id  %>"/>
-                    </form>
-                    <% } else { %>
-                        Stopped&nbsp;<i style="color: red;" class="icon-warning-sign"></i>
-                        <% if(model.is_vm) { %>  —
-                            <button class="btn btn-link noPadding" name="nodeOperation" data-value="start">
-                                <i title="Power On VM" class="icon-play" style="color: green;"></i>
-                            </button>
-                        <% } %>
-                    <% } %>
-                </dd>
-            </dl>
-        </div>
-        <div id="nodeGraph" class="span8"></div>
+                <% } %>
+            </dd>
+        </dl>
     </section>
 </article>
-<!--
-<article>
-    <header><strong>Patches over Time</strong></header>
+<article class="row-fluid">
     <section class="well well-small noMargin clearfix">
-        <div id='test'></div>
+        <div id="installedGraph" class="span6"></div>
+        <div id="availableGraph" class="span6"></div>
     </section>
 </article>
--->
 <article>
     <header><strong>Network Interfaces</strong></header>
     <section class="well well-small noMargin clearfix">
