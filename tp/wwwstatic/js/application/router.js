@@ -126,7 +126,7 @@ define(
                 require(['modules/node'], function (myView) {
                     myView.Collection = myView.Collection.extend({id: id});
                     myView.VmCollection = myView.VmCollection.extend({id: id});
-                    myView.GraphCollection = myView.GraphCollection.extend({id: id});
+                    //myView.GraphCollection = myView.GraphCollection.extend({id: id});
                     var view = new myView.View();
                     that.show({hash: '#nodes', title: 'Nodes', view: view});
                 });
@@ -181,7 +181,7 @@ define(
                 require(['modules/tag'], function (myView) {
                     myView.StatsCollection = myView.StatsCollection.extend({id: id});
                     myView.PatchCollection = myView.PatchCollection.extend({id: id});
-                    myView.GraphCollection = myView.GraphCollection.extend({id: id});
+                    //myView.GraphCollection = myView.GraphCollection.extend({id: id});
                     that.show({hash: '#tags', title: 'Tag Detail', view: new myView.View()});
                 });
             },

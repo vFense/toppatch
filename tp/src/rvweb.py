@@ -120,7 +120,7 @@ class Application(tornado.web.Application):
             (r"/api/acl/create?", AclCreateHandler),
             (r"/api/acl/modify?", AclModifyHandler),
             (r"/api/acl/delete?", AclDeleteHandler),
-            (r"/api/userInfo/?", UserHandler),
+            (r"/api/user/?", UserHandler),
             (r"/api/users/list?", ListUserHandler),
             (r"/api/users/create?", CreateUserHandler),
             (r"/api/users/delete?", DeleteUserHandler),

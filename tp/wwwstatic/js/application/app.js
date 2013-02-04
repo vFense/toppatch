@@ -128,7 +128,7 @@ define(
                 var userSettings, userName,
                     User = {};
                 $.ajax({
-                    url: '/api/userInfo',
+                    url: '/api/user',
                     dataType: 'json',
                     async: false,
                     success: function (json) {

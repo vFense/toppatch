@@ -21,13 +21,13 @@ define(
                     return this.baseUrl + '?node_id=' + this.id;
                 }
             }),
-            GraphCollection: Backbone.Collection.extend({
+           /* GraphCollection: Backbone.Collection.extend({
                 baseUrl: 'api/node/graphs/severity',
                 installed: 'true',
                 url: function () {
                     return this.baseUrl + '?nodeid=' + this.id + '&installed=' + this.installed;
                 }
-            }),
+            }),*/
             View: Backbone.View.extend({
                 initialize: function () {
                     _.bindAll(this, 'createtag');
@@ -46,9 +46,9 @@ define(
                     this.vmcollection.bind('reset', this.render, this);
                     this.vmcollection.fetch();
 
-                    this.graphcollection = new exports.GraphCollection();
+                    /*this.graphcollection = new exports.GraphCollection();
                     this.graphcollection.bind('reset', this.render, this);
-                    this.graphcollection.fetch();
+                    this.graphcollection.fetch();*/
                 },
                 events: {
                     'click .disabled': function (e) { e.preventDefault(); },
@@ -155,29 +155,45 @@ define(
                         el: $body
                     });
                     this.navigation.setActive('nodes/' + this.id + '/patches');
-
+                    this.showLoading('.tab-body');
                     this.$el.find("a.disabled").on("click", false);
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
                 },
+                showLoading: function (el) {
+                    var $el = this.$el,
+                        $div = $el.find(el);
+                    this._pinwheel = new app.pinwheel();
+                    $div.empty().append(this._pinwheel.el);
+                },
                 stackedAreaGraph: function () {
-                    var data = [],
-                        graphId = '#nodeGraph',
-                        $graphDiv = this.$el.find(graphId),
+                    var id = this.id,
+                        installedGraph = '#installedGraph',
+                        availableGraph = '#availableGraph',
+                        $graphDiv = this.$el.find(installedGraph),
                         width = $graphDiv.width(),
                         height = $graphDiv.parent().height(),
-                        stackedChart = app.chart.stackedArea().width(width).height(height),
-                        variable = this.graphcollection.toJSON();
-                    if (variable.length) {
-                        d3.select(graphId).datum(variable).call(stackedChart);
-                    }
+                        stackedChart = app.chart.stackedArea().width(width).height(height);
+                        //data = this.graphcollection.toJSON();
+                    this.showLoading(installedGraph);
+                    this.showLoading(availableGraph);
+                    d3.json("../api/node/graphs/severity?nodeid=" + id + "&installed=true", function (json) {
+                        d3.select(installedGraph).datum([json]).call(stackedChart.title('Installed packages over time'));
+                    });
+                    d3.json("../api/node/graphs/severity?nodeid=" + id + "&installed=false", function (json) {
+                        d3.select(availableGraph).datum([json]).call(stackedChart.title('Available packages over time'));
+                    });
+                    /*if (data.length) {
+                        d3.select(graphId).datum(data).call(stackedChart);
+                    }*/
                 },
                 changeView: function (event) {
                     event.preventDefault();
                     var $tab = $(event.currentTarget),
                         $body = this.$el.find('.tab-body'),
                         id = this.id;
+                    this.showLoading('.tab-body');
                     if ($tab.attr('href') === '#nodes/' + id + '/patches') {
                         patchesView.Collection = patchesView.Collection.extend({id: id});
                         this.patchesView = new patchesView.View({
