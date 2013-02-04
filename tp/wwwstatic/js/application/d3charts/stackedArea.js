@@ -19,7 +19,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
             selection.each(function (data) {
                 // generate chart here; `d` is the data and `this` is the element
                 var svg, xAxis, xAxisText, yAxisLeft, yAxisLeftText, xAxisWidth, xAxisElement,
-                    line, graph, point, area, stack, key, legend, legendData,
+                    line, graph, point, area, stack, key, legend, legendData, legendBox,
                     txtTop, txtMask, txtRect, txtMiddleTop, txtMiddle, txtMiddleBottom, txtBottom, txtBottomTop,
                     layers = [{name: 'optional'}, {name: 'recommended'}, {name: 'critical'}],
                     color = d3.scale.category20(),
@@ -185,21 +185,27 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                             return "translate(-45, " + heights[i] + ")";
                         });
 
-                    legend.append("rect")
-                        .attr("x", width - 18)
-                        .attr("width", 18)
+                    legendBox = legend.append("rect")
+                        .attr("x", width - 25)
+                        .attr("width", 25)
                         .attr("height", 18)
-                        .style("fill", function (d, i) { return severityColors[i]; })
-                        .append("title").text(function (d, i) { return d.title + ": " + (d.value || 0); });
+                        .style("fill", function (d, i) { return severityColors[i]; });
+                    legend.append("text")
+                        .attr("x", width - 12)
+                        .attr("y", 12)
+                        .style("fill", "black")
+                        .attr("text-anchor", "middle")
+                        .text(function (d, i) { return d.value || 0; });
+                    legend.append("title").text(function (d, i) { return d.title + ": " + (d.value || 0); });
                     if (width > 500) {
                         legend.append("text")
-                            .attr("x", width - 24)
-                            .attr("y", 9)
+                            .attr("x", width - 30)
+                            .attr("y", 6)
                             .attr("dy", ".75em")
                             .style("font-size", "10px")
                             .style('font-weight', "bold")
                             .style("text-anchor", "end")
-                            .text(function (d) { return d.title + ": " + (d.value || 0); });
+                            .text(function (d) { return d.title; });
                     }
 
 
