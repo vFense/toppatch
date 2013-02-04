@@ -193,7 +193,7 @@ define(
             },
             showLogs: function (query) {
                 var that = this,
-                    params = '',
+                    params = {},
                     collection,
                     view;
 
