@@ -53,12 +53,27 @@ define(
                     admin: undefined
                 }
             },
-            parseQuery: function (query) {
-                var params = {};
-                _.each(query.split('&'), function (value) {
-                    var param = value.split('=');
-                    params[param[0]] = param[1];
+            parseQuery: function (query, coerce) {
+                var params = {},
+                    coerce_types = {'true': true, 'false': false, 'null': null},
+                    decode = decodeURIComponent;
+
+                _.each(query.split('&'), function (param) {
+                    param = param.split('=');
+                    var key = decode(param[0]),
+                        val = decode(param[1]);
+                    if (coerce || $.type(coerce) === "undefined") {
+                        if ($.isNumeric(val)) {
+                            val = +val;
+                        } else if (val === "undefined") {
+                            val = undefined;
+                        } else if (coerce_types[val] !== undefined) {
+                            val = coerce_types[val];
+                        }
+                    }
+                    params[key] = val;
                 });
+
                 return params;
             },
             pinwheel: pinwheel.View,
