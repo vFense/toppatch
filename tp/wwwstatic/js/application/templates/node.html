@@ -16,18 +16,6 @@
             <dt>Hostname:</dt><dd><% model['host/name'] ? print('<span>' + model['host/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editHost" data-placement="right" name="editPopover"><i class="icon-pencil" title="Edit Hostname" style="color: #daa520"></i></a></dd>
             <dt>Computer Name:</dt><dd><% model['computer/name'] ? print('<span>' + model['computer/name'] +'</span>') : print('<em>Not listed</em>'); %></dd>
             <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
-            <dt>Tags applied:</dt>
-            <dd>
-                <div id="taglist" class="pull-left">
-                <% if (model.tags.length != 0) { %>
-                    <% _.each(model.tags, function (tag) { %>
-                        <span style="margin-right: 3px" class="label label-info" id="<% print(tag.replace(' ', '')) %>"><%= tag %></span>
-                    <% }); %>
-                <% } else { %>
-                    <em id="notag">No tags applied</em>
-                <% } %>
-                </div>&nbsp;<a href="#" id="addTag" data-placement="right"><i style="color: green;" class="icon-plus" title="Add a tag" ></i></a>
-            </dd>
             <dt>Agent Status:</dt>
             <dd>
                 <% if (model['agent/status']) { %>
@@ -124,7 +112,7 @@
                 <div class="pull-left">&nbsp;</div>
                 <div class="pull-right hidden-print">
                     <small>Add a tag</small>&nbsp;
-                    <button class="btn btn-link noPadding"><i style="color: green;" class="icon-plus"></i></button>
+                    <button class="btn btn-link noPadding" name="toggleAddTag"><i style="color: green;" class="icon-plus"></i></button>
                 </div>
             </header>
             <div class="items">
@@ -213,12 +201,12 @@
                     <% }); %>
                 <% } %>
             </div>
-        </div>
-        <div class="item clearfix" style="margin-top: 10px">
-            <button type="button" class="btn btn-link" id="newtag"><span>New tag...</span></button>
-            <div class="hide inline input-append">
-                <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
-                <button class="btn" id="createtag">Add</button>
+            <div class="item clearfix noPadding" style="margin-top: 10px">
+                <button type="button" class="btn btn-link" name="showNewTag"><span>New tag...</span></button>
+                <div class="hide inline input-append">
+                    <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
+                    <button class="btn btn-mini btn-primary" id="createtag">Add</button>
+                </div>
             </div>
         </div>
         <input type="hidden" name="nodeid" value="<% print(model.id); %>"/>
