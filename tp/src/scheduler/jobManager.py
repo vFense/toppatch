@@ -2,6 +2,7 @@
 
 from datetime import datetime
 import logging, logging.config
+import apscheduler
 from apscheduler.scheduler import Scheduler
 from apscheduler.jobstores.sqlalchemy_store import SQLAlchemyJobStore
 
@@ -15,6 +16,7 @@ logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
 logger = logging.getLogger('rvapi')
 
 ENGINE = init_engine()
+
 def job_lister(session,sched):
     """
         Return a list of schedules in json 
@@ -28,23 +30,52 @@ def job_lister(session,sched):
     for schedule in jobs:
         if len(schedule.args) >1:
             username = schedule.args.pop()
-        messages = schedule.args
-        for message in messages:
-            if type(message) == str:
-                jsonValid, message = verify_json_is_valid(message)
-                if jsonValid:
-                    if 'node_id' in message:
-                        node = node_exists(session, node_id=message['node_id'])
-                        message['ipaddress'] = node.ip_address
-                        message['hostname'] = node.host_name
-                        message['displayname'] = node.display_name
-                        message['username'] = username
-                        job_listing.append(message)
-                    elif 'tag_id' in message:
-                        tag = tag_exists(session, tag_id=message['tag_id'])
-                        message['tagname'] = tag.tag
-                        message['username'] = username
-                        job_listing.append(message)
+        message = {}
+        message['job_name'] = schedule.name
+        message['runs'] = schedule.runs
+        message['job_id'] = str(schedule.id)
+        message['next_run_time'] = str(schedule.next_run_time)
+        if isinstance(schedule.trigger,
+                apscheduler.triggers.cron.CronTrigger):
+            message['schedule_type'] = 'cron'
+        elif isinstance(schedule.trigger,
+                apscheduler.triggers.interval.IntervalTrigger):
+            message['schedule_type'] = 'interval'
+        elif isinstance(schedule.trigger,
+                apscheduler.triggers.simple.SimpleTrigger):
+            message['schedule_type'] = 'once'
+        if len(schedule.args) == 1:
+            jsonValid, json_msg = verify_json_is_valid(schedule.args[0])
+            if jsonValid:
+                if 'node_id' in json_msg:
+                    node = node_exists(session, node_id=json_msg['node_id'])
+                    message['ipaddress'] = node.ip_address
+                    message['hostname'] = node.host_name
+                    message['displayname'] = node.display_name
+                    message['username'] = username
+                    job_listing.append(message)
+                elif 'tag_id' in json_msg:
+                    tag = tag_exists(session, tag_id=json_msg['tag_id'])
+                    message['tagname'] = tag.tag
+                    message['username'] = username
+                    job_listing.append(message)
+                    #else:
+        elif len(schedule.args) == 4:
+            if isinstance(schedule.args[0], str) or\
+                    isinstance(schedule.args[0], unicode):
+                message['severity'] = schedule.args[0]
+                message['tag_ids'] = schedule.args[1]
+                message['node_ids'] = schedule.args[2]
+                message['operation'] = schedule.args[3]
+                job_listing.append(message)
+        elif len(schedule.args) == 3:
+            if isinstance(schedule.args[0], list):
+                message['tag_ids'] = schedule.args[0]
+                message['node_ids'] = schedule.args[1]
+                message['operation'] = schedule.args[2]
+        elif len(schedule.args[0]) == 1:
+            job_listing.append(message)
+
     return job_listing
 
 
@@ -197,7 +228,7 @@ def add_recurrent(sched, node_ids=[], tag_ids=[],
                     week=week, day_of_week=day_of_week,
                     hour=hour, minute=minute, second=second,
                     start_date=start_date,
-                    args=[severity, tag_ids, node_ids, operation],
+                    args=[severity, tag_ids, node_ids, operation, username],
                     name=name, jobstore="toppatch"
                     )
             succeeded = True
@@ -211,7 +242,7 @@ def add_recurrent(sched, node_ids=[], tag_ids=[],
                     week=week, day_of_week=day_of_week,
                     hour=hour, minute=minute, second=second,
                     start_date=start_date,
-                    args=[node_ids, tag_ids, operation],
+                    args=[node_ids, tag_ids, operation, username],
                     name=name, jobstore="toppatch"
                     )
             succeeded = True
