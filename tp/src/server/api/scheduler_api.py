@@ -234,6 +234,10 @@ class SchedulerAddRecurrentJobHandler(BaseHandler):
         jobname = self.get_argument('jobname', None)
         node_ids = self.get_arguments('nodeids')
         tag_ids = self.get_arguments('tagids')
+        if 'all' in tag_ids:
+            tag_ids = []
+        if 'all' in node_ids:
+            node_ids = []
         if operation and jobname:
             result = add_recurrent(sched, node_ids=node_ids,
                     tag_ids=tag_ids, severity=severity,

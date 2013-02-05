@@ -46,18 +46,19 @@ def job_lister(session,sched):
                 apscheduler.triggers.simple.SimpleTrigger):
             message['schedule_type'] = 'once'
         if len(schedule.args) == 1:
-            jsonValid, json_msg = verify_json_is_valid(schedule.args[0])
-            if jsonValid:
-                if 'node_id' in json_msg:
-                    node = node_exists(session, node_id=json_msg['node_id'])
-                    message['ipaddress'] = node.ip_address
-                    message['hostname'] = node.host_name
-                    message['displayname'] = node.display_name
-                    job_listing.append(message)
-                elif 'tag_id' in json_msg:
-                    tag = tag_exists(session, tag_id=json_msg['tag_id'])
-                    message['tagname'] = tag.tag
-                    job_listing.append(message)
+            if not isinstance(schedule.args[0], list):
+                jsonValid, json_msg = verify_json_is_valid(schedule.args[0])
+                if jsonValid:
+                    if 'node_id' in json_msg:
+                        node = node_exists(session, node_id=json_msg['node_id'])
+                        message['ipaddress'] = node.ip_address
+                        message['hostname'] = node.host_name
+                        message['displayname'] = node.display_name
+                        job_listing.append(message)
+                    elif 'tag_id' in json_msg:
+                        tag = tag_exists(session, tag_id=json_msg['tag_id'])
+                        message['tagname'] = tag.tag
+                        job_listing.append(message)
             else:
                 job_listing.append(message)
         elif len(schedule.args) == 4:
@@ -73,7 +74,7 @@ def job_lister(session,sched):
                 message['tag_ids'] = schedule.args[0]
                 message['node_ids'] = schedule.args[1]
                 message['operation'] = schedule.args[2]
-    print job_listing
+
     return job_listing
 
 
