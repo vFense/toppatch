@@ -133,7 +133,11 @@ define(
                     });
                 },
                 beforeRender: $.noop,
-                onRender: $.noop,
+                onRender: function () {
+                    this.$el.find('i').each(function () {
+                        $(this).tooltip();
+                    });
+                },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
