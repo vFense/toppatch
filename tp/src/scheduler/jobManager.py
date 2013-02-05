@@ -32,7 +32,7 @@ def job_lister(session,sched):
             username = schedule.args.pop()
         message = {}
         message['job_name'] = schedule.name
-        message['runs'] = schedule.runs
+        message['runs'] = str(schedule.runs)
         message['job_id'] = str(schedule.id)
         message['next_run_time'] = str(schedule.next_run_time)
         message['username'] = username
