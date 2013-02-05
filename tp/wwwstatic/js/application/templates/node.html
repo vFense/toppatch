@@ -116,6 +116,43 @@
         <% } %>
     </section>
 </article>
+<article class="row-fluid">
+    <header><strong>Tags Applied</strong></header>
+    <section class="well well-small noMargin clearfix">
+        <div class="list">
+            <header class="clearfix">
+                <div class="pull-left">&nbsp;</div>
+                <div class="pull-right hidden-print">
+                    <small>Add a tag</small>&nbsp;
+                    <button class="btn btn-link noPadding"><i style="color: green;" class="icon-plus"></i></button>
+                </div>
+            </header>
+            <div class="items">
+                <% if (model.tags.length != 0) { %>
+                    <% _.each(model.tags, function (tag) { %>
+                    <div class="item row-fluid">
+                        <div class="span6">
+                            <span class="label label-info"><i class="icon-tag"></i>&nbsp;<%= tag %></span>&nbsp;
+                            <i style="color: green;" class="icon-ok"></i>&nbsp;
+                            <i style="color: orange" class="icon-warning-sign"></i>&nbsp;
+                            <i style="color: red;" class="icon-warning-sign"></i>
+                        </div>
+                        <span class="span6 alignRight">
+                            <i style="color: red;" class="icon-trash"></i>&nbsp;
+                            <i style="color: red;" class="icon-remove"></i>&nbsp;
+                            <a href="javascript:;">More Info</a>
+                        </span>
+                    </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="item row-fluid">
+                        <span><em>No tags applied</em></span>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+</article>
 <% if (model.is_vm && vm) { %>
 <article  class="row-fluid">
     <header><strong>VMware Information</strong></header>
