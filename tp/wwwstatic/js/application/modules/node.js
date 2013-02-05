@@ -31,6 +31,7 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     _.bindAll(this, 'createTag');
+                    this._rendered = false;
                     this.template = myTemplate;
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
@@ -117,6 +118,7 @@ define(
                             $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                         }
                     });
+                    this._rendered = true;
                 },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
@@ -405,7 +407,9 @@ define(
                                             '</div>';
                                 checkboxlist.append(itemstring);
                                 checkboxlist.find('input[name=taglist]').on('click', that.toggleTag);
-                                that.updateTagList();
+                                //that.updateTagList();
+                                that.tagcollection.fetch();
+                                that.collection.fetch();
                                 $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tagname + ' was created.');
                             } else {
                                 $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
@@ -434,7 +438,8 @@ define(
                             function (json) {
                                 window.console.log(json);
                                 if (json.pass) {
-                                    that.updateTagList();
+                                    //that.updateTagList();
+                                    that.collection.fetch();
                                     $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was applied.');
                                 } else {
                                     $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
@@ -447,7 +452,8 @@ define(
                             function (json) {
                                 window.console.log(json);
                                 if (json.pass) {
-                                    that.updateTagList();
+                                    //that.updateTagList();
+                                    that.collection.fetch();
                                     $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was removed.');
                                 } else {
                                     $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
@@ -456,7 +462,7 @@ define(
                     }
                 },
                 updateTagList: function () {
-                    console.log('inside update list');
+                    //console.log('inside update list');
                 },
                 showNetworking: function (event) {
                     var $button = $(event.currentTarget),
