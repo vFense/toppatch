@@ -21,16 +21,17 @@ define(
                     return this.baseUrl + '?node_id=' + this.id;
                 }
             }),
-            GraphCollection: Backbone.Collection.extend({
+           /* GraphCollection: Backbone.Collection.extend({
                 baseUrl: 'api/node/graphs/severity',
                 installed: 'true',
                 url: function () {
                     return this.baseUrl + '?nodeid=' + this.id + '&installed=' + this.installed;
                 }
-            }),
+            }),*/
             View: Backbone.View.extend({
                 initialize: function () {
-                    _.bindAll(this, 'createtag');
+                    _.bindAll(this, 'createTag');
+                    this._rendered = false;
                     this.template = myTemplate;
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
@@ -46,17 +47,18 @@ define(
                     this.vmcollection.bind('reset', this.render, this);
                     this.vmcollection.fetch();
 
-                    this.graphcollection = new exports.GraphCollection();
+                    /*this.graphcollection = new exports.GraphCollection();
                     this.graphcollection.bind('reset', this.render, this);
-                    this.graphcollection.fetch();
+                    this.graphcollection.fetch();*/
                 },
                 events: {
                     'click .disabled': function (e) { e.preventDefault(); },
                     'click li a': 'changeView',
-                    'click #addTag': 'showtags',
-                    'click #createtag': 'createtag',
+                    'click button[name=toggleAddTag]': 'showTags',
+                    'click button[name=removeTag]': 'removeTag',
+                    'click #createtag': 'createTag',
                     'click button[name=dependencies]': 'showDependencies',
-                    'click input[name=taglist]': 'toggletag',
+                    'click input[name=taglist]': 'toggleTag',
                     'click #editDisplay': 'showEditOperation',
                     'click #editHost': 'showEditOperation',
                     'click button[name=showNetworking]': 'showNetworking',
@@ -68,9 +70,12 @@ define(
                 onRender: function () {
                     var close, that = this;
                     this.stackedAreaGraph();
-                    this.$el.find('#addTag').popover({
+                    this.$el.find('i').each(function () {
+                        $(this).tooltip();
+                    });
+                    this.$el.find('button[name=toggleAddTag]').popover({
                         placement: 'right',
-                        title: 'Tags Available<button type="button" class="btn btn-link noPadding pull-right" id="close"><i class="icon-remove"></i></button>',
+                        title: 'Tags Available<button class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
                         html: true,
                         trigger: 'click',
                         content: $('#list-form')
@@ -114,6 +119,7 @@ define(
                             $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                         }
                     });
+                    this._rendered = true;
                 },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
@@ -168,16 +174,25 @@ define(
                     $div.empty().append(this._pinwheel.el);
                 },
                 stackedAreaGraph: function () {
-                    var graphId = '#nodeGraph',
-                        $graphDiv = this.$el.find(graphId),
+                    var id = this.id,
+                        installedGraph = '#installedGraph',
+                        availableGraph = '#availableGraph',
+                        $graphDiv = this.$el.find(installedGraph),
                         width = $graphDiv.width(),
                         height = $graphDiv.parent().height(),
-                        stackedChart = app.chart.stackedArea().width(width).height(height),
-                        data = this.graphcollection.toJSON();
-                    this.showLoading(graphId);
-                    if (data.length) {
+                        stackedChart = app.chart.stackedArea().width(width).height(height);
+                        //data = this.graphcollection.toJSON();
+                    this.showLoading(installedGraph);
+                    this.showLoading(availableGraph);
+                    d3.json("../api/node/graphs/severity?nodeid=" + id + "&installed=true", function (json) {
+                        d3.select(installedGraph).datum([json]).call(stackedChart.title('Installed packages over time'));
+                    });
+                    d3.json("../api/node/graphs/severity?nodeid=" + id + "&installed=false", function (json) {
+                        d3.select(availableGraph).datum([json]).call(stackedChart.title('Available packages over time'));
+                    });
+                    /*if (data.length) {
                         d3.select(graphId).datum(data).call(stackedChart);
-                    }
+                    }*/
                 },
                 changeView: function (event) {
                     event.preventDefault();
@@ -345,28 +360,30 @@ define(
                         }
                     });
                 },
-                showtags: function (evt) {
+                showTags: function (evt) {
                     var showInput, addTag, tagList, close,
-                        popover = $(evt.target).parent().data('popover');
+                        popover = $(evt.currentTarget).data('popover');
                     if (popover) {
-                        showInput = popover.$tip.find('button');
-                        close = popover.$tip.find('#close');
+                        showInput = popover.$tip.find('button[name=showNewTag]');
+                        close = popover.$tip.find('button[name=close]');
                         addTag = showInput.siblings('div').children('button');
                         tagList = popover.$tip.find('input[name=taglist]');
-                        close.bind('click', function () { $(evt.target).parent().popover('hide'); });
-                        tagList.bind('click', this.toggletag);
-                        addTag.bind('click', this.createtag);
+                        close.bind('click', function () {
+                            $(evt.currentTarget).popover('hide');
+                        });
+                        tagList.unbind().bind('click', this.toggleTag);
+                        addTag.unbind().bind('click', this.createTag);
                         showInput.show().siblings('div').hide();
-                        showInput.bind('click', function () {
+                        showInput.unbind().bind('click', function () {
                             $(this).hide().siblings('div').show();
                         });
                     }
                     return false;
                 },
-                createtag: function (evt) {
-                    var params, tag, user, nodes, operation, list, checkboxlist, itemstring, tagname, notag,
+                createTag: function (evt) {
+                    var params, tag, user, nodes, operation, checkboxlist, itemstring, tagname,
+                        $alert = this.$el.find('.alert').first(),
                         that = this;
-                    list = $('#taglist');
                     checkboxlist = $('#list-form').children('.list').children('.items');
                     operation = 'add_to_tag';
                     user = window.User.get('name');
@@ -382,9 +399,6 @@ define(
                         function (json) {
                             window.console.log(json);
                             if (json.pass) {
-                                notag = $('#notag');
-                                if (notag) { notag.remove(); }
-                                list.prepend('<span class="label label-info">' + tag + '</span>&nbsp;');
                                 tagname = tag;
                                 tag = 'value="' + tag + '"';
                                 itemstring = '<div class="item clearfix">' +
@@ -393,15 +407,23 @@ define(
                                                 '</label>' +
                                             '</div>';
                                 checkboxlist.append(itemstring);
-                                checkboxlist.find('input[name=taglist]').on('click', that.toggletag);
+                                checkboxlist.find('input[name=taglist]').on('click', that.toggleTag);
+                                //that.updateTagList();
+                                that.tagcollection.fetch();
+                                that.collection.fetch();
+                                $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tagname + ' was created.');
+                            } else {
+                                $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                             }
                         });
                     return false;
                 },
-                toggletag: function (evt) {
-                    var params, nodes, tag, user, list, notag,
-                        checked = evt.currentTarget.checked;
-                    list = $('#taglist');
+                toggleTag: function (evt) {
+                    var params, nodes, tag, user, list,
+                        checked = evt.currentTarget.checked,
+                        $el = this.$el,
+                        $alert = $el.find('.alert').first(),
+                        that = this;
                     user = window.User.get('name');
                     tag = $(evt.currentTarget).val();
                     nodes = $(evt.currentTarget).parents('form').find('input[name=nodeid]').val();
@@ -412,14 +434,16 @@ define(
                     };
                     if (checked) {
                         //add node to tag
-                        notag = $('#notag');
-                        if (notag) { notag.remove(); }
                         params.operation = 'add_to_tag';
                         $.post("/api/tagging/addTagPerNode", { operation: JSON.stringify(params) },
                             function (json) {
                                 window.console.log(json);
                                 if (json.pass) {
-                                    list.prepend('<span style="margin-right: 6px" class="label label-info" id="' + tag.replace(' ', '') + '">' + tag + '</span>');
+                                    //that.updateTagList();
+                                    that.collection.fetch();
+                                    $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was applied.');
+                                } else {
+                                    $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                                 }
                             });
                     } else {
@@ -429,10 +453,43 @@ define(
                             function (json) {
                                 window.console.log(json);
                                 if (json.pass) {
-                                    $('#' + tag.replace(' ', '')).remove();
+                                    //that.updateTagList();
+                                    that.collection.fetch();
+                                    $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was removed.');
+                                } else {
+                                    $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                                 }
                             });
                     }
+                },
+                removeTag: function (event) {
+                    var $button = $(event.currentTarget),
+                        tag = $button.attr('value'),
+                        $alert = this.$el.find('.alert').first(),
+                        node = $button.data('node'),
+                        user = window.User.get('name'),
+                        that = this,
+                        params = {
+                            operation: 'remove_from_tag',
+                            nodes: [node],
+                            user: user,
+                            tag: tag
+                        };
+                    console.log(params);
+                    $.post("/api/tagging/removeTagPerNode", { operation: JSON.stringify(params) },
+                        function (json) {
+                            window.console.log(json);
+                            if (json.pass) {
+                                //that.updateTagList();
+                                that.collection.fetch();
+                                $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was removed.');
+                            } else {
+                                $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                            }
+                        });
+                },
+                updateTagList: function () {
+                    //console.log('inside update list');
                 },
                 showNetworking: function (event) {
                     var $button = $(event.currentTarget),

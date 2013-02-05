@@ -1,40 +1,37 @@
-<article>
+<article class="row-fluid">
     <section class="list">
         <div class="items">
-            <div class="legend">
-                <span><strong>Node</strong> — Operation — Label</span>
-                <span class="patches pull-right">
-                    <span>Time</span> /
-                    <span>Type</span> /
-                    <span>Throttle</span> /
-                    <span>Remove</span>
-                </span>
+            <div class="legend clearfix">
+                <span class="span6"><strong>Job Name</strong></span>
+                <span class="span2 alignRight">Date</span>
+                <span class="span1 alignRight">Type</span>
+                <span class="span1 alignRight">Total Runs</span>
+                <span class="span1 alignRight">Operation</span>
+                <span class="span1 alignRight">Remove</span>
             </div>
             <% if(data.length != 0) { %>
                 <% _.each(data, function (schedule) { %>
                     <div class="item clearfix">
-                        <div class="row-fluid">
-                            <span class="span8">
-                                <strong><% print(schedule.displayname || schedule.hostname || schedule.ipaddress) %></strong> —
-                                <%= schedule.operation %> —
-                                <%= schedule.label %>
-                            </span>
-                            <span class="span4 alignRight">
-                                <%= schedule.time %> /
-                                <%= schedule.schedule %> /
-                                <%= schedule.cpu_throttle || 'N/A' %> /
-                                <button type="button" class="btn btn-link" name="remove" value="<%= schedule.label %>">
-                                    <i style="color: red; vertical-align: 100%;" class="icon-remove"></i>
-                                </button>
-                            </span>
-                        </div>
+                        <span class="span6">
+                            <strong><%= schedule.job_name %></strong>
+                        </span>
+                        <span class="span2 alignRight"><%= schedule.next_run_time %></span>
+                        <span class="span1 alignRight"><%= schedule.schedule_type %></span>
+                        <span class="span1 alignRight"><%= schedule.runs %></span>
+                        <span class="span1 alignRight"><%= schedule.operation || 'N/A' %></span>
+                        <span class="span1 alignRight">
+                            <button type="button" class="btn btn-link noPadding" name="remove" value="<%= schedule.job_name %>">
+                                <i style="color: red; vertical-align: 20%;" class="icon-remove"></i>
+                            </button>
+                        </span>
                     </div>
                 <% }); %>
             <% }  else { %>
                 <div class="item clearfix">
-                    <em>No scheduled patches.</em>
+                    <span class="span12"><em>No scheduled patches.</em></span>
                 </div>
             <% } %>
         </div>
     </section>
 </article>
+<article class="alert alert-block fade in hide"></article>

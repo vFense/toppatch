@@ -430,7 +430,7 @@ define(
                     this.$el.find('button[name=globalacl]').each(function () {
                         $(this).popover({
                             placement: 'right',
-                            title: '<div class="alignLeft"><span>Global User Acl</span><button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button></div>',
+                            title: '<div class="alignLeft"><i class="icon-globe"></i><span>Global User Acl</span><button type="button" class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button></div>',
                             html: true,
                             content: that.$el.find('#globalacl').clone(),
                             trigger: 'click'

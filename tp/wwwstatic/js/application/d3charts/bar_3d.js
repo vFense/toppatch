@@ -36,16 +36,17 @@ define(
                     }
                     function textMouseOver(d) {
                         var mousePos = d3.mouse(that), textLength;
-                        mousePos[0] = mousePos[0] - 10;
-                        mousePos[1] = mousePos[1] - 38;
                         txt.text(d.label + ': ' + d.value + ' patches.');
-                        textLength = txt.style('width');
+                        textLength = parseFloat(txt.style('width'));
+                        mousePos[0] = mousePos[0] > (width / 2) ? mousePos[0] - textLength + 10 : mousePos[0] - 40;
+                        mousePos[1] = mousePos[1] - 38;
                         txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                        txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                        txtRect.attr({width: textLength + 2}).style('opacity', '0.3');
                     }
                     function textMouseMove() {
-                        var mousePos = d3.mouse(that);
-                        mousePos[0] = mousePos[0] - 10;
+                        var mousePos = d3.mouse(that),
+                            textLength = parseFloat(txt.style('width'));
+                        mousePos[0] = mousePos[0] > (width / 2) ? mousePos[0] - textLength + 10 : mousePos[0] - 40;
                         mousePos[1] = mousePos[1] - 38;
                         txtMask.attr({transform: 'translate(' + mousePos + ')'});
                         txtRect.style('opacity', '0.3');

@@ -357,16 +357,18 @@ define(
                         });
                     },
                     stackedAreaGraph: function (selection, installed) {
-                        var span = this.$el.find(selection).parents('article').attr('class').split(' ')[0],
+                        var title, span = this.$el.find(selection).parents('article').attr('class').split(' ')[0],
                             width = this.emToPx(parseFloat(this.getStyleWidth('.' + span))),
                             stackedChart = app.chart.stackedArea().width(width);
                         if (installed) {
                             this.$el.find(selection).attr('class', 'area_1 graph');
+                            title = 'Installed packages over time';
                         } else {
                             this.$el.find(selection).attr('class', 'area_2 graph');
+                            title = 'Available packages over time';
                         }
                         d3.json("../api/node/graphs/severity?installed=" + installed, function (json) {
-                            d3.select(selection).datum([json]).call(stackedChart);
+                            d3.select(selection).datum([json]).call(stackedChart.title(title));
                         });
                     },/*
                     lineGraph: function (selection) {
