@@ -35,6 +35,7 @@ def job_lister(session,sched):
         message['runs'] = schedule.runs
         message['job_id'] = str(schedule.id)
         message['next_run_time'] = str(schedule.next_run_time)
+        message['username'] = username
         if isinstance(schedule.trigger,
                 apscheduler.triggers.cron.CronTrigger):
             message['schedule_type'] = 'cron'
@@ -52,14 +53,13 @@ def job_lister(session,sched):
                     message['ipaddress'] = node.ip_address
                     message['hostname'] = node.host_name
                     message['displayname'] = node.display_name
-                    message['username'] = username
                     job_listing.append(message)
                 elif 'tag_id' in json_msg:
                     tag = tag_exists(session, tag_id=json_msg['tag_id'])
                     message['tagname'] = tag.tag
-                    message['username'] = username
                     job_listing.append(message)
-                    #else:
+            else:
+                job_listing.append(message)
         elif len(schedule.args) == 4:
             if isinstance(schedule.args[0], str) or\
                     isinstance(schedule.args[0], unicode):
@@ -73,9 +73,7 @@ def job_lister(session,sched):
                 message['tag_ids'] = schedule.args[0]
                 message['node_ids'] = schedule.args[1]
                 message['operation'] = schedule.args[2]
-        elif len(schedule.args[0]) == 1:
-            job_listing.append(message)
-
+    print job_listing
     return job_listing
 
 
