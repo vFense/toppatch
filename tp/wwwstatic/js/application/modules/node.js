@@ -106,8 +106,8 @@ define(
                     }).click(function () {
                         var popover = this;
                         if (popover.checked) {
-                            $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
-                            close = $(this).data('popover').$tip.find('button[name=close]');
+                            $(popover).data('popover').options.content.find('input[name=datepicker]').datepicker();
+                            close = $(popover).data('popover').$tip.find('button[name=close]');
                             close.unbind();
                             close.bind('click', function (event) {
                                 event.preventDefault();
