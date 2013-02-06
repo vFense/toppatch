@@ -21,18 +21,21 @@ define(
                     return this.baseUrl + '?node_id=' + this.id;
                 }
             }),
-           /* GraphCollection: Backbone.Collection.extend({
-                baseUrl: 'api/node/graphs/severity',
-                installed: 'true',
+            TagsInNodeCollection: Backbone.Collection.extend({
+                baseUrl: 'api/nodes.json',
                 url: function () {
-                    return this.baseUrl + '?nodeid=' + this.id + '&installed=' + this.installed;
+                    return this.baseUrl + '?id=' + this.id;
                 }
-            }),*/
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
                     _.bindAll(this, 'createTag');
                     this._rendered = false;
                     this.template = myTemplate;
+
+                    this.tagsinnodecollection = new exports.TagsInNodeCollection();
+                    this.tagsinnodecollection.bind('reset', this.updateTagList, this);
+
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
@@ -46,10 +49,6 @@ define(
                     this.vmcollection = new exports.VmCollection();
                     this.vmcollection.bind('reset', this.render, this);
                     this.vmcollection.fetch();
-
-                    /*this.graphcollection = new exports.GraphCollection();
-                    this.graphcollection.bind('reset', this.render, this);
-                    this.graphcollection.fetch();*/
                 },
                 events: {
                     'click .disabled': function (e) { e.preventDefault(); },
@@ -408,7 +407,6 @@ define(
                                             '</div>';
                                 checkboxlist.append(itemstring);
                                 checkboxlist.find('input[name=taglist]').on('click', that.toggleTag);
-                                //that.updateTagList();
                                 that.tagcollection.fetch();
                                 that.collection.fetch();
                                 $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tagname + ' was created.');
@@ -439,8 +437,7 @@ define(
                             function (json) {
                                 window.console.log(json);
                                 if (json.pass) {
-                                    //that.updateTagList();
-                                    that.collection.fetch();
+                                    that.tagsinnodecollection.fetch();
                                     $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was applied.');
                                 } else {
                                     $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
@@ -453,8 +450,7 @@ define(
                             function (json) {
                                 window.console.log(json);
                                 if (json.pass) {
-                                    //that.updateTagList();
-                                    that.collection.fetch();
+                                    that.tagsinnodecollection.fetch();
                                     $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was removed.');
                                 } else {
                                     $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
@@ -480,7 +476,6 @@ define(
                         function (json) {
                             window.console.log(json);
                             if (json.pass) {
-                                //that.updateTagList();
                                 that.collection.fetch();
                                 $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was removed.');
                             } else {
@@ -489,7 +484,47 @@ define(
                         });
                 },
                 updateTagList: function () {
-                    //console.log('inside update list');
+                    var $item, $leftDiv, $rightDiv, $tagSpan, $removeButton, $href,
+                        $okIcon, $rebootIcon, $downIcon, $trashIcon,
+                        $items = this.$el.find('#tagItems'),
+                        data = this.tagsinnodecollection.toJSON()[0],
+                        tags = data.tags,
+                        that = this,
+                        newElement = function (element) {
+                            return $(document.createElement(element));
+                        };
+                    $items.empty();
+                    _.each(tags, function (tag) {
+                        $item       = newElement('div').addClass('item row-fluid');
+                        $leftDiv    = newElement('div').addClass('span6');
+                        $rightDiv   = newElement('div').addClass('span6 alignRight');
+                        $tagSpan = newElement('span').addClass('label label-info').html('<i class="icon-tag"></i>&nbsp;' + tag.tag_name);
+                        $leftDiv.append($tagSpan, '&nbsp;');
+                        if (tag.agents_up > 0) {
+                            $okIcon = newElement('i').addClass('icon-ok').attr('title', tag.agents_up + ' agents up.').data('placement', 'right').css('color', 'green');
+                            $leftDiv.append($okIcon, '&nbsp;');
+                        }
+                        if (tag.reboots_pending > 0) {
+                            $rebootIcon = newElement('i').addClass('icon-warning-sign').attr('title', tag.reboots_pending + 'reboots pending..').data('placement', 'right').css('color', 'orange');
+                            $leftDiv.append($rebootIcon, '&nbsp;');
+                        }
+                        if (tag.agents_down > 0) {
+                            $downIcon = newElement('i').addClass('icon-warning-sign').attr('title', tag.agents_down + ' agents down.').data('placement', 'right').css('color', 'red');
+                            $leftDiv.append($downIcon);
+                        }
+                        $removeButton = newElement('button').addClass('btn btn-link noPadding').attr({
+                            name: 'removeTag',
+                            value: tag.tag_name
+                        }).data('node', that.id);
+                        $trashIcon = newElement('i').addClass('icon-trash').attr('title', 'RemoveTag').data('placement', 'left').css('color', 'red');
+                        $href = newElement('a').attr('href', '#tags/' + tag.tag_id).html('More Info');
+                        $rightDiv.append($removeButton.append($trashIcon), $href);
+                        $item.append($leftDiv, $rightDiv);
+                        $items.append($item);
+                    });
+                    $items.find('i').each(function () {
+                        $(this).tooltip();
+                    });
                 },
                 showNetworking: function (event) {
                     var $button = $(event.currentTarget),
