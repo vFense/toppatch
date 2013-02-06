@@ -1,25 +1,25 @@
 <article class="row-fluid">
     <section class="list">
         <div class="items">
-            <div class="legend">
-                <span><strong>Job Name</strong> — Type  — Date</span>
-                <span class="patches pull-right">
-                    <span>Total Runs</span> /
-                    <span>Operation</span> /
-                    <span>Remove</span>
-                </span>
+            <div class="legend clearfix">
+                <span class="span6"><strong>Job Name</strong></span>
+                <span class="span2 alignRight">Date</span>
+                <span class="span1 alignRight">Type</span>
+                <span class="span1 alignRight">Total Runs</span>
+                <span class="span1 alignRight">Operation</span>
+                <span class="span1 alignRight">Remove</span>
             </div>
             <% if(data.length != 0) { %>
                 <% _.each(data, function (schedule) { %>
                     <div class="item clearfix">
-                        <span class="span8">
-                            <strong><%= schedule.job_name %></strong> —
-                            <%= schedule.schedule_type %> —
-                            <%= schedule.next_run_time %>
+                        <span class="span6">
+                            <strong><%= schedule.job_name %></strong>
                         </span>
-                        <span class="span4 alignRight">
-                            <%= schedule.runs %> /
-                            <%= schedule.operation || 'N/A' %> /
+                        <span class="span2 alignRight"><%= schedule.next_run_time %></span>
+                        <span class="span1 alignRight"><%= schedule.schedule_type %></span>
+                        <span class="span1 alignRight"><%= schedule.runs %></span>
+                        <span class="span1 alignRight"><%= schedule.operation || 'N/A' %></span>
+                        <span class="span1 alignRight">
                             <button type="button" class="btn btn-link noPadding" name="remove" value="<%= schedule.job_name %>">
                                 <i style="color: red; vertical-align: 20%;" class="icon-remove"></i>
                             </button>
