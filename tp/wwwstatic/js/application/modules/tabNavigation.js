@@ -11,10 +11,12 @@ define(
         exports.View = Backbone.View.extend({
             tagName: 'ul',
             className: 'nav nav-tabs',
+            stacked: false,
 
             initialize: function (args) {
                 _.extend(this, args);
                 this.collection = new exports.Collection(this.tabs);
+                this.$el.toggleClass('nav-stacked', this.stacked);
                 this.lastTarget = '';
             },
 

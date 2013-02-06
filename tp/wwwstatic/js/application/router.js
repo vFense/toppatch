@@ -48,7 +48,8 @@ define(
                 'admin/vmware'    : 'modal/admin/vmware',
                 'admin/groups'    : 'modal/admin/groups',
                 'admin/users'     : 'modal/admin/users',
-                'admin/schedule'  : 'modal/admin/schedule'
+                'admin/schedule'  : 'modal/admin/schedule',
+                'admin/services'  : 'modal/admin/services'
 
                 // Default
                 // '*other'        : 'defaultAction'
@@ -240,6 +241,9 @@ define(
             },
             'modal/admin/schedule': function () {
                 this.openAdminModalWithView('modals/admin/schedule');
+            },
+            'modal/admin/services': function () {
+                this.openAdminModalWithView('modals/admin/services');
             },
             /*
             defaultAction: function () {

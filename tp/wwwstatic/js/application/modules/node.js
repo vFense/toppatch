@@ -30,7 +30,6 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     _.bindAll(this, 'createTag');
-                    this._rendered = false;
                     this.template = myTemplate;
 
                     this.tagsinnodecollection = new exports.TagsInNodeCollection();
@@ -41,6 +40,8 @@ define(
                     this.collection.fetch();
 
                     this.id = this.collection.id;
+                    this._rendered = false;
+                    this._currentTab = '#nodes/' + this.id + '/patches';
 
                     this.tagcollection = new exports.TagCollection();
                     this.tagcollection.bind('reset', this.render, this);
@@ -196,21 +197,33 @@ define(
                 changeView: function (event) {
                     event.preventDefault();
                     var $tab = $(event.currentTarget),
+                        view = $tab.attr('href'),
                         $body = this.$el.find('.tab-body'),
                         id = this.id;
-                    this.showLoading('.tab-body');
-                    if ($tab.attr('href') === '#nodes/' + id + '/patches') {
-                        patchesView.Collection = patchesView.Collection.extend({id: id});
-                        this.patchesView = new patchesView.View({
-                            el: $body
-                        });
-                        this.navigation.setActive('nodes/' + id + '/patches');
-                    } else if ($tab.attr('href') === '#nodes/' + id + '/vmware') {
-                        vmView.Collection = vmView.Collection.extend({id: id});
-                        this.vmView = new vmView.View({
-                            el: $body
-                        });
-                        this.navigation.setActive('nodes/' + id + '/vmware');
+                    if (this._currentTab !== view) {
+                        this._currentTab  = view;
+                        this.showLoading('.tab-body');
+                        if (view === '#nodes/' + id + '/patches') {
+                            if (this.patchesView) {
+                                this.patchesView.render();
+                            } else {
+                                patchesView.Collection = patchesView.Collection.extend({id: id});
+                                this.patchesView = new patchesView.View({
+                                    el: $body
+                                });
+                            }
+                            this.navigation.setActive('nodes/' + id + '/patches');
+                        } else if (view === '#nodes/' + id + '/vmware') {
+                            if (this.vmView) {
+                                this.vmView.render();
+                            } else {
+                                vmView.Collection = vmView.Collection.extend({id: id});
+                                this.vmView = new vmView.View({
+                                    el: $body
+                                });
+                            }
+                            this.navigation.setActive('nodes/' + id + '/vmware');
+                        }
                     }
                 },
                 submit: function (evt) {
