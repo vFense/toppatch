@@ -463,8 +463,30 @@ define(
                     }
                 },
                 removeTag: function (event) {
-                    var $button = $(event.currentTarget);
-                    console.log(event);
+                    var $button = $(event.currentTarget),
+                        tag = $button.attr('value'),
+                        $alert = this.$el.find('.alert').first(),
+                        node = $button.data('node'),
+                        user = window.User.get('name'),
+                        that = this,
+                        params = {
+                            operation: 'remove_from_tag',
+                            nodes: [node],
+                            user: user,
+                            tag: tag
+                        };
+                    console.log(params);
+                    $.post("/api/tagging/removeTagPerNode", { operation: JSON.stringify(params) },
+                        function (json) {
+                            window.console.log(json);
+                            if (json.pass) {
+                                //that.updateTagList();
+                                that.collection.fetch();
+                                $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was removed.');
+                            } else {
+                                $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                            }
+                        });
                 },
                 updateTagList: function () {
                     //console.log('inside update list');
