@@ -38,7 +38,6 @@ def job_lister(session,sched):
         message['next_run_time'] = str(schedule.next_run_time)
         message['username'] = username
         #print message
-        print schedule.__dict__
         if isinstance(messages.trigger,
                 apscheduler.triggers.cron.CronTrigger):
             message['schedule_type'] = 'cron'
