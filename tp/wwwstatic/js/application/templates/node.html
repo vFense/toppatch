@@ -71,7 +71,7 @@
         </dl>
     </section>
 </article>
-<article class="row-fluid">
+<article class="row-fluid" style="z-index: 0;">
     <header><strong>Trends</strong></header>
     <section class="well well-small noMargin clearfix">
         <div id="installedGraph" class="span6"></div>
@@ -115,7 +115,7 @@
                     <button class="btn btn-link noPadding" name="toggleAddTag"><i style="color: green;" class="icon-plus"></i></button>
                 </div>
             </header>
-            <div class="items">
+            <div class="items" id="tagItems">
                 <% if (model.tags.length != 0) { %>
                     <% _.each(model.tags, function (tag) { %>
                     <div class="item row-fluid">
@@ -131,12 +131,12 @@
                                 <i style="color: red;" class="icon-warning-sign" title="<%= tag.agents_down %> agents down." data-placement="right"></i>
                             <% } %>
                         </div>
-                        <span class="span6 alignRight">
+                        <div class="span6 alignRight">
                             <button class="btn btn-link noPadding" name="removeTag" value="<%= tag.tag_name %>"  data-node="<% print(model.id); %>">
                                 <i style="color: red;" class="icon-trash" title="Remove Tag" data-placement="left"></i>&nbsp;
                             </button>
                             <a href="#tags/<%= tag.tag_id %>">More Info</a>
-                        </span>
+                        </div>
                     </div>
                     <% }); %>
                 <% } else { %>
@@ -200,7 +200,7 @@
                                 <input value="<%= tag.tag_name %>" name="taglist"  type="checkbox"
                                 <% if (model.tags.length != 0) { %>
                                     <% _.each(model.tags, function (nodeTag) { %>
-                                        <% if(nodeTag == tag.tag_name) { print('checked="checked"'); } %>
+                                        <% if(nodeTag.tag_name == tag.tag_name) { print('checked="checked"'); } %>
                                     <% }); %>
                                 <% } %> />
                             </label>
