@@ -37,11 +37,11 @@ logger = logging.getLogger('rvapi')
 class SchedulerListerHandler(BaseHandler):
     @authenticated_request
     def get(self):
-        self.session = self.application.session
-        self.session = validate_session(self.session)
-        self.sched = self.application.scheduler
-        result = job_lister(self.session, self.sched)
-        self.session.close()
+        session = self.application.session
+        session = validate_session(session)
+        sched = self.application.scheduler
+        result = job_lister(session, sched)
+        session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 

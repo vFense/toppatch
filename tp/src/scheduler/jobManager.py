@@ -28,26 +28,32 @@ def job_lister(session,sched):
     job_listing = []
     username = None
     for schedule in jobs:
-        if len(schedule.args) >1:
-            username = schedule.args.pop()
+        messages = schedule
+        if len(schedule.args) >0:
+            username = messages.args.pop()
         message = {}
         message['job_name'] = schedule.name
         message['runs'] = str(schedule.runs)
         message['job_id'] = str(schedule.id)
         message['next_run_time'] = str(schedule.next_run_time)
         message['username'] = username
-        if isinstance(schedule.trigger,
+        #print message
+        print schedule.__dict__
+        if isinstance(messages.trigger,
                 apscheduler.triggers.cron.CronTrigger):
             message['schedule_type'] = 'cron'
-        elif isinstance(schedule.trigger,
+
+        elif isinstance(messages.trigger,
                 apscheduler.triggers.interval.IntervalTrigger):
             message['schedule_type'] = 'interval'
-        elif isinstance(schedule.trigger,
+
+        elif isinstance(messages.trigger,
                 apscheduler.triggers.simple.SimpleTrigger):
             message['schedule_type'] = 'once'
-        if len(schedule.args) == 1:
-            if not isinstance(schedule.args[0], list):
-                jsonValid, json_msg = verify_json_is_valid(schedule.args[0])
+
+        if len(messages.args) == 1:
+            if not isinstance(messages.args[0], list):
+                jsonValid, json_msg = verify_json_is_valid(messages.args[0])
                 if jsonValid:
                     if 'node_id' in json_msg:
                         node = node_exists(session, node_id=json_msg['node_id'])
@@ -55,25 +61,33 @@ def job_lister(session,sched):
                         message['hostname'] = node.host_name
                         message['displayname'] = node.display_name
                         job_listing.append(message)
+
                     elif 'tag_id' in json_msg:
                         tag = tag_exists(session, tag_id=json_msg['tag_id'])
                         message['tagname'] = tag.tag
                         job_listing.append(message)
-            else:
+
+                else:
+                    job_listing.append(message)
+
+        elif len(messages.args) == 4:
+            if isinstance(messages.args[0], str) or\
+                    isinstance(messages.args[0], unicode):
+                message['severity'] = messages.args[0]
+                message['tag_ids'] = messages.args[1]
+                message['node_ids'] = messages.args[2]
+                message['operation'] = messages.args[3]
                 job_listing.append(message)
-        elif len(schedule.args) == 4:
-            if isinstance(schedule.args[0], str) or\
-                    isinstance(schedule.args[0], unicode):
-                message['severity'] = schedule.args[0]
-                message['tag_ids'] = schedule.args[1]
-                message['node_ids'] = schedule.args[2]
-                message['operation'] = schedule.args[3]
+
+        elif len(messages.args) == 3:
+            if isinstance(messages.args[0], list):
+                message['tag_ids'] = messages.args[0]
+                message['node_ids'] = messages.args[1]
+                message['operation'] = messages.args[2]
                 job_listing.append(message)
-        elif len(schedule.args) == 3:
-            if isinstance(schedule.args[0], list):
-                message['tag_ids'] = schedule.args[0]
-                message['node_ids'] = schedule.args[1]
-                message['operation'] = schedule.args[2]
+
+        elif len(messages.args) == 0:
+            job_listing.append(message)
 
     return job_listing
 
