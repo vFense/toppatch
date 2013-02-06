@@ -55,6 +55,7 @@ define(
                     'click .disabled': function (e) { e.preventDefault(); },
                     'click li a': 'changeView',
                     'click button[name=toggleAddTag]': 'showTags',
+                    'click button[name=removeTag]': 'removeTag',
                     'click #createtag': 'createTag',
                     'click button[name=dependencies]': 'showDependencies',
                     'click input[name=taglist]': 'toggleTag',
@@ -460,6 +461,10 @@ define(
                                 }
                             });
                     }
+                },
+                removeTag: function (event) {
+                    var $button = $(event.currentTarget);
+                    console.log(event);
                 },
                 updateTagList: function () {
                     //console.log('inside update list');

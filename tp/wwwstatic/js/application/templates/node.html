@@ -120,15 +120,22 @@
                     <% _.each(model.tags, function (tag) { %>
                     <div class="item row-fluid">
                         <div class="span6">
-                            <span class="label label-info"><i class="icon-tag"></i>&nbsp;<%= tag %></span>&nbsp;
-                            <i style="color: green;" class="icon-ok"></i>&nbsp;
-                            <i style="color: orange" class="icon-warning-sign"></i>&nbsp;
-                            <i style="color: red;" class="icon-warning-sign"></i>
+                            <span class="label label-info"><i class="icon-tag"></i>&nbsp;<%= tag.tag_name %></span>&nbsp;
+                            <% if (tag.agents_up > 0) { %>
+                                <i style="color: green;" class="icon-ok" title="<%= tag.agents_up %> agents up." data-placement="right"></i>&nbsp;
+                            <% } %>
+                            <% if (tag.reboots_pending > 0) { %>
+                                <i style="color: orange" class="icon-warning-sign" title="<%= tag.reboots_pending %> reboots pending." data-placement="right"></i>&nbsp;
+                            <% } %>
+                            <% if (tag.agents_down > 0) { %>
+                                <i style="color: red;" class="icon-warning-sign" title="<%= tag.agents_down %> agents down." data-placement="right"></i>
+                            <% } %>
                         </div>
                         <span class="span6 alignRight">
-                            <i style="color: red;" class="icon-trash"></i>&nbsp;
-                            <i style="color: red;" class="icon-remove"></i>&nbsp;
-                            <a href="javascript:;">More Info</a>
+                            <button class="btn btn-link noPadding" name="removeTag" value="<%= tag.tag_id %>">
+                                <i style="color: red;" class="icon-trash"></i>&nbsp;
+                            </button>
+                            <a href="#tags/<%= tag.tag_id %>">More Info</a>
                         </span>
                     </div>
                     <% }); %>
