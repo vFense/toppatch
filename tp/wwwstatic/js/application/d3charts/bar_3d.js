@@ -20,9 +20,10 @@ define(
                 selection.each(function (data) {
                     var svg, frontRect, sideRect, topRect, rightTopTriangle, leftTopTriangle, botWhiteTriangle, txtMask, txtRect, txt,
                         that = this,
+                        max = d3.max(data, function (datum) { return datum.value; }) || 200,
                         colors = d3.scale.category20(),
                         x = d3.scale.linear().domain([0, data.length]).range([15, width]),
-                        y = d3.scale.linear().domain([0, d3.max(data, function (datum) { return datum.value; })]).rangeRound([0, height]),
+                        y = d3.scale.linear().domain([0, max]).rangeRound([0, height]),
                         barWidth = width / data.length - (width * 0.15);
                     $(this).html("");
                     function topColor(color) {
