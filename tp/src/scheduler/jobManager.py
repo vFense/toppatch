@@ -30,14 +30,13 @@ def job_lister(session,sched):
     for schedule in jobs:
         messages = schedule
         if len(schedule.args) >0:
-            username = messages.args.pop()
+            username = messages.args[-1]
         message = {}
         message['job_name'] = schedule.name
         message['runs'] = str(schedule.runs)
         message['job_id'] = str(schedule.id)
         message['next_run_time'] = str(schedule.next_run_time)
         message['username'] = username
-        #print message
         if isinstance(messages.trigger,
                 apscheduler.triggers.cron.CronTrigger):
             message['schedule_type'] = 'cron'
@@ -50,7 +49,7 @@ def job_lister(session,sched):
                 apscheduler.triggers.simple.SimpleTrigger):
             message['schedule_type'] = 'once'
 
-        if len(messages.args) == 1:
+        if len(messages.args) == 2:
             if not isinstance(messages.args[0], list):
                 jsonValid, json_msg = verify_json_is_valid(messages.args[0])
                 if jsonValid:
@@ -69,7 +68,7 @@ def job_lister(session,sched):
                 else:
                     job_listing.append(message)
 
-        elif len(messages.args) == 4:
+        elif len(messages.args) == 5:
             if isinstance(messages.args[0], str) or\
                     isinstance(messages.args[0], unicode):
                 message['severity'] = messages.args[0]
@@ -78,14 +77,14 @@ def job_lister(session,sched):
                 message['operation'] = messages.args[3]
                 job_listing.append(message)
 
-        elif len(messages.args) == 3:
+        elif len(messages.args) == 4:
             if isinstance(messages.args[0], list):
                 message['tag_ids'] = messages.args[0]
                 message['node_ids'] = messages.args[1]
                 message['operation'] = messages.args[2]
                 job_listing.append(message)
 
-        elif len(messages.args) == 0:
+        elif len(messages.args) == 1:
             job_listing.append(message)
 
     return job_listing
