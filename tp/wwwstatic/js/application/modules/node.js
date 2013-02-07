@@ -74,7 +74,7 @@ define(
                         $(this).tooltip();
                     });
                     this.$el.find('button[name=toggleAddTag]').popover({
-                        placement: 'right',
+                        placement: 'top',
                         title: 'Tags Available<button class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
                         html: true,
                         trigger: 'click',
@@ -227,7 +227,8 @@ define(
                     }
                 },
                 submit: function (evt) {
-                    var item, span, label, checkbox, $scheduleForm, type, patches, url, offset, fields,
+                    var item, span, label, checkbox, $scheduleForm, type, patches,
+                        url, offset, fields, $badge, badgeNumber,
                         $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
                         time = '',
@@ -248,9 +249,10 @@ define(
                     }
                     type = $form.attr('id');
                     patches = $form.find('input[name="patches"]:checked');
+                    $badge = this.$el.find('#pending').parents('.accordion-group').find('.badge').first();
+                    badgeNumber = parseFloat($badge.html());
                     url = '/submitForm?' + $form.serialize();
                     url += time ? '&time=' + time + '&label=' + label + '&offset=' + offset : '';
-
                     $.post(url,
                         function (json) {
                             window.console.log(json);
@@ -282,6 +284,8 @@ define(
                                         item.remove();
                                     }
                                 });
+                                badgeNumber += patches.length;
+                                $badge.html(badgeNumber);
                                 if ($form.find('input:checked').attr('checked')) {
                                     $form.find('input:checked').attr('checked', false);
                                 }
