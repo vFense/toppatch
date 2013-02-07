@@ -20,9 +20,11 @@ define(
                 selection.each(function (data) {
                     var svg, frontRect, sideRect, topRect, rightTopTriangle, leftTopTriangle, botWhiteTriangle, txtMask, txtRect, txt,
                         that = this,
+                        max = d3.max(data, function (datum) { return datum.value; }) || 200,
+                        min = 0.1 * max,
                         colors = d3.scale.category20(),
                         x = d3.scale.linear().domain([0, data.length]).range([15, width]),
-                        y = d3.scale.linear().domain([0, d3.max(data, function (datum) { return datum.value; })]).rangeRound([0, height]),
+                        y = d3.scale.linear().domain([0, max]).rangeRound([0, height]),
                         barWidth = width / data.length - (width * 0.15);
                     $(this).html("");
                     function topColor(color) {
@@ -36,16 +38,17 @@ define(
                     }
                     function textMouseOver(d) {
                         var mousePos = d3.mouse(that), textLength;
-                        mousePos[0] = mousePos[0] - 10;
-                        mousePos[1] = mousePos[1] - 38;
                         txt.text(d.label + ': ' + d.value + ' patches.');
-                        textLength = txt.style('width');
+                        textLength = parseFloat(txt.style('width'));
+                        mousePos[0] = mousePos[0] > (width / 2) ? mousePos[0] - textLength + 10 : mousePos[0] - 40;
+                        mousePos[1] = mousePos[1] - 38;
                         txtMask.attr({transform: 'translate(' + mousePos + ')'});
-                        txtRect.attr({width: parseFloat(textLength) + 2}).style('opacity', '0.3');
+                        txtRect.attr({width: textLength + 2}).style('opacity', '0.3');
                     }
                     function textMouseMove() {
-                        var mousePos = d3.mouse(that);
-                        mousePos[0] = mousePos[0] - 10;
+                        var mousePos = d3.mouse(that),
+                            textLength = parseFloat(txt.style('width'));
+                        mousePos[0] = mousePos[0] > (width / 2) ? mousePos[0] - textLength + 10 : mousePos[0] - 40;
                         mousePos[1] = mousePos[1] - 38;
                         txtMask.attr({transform: 'translate(' + mousePos + ')'});
                         txtRect.style('opacity', '0.3');
@@ -67,8 +70,8 @@ define(
                         .append("svg:rect")
                         .attr("class", "top_rect")
                         .attr("x", function (d, index) { return x(index) + depth - 0.8; })
-                        .attr("y", function (d, index) { return y(d.value) > 20 ? height - y(d.value) : height - y(20); })
-                        .attr("height", function (d) { return y(d.value) > 20 ? y(d.value) : y(20) + 5; })
+                        .attr("y", function (d, index) { return y(d.value) > min ? height - y(d.value) : height - y(min); })
+                        .attr("height", function (d) { return y(d.value) > min ? y(d.value) : y(min) + 5; })
                         .attr("width", barWidth)
                         .attr("stroke", "0")
                         .attr("stroke-width", "0")
@@ -89,8 +92,8 @@ define(
                         .append("svg:rect")
                         .attr("class", "side_rect")
                         .attr("x", function (d, index) { return x(index) + barWidth; })
-                        .attr("y", function (d, index) { return y(d.value) > 20 ? height - y(d.value) + depth : height - y(20) + depth; })
-                        .attr("height", function (d) { return y(d.value) > 20 ? y(d.value) : y(20); })
+                        .attr("y", function (d, index) { return y(d.value) > min ? height - y(d.value) + depth : height - y(min) + depth; })
+                        .attr("height", function (d) { return y(d.value) > min ? y(d.value) : y(min); })
                         .attr("width", depth)
                         .attr("stroke", "0")
                         .attr("fill", function (d, index) { return sideColor(index); })
@@ -106,10 +109,10 @@ define(
                         .attr("fill", function (d, index) { return sideColor(index); })
                         .attr("d", function (d, index) {
                             var startX = x(index) + barWidth,
-                                startY = y(d.value) > 20 ? height - y(d.value) + depth : height - y(20) + depth,
+                                startY = y(d.value) > min ? height - y(d.value) + depth : height - y(min) + depth,
                                 M = startX + ' ' + startY,
                                 H = x(index) + barWidth + depth,
-                                V = y(d.value) > 20 ? height - y(d.value) : height - y(20),
+                                V = y(d.value) > min ? height - y(d.value) : height - y(min),
                                 triangle = 'M ' + M + ' ' + ' H ' + H + ' ' + ' V ' + V + ' ' + ' L ' + M;
                             return triangle;
                         });
@@ -121,10 +124,10 @@ define(
                         .attr("fill", function (d, index) { return topColor(index); })
                         .attr("d", function (d, index) {
                             var startX = x(index) - 0.7,
-                                startY = y(d.value) > 20 ? height - y(d.value) + depth : height - y(20) + depth,
+                                startY = y(d.value) > min ? height - y(d.value) + depth : height - y(min) + depth,
                                 M = startX + ' ' + startY,
                                 H = x(index) + depth - 0.1,
-                                V = y(d.value) > 20 ? height - y(d.value) : height - y(20),
+                                V = y(d.value) > min ? height - y(d.value) : height - y(min),
                                 triangle = 'M ' + M + ' ' + ' H ' + H + ' ' + ' V ' + V + ' ' + ' L ' + M;
                             return triangle;
                         });
@@ -149,8 +152,8 @@ define(
                         .append("svg:rect")
                         .attr("class", "front_rect")
                         .attr("x", function (d, index) { return x(index); })
-                        .attr("y", function (d) { return y(d.value) > 20 ? height - y(d.value) + depth : height - y(20) + depth; })
-                        .attr("height", function (d) { return y(d.value) > 20 ? y(d.value) : y(20); })
+                        .attr("y", function (d) { return y(d.value) > min ? height - y(d.value) + depth : height - y(min) + depth; })
+                        .attr("height", function (d) { return y(d.value) > min ? y(d.value) : y(min); })
                         .attr("width", barWidth)
                         .attr("stroke", function (d, index) { return sideColor(index); })//stroke same color as sideRect
                         .attr("fill", function (d, index) { return frontColor(index); })
@@ -164,7 +167,7 @@ define(
                         .enter()
                         .append("svg:text")
                         .attr("x", function (datum, index) { return x(index) + barWidth / 2; })
-                        .attr("y", function (datum) { return y(datum.value) > 20 ? height - y(datum.value) : height - y(20); })
+                        .attr("y", function (datum) { return y(datum.value) > min ? height - y(datum.value) : height - y(min); })
                         .attr("dy", "33")
                         .attr("text-anchor", "middle")
                         .attr("style", "font-size: 10")

@@ -37,11 +37,11 @@ logger = logging.getLogger('rvapi')
 class SchedulerListerHandler(BaseHandler):
     @authenticated_request
     def get(self):
-        self.session = self.application.session
-        self.session = validate_session(self.session)
-        self.sched = self.application.scheduler
-        result = job_lister(self.session, self.sched)
-        self.session.close()
+        session = self.application.session
+        session = validate_session(session)
+        sched = self.application.scheduler
+        result = job_lister(session, sched)
+        session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))
 
@@ -234,6 +234,10 @@ class SchedulerAddRecurrentJobHandler(BaseHandler):
         jobname = self.get_argument('jobname', None)
         node_ids = self.get_arguments('nodeids')
         tag_ids = self.get_arguments('tagids')
+        if 'all' in tag_ids:
+            tag_ids = []
+        if 'all' in node_ids:
+            node_ids = []
         if operation and jobname:
             result = add_recurrent(sched, node_ids=node_ids,
                     tag_ids=tag_ids, severity=severity,

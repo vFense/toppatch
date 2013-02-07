@@ -12,22 +12,10 @@
     <section class="well well-small noMargin clearfix">
         <dl>
             <dt>Node IP:</dt><dd><% print(model.ip || '<em>Not listed</em>'); %></dd>
-            <dt>Display Name:</dt><dd><% model['display/name'] ? print('<span>' + model['display/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editDisplay" data-placement="right" name="editPopover"><i class="icon-pencil" style="color: #daa520"></i></a></dd>
-            <dt>Hostname:</dt><dd><% model['host/name'] ? print('<span>' + model['host/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editHost" data-placement="right" name="editPopover"><i class="icon-pencil" style="color: #daa520"></i></a></dd>
+            <dt>Display Name:</dt><dd><% model['display/name'] ? print('<span>' + model['display/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editDisplay" data-placement="right" name="editPopover"><i class="icon-pencil" title="Edit Display Name" style="color: #daa520"></i></a></dd>
+            <dt>Hostname:</dt><dd><% model['host/name'] ? print('<span>' + model['host/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editHost" data-placement="right" name="editPopover"><i class="icon-pencil" title="Edit Hostname" style="color: #daa520"></i></a></dd>
             <dt>Computer Name:</dt><dd><% model['computer/name'] ? print('<span>' + model['computer/name'] +'</span>') : print('<em>Not listed</em>'); %></dd>
             <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
-            <dt>Tags applied:</dt>
-            <dd>
-                <div id="taglist" class="pull-left">
-                <% if (model.tags.length != 0) { %>
-                    <% _.each(model.tags, function (tag) { %>
-                        <span style="margin-right: 3px" class="label label-info" id="<% print(tag.replace(' ', '')) %>"><%= tag %></span>
-                    <% }); %>
-                <% } else { %>
-                    <em id="notag">No tags applied</em>
-                <% } %>
-                </div>&nbsp;<a href="#" id="addTag" data-placement="right"><i style="color: green;" class="icon-plus" ></i></a>
-            </dd>
             <dt>Agent Status:</dt>
             <dd>
                 <% if (model['agent/status']) { %>
@@ -83,7 +71,8 @@
         </dl>
     </section>
 </article>
-<article class="row-fluid">
+<article class="row-fluid" style="z-index: 0;">
+    <header><strong>Trends</strong></header>
     <section class="well well-small noMargin clearfix">
         <div id="installedGraph" class="span6"></div>
         <div id="availableGraph" class="span6"></div>
@@ -113,6 +102,50 @@
         <% } else { %>
             <span><em>No interfaces available.</em></span>
         <% } %>
+    </section>
+</article>
+<article class="row-fluid">
+    <header><strong>Tags Applied</strong></header>
+    <section class="well well-small noMargin clearfix">
+        <div class="list">
+            <header class="clearfix">
+                <div class="pull-left">&nbsp;</div>
+                <div class="pull-right hidden-print">
+                    <small>Add a tag</small>&nbsp;
+                    <button class="btn btn-link noPadding" name="toggleAddTag"><i style="color: green;" class="icon-plus"></i></button>
+                </div>
+            </header>
+            <div class="items" id="tagItems">
+                <% if (model.tags.length != 0) { %>
+                    <% _.each(model.tags, function (tag) { %>
+                    <div class="item row-fluid">
+                        <div class="span6">
+                            <span class="label label-info"><i class="icon-tag"></i>&nbsp;<%= tag.tag_name %></span>&nbsp;
+                            <% if (tag.agents_up > 0) { %>
+                                <i style="color: green;" class="icon-ok" title="<%= tag.agents_up %> agents up." data-placement="right"></i>&nbsp;
+                            <% } %>
+                            <% if (tag.reboots_pending > 0) { %>
+                                <i style="color: orange" class="icon-warning-sign" title="<%= tag.reboots_pending %> reboots pending." data-placement="right"></i>&nbsp;
+                            <% } %>
+                            <% if (tag.agents_down > 0) { %>
+                                <i style="color: red;" class="icon-warning-sign" title="<%= tag.agents_down %> agents down." data-placement="right"></i>
+                            <% } %>
+                        </div>
+                        <div class="span6 alignRight">
+                            <button class="btn btn-link noPadding" name="removeTag" value="<%= tag.tag_name %>"  data-node="<% print(model.id); %>">
+                                <i style="color: red;" class="icon-trash" title="Remove Tag" data-placement="left"></i>&nbsp;
+                            </button>
+                            <a href="#tags/<%= tag.tag_id %>">More Info</a>
+                        </div>
+                    </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="item row-fluid">
+                        <span><em>No tags applied</em></span>
+                    </div>
+                <% } %>
+            </div>
+        </div>
     </section>
 </article>
 <% if (model.is_vm && vm) { %>
@@ -167,7 +200,7 @@
                                 <input value="<%= tag.tag_name %>" name="taglist"  type="checkbox"
                                 <% if (model.tags.length != 0) { %>
                                     <% _.each(model.tags, function (nodeTag) { %>
-                                        <% if(nodeTag == tag.tag_name) { print('checked="checked"'); } %>
+                                        <% if(nodeTag.tag_name == tag.tag_name) { print('checked="checked"'); } %>
                                     <% }); %>
                                 <% } %> />
                             </label>
@@ -175,12 +208,12 @@
                     <% }); %>
                 <% } %>
             </div>
-        </div>
-        <div class="item clearfix" style="margin-top: 10px">
-            <button type="button" class="btn btn-link" id="newtag"><span>New tag...</span></button>
-            <div class="hide inline input-append">
-                <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
-                <button class="btn" id="createtag">Add</button>
+            <div class="item clearfix noPadding" style="margin-top: 10px">
+                <button type="button" class="btn btn-link" name="showNewTag"><span>New tag...</span></button>
+                <div class="hide inline input-append">
+                    <input type="text" name="tag" placeholder="New tag..." class="input-medium"/>
+                    <button class="btn btn-mini btn-primary" id="createtag">Add</button>
+                </div>
             </div>
         </div>
         <input type="hidden" name="nodeid" value="<% print(model.id); %>"/>

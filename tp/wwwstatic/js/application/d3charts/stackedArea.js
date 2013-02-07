@@ -194,6 +194,7 @@ define(['jquery', 'd3', 'underscore'], function ($, d3, _) {
                         .attr("x", width - 12)
                         .attr("y", 12)
                         .style("fill", "black")
+                        .style("font-weight", "bold")
                         .attr("text-anchor", "middle")
                         .text(function (d, i) { return d.value || 0; });
                     legend.append("title").text(function (d, i) { return d.title + ": " + (d.value || 0); });

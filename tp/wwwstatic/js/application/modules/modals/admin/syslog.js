@@ -25,13 +25,12 @@ define(
                     this.collection.fetch();
                 },
                 events: {
-                    'submit form': 'submit'
+                    'click button[name=submitSyslog]': 'submit'
                 },
                 submit: function (event) {
                     var $form = $(event.target),
                         url = 'api/logger/modifyLogging',
                         $alert = this.$el.find('.alert');
-                    window.console.log($form.serialize());
                     $.post(url, $form.serialize(), function (json) {
                         window.console.log(json);
                         if (!json.pass) {

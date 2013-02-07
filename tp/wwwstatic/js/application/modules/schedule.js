@@ -20,15 +20,17 @@ define(
                     'click button[name=remove]': 'removeSchedule'
                 },
                 removeSchedule: function (event) {
-                    var $removeButton = $(event.currentTarget),
+                    var that = this,
+                        $removeButton = $(event.currentTarget),
                         jobname = $removeButton.val(),
-                        $item = $removeButton.parents('.item');
+                        $item = $removeButton.parents('.item'),
+                        $alert = this.$el.find('.alert').first();
                     $.post('api/scheduler/remove', {jobname: jobname}, function (json) {
                         window.console.log(json);
                         if (json.pass) {
-                            $item.remove();
+                            that.collection.fetch();
                         } else {
-                            window.console.log(json);
+                            $alert.removeClass('alert-error').addClass('alert-success').html(json.message).show();
                         }
                     });
                 },
@@ -39,6 +41,7 @@ define(
 
                     var template = _.template(this.template),
                         data = this.collection.toJSON();
+                    console.log(data);
 
                     this.$el.empty();
 

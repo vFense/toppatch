@@ -14,9 +14,10 @@ define(
                     {text: 'TimeBlocks', href: 'admin/timeblock'},
                     {text: 'Users', href: 'admin/users'},
                     {text: 'Groups', href: 'admin/groups'},
-                    {text: 'Syslog', href: 'admin/syslog'},
-                    {text: 'VMware', href: 'admin/vmware'},
-                    {text: 'Schedule', href: 'admin/schedule'}
+                    //{text: 'Syslog', href: 'admin/syslog'},
+                    //{text: 'VMware', href: 'admin/vmware'},
+                    {text: 'Schedule', href: 'admin/schedule'},
+                    {text: 'Services', href: 'admin/services'}
                 ]
             }),
             initialize: function (options) {

@@ -21,22 +21,27 @@ define(
                     return this.baseUrl + '?node_id=' + this.id;
                 }
             }),
-           /* GraphCollection: Backbone.Collection.extend({
-                baseUrl: 'api/node/graphs/severity',
-                installed: 'true',
+            TagsInNodeCollection: Backbone.Collection.extend({
+                baseUrl: 'api/nodes.json',
                 url: function () {
-                    return this.baseUrl + '?nodeid=' + this.id + '&installed=' + this.installed;
+                    return this.baseUrl + '?id=' + this.id;
                 }
-            }),*/
+            }),
             View: Backbone.View.extend({
                 initialize: function () {
-                    _.bindAll(this, 'createtag');
+                    _.bindAll(this, 'createTag');
                     this.template = myTemplate;
+
+                    this.tagsinnodecollection = new exports.TagsInNodeCollection();
+                    this.tagsinnodecollection.bind('reset', this.updateTagList, this);
+
                     this.collection = new exports.Collection();
                     this.collection.bind('reset', this.render, this);
                     this.collection.fetch();
 
                     this.id = this.collection.id;
+                    this._rendered = false;
+                    this._currentTab = '#nodes/' + this.id + '/patches';
 
                     this.tagcollection = new exports.TagCollection();
                     this.tagcollection.bind('reset', this.render, this);
@@ -45,18 +50,15 @@ define(
                     this.vmcollection = new exports.VmCollection();
                     this.vmcollection.bind('reset', this.render, this);
                     this.vmcollection.fetch();
-
-                    /*this.graphcollection = new exports.GraphCollection();
-                    this.graphcollection.bind('reset', this.render, this);
-                    this.graphcollection.fetch();*/
                 },
                 events: {
                     'click .disabled': function (e) { e.preventDefault(); },
                     'click li a': 'changeView',
-                    'click #addTag': 'showtags',
-                    'click #createtag': 'createtag',
+                    'click button[name=toggleAddTag]': 'showTags',
+                    'click button[name=removeTag]': 'removeTag',
+                    'click #createtag': 'createTag',
                     'click button[name=dependencies]': 'showDependencies',
-                    'click input[name=taglist]': 'toggletag',
+                    'click input[name=taglist]': 'toggleTag',
                     'click #editDisplay': 'showEditOperation',
                     'click #editHost': 'showEditOperation',
                     'click button[name=showNetworking]': 'showNetworking',
@@ -68,9 +70,12 @@ define(
                 onRender: function () {
                     var close, that = this;
                     this.stackedAreaGraph();
-                    this.$el.find('#addTag').popover({
+                    this.$el.find('i').each(function () {
+                        $(this).tooltip();
+                    });
+                    this.$el.find('button[name=toggleAddTag]').popover({
                         placement: 'right',
-                        title: 'Tags Available<button type="button" class="btn btn-link noPadding pull-right" id="close"><i class="icon-remove"></i></button>',
+                        title: 'Tags Available<button class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
                         html: true,
                         trigger: 'click',
                         content: $('#list-form')
@@ -101,8 +106,8 @@ define(
                     }).click(function () {
                         var popover = this;
                         if (popover.checked) {
-                            $(this).data('popover').options.content.find('input[name=datepicker]').datepicker();
-                            close = $(this).data('popover').$tip.find('button[name=close]');
+                            $(popover).data('popover').options.content.find('input[name=datepicker]').datepicker();
+                            close = $(popover).data('popover').$tip.find('button[name=close]');
                             close.unbind();
                             close.bind('click', function (event) {
                                 event.preventDefault();
@@ -114,6 +119,7 @@ define(
                             $(this).data('popover').options.content.find('input[name=datepicker]').datepicker('destroy');
                         }
                     });
+                    this._rendered = true;
                 },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
@@ -191,21 +197,33 @@ define(
                 changeView: function (event) {
                     event.preventDefault();
                     var $tab = $(event.currentTarget),
+                        view = $tab.attr('href'),
                         $body = this.$el.find('.tab-body'),
                         id = this.id;
-                    this.showLoading('.tab-body');
-                    if ($tab.attr('href') === '#nodes/' + id + '/patches') {
-                        patchesView.Collection = patchesView.Collection.extend({id: id});
-                        this.patchesView = new patchesView.View({
-                            el: $body
-                        });
-                        this.navigation.setActive('nodes/' + id + '/patches');
-                    } else if ($tab.attr('href') === '#nodes/' + id + '/vmware') {
-                        vmView.Collection = vmView.Collection.extend({id: id});
-                        this.vmView = new vmView.View({
-                            el: $body
-                        });
-                        this.navigation.setActive('nodes/' + id + '/vmware');
+                    if (this._currentTab !== view) {
+                        this._currentTab  = view;
+                        this.showLoading('.tab-body');
+                        if (view === '#nodes/' + id + '/patches') {
+                            if (this.patchesView) {
+                                this.patchesView.render();
+                            } else {
+                                patchesView.Collection = patchesView.Collection.extend({id: id});
+                                this.patchesView = new patchesView.View({
+                                    el: $body
+                                });
+                            }
+                            this.navigation.setActive('nodes/' + id + '/patches');
+                        } else if (view === '#nodes/' + id + '/vmware') {
+                            if (this.vmView) {
+                                this.vmView.render();
+                            } else {
+                                vmView.Collection = vmView.Collection.extend({id: id});
+                                this.vmView = new vmView.View({
+                                    el: $body
+                                });
+                            }
+                            this.navigation.setActive('nodes/' + id + '/vmware');
+                        }
                     }
                 },
                 submit: function (evt) {
@@ -354,28 +372,30 @@ define(
                         }
                     });
                 },
-                showtags: function (evt) {
+                showTags: function (evt) {
                     var showInput, addTag, tagList, close,
-                        popover = $(evt.target).parent().data('popover');
+                        popover = $(evt.currentTarget).data('popover');
                     if (popover) {
-                        showInput = popover.$tip.find('button');
-                        close = popover.$tip.find('#close');
+                        showInput = popover.$tip.find('button[name=showNewTag]');
+                        close = popover.$tip.find('button[name=close]');
                         addTag = showInput.siblings('div').children('button');
                         tagList = popover.$tip.find('input[name=taglist]');
-                        close.bind('click', function () { $(evt.target).parent().popover('hide'); });
-                        tagList.bind('click', this.toggletag);
-                        addTag.bind('click', this.createtag);
+                        close.bind('click', function () {
+                            $(evt.currentTarget).popover('hide');
+                        });
+                        tagList.unbind().bind('click', this.toggleTag);
+                        addTag.unbind().bind('click', this.createTag);
                         showInput.show().siblings('div').hide();
-                        showInput.bind('click', function () {
+                        showInput.unbind().bind('click', function () {
                             $(this).hide().siblings('div').show();
                         });
                     }
                     return false;
                 },
-                createtag: function (evt) {
-                    var params, tag, user, nodes, operation, list, checkboxlist, itemstring, tagname, notag,
+                createTag: function (evt) {
+                    var params, tag, user, nodes, operation, checkboxlist, itemstring, tagname,
+                        $alert = this.$el.find('.alert').first(),
                         that = this;
-                    list = $('#taglist');
                     checkboxlist = $('#list-form').children('.list').children('.items');
                     operation = 'add_to_tag';
                     user = window.User.get('name');
@@ -391,9 +411,6 @@ define(
                         function (json) {
                             window.console.log(json);
                             if (json.pass) {
-                                notag = $('#notag');
-                                if (notag) { notag.remove(); }
-                                list.prepend('<span class="label label-info">' + tag + '</span>&nbsp;');
                                 tagname = tag;
                                 tag = 'value="' + tag + '"';
                                 itemstring = '<div class="item clearfix">' +
@@ -402,15 +419,22 @@ define(
                                                 '</label>' +
                                             '</div>';
                                 checkboxlist.append(itemstring);
-                                checkboxlist.find('input[name=taglist]').on('click', that.toggletag);
+                                checkboxlist.find('input[name=taglist]').on('click', that.toggleTag);
+                                that.tagcollection.fetch();
+                                that.collection.fetch();
+                                $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tagname + ' was created.');
+                            } else {
+                                $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                             }
                         });
                     return false;
                 },
-                toggletag: function (evt) {
-                    var params, nodes, tag, user, list, notag,
-                        checked = evt.currentTarget.checked;
-                    list = $('#taglist');
+                toggleTag: function (evt) {
+                    var params, nodes, tag, user, list,
+                        checked = evt.currentTarget.checked,
+                        $el = this.$el,
+                        $alert = $el.find('.alert').first(),
+                        that = this;
                     user = window.User.get('name');
                     tag = $(evt.currentTarget).val();
                     nodes = $(evt.currentTarget).parents('form').find('input[name=nodeid]').val();
@@ -421,14 +445,15 @@ define(
                     };
                     if (checked) {
                         //add node to tag
-                        notag = $('#notag');
-                        if (notag) { notag.remove(); }
                         params.operation = 'add_to_tag';
                         $.post("/api/tagging/addTagPerNode", { operation: JSON.stringify(params) },
                             function (json) {
                                 window.console.log(json);
                                 if (json.pass) {
-                                    list.prepend('<span style="margin-right: 6px" class="label label-info" id="' + tag.replace(' ', '') + '">' + tag + '</span>');
+                                    that.tagsinnodecollection.fetch();
+                                    $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was applied.');
+                                } else {
+                                    $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                                 }
                             });
                     } else {
@@ -438,10 +463,81 @@ define(
                             function (json) {
                                 window.console.log(json);
                                 if (json.pass) {
-                                    $('#' + tag.replace(' ', '')).remove();
+                                    that.tagsinnodecollection.fetch();
+                                    $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was removed.');
+                                } else {
+                                    $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
                                 }
                             });
                     }
+                },
+                removeTag: function (event) {
+                    var $button = $(event.currentTarget),
+                        tag = $button.attr('value'),
+                        $alert = this.$el.find('.alert').first(),
+                        node = $button.data('node'),
+                        user = window.User.get('name'),
+                        that = this,
+                        params = {
+                            operation: 'remove_from_tag',
+                            nodes: [node],
+                            user: user,
+                            tag: tag
+                        };
+                    console.log(params);
+                    $.post("/api/tagging/removeTagPerNode", { operation: JSON.stringify(params) },
+                        function (json) {
+                            window.console.log(json);
+                            if (json.pass) {
+                                that.collection.fetch();
+                                $alert.removeClass('alert-error').addClass('alert-success').show().find('span').html('Tag ' + tag + ' was removed.');
+                            } else {
+                                $alert.removeClass('alert-success').addClass('alert-error').show().find('span').html(json.message);
+                            }
+                        });
+                },
+                updateTagList: function () {
+                    var $item, $leftDiv, $rightDiv, $tagSpan, $removeButton, $href,
+                        $okIcon, $rebootIcon, $downIcon, $trashIcon,
+                        $items = this.$el.find('#tagItems'),
+                        data = this.tagsinnodecollection.toJSON()[0],
+                        tags = data.tags,
+                        that = this,
+                        newElement = function (element) {
+                            return $(document.createElement(element));
+                        };
+                    $items.empty();
+                    _.each(tags, function (tag) {
+                        $item       = newElement('div').addClass('item row-fluid');
+                        $leftDiv    = newElement('div').addClass('span6');
+                        $rightDiv   = newElement('div').addClass('span6 alignRight');
+                        $tagSpan = newElement('span').addClass('label label-info').html('<i class="icon-tag"></i>&nbsp;' + tag.tag_name);
+                        $leftDiv.append($tagSpan, '&nbsp;');
+                        if (tag.agents_up > 0) {
+                            $okIcon = newElement('i').addClass('icon-ok').attr('title', tag.agents_up + ' agents up.').data('placement', 'right').css('color', 'green');
+                            $leftDiv.append($okIcon, '&nbsp;');
+                        }
+                        if (tag.reboots_pending > 0) {
+                            $rebootIcon = newElement('i').addClass('icon-warning-sign').attr('title', tag.reboots_pending + 'reboots pending..').data('placement', 'right').css('color', 'orange');
+                            $leftDiv.append($rebootIcon, '&nbsp;');
+                        }
+                        if (tag.agents_down > 0) {
+                            $downIcon = newElement('i').addClass('icon-warning-sign').attr('title', tag.agents_down + ' agents down.').data('placement', 'right').css('color', 'red');
+                            $leftDiv.append($downIcon);
+                        }
+                        $removeButton = newElement('button').addClass('btn btn-link noPadding').attr({
+                            name: 'removeTag',
+                            value: tag.tag_name
+                        }).data('node', that.id);
+                        $trashIcon = newElement('i').addClass('icon-trash').attr('title', 'RemoveTag').data('placement', 'left').css('color', 'red');
+                        $href = newElement('a').attr('href', '#tags/' + tag.tag_id).html('More Info');
+                        $rightDiv.append($removeButton.append($trashIcon), $href);
+                        $item.append($leftDiv, $rightDiv);
+                        $items.append($item);
+                    });
+                    $items.find('i').each(function () {
+                        $(this).tooltip();
+                    });
                 },
                 showNetworking: function (event) {
                     var $button = $(event.currentTarget),

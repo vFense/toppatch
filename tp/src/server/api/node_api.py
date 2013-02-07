@@ -238,9 +238,14 @@ class NodesHandler(BaseHandler):
                             'id': pkg[0].toppatch_id,
                             'severity': pkg[1].severity
                             })
-                tags = map(lambda x: x[1].tag,
-                        self.session.query(TagsPerNode, TagInfo).\
+                tags = map(lambda x: {'tag_name': x[1].tag,
+                                      'tag_id': x[1].id,
+                                      'agents_down': x[2].agents_down,
+                                      'agents_up': x[2].agents_up,
+                                      'reboots_pending': x[2].reboots_pending},
+                        self.session.query(TagsPerNode, TagInfo, TagStats).\
                                 join(TagInfo).\
+                                join(TagStats).\
                                 filter(TagsPerNode.node_id == \
                                 node_info[1].node_id).all()
                                 )
