@@ -74,7 +74,7 @@ define(
                         $(this).tooltip();
                     });
                     this.$el.find('button[name=toggleAddTag]').popover({
-                        placement: 'right',
+                        placement: 'top',
                         title: 'Tags Available<button class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
                         html: true,
                         trigger: 'click',
