@@ -44,8 +44,6 @@ define(
                 'admin/nodes'     : 'modal/admin/nodes',
                 'admin/timeblock' : 'modal/admin/timeblock',
                 'admin/listblocks': 'modal/admin/listblocks',
-                'admin/syslog'    : 'modal/admin/syslog',
-                'admin/vmware'    : 'modal/admin/vmware',
                 'admin/groups'    : 'modal/admin/groups',
                 'admin/users'     : 'modal/admin/users',
                 'admin/schedule'  : 'modal/admin/schedule',
@@ -226,12 +224,6 @@ define(
             },
             'modal/admin/listblocks': function () {
                 this.openAdminModalWithView('modals/admin/listblocks');
-            },
-            'modal/admin/syslog': function () {
-                this.openAdminModalWithView('modals/admin/syslog');
-            },
-            'modal/admin/vmware': function () {
-                this.openAdminModalWithView('modals/admin/vmware');
             },
             'modal/admin/groups': function () {
                 this.openAdminModalWithView('modals/admin/groups');

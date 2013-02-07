@@ -6,8 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 define(
-    ['jquery', 'underscore', 'backbone', 'app', 'modules/tabNavigation', 'modules/modals/admin/syslog', 'modules/modals/admin/vmware', 'text!templates/modals/admin/services.html'],
-    function ($, _, Backbone, app, tabNav, syslogView, virtualView, myTemplate) {
+    ['jquery', 'underscore', 'backbone', 'app', 'modules/tabNavigation', 'modules/modals/admin/syslog', 'modules/modals/admin/vmware', 'modules/modals/admin/email', 'text!templates/modals/admin/services.html'],
+    function ($, _, Backbone, app, tabNav, syslogView, virtualView, emailView, myTemplate) {
         "use strict";
         var exports = {
             View: Backbone.View.extend({
@@ -30,24 +30,33 @@ define(
                     'click li a': 'changeView'
                 },
                 beforeRender: $.noop,
-                onRender: $.noop,
+                onRender: function () {
+                    var $body = this.$el.find('.tab-content');
+
+                    this.syslogView = new syslogView.View({
+                        el: $body
+                    });
+                    this.updateHeight();
+                },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var $header, $body, template = _.template(this.template);
+                    var template = _.template(this.template);
 
                     this.$el.empty();
 
                     this.$el.html(template());
 
-                    $body = this.$el.find('.tab-content');
-
-                    this.syslogView = new syslogView.View({
-                        el: $body
-                    });
-
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;
+                },
+                updateHeight: function () {
+                    var height, $navTabs = this.$el.find('.nav-tabs'),
+                        $body = this.$el.find('.tab-content');
+                    setTimeout(function () {
+                        height = $body.height() > 150 ? $body.height() : 150;
+                        $navTabs.css('height', height);
+                    }, 50);
                 },
                 showLoading: function (el) {
                     var $el = this.$el,
@@ -56,9 +65,10 @@ define(
                     $div.empty().append(this._pinwheel.el);
                 },
                 changeView: function (event) {
-                    var $tab = $(event.currentTarget),
-                        view = $tab.attr('href'),
-                        $body = this.$el.find('.tab-content');
+                    var $currentTab = $(event.currentTarget),
+                        view = $currentTab.attr('href'),
+                        $body = this.$el.find('.tab-content'),
+                        $navTabs = this.$el.find('.nav-tabs');
                     event.preventDefault();
                     if (this._currentTab !== view) {
                         this._currentTab = view;
@@ -80,10 +90,16 @@ define(
                                 });
                             }
                         } else if (view === '#email') {
-                            $body.html('working on this!');
+                            if (this.emailView) {
+                                this.emailView.render();
+                            } else {
+                                this.emailView = new emailView.View({
+                                    el: $body
+                                });
+                            }
                         }
+                        this.updateHeight();
                     }
-                    window.console.log(view);
                 }
             })
         };
