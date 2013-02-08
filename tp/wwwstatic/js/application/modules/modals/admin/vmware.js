@@ -69,10 +69,10 @@ define(
 
                     var template = _.template(this.template),
                         data = this.collection.toJSON()[0];
-                    window.console.log(data);
+
                     this.$el.empty();
 
-                    this.$el.html(template({data: data}));
+                    if (data) { this.$el.html(template({data: data})); }
 
                     if (this.onRender !== $.noop) { this.onRender(); }
                     return this;

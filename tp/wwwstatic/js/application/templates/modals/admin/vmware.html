@@ -3,12 +3,20 @@
         <form>
             <section class="row-fluid">
                 <div class="control-group span6">
-                    <label class="control-label">VMware Host:</label>
+                    <label class="control-label">Virtual Software:</label>
+                    <select name="virtual">
+                        <option value="install">VMware</option>
+                    </select>
+                </div>
+            </section>
+            <section class="row-fluid">
+                <div class="control-group span6">
+                    <label class="control-label">Virtual Host:</label>
                     <div class="controls">
                         <input type="text" name="vm_host" value="<%= data.host %>"/>
                     </div>
                 </div>
-                <div class="control-group span4">
+                <div class="control-group span6">
                     <label class="control-label">Collecting Cycle:</label>
                     <div class="controls">
                         <select name="cycle">
@@ -27,7 +35,7 @@
                         <input type="text" name="vm_user"  value="<%= data.username %>"/>
                     </div>
                 </div>
-                <div class="control-group span4">
+                <div class="control-group span6">
                     <label class="control-label">Password:</label>
                     <div class="controls">
                         <input type="password" name="vm_password"  value=""/>
@@ -35,13 +43,12 @@
                 </div>
             </section>
             <section class="row-fluid">
-                <div class="span10">
+                <div class="span12">
                     <div class="alert alert-block fade in hide"></div>
                 </div>
             </section>
             <section class="row-fluid">
-                <div class="span6"></div>
-                <div class="span4 alignRight">
+                <div class="span12 alignRight">
                     <input type="submit" value="Save" class="btn btn-primary" name="submit"/>
                 </div>
             </section>

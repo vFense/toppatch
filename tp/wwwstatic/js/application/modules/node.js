@@ -30,7 +30,6 @@ define(
             View: Backbone.View.extend({
                 initialize: function () {
                     _.bindAll(this, 'createTag');
-                    this._rendered = false;
                     this.template = myTemplate;
 
                     this.tagsinnodecollection = new exports.TagsInNodeCollection();
@@ -41,6 +40,8 @@ define(
                     this.collection.fetch();
 
                     this.id = this.collection.id;
+                    this._rendered = false;
+                    this._currentTab = '#nodes/' + this.id + '/patches';
 
                     this.tagcollection = new exports.TagCollection();
                     this.tagcollection.bind('reset', this.render, this);
@@ -73,7 +74,7 @@ define(
                         $(this).tooltip();
                     });
                     this.$el.find('button[name=toggleAddTag]').popover({
-                        placement: 'right',
+                        placement: 'top',
                         title: 'Tags Available<button class="btn btn-link noPadding pull-right" name="close"><i class="icon-remove"></i></button>',
                         html: true,
                         trigger: 'click',
@@ -196,25 +197,38 @@ define(
                 changeView: function (event) {
                     event.preventDefault();
                     var $tab = $(event.currentTarget),
+                        view = $tab.attr('href'),
                         $body = this.$el.find('.tab-body'),
                         id = this.id;
-                    this.showLoading('.tab-body');
-                    if ($tab.attr('href') === '#nodes/' + id + '/patches') {
-                        patchesView.Collection = patchesView.Collection.extend({id: id});
-                        this.patchesView = new patchesView.View({
-                            el: $body
-                        });
-                        this.navigation.setActive('nodes/' + id + '/patches');
-                    } else if ($tab.attr('href') === '#nodes/' + id + '/vmware') {
-                        vmView.Collection = vmView.Collection.extend({id: id});
-                        this.vmView = new vmView.View({
-                            el: $body
-                        });
-                        this.navigation.setActive('nodes/' + id + '/vmware');
+                    if (this._currentTab !== view) {
+                        this._currentTab  = view;
+                        this.showLoading('.tab-body');
+                        if (view === '#nodes/' + id + '/patches') {
+                            if (this.patchesView) {
+                                this.patchesView.render();
+                            } else {
+                                patchesView.Collection = patchesView.Collection.extend({id: id});
+                                this.patchesView = new patchesView.View({
+                                    el: $body
+                                });
+                            }
+                            this.navigation.setActive('nodes/' + id + '/patches');
+                        } else if (view === '#nodes/' + id + '/vmware') {
+                            if (this.vmView) {
+                                this.vmView.render();
+                            } else {
+                                vmView.Collection = vmView.Collection.extend({id: id});
+                                this.vmView = new vmView.View({
+                                    el: $body
+                                });
+                            }
+                            this.navigation.setActive('nodes/' + id + '/vmware');
+                        }
                     }
                 },
                 submit: function (evt) {
-                    var item, span, label, checkbox, $scheduleForm, type, patches, url, offset, fields,
+                    var item, span, label, checkbox, $scheduleForm, type, patches,
+                        url, offset, fields, $badge, badgeNumber,
                         $form = $(evt.target),
                         schedule = $form.find('input[name="schedule"]:checked'),
                         time = '',
@@ -235,9 +249,10 @@ define(
                     }
                     type = $form.attr('id');
                     patches = $form.find('input[name="patches"]:checked');
+                    $badge = this.$el.find('#pending').parents('.accordion-group').find('.badge').first();
+                    badgeNumber = parseFloat($badge.html());
                     url = '/submitForm?' + $form.serialize();
                     url += time ? '&time=' + time + '&label=' + label + '&offset=' + offset : '';
-
                     $.post(url,
                         function (json) {
                             window.console.log(json);
@@ -269,6 +284,8 @@ define(
                                         item.remove();
                                     }
                                 });
+                                badgeNumber += patches.length;
+                                $badge.html(badgeNumber);
                                 if ($form.find('input:checked').attr('checked')) {
                                     $form.find('input:checked').attr('checked', false);
                                 }

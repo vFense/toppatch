@@ -49,28 +49,27 @@ class HandOff():
         self.data = data
         self.valid_json, self.json_object = verify_json_is_valid(self.data)
         self.ip = ip_address
-        self.is_enabled = False
+        self.is_enabled = True
         self.node = None
         if self.valid_json:
             if 'node_id' in self.json_object:
                 self.node = node_exists(self.session,
                     node_id=self.json_object['node_id'])
-            else:
-                logger.info('%s - Json does not contain a node_id %s' %\
-                    (self.username, self.json_object)
-                    )
+            elif 'new_agent' in self.json_object:
+                node_added = add_node(self.session, self.ip)
+                tcp_results = self.send_node_id(str(node_added.id))
+                logger.info('Node %s Added, agent_id is %s' % (self.ip, str(node_added.id))
+                return
         else:
             logger.info('%s - Json is not valid %s' %\
                     (self.username, data)
                     )
         if self.node:
-            self.is_enabled = self.session.query(SslInfo.enabled).\
-                    filter(SslInfo.node_id == self.node.id).first()
-        if self.is_enabled:
+            self.is_enabled = self.session.query(NodeInfo.enabled).\
+                    filter(NodeInfo.node_id == self.node.id).first()
+
+        if self.is_enabled and self.node:
             logger.info('%s is enabled in RV' % self.node.ip_address)
-        else:
-            logger.warn('%s is disabled in RV' % self.ip)
-        if self.is_enabled:
             if self.ip != self.node.ip_address:
                 self.node.ip_address = self.ip
                 self.session.commit()
@@ -101,6 +100,8 @@ class HandOff():
                 self.update_results(self.node)
             if self.json_object[OPERATION] == STOP:
                 self.update_results(self.node)
+        else:
+            logger.warn('%s is disabled in RV' % self.ip)
         self.session.close()
 
     def get_data(self, oper):
@@ -202,5 +203,12 @@ class HandOff():
         logger.debug('%s - status updated for node %s' % \
                 (self.username, self.node.ip_address))
         results = update_node(self.session, self.node.id, self.ip)
+
+
+    def send_node_id(self, node_id):
+        msg = encode({"node_id" : node_id})
+        msg = msg + '<EOF>'
+        tcp_results = TcpConnect(self.client_ip, msg)
+        return tcp_results
 
 

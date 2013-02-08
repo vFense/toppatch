@@ -16,20 +16,20 @@ PIDFILE = '/opt/TopPatch/var/tmp/process.pid'
 MYSQL_PIDFILE = '/opt/TopPatch/var/tmp/mysql-9006.pid'
 REDIS_PIDFILE = '/opt/TopPatch/var/tmp/redis-6379.pid'
 RVLISTENER_PIDFILE = '/opt/TopPatch/var/tmp/rvlistener-9001.pid'
-CSRLISTENER_PIDFILE = '/opt/TopPatch/var/tmp/csrlistener-9002.pid'
+#CSRLISTENER_PIDFILE = '/opt/TopPatch/var/tmp/csrlistener-9002.pid'
 RVWEB_PIDFILE = '/opt/TopPatch/var/tmp/rvweb-9000.pid'
 MYSQL= '/opt/TopPatch/mysql/percona-5.5/support-files/mysql.server'
 REDIS= '/opt/TopPatch/tp/src/daemon/redis_init'
 PATH='/opt/TopPatch/tp/'
 RVLISTENER = 'src/receiver/rvlistener.py'
-CSRLISTENER = 'src/receiver/csrlistener.py'
+#CSRLISTENER = 'src/receiver/csrlistener.py'
 RVWEB = 'src/rvweb.py'
 PROGRAM = 'python'
 
 PIDS = [(MYSQL_PIDFILE, 'RVMySQL'), (RVLISTENER_PIDFILE, 'RVListener'), 
-        (CSRLISTENER_PIDFILE, 'CSRListener'),
         (RVWEB_PIDFILE, 'RVWeb'),
         (REDIS_PIDFILE, 'RVRedis')]
+        #(CSRLISTENER_PIDFILE, 'CSRListener'),
 
 if not os.path.exists('/opt/TopPatch/var/tmp/'):
     os.mkdir('/opt/TopPatch/var/tmp/')
@@ -46,8 +46,8 @@ if not os.path.exists('/opt/TopPatch/var/lib/'):
 
 SERVICES = [
         (RVLISTENER, RVLISTENER_PIDFILE, 'RVListener'),
-        (CSRLISTENER, CSRLISTENER_PIDFILE, 'CSRListener'),
         (RVWEB, RVWEB_PIDFILE, 'RVWeb')]
+        #(CSRLISTENER, CSRLISTENER_PIDFILE, 'CSRListener'),
 
 
 def run(program, *args):
