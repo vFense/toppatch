@@ -199,8 +199,8 @@ def node_toggler(session, nodeid=None, toggle=False, username='system_user'):
     session = validate_session(session)
     result = None
     if nodeid:
-        sslinfo = session.query(SslInfo).\
-            filter(SslInfo.node_id == nodeid).first()
+        sslinfo = session.query(NodeInfo).\
+            filter(NodeInfo.id == nodeid).first()
         if sslinfo and toggle:
             sslinfo.enabled = True
             session.commit()
@@ -230,6 +230,7 @@ def node_toggler(session, nodeid=None, toggle=False, username='system_user'):
                 'message' : 'node_id %s does not exist' % 
                         (nodeid)
                 }
+    session.close()
     return(result)
 
 

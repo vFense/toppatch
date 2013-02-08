@@ -144,10 +144,13 @@ class SslHandler(BaseHandler):
         result = []
         self.session = self.application.session
         self.session = validate_session(self.session)
-        for u in self.session.query(SslInfo, NodeInfo).join(NodeInfo).all():
-            result.append({'enabled': u[0].enabled,
-                'node_id': u[0].node_id,
-                'ip': u[1].ip_address
+        for u in self.session.query(NodeInfo).all():
+            result.append({'enabled': u.enabled,
+                'node_id': u.node_id,
+                'computer_name': u.computer_name,
+                'display_name': u.computer_name,
+                'host_name': u.computer_name,
+                'ip': u.ip_address
                 })
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(result, indent=4))

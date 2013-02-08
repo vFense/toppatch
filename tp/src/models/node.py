@@ -27,10 +27,12 @@ class NodeInfo(Base):
     last_node_update = Column(DATETIME, nullable=True)
     reboot = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
     is_vm = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
+    enabled = Column(BOOLEAN, nullable=False)   # True = Up, False = Down
     def __init__(self, ip_address=None, host_name=None, computer_name=None,
                 display_name=None, host_status=False,
                 agent_status=False, last_agent_update=None,
-                last_node_update=None, reboot=False, is_vm=False
+                last_node_update=None, reboot=False, is_vm=False,
+                enabled=True
                 ):
         self.display_name = display_name
         self.computer_name = computer_name
@@ -42,13 +44,15 @@ class NodeInfo(Base):
         self.last_node_update = last_node_update
         self.reboot = reboot
         self.is_vm = is_vm
+        self.enabled = enabled
     def __repr__(self):
-        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
+        return "<NodeInfo(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)>" %\
                 (
                 self.host_name, self.ip_address, self.display_name,
                 self.computer_name, self.host_status,
                 self.agent_status, self.last_agent_update,
-                self.last_node_update, self.reboot, self.is_vm
+                self.last_node_update, self.reboot, self.is_vm,
+                self.enabled
                 )
 
 class SystemInfo(Base):
