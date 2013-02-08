@@ -146,7 +146,7 @@ class SslHandler(BaseHandler):
         self.session = validate_session(self.session)
         for u in self.session.query(NodeInfo).all():
             result.append({'enabled': u.enabled,
-                'node_id': u.node_id,
+                'node_id': u.id,
                 'computer_name': u.computer_name,
                 'display_name': u.computer_name,
                 'host_name': u.computer_name,
