@@ -58,6 +58,7 @@ class HandOff():
             elif 'new_agent' in self.json_object:
                 node_added = add_node(self.session, self.ip)
                 tcp_results = self.send_node_id(str(node_added.id))
+                print node_added, 'noded added'
                 return()
         else:
             logger.info('%s - Json is not valid %s' %\
@@ -70,7 +71,7 @@ class HandOff():
         #    logger.info('%s is enabled in RV' % self.node.ip_address)
         #else:
         #    logger.warn('%s is disabled in RV' % self.ip)
-        if self.is_enabled:
+        if self.is_enabled and self.node:
             if self.ip != self.node.ip_address:
                 self.node.ip_address = self.ip
                 self.session.commit()
