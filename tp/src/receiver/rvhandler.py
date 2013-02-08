@@ -49,7 +49,7 @@ class HandOff():
         self.data = data
         self.valid_json, self.json_object = verify_json_is_valid(self.data)
         self.ip = ip_address
-        self.is_enabled = False
+        self.is_enabled = True
         self.node = None
         if self.valid_json:
             if 'node_id' in self.json_object:
@@ -62,13 +62,13 @@ class HandOff():
             logger.info('%s - Json is not valid %s' %\
                     (self.username, data)
                     )
-        if self.node:
-            self.is_enabled = self.session.query(SslInfo.enabled).\
+        #if self.node:
+        #    self.is_enabled = self.session.query(SslInfo.enabled).\
                     filter(SslInfo.node_id == self.node.id).first()
-        if self.is_enabled:
-            logger.info('%s is enabled in RV' % self.node.ip_address)
-        else:
-            logger.warn('%s is disabled in RV' % self.ip)
+        #if self.is_enabled:
+        #    logger.info('%s is enabled in RV' % self.node.ip_address)
+        #else:
+        #    logger.warn('%s is disabled in RV' % self.ip)
         if self.is_enabled:
             if self.ip != self.node.ip_address:
                 self.node.ip_address = self.ip
