@@ -17,6 +17,7 @@ fieldset {
   border: 0;
 }
 
+
 // Groups of fields with labels on top (legends)
 legend {
   display: block;
@@ -547,9 +548,9 @@ select:focus:required:invalid {
 
 input.search-query {
   padding-right: @em*( 14px )/@libstFontSize;
-  padding-right: @em*( 4px )/@libstFontSize \9;
+  padding-right: 4px \9;
   padding-left: @em*( 14px )/@libstFontSize;
-  padding-left: @em*( 4px )/@libstFontSize \9; /* IE7-8 doesn't have border-radius, so don't indent the padding */
+  padding-left: 4px \9; /* IE7-8 doesn't have border-radius, so don't indent the padding */
   margin-bottom: 0; // Remove the default margin on all inputs
   .border-radius(@em*( 15px )/@libstFontSize);
 }
