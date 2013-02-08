@@ -66,7 +66,7 @@ class HandOff():
                     )
         if self.node:
             self.is_enabled = self.session.query(NodeInfo.enabled).\
-                    filter(NodeInfo.node_id == self.node.id).first()
+                    filter(NodeInfo.id == self.node.id).first()
 
         if self.is_enabled and self.node:
             logger.info('%s is enabled in RV' % self.node.ip_address)
