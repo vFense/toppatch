@@ -55,7 +55,7 @@ class HandOff():
             if 'node_id' in self.json_object:
                 self.node = node_exists(self.session,
                     node_id=self.json_object['node_id'])
-            elif 'new_agent' in self.json_object:
+            elif 'new_agent' in self.json_object['operation']:
                 node_added = add_node(self.session, self.ip)
                 tcp_results = self.send_node_id(str(node_added.id))
                 logger.info('Node %s Added, agent_id is %s' % (self.ip, str(node_added.id)))
