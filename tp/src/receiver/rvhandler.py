@@ -55,10 +55,9 @@ class HandOff():
             if 'node_id' in self.json_object:
                 self.node = node_exists(self.session,
                     node_id=self.json_object['node_id'])
-            else:
-                logger.info('%s - Json does not contain a node_id %s' %\
-                    (self.username, self.json_object)
-                    )
+            elif 'new_agent' in self.json_object:
+                node_added = add_node(self.session, self.ip)
+                tcp_results = send_node_id(str(node_added.id))
         else:
             logger.info('%s - Json is not valid %s' %\
                     (self.username, data)
@@ -202,5 +201,12 @@ class HandOff():
         logger.debug('%s - status updated for node %s' % \
                 (self.username, self.node.ip_address))
         results = update_node(self.session, self.node.id, self.ip)
+
+
+    def send_node_id(self, node_id):
+        msg = encode({"node_id" : node_id})
+        msg = msg + '<EOF>'
+        tcp_results = TcpConnect(self.client_ip, msg)
+        return tcp_results
 
 
