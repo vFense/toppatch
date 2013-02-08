@@ -208,7 +208,7 @@ class HandOff():
     def send_node_id(self, node_id):
         msg = encode({"node_id" : node_id})
         msg = msg + '<EOF>'
-        tcp_results = TcpConnect(self.client_ip, msg)
+        tcp_results = TcpConnect(self.ip, msg)
         return tcp_results
 
 
