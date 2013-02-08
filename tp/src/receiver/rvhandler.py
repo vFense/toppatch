@@ -64,7 +64,7 @@ class HandOff():
                     )
         #if self.node:
         #    self.is_enabled = self.session.query(SslInfo.enabled).\
-                    filter(SslInfo.node_id == self.node.id).first()
+        #            filter(SslInfo.node_id == self.node.id).first()
         #if self.is_enabled:
         #    logger.info('%s is enabled in RV' % self.node.ip_address)
         #else:
