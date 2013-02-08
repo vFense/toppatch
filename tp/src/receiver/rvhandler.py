@@ -57,7 +57,7 @@ class HandOff():
                     node_id=self.json_object['node_id'])
             elif 'new_agent' in self.json_object:
                 node_added = add_node(self.session, self.ip)
-                tcp_results = send_node_id(str(node_added.id))
+                tcp_results = self.send_node_id(str(node_added.id))
         else:
             logger.info('%s - Json is not valid %s' %\
                     (self.username, data)
