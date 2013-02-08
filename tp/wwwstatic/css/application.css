@@ -25,6 +25,68 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+@font-face {
+  font-family: pictonic;
+  src: url('../font/pictonic/pictonic.eot');
+  src: url('../font/pictonic/pictonic.eot?#iefix') format('embedded-opentype'), url('../font/pictonic/pictonic.ttf') format('truetype'), url('../font/pictonic/pictonic.woff') format('woff'), url('../font/pictonic/pictonic.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-font-smoothing: antialiased !important;
+  font-smoothing: antialiased !important;
+}
+.icon-os-apple:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-lin-ubuntu:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-lin-debian:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-lin-centos:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-lin-redhat:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-lin-fedora:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-os-win-02:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-os-win-03:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-os-win-04:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-android:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-os-linux_1_:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-os-ios:before {
+  font-family: "pictonic";
+  content: "";
+}
+.icon-os-osx_1_:before {
+  font-family: "pictonic";
+  content: "";
+}
 /*!
    ===== Primary Styles ========================================================
    Author: Luis Aleman
@@ -34,19 +96,19 @@ BODY {
   font-family: "Open Sans", Arial, "Helvetica Neue", Helvetica, sans-serif;
   min-width: 67.14285714285714em;
   padding-top: 1em;
-  padding-bottom: 2.857142857142857em;
+  padding-bottom: 1.4285714285714286em;
 }
 BODY > FOOTER {
   background-color: #F8F8F8;
-  height: 2.857142857142857em;
+  height: 1.4285714285714286em;
   color: #535456;
   border-top: 0.07142857142857142em solid #e0e0e0;
   border-bottom: 0.07142857142857142em solid #e0e0e0;
 }
 BODY > FOOTER .logo-text {
   height: 2.5714285714285716em;
-  padding-top: 0.14285714285714285em;
-  padding-bottom: 0.14285714285714285em;
+  padding-top: -0.5714285714285714em;
+  padding-bottom: -0.5714285714285714em;
 }
 .loading_indicator .brand {
   font-size: 20px;
@@ -83,7 +145,7 @@ H6 {
   margin: 0;
 }
 .legal {
-  line-height: 2.857142857142857em;
+  line-height: 1.4285714285714286em;
 }
 .reader-only {
   position: absolute;
@@ -796,8 +858,8 @@ BODY > HEADER #primaryNav {
 .list .items .item.linked A STRONG {
   color: #0088cc;
 }
-.list .items .item SPAN,
-.list .items .item .desc {
+.list .items .item [class^="span"],
+.list .items .item > .desc {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
