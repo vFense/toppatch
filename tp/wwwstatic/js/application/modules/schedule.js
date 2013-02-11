@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'underscore', 'backbone', 'text!templates/schedule.html', 'jquery.ui.datepicker', 'jquery.ui.slider'],
+    ['jquery', 'underscore', 'backbone', 'text!templates/schedule.html', 'jquery.ui.datepicker', 'jquery.ui.slider', 'jquery.ui.timepicker'],
     function ($, _, Backbone, myTemplate) {
         "use strict";
         var exports = {
@@ -47,8 +47,11 @@ define(
                 },
                 toggleAddSchedule: function (event) {
                     var $button = $(event.currentTarget),
-                        $scheduleDiv = this.$el.find('#scheduleDiv');
+                        $scheduleDiv = this.$el.find('#scheduleDiv'),
+                        $form = $scheduleDiv.find('form');
+                    event.preventDefault();
                     $scheduleDiv.toggle();
+                    $form[0].reset();
                 },
                 hideSeverity: function (event) {
                     var option = $(event.currentTarget).val(),
@@ -64,12 +67,15 @@ define(
                         that = this,
                         url = 'api/scheduler/recurrent/add',
                         $alert = this.$el.find('.alert'),
-                        $inputs = $form.find('input, select:not(:hidden)'),
+                        $inputs = $form.find('input:not([name=time]), select:not([multiple], :hidden)'),
+                        $multiple = $form.find('select[multiple]'),
+                        time = $form.find('input[name=time]').val().split(':'),
                         invalid = false,
                         params = {
-                            minutes: this.minutes,
-                            hours: this.hours
+                            hours: time[0],
+                            minutes: time[1]
                         };
+                    event.preventDefault();
                     $inputs.each(function () {
                         if (this.name !== 'start_date') {
                             if (this.value === '-1' || !this.value) {
@@ -81,6 +87,19 @@ define(
                                     params[this.name] = this.value;
                                 }
                             }
+                        }
+                    });
+                    $multiple.each(function () {
+                        var options = $(this).val();
+                        if (options && options.length) {
+                            if (options[0] === 'any') { options.splice(0, 1); }
+                            $(this).parents('.control-group').removeClass('error');
+                            if (options.length > 0) {
+                                params[this.name] = options;
+                            }
+                        } else {
+                            $(this).parents('.control-group').addClass('error');
+                            invalid = true;
                         }
                     });
                     window.console.log(params);
@@ -121,9 +140,10 @@ define(
                     var $el = this.$el,
                         that = this,
                         $slide = $el.find('#slider-range'),
-                        $dateInput = $el.find('input[name=start_date]');
+                        $dateInput = $el.find('input[name=start_date]'),
+                        $timeInput = $el.find('input[name=time]');
                     $el.find('label').show();
-                    $slide.slider({
+                    /*$slide.slider({
                         min: 0,
                         max: 1439,
                         slide: function (event, ui) {
@@ -138,8 +158,9 @@ define(
                             startTime = hours >= 12 ? startTime + ':' + minutes + ' PM' : startTime + ':' + minutes + ' AM';
                             $(event.target).siblings('label').html('Time: ' + startTime);
                         }
-                    });
+                    });*/
                     $dateInput.datepicker();
+                    $timeInput.timepicker();
                 },
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
