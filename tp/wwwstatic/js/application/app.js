@@ -5,7 +5,7 @@ define(
         'backbone',
         'utilities/vent',
         'utilities/viewManager',
-        'utilities/propogate',
+        'utilities/inheritance',
         'utilities/pinwheel',
         'd3charts/loadAll'
     ],
@@ -15,7 +15,7 @@ define(
         Backbone,
         vent,
         ViewManager,
-        propogate,
+        inheritance,
         pinwheel,
         charts
     ) {
@@ -77,8 +77,8 @@ define(
                 return params;
             },
             pinwheel: pinwheel.View,
-            inherit: propogate.inherit,
-            createChild: propogate.createChild
+            inherit: inheritance.inherit,
+            createChild: inheritance.createChild
         });
 
         // WebSockets
