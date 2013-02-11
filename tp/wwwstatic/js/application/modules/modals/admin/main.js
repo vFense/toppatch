@@ -16,7 +16,7 @@ define(
                     {text: 'Groups', href: 'admin/groups'},
                     //{text: 'Syslog', href: 'admin/syslog'},
                     //{text: 'VMware', href: 'admin/vmware'},
-                    {text: 'Schedule', href: 'admin/schedule'},
+                    //{text: 'Schedule', href: 'admin/schedule'},
                     {text: 'Services', href: 'admin/services'}
                 ]
             }),
