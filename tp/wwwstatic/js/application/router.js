@@ -192,15 +192,15 @@ define(
             },
             showLogs: function (query) {
                 var that = this,
-                    params = '',
+                    params = {},
                     collection,
                     view;
 
-                require(['modules/logs'], function (myView) {
-                    if ($.type(query) === 'string') {
-                        params = app.parseQuery(query);
-                    }
+                if ($.type(query) === 'string' && query.length > 0) {
+                    params = app.parseQuery(query);
+                }
 
+                require(['modules/logs'], function (myView) {
                     collection = new myView.Collection({
                         params: params
                     });
