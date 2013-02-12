@@ -24,12 +24,6 @@ require.config({
         'respond'           : 'libs/respond/respond.src',
         'd3'                : 'libs/d3/d3.v2',
 
-        // Library Plugins
-        // ---------------------------------------------------------------------
-        'text'              : 'libs/require/plugins/text',
-        'bootstrap-modal'   : 'libs/backbone/plugins/bootstrap-modal',
-        'Rickshaw'          : 'libs/rickshaw/rickshaw',
-        'nvd3'              : 'libs/nvd3/nv.d3',
 
         // jQuery.ui Library
         // ---------------------------------------------------------------------
@@ -52,7 +46,16 @@ require.config({
         'jquery.ui.slider'      : 'libs/jquery-ui/dev/jquery.ui.slider',
         'jquery.ui.spinner'     : 'libs/jquery-ui/dev/jquery.ui.spinner',
         'jquery.ui.tabs'        : 'libs/jquery-ui/dev/jquery.ui.tabs',
-        'jquery.ui.tooltip'     : 'libs/jquery-ui/dev/jquery.ui.tooltip'
+        'jquery.ui.tooltip'     : 'libs/jquery-ui/dev/jquery.ui.tooltip',
+
+
+        // Library Plugins
+        // ---------------------------------------------------------------------
+        'text'                  : 'libs/require/plugins/text',
+        'bootstrap-modal'       : 'libs/backbone/plugins/bootstrap-modal',
+        'Rickshaw'              : 'libs/rickshaw/rickshaw',
+        'nvd3'                  : 'libs/nvd3/nv.d3',
+        'jquery.ui.timepicker'  : 'libs/jquery-ui-timepicker/jquery.ui.timepicker.addon'
     },
 
     shim: {
@@ -103,7 +106,10 @@ require.config({
         'jquery.ui.progressbar' : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
         'jquery.ui.slider'      : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.mouse']},
         'jquery.ui.spinner'     : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget', 'jquery.ui.button']},
-        'jquery.ui.tabs'        : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']}
+        'jquery.ui.tabs'        : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.widget']},
+
+        //Plugins
+        'jquery.ui.timepicker'  : {exports: 'jQuery', deps: ['jquery.ui.core', 'jquery.ui.datepicker', 'jquery.ui.slider']}
     },
 
     // Load Respond.js, bootstrap, and our main application file
