@@ -101,7 +101,11 @@
                 </section>
                 <% if (data.tags.length && data.nodes && data.nodes.nodes.length) { %>
                 <section class="row-fluid">
-                    <div class="control-group select optional span6">
+                    <div class="control-group span4">
+                        <label class="control-label"><small>Time:</small></label>
+                        <input type="text" name="time" value="00:00"/>
+                    </div>
+                    <div class="control-group select optional span4">
                         <label class="control-label"><small>*Tags:</small></label>
                         <div class="controls">
                             <select multiple="multiple" name="tags" size="3">
@@ -113,7 +117,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="control-group span6">
+                    <div class="control-group span4">
                         <label class="control-label"><small>*Nodes:</small></label>
                         <div class="controls">
                             <select multiple="multiple" name="nodes" size="3">
@@ -127,12 +131,12 @@
                     </div>
                 </section>
                 <% } %>
-                <section class="row-fluid">
+                <!--<section class="row-fluid">
                     <div class="control-group span12">
                         <label class="control-label"><small>Time: 00:00 AM</small></label>
                         <div id="slider-range" style="margin-left: 5px;"></div><br>
                     </div>
-                </section>
+                </section>-->
                 <section class="row-fluid">
                     <div class="span6">
                         <small>*CTRL/CMD + Click to select multiple values.</small>
