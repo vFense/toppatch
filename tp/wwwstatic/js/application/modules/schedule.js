@@ -47,8 +47,10 @@ define(
                 },
                 toggleAddSchedule: function (event) {
                     var $button = $(event.currentTarget),
-                        $scheduleDiv = this.$el.find('#scheduleDiv');
+                        $scheduleDiv = this.$el.find('#scheduleDiv'),
+                        $form = $scheduleDiv.find('form');
                     $scheduleDiv.toggle();
+                    $form[0].reset();
                 },
                 hideSeverity: function (event) {
                     var option = $(event.currentTarget).val(),
@@ -64,7 +66,8 @@ define(
                         that = this,
                         url = 'api/scheduler/recurrent/add',
                         $alert = this.$el.find('.alert'),
-                        $inputs = $form.find('input, select:not(:hidden)'),
+                        $inputs = $form.find('input, select:not([multiple], :hidden)'),
+                        $multiple = $form.find('select[multiple]'),
                         invalid = false,
                         params = {
                             minutes: this.minutes,
@@ -81,6 +84,19 @@ define(
                                     params[this.name] = this.value;
                                 }
                             }
+                        }
+                    });
+                    $multiple.each(function () {
+                        var options = $(this).val();
+                        if (options && options.length) {
+                            if (options[0] === 'any') { options.splice(0, 1); }
+                            $(this).parents('.control-group').removeClass('error');
+                            if (options.length > 0) {
+                                params[this.name] = options;
+                            }
+                        } else {
+                            $(this).parents('.control-group').addClass('error');
+                            invalid = true;
                         }
                     });
                     window.console.log(params);

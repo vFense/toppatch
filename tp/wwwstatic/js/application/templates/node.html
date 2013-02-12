@@ -15,7 +15,11 @@
             <dt>Display Name:</dt><dd><% model['display/name'] ? print('<span>' + model['display/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editDisplay" data-placement="right" name="editPopover"><i class="icon-pencil" title="Edit Display Name" style="color: #daa520"></i></a></dd>
             <dt>Hostname:</dt><dd><% model['host/name'] ? print('<span>' + model['host/name'] + '</span>') : print('<em>Not listed</em>'); %>&nbsp;<a href="#" id="editHost" data-placement="right" name="editPopover"><i class="icon-pencil" title="Edit Hostname" style="color: #daa520"></i></a></dd>
             <dt>Computer Name:</dt><dd><% model['computer/name'] ? print('<span>' + model['computer/name'] +'</span>') : print('<em>Not listed</em>'); %></dd>
-            <dt>Operating System:</dt><dd><% print(model['os/name'] || '<em>Not listed</em>'); %></dd>
+            <dt>Operating System:</dt>
+            <dd>
+                <% print(model['os/name'] || '<em>Not listed</em>'); %>&nbsp;
+                <i class="<%= printOsIcon(model['os/name']) %>"></i>
+            </dd>
             <dt>Agent Status:</dt>
             <dd>
                 <% if (model['agent/status']) { %>
