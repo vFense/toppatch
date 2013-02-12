@@ -72,7 +72,30 @@ define(
                             tagdata: tagdata,
                             by_os: this.collection.by_os,
                             severity: this.collection.severity,
-                            filter: this.collection.filterby
+                            filter: this.collection.filterby,
+                            printOsIcon: function (osname) {
+                                var osClass = '';
+                                if (osname.indexOf('CentOS') !== -1) {
+                                    osClass = 'icon-lin-centos';
+                                } else if (osname.indexOf('Ubuntu') !== -1) {
+                                    osClass = 'icon-lin-ubuntu';
+                                } else if (osname.indexOf('Fedora') !== -1) {
+                                    osClass = 'icon-lin-fedora';
+                                } else if (osname.indexOf('Debian') !== -1) {
+                                    osClass = 'icon-lin-debian';
+                                } else if (osname.indexOf('Red Hat') !== -1) {
+                                    osClass = 'icon-lin-redhat';
+                                } else if (osname.indexOf('OS X') !== -1) {
+                                    osClass = 'icon-os-apple';
+                                } else if (osname.indexOf('Linux') !== -1) {
+                                    osClass = 'icon-os-linux_1_';
+                                } else if (osname.indexOf('Windows') !== -1) {
+                                    osClass = 'icon-os-win-03';
+                                } else {
+                                    osClass = 'icon-laptop';
+                                }
+                                return osClass;
+                            }
                         },
                         temp;
                     temp = payload.offset - payload.getCount;
