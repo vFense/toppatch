@@ -55,11 +55,12 @@ define(
                 },
                 hideSeverity: function (event) {
                     var option = $(event.currentTarget).val(),
-                        $severity = this.$el.find('select[name=severity]').parents('.control-group');
+                        $select = this.$el.find('select[name=severity]'),
+                        $severity = $select.parents('.control-group');
                     if (option === 'reboot') {
-                        $severity.hide();
+                        $select.attr('disabled', true).addClass('disabled');
                     } else {
-                        $severity.show();
+                        $select.attr('disabled', false).removeClass('disabled');
                     }
                 },
                 addSchedule: function (event) {
@@ -67,7 +68,7 @@ define(
                         that = this,
                         url = 'api/scheduler/recurrent/add',
                         $alert = this.$el.find('.alert'),
-                        $inputs = $form.find('input:not([name=time]), select:not([multiple], :hidden)'),
+                        $inputs = $form.find('input:not([name=time]), select:not([multiple], :disabled)'),
                         $multiple = $form.find('select[multiple]'),
                         time = $form.find('input[name=time]').val().split(':'),
                         invalid = false,
