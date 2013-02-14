@@ -144,22 +144,6 @@ define(
                         $dateInput = $el.find('input[name=start_date]'),
                         $timeInput = $el.find('input[name=time]');
                     $el.find('label').show();
-                    /*$slide.slider({
-                        min: 0,
-                        max: 1439,
-                        slide: function (event, ui) {
-                            var hours, minutes, startTime;
-                            minutes = ui.value % 60;
-                            that.minutes = minutes;
-                            minutes = minutes < 10 ? '0' + minutes : minutes;
-                            hours = Math.floor(ui.value / 60);
-                            that.hours = hours;
-                            hours = hours < 10 ? '0' + hours : hours;
-                            startTime = hours > 12 ? String(hours - 12) : String(hours);
-                            startTime = hours >= 12 ? startTime + ':' + minutes + ' PM' : startTime + ':' + minutes + ' AM';
-                            $(event.target).siblings('label').html('Time: ' + startTime);
-                        }
-                    });*/
                     $dateInput.datepicker();
                     $timeInput.timepicker();
                 },

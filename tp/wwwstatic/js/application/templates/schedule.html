@@ -106,7 +106,7 @@
                                 </select>
                             </div>
                         </section>
-                        <% if (data.tags.length && data.nodes && data.nodes.nodes.length) { %>
+                        <% if (data.tags.length && data.nodes && data.nodes.data.length) { %>
                         <section class="row-fluid">
                             <div class="control-group select optional span4">
                                 <label class="control-label"><small>*Tags:</small></label>
@@ -126,7 +126,7 @@
                                     <select multiple="multiple" name="nodes" size="3">
                                         <option value="any">None</option>
                                         <option value="all">All</option>
-                                        <% _.each(data.nodes.nodes, function (node) { %>
+                                        <% _.each(data.nodes.data, function (node) { %>
                                         <option value="<%= node.id %>"><%= node.displayname || node['computer/name'] || node.hostname || node.ip %></option>
                                         <% }); %>
                                     </select>

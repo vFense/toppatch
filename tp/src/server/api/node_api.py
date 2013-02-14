@@ -289,7 +289,7 @@ class NodesHandler(BaseHandler):
                               'patch/pend': node_info[2].patches_pending
                                }
                 data.append(resultnode)
-            resultjson = {"count": total_count, "nodes": data}
+            resultjson = {"count": total_count, "data": data}
         self.session.close()
         self.set_header('Content-Type', 'application/json')
         self.write(json.dumps(resultjson, indent=4))
