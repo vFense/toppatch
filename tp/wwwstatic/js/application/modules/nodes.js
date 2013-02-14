@@ -31,6 +31,7 @@ define(
                 filterByTag: function (event) {
                     var filterBy = $(event.currentTarget).val();
                     this.collection.params.filterby = filterBy === 'none' ? '' : filterBy;
+                    this.collection.params.by_os = '';
                     this.collection.fetch();
                 },
                 onRender: function () {
