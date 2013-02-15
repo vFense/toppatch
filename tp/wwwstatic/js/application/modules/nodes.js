@@ -80,7 +80,7 @@ define(
                         $iconOS     = newElement('i').addClass(osIcon),
                         $nameSpan   = newElement('strong').html(displayName),
                         $leftSpan   = newElement('span').addClass('desc span8')
-                                        .append($iconStatus, ' — ', $iconOS, $nameSpan, ' — ', item.get('os/name')),
+                                        .append($iconStatus, ' — ', $iconOS, ' ', $nameSpan, ' — ', item.get('os/name')),
                         $rightSpan  = newElement('span').addClass('alignRight span4')
                                         .append($done, ' / ', $pend, ' / ', $need, ' / ', $fail, ' ', $iconCaret),
                         $href       = newElement('a').attr('href', '#nodes/' + id)
@@ -91,9 +91,9 @@ define(
                 },
                 displayName: function (item) {
                     return item.get('node_vm_name') ||
-                        item.get('node_display_name') ||
-                        item.get('node_computer_name') ||
-                        item.get('node_host_name');
+                        item.get('displayname') ||
+                        item.get('computer/name') ||
+                        item.get('hostname');
                 },
                 getStatus: function (item) {
                     var reboot      = item.get('reboot'),
