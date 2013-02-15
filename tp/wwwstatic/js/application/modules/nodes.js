@@ -22,7 +22,7 @@ define(
                 initialize: function (options) {
                     Pager.View.prototype.initialize.call(this, options);
                     this.tagcollection = new exports.TagCollection();
-                    this.tagcollection.bind('reset', this.onRender, this);
+                    this.listenTo(this.tagcollection, 'reset', this.onRender);
                     this.tagcollection.fetch();
                 },
                 events: {
