@@ -18,12 +18,6 @@
                 <article class="hide" id="scheduleDiv">
                     <form>
                         <section class="row-fluid">
-                            <div class="control-group span12">
-                                <label class="control-label"><small>Job Name:</small></label>
-                                <input type="text" name="jobname" placeholder="Required"/>
-                            </div>
-                        </section>
-                        <section class="row-fluid">
                             <div class="control-group span3">
                                 <label class="control-label"><small>Operation:</small></label>
                                 <select name="operation" class="btn btn-mini">
@@ -33,22 +27,22 @@
                                 </select>
                             </div>
                             <div class="control-group span3">
+                                <label class="control-label"><small>Job Name:</small></label>
+                                <input type="text" name="jobname" placeholder="Required"/>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label"><small>Start Date:</small></label>
+                                <input type="text" name="start_date" placeholder="Optional"/>
+                            </div>
+                            <div class="control-group span3 hide">
                                 <label class="control-label"><small>Severity:</small></label>
-                                <select name="severity" class="btn btn-mini disabled" disabled="disabled">
+                                <select name="severity" class="btn btn-mini">
                                     <option value="-1">Select one</option>
                                     <option value="any">Any</option>
                                     <option value="optional">Optional</option>
                                     <option value="recommended">Recommended</option>
                                     <option value="critical">Critical</option>
                                 </select>
-                            </div>
-                            <div class="control-group span3">
-                                <label class="control-label"><small>Start Date:</small></label>
-                                <input type="text" name="start_date" placeholder="Optional"/>
-                            </div>
-                            <div class="control-group span3">
-                                <label class="control-label"><small>Time:</small></label>
-                                <input type="text" name="time" value="00:00"/>
                             </div>
                         </section>
                         <section class="row-fluid">
@@ -108,6 +102,10 @@
                         </section>
                         <% if (data.tags.length && data.nodes && data.nodes.data.length) { %>
                         <section class="row-fluid">
+                            <div class="control-group span4">
+                                <label class="control-label"><small>Time:</small></label>
+                                <input type="text" name="time" value="00:00"/>
+                            </div>
                             <div class="control-group select optional span4">
                                 <label class="control-label"><small>*Tags:</small></label>
                                 <div class="controls">
