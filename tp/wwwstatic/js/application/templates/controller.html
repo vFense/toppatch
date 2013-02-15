@@ -1,6 +1,6 @@
 <div class="items">
-    <% if(data.nodes.length > 0) { %>
-        <% _.each(data.nodes, function (node, i) { %>
+    <% if(data.data.length > 0) { %>
+        <% _.each(data.data, function (node, i) { %>
             <div class="<% if(i === 0) { print('first'); } %> item clearfix id" id="<%= node.id %>">
                 <div class="row-fluid">
                     <span class="desc span11"><strong>Node ID</strong> - <%= node.ip %></span>

@@ -1,90 +1,63 @@
 <div class="modal hide" id="widgetProperties">
-    <div class="modal-header">
+    <header class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
         <h3>Widget Properties</h3>
-    </div>
-    <div class="modal-body">
-        <form id="properties-form">
-            <h4>Choose a widget</h4>
-            <div id="type">
-                <label for="type1" class="radio inline">
-                    <input type="radio" name="type" id="type1"  value="graph" />Graph
-                </label>
-                <label for="type2" class="radio inline">
-                    <input type="radio" name="type" id="type2" value="tag" />Tag Info
-                </label>
-            </div>
-            <div id="textSettings" class="hide">
-                <h4>Choose a parameter</h4>
-                <div id="parameter">
-                    <label for="param1" class="radio inline">
-                        <input type="radio" name="param" id="param1"  value="Nodes"/>Nodes
+    </header>
+    <section class="modal-body">
+        <div>
+            <article id="properties-form" class="row-fluid noMargin">
+                <section id="type" class="row-fluid">
+                    <h4>Choose a widget</h4>
+                    <label for="type1" class="radio span4">
+                        <input type="radio" name="type" id="type1"  value="graph" />Graph
                     </label>
-                    <label for="param2" class="radio inline">
-                        <input type="radio" name="param" id="param2" value="Patched" />Patched
+                    <label for="type2" class="radio span4">
+                        <input type="radio" name="type" id="type2" value="tag" />Tag Info
                     </label>
-                    <label for="param3" class="radio inline">
-                        <input type="radio" name="param" id="param3" value="Scheduled Patches"/>Unpatched
-                    </label>
-                    <label for="param4" class="radio inline">
-                        <input type="radio" name="param" id="param4" value="Failed Patches"/>Failed
-                    </label>
-                </div>
-            </div>
-            <div id="widgetSettings">
-                <h4>Widget Title</h4>
-                <input type="text" id="title" placeholder="title">
-                <h4>Choose a size</h4>
-                <div id="size">
-                    <label for="radio3" class="radio inline">
-                        <input type="radio" name="radio" id="radio3" value="4" checked="checked"/>Small
-                    </label>
-                    <label for="radio4" class="radio inline">
-                        <input type="radio" name="radio" id="radio4" value="6"/>Medium
-                    </label>
-                    <label for="radio5" class="radio inline">
-                        <input type="radio" name="radio" id="radio5" value="12"/>Large
-                    </label>
-                </div>
-            </div>
-            <div id="graphSettings" class="hide">
-                <h4>Choose type of graph</h4>
-                <div id="graphType" class="radio-graph">
-                    <select name="graph" class="span4">
-                        <option value="pie">Nodes By Os</option>
-                        <option value="bar">Updates by Severity</option>
-                        <option value="area_1">Packages Installed in Network</option>
-                        <option value="area_2">Packages Available in Network</option>
-                    </select>
-                    <!--<label for="graphtype1" class="radio inline">
-                        <input type="radio" name="graph" id="graphtype1"  value="pie" />Pie Graph
-                    </label>
-                    <label for="graphtype2" class="radio inline">
-                        <input type="radio" name="graph" id="graphtype2" value="bar" checked="checked"/>Bar Graph
-                    </label>
-                    <label for="graphtype5" class="radio inline">
-                        <input type="radio" name="graph" id="graphtype5" value="stacked"/>Stacked Bar
-                    </label>
-                    <label for="graphtype6" class="radio inline">
-                        <input type="radio" name="graph" id="graphtype6" value="area"/>Area Graph
-                    </label>-->
-                </div><!--
-                <div id="areaSettings" class="hide">
-                    <h4>Choose type of Data</h4>
-                    <div id="graphdata">
-                        <label for="graphdata1" class="radio inline">
-                            <input type="radio" name="graphdata" id="graphdata1"  value="0" checked="checked"/>Available Packages
+                </section>
+                <section id="widgetSettings" class="row-fluid">
+                    <h4>Widget Title</h4>
+                    <input type="text" id="title" placeholder="title">
+                    <h4>Choose a size</h4>
+                    <div id="size">
+                        <label for="radio3" class="radio inline">
+                            <input type="radio" name="radio" id="radio3" value="4" checked="checked"/>Small
                         </label>
-                        <label for="graphdata2" class="radio inline">
-                            <input type="radio" name="graphdata" id="graphdata2" value="1"/>Installed Packages
+                        <label for="radio4" class="radio inline">
+                            <input type="radio" name="radio" id="radio4" value="6"/>Medium
+                        </label>
+                        <label for="radio5" class="radio inline">
+                            <input type="radio" name="radio" id="radio5" value="12"/>Large
                         </label>
                     </div>
-                </div>-->
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
+                </section>
+                <section id="graphSettings" class="row-fluid hide">
+                    <h4>Choose type of graph</h4>
+                    <div id="graphType" class="radio-graph">
+                        <select name="graph" class="span4">
+                            <option value="pie">Nodes By Os</option>
+                            <option value="bar">Updates by Severity</option>
+                            <option value="area_1">Packages Installed in Network</option>
+                            <option value="area_2">Packages Available in Network</option>
+                        </select>
+                    </div><!--
+                    <div id="areaSettings" class="hide">
+                        <h4>Choose type of Data</h4>
+                        <div id="graphdata">
+                            <label for="graphdata1" class="radio inline">
+                                <input type="radio" name="graphdata" id="graphdata1"  value="0" checked="checked"/>Available Packages
+                            </label>
+                            <label for="graphdata2" class="radio inline">
+                                <input type="radio" name="graphdata" id="graphdata2" value="1"/>Installed Packages
+                            </label>
+                        </div>
+                    </div>-->
+                </section>
+            </article>
+        </div>
+    </section>
+    <footer class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal">Close</a>
         <a href="#" class="btn btn-primary" id="apply">Save changes</a>
-    </div>
+    </footer>
 </div>

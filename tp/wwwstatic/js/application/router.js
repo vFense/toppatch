@@ -106,18 +106,20 @@ define(
                 this.show({hash: '#dashboard', title: 'Dashboard', view: 'modules/mainDash'});
             },
             showNodes: function (query) {
-                var that = this;
+                var that = this,
+                    params = {},
+                    collection,
+                    view;
+
+                if ($.type(query) === 'string' && query.length > 0) {
+                    params = app.parseQuery(query);
+                }
                 require(['modules/nodes'], function (myView) {
-                    if ($.type(query) === 'string') {
-                        var params = app.parseQuery(query);
-                        myView.Collection = myView.Collection.extend({
-                            getCount: params.count,
-                            offset: params.offset,
-                            by_os: params.by_os,
-                            filterby: params.filterby
-                        });
-                    }
-                    that.show({hash: '#nodes', title: 'Nodes', view: new myView.View()});
+                    collection = new myView.Collection({
+                        params: params
+                    });
+                    view = new myView.View({collection: collection});
+                    that.show({hash: '#nodes', title: 'Nodes', view: view});
                 });
             },
             showNode: function (id) {
@@ -192,15 +194,15 @@ define(
             },
             showLogs: function (query) {
                 var that = this,
-                    params = '',
+                    params = {},
                     collection,
                     view;
 
-                require(['modules/logs'], function (myView) {
-                    if ($.type(query) === 'string') {
-                        params = app.parseQuery(query);
-                    }
+                if ($.type(query) === 'string' && query.length > 0) {
+                    params = app.parseQuery(query);
+                }
 
+                require(['modules/logs'], function (myView) {
                     collection = new myView.Collection({
                         params: params
                     });

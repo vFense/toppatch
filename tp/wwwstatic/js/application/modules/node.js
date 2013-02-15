@@ -124,7 +124,7 @@ define(
                 render: function () {
                     if (this.beforeRender !== $.noop) { this.beforeRender(); }
 
-                    var $header, $body, vmData,
+                    var $header, $body, vmData, payload,
                         template = _.template(this.template),
                         data = this.collection.toJSON()[0],
                         tagData = this.tagcollection.toJSON();
@@ -147,9 +147,38 @@ define(
                         vmData = null;
                     }
 
+                    payload = {
+                        model: data,
+                        tags: tagData,
+                        vm: vmData,
+                        printOsIcon: function (osname) {
+                            var osClass = '';
+                            if (osname.indexOf('CentOS') !== -1) {
+                                osClass = 'icon-lin-centos';
+                            } else if (osname.indexOf('Ubuntu') !== -1) {
+                                osClass = 'icon-lin-ubuntu';
+                            } else if (osname.indexOf('Fedora') !== -1) {
+                                osClass = 'icon-lin-fedora';
+                            } else if (osname.indexOf('Debian') !== -1) {
+                                osClass = 'icon-lin-debian';
+                            } else if (osname.indexOf('Red Hat') !== -1) {
+                                osClass = 'icon-lin-redhat';
+                            } else if (osname.indexOf('OS X') !== -1) {
+                                osClass = 'icon-os-apple';
+                            } else if (osname.indexOf('Linux') !== -1) {
+                                osClass = 'icon-os-linux_1_';
+                            } else if (osname.indexOf('Windows') !== -1) {
+                                osClass = 'icon-os-win-03';
+                            } else {
+                                osClass = 'icon-laptop';
+                            }
+                            return osClass;
+                        }
+                    }
+
                     this.$el.html('');
 
-                    this.$el.append(template({model: data, tags: tagData, vm: vmData}));
+                    this.$el.append(template(payload));
 
                     $header = this.$el.find('.tab-header');
                     $header.addClass('tabs').html(this.navigation.render().el);

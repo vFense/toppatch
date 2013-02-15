@@ -1,6 +1,157 @@
+<style>
+    div.ui-datepicker{
+        font-size:12px;
+    }
+</style>
 <article class="row-fluid">
     <section class="list">
         <div class="items">
+            <header class="clearfix">
+                <div class="pull-left">&nbsp;</div>
+                <div class="pull-right hidden-print">
+                    <button class="btn btn-mini" name="toggleAddSchedule">
+                        <i class="icon-plus" style="color: green;"></i>&nbsp;Add Schedule
+                    </button>
+                </div>
+            </header>
+            <header class="clearfix">
+                <article class="hide" id="scheduleDiv">
+                    <form>
+                        <section class="row-fluid">
+                            <div class="control-group span12">
+                                <label class="control-label"><small>Job Name:</small></label>
+                                <input type="text" name="jobname" placeholder="Required"/>
+                            </div>
+                        </section>
+                        <section class="row-fluid">
+                            <div class="control-group span3">
+                                <label class="control-label"><small>Operation:</small></label>
+                                <select name="operation" class="btn btn-mini">
+                                    <option value="-1">Select one</option>
+                                    <option value="install">Install</option>
+                                    <option value="reboot">Reboot</option>
+                                </select>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label"><small>Severity:</small></label>
+                                <select name="severity" class="btn btn-mini disabled" disabled="disabled">
+                                    <option value="-1">Select one</option>
+                                    <option value="any">Any</option>
+                                    <option value="optional">Optional</option>
+                                    <option value="recommended">Recommended</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label"><small>Start Date:</small></label>
+                                <input type="text" name="start_date" placeholder="Optional"/>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label"><small>Time:</small></label>
+                                <input type="text" name="time" value="00:00"/>
+                            </div>
+                        </section>
+                        <section class="row-fluid">
+                            <div class="control-group span3">
+                                <label class="control-label"><small>Month:</small></label>
+                                <select name="month" class="btn btn-mini">
+                                    <option value="-1">Select one</option>
+                                    <option value="any">Any</option>
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label"><small>Day of Week:</small></label>
+                                <select name="day_of_week" class="btn btn-mini">
+                                    <option value="-1">Select one</option>
+                                    <option value="any">Any</option>
+                                    <option value="0">Monday</option>
+                                    <option value="1">Tuesday</option>
+                                    <option value="2">Wednesday</option>
+                                    <option value="3">Thursday</option>
+                                    <option value="4">Friday</option>
+                                    <option value="5">Saturday</option>
+                                    <option value="6">Sunday</option>
+                                </select>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label"><small>Day:</small></label>
+                                <select name="day" class="btn btn-mini">
+                                    <option value="-1">Select one</option>
+                                    <option value="any">Any</option>
+                                    <% for (var i = 1; i <= 31; i++) { %>
+                                    <option value="<%= i %>"><%= i %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label"><small>Week:</small></label>
+                                <select name="week" class="btn btn-mini">
+                                    <option value="-1">Select one</option>
+                                    <option value="any">Any</option>
+                                    <% for (var i = 1; i <= 53; i++) { %>
+                                    <option value="<%= i %>"><%= i %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+                        </section>
+                        <% if (data.tags.length && data.nodes && data.nodes.data.length) { %>
+                        <section class="row-fluid">
+                            <div class="control-group select optional span4">
+                                <label class="control-label"><small>*Tags:</small></label>
+                                <div class="controls">
+                                    <select multiple="multiple" name="tags" size="3">
+                                        <option value="any">None</option>
+                                        <option value="all">All</option>
+                                        <% _.each(data.tags, function (tag) { %>
+                                        <option value="<%= tag.tag_id %>"><%= tag.tag_name %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span4">
+                                <label class="control-label"><small>*Nodes:</small></label>
+                                <div class="controls">
+                                    <select multiple="multiple" name="nodes" size="3">
+                                        <option value="any">None</option>
+                                        <option value="all">All</option>
+                                        <% _.each(data.nodes.data, function (node) { %>
+                                        <option value="<%= node.id %>"><%= node.displayname || node['computer/name'] || node.hostname || node.ip %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
+                        </section>
+                        <% } %>
+                        <!--<section class="row-fluid">
+                            <div class="control-group span12">
+                                <label class="control-label"><small>Time: 00:00 AM</small></label>
+                                <div id="slider-range" style="margin-left: 5px;"></div><br>
+                            </div>
+                        </section>-->
+                        <section class="row-fluid">
+                            <div class="span6">
+                                <small>*CTRL/CMD + Click to select multiple values.</small>
+                            </div>
+                            <div class="span6 alignRight">
+                                <button class="btn btn-mini btn-primary" name="addSchedule">Add</button>
+                                <button class="btn btn-mini btn-danger" name="toggleAddSchedule">Cancel</button>
+                            </div>
+                        </section>
+                    </form>
+                </article>
+            </header>
             <div class="legend clearfix">
                 <span class="span6"><strong>Job Name</strong></span>
                 <span class="span2 alignRight">Next Run Time</span>
@@ -9,8 +160,8 @@
                 <span class="span1 alignRight">Operation</span>
                 <span class="span1 alignRight">Remove</span>
             </div>
-            <% if(data.length != 0) { %>
-                <% _.each(data, function (schedule) { %>
+            <% if(data.schedules.length != 0) { %>
+                <% _.each(data.schedules, function (schedule) { %>
                     <div class="item clearfix">
                         <span class="span6">
                             <strong><%= schedule.job_name %></strong>
