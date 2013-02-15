@@ -25,14 +25,15 @@ define(
                     this.listenTo(this.tagcollection, 'reset', this.onRender);
                     this.tagcollection.fetch();
                 },
-                events: {
+                /*events: {
                     'change select[name=filter]': 'filterByTag'
-                },
+                },*/
                 filterByTag: function (event) {
-                    var filterBy = $(event.currentTarget).val();
-                    this.collection.params.filterby = filterBy === 'none' ? '' : filterBy;
-                    this.collection.params.by_os = '';
-                    this.collection.fetch();
+                    var filterBy = $(event.currentTarget).val(),
+                        view = event.data;
+                    view.collection.params.filterby = filterBy === 'none' ? '' : filterBy;
+                    view.collection.params.by_os = '';
+                    view.collection.fetch();
                 },
                 onRender: function () {
                     var newElement = function (element) {
@@ -61,6 +62,7 @@ define(
                             $select.append($option);
                         });
                         $header.find('.pull-right').prepend($select);
+                        $select.change(this, this.filterByTag);
                     }
                 },
                 renderModel: function (item) {
