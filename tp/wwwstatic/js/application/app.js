@@ -144,9 +144,9 @@ define(
                                         copyFooter: true
                                     },
                                     widgets: {
-                                        'graph': ['pie', 'bar', 'tag', 'area_2'],
-                                        'spans': [4, 4, 4, 12],
-                                        'titles': ['Nodes in Network by OS', 'Updates by Severity', 'Tags', 'Packages Available in Network']//'Packages Installed in Network',
+                                        'graph': ['pie', 'bar', 'tag'],//, 'area_2'],
+                                        'spans': [6, 6, 12],//, 12],
+                                        'titles': ['Nodes in Network by OS', 'Updates by Severity', 'Tags']// 'Packages Available in Network']//'Packages Installed in Network',
                                     }
                                 }
                             });

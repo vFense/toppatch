@@ -95,7 +95,8 @@ define(
                     return item.get('node_vm_name') ||
                         item.get('displayname') ||
                         item.get('computer/name') ||
-                        item.get('hostname');
+                        item.get('hostname') ||
+                        item.get('ip');
                 },
                 getStatus: function (item) {
                     var reboot      = item.get('reboot'),
