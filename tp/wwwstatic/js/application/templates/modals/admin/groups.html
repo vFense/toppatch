@@ -245,8 +245,8 @@
                                             <span class="alert fade in hide inline"></span>
                                             <select name="nodelist" class="btn btn-mini">
                                                 <option value="0">Select one...</option>
-                                                <% if(nodes && nodes.nodes.length != 0) {
-                                                    _.each(nodes.nodes, function (node) { %>
+                                                <% if(nodes && nodes.data.length != 0) {
+                                                    _.each(nodes.data, function (node) { %>
                                                         <option value="<%= node.id %>"><% print(node.displayname || node.hostname || node.ip); %></option>
                                                     <% });
                                                 } %>
