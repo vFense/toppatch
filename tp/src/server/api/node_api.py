@@ -155,7 +155,7 @@ class NodesHandler(BaseHandler):
         self.session = self.application.session
         self.session = validate_session(self.session)
         node_id = self.get_argument('id', None)
-        queryCount = self.get_argument('count', 10)
+        queryCount = self.get_argument('count', 20)
         queryOffset = self.get_argument('offset', 0)
         total_count = self.session.query(NodeInfo).count()
         filter_by_tags = self.get_argument('filterby', None)

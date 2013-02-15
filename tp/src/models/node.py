@@ -18,9 +18,9 @@ class NodeInfo(Base):
     }
     id = Column(INTEGER(unsigned=True),primary_key=True, autoincrement=True)
     display_name = Column(VARCHAR(64), nullable=True, unique=True)
-    host_name = Column(VARCHAR(64), nullable=True, unique=True)
-    computer_name = Column(VARCHAR(64), nullable=True, unique=True)
-    ip_address = Column(VARCHAR(16), nullable=True, unique=True)
+    host_name = Column(VARCHAR(64), nullable=True, unique=False)
+    computer_name = Column(VARCHAR(64), nullable=True, unique=False)
+    ip_address = Column(VARCHAR(16), nullable=True, unique=False)
     host_status = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
     agent_status = Column(BOOLEAN, nullable=True)   # True = Up, False = Down
     last_agent_update = Column(DATETIME, nullable=True)

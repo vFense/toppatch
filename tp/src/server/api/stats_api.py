@@ -391,12 +391,15 @@ class BasePackageSeverityOverTimeHandler(BaseHandler):
                             filter(Package.severity == 'Critical').\
                             filter(PackagePerNode.toppatch_id.in_(tp_ids)).\
                             join(Package).all())
+                    print node_ids
                     optional = len(session.query(PackagePerNode).\
                             filter(func.date(PackagePerNode.date_installed) == line).\
                             filter(PackagePerNode.installed == True).\
                             filter(Package.severity == 'Optional').\
-                            filter(PackagePerNode.toppatch_id.in_(tp_ids)).\
+                            filter(PackagePerNode.node_id.in_(node_ids)).\
                             join(Package).all())
+                            #filter(PackagePerNode.toppatch_id.in_(tp_ids)).\
+                    print optional
                     recommended = len(session.query(PackagePerNode).\
                             filter(func.date(PackagePerNode.date_installed) == line).\
                             filter(PackagePerNode.installed == True).\
