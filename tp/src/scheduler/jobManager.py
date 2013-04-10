@@ -37,6 +37,8 @@ def job_lister(session,sched):
         message['job_id'] = str(schedule.id)
         message['next_run_time'] = str(schedule.next_run_time)
         message['username'] = username
+        print schedule
+        print schedule.next_run_time
         if isinstance(messages.trigger,
                 apscheduler.triggers.cron.CronTrigger):
             message['schedule_type'] = 'cron'
@@ -234,6 +236,7 @@ def add_recurrent(sched, node_ids=[], tag_ids=[],
     msg = 'Recurrent Scheduled added successfully'
     if re.search(r'^install|uninstall', operation) and name:
         try:
+            print hour, minute, second
             sched.add_cron_job(get_patches_and_install,
                     year=year, month=month, day=day,
                     week=week, day_of_week=day_of_week,

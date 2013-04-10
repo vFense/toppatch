@@ -228,17 +228,18 @@ class SchedulerAddRecurrentJobHandler(BaseHandler):
         week = self.get_argument('week', None)
         day = self.get_argument('day', None)
         day_of_week = self.get_argument('day_of_week', None)
-        hour = self.get_argument('hour', None)
-        minute = self.get_argument('minute', None)
+        hour = self.get_argument('hours', None)
+        minute = self.get_argument('minutes', None)
         second = self.get_argument('second', None)
         jobname = self.get_argument('jobname', None)
-        node_ids = self.get_arguments('nodeids')
-        tag_ids = self.get_arguments('tagids')
+        node_ids = self.get_arguments('nodes')
+        tag_ids = self.get_arguments('tags')
         if 'all' in tag_ids:
             tag_ids = []
         if 'all' in node_ids:
             node_ids = []
         if operation and jobname:
+            print hour, minute, second
             result = add_recurrent(sched, node_ids=node_ids,
                     tag_ids=tag_ids, severity=severity,
                     operation=operation, name=jobname,
