@@ -159,11 +159,22 @@ def get_patches_and_install(severity=None,
     job_list = []
     patches = None
     session = create_session(ENGINE)
+    print node_ids, "nodes"
+    print tag_ids, "tags"
+    if len(node_ids) == 1:
+        if 'all' in node_ids[0]:
+            node_ids = map(lambda x: int(x[0]), session.query(NodeInfo.id).all())
+    if len(tag_ids) == 1:
+        if 'all' in tag_ids[0]:
+            tag_ids = map(lambda x: int(x[0]), session.query(TagInfo.id).all())
+    
+    print node_ids, "nodes"
+    print tag_ids, "tags"
     if len(tag_ids) >0:
         node_ids = \
                 node_ids + map(lambda nodes: nodes.node_id,
                         session.query(TagsPerNode.node_id).\
-                                filter(TagsPerNode.tag_id.in_(tags_ids)).all()
+                                filter(TagsPerNode.tag_id.in_(tag_ids)).all()
                                 )
 
     if len(node_ids) >0 and severity:
@@ -190,6 +201,7 @@ def get_patches_and_install(severity=None,
                 filter(Package.severity == severity).\
                 join(PackagePerNode).all()
 
+    print patches, "patches"
     if patches:
         for pkg in patches:
             data.append(pkg.Package.toppatch_id)
@@ -204,6 +216,7 @@ def get_patches_and_install(severity=None,
             job_list.append(job)
     
     session.close()
+    print job_list, "joblist"
     if len(job_list) >0:
         call_agent_operation(job_list, username)
 

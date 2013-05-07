@@ -24,6 +24,7 @@ define(
             }),
             View: Backbone.View.extend({
                 initialize: function () {
+                    $.ajaxSetup({ traditional: true });
                     this.template = myTemplate;
                     this.minutes = '0';
                     this.hours = '0';
